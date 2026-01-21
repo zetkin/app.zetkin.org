@@ -32,6 +32,60 @@ const SurveyLinkDialog = ({
   const { orgId } = useNumericRouteParams();
   const { updatePerson } = usePersonMutations(orgId, person.id);
 
+  if (person.email && email !== person.email) {
+    return (
+      <Dialog open={open}>
+        <DialogTitle>{messages.surveyDialogDifferentEmail.title()}</DialogTitle>
+        <Divider />
+        <DialogContent>
+          <Box
+            alignItems="center"
+            display="flex"
+            flexDirection="row"
+            paddingBottom="5px"
+          >
+            <ZUIPersonAvatar
+              orgId={orgId}
+              personId={person?.id ?? 0}
+              size="sm"
+            />
+            <Typography ml={2} variant="h6">
+              {person?.first_name} {person?.last_name}
+            </Typography>
+          </Box>
+
+          <Box alignItems="center" display="flex" mb={2}>
+            {email}
+            <Box alignItems="center" display="flex" ml={2} mr={2}>
+              <ArrowForward
+                color="secondary"
+                sx={{
+                  opacity: '50%',
+                }}
+              />
+            </Box>
+            {person.email}
+          </Box>
+          {messages.surveyDialogDifferentEmail.description()}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>
+            {messages.surveyDialogDifferentEmail.keep()}
+          </Button>
+          <Button
+            onClick={() => {
+              updatePerson({ email });
+              onClose();
+            }}
+            variant="contained"
+          >
+            {messages.surveyDialogDifferentEmail.update()}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
   return (
     <Dialog open={open}>
       <DialogTitle>{messages.surveyDialog.title()}</DialogTitle>

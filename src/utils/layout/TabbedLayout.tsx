@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import {
   Alert,
@@ -10,7 +9,6 @@ import {
   Tab,
   TabProps,
   Tabs,
-  Theme,
 } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
@@ -18,17 +16,6 @@ import DefaultLayout from './DefaultLayout';
 import Header from '../../zui/ZUIHeader';
 import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
-
-interface StyleProps {
-  noPad?: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  main: {
-    overflow: 'hidden',
-    padding: ({ noPad }) => (noPad ? 0 : undefined),
-  },
-}));
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
@@ -71,7 +58,6 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   title,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const classes = useStyles({ noPad });
   const router = useRouter();
 
   const currentTab =
@@ -103,7 +89,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   }));
 
   return (
-    <DefaultLayout>
+    <DefaultLayout title={title}>
       {alertMsg && (
         <Alert
           action={
@@ -138,6 +124,13 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           <Tabs
             aria-label="campaign tabs"
             onChange={(_, selected) => selectTab(selected)}
+            slotProps={{
+              list: {
+                sx: {
+                  overflowX: 'auto',
+                },
+              },
+            }}
             value={currentTab}
           >
             {tabs.map((tab) => {
@@ -170,13 +163,16 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
         </Collapse>
         {/* Page Content */}
         <Box
-          className={classes.main}
           component="main"
           flexGrow={1}
           minHeight={0}
           p={fixedHeight ? 0 : 3}
           position="relative"
           role="tabpanel"
+          sx={{
+            overflow: 'hidden',
+            padding: noPad ? 0 : undefined,
+          }}
         >
           <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
         </Box>

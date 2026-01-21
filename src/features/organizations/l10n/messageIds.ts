@@ -30,7 +30,10 @@ export default makeMessages('feat.organizations', {
     cancelledParagraph: m(
       'You can no longer sign up for it and if you were signed up, you are no longer expected to attend.'
     ),
-    contactPerson: m<{ name: string }>('{name} is the contact person'),
+    contactPerson: {
+      default: m<{ name: string }>('{name} is the contact person'),
+      you: m('You are the contact person'),
+    },
     defaultTitle: m('Untitled event'),
     loading: m('Loading...'),
     noLocation: m('No physical location'),
@@ -57,6 +60,7 @@ export default makeMessages('feat.organizations', {
       copyIcsUrl: m('Copy calendar subscription URL'),
       follow: m('Follow'),
       login: m('Login & connect'),
+      organize: m('Organize'),
       unfollow: m('Unfollow'),
     },
     map: {
@@ -64,8 +68,11 @@ export default makeMessages('feat.organizations', {
       viewInMap: m('View in map'),
     },
     menu: {
+      allEvents: m('All events'),
       logout: m('Logout'),
+      myActivities: m('My activities'),
       myZetkin: m('My Zetkin'),
+      settings: m('Settings'),
     },
     tabs: {
       calendar: m('Calendar'),

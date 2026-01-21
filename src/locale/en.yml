@@ -1,3 +1,6 @@
+glob:
+  accessLevels:
+    configure: 'Edit configure '
 core:
   err404:
     backToHomePage: Back to home page
@@ -123,8 +126,6 @@ feat:
         copyMenuHeader: Copy {numberOfEvents} events to
         createShift: After each event (create shift)
         duplicate: Same time and date (duplicate)
-        move: Move
-        moveMenuHeader: Move {numberOfEvents} events to
         nextDay: Next day {dates}
         nextWeek: Next week {dates}
     shortWeek: w {weekNumber}
@@ -261,7 +262,6 @@ feat:
         filter: Filter results
         standalones: Standalone events
         surveys: Surveys
-      heading: All projects
       indefinite: Indefinite
       unsorted: Unsorted projects
       upcoming: '{numEvents, number} upcoming events.'
@@ -1339,10 +1339,8 @@ feat:
         title: Recent organizations
   profile:
     delete:
-      button: Remove person
       confirm: Are you sure you want to delete {name} from {org}, and all related
         organizations? This is a permanent action.
-      title: Delete account
       warning: This cannot be undone!
     details:
       title: Details
@@ -2600,10 +2598,6 @@ feat:
         openButton: Show
     toolbar:
       createColumn: New column
-      createFromSelection: Create list from selection
-      removeFromSelection: Remove {numSelected, plural, one {1 person} other
-        {{numSelected} people} } from list
-      removeTooltip: Smart search lists do not currently support removing rows
     viewLayout:
       actions:
         share: Share

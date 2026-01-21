@@ -106,9 +106,47 @@ export default makeMessages('feat.surveys', {
       ),
     },
   },
+  insights: {
+    export: {
+      errorUnknown: m('Unknown error occurred while exporting.'),
+      toPdf: m('Export to pdf'),
+      toPng: m('Export to png'),
+    },
+    optionsFields: {
+      subheader: m<{
+        answerCount: number;
+        totalSelectedOptionsCount: number;
+      }>(
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}} and {totalSelectedOptionsCount, plural, =1 {1 selected option} other {# selected options}}.'
+      ),
+      tabs: {
+        barPlot: m('Bar'),
+        piePlot: m('Pie'),
+      },
+      warningMultipleSelectedOptionsPie: m<{ respondentCount: number }>(
+        'Note that this question allows respondents to choose more than one option, and {respondentCount, plural, =1 {1 respondent} other {# respondents}} did. This may make the pie chart misleading.'
+      ),
+    },
+    textFields: {
+      subheader: m<{
+        answerCount: number;
+        totalUniqueWordCount: number;
+        totalWordCount: number;
+      }>(
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}}, {totalWordCount, plural, =1 {1 word} other {# words}} and {totalUniqueWordCount, plural, =1 {1 unique word} other {# unique words}}.'
+      ),
+      tabs: {
+        responses: m('Response'),
+        wordCloud: m('Cloud'),
+        wordFrequencies: m('Bar'),
+      },
+    },
+  },
   layout: {
     actions: {
+      createList: m('Create list from submissions'),
       delete: m('Delete'),
+      duplicate: m('Duplicate'),
       move: m('Move'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
@@ -193,6 +231,19 @@ export default makeMessages('feat.surveys', {
     ),
     title: m('Add email address'),
   },
+  surveyDialogDifferentEmail: {
+    description: m(
+      'The person you are about to link has a different email to the one in the survey response. Would you like to set the survey response email to be the new email for this person?'
+    ),
+    keep: m('No, keep old email'),
+    title: m('Update email address'),
+    update: m('Yes, update email'),
+  },
+  surveyDuplicated: {
+    error: m('Error: Could not duplicate survey'),
+    success: m('Your survey has been duplicated.'),
+    title: m('Survey Duplicated'),
+  },
   surveyForm: {
     accept: m('I accept the terms stated below'),
     error: m(
@@ -215,6 +266,7 @@ export default makeMessages('feat.surveys', {
     },
   },
   surveyFormSubmitted: {
+    retakeSurvey: m('Retake survey'),
     text: m<{ title: string }>(
       'Your responses to “{title}” have been submitted.'
     ),
@@ -235,7 +287,14 @@ export default makeMessages('feat.surveys', {
       ),
     },
   },
+  surveyToList: {
+    error: m(
+      'Could not create list from survey submissions due to unknown error.'
+    ),
+    title: m<{ surveyTitle: string }>('Submissions from {surveyTitle}'),
+  },
   tabs: {
+    insights: m('Insights'),
     overview: m('Overview'),
     questions: m('Questions'),
     submissions: m('Submissions'),

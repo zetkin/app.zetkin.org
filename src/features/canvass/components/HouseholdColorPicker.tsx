@@ -13,7 +13,11 @@ import {
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import { HouseholdColor, householdColors, householdColorToHex } from '../types';
+import {
+  hexColorToHouseholdColor,
+  HouseholdColor,
+  householdHexColors,
+} from '../types';
 
 type Props = {
   onChange: (newColor: HouseholdColor) => void;
@@ -49,13 +53,12 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
         }}
         onChange={(ev) => onChange(ev.target.value as HouseholdColor)}
         renderValue={(value: HouseholdColor) => {
-          const color = value !== 'clear' ? householdColorToHex[value] : null;
           return (
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
               {value != 'clear' && (
                 <Box
                   sx={{
-                    backgroundColor: color,
+                    backgroundColor: value,
                     borderRadius: '4px',
                     height: '30px',
                     width: '30px',
@@ -65,7 +68,9 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
               <Typography>
                 {value == 'clear'
                   ? messages.households.colorPicker.noColor()
-                  : messages.households.colorPicker.colorNames[value]()}
+                  : messages.households.colorPicker.colorNames[
+                      hexColorToHouseholdColor[value]
+                    ]()}
               </Typography>
             </Box>
           );
@@ -92,11 +97,10 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
         >
           <Close color="secondary" />
         </MenuItem>
-        {householdColors.map((colorName) => {
-          const color = householdColorToHex[colorName];
+        {householdHexColors.map((color, index) => {
           return (
             <MenuItem
-              key={colorName}
+              key={index}
               sx={{
                 '&.Mui-selected': {
                   '&:focus-visible': {
@@ -119,7 +123,7 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
                   padding: '0 0 100%',
                 },
               }}
-              value={colorName}
+              value={color}
             >
               <Box
                 sx={{

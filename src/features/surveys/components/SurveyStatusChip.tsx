@@ -1,6 +1,5 @@
-import { Box } from '@mui/material';
-import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
+import { Box, SxProps } from '@mui/material';
+import { FC, useMemo } from 'react';
 
 import { Msg } from 'core/i18n';
 import { SurveyState } from '../hooks/useSurveyState';
@@ -11,52 +10,42 @@ interface SurveyStatusChipProps {
   state: SurveyState;
 }
 
-const useStyles = makeStyles(() => ({
-  chip: {
-    alignItems: 'center',
-    borderRadius: '2em',
-    color: 'white',
-    display: 'inline-flex',
-    fontSize: 14,
-    fontWeight: 'bold',
-    padding: '0.5em 0.7em',
-  },
-  draft: {
-    backgroundColor: oldTheme.palette.grey[500],
-  },
-  published: {
-    backgroundColor: oldTheme.palette.success.main,
-  },
-  scheduled: {
-    backgroundColor: oldTheme.palette.statusColors.blue,
-  },
-  spinner: {
-    marginLeft: '0.5em',
-  },
-  unpublished: {
-    backgroundColor: oldTheme.palette.error.main,
-  },
-}));
-
 const SurveyStatusChip: FC<SurveyStatusChipProps> = ({ state }) => {
-  const classes = useStyles();
+  const boxStyles: SxProps = useMemo(() => {
+    return {
+      alignItems: 'center',
+      borderRadius: '2em',
+      color: 'white',
+      display: 'inline-flex',
+      fontSize: 14,
+      fontWeight: 'bold',
+      padding: '0.5em 0.7em',
+      ...{
+        [SurveyState.UNPUBLISHED]: {
+          backgroundColor: oldTheme.palette.error.main,
+        },
+        [SurveyState.DRAFT]: {
+          backgroundColor: oldTheme.palette.grey[500],
+        },
+        [SurveyState.PUBLISHED]: {
+          backgroundColor: oldTheme.palette.success.main,
+        },
+        [SurveyState.SCHEDULED]: {
+          backgroundColor: oldTheme.palette.statusColors.blue,
+        },
+        [SurveyState.UNKNOWN]: {
+          backgroundColor: oldTheme.palette.grey[500],
+        },
+      }[state],
+    };
+  }, [state]);
 
   if (state == SurveyState.UNKNOWN) {
     return null;
   }
 
-  const classMap: Record<SurveyState, string> = {
-    [SurveyState.UNPUBLISHED]: classes.unpublished,
-    [SurveyState.DRAFT]: classes.draft,
-    [SurveyState.PUBLISHED]: classes.published,
-    [SurveyState.SCHEDULED]: classes.scheduled,
-    [SurveyState.UNKNOWN]: classes.draft,
-  };
-
-  const colorClassName = classMap[state];
-
   return (
-    <Box className={`${colorClassName} ${classes.chip}`}>
+    <Box sx={boxStyles}>
       <Msg id={messageIds.state[state]} />
     </Box>
   );

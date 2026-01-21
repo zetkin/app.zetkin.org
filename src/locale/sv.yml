@@ -320,8 +320,6 @@ feat:
         copyMenuHeader: Kopiera {numberOfEvents} event till
         createShift: Skapa skift efter varje event
         duplicate: Samma tid och datum (duplicera)
-        move: Flytta
-        moveMenuHeader: Flytta {numberOfEvents} event till
         nextDay: Nästa dag {dates}
         nextWeek: Nästa vecka {dates}
     shortWeek: v {weekNumber}
@@ -585,7 +583,6 @@ feat:
         filter: Filtrera resultat
         standalones: Fristående event
         surveys: Enkäter
-      heading: Alla projekt
       indefinite: Obestämd
       unsorted: Osorterade projekt
       upcoming: '{numEvents, number} framtida event.'
@@ -731,7 +728,41 @@ feat:
         saveButtonLabel: Spara {numHouseholds} hushåll
       colorPicker:
         colorNames:
-          undefined: ''
+          black: Svart
+          darkAqua: Mörk aqua
+          darkBlue: Mörkblå
+          darkGreen: Mörkgrön
+          darkIndigo: Mörkindigo
+          darkLime: Mörk lime
+          darkOrange: Mörkorange
+          darkPink: Mörkrosa
+          darkPurple: Mörklila
+          darkRed: Mörkröd
+          darkTurqouise: Mörkturkos
+          darkYellow: Mörkgul
+          grey: Grå
+          lightAqua: Ljus aqua
+          lightBlue: Ljusblå
+          lightGreen: Ljusgrön
+          lightIndigo: Ljusindigo
+          lightLime: Ljus lime
+          lightOrange: Ljusorange
+          lightPink: Ljusrosa
+          lightPurple: Ljuslila
+          lightRed: Ljusröd
+          lightTurquoise: Ljusturkos
+          lightYellow: Ljusgul
+          mediumAqua: Aqua
+          mediumBlue: Blå
+          mediumGreen: Grön
+          mediumIndigo: Indigo
+          mediumLime: Lime
+          mediumOrange: Orange
+          mediumPink: Rosa
+          mediumPurple: Lila
+          mediumRed: Röd
+          mediumTurqouise: Turkos
+          mediumYellow: Gul
         inputLabel: Redigera hushållets färg
         noColor: Ingen färg
       createMultiple:
@@ -739,6 +770,9 @@ feat:
         header: Skapa hushåll
         numberOfFloorsInput: Antal våningar
         numberOfHouseholdsInput: Hushåll per våning
+      delete:
+        title: Radera hushåll
+        warningText: Är du säker på att du vill radera hushållet? Det kan inte ångras.
       editSingleHousehold:
         floorLabel: Redigera våning
         header: Redigera {title}
@@ -752,6 +786,9 @@ feat:
         logVisitButtonLabel: Logga besök
         subtitle: Våning {floorNumber}
         wasVisited: Detta hushåll har besökts i det här uppdraget
+      stackItem:
+        detailsButtonLabel: Detaljer
+        visitButtonLabel: Besök
     instructions:
       areas: Områden
       instructionsHeader: Instruktioner
@@ -796,8 +833,12 @@ feat:
           title: Alltid
         header:
           households: Hushåll
+          householdsSuccessful: Lyckat besök
+          householdsVisited: Besökta hushåll
           locations: Platser
+          successfulVisits: Lyckade besök
           title: Framsteg
+          visits: Besök
         session:
           title: Session (idag)
           you: Du
@@ -1359,6 +1400,8 @@ feat:
       noLocation: Ingen fysisk plats
     footer:
       privacyPolicy: Sekretesspolicy
+    newLandingPageAlert:
+      title: Detta är din nya landningssida
     settings:
       accountSettings:
         email:
@@ -1851,7 +1894,6 @@ feat:
       cancelledHeader: Detta event har avbokats
       cancelledParagraph: Du kan inte längre anmälda dig och om du var anmäld så
         förväntas du inte längre att närvara.
-      contactPerson: '{name} är kontaktperson'
       defaultTitle: Namnlöst event
       loading: Laddar...
       noLocation: Ingen fysisk plats
@@ -1871,12 +1913,17 @@ feat:
         connect: Anslut
         follow: Följ
         login: Logga in & anslut
+        organize: Organisera
         unfollow: Avfölj
       map:
         viewInList: Visa i lista
         viewInMap: Visa på karta
       menu:
+        allEvents: Alla event
         logout: Logga ut
+        myActivities: Mina aktiviteter
+        myZetkin: Mitt Zetkin
+        settings: Inställningar
       tabs:
         calendar: Kalender
         suborgs: Utforska
@@ -1891,6 +1938,9 @@ feat:
         Foundation.
       myPageButton: Gå till aktivistportalen
       title: Du har inte administratörsbehörighet
+    overview:
+      suborgs:
+        title: Underorganisationer
     page:
       title: 'Välj organisation:'
     sidebar:
@@ -1910,10 +1960,8 @@ feat:
       showButton: Visa alla events
   profile:
     delete:
-      button: Ta bort person
       confirm: Är du säker på att du vill ta bort {name} från {org} och alla
         relaterade organisationer? Det är permanent och går inte att ångra.
-      title: Radera konto
       warning: Detta kan inte ångras!
     details:
       title: Detaljer
@@ -2118,6 +2166,10 @@ feat:
           any: alla underorganisationer
           multiple: någon av följande underorganisationer
           single: den specifika underorganisationen
+      area:
+        slice:
+          in: innaför
+          out: utanför
       callBlocked:
         inputString: '{addRemoveSelect} personer som är blockerade från att ringa av
           vilken anledning som helst'
@@ -2325,21 +2377,25 @@ feat:
           edit:
             callassignment_goal: '{querySelect} i ringuppdraget "{titleSelect}"'
             callassignment_target: '{querySelect} i ringuppdraget "{titleSelect}"'
+            email_target: '{querySelect} av e-postmeddelandet "{titleSelect}"'
             none: '{querySelect}'
             standalone: '{querySelect} "{titleSelect}"'
           preview:
             callassignment_goal: syftet för ringuppdraget "{queryTitle}"
             callassignment_target: målgruppen i ringuppdraget "{queryTitle}"
+            email_target: målgruppen för e-postmeddelandet "{queryTitle}"
             none: '{queryTitle}'
             standalone: den Smarta sökningen "{queryTitle}"
           selectLabel:
             callassignment_goal: syftet
             callassignment_target: målgruppen
+            email_target: målgruppen
             none: den Smarta sökningen
             standalone: Smart sökning
           selectOptions:
             callassignment_goal: syftet i ett ringuppdrag
             callassignment_target: målgruppen i ett ringuppdrag
+            email_target: målgruppen för ett e-postmeddelande
             none: Den här organisationen har inga ringuppdrag eller sparade Smarta sökningar
               än.
             standalone: en fristående Smart sökning
@@ -2598,9 +2654,23 @@ feat:
         header: Enkät låst
         subheader: Den här enkäten har börjat få in enkätsvar. Att ändra enkäten nu kan
           orsaka problem med datan. Fortsätt med försiktighet.
+    insights:
+      export:
+        errorUnknown: 'Ett okänt fel inträffade under exporten. '
+        toPdf: Exportera till pdf
+        toPng: Exportera till png
+      optionsFields:
+        tabs:
+          barPlot: Stapel
+      textFields:
+        tabs:
+          responses: Svar
+          wordFrequencies: Stapel
     layout:
       actions:
+        createList: Skapa lista av enkätsvaren
         delete: Ta bort enkät
+        duplicate: Duplicera
         move: Flytta
         publish: Publicera enkät
         unpublish: Avpublicera enkät
@@ -2661,6 +2731,10 @@ feat:
       description: Personen som du ska länka enkäten till har ingen epost men enkäten
         innehåller en epostadress. Vill du lägga till den till personen?
       title: Lägg till epostadress
+    surveyDuplicated:
+      error: 'Fel: Kunde inte duplicera enkäten'
+      success: Din enkät har duplicerats.
+      title: Enkäten duplicerades
     surveyForm:
       accept: Jag accepterar villkoren nedan.
       error: Något gick fel när ditt svar skulle skickas igen. Testa gärna igen
@@ -2690,7 +2764,11 @@ feat:
         anonymous: Skicka in anonymt
         email: Signera med namn och epost
         user: Signera som {person} med epostadress {email}
+    surveyToList:
+      error: 'Kunde inte skapa en lista från enkätsvar på grund av ett okänt fel. '
+      title: Enkätsvar från {surveyTitle}
     tabs:
+      insights: Insikter
       overview: Översikt
       questions: Frågor
       submissions: Enkätsvar
@@ -3217,11 +3295,6 @@ feat:
         openButton: Visa
     toolbar:
       createColumn: Ny kolumn
-      createFromSelection: Skapa lista från urval
-      removeFromSelection: Ta bort {numSelected, plural, one {1 person} other
-        {{numSelected} personer} } från listan
-      removeTooltip: För tillfället går det inte att ta bort rader i listor som
-        baseras på en Smart sökning
     viewLayout:
       actions:
         share: Dela

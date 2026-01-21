@@ -60,7 +60,9 @@ test.describe('Tag manager', () => {
     await playsGuitar.first().waitFor({ state: 'visible' });
 
     // Expect to have made request to put tag
-    expect(putTagLog().length).toEqual(1);
+    await expect(() => {
+      expect(putTagLog()).toHaveLength(1);
+    }).toPass();
   });
 
   test('lets user add value tag', async ({ page, appUri, moxy }) => {

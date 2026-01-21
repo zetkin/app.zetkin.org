@@ -1,5 +1,5 @@
 import { Box, Checkbox, useTheme } from '@mui/material';
-import { FC, KeyboardEvent } from 'react';
+import { FC, KeyboardEvent, useCallback } from 'react';
 import {
   GridColDef,
   GridRenderCellParams,
@@ -8,6 +8,7 @@ import {
 
 import { IColumnType } from '.';
 import { useNumericRouteParams } from 'core/hooks';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
   LocalBoolViewColumn,
@@ -31,6 +32,7 @@ export default class LocalBoolColumnType implements IColumnType {
           <Cell cell={params.value} column={column} personId={params.row.id} />
         );
       },
+      sortingOrder: ['desc', 'asc', null],
       type: 'boolean',
     };
   }
@@ -67,8 +69,15 @@ const Cell: FC<{
   const theme = useTheme();
   const { orgId, viewId } = useNumericRouteParams();
   const { setCellValue } = useViewGrid(orgId, viewId);
+  const onChange = useCallback(
+    (ev: React.ChangeEvent<HTMLInputElement>) => {
+      setCellValue(personId, column.id, !!ev.target.checked);
+    },
+    [setCellValue, personId, column.id]
+  );
 
   const checked = !!cell;
+  const [isRestricted] = useAccessLevel();
 
   return (
     <Box
@@ -82,9 +91,8 @@ const Cell: FC<{
       <Checkbox
         checked={checked}
         color="success"
-        onChange={(ev) => {
-          setCellValue(personId, column.id, !!ev.target.checked);
-        }}
+        disabled={isRestricted}
+        onChange={onChange}
         tabIndex={-1}
       />
     </Box>

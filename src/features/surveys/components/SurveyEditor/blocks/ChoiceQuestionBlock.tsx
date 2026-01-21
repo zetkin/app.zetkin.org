@@ -149,7 +149,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   }
 
   return (
-    <ClickAwayListener {...clickAwayProps}>
+    <ClickAwayListener
+      mouseEvent="onMouseDown"
+      onClickAway={clickAwayProps.onClickAway}
+      touchEvent="onTouchStart"
+    >
       <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
@@ -224,7 +228,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus={addedOptionId == option.id}
                       fullWidth
-                      inputProps={props}
                       onBlur={(ev) => {
                         updateElementOption(
                           element.id,
@@ -241,6 +244,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                           )
                         );
                       }}
+                      slotProps={{ htmlInput: props }}
                       value={option.text}
                     />
                   </Box>

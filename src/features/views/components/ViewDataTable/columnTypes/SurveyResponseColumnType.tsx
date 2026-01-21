@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 import {
@@ -36,21 +35,21 @@ export default class SurveyResponseColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string[], v2: string[]) => {
-        const lastInV1 = v1[v1.length - 1];
-        const lastInV2 = v2[v2.length - 1];
-
-        if (v1.length == 0 || lastInV1 == '') {
-          return 1;
-        } else if (v2.length == 0 || lastInV2 == '') {
-          return -1;
-        } else {
-          return lastInV1.localeCompare(lastInV2);
-        }
-      },
+      sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return cell?.map((response) => response.text || '') || [];
+        if (!cell?.length) {
+          return '';
+        }
+
+        const sortedSubmissions = cell.concat().sort((sub0, sub1) => {
+          const d0 = new Date(sub0.submitted);
+          const d1 = new Date(sub1.submitted);
+          return d1.getTime() - d0.getTime();
+        });
+        const mostRecentSubmission = sortedSubmissions[0];
+
+        return mostRecentSubmission.text || '';
       },
       width: 250,
     };
@@ -63,27 +62,8 @@ export default class SurveyResponseColumnType
   }
 }
 
-const useStyles = makeStyles({
-  cell: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '100%',
-    width: '100%',
-  },
-  content: {
-    '-webkit-box-orient': 'vertical',
-    '-webkit-line-clamp': 2,
-    display: '-webkit-box',
-    maxHeight: '100%',
-    overflow: 'hidden',
-    whiteSpace: 'normal',
-    width: '100%',
-  },
-});
-
 const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
   const { orgId } = useRouter().query;
-  const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
   const { open: openPopper, close: closePopper } = useToggleDebounce(
@@ -101,11 +81,26 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
     return d1.getTime() - d0.getTime();
   });
   return (
-    <Box className={styles.cell}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        height: '100%',
+        width: '100%',
+      }}
+    >
       <Box
-        className={styles.content}
         onMouseOut={closePopper}
         onMouseOver={openPopper}
+        sx={{
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+          display: '-webkit-box',
+          maxHeight: '100%',
+          overflow: 'hidden',
+          whiteSpace: 'normal',
+          width: '100%',
+        }}
       >
         <Box alignItems="center" display="flex" justifyContent="space-between">
           {sorted[0].text}

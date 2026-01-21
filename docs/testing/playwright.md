@@ -10,7 +10,7 @@ category: Testing
 ### Run all tests
 
 ```
-yarn playwright
+yarn e2e
 ```
 
 It can be useful to run the whole playwright suite if you've changed a few features as part of whatever you're working on.
@@ -18,23 +18,23 @@ It can be useful to run the whole playwright suite if you've changed a few featu
 ### Run one test
 
 ```
-yarn playwright tests/organize/views/detail/display.spec.ts
+yarn e2e tests/organize/views/detail/display.spec.ts
 ```
 
-When you're working on one particular feature, you can run its playwright tests by putting the path to them after `yarn playwright`.
+When you're working on one particular feature, you can run its playwright tests by putting the path to them after `yarn e2e`.
 
 ### Skip the build
 
 ```
-yarn playwright:skipbuild tests/organize/views/detail/display.spec.ts
+yarn e2e:skipbuild tests/organize/views/detail/display.spec.ts
 ```
 
-The `yarn playwright` script builds the Next.js app before running the tests. This takes several minutes, and isn't useful if you're only changing test code (code in a `.spec.ts` file). You can tell playwright not to include this build step with the `playwright:skipbuild` script.
+The `yarn e2e` script builds the Next.js app before running the tests. This takes several minutes, and isn't useful if you're only changing test code (code in a `.spec.ts` file). You can tell playwright not to include this build step with the `e2e:skipbuild` script.
 
 ### Debug mode
 
 ```
-yarn playwright:skipbuild --debug tests/organize/views/detail/display.spec.ts
+yarn e2e:skipbuild --debug tests/organize/views/detail/display.spec.ts
 ```
 
 In its default mode of execution, Playwright runs the tests in a headless browser. This means you can't see them running or interact with the browser's developer tools to debug any problems that arise. By adding the `--debug` flag, you can tell Playwright to run the tests visually in a Chrome window so you can see what's happening and debug any problems.

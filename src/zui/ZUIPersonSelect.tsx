@@ -288,14 +288,16 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
         renderInput={(params) => (
           <TextField
             {...params}
-            inputProps={{
-              ...params.inputProps,
-            }}
             inputRef={inputRef}
             label={label}
             name={name}
             placeholder={placeholder}
             size={size}
+            slotProps={{
+              htmlInput: {
+                ...params.inputProps,
+              },
+            }}
             variant={variant}
           />
         )}

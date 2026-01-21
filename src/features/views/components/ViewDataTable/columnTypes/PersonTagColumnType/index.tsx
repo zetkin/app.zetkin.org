@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Box, lighten, TextField, TextFieldProps } from '@mui/material';
 import { FC, KeyboardEvent, useCallback, useState } from 'react';
@@ -15,7 +14,6 @@ import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import IApiClient from 'core/api/client/IApiClient';
 import { IColumnType } from '../';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
-import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
 import useTagging from 'features/tags/hooks/useTagging';
@@ -24,9 +22,11 @@ import ValueTagCell from './ValueTagCell';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
-import { AppDispatch, RootState } from 'core/store';
+import { AppDispatch } from 'core/store';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
 import { tagLoad, tagLoaded } from 'features/tags/store';
+import { RemoteList } from 'utils/storeUtils';
+import ZUITagChip from 'zui/components/ZUITagChip';
 
 type PersonTagViewCell = null | {
   value?: string;
@@ -40,7 +40,7 @@ export default class PersonTagColumnType implements IColumnType {
   getColDef(
     column: PersonTagViewColumn,
     accessLevel: ZetkinObjectAccess['level'],
-    state: RootState,
+    tagListState: RemoteList<ZetkinTag>,
     apiClient: IApiClient,
     dispatch: AppDispatch,
     orgId: number
@@ -50,8 +50,7 @@ export default class PersonTagColumnType implements IColumnType {
     let tag: ZetkinTag | null = null;
 
     if (!accessLevel) {
-      const tagList = state.tags.tagList;
-      const tagItem = tagList.items.find((item) => item.id == tagId);
+      const tagItem = tagListState.items.find((item) => item.id == tagId);
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
         actionOnLoad: () => tagLoad(tagId),
@@ -117,21 +116,6 @@ export default class PersonTagColumnType implements IColumnType {
     viewGrid.toggleTag(personId, col.config.tag_id, !!data, data);
   }
 }
-
-const useStyles = makeStyles(() => ({
-  ghost: {
-    pointerEvents: 'none',
-  },
-  ghostContainer: {
-    '&:hover': {
-      opacity: 0.4,
-    },
-    cursor: 'pointer',
-    opacity: 0,
-    transition: 'opacity 0.1s',
-  },
-  valueTagEditCell: {},
-}));
 
 interface CellProps {
   cellValue: ZetkinAppliedTag | string | undefined;
@@ -241,13 +225,12 @@ const BasicTagCell: FC<{
   const { tagFuture } = useTag(orgId, tagId);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
 
-  const styles = useStyles({});
-
   const [isRestricted] = useAccessLevel();
 
   if (cell) {
     return (
-      <TagChip
+      <ZUITagChip
+        disabled={isRestricted}
         onDelete={() => {
           removeFromPerson(personId, tagId);
         }}
@@ -263,13 +246,24 @@ const BasicTagCell: FC<{
         <ZUIFuture future={tagFuture}>
           {(tag) => (
             <Box
-              className={styles.ghostContainer}
               onClick={() => {
                 assignToPerson(personId, tagId);
               }}
+              sx={{
+                '&:hover': {
+                  opacity: 0.4,
+                },
+                cursor: 'pointer',
+                opacity: 0,
+                transition: 'opacity 0.1s',
+              }}
             >
-              <Box className={styles.ghost}>
-                <TagChip tag={tag} />
+              <Box
+                sx={{
+                  pointerEvents: 'none',
+                }}
+              >
+                <ZUITagChip tag={tag} />
               </Box>
             </Box>
           )}

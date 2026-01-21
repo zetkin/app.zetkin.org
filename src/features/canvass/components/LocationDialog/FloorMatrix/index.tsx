@@ -14,6 +14,9 @@ import {
 import FloorEditor from './FloorEditor';
 import { EditedFloor } from './types';
 import AddFloorButton from './AddFloorButton';
+import useIsMobile from 'utils/hooks/useIsMobile';
+
+const naturalCmp = new Intl.Collator(undefined, { numeric: true }).compare;
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -39,6 +42,7 @@ const FloorMatrix: FC<Props> = ({
   selectedHouseholdIds,
 }) => {
   const households = useHouseholds(location.organization_id, location.id);
+  const isMobile = useIsMobile();
 
   const metrics = useAreaAssignmentMetrics(
     location.organization_id,
@@ -56,7 +60,7 @@ const FloorMatrix: FC<Props> = ({
     const floor1 = h1.level ?? Infinity;
 
     if (floor0 == floor1) {
-      return h0.title.localeCompare(h1.title);
+      return naturalCmp(h0.title, h1.title);
     }
 
     return floor0 - floor1;
@@ -93,7 +97,7 @@ const FloorMatrix: FC<Props> = ({
   const unlikelyToBeSingleFloorInRealLife = households.length > 8;
   const householdsLikelyCreatedWithoutFloors =
     hasOnlyLevelZero && unlikelyToBeSingleFloorInRealLife;
-  const shouldStartExpanded = householdsLikelyCreatedWithoutFloors;
+  const shouldStartExpanded = householdsLikelyCreatedWithoutFloors || !isMobile;
 
   return (
     <Box

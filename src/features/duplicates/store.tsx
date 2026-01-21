@@ -13,10 +13,12 @@ export interface PotentialDuplicate {
 }
 
 export interface PotentialDuplicatesStoreSlice {
+  detailedPersonsList: Record<string, RemoteList<ZetkinPerson>>;
   potentialDuplicatesList: RemoteList<PotentialDuplicate>;
 }
 
 const initialState: PotentialDuplicatesStoreSlice = {
+  detailedPersonsList: {},
   potentialDuplicatesList: remoteList(),
 };
 
@@ -24,6 +26,21 @@ const potentialDuplicatesSlice = createSlice({
   initialState,
   name: 'potentialDuplicates',
   reducers: {
+    detailedPersonsLoad: (state, action: PayloadAction<number[]>) => {
+      const ids = action.payload;
+      const key = ids.sort().join(',');
+      state.detailedPersonsList[key] = remoteList();
+      state.detailedPersonsList[key].isLoading = true;
+    },
+    detailedPersonsLoaded: (
+      state,
+      action: PayloadAction<[number[], ZetkinPerson[]]>
+    ) => {
+      const [ids, data] = action.payload;
+      const key = ids.sort().join(',');
+      state.detailedPersonsList[key] = remoteList(data);
+      state.detailedPersonsList[key].loaded = new Date().toISOString();
+    },
     duplicateMerged: (state, action: PayloadAction<number>) => {
       const mergedDuplicateId = action.payload;
       const potentialDuplicatesFiltered =
@@ -61,6 +78,8 @@ const potentialDuplicatesSlice = createSlice({
 
 export default potentialDuplicatesSlice;
 export const {
+  detailedPersonsLoad,
+  detailedPersonsLoaded,
   duplicateMerged,
   duplicateUpdated,
   potentialDuplicatesLoad,

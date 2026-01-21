@@ -9,8 +9,9 @@ import {
   Map as MapType,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Alert } from '@mui/material';
 
-import { Zetkin2Area } from 'features/areas/types';
+import { PointData, Zetkin2Area } from 'features/areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
@@ -22,14 +23,15 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import ClusterImageRenderer from './ClusterImageRenderer';
-
+import messageIds from '../../l10n/messageIds';
+import { Msg } from 'core/i18n';
+import useIsMobile from 'utils/hooks/useIsMobile';
 const BOUNDS_PADDING = 20;
 
 type Props = {
   assignment: ZetkinAreaAssignment;
   selectedArea: Zetkin2Area;
 };
-
 const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const env = useEnv();
   const locations = useLocations(
@@ -37,6 +39,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     assignment.id,
     selectedArea.id
   );
+  const isMobile = useIsMobile();
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const createLocation = useCreateLocation(assignment.organization_id);
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
@@ -49,6 +52,10 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
+  const [mapInitError, setMapInitError] = useState(false);
+  const [userLocation, setUserLocation] = useState<PointData | null>(null);
+  const [userAccuracy, setUserAccuracy] = useState<number | null>(null);
+  const [mapZoom, setMapZoom] = useState<number | null>(null);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -176,6 +183,36 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return Array.from(new Set(titles));
   }, [locations.data]);
 
+  const userLocationGeoJson: GeoJSON.FeatureCollection | null = useMemo(() => {
+    if (!userLocation) {
+      return null;
+    }
+
+    let accuracyPx = 18;
+
+    if (userAccuracy != null && mapZoom != null) {
+      const lat = userLocation[1];
+      const metersPerPixel =
+        (156543.03392 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, mapZoom);
+
+      accuracyPx = userAccuracy / metersPerPixel;
+    }
+
+    return {
+      features: [
+        {
+          geometry: {
+            coordinates: userLocation,
+            type: 'Point',
+          },
+          properties: { accuracyPx },
+          type: 'Feature',
+        },
+      ],
+      type: 'FeatureCollection',
+    };
+  }, [userLocation, userAccuracy, mapZoom]);
+
   const saveBounds = () => {
     const bounds = map?.getBounds();
 
@@ -185,6 +222,15 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         [bounds.getEast(), bounds.getNorth()],
       ]);
     }
+  };
+
+  const onPositionChange = (lngLat: PointData, accuracy: number | null) => {
+    setUserLocation(lngLat);
+    setUserAccuracy(accuracy);
+  };
+
+  const onGeoLocate = (lngLat: PointData) => {
+    map?.panTo(lngLat, { animate: true });
   };
 
   const updateSelection = useCallback(() => {
@@ -227,7 +273,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           setSelectedLocationId(null);
         }
       }
-    } catch (err) {
+    } catch {
       // Do nothing for now
     }
   }, [map, selectedLocationId, locations]);
@@ -242,6 +288,15 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return null;
   }
 
+  if (mapInitError) {
+    return (
+      <Box data-testid="map-error" role="alert">
+        <Alert severity="error">
+          <Msg id={messageIds.map.initializationError} />
+        </Alert>
+      </Box>
+    );
+  }
   return (
     <>
       <Box sx={{ position: 'relative' }}>
@@ -255,9 +310,8 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               });
             }
           }}
-          onGeolocate={(lngLat) => {
-            map?.panTo(lngLat, { animate: true, duration: 800 });
-          }}
+          onGeolocate={onGeoLocate}
+          onPositionChange={onPositionChange}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
         />
@@ -267,7 +321,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             left: '50%',
             opacity: !selectedLocationId ? 1 : 0.3,
             position: 'absolute',
-            top: 'calc(50vh - 40px)',
+            top: isMobile ? 'calc(50vh - 57px)' : 'calc(50vh - 37px)',
             transform: 'translate(-50%, -50%)',
             transition: 'opacity 0.1s',
             zIndex: 1200,
@@ -312,6 +366,9 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}
+        onError={() => {
+          setMapInitError(true);
+        }}
         onLoad={(ev) => {
           const map = ev.target;
           const percentages = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
@@ -347,8 +404,12 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               );
             });
           });
+          setMapZoom(map.getZoom());
         }}
-        onMove={() => updateSelection()}
+        onMove={(ev) => {
+          updateSelection();
+          setMapZoom(ev.target.getZoom());
+        }}
         onMoveEnd={() => saveBounds()}
         RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         style={{ height: '100%', width: '100%' }}
@@ -438,6 +499,29 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             type="symbol"
           />
         </Source>
+        {userLocationGeoJson && (
+          <Source data={userLocationGeoJson} id="userLocation" type="geojson">
+            <Layer
+              id="userLocationHalo"
+              paint={{
+                'circle-color': oldTheme.palette.primary.main,
+                'circle-opacity': 0.15,
+                'circle-radius': ['coalesce', ['get', 'accuracyPx'], 18],
+              }}
+              type="circle"
+            />
+            <Layer
+              id="userLocationDot"
+              paint={{
+                'circle-color': oldTheme.palette.primary.main,
+                'circle-radius': 6,
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 2,
+              }}
+              type="circle"
+            />
+          </Source>
+        )}
       </Map>
       <CanvassMapOverlays
         assignment={assignment}

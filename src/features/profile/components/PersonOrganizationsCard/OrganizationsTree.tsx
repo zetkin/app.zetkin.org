@@ -13,7 +13,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 
 import globalMessageIds from 'core/i18n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -27,18 +26,6 @@ type OrganizationProps = {
   organizationTree: PersonOrganization;
 };
 
-const useStyles = makeStyles({
-  divider: {
-    marginLeft: 72,
-  },
-  inactive: {
-    opacity: 0.3,
-  },
-  listItemText: {
-    marginLeft: ({ level }: { level: number }) => level * 10,
-  },
-});
-
 export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
   editable,
   level = 0,
@@ -49,7 +36,6 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const hasChildren = !!sub_orgs?.length;
-  const classes = useStyles({ level });
   const getIcon = () => {
     if (level === 0) {
       return <AccountTree />;
@@ -64,14 +50,20 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
 
   return (
     <Collapse appear in>
-      <ListItem className={is_active ? undefined : classes.inactive}>
+      <ListItem
+        sx={{
+          opacity: is_active ? undefined : 0.3,
+        }}
+      >
         <ListItemIcon>{getIcon()}</ListItemIcon>
         <ListItemText
-          className={classes.listItemText}
           primary={title}
           secondary={
             role ? globalMessages.roles[role]() : messages.role.noRole()
           }
+          sx={{
+            marginLeft: `${level * 10}px`,
+          }}
         />
         <ListItemSecondaryAction>
           <IconButton edge="end" onClick={() => onClickRemove(id)} size="large">
@@ -79,7 +71,11 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
-      <Divider className={classes.divider} />
+      <Divider
+        sx={{
+          marginLeft: '72px',
+        }}
+      />
       {hasChildren &&
         sub_orgs.map((org) => (
           <OrganizationsTree

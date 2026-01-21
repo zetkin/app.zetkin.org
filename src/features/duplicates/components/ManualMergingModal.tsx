@@ -16,7 +16,7 @@ const ManualMergingModal: FC<Props> = ({ initialPersons, open, onClose }) => {
   const { orgId } = useNumericRouteParams();
   const mergePersons = useMergePersons(orgId);
 
-  return (
+  return open ? (
     <MergeModal
       initiallyShowManualSearch
       onClose={onClose}
@@ -27,7 +27,7 @@ const ManualMergingModal: FC<Props> = ({ initialPersons, open, onClose }) => {
       open={open}
       persons={initialPersons}
     />
-  );
+  ) : null;
 };
 
 export default ManualMergingModal;

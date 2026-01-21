@@ -99,7 +99,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
       return a.title.localeCompare(b.title);
     });
     return sorted;
-  }, [locations?.length]);
+  }, [locations]);
 
   const options: (
     | ZetkinLocation
@@ -110,6 +110,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
   const events = useParallelEvents(orgId, data.start_time, data.end_time);
+
+  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -316,7 +318,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
             <Box display="flex" flex={1} flexDirection="column" gap={2}>
               <ZUIPreviewableInput
                 {...previewableProps}
-                renderInput={() => {
+                renderInput={(renderParams) => {
                   return (
                     <Box alignItems="center" display="flex">
                       <Autocomplete
@@ -346,11 +348,22 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           }
                           setLocationId(location.id);
                         }}
+                        onClose={() => setLocationDropdownOpen(false)}
+                        onOpen={() => setLocationDropdownOpen(true)}
+                        open={locationDropdownOpen}
                         options={options}
                         renderInput={(params) => (
                           <TextField
                             {...params}
+                            inputRef={renderParams.ref}
                             label={messages.eventOverviewCard.location()}
+                            onFocus={(e) => {
+                              setLocationDropdownOpen(true);
+                              const target = e.currentTarget;
+                              setTimeout(() => {
+                                target?.select();
+                              }, 0);
+                            }}
                             sx={{
                               backgroundColor: 'white',
                               borderRadius: '5px',
@@ -441,9 +454,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 renderInput={(props) => (
                   <TextField
                     fullWidth
-                    inputProps={props}
                     label={messages.eventOverviewCard.url()}
                     onChange={(ev) => setLink(ev.target.value)}
+                    slotProps={{ htmlInput: { props } }}
                     value={link}
                   />
                 )}
@@ -488,11 +501,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
               renderInput={(props) => (
                 <TextField
                   fullWidth
-                  inputProps={props}
                   label={messages.eventOverviewCard.description()}
                   multiline
                   onChange={(ev) => setInfoText(ev.target.value)}
                   rows={4}
+                  slotProps={{ htmlInput: props }}
                   value={infoText}
                 />
               )}
