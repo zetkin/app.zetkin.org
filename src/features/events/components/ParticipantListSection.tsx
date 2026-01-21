@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import filterParticipants from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
@@ -101,7 +101,7 @@ interface ParticipantListSectionListProps {
   description: string;
   filterString: string;
   eventId: number;
-  headerActions?: React.ReactNode;
+  headerActions?: ReactNode;
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
   title: string;
