@@ -119,7 +119,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
       onChange={(event) => {
         clearConfiguration();
 
-        if (event.target.value == '') {
+        if (!event.target.value) {
           onChange({
             kind: ColumnKind.UNKNOWN,
             selected: false,
@@ -237,7 +237,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
           <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.fields} />
         </ListSubheader>
       )}
-      {fieldOptionsSorted.map((option) => listOption(option))}
+      {fieldOptionsSorted.map(listOption)}
 
       <ListSubheader>
         <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.other} />
