@@ -1,5 +1,6 @@
 import { Box, Button, Chip, MenuItem, Typography } from '@mui/material';
 import { FormEvent, useState } from 'react';
+import Fuse from 'fuse.js';
 
 import FilterForm from '../../FilterForm';
 import StyledItemSelect from 'features/smartSearch/components/inputs/StyledItemSelect';
@@ -139,6 +140,11 @@ const PersonTags = ({
     sortedGroupedSelectedTags.push(...group.tags);
   });
 
+  const fuse = new Fuse(tags, {
+    keys: ['title', 'group.title'],
+    threshold: 0.4,
+  });
+
   return (
     <FilterForm
       disableSubmit={!submittable}
@@ -224,16 +230,9 @@ const PersonTags = ({
                       const lowerCaseSearchPhrase =
                         state.inputValue.toLowerCase();
 
-                      const matchingTags = tags.filter((tag) => {
-                        return (
-                          tag.title
-                            .toLowerCase()
-                            .includes(lowerCaseSearchPhrase) ||
-                          tag.group?.title
-                            .toLowerCase()
-                            .includes(lowerCaseSearchPhrase)
-                        );
-                      });
+                      const matchingTags = fuse
+                        .search(lowerCaseSearchPhrase)
+                        .map((fuseResult) => fuseResult.item);
 
                       return matchingTags;
                     }}
