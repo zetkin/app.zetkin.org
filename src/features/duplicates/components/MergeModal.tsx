@@ -1,6 +1,4 @@
 import {
-  Alert,
-  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -15,9 +13,12 @@ import oldTheme from 'theme';
 import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
 import PotentialDuplicatesLists from './PotentialDuplicatesLists';
-import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { useNumericRouteParams } from 'core/hooks';
+import useDetailedPersons from '../hooks/useDetailedPerson';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
+import ZUIFutures from 'zui/ZUIFutures';
 
 type Props = {
   initiallyShowManualSearch?: boolean;
@@ -39,21 +40,29 @@ const MergeModal: FC<Props> = ({
   const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
-    persons.map((person) => person.id) ?? []
+    persons.map((person) => person.id)
   );
+
+  const { orgId } = useNumericRouteParams();
+  const customFields = useCustomFields(orgId);
 
   const peopleToMerge = [
     ...persons.filter((person) => selectedIds.includes(person.id)),
     ...additionalPeople,
   ];
 
+  const detailedPersons = useDetailedPersons(
+    orgId,
+    peopleToMerge.map((person) => person.id)
+  );
+
   const peopleNotToMerge = persons.filter(
     (person) => !selectedIds.includes(person.id)
   );
 
-  const { hasConflictingValues, fieldValues, initialOverrides } =
-    useFieldSettings(peopleToMerge);
-  const [overrides, setOverrides] = useState(initialOverrides);
+  const [overrides, setOverrides] = useState<Partial<ZetkinPerson> | null>(
+    null
+  );
 
   useEffect(() => {
     setSelectedIds(persons.map((person) => person.id) ?? []);
@@ -107,20 +116,20 @@ const MergeModal: FC<Props> = ({
           sx={{ overflowY: 'auto' }}
           width="50%"
         >
-          <FieldSettings
-            duplicates={peopleToMerge}
-            fieldValues={fieldValues}
-            onChange={(field, value) => {
-              setOverrides({ ...overrides, [`${field}`]: value });
-            }}
-          />
-          <Box marginBottom={2} />
-          {hasConflictingValues && (
-            <Alert severity="warning">
-              <AlertTitle>{messages.modal.warningTitle()}</AlertTitle>
-              {messages.modal.warningMessage()}
-            </Alert>
-          )}
+          <ZUIFutures futures={{ customFields, detailedPersons }}>
+            {({ data: { customFields, detailedPersons } }) => (
+              <FieldSettings
+                customFields={customFields}
+                duplicates={detailedPersons}
+                onChange={(field, value) => {
+                  if (overrides) {
+                    setOverrides({ ...overrides, [`${field}`]: value });
+                  }
+                }}
+                setOverrides={setOverrides}
+              />
+            )}
+          </ZUIFutures>
         </Box>
       </Box>
       <DialogActions sx={{ p: 2 }}>
@@ -135,9 +144,15 @@ const MergeModal: FC<Props> = ({
         </Button>
         <Button
           disabled={
-            additionalPeople.length + selectedIds.length > 1 ? false : true
+            !overrides || additionalPeople.length + selectedIds.length <= 1
           }
           onClick={() => {
+            if (!overrides) {
+              // This should never happen, because we disable the button above when `overrides` is falsy
+              throw new Error(
+                'Operation not allowed. Merge data not available'
+              );
+            }
             const idSet = new Set([
               ...selectedIds,
               ...additionalPeople.map((person) => person.id),

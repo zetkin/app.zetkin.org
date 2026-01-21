@@ -1,9 +1,15 @@
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import sortValuesByFrequency from '../utils/sortValuesByFrequency';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import sortValuesByFrequency from './sortValuesByFrequency';
+import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 
-export default function useFieldSettings(duplicates: ZetkinPerson[]) {
-  const sortedNativePersonFields: NATIVE_PERSON_FIELDS[] = [
+export default function getFieldSettings({
+  duplicates,
+  customFields,
+}: {
+  customFields: ZetkinCustomField[];
+  duplicates: ZetkinPerson[];
+}) {
+  const sortedPersonFields: string[] = [
     NATIVE_PERSON_FIELDS.FIRST_NAME,
     NATIVE_PERSON_FIELDS.LAST_NAME,
     NATIVE_PERSON_FIELDS.EMAIL,
@@ -16,11 +22,12 @@ export default function useFieldSettings(duplicates: ZetkinPerson[]) {
     NATIVE_PERSON_FIELDS.CITY,
     NATIVE_PERSON_FIELDS.COUNTRY,
     NATIVE_PERSON_FIELDS.EXT_ID,
+    ...customFields.map((item) => item.slug),
   ];
 
   const fieldValues: Record<string, string[]> = {};
 
-  sortedNativePersonFields.forEach((field) => {
+  sortedPersonFields.forEach((field) => {
     const values = duplicates.map((person) => {
       const value = person[field];
       return value ? value.toString() : '';

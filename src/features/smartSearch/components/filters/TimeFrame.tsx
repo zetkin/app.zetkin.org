@@ -154,8 +154,8 @@ const TimeFrame = ({
             days: numDays,
             daysInput: (
               <StyledNumberInput
-                inputProps={{ min: '1' }}
                 onChange={(e) => setNumDays(+e.target.value)}
+                slotProps={{ htmlInput: { min: '1' } }}
                 value={numDays}
               />
             ),

@@ -31,7 +31,7 @@ export default makeMessages('feat.duplicates', {
     },
     title: m('Merge duplicates'),
     warningMessage: m(
-      'All data related to any of the person records will transfer to the merged person. This includes event participation, survey submissions, tags etc. But the values you discard in the fields above will be lost.'
+      'All data related to any of the person records will transfer to the merged person. This includes event participation, survey submissions, tags etc. But the values you discard in the fields below will be lost.'
     ),
     warningTitle: m('Risk of data loss'),
   },

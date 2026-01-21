@@ -86,10 +86,6 @@ const TagSelect: FC<TagSelectProps> = ({
         <TextField
           autoFocus
           fullWidth
-          inputProps={{
-            ...getInputProps(),
-            'data-testid': 'TagManager-TagSelect-searchField',
-          }}
           onChange={(ev) => setInputValue(ev.target.value)}
           onKeyUp={(ev) => {
             if (ev.key == 'Enter') {
@@ -111,6 +107,12 @@ const TagSelect: FC<TagSelectProps> = ({
               ? messages.manager.addValue({ tag: selectedValueTag.title })
               : messages.manager.addTag()
           }
+          slotProps={{
+            htmlInput: {
+              ...getInputProps(),
+              'data-testid': 'TagManager-TagSelect-searchField',
+            },
+          }}
           variant="outlined"
         />
         {selectedValueTag ? (

@@ -64,7 +64,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
       </Head>
       <Grid container spacing={2}>
         <Grid size={{ md: isShared ? 12 : 8, sm: 12, xs: 12 }}>
-          <ZUIFuture future={submissionsFuture} ignoreDataWhileLoading>
+          <ZUIFuture future={submissionsFuture}>
             {(data) => {
               let submissions = data;
               if (showUnlinkedOnly) {
