@@ -4,6 +4,7 @@ import { Add, Remove, Home } from '@mui/icons-material';
 
 import { Latitude, Longitude, PointData } from 'features/areas/types';
 import { AnimatedGpsFixed } from 'zui/icons/AnimatedGpsFixed';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   onFitBounds: () => void;
@@ -31,10 +32,7 @@ const ZUIMapControls: React.FC<Props> = ({
 
   useEffect(() => {
     return () => {
-      if (
-        geolocationWatchIdRef.current !== null &&
-        geolocationWatchIdRef.current !== undefined
-      ) {
+      if (notEmpty(geolocationWatchIdRef.current)) {
         navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
         geolocationWatchIdRef.current = null;
       }
@@ -92,11 +90,7 @@ const ZUIMapControls: React.FC<Props> = ({
     const latestPosition = latestPositionRef.current;
     const latestAccuracy = latestAccuracyRef.current ?? null;
 
-    if (
-      latestPosition &&
-      geolocationWatchIdRef.current !== null &&
-      geolocationWatchIdRef.current !== undefined
-    ) {
+    if (latestPosition && notEmpty(geolocationWatchIdRef.current)) {
       onGeolocate(latestPosition, latestAccuracy);
       return;
     }
@@ -112,10 +106,7 @@ const ZUIMapControls: React.FC<Props> = ({
       },
       () => {
         setIsAwaitingInitialPosition(false);
-        if (
-          geolocationWatchIdRef.current !== null &&
-          geolocationWatchIdRef.current !== undefined
-        ) {
+        if (notEmpty(geolocationWatchIdRef.current)) {
           navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
           geolocationWatchIdRef.current = null;
         }

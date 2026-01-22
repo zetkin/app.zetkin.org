@@ -5,6 +5,7 @@ import { Box, useTheme } from '@mui/system';
 
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 interface ZUITimezonePickerProps {
   onChange: (value: string) => void;
@@ -66,7 +67,7 @@ const ZUITimezonePicker = ({
       getOptionLabel={(option) => option.tzValue}
       isOptionEqualToValue={(option, value) => option.tzValue === value.tzValue}
       onChange={(_, tzGroup) => {
-        if (tzGroup !== null && tzGroup !== undefined) {
+        if (notEmpty(tzGroup)) {
           setValue(tzGroup);
           onChange(tzGroup.tzValue.split(' ')[0]);
         }

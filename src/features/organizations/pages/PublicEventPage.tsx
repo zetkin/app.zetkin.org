@@ -37,6 +37,7 @@ import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
 import useUserMemberships from 'features/home/hooks/useUserMemberships';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   eventId: number;
@@ -85,8 +86,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   );
 
   const isLoggedInAsContactPerson =
-    contactPerson !== undefined &&
-    contactPerson?.id === orgMembership?.profile.id;
+    notEmpty(contactPerson) && contactPerson?.id === orgMembership?.profile.id;
 
   const showContactDetails =
     !event?.cancelled && event?.status === 'booked' && !!contactPerson;

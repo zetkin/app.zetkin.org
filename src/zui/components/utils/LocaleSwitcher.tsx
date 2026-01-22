@@ -9,6 +9,7 @@ import 'dayjs/locale/nn';
 import 'dayjs/locale/sv';
 
 import { SUPPORTED_LANGUAGES, SupportedLanguage } from 'core/i18n/languages';
+import notEmpty from 'utils/notEmpty';
 
 const LocaleSwitcher: FC<PropsWithChildren> = ({ children }) => {
   const locales = SUPPORTED_LANGUAGES;
@@ -37,7 +38,7 @@ const LocaleSwitcher: FC<PropsWithChildren> = ({ children }) => {
           exclusive
           fullWidth
           onChange={(event, newLocale) => {
-            if (newLocale !== null && newLocale !== undefined) {
+            if (notEmpty(newLocale)) {
               setLocale(newLocale);
             }
           }}

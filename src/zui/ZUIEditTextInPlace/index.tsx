@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;
@@ -111,7 +112,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   };
 
   const setBorderOnTypeEdit = () => {
-    if (onFocus !== undefined) {
+    if (notEmpty(onFocus)) {
       onFocus();
     }
   };

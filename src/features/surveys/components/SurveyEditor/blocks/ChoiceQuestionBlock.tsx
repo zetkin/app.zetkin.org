@@ -29,6 +29,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 interface ChoiceQuestionBlockProps {
   editable: boolean;
@@ -97,10 +98,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     if (options) {
       // If the previous length is null, it's because it only now loaded for the
       // first time and the length has not really been read before.
-      if (
-        lengthRef.current !== undefined &&
-        lengthRef.current < options.length
-      ) {
+      if (notEmpty(lengthRef.current) && lengthRef.current < options.length) {
         const lastOption = options[options.length - 1];
         if (lastOption.text === '') {
           // Only focus the last added option if it's empty, i.e. if it was

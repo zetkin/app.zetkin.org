@@ -5,6 +5,7 @@ import useMessages from 'core/i18n/useMessages';
 import messageIds from '../l10n/messageIds';
 import useEvent from '../hooks/useEvent';
 import ZUIURLCard from 'zui/components/ZUIURLCard';
+import notEmpty from 'utils/notEmpty';
 
 interface EventURLCardProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ const EventURLCard = ({
   const messages = useMessages(messageIds);
   const eventUrl = useMemo(
     () =>
-      event !== null && event !== undefined && event.data
+      notEmpty(event) && event.data
         ? `${location.protocol}//${location.host}/o/${event.data.organization.id}/events/${eventId}`
         : '',
     [event?.data, eventId]

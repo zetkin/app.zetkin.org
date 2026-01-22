@@ -16,6 +16,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
+import notEmpty from 'utils/notEmpty';
 
 interface EmailActionButtonsProp {
   email: ZetkinEmail;
@@ -61,8 +62,7 @@ const EmailActionButtons = ({
       {state === EmailState.DRAFT && <DeliveryButton email={email} />}
       {email.published &&
         state === EmailState.SENT &&
-        email.processed !== null &&
-        email.processed !== undefined && (
+        notEmpty(email.processed) && (
           <Box alignItems="center" display="flex">
             <Send color="secondary" sx={{ mr: 1 }} />
             <Typography color="secondary">

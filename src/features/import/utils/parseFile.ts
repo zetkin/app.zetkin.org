@@ -70,7 +70,7 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
       });
       workbook.SheetNames.forEach((name) => {
         const sheet = workbook.Sheets[name];
-        if ('!ref' in sheet && sheet['!ref'] !== undefined) {
+        if ('!ref' in sheet && notEmpty(sheet['!ref'])) {
           const range = XLSX.utils.decode_range(sheet['!ref']);
 
           const table: ExcelTable = {

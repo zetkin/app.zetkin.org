@@ -3,6 +3,7 @@ import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import { Column, ColumnKind } from '../utils/types';
+import notEmpty from 'utils/notEmpty';
 
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
@@ -58,8 +59,8 @@ export default function useUIDataColumn(
 
   const valueInFirstRow = cellValues[0];
   const title =
-    firstRowIsHeaders && valueInFirstRow !== null
-      ? valueInFirstRow?.toString() ?? ''
+    firstRowIsHeaders && notEmpty(valueInFirstRow)
+      ? valueInFirstRow.toString() ?? ''
       : messages.configuration.mapping.defaultColumnHeader({
           columnIndex: columnIndex + 1,
         });

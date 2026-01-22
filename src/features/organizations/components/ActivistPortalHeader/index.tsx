@@ -14,6 +14,7 @@ import { useMessages } from 'core/i18n';
 import ZUIMenu, { MenuItem } from 'zui/components/ZUIMenu';
 import ZUIButton from 'zui/components/ZUIButton';
 import useMemberships from 'features/organizations/hooks/useMemberships';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   button?: JSX.Element;
@@ -65,7 +66,9 @@ const ActivistPortalHeader: FC<Props> = ({
   );
 
   const memberships = useMemberships().data || [];
-  const isOfficial = memberships.find((membership) => membership.role !== null);
+  const isOfficial = memberships.find((membership) =>
+    notEmpty(membership.role)
+  );
 
   return (
     <Box

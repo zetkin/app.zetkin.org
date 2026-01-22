@@ -101,7 +101,7 @@ const emailsSlice = createSlice({
       //Only set stats as stale if query or locked state has updated
       if (
         (statsItem && email.locked !== item?.data?.locked) ||
-        JSON.stringify(email.target.filter_spec) !=
+        JSON.stringify(email.target.filter_spec) !==
           JSON.stringify(item?.data?.target.filter_spec)
       ) {
         statsItem.isStale = true;

@@ -14,6 +14,7 @@ import useMemberships from 'features/organizations/hooks/useMemberships';
 import messageIds from '../l10n/messageIds';
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import ZUIText from 'zui/components/ZUIText';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   children: ReactNode;
@@ -44,8 +45,8 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
   const messages = useMessages(messageIds);
   const user = useUser();
   const memberships = useMemberships().data || [];
-  const isOfficial = memberships.find(
-    (membership) => membership.role !== null && membership.role !== undefined
+  const isOfficial = memberships.find((membership) =>
+    notEmpty(membership.role)
   );
 
   const path = usePathname();

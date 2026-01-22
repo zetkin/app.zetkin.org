@@ -19,6 +19,7 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats';
+import notEmpty from 'utils/notEmpty';
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
@@ -67,7 +68,7 @@ const surveysSlice = createSlice({
       }
       const submissionsUpdated = state.submissionList.items
         .map((item) => item.data)
-        .filter((data): data is ZetkinSurveySubmission => data !== null);
+        .filter((data): data is ZetkinSurveySubmission => notEmpty(data));
 
       addSubmissionToState(state, submissionsUpdated);
     }),

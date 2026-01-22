@@ -65,7 +65,7 @@ export default class PersonTagColumnType implements IColumnType {
 
     return {
       align: 'center',
-      editable: !accessLevel && tag?.value_type !== null,
+      editable: !accessLevel && notEmpty(tag?.value_type),
       headerAlign: 'center',
       renderCell: (
         params: GridRenderCellParams<ZetkinViewRow, ZetkinAppliedTag>

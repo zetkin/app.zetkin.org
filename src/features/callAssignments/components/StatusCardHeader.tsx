@@ -1,6 +1,6 @@
 import { Box, Divider, Theme, Typography, useTheme } from '@mui/material';
-import notEmpty from 'utils/notEmpty';
 
+import notEmpty from 'utils/notEmpty';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUINumberChip from 'zui/ZUINumberChip';
 

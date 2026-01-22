@@ -26,6 +26,7 @@ import ClusterImageRenderer from './ClusterImageRenderer';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import notEmpty from 'utils/notEmpty';
 const BOUNDS_PADDING = 20;
 
 type Props = {
@@ -190,12 +191,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
 
     let accuracyPx = 18;
 
-    if (
-      userAccuracy !== null &&
-      userAccuracy !== undefined &&
-      mapZoom !== null &&
-      mapZoom !== undefined
-    ) {
+    if (notEmpty(userAccuracy) && notEmpty(mapZoom)) {
       const lat = userLocation[1];
       const metersPerPixel =
         (156543.03392 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, mapZoom);

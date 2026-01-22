@@ -17,6 +17,7 @@ import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useDateConfig from 'features/import/hooks/useDateConfig';
 import useDebounce from 'utils/hooks/useDebounce';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 interface DateConfigProps {
   uiDataColumn: UIDataColumn<DateColumn>;
@@ -116,7 +117,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           </MenuItem>
         </Select>
       </FormControl>
-      {dateFormat !== null && !isPersonNumberFormat(dateFormat) && (
+      {notEmpty(dateFormat) && !isPersonNumberFormat(dateFormat) && (
         <TextField
           label={messages.configuration.configure.dates.dateInputLabel()}
           onChange={(event) => {

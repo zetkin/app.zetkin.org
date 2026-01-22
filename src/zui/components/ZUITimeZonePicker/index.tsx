@@ -11,6 +11,7 @@ import {
 
 import messageIds from 'zui/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 type ZUITimezonePickerProps = {
   /**
@@ -85,7 +86,7 @@ const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
         </Typography>
       }
       onChange={(_, tzGroup) => {
-        if (tzGroup !== null && tzGroup !== undefined) {
+        if (notEmpty(tzGroup)) {
           setValue(tzGroup);
           onChange(tzGroup.tzValue.split(' ')[0]);
         }

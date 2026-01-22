@@ -12,6 +12,7 @@ import UnderlinedText from '../../UnderlinedText';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
+import notEmpty from 'utils/notEmpty';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -58,7 +59,7 @@ const DisplayPersonField = ({
   } else if (
     fieldType === CUSTOM_FIELD_TYPE.ENUM &&
     field?.enum_choices &&
-    search !== undefined
+    notEmpty(search)
   ) {
     fieldMessage = (
       <Msg

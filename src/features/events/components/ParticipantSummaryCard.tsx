@@ -20,6 +20,7 @@ import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
 import RemindAllButton from './RemindAllButton';
+import notEmpty from 'utils/notEmpty';
 
 type ParticipantSummaryCardProps = {
   eventId: number;
@@ -98,8 +99,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                 onClickAway={() => {
                   setAnchorEl(null);
                   if (
-                    newReqParticipants !== null &&
-                    newReqParticipants !== undefined &&
+                    notEmpty(newReqParticipants) &&
                     newReqParticipants !== reqParticipants
                   ) {
                     setReqParticipants(newReqParticipants);
@@ -127,10 +127,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                       onKeyDown={(ev) => {
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
-                          if (
-                            newReqParticipants !== null &&
-                            newReqParticipants !== undefined
-                          ) {
+                          if (notEmpty(newReqParticipants)) {
                             setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {

@@ -269,8 +269,8 @@ const SurveySubmissionsList = ({
         const personHasNoEmail = person.email === null || person.email === '';
         const personHasDifferentEmail = person.email !== respondentEmail;
         if (
-          (personHasNoEmail && respondentEmail !== undefined) ||
-          (personHasDifferentEmail && respondentEmail !== undefined)
+          (personHasNoEmail && notEmpty(respondentEmail)) ||
+          (personHasDifferentEmail && notEmpty(respondentEmail))
         ) {
           setDialogEmail(respondentEmail);
           setDialogPerson(person);

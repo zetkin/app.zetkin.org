@@ -40,6 +40,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import notEmpty from 'utils/notEmpty';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -71,12 +72,8 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     state === EventState.CANCELLED;
 
   const numRemindedParticipants =
-    participants.filter(
-      (p) =>
-        p.reminder_sent !== null &&
-        p.reminder_sent !== undefined &&
-        !p.cancelled
-    ).length ?? 0;
+    participants.filter((p) => notEmpty(p.reminder_sent) && !p.cancelled)
+      .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);
   const signedParticipants = respondents.filter(

@@ -157,7 +157,7 @@ const SurveyResponseConfig = ({
                       evt.target.value,
                       surveyId
                     );
-                    if (columns !== undefined) {
+                    if (notEmpty(columns)) {
                       onOutputConfigured(columns);
                     }
                   }

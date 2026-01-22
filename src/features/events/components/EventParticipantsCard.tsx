@@ -24,6 +24,7 @@ import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import notEmpty from 'utils/notEmpty';
 
 type EventParticipantsCardProps = {
   eventId: number;
@@ -45,12 +46,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   const messages = useMessages(messageIds);
 
   const remindedParticipants =
-    participants.filter(
-      (p) =>
-        p.reminder_sent !== null &&
-        p.reminder_sent !== undefined &&
-        !p.cancelled
-    ).length ?? 0;
+    participants.filter((p) => notEmpty(p.reminder_sent) && !p.cancelled)
+      .length ?? 0;
 
   const availParticipants = event?.num_participants_available ?? 0;
   const reqParticipants = event?.num_participants_required ?? 0;
@@ -95,8 +92,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                 onClickAway={() => {
                   setAnchorEl(null);
                   if (
-                    newReqParticipants !== null &&
-                    newReqParticipants !== undefined &&
+                    notEmpty(newReqParticipants) &&
                     newReqParticipants !== reqParticipants
                   ) {
                     setReqParticipants(newReqParticipants);
@@ -124,10 +120,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                       onKeyDown={(ev) => {
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
-                          if (
-                            newReqParticipants !== null &&
-                            newReqParticipants !== undefined
-                          ) {
+                          if (notEmpty(newReqParticipants)) {
                             setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {
