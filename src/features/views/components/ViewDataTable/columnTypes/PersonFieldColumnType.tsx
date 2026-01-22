@@ -1,15 +1,14 @@
-import { FC } from 'react';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { Link } from '@mui/material';
 
-import messageIds from 'features/duplicates/l10n/messageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import { IColumnType } from '.';
+import { Msg } from 'core/i18n';
 import {
   NATIVE_PERSON_FIELDS,
   PersonFieldViewColumn,
   ZetkinViewColumn,
 } from '../../types';
-import { useMessages } from 'core/i18n';
 
 type SimpleData = string | number | boolean | null;
 
@@ -35,9 +34,26 @@ export default class PersonFieldColumnType
       renderCell: (params) => {
         const cell = params.row[params.field];
         const value = getValue(cell, column);
-        {
-          return <CellContent fieldType={column.config.field} value={value} />;
+
+        if (column.config.field == NATIVE_PERSON_FIELDS.EMAIL) {
+          return <Link href={`mailto:${value}`}>{value}</Link>;
         }
+
+        if (column.config.field == NATIVE_PERSON_FIELDS.GENDER) {
+          if (value == 'm' || value == 'f' || value == 'o') {
+            return <Msg id={globalMessageIds.genderOptions[value]} />;
+          }
+          return <Msg id={globalMessageIds.genderOptions.unspecified} />;
+        }
+
+        if (
+          column.config.field == NATIVE_PERSON_FIELDS.PHONE ||
+          column.config.field == NATIVE_PERSON_FIELDS.ALT_PHONE
+        ) {
+          return <Link href={`tel:${value}`}>{value}</Link>;
+        }
+
+        return <div>{value}</div>;
       },
       valueGetter: (params) => {
         const cell = params.row[params.field];
@@ -53,35 +69,3 @@ export default class PersonFieldColumnType
     return [getValue(cell, column)];
   }
 }
-
-const CellContent: FC<{ fieldType: string; value: string }> = ({
-  fieldType,
-  value,
-}) => {
-  const messages = useMessages(messageIds);
-
-  if (fieldType == NATIVE_PERSON_FIELDS.GENDER) {
-    let genderString = '';
-    if (value === 'f') {
-      genderString = messages.modal.fieldSettings.gender.f();
-    } else if (value === 'm') {
-      genderString = messages.modal.fieldSettings.gender.m();
-    } else if (value === 'o') {
-      genderString = messages.modal.fieldSettings.gender.o();
-    }
-    return <div>{genderString}</div>;
-  }
-
-  if (fieldType == NATIVE_PERSON_FIELDS.EMAIL) {
-    return <Link href={`mailto:${value}`}>{value}</Link>;
-  }
-
-  if (
-    fieldType == NATIVE_PERSON_FIELDS.PHONE ||
-    fieldType == NATIVE_PERSON_FIELDS.ALT_PHONE
-  ) {
-    return <Link href={`tel:${value}`}>{value}</Link>;
-  }
-
-  return <div>{value}</div>;
-};
