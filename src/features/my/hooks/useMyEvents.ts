@@ -1,8 +1,8 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
 import useRemoteList from 'core/hooks/useRemoteList';
-import { userEventsLoad, userEventsLoaded } from '../store';
+import { userEventsLoad, userEventsLoaded } from '../../events/store';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { ZetkinEventWithStatus } from 'features/activistPortal/types';
+import { ZetkinEventWithStatus } from 'features/public/types';
 
 export default function useMyEvents() {
   const apiClient = useApiClient();

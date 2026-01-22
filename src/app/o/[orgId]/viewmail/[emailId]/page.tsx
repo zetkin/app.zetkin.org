@@ -5,7 +5,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';
 import messageIds from 'features/emails/l10n/messageIds';
-import PublicEmailPage from 'features/activistPortal/pages/PublicEmailPage';
+import PublicEmailPage from 'features/public/pages/PublicEmailPage';
 import renderEmailHtml from 'features/emails/utils/rendering/renderEmailHtml';
 import { ZetkinEmail } from 'utils/types/zetkin';
 

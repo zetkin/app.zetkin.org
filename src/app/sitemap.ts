@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .get<ZetkinOrganization[]>(`/api/orgs`)
     .catch(() => [] as ZetkinOrganization[]);
 
-  const staticPages = ['', '/my/home', '/my/feed', '/my/settings'].map(
+  const staticPages = ['', '/my/my', '/my/feed', '/my/settings'].map(
     (path) => ({
       lastModified: new Date(),
       url: `${baseUrl}${path}`,

@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
 
-import ActivistPortalHeader from 'features/activistPortal/components/ActivistPortalHeader';
+import ActivistPortalHeader from 'features/public/components/ActivistPortalHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';

@@ -22,8 +22,8 @@ import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
-import { ZetkinEventWithStatus } from 'features/activistPortal/types';
-import { EventSignupButton } from 'features/activistPortal/components/EventSignupButton';
+import { ZetkinEventWithStatus } from 'features/public/types';
+import { EventSignupButton } from 'features/public/components/EventSignupButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
@@ -32,11 +32,11 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIButton from 'zui/components/ZUIButton';
-import useMyEvents from 'features/events/hooks/useMyEvents';
+import useMyEvents from 'features/my/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
-import useUserMemberships from 'features/activistPortal/hooks/useUserMemberships';
+import useUserMemberships from 'features/public/hooks/useUserMemberships';
 
 type Props = {
   eventId: number;

@@ -10,7 +10,7 @@ import messageIds from 'features/organizations/l10n/messageIds';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { ActivistPortalEventMap } from '../components/ActivistPortalEventMap';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
-import { ZetkinEventWithStatus } from 'features/activistPortal/types';
+import { ZetkinEventWithStatus } from 'features/public/types';
 
 const useDelayOnTrue = (durationMs: number, value: boolean) => {
   const [delayedValue, setDelayedValue] = useState(false);

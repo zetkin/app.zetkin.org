@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import PublicSurveyPage from 'features/activistPortal/pages/PublicSurveyPage';
+import PublicSurveyPage from 'features/public/pages/PublicSurveyPage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinSurveyExtended, ZetkinUser } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';

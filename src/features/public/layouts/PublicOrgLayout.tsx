@@ -10,7 +10,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
-import ActivistPortalHeader from 'features/activistPortal/components/ActivistPortalHeader';
+import ActivistPortalHeader from 'features/public/components/ActivistPortalHeader';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';

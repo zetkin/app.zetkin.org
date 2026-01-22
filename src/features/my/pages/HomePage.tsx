@@ -1,12 +1,12 @@
 'use client';
 
-import { Box } from '@mui/material';
 import { FC, Suspense } from 'react';
+import { Box } from '@mui/material';
 
+import MyActivitiesList from 'features/public/components/MyActivitiesList';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import AllEventsList from '../components/AllEventsList';
 
-const AllEventsPage: FC = () => {
+const HomePage: FC = () => {
   return (
     <Suspense
       fallback={
@@ -21,9 +21,9 @@ const AllEventsPage: FC = () => {
         </Box>
       }
     >
-      <AllEventsList />
+      <MyActivitiesList />
     </Suspense>
   );
 };
 
-export default AllEventsPage;
+export default HomePage;

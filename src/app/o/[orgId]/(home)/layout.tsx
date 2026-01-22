@@ -2,8 +2,8 @@ import { FC, ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
-import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import PublicOrgLayout from 'features/activistPortal/layouts/PublicOrgLayout';
+import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
+import PublicOrgLayout from 'features/public/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';

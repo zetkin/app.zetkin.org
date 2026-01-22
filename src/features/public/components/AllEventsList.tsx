@@ -1,6 +1,4 @@
-'use client';
-
-import dayjs, { Dayjs } from 'dayjs';
+import { FC, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -10,60 +8,53 @@ import {
   ListItemAvatar,
   Switch,
 } from '@mui/material';
-import { FC, useState } from 'react';
-import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
+import { CalendarMonthOutlined, Clear, Search } from '@mui/icons-material';
+import {
+  DateRange,
+  DateRangeCalendar,
+  DateRangePickerDay,
+} from '@mui/x-date-pickers-pro';
+import dayjs, { Dayjs } from 'dayjs';
 import { useIntl } from 'react-intl';
-import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
 
-import EventListItem from 'features/activistPortal/components/EventListItem';
-import { ZetkinEventWithStatus } from 'features/activistPortal/types';
-import useIncrementalDelay from 'features/activistPortal/hooks/useIncrementalDelay';
-import ZUIDate from 'zui/ZUIDate';
-import SubOrgEventBlurb from '../components/SubOrgEventBlurb';
-import { ZetkinEvent } from 'utils/types/zetkin';
-import useUser from 'core/hooks/useUser';
+import useAllEvents from 'features/my/hooks/useAllEvents';
+import EventListItem from './EventListItem';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/organizations/l10n/messageIds';
-import NoEventsBlurb from '../components/NoEventsBlurb';
-import ZUIText from 'zui/components/ZUIText';
-import ZUIModal from 'zui/components/ZUIModal';
-import ZUIDivider from 'zui/components/ZUIDivider';
+import messageIds from '../l10n/messageIds';
+import { ZetkinEventWithStatus } from '../types';
+import ZUIDate from 'zui/ZUIDate';
+import useIncrementalDelay from '../hooks/useIncrementalDelay';
+import { getContrastColor } from 'utils/colorUtils';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from 'zui/components/ZUIButton';
+import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
-import { getContrastColor } from 'utils/colorUtils';
-import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated } from 'features/organizations/store';
-import useOrganization from 'features/organizations/hooks/useOrganization';
-import useIsMobile from 'utils/hooks/useIsMobile';
+import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 
-type Props = {
-  orgId: number;
-};
-
-const PublicOrgPage: FC<Props> = ({ orgId }) => {
-  const isMobile = useIsMobile();
+const AllEventsList: FC = () => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
+  const allEvents = useAllEvents();
   const nextDelay = useIncrementalDelay();
-  const organization = useOrganization(orgId).data;
-  const user = useUser();
-  const dispatch = useAppDispatch();
-  const { allEvents, getDateRange, locationEvents, eventTypeFilter } =
-    useFilteredOrgEvents(orgId);
-  const {
-    customDatesToFilterBy,
-    dateFilterState,
-    geojsonToFilterBy,
-    orgIdsToFilterBy,
-  } = useAppSelector((state) => state.organizations.filters);
 
-  const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
-  const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | 'eventTypes' | null
   >(null);
+  const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
+  const [eventTypesToFilterBy, setEventTypesToFilterBy] = useState<string[]>(
+    []
+  );
+  const [customDatesToFilterBy, setCustomDatesToFilterBy] = useState<
+    DateRange<Dayjs>
+  >([null, null]);
+  const [dateFilterState, setDateFilterState] = useState<
+    'today' | 'tomorrow' | 'thisWeek' | 'custom' | null
+  >(null);
+
+  const eventTypeFilter = useEventTypeFilter(allEvents, {
+    eventTypeLabelsToFilterBy: eventTypesToFilterBy,
+    setEventTypeLabelsToFilterBy: setEventTypesToFilterBy,
+  });
 
   const orgs = [
     ...new Map(
@@ -73,11 +64,19 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const isFiltered =
-    !!dateFilterState ||
-    eventTypeFilter.isFiltered ||
-    !!geojsonToFilterBy.length ||
-    !!orgIdsToFilterBy.length;
+  const getDateRange = (): [Dayjs | null, Dayjs | null] => {
+    const today = dayjs();
+    if (!dateFilterState || dateFilterState == 'custom') {
+      return customDatesToFilterBy;
+    } else if (dateFilterState == 'today') {
+      return [today, null];
+    } else if (dateFilterState == 'tomorrow') {
+      return [today.add(1, 'day'), null];
+    } else {
+      //dateFilterState is 'thisWeek'
+      return [today.startOf('week'), today.endOf('week')];
+    }
+  };
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -93,6 +92,67 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     }
   };
 
+  const filteredEvents = allEvents
+    .filter((event) => {
+      if (orgIdsToFilterBy.length == 0) {
+        return true;
+      }
+      return orgIdsToFilterBy.includes(event.organization.id);
+    })
+    .filter((event) => {
+      if (
+        !dateFilterState ||
+        (dateFilterState == 'custom' && !customDatesToFilterBy[0])
+      ) {
+        return true;
+      }
+
+      const [start, end] = getDateRange();
+      const eventStart = dayjs(event.start_time);
+      const eventEnd = dayjs(event.end_time);
+
+      if (!end) {
+        const isOngoing = eventStart.isBefore(start) && eventEnd.isAfter(start);
+        const startsOnSelectedDay = eventStart.isSame(start, 'day');
+        const endsOnSelectedDay = eventEnd.isSame(start, 'day');
+        return isOngoing || startsOnSelectedDay || endsOnSelectedDay;
+      } else {
+        const isOngoing =
+          eventStart.isBefore(start, 'day') && eventEnd.isAfter(end, 'day');
+        const startsInPeriod =
+          (eventStart.isSame(start, 'day') ||
+            eventStart.isAfter(start, 'day')) &&
+          (eventStart.isSame(end, 'day') || eventStart.isBefore(end, 'day'));
+        const endsInPeriod =
+          (eventEnd.isSame(start, 'day') || eventEnd.isAfter(start, 'day')) &&
+          (eventEnd.isBefore(end, 'day') || eventEnd.isSame(end, 'day'));
+        return isOngoing || startsInPeriod || endsInPeriod;
+      }
+    })
+    .filter(eventTypeFilter.getShouldShowEvent);
+
+  const eventsByDate = filteredEvents.reduce<
+    Record<string, ZetkinEventWithStatus[]>
+  >((dates, event) => {
+    const eventDate = event.start_time.slice(0, 10);
+    const existingEvents = dates[eventDate] || [];
+
+    const dateRange = getDateRange();
+    const firstFilterDate = dateRange[0]?.format('YYYY-MM-DD');
+
+    const dateToSortAs =
+      firstFilterDate && eventDate < firstFilterDate
+        ? firstFilterDate
+        : eventDate;
+
+    return {
+      ...dates,
+      [dateToSortAs]: [...existingEvents, event],
+    };
+  }, {});
+
+  const dates = Object.keys(eventsByDate).sort();
+
   const orgIdsWithEvents = allEvents.reduce<number[]>((orgIds, event) => {
     if (!orgIds.includes(event.organization.id)) {
       orgIds = [...orgIds, event.organization.id];
@@ -101,16 +161,8 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
-
-  let locationFilterLabel = '';
-  if (geojsonToFilterBy.length > 1) {
-    locationFilterLabel = messages.allEventsList.filterButtonLabels.locations({
-      count: geojsonToFilterBy.length,
-    });
-  } else if (geojsonToFilterBy.length === 1) {
-    locationFilterLabel = geojsonToFilterBy[0]?.properties?.location
-      ?.title as string;
-  }
+  const isFiltered =
+    orgIdsToFilterBy.length || !!dateFilterState || eventTypeFilter.isFiltered;
 
   const filters = [
     {
@@ -118,12 +170,8 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       key: 'today',
       label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
-        dispatch(
-          filtersUpdated({
-            customDatesToFilterBy: [null, null],
-            dateFilterState: 'today',
-          })
-        );
+        setCustomDatesToFilterBy([null, null]);
+        setDateFilterState('today');
       },
     },
     {
@@ -131,12 +179,8 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       key: 'tomorrow',
       label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
-        dispatch(
-          filtersUpdated({
-            customDatesToFilterBy: [null, null],
-            dateFilterState: 'tomorrow',
-          })
-        );
+        setCustomDatesToFilterBy([null, null]);
+        setDateFilterState('tomorrow');
       },
     },
     {
@@ -144,12 +188,8 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       key: 'thisWeek',
       label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
-        dispatch(
-          filtersUpdated({
-            customDatesToFilterBy: [null, null],
-            dateFilterState: 'thisWeek',
-          })
-        );
+        setCustomDatesToFilterBy([null, null]);
+        setDateFilterState('thisWeek');
       },
     },
     {
@@ -188,93 +228,24 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           },
         ]
       : []),
-  ]
-    .concat(
-      geojsonToFilterBy.length
-        ? [
-            {
-              active: true,
-              key: 'location',
-              label: locationFilterLabel,
-              onClick: () => {
-                dispatch(
-                  filtersUpdated({
-                    geojsonToFilterBy: [],
-                  })
-                );
-              },
-            },
-          ]
-        : []
-    )
-    .sort((a, b) => {
-      if (a.active && !b.active) {
-        return -1;
-      } else if (!a.active && b.active) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-
-  const topOrgEvents = allEvents.filter(
-    (event) => event.organization.id == orgId
-  );
-
-  const events =
-    includeSubOrgs || topOrgEvents.length == 0 ? allEvents : topOrgEvents;
-
-  const eventsByDate = locationEvents.reduce<
-    Record<string, ZetkinEventWithStatus[]>
-  >((dates, event) => {
-    const eventDate = event.start_time.slice(0, 10);
-    const existingEvents = dates[eventDate] || [];
-
-    const firstFilterDate = dayjs().format('YYYY-MM-DD');
-
-    const dateToSortAs =
-      firstFilterDate && eventDate < firstFilterDate
-        ? firstFilterDate
-        : eventDate;
-
-    return {
-      ...dates,
-      [dateToSortAs]: [...existingEvents, event],
-    };
-  }, {});
-
-  const dates = Object.keys(eventsByDate).sort();
-  const indexForSubOrgsButton = Math.min(1, dates.length - 1);
-  const showSubOrgBlurb =
-    orgIdsToFilterBy.length == 0 && locationEvents.length > events.length;
-
-  const showNoEventsBlurb = !allEvents.length;
+  ].sort((a, b) => {
+    if (a.active && !b.active) {
+      return -1;
+    } else if (!a.active && b.active) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
 
   return (
     <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-        gap: 1,
-        height: '100%',
-        my: 2,
-      }}
+      display="flex"
+      flexDirection="column"
+      gap={1}
+      overflow="hidden"
+      position="relative"
     >
-      {showNoEventsBlurb && (
-        <Box key="empty">
-          <NoEventsBlurb
-            description={
-              organization
-                ? messages.noEventsBlurb.description({
-                    org: organization.title,
-                  })
-                : undefined
-            }
-            title={messages.noEventsBlurb.headline()}
-          />
-        </Box>
-      )}
       {allEvents.length != 0 && (
         <Box
           alignItems="center"
@@ -282,9 +253,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           gap={1}
           maxWidth="100%"
           padding={1}
-          sx={{
-            ...(isMobile ? { overflowX: 'auto' } : { flexWrap: 'wrap' }),
-          }}
+          sx={{ overflowX: 'auto' }}
         >
           {isFiltered && (
             <ZUIFilterButton
@@ -292,14 +261,9 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               circular
               label={Clear}
               onClick={() => {
-                dispatch(
-                  filtersUpdated({
-                    customDatesToFilterBy: [null, null],
-                    dateFilterState: null,
-                    geojsonToFilterBy: [],
-                    orgIdsToFilterBy: [],
-                  })
-                );
+                setDateFilterState(null);
+                setCustomDatesToFilterBy([null, null]);
+                setOrgIdsToFilterBy([]);
                 eventTypeFilter.clearEventTypeFilter();
               }}
             />
@@ -314,7 +278,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </Box>
       )}
-      {locationEvents.length == 0 && (
+      {filteredEvents.length == 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -332,28 +296,24 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
             <ZUIButton
               label={messages.allEventsList.emptyList.removeFiltersButton()}
               onClick={() => {
-                dispatch(
-                  filtersUpdated({
-                    customDatesToFilterBy: [null, null],
-                    dateFilterState: null,
-                    orgIdsToFilterBy: [],
-                  })
-                );
+                setCustomDatesToFilterBy([null, null]);
+                setOrgIdsToFilterBy([]);
                 eventTypeFilter.clearEventTypeFilter();
+                setDateFilterState(null);
               }}
               variant="secondary"
             />
           )}
         </Box>
       )}
-      {dates.map((date, index) => (
+      {dates.map((date) => (
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
-            <Box sx={{ mb: 2, mt: 3 }}>
-              <ZUIText variant="headingMd">
+            <div>
+              <ZUIText my={1} variant="headingMd">
                 <ZUIDate datetime={date} />
               </ZUIText>
-            </Box>
+            </div>
           </Fade>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <Box display="flex" flexDirection="column" gap={1}>
@@ -362,35 +322,10 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                   key={event.id}
                   event={event}
                   href={`/o/${event.organization.id}/events/${event.id}`}
-                  onClickSignUp={(ev) => {
-                    if (!user) {
-                      setPostAuthEvent(event);
-                      ev.preventDefault();
-                    }
-                  }}
                 />
               ))}
             </Box>
           </Fade>
-          {index == indexForSubOrgsButton && showSubOrgBlurb && (
-            <Fade
-              appear
-              in
-              mountOnEnter
-              style={{ transitionDelay: nextDelay() }}
-            >
-              <Box sx={{ my: 4 }}>
-                <ZUIDivider />
-                <SubOrgEventBlurb
-                  onClickShow={() => setIncludeSubOrgs(true)}
-                  subOrgEvents={allEvents.filter(
-                    (event) => event.organization.id != orgId
-                  )}
-                />
-                <ZUIDivider />
-              </Box>
-            </Fade>
-          )}
         </Box>
       ))}
       <ZUIDrawerModal
@@ -406,14 +341,10 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           <DateRangeCalendar
             calendars={1}
             disablePast
-            onChange={(newDateRange) =>
-              dispatch(
-                filtersUpdated({
-                  customDatesToFilterBy: newDateRange,
-                  dateFilterState: 'custom',
-                })
-              )
-            }
+            onChange={(newDateRange) => {
+              setDateFilterState('custom');
+              setCustomDatesToFilterBy(newDateRange);
+            }}
             slots={{
               day: (props) => {
                 const day = props.day;
@@ -474,18 +405,10 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                 checked={orgIdsToFilterBy.includes(org.id)}
                 onChange={(_event, checked) => {
                   if (checked) {
-                    dispatch(
-                      filtersUpdated({
-                        orgIdsToFilterBy: [...orgIdsToFilterBy, org.id],
-                      })
-                    );
+                    setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
                   } else {
-                    dispatch(
-                      filtersUpdated({
-                        orgIdsToFilterBy: orgIdsToFilterBy.filter(
-                          (id) => id != org.id
-                        ),
-                      })
+                    setOrgIdsToFilterBy(
+                      orgIdsToFilterBy.filter((id) => id != org.id)
                     );
                   }
                 }}
@@ -514,28 +437,8 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </List>
       </ZUIDrawerModal>
-      <ZUIModal
-        onClose={() => setPostAuthEvent(null)}
-        open={!!postAuthEvent}
-        primaryButton={{
-          href: `/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`,
-          label: messages.authDialog.loginButton(),
-        }}
-        secondaryButton={{
-          label: messages.authDialog.cancelButton(),
-          onClick: () => setPostAuthEvent(null),
-        }}
-        size="small"
-        title={messages.authDialog.label()}
-      >
-        <Box sx={{ paddingTop: '0.75rem' }}>
-          <ZUIText>
-            <Msg id={messageIds.authDialog.content} />
-          </ZUIText>
-        </Box>
-      </ZUIModal>
     </Box>
   );
 };
 
-export default PublicOrgPage;
+export default AllEventsList;

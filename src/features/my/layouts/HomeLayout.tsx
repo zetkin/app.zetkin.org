@@ -11,8 +11,8 @@ import ZUIAlert from 'zui/components/ZUIAlert';
 import useUser from 'core/hooks/useUser';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useMemberships from 'features/organizations/hooks/useMemberships';
-import messageIds from 'features/home/l10n/messageIds';
-import ActivistPortalHeader from 'features/activistPortal/components/ActivistPortalHeader';
+import messageIds from 'features/my/l10n/messageIds';
+import ActivistPortalHeader from 'features/public/components/ActivistPortalHeader';
 import ZUIText from 'zui/components/ZUIText';
 
 type Props = {

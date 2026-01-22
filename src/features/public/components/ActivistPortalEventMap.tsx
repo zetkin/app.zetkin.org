@@ -9,7 +9,7 @@ import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import { markerImage } from '../utils/markerImage';
 import { pointsToBounds } from 'utils/mapUtils';
-import { ZetkinEventWithStatus } from 'features/activistPortal/types';
+import { ZetkinEventWithStatus } from 'features/public/types';
 import { Latitude, Longitude } from 'features/areas/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import useMapMarkerClick from '../hooks/useMapMarkerClick';

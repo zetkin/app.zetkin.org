@@ -1,9 +1,9 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useMemo } from 'react';
 
-import { ZetkinEventWithStatus } from 'features/activistPortal/types';
+import { ZetkinEventWithStatus } from 'features/public/types';
 import useUpcomingOrgEvents from './useUpcomingOrgEvents';
-import useMyEvents from 'features/events/hooks/useMyEvents';
+import useMyEvents from 'features/my/hooks/useMyEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';

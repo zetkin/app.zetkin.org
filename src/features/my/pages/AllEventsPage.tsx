@@ -1,12 +1,12 @@
 'use client';
 
-import { FC, Suspense } from 'react';
 import { Box } from '@mui/material';
+import { FC, Suspense } from 'react';
 
-import MyActivitiesList from 'features/activistPortal/components/MyActivitiesList';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
+import AllEventsList from '../../public/components/AllEventsList';
 
-const HomePage: FC = () => {
+const AllEventsPage: FC = () => {
   return (
     <Suspense
       fallback={
@@ -21,9 +21,9 @@ const HomePage: FC = () => {
         </Box>
       }
     >
-      <MyActivitiesList />
+      <AllEventsList />
     </Suspense>
   );
 };
 
-export default HomePage;
+export default AllEventsPage;
