@@ -62,7 +62,9 @@ function OrganizationTree({
       <SimpleTreeView
         defaultExpandedItems={
           // If there is only one top-level org, expand it by default
-          treeItemData.length === 1 ? [treeItemData[0].id.toString()] : undefined
+          treeItemData.length === 1
+            ? [treeItemData[0].id.toString()]
+            : undefined
         }
         disableSelection
         slots={{ collapseIcon: ExpandMore, expandIcon: ChevronRight }}

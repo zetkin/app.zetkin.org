@@ -145,7 +145,9 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
               : messages.areas.filter.ungroupedTagsLabel(),
             onClick: () => {
               if (selected) {
-                setActiveGroupIds(activeGroupIds.filter((id) => groupId !== id));
+                setActiveGroupIds(
+                  activeGroupIds.filter((id) => groupId !== id)
+                );
                 const newValue = { ...activeTagIdsByGroup };
                 delete newValue[groupId];
                 setActiveTagIdsByGroup(newValue);

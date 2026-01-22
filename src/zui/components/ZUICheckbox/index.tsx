@@ -93,11 +93,15 @@ const ZUICheckbox: FC<ZUICheckboxProps> = ({
             ? 'flex-start'
             : 'center',
         marginBottom:
-          labelPlacement === 'top' || labelPlacement === 'bottom' ? '0.5rem' : '',
+          labelPlacement === 'top' || labelPlacement === 'bottom'
+            ? '0.5rem'
+            : '',
         marginLeft: labelPlacement !== 'end' ? 0 : '',
         marginRight: labelPlacement !== 'start' ? 0 : '',
         marginTop:
-          labelPlacement === 'top' || labelPlacement === 'bottom' ? '0.5rem' : '',
+          labelPlacement === 'top' || labelPlacement === 'bottom'
+            ? '0.5rem'
+            : '',
       }}
     />
   );

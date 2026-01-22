@@ -33,7 +33,8 @@ export class SankeyRenderer {
     const changeWidth = seg.side.width * maxStreamWidth;
 
     const inputWidth = seg.kind === 'add' ? mainWidth : mainWidth + changeWidth;
-    const outputWidth = seg.kind === 'add' ? mainWidth + changeWidth : mainWidth;
+    const outputWidth =
+      seg.kind === 'add' ? mainWidth + changeWidth : mainWidth;
 
     if (seg.main) {
       if (seg.kind === 'add') {

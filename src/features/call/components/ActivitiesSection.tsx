@@ -389,7 +389,8 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     numProjects: projectIdsToFilterActivitiesBy.length,
                   })
                 : projects.find(
-                    (project) => project.id === projectIdsToFilterActivitiesBy[0]
+                    (project) =>
+                      project.id === projectIdsToFilterActivitiesBy[0]
                   )?.title ||
                   messages.activities.filters.projects({ numProjects: 0 }),
             onClick: () => {

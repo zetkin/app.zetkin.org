@@ -137,7 +137,9 @@ const FloorMatrix: FC<Props> = ({
         .reverse()
         .map((floor, thisFloorIndex) => {
           const householdsOnFloor = householdsByFloor[floor] || [];
-          const draftFloor = draftFloors?.find((draft) => draft.level === floor);
+          const draftFloor = draftFloors?.find(
+            (draft) => draft.level === floor
+          );
 
           const hasNoHouseholdsFromBefore = households.length === 0;
           const isBottomFloor = floor === minLevel;

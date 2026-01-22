@@ -50,7 +50,8 @@ export default function useFolder(
 
   const folderFuture = itemsFuture.data
     ? new ResolvedFuture(
-        itemsFuture.data.folders.find((folder) => folder.id === folderId) || null
+        itemsFuture.data.folders.find((folder) => folder.id === folderId) ||
+          null
       )
     : new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
 

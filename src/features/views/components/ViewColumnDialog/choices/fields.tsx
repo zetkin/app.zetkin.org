@@ -25,7 +25,8 @@ export const fullName: ColumnChoice = {
     return fieldsToAdd.every((fieldName) =>
       columns.some(
         (col) =>
-          col.type === COLUMN_TYPE.PERSON_FIELD && col.config.field === fieldName
+          col.type === COLUMN_TYPE.PERSON_FIELD &&
+          col.config.field === fieldName
       )
     );
   },
@@ -69,7 +70,8 @@ export const pickFields: ColumnChoice = {
     return Object.values(NATIVE_PERSON_FIELDS).every((fieldName) =>
       columns.some(
         (col) =>
-          col.type === COLUMN_TYPE.PERSON_FIELD && col.config.field === fieldName
+          col.type === COLUMN_TYPE.PERSON_FIELD &&
+          col.config.field === fieldName
       )
     );
   },

@@ -138,7 +138,8 @@ const CallPanels: FC<Props> = ({
           },
           animationDuration: '0.5s',
           animationFillMode: 'backwards',
-          animationName: lane.step === LaneStep.SUMMARY ? 'instructionsOut' : '',
+          animationName:
+            lane.step === LaneStep.SUMMARY ? 'instructionsOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
           left:

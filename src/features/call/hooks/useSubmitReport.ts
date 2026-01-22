@@ -26,7 +26,8 @@ export default function useSubmitReport(orgId: number) {
   ): Promise<Result> => {
     const state = calculateReportState(report);
     const reportData = {
-      call_back_after: state === 13 || state === 14 ? report.callBackAfter : null,
+      call_back_after:
+        state === 13 || state === 14 ? report.callBackAfter : null,
       message_to_organizer:
         report.organizerActionNeeded && report.organizerLog
           ? report.organizerLog

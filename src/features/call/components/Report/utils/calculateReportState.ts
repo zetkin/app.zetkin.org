@@ -20,7 +20,10 @@ export default function calculateReportState(
       } else {
         return 11;
       }
-    } else if (report.failureReason === 'notAvailable' && report.callBackAfter) {
+    } else if (
+      report.failureReason === 'notAvailable' &&
+      report.callBackAfter
+    ) {
       return 14;
     } else {
       //report.wrongNumber

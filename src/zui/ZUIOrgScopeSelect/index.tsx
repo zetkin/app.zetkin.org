@@ -38,7 +38,8 @@ const ZUIOrgScopeSelect: FC<Props> = ({
     value,
   });
 
-  const curOrgTitle = organizations.find((org) => org.id === orgId)?.title ?? '';
+  const curOrgTitle =
+    organizations.find((org) => org.id === orgId)?.title ?? '';
 
   return (
     <Box alignItems="center" display="flex" gap={1}>

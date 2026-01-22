@@ -594,7 +594,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             .filter((session) => session.area_id === area.id)
             .map((session) => session.user_id);
 
-          const stats = areaStats.stats.find((stat) => stat.area_id === area.id);
+          const stats = areaStats.stats.find(
+            (stat) => stat.area_id === area.id
+          );
 
           let numberOfHouseholds = 0;
           locationsByAreaId[area.id].forEach(

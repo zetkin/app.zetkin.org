@@ -192,7 +192,9 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
                     <ListItem
                       key={`${type}-${id}`}
                       onClick={
-                        type === 'folder' ? () => setViewedFolder(id) : undefined
+                        type === 'folder'
+                          ? () => setViewedFolder(id)
+                          : undefined
                       }
                       sx={
                         type === 'folder'

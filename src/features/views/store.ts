@@ -249,7 +249,8 @@ const viewsSlice = createSlice({
         colList.items = colList.items.map((item) => {
           if (item.id === column.id) {
             if (
-              JSON.stringify(column.config) !== JSON.stringify(item.data?.config)
+              JSON.stringify(column.config) !==
+              JSON.stringify(item.data?.config)
             ) {
               configChanged = true;
             }

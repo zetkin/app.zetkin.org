@@ -75,7 +75,8 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   }, [searchString]);
 
   const showLoadingState = treeDataList.isLoading;
-  const showEmptyState = searchString.length > 0 && filteredAllOrgs.length === 0;
+  const showEmptyState =
+    searchString.length > 0 && filteredAllOrgs.length === 0;
   const showOrgTree = orgData.length > 0 && !showEmptyState;
   const hasMatchesInRecentOrgs =
     searchString.length > 0 && filteredRecentOrgs.length > 0;

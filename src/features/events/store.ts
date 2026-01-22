@@ -348,7 +348,9 @@ const eventsSlice = createSlice({
     },
     locationLoaded: (state, action: PayloadAction<ZetkinLocation>) => {
       const event = action.payload;
-      const item = state.locationList.items.find((item) => item.id === event.id);
+      const item = state.locationList.items.find(
+        (item) => item.id === event.id
+      );
 
       if (!item) {
         throw new Error('Finished loading item that never started loading');

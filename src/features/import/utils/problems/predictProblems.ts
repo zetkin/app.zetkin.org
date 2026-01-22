@@ -120,7 +120,10 @@ export function predictProblems(
               !z.string().email().safeParse(value.toString().trim()).success
             ) {
               accumulateFieldProblem(column.field, rowIndex);
-            } else if (column.field === 'phone' || column.field === 'alt_phone') {
+            } else if (
+              column.field === 'phone' ||
+              column.field === 'alt_phone'
+            ) {
               if (!isValidPhoneNumber(cleanPhoneNumber(value), country)) {
                 const isKnownProblem = accumulateFieldProblem(
                   column.field,

@@ -209,7 +209,9 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     onAssignTag={(tag) => setTags([...tags, tag])}
                     onRemoveAssignee={(person) =>
                       setAssignees(
-                        assignees.filter((assignee) => assignee.id !== person.id)
+                        assignees.filter(
+                          (assignee) => assignee.id !== person.id
+                        )
                       )
                     }
                     onRemoveSubject={(person) =>
