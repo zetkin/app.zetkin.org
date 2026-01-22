@@ -8,7 +8,7 @@ import ZUIText from 'zui/components/ZUIText';
 import messageIds from '../l10n/messageIds';
 type SignupChoiceModalProps = {
   eventId: number;
-  onClose?: () => void;
+  onClose: () => void;
   orgId: number;
 };
 
