@@ -46,7 +46,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
     direction?: GridSortDirection
   ) => {
     const newSortModel = sortModel.map((item, idx) => {
-      return idx == index
+      return idx === index
         ? {
             field: field || item.field,
             sort: direction || item.sort,

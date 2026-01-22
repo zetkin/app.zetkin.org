@@ -33,5 +33,5 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     `/api/orgs/${orgId}/people/${official.id}/connections`
   );
 
-  return memberships.find((m) => m.organization.id == orgId) || null;
+  return memberships.find((m) => m.organization.id === orgId) || null;
 }

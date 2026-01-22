@@ -32,11 +32,11 @@ export class SankeyRenderer {
     const mainWidth = (seg.main?.width ?? 0) * maxStreamWidth;
     const changeWidth = seg.side.width * maxStreamWidth;
 
-    const inputWidth = seg.kind == 'add' ? mainWidth : mainWidth + changeWidth;
-    const outputWidth = seg.kind == 'add' ? mainWidth + changeWidth : mainWidth;
+    const inputWidth = seg.kind === 'add' ? mainWidth : mainWidth + changeWidth;
+    const outputWidth = seg.kind === 'add' ? mainWidth + changeWidth : mainWidth;
 
     if (seg.main) {
-      if (seg.kind == 'add') {
+      if (seg.kind === 'add') {
         this.drawMain(
           diagCenter - inputWidth / 2,
           diagCenter + inputWidth / 2,
@@ -45,7 +45,7 @@ export class SankeyRenderer {
           offsetY,
           seg.main.style
         );
-      } else if (seg.kind == 'sub') {
+      } else if (seg.kind === 'sub') {
         this.drawMain(
           diagCenter - inputWidth / 2,
           diagCenter + inputWidth / 2 - changeWidth,
@@ -57,7 +57,7 @@ export class SankeyRenderer {
       }
     }
 
-    if (seg.kind == 'add') {
+    if (seg.kind === 'add') {
       const totalOutWidth = mainWidth + changeWidth;
 
       this.drawInput(
@@ -66,7 +66,7 @@ export class SankeyRenderer {
         offsetY,
         seg.side.style
       );
-    } else if (seg.kind == 'sub') {
+    } else if (seg.kind === 'sub') {
       const totalInWidth = mainWidth + changeWidth;
 
       this.drawOutput(
@@ -225,7 +225,7 @@ export class SankeyRenderer {
     const diagCenter = diagWidth / 2;
     const doubleMargin = margin * 2;
 
-    if (seg.kind == SEGMENT_KIND.PSEUDO_SUB) {
+    if (seg.kind === SEGMENT_KIND.PSEUDO_SUB) {
       const outputWidth = seg.side.width * (diagWidth - doubleMargin);
       this.drawOutput(
         diagCenter - outputWidth / 2,
@@ -247,8 +247,8 @@ export class SankeyRenderer {
       const segWidth = seg.main.width * (diagWidth - doubleMargin);
 
       if (
-        seg.main.style == SEGMENT_STYLE.STROKE &&
-        seg.side.style == SEGMENT_STYLE.STROKE
+        seg.main.style === SEGMENT_STYLE.STROKE &&
+        seg.side.style === SEGMENT_STYLE.STROKE
       ) {
         // Clear "behind" main so that the side
         // does not shine through.
@@ -272,23 +272,23 @@ export class SankeyRenderer {
   }
 
   drawSegment(seg: SankeySegment, offsetY: number) {
-    if (seg.kind == SEGMENT_KIND.ADD || seg.kind == SEGMENT_KIND.SUB) {
+    if (seg.kind === SEGMENT_KIND.ADD || seg.kind === SEGMENT_KIND.SUB) {
       this.drawAddSubSegment(seg, offsetY);
     } else if (
-      seg.kind == SEGMENT_KIND.PSEUDO_ADD ||
-      seg.kind == SEGMENT_KIND.PSEUDO_SUB
+      seg.kind === SEGMENT_KIND.PSEUDO_ADD ||
+      seg.kind === SEGMENT_KIND.PSEUDO_SUB
     ) {
       this.drawPseudoAddSubSegment(seg, offsetY);
-    } else if (seg.kind == SEGMENT_KIND.ENTRY) {
+    } else if (seg.kind === SEGMENT_KIND.ENTRY) {
       this.drawEntrySegment(seg, offsetY);
-    } else if (seg.kind == SEGMENT_KIND.EXIT) {
+    } else if (seg.kind === SEGMENT_KIND.EXIT) {
       this.drawExitSegment(seg, offsetY);
     }
   }
 
   drawSegments(segments: SankeySegment[], highlightIndex: number) {
     segments.forEach((seg, index) => {
-      this._highlightCurrent = index == highlightIndex;
+      this._highlightCurrent = index === highlightIndex;
       this.drawSegment(seg, index * this.segHeight);
     });
   }
@@ -296,7 +296,7 @@ export class SankeyRenderer {
   initPathWithInset(style: SEGMENT_STYLE) {
     const { color, highlightColor, lineWidth } = this.config;
 
-    const isStroke = style == SEGMENT_STYLE.STROKE;
+    const isStroke = style === SEGMENT_STYLE.STROKE;
     this.ctx.beginPath();
     this.ctx.strokeStyle = isStroke
       ? this._highlightCurrent
@@ -318,7 +318,7 @@ export class SankeyRenderer {
    * we are drawing a stroked or filled path.
    */
   styledLineTo(toX: number, toY: number, style: SEGMENT_STYLE) {
-    if (style == SEGMENT_STYLE.FILL) {
+    if (style === SEGMENT_STYLE.FILL) {
       this.ctx.lineTo(toX, toY);
     } else {
       this.ctx.moveTo(toX, toY);

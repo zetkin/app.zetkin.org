@@ -9,7 +9,7 @@ export default function useGenderMapping(column: Column, columnIndex: number) {
   const dispatch = useAppDispatch();
 
   const getSelectedGender = (value: CellData) => {
-    if (column.kind == ColumnKind.GENDER) {
+    if (column.kind === ColumnKind.GENDER) {
       const map = column.mapping.find((m) => m.value === value);
       if (!map) {
         return null;
@@ -39,13 +39,13 @@ export default function useGenderMapping(column: Column, columnIndex: number) {
   };
 
   const deselectGender = (value: CellData) => {
-    if (column.kind != ColumnKind.GENDER) {
+    if (column.kind !== ColumnKind.GENDER) {
       return;
     }
 
-    const map = column.mapping.find((map) => map.value == value);
+    const map = column.mapping.find((map) => map.value === value);
     if (map) {
-      const filteredMapping = column.mapping.filter((m) => m.value != value);
+      const filteredMapping = column.mapping.filter((m) => m.value !== value);
 
       dispatch(
         columnUpdate([

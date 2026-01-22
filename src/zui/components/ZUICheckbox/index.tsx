@@ -81,7 +81,7 @@ const ZUICheckbox: FC<ZUICheckboxProps> = ({
           '-ms-user-select': 'none',
           '-webkit-user-select': 'none',
           marginTop: (theme) =>
-            labelPlacement == 'start' || labelPlacement == 'end'
+            labelPlacement === 'start' || labelPlacement === 'end'
               ? `calc(${parseFloat(sizes[size]) / 2}rem + (9px - ${
                   theme.typography.labelXlMedium.lineHeight
                 } / 2))`
@@ -89,15 +89,15 @@ const ZUICheckbox: FC<ZUICheckboxProps> = ({
           userSelect: 'none',
         },
         alignItems:
-          labelPlacement == 'start' || labelPlacement == 'end'
+          labelPlacement === 'start' || labelPlacement === 'end'
             ? 'flex-start'
             : 'center',
         marginBottom:
-          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
-        marginLeft: labelPlacement != 'end' ? 0 : '',
-        marginRight: labelPlacement != 'start' ? 0 : '',
+          labelPlacement === 'top' || labelPlacement === 'bottom' ? '0.5rem' : '',
+        marginLeft: labelPlacement !== 'end' ? 0 : '',
+        marginRight: labelPlacement !== 'start' ? 0 : '',
         marginTop:
-          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
+          labelPlacement === 'top' || labelPlacement === 'bottom' ? '0.5rem' : '',
       }}
     />
   );

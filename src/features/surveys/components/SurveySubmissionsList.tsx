@@ -265,11 +265,11 @@ const SurveySubmissionsList = ({
 
       const respondentEmail = row.respondent?.email;
       if (person) {
-        const personHasNoEmail = person.email == null || person.email == '';
+        const personHasNoEmail = person.email === null || person.email === '';
         const personHasDifferentEmail = person.email !== respondentEmail;
         if (
-          (personHasNoEmail && respondentEmail != undefined) ||
-          (personHasDifferentEmail && respondentEmail != undefined)
+          (personHasNoEmail && respondentEmail !== undefined) ||
+          (personHasDifferentEmail && respondentEmail !== undefined)
         ) {
           setDialogEmail(respondentEmail);
           setDialogPerson(person);
@@ -290,7 +290,7 @@ const SurveySubmissionsList = ({
   };
 
   const creatingFromSubmission = submissions.find(
-    (sub) => sub.id == createPersonOpen
+    (sub) => sub.id === createPersonOpen
   );
 
   return (
@@ -339,12 +339,12 @@ const SurveySubmissionsList = ({
             setCreatePersonOpen(-1);
           }}
           onSubmit={(e, person) => {
-            if (createPersonOpen == -1) {
+            if (createPersonOpen === -1) {
               return;
             }
             setRespondentId(person.id);
           }}
-          open={createPersonOpen != -1}
+          open={createPersonOpen !== -1}
           submitLabel={messages.submissions.createPersonSubmit()}
           title={messages.submissions.createPersonTitle()}
         />

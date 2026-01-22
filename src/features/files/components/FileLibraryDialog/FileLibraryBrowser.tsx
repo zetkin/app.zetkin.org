@@ -67,7 +67,7 @@ const FileLibraryBrowser: FC<Props> = ({
             label={messages.typeFilter.label()}
             onChange={(ev) =>
               setFilterType(
-                ev.target.value == 'any'
+                ev.target.value === 'any'
                   ? 'any'
                   : (ev.target.value as TypeOption)
               )
@@ -102,13 +102,13 @@ const FileLibraryBrowser: FC<Props> = ({
                 file.original_name.toLowerCase().includes(filterText);
 
               const matchesType =
-                filterType == 'any' ||
+                filterType === 'any' ||
                 TYPE_OPTIONS[filterType].includes(file.mime_type);
 
               return matchesText && matchesType;
             });
             const sortedFiles = filteredFiles.sort((f0, f1) => {
-              if (sorting == 'originalName') {
+              if (sorting === 'originalName') {
                 return f0.original_name.localeCompare(f1.original_name);
               } else {
                 const d0 = new Date(f0.uploaded);

@@ -112,7 +112,7 @@ const Map: FC<MapProps> = ({
                 url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
               />
               {filteredLocations.map((location) => {
-                const isSelectedMarker = selectedLocation?.id == location.id;
+                const isSelectedMarker = selectedLocation?.id === location.id;
                 const noOfRelevantEvents = relatedEvents.filter(
                   (event) =>
                     event.location?.id === location.id &&

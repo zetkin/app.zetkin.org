@@ -40,7 +40,7 @@ const SurveyStatusChip: FC<SurveyStatusChipProps> = ({ state }) => {
     };
   }, [state]);
 
-  if (state == SurveyState.UNKNOWN) {
+  if (state === SurveyState.UNKNOWN) {
     return null;
   }
 

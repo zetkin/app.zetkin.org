@@ -162,7 +162,7 @@ const CallHistory = ({
               <StyledSelect
                 onChange={(e) => {
                   const callOperator = e.target.value as CALL_OPERATOR;
-                  if (callOperator == CALL_OPERATOR.NOTREACHED) {
+                  if (callOperator === CALL_OPERATOR.NOTREACHED) {
                     setConfig({
                       ...filter.config,
                       minTimes: undefined,
@@ -185,7 +185,7 @@ const CallHistory = ({
               </StyledSelect>
             ),
             minTimes:
-              filter.config.operator == CALL_OPERATOR.NOTREACHED ? null : (
+              filter.config.operator === CALL_OPERATOR.NOTREACHED ? null : (
                 <Msg
                   id={localMessageIds.minTimesInput}
                   values={{

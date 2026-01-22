@@ -74,7 +74,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
         openEventPopper(cluster, { left: x, top: y });
       }}
       PrimaryIcon={
-        cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
+        cluster.kind === CLUSTER_TYPE.MULTI_LOCATION
           ? MultiLocationIcon
           : SplitscreenOutlined
       }
@@ -96,7 +96,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
             {
               icon: <PlaceOutlined fontSize="inherit" />,
               label:
-                cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ? (
+                cluster.kind === CLUSTER_TYPE.MULTI_LOCATION ? (
                   <Msg
                     id={messageIds.activityList.eventItem.locations}
                     values={{ count: cluster.events.length }}

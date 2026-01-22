@@ -41,16 +41,16 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
     options.push({
       label:
-        i == 0
+        i === 0
           ? messages.report.steps.callBack.question.anyTimeOptionLabel()
           : messages.report.steps.callBack.question.afterSpecificHourOptionLabel(
               { hour }
             ),
-      value: i == 0 ? 'any' : hour,
+      value: i === 0 ? 'any' : hour,
     });
   }
   const initialTime =
-    options.find((o) => o.value == report.callBackAfter?.slice(-5)) ||
+    options.find((o) => o.value === report.callBackAfter?.slice(-5)) ||
     options[0];
 
   const [time, setTime] =
@@ -59,11 +59,11 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
   const getNextMonday = () => {
     const indexOfToday = today.day();
-    return today.add(indexOfToday == 0 ? 1 : 8 - indexOfToday, 'day');
+    return today.add(indexOfToday === 0 ? 1 : 8 - indexOfToday, 'day');
   };
 
   const makeCallBackAfter = (timeToCallBack: string, dateToCallBack: Dayjs) => {
-    const callBackTime = timeToCallBack == 'any' ? '00:00' : timeToCallBack;
+    const callBackTime = timeToCallBack === 'any' ? '00:00' : timeToCallBack;
     const month = (dateToCallBack.month() + 1).toString().padStart(2, '0');
     const day = dateToCallBack.date().toString().padStart(2, '0');
 
@@ -78,7 +78,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
     let callBackHour: number = currentHour + 3;
     let laterToday = '';
-    if (currentHour == 23) {
+    if (currentHour === 23) {
       //If it's after 23.00 and you press this button,
       //we set the call back time to "any time tomorrow"
       setTime(options[0]);
@@ -139,23 +139,23 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
-      const dateInputIsActive = dateInputRef.current == document.activeElement;
-      const timeInputIsActive = timeInputRef.current == document.activeElement;
+      const dateInputIsActive = dateInputRef.current === document.activeElement;
+      const timeInputIsActive = timeInputRef.current === document.activeElement;
 
       const focusIsOutsideInputs = !dateInputIsActive && !timeInputIsActive;
 
       if (focusIsOutsideInputs) {
-        if (ev.key == '1') {
+        if (ev.key === '1') {
           onReportUpdate({
             ...report,
             callBackAfter,
             step: 'organizerAction',
           });
-        } else if (ev.key == '2') {
+        } else if (ev.key === '2') {
           callBackLaterToday();
-        } else if (ev.key == '3') {
+        } else if (ev.key === '3') {
           callBackTomorrow();
-        } else if (ev.key == '4') {
+        } else if (ev.key === '4') {
           callBackNextWeek();
         }
       }
@@ -250,7 +250,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             dateIsValid
               ? messages.report.steps.callBack.question.callBackButtonLabel({
                   date:
-                    time.value == 'any' ? (
+                    time.value === 'any' ? (
                       <ZUIDate datetime={callBackAfter} />
                     ) : (
                       <ZUIDateTime datetime={callBackAfter} />

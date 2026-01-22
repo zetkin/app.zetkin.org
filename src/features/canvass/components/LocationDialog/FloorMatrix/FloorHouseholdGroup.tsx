@@ -86,7 +86,7 @@ const FloorHouseholdGroup: FC<Props> = ({
                   .filter((id) => selectedIds.includes(id));
 
                 const allSelected =
-                  selectedIdsOnFloor.length == householdItems.length;
+                  selectedIdsOnFloor.length === householdItems.length;
                 const shouldSelectAll = !allSelected;
                 if (shouldSelectAll) {
                   onSelectIds(householdItems.map((item) => item.household.id));

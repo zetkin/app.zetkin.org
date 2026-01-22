@@ -21,6 +21,6 @@ export default function useMyAreaAssignments() {
     ({ end_date, start_date }) =>
       start_date &&
       start_date.slice(0, 10) <= today &&
-      (end_date == null || end_date.slice(0, 10) >= today)
+      (end_date === null || end_date.slice(0, 10) >= today)
   );
 }

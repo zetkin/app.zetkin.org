@@ -30,7 +30,7 @@ export default function useMembership(
   if (membershipsFuture.data) {
     return new ResolvedFuture(
       membershipsFuture.data.find(
-        (membership) => membership.organization.id == orgId
+        (membership) => membership.organization.id === orgId
       ) || null
     );
   }

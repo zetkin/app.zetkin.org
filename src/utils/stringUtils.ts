@@ -62,7 +62,7 @@ const truncateOnMiddle = (str: string, maxLength: number) => {
   const lastPartBase = str.substring(str.length - halfLength);
   const lastWhitespaceOfFirst = firstPartBase.lastIndexOf(' ');
   const firstWhitespaceOfLast = lastPartBase.indexOf(' ');
-  if (lastWhitespaceOfFirst == -1 || firstWhitespaceOfLast == -1) {
+  if (lastWhitespaceOfFirst === -1 || firstWhitespaceOfLast === -1) {
     return `${firstPartBase}...${lastPartBase}`;
   }
   const firstPart = firstPartBase.substring(0, lastWhitespaceOfFirst);

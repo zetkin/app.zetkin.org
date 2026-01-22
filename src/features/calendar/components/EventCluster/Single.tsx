@@ -99,8 +99,8 @@ const Single: FC<SingleProps> = ({
 
   return (
     <Event
-      cancelled={state == EventState.CANCELLED}
-      draft={state == EventState.DRAFT}
+      cancelled={state === EventState.CANCELLED}
+      draft={state === EventState.DRAFT}
       events={[event]}
       fieldGroups={[fields]}
       height={height}

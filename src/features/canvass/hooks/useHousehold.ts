@@ -11,7 +11,7 @@ export default function useHousehold(
   const apiClient = useApiClient();
   const item = useAppSelector((state) =>
     state.canvass.householdsByLocationId[locationId].items.find(
-      (item) => item.id == householdId
+      (item) => item.id === householdId
     )
   );
 

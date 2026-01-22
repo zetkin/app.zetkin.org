@@ -20,7 +20,7 @@ import { cleanPhoneNumber } from '../phoneUtils';
 const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   date: (value) => {
     try {
-      return new Date(value).toISOString().slice(0, 10) == value;
+      return new Date(value).toISOString().slice(0, 10) === value;
     } catch (err) {
       return false;
     }
@@ -44,13 +44,13 @@ export function predictProblems(
   const rowProblemByKind: Record<string, ImportRowProblem> = {};
 
   const sheetHasId = sheet.columns.some(
-    (col) => col.kind == ColumnKind.ID_FIELD
+    (col) => col.kind === ColumnKind.ID_FIELD
   );
   const sheetHasFirstName = sheet.columns.some(
-    (col) => col.kind == ColumnKind.FIELD && col.field == 'first_name'
+    (col) => col.kind === ColumnKind.FIELD && col.field === 'first_name'
   );
   const sheetHasLastName = sheet.columns.some(
-    (col) => col.kind == ColumnKind.FIELD && col.field == 'last_name'
+    (col) => col.kind === ColumnKind.FIELD && col.field === 'last_name'
   );
 
   if (!sheetHasId) {
@@ -101,9 +101,9 @@ export function predictProblems(
         const value = row.data[colIndex];
 
         if (value) {
-          if (column.kind == ColumnKind.ID_FIELD) {
+          if (column.kind === ColumnKind.ID_FIELD) {
             rowHasId = true;
-          } else if (column.kind == ColumnKind.FIELD) {
+          } else if (column.kind === ColumnKind.FIELD) {
             const fieldInfo = customFieldsBySlug[column.field];
             if (fieldInfo) {
               const validator = VALIDATORS[fieldInfo.type];
@@ -111,16 +111,16 @@ export function predictProblems(
               if (!valid) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
-            } else if (column.field == 'first_name') {
+            } else if (column.field === 'first_name') {
               rowHasFirstName = true;
-            } else if (column.field == 'last_name') {
+            } else if (column.field === 'last_name') {
               rowHasLastName = true;
             } else if (
-              column.field == 'email' &&
+              column.field === 'email' &&
               !z.string().email().safeParse(value.toString().trim()).success
             ) {
               accumulateFieldProblem(column.field, rowIndex);
-            } else if (column.field == 'phone' || column.field == 'alt_phone') {
+            } else if (column.field === 'phone' || column.field === 'alt_phone') {
               if (!isValidPhoneNumber(cleanPhoneNumber(value), country)) {
                 const isKnownProblem = accumulateFieldProblem(
                   column.field,
@@ -129,7 +129,7 @@ export function predictProblems(
 
                 if (!isKnownProblem) {
                   const countryIsUnknown =
-                    getCountries().findIndex((iso) => country == iso) == -1;
+                    getCountries().findIndex((iso) => country === iso) === -1;
                   if (countryIsUnknown) {
                     problems.push({
                       code: country,
@@ -138,12 +138,12 @@ export function predictProblems(
                   }
                 }
               }
-            } else if (column.field == 'gender') {
+            } else if (column.field === 'gender') {
               if (!['m', 'f', 'o', ''].includes(value.toString())) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
             }
-          } else if (column.kind == ColumnKind.DATE) {
+          } else if (column.kind === ColumnKind.DATE) {
             const validator = VALIDATORS['date'];
 
             if (column.dateFormat) {

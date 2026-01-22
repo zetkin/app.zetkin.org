@@ -28,7 +28,7 @@ export default function useSurveySubmission(
   const { setRespondentId } = useSurveySubmissionResponder(orgId, submissionId);
 
   const submissionItem = useAppSelector((state) =>
-    state.surveys.submissionList.items.find((item) => item.id == submissionId)
+    state.surveys.submissionList.items.find((item) => item.id === submissionId)
   );
 
   const future = loadItemIfNecessary(submissionItem, dispatch, {

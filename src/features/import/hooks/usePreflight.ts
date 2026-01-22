@@ -51,7 +51,7 @@ export default function usePreflight(orgId: number) {
     fields
   );
 
-  if (problems.length == 0) {
+  if (problems.length === 0) {
     problems.push(
       ...problemsFromPreview(
         sheet.firstRowIsHeaders ? sheet.rows.length - 1 : sheet.rows.length,
@@ -61,7 +61,7 @@ export default function usePreflight(orgId: number) {
   }
 
   const hasError = problems.some(
-    (problem) => levelForProblem(problem) == 'error'
+    (problem) => levelForProblem(problem) === 'error'
   );
 
   const importDisabled = !allWarningsApproved || hasError;
@@ -80,13 +80,13 @@ export default function usePreflight(orgId: number) {
     });
   } else if (
     preflightSummary.updated.total > 0 &&
-    preflightSummary.created.total == 0
+    preflightSummary.created.total === 0
   ) {
     statusMessage = messages.validation.statusMessages.update({
       numUpdated: preflightSummary.updated.total,
     });
   } else if (
-    preflightSummary.updated.total == 0 &&
+    preflightSummary.updated.total === 0 &&
     preflightSummary.created.total > 0
   ) {
     statusMessage = messages.validation.statusMessages.create({

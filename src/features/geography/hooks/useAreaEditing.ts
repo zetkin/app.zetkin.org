@@ -57,10 +57,10 @@ export default function useAreaEditing({ map, selectedArea }: Props): Return {
         setDraggingPoints((current) => {
           if (current) {
             updatedPoints = current;
-            const isDraggingFirst = draggedPointIndex == 0;
+            const isDraggingFirst = draggedPointIndex === 0;
             return current.map((originalLngLat, index) => {
-              const isDraggedPoint = index == draggedPointIndex;
-              const isLastPoint = index == current.length - 1;
+              const isDraggedPoint = index === draggedPointIndex;
+              const isLastPoint = index === current.length - 1;
               const shouldReplace =
                 isDraggedPoint || (isDraggingFirst && isLastPoint);
 

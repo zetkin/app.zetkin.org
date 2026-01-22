@@ -43,14 +43,14 @@ const FilterEditor = ({
 }: FilterEditorProps): JSX.Element => {
   return (
     <>
-      {filter.type == FILTER_TYPE.ALL && (
+      {filter.type === FILTER_TYPE.ALL && (
         <AllInSuborg
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
         />
       )}
-      {filter.type == FILTER_TYPE.AREA && (
+      {filter.type === FILTER_TYPE.AREA && (
         <Area
           filter={filter}
           onCancel={onCancelSubmitFilter}

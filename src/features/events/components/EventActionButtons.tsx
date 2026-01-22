@@ -49,7 +49,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   };
   const handleChangeDate = (date: string | null) => {
     const newDateIsDifferent =
-      date && date != dayjs(event.published).format('YYYY-MM-DD');
+      date && date !== dayjs(event.published).format('YYYY-MM-DD');
 
     if (newDateIsDifferent) {
       setPublished(date);

@@ -36,7 +36,7 @@ const PersonTagConfig = ({ onOutputConfigured }: PersonTagConfigProps) => {
           onChangeTags(newAssignedTags);
         }}
         onUnassignTag={(tag) => {
-          const unassignedTags = selectedTags.filter((t) => t.id != tag.id);
+          const unassignedTags = selectedTags.filter((t) => t.id !== tag.id);
           onChangeTags(unassignedTags);
         }}
       />

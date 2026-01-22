@@ -14,9 +14,9 @@ const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ name, status }) => {
   const theme = useTheme();
 
   const getColors = () => {
-    if (status == 'needed') {
+    if (status === 'needed') {
       return theme.palette.swatches.yellow;
-    } else if (status == 'signedUp') {
+    } else if (status === 'signedUp') {
       return theme.palette.swatches.green;
     } else {
       //Status must be "booked"
@@ -40,7 +40,7 @@ const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ name, status }) => {
       }}
     >
       <ZUILabel color="inherit">
-        {name && status == 'signedUp' ? (
+        {name && status === 'signedUp' ? (
           <Msg id={messageIds.signUpChip.callSignUp} values={{ name }} />
         ) : (
           <Msg id={messageIds.signUpChip[status]} />

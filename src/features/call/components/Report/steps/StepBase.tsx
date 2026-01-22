@@ -76,7 +76,7 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
             sx={(theme) => ({
               alignItems: 'center',
               backgroundColor:
-                state == 'failure'
+                state === 'failure'
                   ? theme.palette.secondary.light
                   : theme.palette.primary.main,
               borderRadius: '5rem',

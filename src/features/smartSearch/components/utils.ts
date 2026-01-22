@@ -78,19 +78,19 @@ export const getMatchingWithConfig = (config?: {
   const max = config?.max;
   const min = config?.min;
 
-  if (min != undefined && max != undefined) {
+  if (min !== undefined && max !== undefined) {
     return {
       config: config,
       option: MATCHING.BETWEEN,
     };
   }
-  if (min != undefined) {
+  if (min !== undefined) {
     return {
       config,
       option: MATCHING.MIN,
     };
   }
-  if (max != undefined) {
+  if (max !== undefined) {
     return {
       config,
       option: MATCHING.MAX,

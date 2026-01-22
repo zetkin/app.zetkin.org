@@ -144,7 +144,7 @@ const Activities: FC<ActivitiesProps> = ({
         </Box>
       )}
       {activities.map((activity) => {
-        if (activity.kind == ACTIVITIES.EVENT) {
+        if (activity.kind === ACTIVITIES.EVENT) {
           return (
             <EventCard
               key={activity.data.id}
@@ -154,7 +154,7 @@ const Activities: FC<ActivitiesProps> = ({
           );
         }
 
-        if (activity.kind == ACTIVITIES.SURVEY) {
+        if (activity.kind === ACTIVITIES.SURVEY) {
           return (
             <SurveyCard
               key={activity.data.id}
@@ -201,7 +201,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     'orgs' | 'calendar' | 'context' | null
   >(null);
   const selectedSurvey =
-    surveys.find((survey) => survey.id == selectedSurveyId) || null;
+    surveys.find((survey) => survey.id === selectedSurveyId) || null;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -251,7 +251,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  if (activitiesWithCampaign.length != surveys.length + events.length) {
+  if (activitiesWithCampaign.length !== surveys.length + events.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
 
@@ -384,12 +384,12 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
             active: !!projectIdsToFilterActivitiesBy.length,
             key: 'context',
             label:
-              projectIdsToFilterActivitiesBy.length != 1
+              projectIdsToFilterActivitiesBy.length !== 1
                 ? messages.activities.filters.projects({
                     numProjects: projectIdsToFilterActivitiesBy.length,
                   })
                 : projects.find(
-                    (project) => project.id == projectIdsToFilterActivitiesBy[0]
+                    (project) => project.id === projectIdsToFilterActivitiesBy[0]
                   )?.title ||
                   messages.activities.filters.projects({ numProjects: 0 }),
             onClick: () => {
@@ -410,7 +410,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   const eventFilters = [
     {
-      active: eventDateFilterState == 'today',
+      active: eventDateFilterState === 'today',
       key: 'today',
       label: messages.activities.filters.events.today(),
       onClick: () => {
@@ -418,13 +418,13 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           filtersUpdated({
             customDatesToFilterEventsBy: [null, null],
             eventDateFilterState:
-              eventDateFilterState == 'today' ? null : 'today',
+              eventDateFilterState === 'today' ? null : 'today',
           })
         );
       },
     },
     {
-      active: eventDateFilterState == 'tomorrow',
+      active: eventDateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.activities.filters.events.tomorrow(),
       onClick: () => {
@@ -432,13 +432,13 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           filtersUpdated({
             customDatesToFilterEventsBy: [null, null],
             eventDateFilterState:
-              eventDateFilterState == 'tomorrow' ? null : 'tomorrow',
+              eventDateFilterState === 'tomorrow' ? null : 'tomorrow',
           })
         );
       },
     },
     {
-      active: eventDateFilterState == 'thisWeek',
+      active: eventDateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.activities.filters.events.thisWeek(),
       onClick: () => {
@@ -446,23 +446,23 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           filtersUpdated({
             customDatesToFilterEventsBy: [null, null],
             eventDateFilterState:
-              eventDateFilterState == 'thisWeek' ? null : 'thisWeek',
+              eventDateFilterState === 'thisWeek' ? null : 'thisWeek',
           })
         );
       },
     },
     {
-      active: eventDateFilterState == 'custom',
+      active: eventDateFilterState === 'custom',
       key: 'custom',
       label:
-        eventDateFilterState == 'custom' && customDatesToFilterEventsBy[0]
+        eventDateFilterState === 'custom' && customDatesToFilterEventsBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterEventsBy[1],
               customDatesToFilterEventsBy[0]
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        if (eventDateFilterState == 'custom') {
+        if (eventDateFilterState === 'custom') {
           dispatch(
             filtersUpdated({
               customDatesToFilterEventsBy: [null, null],
@@ -534,10 +534,10 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   dispatch(surveySelected(surveyId));
                 }}
                 showNoActivities={
-                  filteredActivities.length == 0 && !filterState.alreadyIn
+                  filteredActivities.length === 0 && !filterState.alreadyIn
                 }
                 showNoSignups={
-                  filteredActivities.length == 0 && filterState.alreadyIn
+                  filteredActivities.length === 0 && filterState.alreadyIn
                 }
                 target={target}
               />
@@ -551,7 +551,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       </Box>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'calendar'}
+        open={drawerContent === 'calendar'}
       >
         <Box
           alignItems="center"
@@ -615,7 +615,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'orgs'}
+        open={drawerContent === 'orgs'}
       >
         <List>
           {orgs.map((org) => (
@@ -642,7 +642,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     dispatch(
                       filtersUpdated({
                         orgIdsToFilterEventsBy: orgIdsToFilterEventsBy.filter(
-                          (id) => id != org.id
+                          (id) => id !== org.id
                         ),
                       })
                     );
@@ -655,7 +655,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'context'}
+        open={drawerContent === 'context'}
       >
         <List>
           {projects.map((project) => (
@@ -665,7 +665,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   <GroupWork />
                 </ListItemAvatar>
                 <ZUIText>
-                  {project.id == 'noProject'
+                  {project.id === 'noProject'
                     ? messages.activities.projects.wihoutProjectLabel()
                     : project.title}
                 </ZUIText>
@@ -687,7 +687,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                       filtersUpdated({
                         projectIdsToFilterActivitiesBy:
                           projectIdsToFilterActivitiesBy.filter(
-                            (id) => id != project.id
+                            (id) => id !== project.id
                           ),
                       })
                     );

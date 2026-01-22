@@ -101,10 +101,10 @@ const SurveyOption = ({
 
   const selectedElement = surveys
     .find((s) => s.id === filter.config.survey)
-    ?.elements.find((e) => e.id == filter.config.question);
+    ?.elements.find((e) => e.id === filter.config.question);
   const validOptions =
-    (selectedElement?.type == ELEMENT_TYPE.QUESTION &&
-    selectedElement.question.response_type == RESPONSE_TYPE.OPTIONS
+    (selectedElement?.type === ELEMENT_TYPE.QUESTION &&
+    selectedElement.question.response_type === RESPONSE_TYPE.OPTIONS
       ? selectedElement.question.options
       : []) || [];
 

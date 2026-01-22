@@ -31,8 +31,8 @@ const ZUIBadge: FC<ZUIBadgeProps> = ({
   color,
   truncateLargeNumber = false,
 }) => {
-  const colorName = color == 'danger' ? 'error' : color;
-  const hasNumber = typeof number == 'number';
+  const colorName = color === 'danger' ? 'error' : color;
+  const hasNumber = typeof number === 'number';
 
   return (
     <Badge
@@ -51,7 +51,7 @@ const ZUIBadge: FC<ZUIBadgeProps> = ({
           width: !hasNumber ? '0.625rem' : undefined,
         },
       })}
-      variant={typeof number == 'number' ? 'standard' : 'dot'}
+      variant={typeof number === 'number' ? 'standard' : 'dot'}
     >
       {children}
     </Badge>

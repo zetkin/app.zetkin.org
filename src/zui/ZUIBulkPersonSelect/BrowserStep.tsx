@@ -37,11 +37,11 @@ const BrowserStep: FC<Props> = ({
         onSelect={(item, ev) => {
           ev.preventDefault();
           ev.stopPropagation();
-          if (item.type == 'folder') {
+          if (item.type === 'folder') {
             onFolderSelect(item.data.id);
-          } else if (item.type == 'back') {
+          } else if (item.type === 'back') {
             onFolderSelect(item.folderId);
-          } else if (item.type == 'view') {
+          } else if (item.type === 'view') {
             onViewSelect(item.data.id);
           }
         }}

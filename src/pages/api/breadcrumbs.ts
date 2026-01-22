@@ -51,10 +51,10 @@ const breadcrumbs = async (
         elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
       } else {
-        if (field == 'callassignments' || field == 'surveys') {
+        if (field === 'callassignments' || field === 'surveys') {
           curPath.push(field);
           continue;
-        } else if (field == 'folders' || field == 'lists') {
+        } else if (field === 'folders' || field === 'lists') {
           // Ignore "views" and "folders" which are only there
           // for technical reasons, but do not represent any page
           // and shouldn't link to anything.
@@ -121,7 +121,7 @@ async function fetchElements(
         label: task.data.title,
       },
     ];
-  } else if (fieldName == 'viewId') {
+  } else if (fieldName === 'viewId') {
     const view = await apiFetch(
       `/orgs/${orgId}/people/views/${fieldValue}`
     ).then((res) => res.json());
@@ -138,7 +138,7 @@ async function fetchElements(
         label: view.data.title,
       },
     ];
-  } else if (fieldName == 'instanceId') {
+  } else if (fieldName === 'instanceId') {
     const journeyInstance = await apiFetch(
       `/orgs/${orgId}/journey_instances/${fieldValue}`
     ).then((res) => res.json());
@@ -150,7 +150,7 @@ async function fetchElements(
         } #${journeyInstance.data.id}`,
       },
     ];
-  } else if (fieldName == 'journeyId') {
+  } else if (fieldName === 'journeyId') {
     const journey = await apiFetch(
       `/orgs/${orgId}/journeys/${fieldValue}`
     ).then((res) => res.json());
@@ -160,7 +160,7 @@ async function fetchElements(
         label: journey.data.title,
       },
     ];
-  } else if (fieldName == 'callAssId') {
+  } else if (fieldName === 'callAssId') {
     const assignment = await apiFetch(
       `/orgs/${orgId}/call_assignments/${fieldValue}`
     ).then((res) => res.json());
@@ -170,7 +170,7 @@ async function fetchElements(
         label: assignment.data.title,
       },
     ];
-  } else if (fieldName == 'surveyId') {
+  } else if (fieldName === 'surveyId') {
     const survey = await apiFetch(`/orgs/${orgId}/surveys/${fieldValue}`).then(
       (res) => res.json()
     );
@@ -180,7 +180,7 @@ async function fetchElements(
         label: survey.data.title,
       },
     ];
-  } else if (fieldName == 'eventId') {
+  } else if (fieldName === 'eventId') {
     const event = await apiFetch(`/orgs/${orgId}/actions/${fieldValue}`).then(
       (res) => res.json()
     );
@@ -199,7 +199,7 @@ async function fetchElements(
         },
       ];
     }
-  } else if (fieldName == 'folderId') {
+  } else if (fieldName === 'folderId') {
     const folderId = parseInt(fieldValue);
     const folderElements = await fetchFolders(
       folderId,
@@ -208,7 +208,7 @@ async function fetchElements(
       apiFetch
     );
     return folderElements;
-  } else if (fieldName == 'emailId') {
+  } else if (fieldName === 'emailId') {
     const email = await apiFetch(`/orgs/${orgId}/emails/${fieldValue}`).then(
       (res) => res.json()
     );
@@ -233,7 +233,7 @@ async function fetchFolders(
     .then((res) => res.json())
     .then((envelope) => envelope.data as ZetkinViewFolder[]);
 
-  let nextAncestor = folders.find((folder) => folder.id == folderId);
+  let nextAncestor = folders.find((folder) => folder.id === folderId);
 
   const ancestors: ZetkinViewFolder[] = [];
 
@@ -241,7 +241,7 @@ async function fetchFolders(
     ancestors.push(nextAncestor);
     const parent = nextAncestor.parent;
     nextAncestor = parent
-      ? folders.find((folder) => folder.id == parent.id)
+      ? folders.find((folder) => folder.id === parent.id)
       : undefined;
   }
 

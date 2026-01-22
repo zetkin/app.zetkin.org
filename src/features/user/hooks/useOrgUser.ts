@@ -9,7 +9,7 @@ export default function useOrgUser(
 ): ZetkinOrgUser {
   const apiClient = useApiClient();
   const userItem = useAppSelector((state) =>
-    state.user.orgUserList.items.find((item) => item.id == userId)
+    state.user.orgUserList.items.find((item) => item.id === userId)
   );
 
   const url = `/api2/orgs/${orgId}/users/${userId}`;

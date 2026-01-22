@@ -42,9 +42,9 @@ export const EventPopperProvider: FC<EventPopperPropviderProps> = ({
             setSingleAnchorPosition(cursorPosition);
             setMultiAnchorPosition(undefined);
           } else if (
-            cluster.kind == CLUSTER_TYPE.MULTI_LOCATION ||
-            cluster.kind == CLUSTER_TYPE.MULTI_SHIFT ||
-            cluster.kind == CLUSTER_TYPE.ARBITRARY
+            cluster.kind === CLUSTER_TYPE.MULTI_LOCATION ||
+            cluster.kind === CLUSTER_TYPE.MULTI_SHIFT ||
+            cluster.kind === CLUSTER_TYPE.ARBITRARY
           ) {
             setMultiAnchorPosition(cursorPosition);
             setSingleAnchorPosition(undefined);

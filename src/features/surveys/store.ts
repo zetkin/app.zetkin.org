@@ -122,7 +122,7 @@ const surveysSlice = createSlice({
     ) => {
       const [surveyId, elemId, newOption] = action.payload;
       const elementItem = state.elementsBySurveyId[surveyId].items.find(
-        (item) => item.id == elemId
+        (item) => item.id === elemId
       );
       if (
         elementItem?.data?.type === ELEMENT_TYPE.QUESTION &&
@@ -137,7 +137,7 @@ const surveysSlice = createSlice({
     ) => {
       const [surveyId, elemId, optionId] = action.payload;
       const elementItem = state.elementsBySurveyId[surveyId].items.find(
-        (item) => item.id == elemId
+        (item) => item.id === elemId
       );
       if (
         elementItem?.data?.type === ELEMENT_TYPE.QUESTION &&
@@ -155,7 +155,7 @@ const surveysSlice = createSlice({
     ) => {
       const [surveyId, elemId, optionId, updatedOption] = action.payload;
       const elementItem = state.elementsBySurveyId[surveyId].items.find(
-        (item) => item.id == elemId
+        (item) => item.id === elemId
       );
       if (
         elementItem?.data?.type === ELEMENT_TYPE.QUESTION &&
@@ -163,7 +163,7 @@ const surveysSlice = createSlice({
       ) {
         elementItem.data.question.options =
           elementItem.data.question.options?.map((oldOption) =>
-            oldOption.id == optionId ? updatedOption : oldOption
+            oldOption.id === optionId ? updatedOption : oldOption
           );
       }
       delete state.responseStatsBySurveyId[surveyId];
@@ -174,12 +174,12 @@ const surveysSlice = createSlice({
     ) => {
       const [surveyId, elemId, newOrder] = action.payload;
       const elementItem = state.elementsBySurveyId[surveyId].items.find(
-        (item) => item.id == elemId
+        (item) => item.id === elemId
       );
 
       if (
-        elementItem?.data?.type == ELEMENT_TYPE.QUESTION &&
-        elementItem?.data?.question.response_type == RESPONSE_TYPE.OPTIONS
+        elementItem?.data?.type === ELEMENT_TYPE.QUESTION &&
+        elementItem?.data?.question.response_type === RESPONSE_TYPE.OPTIONS
       ) {
         elementItem.data.question.options = elementItem.data.question.options
           ?.concat()
@@ -197,7 +197,7 @@ const surveysSlice = createSlice({
       state.elementsBySurveyId[surveyId].items = state.elementsBySurveyId[
         surveyId
       ].items.map((item) =>
-        item.id == elemId ? remoteItem(elemId, { data: updatedElement }) : item
+        item.id === elemId ? remoteItem(elemId, { data: updatedElement }) : item
       );
       delete state.responseStatsBySurveyId[surveyId];
     },
@@ -281,9 +281,9 @@ const surveysSlice = createSlice({
     },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.submissionList.items.find((item) => item.id == id);
+      const item = state.submissionList.items.find((item) => item.id === id);
       state.submissionList.items = state.submissionList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     submissionLoaded: (
@@ -293,7 +293,7 @@ const surveysSlice = createSlice({
       // TODO: Segregate submission content from submission list
       const submission = action.payload;
       const item = state.submissionList.items.find(
-        (item) => item.id == submission.id
+        (item) => item.id === submission.id
       );
       if (!item) {
         throw new Error('Finished loading item that never started loading');
@@ -324,22 +324,22 @@ const surveysSlice = createSlice({
     },
     surveyDeleted: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.surveyList.items.find((item) => item.id == id);
+      const item = state.surveyList.items.find((item) => item.id === id);
       if (item) {
         item.deleted = true;
       }
     },
     surveyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.surveyList.items.find((item) => item.id == id);
+      const item = state.surveyList.items.find((item) => item.id === id);
       state.elementsBySurveyId[id] = remoteList();
       state.surveyList.items = state.surveyList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     surveyLoaded: (state, action: PayloadAction<ZetkinSurveyExtended>) => {
       const survey = action.payload;
-      const item = state.surveyList.items.find((item) => item.id == survey.id);
+      const item = state.surveyList.items.find((item) => item.id === survey.id);
       if (!item) {
         throw new Error('Finished loading item that never started loading');
       }
@@ -376,7 +376,7 @@ const surveysSlice = createSlice({
     ) => {
       const [submissionId, mutating] = action.payload;
       const item = state.submissionList.items.find(
-        (item) => item.id == submissionId
+        (item) => item.id === submissionId
       );
       if (item) {
         item.mutating = mutating;
@@ -388,7 +388,7 @@ const surveysSlice = createSlice({
     ) => {
       const submission = action.payload;
       const item = state.submissionList.items.find(
-        (item) => item.id == submission.id
+        (item) => item.id === submission.id
       );
       if (item) {
         item.data = { ...item.data, ...submission };
@@ -399,7 +399,7 @@ const surveysSlice = createSlice({
       const submissions = state.submissionsBySurveyId[submission.survey.id];
       if (submissions) {
         const itemCopy = submissions.items.find(
-          (item) => item.id == submission.id
+          (item) => item.id === submission.id
         );
         if (itemCopy) {
           itemCopy.data = { ...itemCopy.data, ...submission };
@@ -436,14 +436,14 @@ const surveysSlice = createSlice({
     },
     surveyUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [surveyId, mutating] = action.payload;
-      const item = state.surveyList.items.find((item) => item.id == surveyId);
+      const item = state.surveyList.items.find((item) => item.id === surveyId);
       if (item) {
         item.mutating = mutating;
       }
     },
     surveyUpdated: (state, action: PayloadAction<ZetkinSurvey>) => {
       const survey = action.payload;
-      const item = state.surveyList.items.find((item) => item.id == survey.id);
+      const item = state.surveyList.items.find((item) => item.id === survey.id);
       if (item) {
         item.data = { ...item.data, ...survey };
         item.mutating = [];
@@ -469,11 +469,11 @@ function addSubmissionToState(
 ) {
   submissions.forEach((submission) => {
     const submissionListItem = state.submissionList.items.find(
-      (item) => item.id == submission.id
+      (item) => item.id === submission.id
     );
     const submissionBySurveyId = state.submissionsBySurveyId[
       submission.survey.id
-    ]?.items.find((item) => item.id == submission.id);
+    ]?.items.find((item) => item.id === submission.id);
 
     if (submissionListItem) {
       submissionListItem.data = { ...submissionListItem.data, ...submission };

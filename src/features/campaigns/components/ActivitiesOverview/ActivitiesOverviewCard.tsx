@@ -77,7 +77,7 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
           return (
             <Box key={`cluster-${activity.events[0].id}`}>
               {index > 0 && <Divider />}
-              {activity.kind == CLUSTER_TYPE.SINGLE ? (
+              {activity.kind === CLUSTER_TYPE.SINGLE ? (
                 <EventOverviewListItem
                   event={activity.events[0]}
                   focusDate={focusDate}

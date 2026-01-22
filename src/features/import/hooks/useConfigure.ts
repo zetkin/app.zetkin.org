@@ -57,7 +57,7 @@ export default function useConfigure(orgId: number) {
     );
 
     const hasErrors = problems.some(
-      (problem) => levelForProblem(problem) == 'error'
+      (problem) => levelForProblem(problem) === 'error'
     );
 
     if (hasErrors) {

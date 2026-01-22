@@ -495,10 +495,10 @@ const ZUIOrganizeSidebar = ({
                 )}
               />
               {menuItemsMap.map(({ name, icon }) => {
-                if (name == 'geography' && !hasAreas) {
+                if (name === 'geography' && !hasAreas) {
                   return null;
                 }
-                if (name == 'settings' && !hasSettings) {
+                if (name === 'settings' && !hasSettings) {
                   return null;
                 }
 

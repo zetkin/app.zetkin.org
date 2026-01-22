@@ -63,14 +63,14 @@ const campaignsSlice = createSlice({
     },
     campaignLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.campaignList.items.find((item) => item.id == id);
+      const item = state.campaignList.items.find((item) => item.id === id);
       state.campaignList.items = state.campaignList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     campaignLoaded: (state, action: PayloadAction<ZetkinCampaign>) => {
       const id = action.payload.id;
-      const item = state.campaignList.items.find((item) => item.id == id);
+      const item = state.campaignList.items.find((item) => item.id === id);
 
       if (!item) {
         throw new Error(
@@ -85,7 +85,7 @@ const campaignsSlice = createSlice({
     },
     campaignUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, attributes] = action.payload;
-      const item = state.campaignList.items.find((item) => item.id == id);
+      const item = state.campaignList.items.find((item) => item.id === id);
 
       if (item) {
         item.mutating = item.mutating
@@ -96,7 +96,7 @@ const campaignsSlice = createSlice({
     campaignUpdated: (state, action: PayloadAction<ZetkinCampaign>) => {
       const campaign = action.payload;
       const item = state.campaignList.items.find(
-        (item) => item.id == campaign.id
+        (item) => item.id === campaign.id
       );
 
       if (item) {

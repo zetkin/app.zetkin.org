@@ -42,7 +42,7 @@ function objFromIdMap(map: Record<string, string>): RecursiveStringMap {
     const path = id.split('.');
     let parent = output;
     path.forEach((elem, index) => {
-      const isLast = index == path.length - 1;
+      const isLast = index === path.length - 1;
       if (isLast) {
         parent[elem] = val;
       } else {

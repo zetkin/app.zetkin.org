@@ -26,12 +26,12 @@ const SearchResults = ({
 
     const getParent = (childOrg: TreeItemData) => {
       return flatOrgData.find((org) => {
-        return org.id == childOrg.parent?.id;
+        return org.id === childOrg.parent?.id;
       });
     };
 
     let parent = getParent(node);
-    while (parent != null) {
+    while (parent !== null) {
       ancestors.push(parent);
       parent = getParent(parent);
     }

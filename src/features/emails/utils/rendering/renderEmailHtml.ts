@@ -20,7 +20,7 @@ export default function renderEmailHtml(
   const traverser = new EmailContentTraverser(contentObj);
   const expanded = traverser.traverse({
     handleInline(node) {
-      if (node.kind == InlineNodeKind.VARIABLE) {
+      if (node.kind === InlineNodeKind.VARIABLE) {
         return {
           kind: InlineNodeKind.STRING,
           value: variableValues[node.name] || '',

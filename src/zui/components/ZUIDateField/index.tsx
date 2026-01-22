@@ -113,7 +113,7 @@ const ZUIDateField: FC<ZUIDateFieldProps> = ({
               fontWeight: '500',
               letterSpacing: '3%',
               transform: `translate(0.875rem, ${
-                size == 'medium' ? '0.563rem' : '1rem'
+                size === 'medium' ? '0.563rem' : '1rem'
               })`,
             },
             '& > label[data-shrink="true"]': {
@@ -144,7 +144,7 @@ const ZUIDateField: FC<ZUIDateFieldProps> = ({
               fontWeight: 400,
               letterSpacing: '1%',
               lineHeight: '1.5rem',
-              paddingY: size == 'medium' ? '0.594rem' : '',
+              paddingY: size === 'medium' ? '0.594rem' : '',
             },
           }),
         },

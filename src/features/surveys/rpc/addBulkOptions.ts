@@ -46,7 +46,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   // Delete all empty options
   const removedOptions: ZetkinSurveyOption[] = [];
   for (const oldOption of existingOptions) {
-    if (oldOption.text.trim() == '') {
+    if (oldOption.text.trim() === '') {
       await apiClient.delete(
         `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${oldOption.id}`
       );

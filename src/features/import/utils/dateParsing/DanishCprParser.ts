@@ -58,6 +58,6 @@ export class DanishCprParser implements IDateParser {
     const dateString =
       makeDate('DDMMYY', dateParts) + dateParts.delimiter + dateParts.suffix;
 
-    return dateString == stringValue;
+    return dateString === stringValue;
   }
 }

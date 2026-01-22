@@ -18,17 +18,17 @@ const ReportForm: FC<Props> = ({
   target,
 }) => {
   const currentStep =
-    report.step == 'summary'
+    report.step === 'summary'
       ? 'summary'
-      : reportSteps.find((step) => step.name == report.step)?.name;
+      : reportSteps.find((step) => step.name === report.step)?.name;
 
   let currentStepIndex: number = 0;
   if (currentStep) {
-    if (currentStep == 'summary') {
+    if (currentStep === 'summary') {
       currentStepIndex = reportSteps.length;
     } else {
       currentStepIndex = reportSteps.findIndex(
-        (step) => step.name == currentStep
+        (step) => step.name === currentStep
       );
     }
   }
@@ -36,7 +36,7 @@ const ReportForm: FC<Props> = ({
   return (
     <Stack>
       {reportSteps.map((step, index) => {
-        if (index > currentStepIndex || index == reportSteps.length) {
+        if (index > currentStepIndex || index === reportSteps.length) {
           return null;
         }
 
@@ -46,7 +46,7 @@ const ReportForm: FC<Props> = ({
           disableCallerNotes
         );
 
-        if (renderVariant == 'summary') {
+        if (renderVariant === 'summary') {
           return step.renderSummary(
             report,
             (updatedReport) => {
@@ -56,7 +56,7 @@ const ReportForm: FC<Props> = ({
           );
         }
 
-        if (renderVariant == 'question') {
+        if (renderVariant === 'question') {
           return step.renderQuestion(
             report,
             onReportChange,

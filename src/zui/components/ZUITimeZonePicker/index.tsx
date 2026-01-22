@@ -26,7 +26,7 @@ type ZUITimezonePickerProps = {
 
 export const findCurrentTZ = () => {
   const tzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return timezones.find((timezone) => timezone.tzCode == tzCode)!;
+  return timezones.find((timezone) => timezone.tzCode === tzCode)!;
 };
 
 const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
@@ -165,7 +165,7 @@ const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {filteredCities.length == 0 && (
+                    {filteredCities.length === 0 && (
                       <Typography
                         sx={(theme) => ({
                           color: theme.palette.secondary.main,

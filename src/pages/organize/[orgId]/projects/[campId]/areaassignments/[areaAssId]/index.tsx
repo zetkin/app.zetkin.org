@@ -68,7 +68,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
           const planUrl = `/organize/${orgId}/projects/${assignment.project_id}/areaassignments/${assignment.id}/map`;
           return (
             <Box display="flex" flexDirection="column" gap={2}>
-              {numAreas == 0 && (
+              {numAreas === 0 && (
                 <Card>
                   <Box p={10} sx={{ textAlign: ' center' }}>
                     <Typography>
@@ -109,7 +109,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                         message={messages.overview.progress.headers.successful()}
                         secondNumber={stats.num_visits}
                       />
-                      {stats.num_households_visited != null && (
+                      {stats.num_households_visited !== null && (
                         <>
                           <Divider flexItem orientation="vertical" />
                           <NumberCard

@@ -161,7 +161,7 @@ const areaAssignmentSlice = createSlice({
 
       const hasStatsItem = !!state.areaStatsByAssignmentId[
         assignee.assignment_id
-      ].data?.stats.find((statsItem) => statsItem.area_id == assignee.area_id);
+      ].data?.stats.find((statsItem) => statsItem.area_id === assignee.area_id);
 
       if (!hasStatsItem) {
         state.areaStatsByAssignmentId[assignee.assignment_id].isStale = true;
@@ -240,9 +240,9 @@ const areaAssignmentSlice = createSlice({
         const [keyAssignmentIdStr] = key.split(':');
         const keyAssignmentId = Number(keyAssignmentIdStr);
 
-        if (keyAssignmentId == assignmentId) {
+        if (keyAssignmentId === assignmentId) {
           const list = state.locationsByAssignmentIdAndAreaId[key];
-          if (list.items.some((item) => item.id == location.id)) {
+          if (list.items.some((item) => item.id === location.id)) {
             remoteItemUpdated(list, location);
           }
         }

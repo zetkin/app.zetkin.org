@@ -67,16 +67,16 @@ const callAssignmentsSlice = createSlice({
     },
     callAssignmentDeleted: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.assignmentList.items.find((item) => item.id == id);
+      const item = state.assignmentList.items.find((item) => item.id === id);
       if (item) {
         item.deleted = true;
       }
     },
     callAssignmentLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.assignmentList.items.find((item) => item.id == id);
+      const item = state.assignmentList.items.find((item) => item.id === id);
       state.assignmentList.items = state.assignmentList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     callAssignmentLoaded: (
@@ -84,7 +84,7 @@ const callAssignmentsSlice = createSlice({
       action: PayloadAction<CallAssignmentData>
     ) => {
       const id = action.payload.id;
-      const item = state.assignmentList.items.find((item) => item.id == id);
+      const item = state.assignmentList.items.find((item) => item.id === id);
 
       if (!item) {
         throw new Error(
@@ -102,7 +102,7 @@ const callAssignmentsSlice = createSlice({
       action: PayloadAction<[number, string[]]>
     ) => {
       const [id, attributes] = action.payload;
-      const caItem = state.assignmentList.items.find((item) => item.id == id);
+      const caItem = state.assignmentList.items.find((item) => item.id === id);
 
       if (caItem) {
         caItem.mutating = caItem.mutating
@@ -117,13 +117,13 @@ const callAssignmentsSlice = createSlice({
       const [assignment, mutating] = action.payload;
       const statsItem = state.statsById[assignment.id];
       const caItem = state.assignmentList.items.find(
-        (item) => item.id == assignment.id
+        (item) => item.id === assignment.id
       );
       const callAssignment = caItem?.data;
 
       if (
         statsItem &&
-        (callAssignment?.cooldown != assignment.cooldown ||
+        (callAssignment?.cooldown !== assignment.cooldown ||
           JSON.stringify(assignment.target.filter_spec) !=
             JSON.stringify(callAssignment?.target.filter_spec) ||
           JSON.stringify(assignment.goal.filter_spec) !=
@@ -139,7 +139,7 @@ const callAssignmentsSlice = createSlice({
       }
 
       state.assignmentList.items = state.assignmentList.items
-        .filter((ca) => ca.id != assignment.id)
+        .filter((ca) => ca.id !== assignment.id)
         .concat([remoteItem(assignment.id, { data: assignment })]);
     },
     callAssignmentsLoad: (state) => {
@@ -157,7 +157,7 @@ const callAssignmentsSlice = createSlice({
     },
     callUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, attributes] = action.payload;
-      const callItem = state.callList.items.find((item) => item.id == id);
+      const callItem = state.callList.items.find((item) => item.id === id);
 
       if (callItem) {
         callItem.mutating = callItem.mutating
@@ -167,7 +167,7 @@ const callAssignmentsSlice = createSlice({
     },
     callUpdated: (state, action: PayloadAction<[Call, string[]]>) => {
       const [call, mutating] = action.payload;
-      const callItem = state.callList.items.find((item) => item.id == call.id);
+      const callItem = state.callList.items.find((item) => item.id === call.id);
 
       if (callItem) {
         callItem.mutating = callItem.mutating.filter((attr) =>
@@ -176,7 +176,7 @@ const callAssignmentsSlice = createSlice({
       }
 
       state.callList.items = state.callList.items
-        .filter((c) => c.id != call?.id)
+        .filter((c) => c.id !== call?.id)
         .concat([remoteItem(call.id, { data: call })]);
     },
     callerAdd: (state, action: PayloadAction<[number, number]>) => {
@@ -191,13 +191,13 @@ const callAssignmentsSlice = createSlice({
     ) => {
       const [caId, caller] = action.payload;
       state.callersById[caId].items = state.callersById[caId].items
-        .filter((c) => c.id != caller.id)
+        .filter((c) => c.id !== caller.id)
         .concat([remoteItem(caller.id, { data: caller })]);
     },
     callerConfigure: (state, action: PayloadAction<[number, number]>) => {
       const [caId, callerId] = action.payload;
       const item = state.callersById[caId].items.find(
-        (item) => item.id == callerId
+        (item) => item.id === callerId
       );
       if (item) {
         item.isLoading = true;
@@ -209,7 +209,7 @@ const callAssignmentsSlice = createSlice({
     ) => {
       const [caId, caller] = action.payload;
       const item = state.callersById[caId].items.find(
-        (item) => item.id == caller.id
+        (item) => item.id === caller.id
       );
       if (item) {
         item.isLoading = false;
@@ -219,7 +219,7 @@ const callAssignmentsSlice = createSlice({
     callerRemove: (state, action: PayloadAction<[number, number]>) => {
       const [caId, callerId] = action.payload;
       const item = state.callersById[caId].items.find(
-        (item) => item.id == callerId
+        (item) => item.id === callerId
       );
       if (item) {
         item.isLoading = true;
@@ -228,7 +228,7 @@ const callAssignmentsSlice = createSlice({
     callerRemoved: (state, action: PayloadAction<[number, number]>) => {
       const [caId, callerId] = action.payload;
       state.callersById[caId].items = state.callersById[caId].items.filter(
-        (item) => item.id != callerId
+        (item) => item.id !== callerId
       );
     },
     callersLoad: (state, action: PayloadAction<number>) => {

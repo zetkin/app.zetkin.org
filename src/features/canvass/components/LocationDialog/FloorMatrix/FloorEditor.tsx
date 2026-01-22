@@ -58,7 +58,7 @@ const FloorEditor: FC<Props> = ({
         <form
           onSubmit={(ev) => {
             ev.preventDefault();
-            if (level != draft.level) {
+            if (level !== draft.level) {
               onLevelChange(level);
             }
           }}
@@ -67,7 +67,7 @@ const FloorEditor: FC<Props> = ({
             defaultValue={level}
             disabled={!levelEnabled}
             onBlur={() => {
-              if (level != draft.level) {
+              if (level !== draft.level) {
                 onLevelChange(level);
               }
             }}
@@ -135,10 +135,10 @@ const FloorEditor: FC<Props> = ({
           <IconButton
             disabled={
               draft.existingHouseholds.length > 0 &&
-              draft.draftHouseholdCount == 0
+              draft.draftHouseholdCount === 0
             }
             onClick={() => {
-              if (totalHouseholdCount == 0) {
+              if (totalHouseholdCount === 0) {
                 onDelete();
               } else {
                 onChange({

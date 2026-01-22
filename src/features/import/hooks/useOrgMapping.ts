@@ -6,7 +6,7 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
   const dispatch = useAppDispatch();
 
   const getSelectedOrgId = (value: CellData) => {
-    if (column.kind == ColumnKind.ORGANIZATION) {
+    if (column.kind === ColumnKind.ORGANIZATION) {
       const map = column.mapping.find((m) => m.value === value);
       return map?.orgId || null;
     }
@@ -14,9 +14,9 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
   };
 
   const selectOrg = (orgId: number, value: CellData) => {
-    if (column.kind == ColumnKind.ORGANIZATION) {
+    if (column.kind === ColumnKind.ORGANIZATION) {
       // Check if there is already a map for this row value to an org ID
-      const map = column.mapping.find((map) => map.value == value);
+      const map = column.mapping.find((map) => map.value === value);
       // If no map for that value
       if (!map) {
         const newMap = { orgId: orgId, value: value };
@@ -33,7 +33,7 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
       } else {
         // If there is already a map, replace it
         // Find mappings that are not for this row value
-        const filteredMapping = column.mapping.filter((m) => m.value != value);
+        const filteredMapping = column.mapping.filter((m) => m.value !== value);
         // New orgId for that row value
         const updatedMap = { ...map, orgId: orgId };
 
@@ -51,7 +51,7 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
   };
 
   const selectOrgs = (mapping: { orgId: number; value: CellData }[]) => {
-    if (column.kind == ColumnKind.ORGANIZATION) {
+    if (column.kind === ColumnKind.ORGANIZATION) {
       dispatch(
         columnUpdate([
           columnIndex,
@@ -65,10 +65,10 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
   };
 
   const deselectOrg = (value: CellData) => {
-    if (column.kind == ColumnKind.ORGANIZATION) {
-      const map = column.mapping.find((map) => map.value == value);
+    if (column.kind === ColumnKind.ORGANIZATION) {
+      const map = column.mapping.find((map) => map.value === value);
       if (map) {
-        const filteredMapping = column.mapping.filter((m) => m.value != value);
+        const filteredMapping = column.mapping.filter((m) => m.value !== value);
 
         dispatch(
           columnUpdate([

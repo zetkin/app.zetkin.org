@@ -87,7 +87,7 @@ const LocationPage: FC<LocationPageProps> = ({
         )}
       </Box>
       <Box display="flex" gap={1} justifyContent="center" m={4}>
-        {assignment.reporting_level == 'location' && (
+        {assignment.reporting_level === 'location' && (
           <Button onClick={onVisit} variant="contained">
             <Msg id={messageIds.location.page.quickReportButtonLabel} />
           </Button>

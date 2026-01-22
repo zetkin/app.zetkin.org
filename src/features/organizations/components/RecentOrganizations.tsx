@@ -50,7 +50,7 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
                 <ProceduralColorIcon id={org.id} />
               </Box>
               <Typography
-                sx={{ fontWeight: orgId == org.id ? 'bold' : 'normal' }}
+                sx={{ fontWeight: orgId === org.id ? 'bold' : 'normal' }}
                 variant="body2"
               >
                 {org.title}

@@ -12,15 +12,15 @@ export default function calculateReportState(
     return 13;
   } else {
     //!wasReached
-    if (report.failureReason == 'lineBusy') {
+    if (report.failureReason === 'lineBusy') {
       return 12;
-    } else if (report.failureReason == 'noPickup') {
+    } else if (report.failureReason === 'noPickup') {
       if (report.leftMessage) {
         return 15;
       } else {
         return 11;
       }
-    } else if (report.failureReason == 'notAvailable' && report.callBackAfter) {
+    } else if (report.failureReason === 'notAvailable' && report.callBackAfter) {
       return 14;
     } else {
       //report.wrongNumber

@@ -51,7 +51,7 @@ const TagManager: FC<TagManagerProps> = ({
     <ZUIFutures futures={{ tagGroups: tagGroupsFuture, tags: tagsFuture }}>
       {({ data: { tagGroups, tags } }) => {
         const tagsWithoutValueTags = tags.filter(
-          (tag) => tag.value_type == null
+          (tag) => tag.value_type === null
         );
         return (
           <TagManagerController

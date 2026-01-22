@@ -80,8 +80,8 @@ const PersonDetailsCard: React.FunctionComponent<{
   const customFieldsConfig = customFields
     .filter(
       (field) =>
-        field.type != CUSTOM_FIELD_TYPE.JSON &&
-        field.type != CUSTOM_FIELD_TYPE.LNGLAT
+        field.type !== CUSTOM_FIELD_TYPE.JSON &&
+        field.type !== CUSTOM_FIELD_TYPE.LNGLAT
     )
     .map((field) => {
       // Object type is filtered above
@@ -96,10 +96,10 @@ const PersonDetailsCard: React.FunctionComponent<{
         );
       } else if (
         value &&
-        field.type == CUSTOM_FIELD_TYPE.ENUM &&
+        field.type === CUSTOM_FIELD_TYPE.ENUM &&
         field.enum_choices
       ) {
-        const enumItem = field.enum_choices.find((c) => c.key == value);
+        const enumItem = field.enum_choices.find((c) => c.key === value);
         if (enumItem) {
           value = enumItem.label;
         }

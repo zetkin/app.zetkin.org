@@ -63,7 +63,7 @@ const EmailTargets: FC<EmailTargetsProps> = ({
     } else if (targetedNotLocked) {
       return messageIds.targets.subtitle.targetedNotLocked;
     } else if (targetedAndLocked) {
-      if (state == EmailState.SCHEDULED) {
+      if (state === EmailState.SCHEDULED) {
         return messageIds.targets.subtitle.scheduled;
       } else {
         return messageIds.targets.subtitle.targetedAndLocked;
@@ -126,7 +126,7 @@ const EmailTargets: FC<EmailTargetsProps> = ({
             <Typography>
               <Msg id={getSubtitleMessageId()} />
             </Typography>
-            {targetedAndLocked && state != EmailState.SCHEDULED && (
+            {targetedAndLocked && state !== EmailState.SCHEDULED && (
               <Alert severity="info">
                 <Msg id={messageIds.targets.unlockAlert} />
               </Alert>

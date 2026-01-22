@@ -102,7 +102,7 @@ const CallerTagSection: FC<{
         groupTags={false}
         ignoreValues={true}
         onAssignTag={(tag) => onChange(tags.concat([tag]))}
-        onUnassignTag={(tag) => onChange(tags.filter((t) => t.id != tag.id))}
+        onUnassignTag={(tag) => onChange(tags.filter((t) => t.id !== tag.id))}
       />
     </>
   );

@@ -34,7 +34,7 @@ function hoursFromSpanValue(value: string): number | undefined {
 }
 
 function axisFromSpanValue(value: string): AxisProps {
-  if (value == 'first24' || value == 'first48') {
+  if (value === 'first24' || value === 'first48') {
     const output: number[] = [];
     for (let i = 0; i < 48; i += 4) {
       output.push(i * 60 * 60);
@@ -47,7 +47,7 @@ function axisFromSpanValue(value: string): AxisProps {
   } else {
     return {
       format: (val) => Math.round(val / 60 / 60 / 24),
-      tickValues: value == 'firstWeek' ? 7 : 15,
+      tickValues: value === 'firstWeek' ? 7 : 15,
     };
   }
 }

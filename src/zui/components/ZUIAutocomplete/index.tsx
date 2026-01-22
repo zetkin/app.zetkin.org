@@ -135,7 +135,7 @@ const ZUIAutocomplete: FC<Props> = ({
         </Typography>
       }
       onChange={(ev, newValue) => {
-        if (Array.isArray(newValue) != multiple) {
+        if (Array.isArray(newValue) !== multiple) {
           throw new Error(
             'When "multiple" is true, newValue must be an array.'
           );
@@ -273,7 +273,7 @@ const ZUIAutocomplete: FC<Props> = ({
           {
             paddingLeft: '0.375rem',
             paddingRight:
-              (Array.isArray(value) && value.length == 0) || !value
+              (Array.isArray(value) && value.length === 0) || !value
                 ? '2.5rem'
                 : '3.75rem',
           },

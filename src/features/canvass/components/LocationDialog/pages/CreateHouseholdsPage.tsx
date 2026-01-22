@@ -51,7 +51,7 @@ const CreateHouseholdsPage: FC<Props> = ({
       setNumFloors(newNumFloors);
       setNumAptsPerFloor(newNumAptsPerFloor);
 
-      if (newScale != scale) {
+      if (newScale !== scale) {
         setScale(newScale);
       }
     },

@@ -40,7 +40,7 @@ export const DefaultCheckboxes: Story = {
                 if (newCheckedState) {
                   setChecked(checked.concat([index]));
                 } else {
-                  setChecked(checked.filter((i) => i != index));
+                  setChecked(checked.filter((i) => i !== index));
                 }
               },
             }}
@@ -82,7 +82,7 @@ export const WideCheckboxes: Story = {
                 if (newCheckedState) {
                   setChecked(checked.concat([index]));
                 } else {
-                  setChecked(checked.filter((i) => i != index));
+                  setChecked(checked.filter((i) => i !== index));
                 }
               },
             }}
@@ -125,7 +125,7 @@ export const NarrowCheckboxes: Story = {
                 if (newCheckedState) {
                   setChecked(checked.concat([index]));
                 } else {
-                  setChecked(checked.filter((i) => i != index));
+                  setChecked(checked.filter((i) => i !== index));
                 }
               },
             }}

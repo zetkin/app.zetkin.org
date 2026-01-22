@@ -14,7 +14,7 @@ export default function hasWrongIDFormat(
   }
 
   return cellValues.some((value, index) => {
-    if (firstRowIsHeaders && index == 0) {
+    if (firstRowIsHeaders && index === 0) {
       return false;
     }
 

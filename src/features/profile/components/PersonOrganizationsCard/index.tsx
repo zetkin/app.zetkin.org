@@ -65,7 +65,7 @@ const PersonOrganizationsCard: React.FunctionComponent<
         try {
           await removeFromOrg(subOrgId);
           setSelected(undefined);
-          if (orgId == subOrgId) {
+          if (orgId === subOrgId) {
             router.push(`/organize/${orgId}/people`);
           }
         } catch (err) {

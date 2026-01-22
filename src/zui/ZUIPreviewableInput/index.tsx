@@ -32,7 +32,7 @@ function ZUIPreviewableInput<
     focusingRef.current = focusInitially;
   }, [focusInitially, mode]);
 
-  if (mode == ZUIPreviewableMode.EDITABLE) {
+  if (mode === ZUIPreviewableMode.EDITABLE) {
     return (
       <Box>
         {renderInput({

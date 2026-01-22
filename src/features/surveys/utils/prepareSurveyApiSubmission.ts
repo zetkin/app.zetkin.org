@@ -24,7 +24,7 @@ export default function prepareSurveyApiSubmission(
     const fields = name.split('.');
     const [id, type] = fields;
 
-    if (type == 'text') {
+    if (type === 'text') {
       responses.push({
         question_id: parseInt(id),
         response: value[0] as string,
@@ -33,7 +33,7 @@ export default function prepareSurveyApiSubmission(
 
     if (type === 'options' && typeof value === 'string') {
       responses.push({
-        options: value == '' ? [] : [parseInt(value, 10)],
+        options: value === '' ? [] : [parseInt(value, 10)],
         question_id: parseInt(id, 10),
       });
     }
@@ -63,7 +63,7 @@ export default function prepareSurveyApiSubmission(
     };
   }
 
-  if (sig == 'email') {
+  if (sig === 'email') {
     signature = {
       email: formData.get('sig.email') as string,
       first_name: formData.get('sig.first_name') as string,

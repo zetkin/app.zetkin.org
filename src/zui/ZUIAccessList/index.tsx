@@ -61,14 +61,14 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
                     onChange={(ev) => {
                       const level = ev.target.value;
                       if (
-                        level == 'configure' ||
-                        level == 'edit' ||
-                        level == 'readonly'
+                        level === 'configure' ||
+                        level === 'edit' ||
+                        level === 'readonly'
                       ) {
                         if (onChangeLevel) {
                           onChangeLevel(person.id, level);
                         }
-                      } else if (level == 'delete' && onRevoke) {
+                      } else if (level === 'delete' && onRevoke) {
                         onRevoke(person.id);
                       }
                     }}

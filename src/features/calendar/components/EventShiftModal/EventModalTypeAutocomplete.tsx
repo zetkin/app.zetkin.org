@@ -98,13 +98,13 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
       getOptionLabel={(option) => option.title}
       isOptionEqualToValue={(option, value) => option.title === value.title}
       onChange={(_, value) => {
-        if (value.id == 'CREATE') {
+        if (value.id === 'CREATE') {
           onCreateType(value.title);
           setCreatedType(value.title);
           return;
         }
         onChange(
-          value.id == 'UNCATEGORIZED'
+          value.id === 'UNCATEGORIZED'
             ? null
             : {
                 id: value.id,
@@ -132,16 +132,16 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
       renderOption={(props, option) => {
         return (
           <Box key={option.id}>
-            {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
+            {option.id !== 'CREATE' && option.id !== 'UNCATEGORIZED' && (
               <li {...props}>{option.title}</li>
             )}
-            {option.id == 'UNCATEGORIZED' && (
+            {option.id === 'UNCATEGORIZED' && (
               <li {...props}>
                 <Clear sx={{ marginRight: 1 }} />
                 <Msg id={messageIds.type.uncategorized} />
               </li>
             )}
-            {option.id == 'CREATE' && (
+            {option.id === 'CREATE' && (
               <li {...props}>
                 <Add sx={{ marginRight: 1 }} />
                 <Msg

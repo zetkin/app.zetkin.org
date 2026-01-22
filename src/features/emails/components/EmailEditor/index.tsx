@@ -62,7 +62,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
     ) {
       for (let i = 0; i < blocksRef.current.length; i++) {
         const block = blocksRef.current[i];
-        if (block.id != content.blocks[i].id) {
+        if (block.id !== content.blocks[i].id) {
           setSelectedBlockIndex(i);
           break;
         }

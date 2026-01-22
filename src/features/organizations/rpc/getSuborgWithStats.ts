@@ -83,7 +83,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     ),
   ]);
 
-  if (results.some((result) => result.status == 'rejected')) {
+  if (results.some((result) => result.status === 'rejected')) {
     return {
       error: true,
       id: orgId,
@@ -103,7 +103,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   let numEventsWithBookedPeople = 0;
   const numBookedByEventsByStartDate: Record<string, number> = {};
-  if (events.status == 'fulfilled') {
+  if (events.status === 'fulfilled') {
     for (let i = 0; i < 30; i++) {
       const date = new Date(new Date().setDate(now.getDate() - (30 - i)))
         .toISOString()
@@ -135,7 +135,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     numCallsByCallDate[date] = 0;
   }
 
-  if (calls.status == 'fulfilled') {
+  if (calls.status === 'fulfilled') {
     for (const call of calls.value) {
       const allocationTime = new Date(call.allocation_time);
       if (allocationTime >= thirtyDaysAgo) {
@@ -155,7 +155,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     numSubmissionsBySubmitDate[date] = 0;
   }
 
-  if (surveySubmissions.status == 'fulfilled') {
+  if (surveySubmissions.status === 'fulfilled') {
     for (const submission of surveySubmissions.value) {
       const submitTime = new Date(submission.submitted);
       if (submitTime >= thirtyDaysAgo) {
@@ -167,15 +167,15 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     }
   }
 
-  const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
+  const numLists = lists.status === 'fulfilled' ? lists.value.length : 0;
   const numPeople =
-    suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
+    suborgStats.status === 'fulfilled' ? suborgStats.value[0].result : 0;
   const numProjects =
-    projects.status == 'fulfilled' ? projects.value.length : 0;
+    projects.status === 'fulfilled' ? projects.value.length : 0;
   const title =
-    organization.status == 'fulfilled' ? organization.value.title : '';
+    organization.status === 'fulfilled' ? organization.value.title : '';
   const numBookedForEvents =
-    eventParticipationStats.status == 'fulfilled'
+    eventParticipationStats.status === 'fulfilled'
       ? eventParticipationStats.value[0].result
       : 0;
 

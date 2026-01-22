@@ -116,7 +116,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           </MenuItem>
         </Select>
       </FormControl>
-      {dateFormat != null && !isPersonNumberFormat(dateFormat) && (
+      {dateFormat !== null && !isPersonNumberFormat(dateFormat) && (
         <TextField
           label={messages.configuration.configure.dates.dateInputLabel()}
           onChange={(event) => {

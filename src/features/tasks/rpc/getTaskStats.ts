@@ -38,8 +38,8 @@ async function handle(
 
   const filteredTasks = assignedTasks.filter(
     (task) =>
-      task.status != ASSIGNED_STATUS.EXPIRED &&
-      task.status != ASSIGNED_STATUS.OVERDUE
+      task.status !== ASSIGNED_STATUS.EXPIRED &&
+      task.status !== ASSIGNED_STATUS.OVERDUE
   );
 
   const stats: TaskStats = {

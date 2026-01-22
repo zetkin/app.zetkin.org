@@ -13,7 +13,7 @@ export default function useJourney(
   const journeyItems = useAppSelector(
     (state) => state.journeys.journeyList.items
   );
-  const journeyItem = journeyItems.find((item) => item.id == journeyId);
+  const journeyItem = journeyItems.find((item) => item.id === journeyId);
 
   return loadItemIfNecessary(journeyItem, dispatch, {
     actionOnLoad: () => journeyLoad(journeyId),

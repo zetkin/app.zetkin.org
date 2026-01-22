@@ -86,8 +86,8 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                       onClickAway={() => {
                         setAnchorEl(null);
                         if (
-                          newCooldown != null &&
-                          newCooldown != callAssignment?.cooldown
+                          newCooldown !== null &&
+                          newCooldown !== callAssignment?.cooldown
                         ) {
                           updateCallAssignment({ cooldown: newCooldown });
                         }
@@ -101,13 +101,13 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                             onChange={(ev) => {
                               const val = ev.target.value;
 
-                              if (val == '') {
+                              if (val === '') {
                                 setNewCooldown(null);
                                 return;
                               }
 
                               const intVal = parseInt(val);
-                              if (!isNaN(intVal) && intVal.toString() == val) {
+                              if (!isNaN(intVal) && intVal.toString() === val) {
                                 setNewCooldown(intVal);
                               }
                             }}
@@ -115,8 +115,8 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                               if (ev.key === 'Enter') {
                                 setAnchorEl(null);
                                 if (
-                                  newCooldown != null &&
-                                  newCooldown != callAssignment?.cooldown
+                                  newCooldown !== null &&
+                                  newCooldown !== callAssignment?.cooldown
                                 ) {
                                   updateCallAssignment({
                                     cooldown: newCooldown,

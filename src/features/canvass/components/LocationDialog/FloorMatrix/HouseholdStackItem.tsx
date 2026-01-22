@@ -38,7 +38,7 @@ const HouseholdStackItem: FC<Props> = ({
       }}
     >
       <HouseholdSquare
-        active={selectionMode == 'selected' || selectionMode == 'default'}
+        active={selectionMode === 'selected' || selectionMode === 'default'}
         color={item.household.color}
         content={lastVisitSuccess ? 'check' : lastVisitTime ? 'cross' : null}
       />

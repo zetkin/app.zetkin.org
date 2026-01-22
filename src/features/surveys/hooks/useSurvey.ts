@@ -12,7 +12,7 @@ export default function useSurvey(
 ): UseSurveyReturn {
   const apiClient = useApiClient();
   const surveyItem = useAppSelector((state) =>
-    state.surveys.surveyList.items.find((item) => item.id == surveyId)
+    state.surveys.surveyList.items.find((item) => item.id === surveyId)
   );
   const dispatch = useAppDispatch();
 

@@ -35,7 +35,7 @@ async function* findYMLFiles(dir: string): AsyncIterable<string> {
     const res = path.resolve(dir, dirEnt.name);
     if (dirEnt.isDirectory()) {
       yield* findYMLFiles(res);
-    } else if (res.slice(-4) == '.yml') {
+    } else if (res.slice(-4) === '.yml') {
       yield res;
     }
   }

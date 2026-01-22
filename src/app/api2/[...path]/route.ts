@@ -50,7 +50,7 @@ async function proxy(
   };
 
   const requestContentType = request.headers.get('Content-Type');
-  if (requestContentType == 'application/json') {
+  if (requestContentType === 'application/json') {
     requestOptions.body = await request.text();
 
     if (requestContentType) {
@@ -71,7 +71,7 @@ async function proxy(
 
   let zetkinResponse: Response = await makeZetkinApiRequest();
 
-  if (zetkinResponse.status == 401) {
+  if (zetkinResponse.status === 401) {
     const errorPayload = await zetkinResponse.json();
     if (errorPayload.error?.includes('invalid_token')) {
       if (session.tokenData?.refresh_token) {
@@ -101,7 +101,7 @@ async function proxy(
     }
   }
 
-  if (zetkinResponse.status == 204) {
+  if (zetkinResponse.status === 204) {
     return new NextResponse(null, { status: 204 });
   } else {
     const zetkinPayload = await zetkinResponse.json();

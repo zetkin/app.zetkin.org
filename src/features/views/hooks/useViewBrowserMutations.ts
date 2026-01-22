@@ -20,11 +20,11 @@ export default function useViewBrowserMutations(
   const { updateView } = useViewMutations(orgId);
 
   const itemIsRenaming = (type: 'folder' | 'view', id: number): boolean => {
-    if (type == 'folder') {
-      const item = views.folderList.items.find((item) => item.id == id);
+    if (type === 'folder') {
+      const item = views.folderList.items.find((item) => item.id === id);
       return item?.mutating.includes('title') ?? false;
-    } else if (type == 'view') {
-      const item = views.viewList.items.find((item) => item.id == id);
+    } else if (type === 'view') {
+      const item = views.viewList.items.find((item) => item.id === id);
       return item?.mutating.includes('title') ?? false;
     } else {
       return false;
@@ -35,17 +35,17 @@ export default function useViewBrowserMutations(
     id: number,
     newParentId: number | null
   ) => {
-    if (type == 'folder') {
+    if (type === 'folder') {
       updateFolder(orgId, id, { parent_id: newParentId });
-    } else if (type == 'view') {
+    } else if (type === 'view') {
       updateView(id, { folder_id: newParentId });
     }
   };
 
   const renameItem = (type: 'folder' | 'view', id: number, title: string) => {
-    if (type == 'folder') {
+    if (type === 'folder') {
       updateFolder(orgId, id, { title });
-    } else if (type == 'view') {
+    } else if (type === 'view') {
       updateView(id, { title });
     }
   };

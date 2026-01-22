@@ -23,7 +23,7 @@ export const EventSignupButton = ({
     event.id
   );
 
-  if (event.status == 'booked') {
+  if (event.status === 'booked') {
     return (
       <ZUIText key="booked" variant="bodySmRegular">
         <Msg
@@ -33,7 +33,7 @@ export const EventSignupButton = ({
       </ZUIText>
     );
   }
-  if (event.status == 'signedUp') {
+  if (event.status === 'signedUp') {
     return (
       <>
         <ZUIButton

@@ -79,7 +79,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       ),
     ]);
 
-    if (results.some((result) => result.status == 'rejected')) {
+    if (results.some((result) => result.status === 'rejected')) {
       return {
         error: true,
         id: suborg.id,
@@ -91,19 +91,19 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
     const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
     const numCalls =
-      calls.status == 'fulfilled'
+      calls.status === 'fulfilled'
         ? calls.value.filter(
             (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
           ).length
         : 0;
     const numBookedForEvents =
-      eventParticipationStats.status == 'fulfilled'
+      eventParticipationStats.status === 'fulfilled'
         ? eventParticipationStats.value[0].result
         : 0;
     const numPeople =
-      suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
+      suborgStats.status === 'fulfilled' ? suborgStats.value[0].result : 0;
     const numSubmissions =
-      surveySubmissions.status == 'fulfilled'
+      surveySubmissions.status === 'fulfilled'
         ? surveySubmissions.value.filter(
             (submission) => new Date(submission.submitted) >= thirtyDaysAgoDate
           ).length

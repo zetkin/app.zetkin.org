@@ -55,7 +55,7 @@ const EmailBody: React.FC<{
   body: LetterparserNode['body'];
   forcePlain?: boolean;
 }> = ({ body, forcePlain = false }) => {
-  const plain = forcePlain || typeof body == 'string';
+  const plain = forcePlain || typeof body === 'string';
 
   if (Array.isArray(body)) {
     let bodyToRender = body.find(
@@ -68,7 +68,7 @@ const EmailBody: React.FC<{
 
     return <EmailBody body={bodyToRender.body} forcePlain />;
   } else {
-    const content = typeof body == 'string' ? body : body.toString();
+    const content = typeof body === 'string' ? body : body.toString();
 
     return (
       <ZUICleanHtml
@@ -107,7 +107,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
     <Stack spacing={1}>
       {RELEVANT_HEADERS.map((headerName) => {
         const matchedHeader = Object.entries(headers).find(
-          ([key]) => key.toLowerCase() == headerName.toLowerCase()
+          ([key]) => key.toLowerCase() === headerName.toLowerCase()
         );
 
         if (matchedHeader && matchedHeader[1]) {

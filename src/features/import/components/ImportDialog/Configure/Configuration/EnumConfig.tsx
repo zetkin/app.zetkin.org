@@ -60,7 +60,7 @@ const EnumConfig: FC<EnumConfigProps> = ({ uiDataColumn }) => {
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <Box key={index}>
-          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          {index !== 0 && <Divider sx={{ marginY: 1 }} />}
           <EnumConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectOption={() => deselectOption(uniqueValue)}

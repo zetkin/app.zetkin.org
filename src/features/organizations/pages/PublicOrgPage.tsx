@@ -114,7 +114,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
 
   const filters = [
     {
-      active: dateFilterState == 'today',
+      active: dateFilterState === 'today',
       key: 'today',
       label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
@@ -127,7 +127,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       },
     },
     {
-      active: dateFilterState == 'tomorrow',
+      active: dateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
@@ -140,7 +140,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       },
     },
     {
-      active: dateFilterState == 'thisWeek',
+      active: dateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
@@ -153,10 +153,10 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       },
     },
     {
-      active: dateFilterState == 'custom',
+      active: dateFilterState === 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
@@ -218,11 +218,11 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     });
 
   const topOrgEvents = allEvents.filter(
-    (event) => event.organization.id == orgId
+    (event) => event.organization.id === orgId
   );
 
   const events =
-    includeSubOrgs || topOrgEvents.length == 0 ? allEvents : topOrgEvents;
+    includeSubOrgs || topOrgEvents.length === 0 ? allEvents : topOrgEvents;
 
   const eventsByDate = locationEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
@@ -246,7 +246,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const dates = Object.keys(eventsByDate).sort();
   const indexForSubOrgsButton = Math.min(1, dates.length - 1);
   const showSubOrgBlurb =
-    orgIdsToFilterBy.length == 0 && locationEvents.length > events.length;
+    orgIdsToFilterBy.length === 0 && locationEvents.length > events.length;
 
   const showNoEventsBlurb = !allEvents.length;
 
@@ -275,7 +275,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           />
         </Box>
       )}
-      {allEvents.length != 0 && (
+      {allEvents.length !== 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -314,7 +314,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </Box>
       )}
-      {locationEvents.length == 0 && (
+      {locationEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -372,7 +372,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               ))}
             </Box>
           </Fade>
-          {index == indexForSubOrgsButton && showSubOrgBlurb && (
+          {index === indexForSubOrgsButton && showSubOrgBlurb && (
             <Fade
               appear
               in
@@ -384,7 +384,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                 <SubOrgEventBlurb
                   onClickShow={() => setIncludeSubOrgs(true)}
                   subOrgEvents={allEvents.filter(
-                    (event) => event.organization.id != orgId
+                    (event) => event.organization.id !== orgId
                   )}
                 />
                 <ZUIDivider />
@@ -395,7 +395,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       ))}
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'calendar'}
+        open={drawerContent === 'calendar'}
       >
         <Box
           alignItems="center"
@@ -459,7 +459,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'orgs'}
+        open={drawerContent === 'orgs'}
       >
         <List>
           {orgs.map((org) => (
@@ -483,7 +483,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                     dispatch(
                       filtersUpdated({
                         orgIdsToFilterBy: orgIdsToFilterBy.filter(
-                          (id) => id != org.id
+                          (id) => id !== org.id
                         ),
                       })
                     );
@@ -496,7 +496,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'eventTypes'}
+        open={drawerContent === 'eventTypes'}
       >
         <List>
           {eventTypeFilter.eventTypeLabels.map((eventType) => (

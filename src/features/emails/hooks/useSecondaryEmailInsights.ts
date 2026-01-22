@@ -35,7 +35,7 @@ export default function useSecondaryEmailInsights(
     };
   }
 
-  const emailItem = state.emailList.items.find((item) => item.id == emailId);
+  const emailItem = state.emailList.items.find((item) => item.id === emailId);
   const emailFuture = loadItemIfNecessary(emailItem, dispatch, {
     actionOnLoad: () => emailLoad(emailId),
     actionOnSuccess: (email) => emailLoaded(email),

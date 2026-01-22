@@ -199,7 +199,7 @@ describe('useVisitReporting()', () => {
       const locationItem =
         stateAfterAction.areaAssignments.locationsByAssignmentId[
           ASSIGNMENT_ID
-        ].items.find((item) => item.id == LOCATION_ID);
+        ].items.find((item) => item.id === LOCATION_ID);
 
       expect(locationItem?.data).toEqual(mockLocation);
     });
@@ -397,7 +397,7 @@ describe('useVisitReporting()', () => {
       const locationItem =
         stateAfterAction.areaAssignments.locationsByAssignmentId[
           ASSIGNMENT_ID
-        ].items.find((item) => item.id == LOCATION_ID);
+        ].items.find((item) => item.id === LOCATION_ID);
 
       expect(locationItem?.data).toEqual(mockLocation);
     });
@@ -716,7 +716,7 @@ describe('useVisitReporting()', () => {
       const locationItem =
         stateAfterAction.areaAssignments.locationsByAssignmentId[
           ASSIGNMENT_ID
-        ].items.find((item) => item.id == LOCATION_ID);
+        ].items.find((item) => item.id === LOCATION_ID);
 
       expect(locationItem?.data).toEqual(mockLocation);
     });

@@ -74,7 +74,7 @@ export const ZetkinFileUploadChip: React.FC<{
   onDelete?: () => void;
 }> = ({ fileUpload, onDelete }) => (
   <ZUIFileChip
-    loading={fileUpload.state == FileUploadState.UPLOADING}
+    loading={fileUpload.state === FileUploadState.UPLOADING}
     mimeType={fileUpload.apiData?.mime_type}
     name={fileUpload.name}
     onDelete={onDelete}

@@ -84,7 +84,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                     gap={1}
                     sx={(theme) => {
                       const color = colors[call.state];
-                      if (color == 'warning') {
+                      if (color === 'warning') {
                         return { color: theme.palette.warning.dark };
                       } else {
                         return { color: theme.palette[color].main };

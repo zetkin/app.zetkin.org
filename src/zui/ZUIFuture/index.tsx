@@ -96,7 +96,7 @@ function ZUIFuture<DataType>(props: ZUIFutureProps<DataType>): ReturnType<FC> {
       return skeleton;
     }
 
-    if (typeof children == 'function') {
+    if (typeof children === 'function') {
       return children(future.data, future.isLoading);
     } else {
       return children;

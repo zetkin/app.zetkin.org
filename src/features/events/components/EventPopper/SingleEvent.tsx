@@ -66,12 +66,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const showPublishButton =
-    state == EventState.DRAFT ||
-    state == EventState.SCHEDULED ||
-    state == EventState.CANCELLED;
+    state === EventState.DRAFT ||
+    state === EventState.SCHEDULED ||
+    state === EventState.CANCELLED;
 
   const numRemindedParticipants =
-    participants.filter((p) => p.reminder_sent != null && !p.cancelled)
+    participants.filter((p) => p.reminder_sent !== null && !p.cancelled)
       .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);

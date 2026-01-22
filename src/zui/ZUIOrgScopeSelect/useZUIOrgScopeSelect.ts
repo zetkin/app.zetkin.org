@@ -19,7 +19,7 @@ type UseZUIOrgScopeSelectProps = {
 
 function getScopeFromValue(value: ValueType, currentOrg: number): Scope {
   if (Array.isArray(value)) {
-    if (value.length == 1 && value[0] == currentOrg) {
+    if (value.length === 1 && value[0] === currentOrg) {
       return 'this';
     } else {
       return 'specific';
@@ -47,12 +47,12 @@ export default function useZUIOrgScopeSelect({
     },
     setScope: (scope: Scope) => {
       setScope(scope);
-      if (scope == 'this') {
+      if (scope === 'this') {
         setOrgs([currentOrg]);
         onChange?.([currentOrg]);
-      } else if (scope == 'suborgs') {
+      } else if (scope === 'suborgs') {
         onChange?.('suborgs');
-      } else if (scope == 'all') {
+      } else if (scope === 'all') {
         onChange?.('all');
       }
     },

@@ -21,7 +21,7 @@ const ViewFolderSubtitle: FC<ViewFolderSubtitleProps> = ({
 }) => {
   const messages = useMessages(messageIds);
 
-  if (numFolders + numViews == 0) {
+  if (numFolders + numViews === 0) {
     return (
       <ZUIIconLabel
         icon={<InfoOutlined />}

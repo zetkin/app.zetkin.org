@@ -46,7 +46,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -171,7 +171,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -309,7 +309,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -388,7 +388,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -528,7 +528,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -568,7 +568,7 @@ test.describe('User submitting a survey', () => {
     await page.fill('input[name="sig.last_name"]', 'User');
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -603,7 +603,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="user"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -634,7 +634,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 
@@ -658,7 +658,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('data-testid=Survey-acceptTerms').click();
 
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.waitForResponse((res) => res.request().method() === 'POST'),
       page.locator('data-testid=Survey-submit').click(),
     ]);
 

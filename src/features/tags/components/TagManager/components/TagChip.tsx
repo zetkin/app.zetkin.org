@@ -29,7 +29,7 @@ const TagToolTip: React.FunctionComponent<{
 const isValueTag = (
   tag: ZetkinAppliedTag | ZetkinTag
 ): tag is ZetkinAppliedTag => {
-  return tag.value_type == 'text';
+  return tag.value_type === 'text';
 };
 
 const TagChip: React.FunctionComponent<{

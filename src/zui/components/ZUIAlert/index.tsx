@@ -86,7 +86,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
   } as const;
 
   const Icon = () => {
-    if (severity == 'error') {
+    if (severity === 'error') {
       return (
         <InfoOutlined
           sx={(theme) => ({
@@ -95,7 +95,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
           })}
         />
       );
-    } else if (severity == 'info') {
+    } else if (severity === 'info') {
       return (
         <InfoOutlined
           sx={(theme) => ({
@@ -104,7 +104,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
           })}
         />
       );
-    } else if (severity == 'success') {
+    } else if (severity === 'success') {
       return (
         <CheckCircleOutline
           sx={(theme) => ({

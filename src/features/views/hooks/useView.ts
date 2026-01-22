@@ -11,7 +11,7 @@ export default function useView(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);
-  const item = views.viewList.items.find((item) => item.id == viewId);
+  const item = views.viewList.items.find((item) => item.id === viewId);
 
   return loadItemIfNecessary(item, dispatch, {
     actionOnLoad: () => viewLoad(viewId),

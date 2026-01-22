@@ -15,9 +15,9 @@ export default function useOrgIdsFromOrgScope(
     const output: number[] = [];
 
     orgsFuture.data.forEach((org) => {
-      if (scope == 'all') {
+      if (scope === 'all') {
         output.push(org.id);
-      } else if (scope == 'suborgs' && org.id != orgId) {
+      } else if (scope === 'suborgs' && org.id !== orgId) {
         output.push(org.id);
       }
     });

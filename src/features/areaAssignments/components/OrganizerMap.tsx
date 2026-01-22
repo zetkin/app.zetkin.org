@@ -95,13 +95,13 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const mapRef = useRef<MapType | null>(null);
   useAutoResizeMap(mapRef.current);
 
-  const selectedArea = areas.find((area) => area.id == selectedId);
+  const selectedArea = areas.find((area) => area.id === selectedId);
 
   function filterAreas(areas: ZetkinArea[], matchString: string) {
     const inputValue = matchString.trim().toLowerCase();
 
     const afterTextFilter =
-      inputValue.length == 0
+      inputValue.length === 0
         ? areas.concat()
         : areas.filter((area) => {
             const areaDesc =
@@ -114,7 +114,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           });
 
     const afterComplexFilter =
-      filteredAreaIds == null
+      filteredAreaIds === null
         ? afterTextFilter
         : afterTextFilter.filter((area) => filteredAreaIds.includes(area.id));
 
@@ -214,7 +214,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             >
               <Button
                 onClick={() => {
-                  if (settingsOpen == 'filters') {
+                  if (settingsOpen === 'filters') {
                     clearAndCloseSettings();
                   } else {
                     startTransition(() => {
@@ -240,7 +240,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             >
               <Button
                 onClick={() => {
-                  if (settingsOpen == 'select') {
+                  if (settingsOpen === 'select') {
                     if (selectedId) {
                       startTransition(() => {
                         setSelectedId(0);
@@ -269,7 +269,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               maxWidth: 400,
               minWidth: 400,
               overflow: 'hidden',
-              paddingX: settingsOpen == 'select' ? 0 : 2,
+              paddingX: settingsOpen === 'select' ? 0 : 2,
               paddingY: 1,
               position: 'absolute',
               right: '1rem',
@@ -277,7 +277,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               zIndex: 1000,
             }}
           >
-            {settingsOpen == 'select' && (
+            {settingsOpen === 'select' && (
               <Box
                 sx={{
                   display: 'flex',
@@ -315,14 +315,14 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     }
                     selectedArea={selectedArea}
                     selectedAreaStats={areaStats.stats.find(
-                      (stat) => stat.area_id == selectedArea?.id
+                      (stat) => stat.area_id === selectedArea?.id
                     )}
                     sessions={sessions}
                   />
                 </Box>
               </Box>
             )}
-            {settingsOpen != 'select' && (
+            {settingsOpen !== 'select' && (
               <>
                 <Box
                   alignItems="center"
@@ -330,7 +330,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   justifyContent="space-between"
                 >
                   <Typography variant="h5">
-                    {settingsOpen == 'filters' ? (
+                    {settingsOpen === 'filters' ? (
                       <Msg id={messageIdsAss.map.filter.header} />
                     ) : (
                       <Msg id={messageIdsAss.map.mapStyle.title} />
@@ -340,19 +340,19 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     <Close />
                   </IconButton>
                 </Box>
-                {settingsOpen == 'filters' && (
+                {settingsOpen === 'filters' && (
                   <Typography color="secondary" paddingBottom={1}>
                     <Msg id={messageIdsAss.map.filter.description} />
                   </Typography>
                 )}
                 <Divider />
-                {settingsOpen == 'layers' && (
+                {settingsOpen === 'layers' && (
                   <MapStyleSettings
                     mapStyle={mapStyle}
                     onMapStyleChange={(newMapStyle) => setMapStyle(newMapStyle)}
                   />
                 )}
-                {settingsOpen == 'filters' && (
+                {settingsOpen === 'filters' && (
                   <OrganizerMapFilters
                     areas={areas}
                     onFilteredIdsChange={(areaIds) => {

@@ -32,7 +32,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
   );
 
   const isTargetBooked = target.future_actions.some(
-    (futureEvent) => futureEvent.id == event.id
+    (futureEvent) => futureEvent.id === event.id
   );
 
   const idsOfEventsRespondedTo = useAppSelector(

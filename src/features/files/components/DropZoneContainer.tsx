@@ -20,7 +20,7 @@ const DropZoneContainer: FC<Props> = ({ children, state }) => {
         alignItems: 'center',
         backgroundColor: lighten(stateColors[state], 0.9),
         borderColor: stateColors[state],
-        borderStyle: state == 'accepting' ? 'dashed' : 'solid',
+        borderStyle: state === 'accepting' ? 'dashed' : 'solid',
         borderWidth: 1,
         display: 'flex',
         flexDirection: 'column',

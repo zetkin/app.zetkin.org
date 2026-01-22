@@ -61,8 +61,8 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                 items={elements.map((elem) => ({
                   id: elem.id,
                   renderContent: ({ dragging }) => {
-                    if (elem.type == ELEMENT_TYPE.QUESTION) {
-                      if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
+                    if (elem.type === ELEMENT_TYPE.QUESTION) {
+                      if (elem.question.response_type === RESPONSE_TYPE.TEXT) {
                         return (
                           <BlockWrapper
                             key={elem.id}
@@ -70,7 +70,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                             hidden={elem.hidden}
                           >
                             <OpenQuestionBlock
-                              editable={elem.id == idOfBlockInEditMode}
+                              editable={elem.id === idOfBlockInEditMode}
                               element={elem as ZetkinSurveyTextQuestionElement}
                               onEditModeEnter={() =>
                                 setIdOfBlockInEditMode(elem.id)
@@ -85,7 +85,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                           </BlockWrapper>
                         );
                       } else if (
-                        elem.question.response_type == RESPONSE_TYPE.OPTIONS
+                        elem.question.response_type === RESPONSE_TYPE.OPTIONS
                       ) {
                         return (
                           <BlockWrapper
@@ -94,7 +94,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                             hidden={elem.hidden}
                           >
                             <ChoiceQuestionBlock
-                              editable={elem.id == idOfBlockInEditMode}
+                              editable={elem.id === idOfBlockInEditMode}
                               element={
                                 elem as ZetkinSurveyOptionsQuestionElement
                               }
@@ -111,7 +111,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                           </BlockWrapper>
                         );
                       }
-                    } else if (elem.type == ELEMENT_TYPE.TEXT) {
+                    } else if (elem.type === ELEMENT_TYPE.TEXT) {
                       return (
                         <BlockWrapper
                           key={elem.id}
@@ -119,7 +119,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                           hidden={elem.hidden}
                         >
                           <TextBlock
-                            editable={elem.id == idOfBlockInEditMode}
+                            editable={elem.id === idOfBlockInEditMode}
                             element={elem}
                             onEditModeEnter={() =>
                               setIdOfBlockInEditMode(elem.id)

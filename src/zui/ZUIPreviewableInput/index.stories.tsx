@@ -41,7 +41,7 @@ const Template: StoryFn<typeof ZUIPreviewableInput> = (args) => {
         )}
         value={otherValue}
       />
-      {mode == ZUIPreviewableMode.EDITABLE && (
+      {mode === ZUIPreviewableMode.EDITABLE && (
         <button onClick={() => setMode(ZUIPreviewableMode.PREVIEW)}>
           Save
         </button>

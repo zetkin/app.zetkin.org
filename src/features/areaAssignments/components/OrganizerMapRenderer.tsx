@@ -31,7 +31,7 @@ const LocationMarker: FC<{
   location: ZetkinLocation;
   locationStyle: 'dot' | 'households' | 'progress';
 }> = ({ location, locationStyle }) => {
-  if (locationStyle == 'dot') {
+  if (locationStyle === 'dot') {
     return (
       <DivIconMarker
         iconAnchor={[2, 2]}
@@ -46,7 +46,7 @@ const LocationMarker: FC<{
         />
       </DivIconMarker>
     );
-  } else if (locationStyle == 'households') {
+  } else if (locationStyle === 'households') {
     return (
       <DivIconMarker iconAnchor={[6, 22]} position={locToLatLng(location)}>
         <Box
@@ -250,7 +250,7 @@ function AssigneeOverlayMarker({
               />
             </Box>
           );
-        } else if (index == 5) {
+        } else if (index === 5) {
           return (
             <Box
               alignItems="center"
@@ -337,21 +337,21 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
     householdColorPercent: number,
     visitsColorPercent: number
   ) => {
-    if (areaStyle == 'hide' || areaStyle == 'outlined') {
+    if (areaStyle === 'hide' || areaStyle === 'outlined') {
       return 'transparent';
     }
 
-    if (areaStyle == 'assignees') {
+    if (areaStyle === 'assignees') {
       return hasPeople
         ? oldTheme.palette.primary.main
         : oldTheme.palette.secondary.main;
     }
 
-    if (areaStyle == 'progress' && !hasPeople) {
+    if (areaStyle === 'progress' && !hasPeople) {
       return oldTheme.palette.secondary.main;
     }
 
-    return areaStyle == 'households'
+    return areaStyle === 'households'
       ? //TODO: Use theme colors for these
         `color-mix(in hsl, ${lighten(oldTheme.palette.primary.main, 0.8)}, ${
           oldTheme.palette.primary.main
@@ -395,7 +395,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   const filteredAreas = areas
     .map((area) => {
       const people = sessions
-        .filter((session) => session.area_id == area.id)
+        .filter((session) => session.area_id === area.id)
         .map((session) => session.user_id);
       const hasPeople = !!people.length;
       return { ...area, hasPeople };
@@ -406,9 +406,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
         return true;
       }
 
-      if (area.hasPeople && assigneesFilter == 'unassigned') {
+      if (area.hasPeople && assigneesFilter === 'unassigned') {
         return false;
-      } else if (!area.hasPeople && assigneesFilter == 'assigned') {
+      } else if (!area.hasPeople && assigneesFilter === 'assigned') {
         return false;
       }
       return true;
@@ -431,9 +431,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             // Always render selected last, so that it gets
             // rendered on top of the unselected ones in case
             // there are overlaps.
-            if (a0.id == selectedId) {
+            if (a0.id === selectedId) {
               return 1;
-            } else if (a1.id == selectedId) {
+            } else if (a1.id === selectedId) {
               return -1;
             } else {
               // When  none of the two areas are selected, sort them
@@ -443,7 +443,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             }
           })
           .map((area, index) => {
-            const selected = selectedId == area.id;
+            const selected = selectedId === area.id;
 
             // The key changes when selected, to force redraw of polygon
             // to reflect new state through visual style. Since we also
@@ -458,7 +458,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             ].join('-');
 
             const stats = areaStats.stats.find(
-              (stat) => stat.area_id == area.id
+              (stat) => stat.area_id === area.id
             );
 
             let numberOfHouseholds = 0;
@@ -478,7 +478,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <Polygon
                 key={key}
-                color={areaStyle == 'hide' ? '' : 'black'}
+                color={areaStyle === 'hide' ? '' : 'black'}
                 dashArray={!area.hasPeople ? '5px 7px' : ''}
                 eventHandlers={{
                   click: () => {
@@ -491,14 +491,14 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   visitsColorPercent
                 )}
                 fillOpacity={1}
-                interactive={areaStyle != 'hide'}
+                interactive={areaStyle !== 'hide'}
                 positions={area.points.map(flipForLeaflet)}
                 weight={selected ? 5 : 2}
               />
             );
           })}
       </FeatureGroup>
-      {locationStyle != 'hide' && (
+      {locationStyle !== 'hide' && (
         <FeatureGroup>
           {locations.map((location) => {
             //Find ids of area/s that the location is in
@@ -522,7 +522,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             for (let i = 0; i < areaIds.length; i++) {
               const id = areaIds[i];
               const people = sessions
-                .filter((session) => session.area_id == id)
+                .filter((session) => session.area_id === id)
                 .map((session) => session.user_id);
 
               const hasPeople = !!people.length;
@@ -540,7 +540,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             const hasVisitsInThisAssignment = location.households.some(
               (household) =>
                 !!household.visits.find(
-                  (visit) => visit.assignment_id == areaAssId
+                  (visit) => visit.assignment_id === areaAssId
                 )
             );
             */
@@ -549,7 +549,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             //don't show locations outside of assigned areas
             //unless they have visits in this assignment
             const hideFromProgressView =
-              locationStyle == 'progress' &&
+              locationStyle === 'progress' &&
               !idOfAreaInThisAssignment &&
               !hasVisitsInThisAssignment;
 
@@ -591,10 +591,10 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
           const detailed = zoom >= 15;
 
           const userIds = sessions
-            .filter((session) => session.area_id == area.id)
+            .filter((session) => session.area_id === area.id)
             .map((session) => session.user_id);
 
-          const stats = areaStats.stats.find((stat) => stat.area_id == area.id);
+          const stats = areaStats.stats.find((stat) => stat.area_id === area.id);
 
           let numberOfHouseholds = 0;
           locationsByAreaId[area.id].forEach(
@@ -623,7 +623,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 />
               );
             }
-            if (overlayStyle == 'progress') {
+            if (overlayStyle === 'progress') {
               return (
                 <ProgressOverlayMarker
                   successfulVisitsColorPercent={successfulVisitsColorPercent}

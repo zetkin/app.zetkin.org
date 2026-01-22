@@ -80,7 +80,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
       // the closure of `onMouseUp` is created on mouse down, the order
       // never changes from the perspective of `onMouseUp`.
       const prevKeys = items.map((item) => item.id);
-      if (order.join(',') != prevKeys.join(',')) {
+      if (order.join(',') !== prevKeys.join(',')) {
         onReorder(order);
       }
     }
@@ -111,7 +111,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     const reorderedKeys = items
       .map((item) => {
         const y =
-          activeId == item.id
+          activeId === item.id
             ? newClientY
             : nodeByIdRef.current[item.id].getBoundingClientRect().top;
 
@@ -165,7 +165,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
               canMoveDown={index + 1 < items.length}
               canMoveUp={index > 0}
               centerWidgets={!!centerWidgets}
-              dragging={activeId == item.id}
+              dragging={activeId === item.id}
               item={item}
               onBeginDrag={(itemNode, contentNode, ev) => {
                 setActiveId(item.id);
@@ -222,21 +222,21 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
                 }
 
                 if (
-                  widget == ZUIReorderableWidget.MOVE_DOWN &&
+                  widget === ZUIReorderableWidget.MOVE_DOWN &&
                   index < items.length - 1
                 ) {
                   return true;
                 } else if (
-                  widget == ZUIReorderableWidget.MOVE_UP &&
+                  widget === ZUIReorderableWidget.MOVE_UP &&
                   index > 0
                 ) {
                   return true;
                 } else if (
-                  widget == ZUIReorderableWidget.DRAG &&
+                  widget === ZUIReorderableWidget.DRAG &&
                   !disableDrag
                 ) {
                   return true;
-                } else if (widget == ZUIReorderableWidget.MENU) {
+                } else if (widget === ZUIReorderableWidget.MENU) {
                   return true;
                 }
 
@@ -315,7 +315,7 @@ const ZUIReorderableItem: FC<{
               return false;
             }
 
-            if (widget == ZUIReorderableWidget.DRAG) {
+            if (widget === ZUIReorderableWidget.DRAG) {
               return (
                 <IconButton
                   onMouseDown={(ev) => {
@@ -327,19 +327,19 @@ const ZUIReorderableItem: FC<{
                   <DragIndicatorOutlined />
                 </IconButton>
               );
-            } else if (widget == ZUIReorderableWidget.MOVE_DOWN) {
+            } else if (widget === ZUIReorderableWidget.MOVE_DOWN) {
               return (
                 <IconButton onClick={() => onClickDown()}>
                   <KeyboardArrowDown />
                 </IconButton>
               );
-            } else if (widget == ZUIReorderableWidget.MOVE_UP) {
+            } else if (widget === ZUIReorderableWidget.MOVE_UP) {
               return (
                 <IconButton onClick={() => onClickUp()}>
                   <KeyboardArrowUp />
                 </IconButton>
               );
-            } else if (widget == ZUIReorderableWidget.MENU) {
+            } else if (widget === ZUIReorderableWidget.MENU) {
               return (
                 <>
                   <IconButton onClick={(ev) => setMenuAnchor(ev.currentTarget)}>

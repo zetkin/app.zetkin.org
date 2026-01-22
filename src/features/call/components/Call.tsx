@@ -48,14 +48,14 @@ const Call: FC = () => {
   );
 
   const unfinishedCalls = outgoingCalls.filter((c) => {
-    const isUnfinishedCall = c.state == 0;
-    const isNotCurrentCall = call ? call.id != c.id : true;
+    const isUnfinishedCall = c.state === 0;
+    const isNotCurrentCall = call ? call.id !== c.id : true;
 
     return isUnfinishedCall && isNotCurrentCall;
   });
 
   const switchedTo = allUserAssignments.find(
-    (oc) => oc.id == assignmentSwitchedTo
+    (oc) => oc.id === assignmentSwitchedTo
   );
 
   if (onServer) {
@@ -99,7 +99,7 @@ const Call: FC = () => {
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
               switchToUnfinishedCall(callId, assignmentId);
-              if (assignmentId != assignment.id) {
+              if (assignmentId !== assignment.id) {
                 setAssignmentSwitchedTo(assignmentId);
               }
             }}
@@ -112,7 +112,7 @@ const Call: FC = () => {
         assignment={assignment}
         onClose={() => setCallLogOpen(false)}
         onSwitch={(assignmentId) => {
-          if (assignmentId != assignment.id) {
+          if (assignmentId !== assignment.id) {
             setAssignmentSwitchedTo(assignmentId);
           }
         }}
@@ -145,7 +145,7 @@ const Call: FC = () => {
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         autoHideDuration={5000}
         onClose={(ev, reason) => {
-          if (reason == 'clickaway') {
+          if (reason === 'clickaway') {
             return;
           } else {
             setAssignmentSwitchedTo(null);

@@ -74,7 +74,7 @@ const ChangeCampaignDialog: React.FunctionComponent<
     ?.filter((campaign) =>
       campaign.title.toLowerCase().includes(campaignFilter)
     )
-    .filter((campaign) => campaign.id != campId);
+    .filter((campaign) => campaign.id !== campId);
 
   const onSearchChange = (value: string) => {
     setCampaignFilter(value);

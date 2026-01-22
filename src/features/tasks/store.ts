@@ -111,12 +111,12 @@ const tasksSlice = createSlice({
       const taskId = action.payload;
       const item = state.tasksList.items.find((task) => task.id === taskId);
       state.tasksList.items = state.tasksList.items
-        .filter((item) => item.id != taskId)
+        .filter((item) => item.id !== taskId)
         .concat([remoteItem(taskId, { data: item?.data, isLoading: true })]);
     },
     taskLoaded: (state, action: PayloadAction<ZetkinTask>) => {
       const task = action.payload;
-      const item = state.tasksList.items.find((item) => item.id == task.id);
+      const item = state.tasksList.items.find((item) => item.id === task.id);
       if (!item) {
         throw new Error('Finished loading item that never started loading');
       }
@@ -127,14 +127,14 @@ const tasksSlice = createSlice({
     },
     taskUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [taskId, mutating] = action.payload;
-      const item = state.tasksList.items.find((item) => item.id == taskId);
+      const item = state.tasksList.items.find((item) => item.id === taskId);
       if (item) {
         item.mutating = mutating;
       }
     },
     taskUpdated: (state, action: PayloadAction<ZetkinTask>) => {
       const task = action.payload;
-      const item = state.tasksList.items.find((item) => item.id == task.id);
+      const item = state.tasksList.items.find((item) => item.id === task.id);
       if (item) {
         item.data = { ...item.data, ...task };
         item.mutating = [];

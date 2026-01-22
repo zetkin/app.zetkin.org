@@ -41,14 +41,14 @@ const DisplaySurveyOption = ({
   const surveyTitle = useSurvey(orgId, surveyId).data?.title || '';
   const surveyElements = useSurveyElements(orgId, surveyId).data || [];
 
-  const element = surveyElements?.find((e) => e.id == questionId);
+  const element = surveyElements?.find((e) => e.id === questionId);
   const question =
-    element?.type == ELEMENT_TYPE.QUESTION ? element.question : null;
+    element?.type === ELEMENT_TYPE.QUESTION ? element.question : null;
 
   const options =
-    question && question.response_type == RESPONSE_TYPE.OPTIONS
+    question && question.response_type === RESPONSE_TYPE.OPTIONS
       ? (optionIds.map((oId) =>
-          question.options?.find((option) => option.id == oId)
+          question.options?.find((option) => option.id === oId)
         ) as ZetkinSurveyOption[])
       : [];
 

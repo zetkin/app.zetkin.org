@@ -37,7 +37,7 @@ const EmailStatusChip: FC<EmailStatusChipProps> = ({ state }) => {
     };
   }, [state]);
 
-  if (state == EmailState.UNKNOWN) {
+  if (state === EmailState.UNKNOWN) {
     return null;
   }
 

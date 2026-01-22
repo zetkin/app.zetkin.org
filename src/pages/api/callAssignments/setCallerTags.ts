@@ -65,7 +65,7 @@ async function updateTags(
   // Find and add tags that should be assigned, but weren't
   const newTags: ZetkinTag[] = [];
   const newTagIds = requestedIds.filter(
-    (tagId) => !existing.find((tag) => tag.id == tagId)
+    (tagId) => !existing.find((tag) => tag.id === tagId)
   );
   for (const tagId of newTagIds) {
     try {

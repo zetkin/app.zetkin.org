@@ -30,10 +30,10 @@ import BrowserItemIcon from './ViewBrowser/BrowserItemIcon';
 import { ViewTreeData } from 'pages/api/views/tree';
 
 const folderById = (id: number | null, viewTree: ViewTreeData) => {
-  if (id == null) {
+  if (id === null) {
     return null;
   }
-  return viewTree.folders.find((f) => f.id == id) ?? null;
+  return viewTree.folders.find((f) => f.id === id) ?? null;
 };
 
 const getAllParentFolderIds = (
@@ -42,7 +42,7 @@ const getAllParentFolderIds = (
 ) => {
   let parentFolderIds: number[] = [];
 
-  while (folderId != null) {
+  while (folderId !== null) {
     parentFolderIds = [folderId, ...parentFolderIds];
 
     const folder = folderById(folderId, viewTree);
@@ -87,7 +87,7 @@ const MoveItemBreadcrumbs = ({
             separator={<NavigateNextIcon fontSize="small" />}
           >
             {breadcrumbItems.map(({ title, id }) =>
-              id == viewedFolder ? (
+              id === viewedFolder ? (
                 <Box key={id ?? 'root'}>{title}</Box>
               ) : (
                 <Link
@@ -127,7 +127,7 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  if (itemToMove.type == 'back') {
+  if (itemToMove.type === 'back') {
     throw new Error('Should not be possible to move a back button');
   }
 
@@ -164,9 +164,9 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
           {(data) => {
             const relevantItems = data.filter(
               (item): item is Exclude<typeof item, ViewBrowserBackItem> =>
-                item.type != 'back'
+                item.type !== 'back'
             );
-            if (relevantItems.length == 0) {
+            if (relevantItems.length === 0) {
               return (
                 <List>
                   <ListItem
@@ -192,10 +192,10 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
                     <ListItem
                       key={`${type}-${id}`}
                       onClick={
-                        type == 'folder' ? () => setViewedFolder(id) : undefined
+                        type === 'folder' ? () => setViewedFolder(id) : undefined
                       }
                       sx={
-                        type == 'folder'
+                        type === 'folder'
                           ? { cursor: 'pointer' }
                           : {
                               color: theme.palette.onSurface.disabled,
@@ -217,7 +217,7 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
                           flexGrow={1}
                           marginRight={2}
                         >
-                          {type == 'folder' ? (
+                          {type === 'folder' ? (
                             <Link color="inherit" underline="hover">
                               {title}
                             </Link>
@@ -237,9 +237,9 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
       <ZUIFuture future={viewTreeFuture}>
         {(viewTree) => {
           const tryingToMoveFolderIntoItself =
-            itemToMove.type == 'folder' &&
+            itemToMove.type === 'folder' &&
             getAllParentFolderIds(viewedFolder, viewTree).some(
-              (id) => id == itemToMove.data.id
+              (id) => id === itemToMove.data.id
             );
           return (
             <DialogActions>

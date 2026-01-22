@@ -25,7 +25,7 @@ const OrganizationsList = () => {
   return (
     <ZUIFuture future={organizations} ignoreDataWhileLoading>
       {(data) => {
-        if (organizations.data && organizations.data.length == 0) {
+        if (organizations.data && organizations.data.length === 0) {
           return (
             <Alert icon={<Key />} severity="error">
               <AlertTitle>

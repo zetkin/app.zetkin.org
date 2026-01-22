@@ -163,14 +163,14 @@ const eventsSlice = createSlice({
     },
     eventLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.eventList.items.find((item) => item.id == id);
+      const item = state.eventList.items.find((item) => item.id === id);
       state.eventList.items = state.eventList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     eventLoaded: (state, action: PayloadAction<ZetkinEvent>) => {
       const event = action.payload;
-      const item = state.eventList.items.find((item) => item.id == event.id);
+      const item = state.eventList.items.find((item) => item.id === event.id);
 
       if (!item) {
         throw new Error('Finished loading item that never started loading');
@@ -209,7 +209,7 @@ const eventsSlice = createSlice({
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
-      const item = state.eventList.items.find((item) => item.id == eventId);
+      const item = state.eventList.items.find((item) => item.id === eventId);
       if (item) {
         item.mutating = mutating;
       }
@@ -231,7 +231,7 @@ const eventsSlice = createSlice({
 
       state.selectedEventIds = state.selectedEventIds.filter(
         (selectedEventId) =>
-          !toggledEvents.some((event) => event.id == selectedEventId)
+          !toggledEvents.some((event) => event.id === selectedEventId)
       );
     },
     eventsLoad: (state) => {
@@ -253,7 +253,7 @@ const eventsSlice = createSlice({
     eventsUpdate: (state, action: PayloadAction<[number[], string[]]>) => {
       const [eventIds, mutating] = action.payload;
       const items = state.eventList.items.filter((item) =>
-        eventIds.find((eventId) => item.id == eventId)
+        eventIds.find((eventId) => item.id === eventId)
       );
 
       items.map((item) => {
@@ -279,7 +279,7 @@ const eventsSlice = createSlice({
     eventsUpdated: (state, action: PayloadAction<ZetkinEvent[]>) => {
       const updatedEvents = action.payload;
       const items = state.eventList.items.filter((item) =>
-        updatedEvents.find((event) => item.id == event.id)
+        updatedEvents.find((event) => item.id === event.id)
       );
 
       items.map((item) => {
@@ -305,7 +305,7 @@ const eventsSlice = createSlice({
           if (updatedEvent.campaign) {
             const eventItem = state.eventsByCampaignId[
               updatedEvent.campaign.id
-            ].items.find((item) => item.id == updatedEvent.id);
+            ].items.find((item) => item.id === updatedEvent.id);
             if (eventItem) {
               eventItem.data = { ...eventItem.data, ...updatedEvent };
               eventItem.mutating = [];
@@ -341,14 +341,14 @@ const eventsSlice = createSlice({
     },
     locationLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.locationList.items.find((item) => item.id == id);
+      const item = state.locationList.items.find((item) => item.id === id);
       state.locationList.items = state.locationList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     locationLoaded: (state, action: PayloadAction<ZetkinLocation>) => {
       const event = action.payload;
-      const item = state.locationList.items.find((item) => item.id == event.id);
+      const item = state.locationList.items.find((item) => item.id === event.id);
 
       if (!item) {
         throw new Error('Finished loading item that never started loading');
@@ -370,7 +370,7 @@ const eventsSlice = createSlice({
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
       const item = state.locationList.items.find(
-        (item) => item.id == location.id
+        (item) => item.id === location.id
       );
       if (item) {
         item.data = { ...item.data, ...location };
@@ -411,14 +411,14 @@ const eventsSlice = createSlice({
       const newOp = action.payload;
       const existingInverseOp = state.pendingParticipantOps.find(
         (existingOp) =>
-          existingOp.eventId == newOp.eventId &&
-          existingOp.personId == newOp.personId &&
-          existingOp.kind != newOp.kind
+          existingOp.eventId === newOp.eventId &&
+          existingOp.personId === newOp.personId &&
+          existingOp.kind !== newOp.kind
       );
 
       if (existingInverseOp) {
         state.pendingParticipantOps = state.pendingParticipantOps.filter(
-          (op) => op != existingInverseOp
+          (op) => op !== existingInverseOp
         );
       } else {
         state.pendingParticipantOps.push(newOp);
@@ -435,7 +435,7 @@ const eventsSlice = createSlice({
         }
 
         const eventItem = state.eventList.items.find(
-          (item) => item.id == op.eventId
+          (item) => item.id === op.eventId
         );
         if (eventItem) {
           eventItem.isStale = true;
@@ -477,7 +477,7 @@ const eventsSlice = createSlice({
         if (event) {
           updateAvailParticipantToState(state, event);
           // If cancelled participant was contact for event, also remove contact
-          if (event.contact?.id == participant.id) {
+          if (event.contact?.id === participant.id) {
             event.contact = null;
           }
         }
@@ -507,7 +507,7 @@ const eventsSlice = createSlice({
       const eventId = action.payload;
       state.remindingByEventId[eventId] = false;
       state.participantsByEventId[eventId].items.map((item) => {
-        if (item.data && item.data?.reminder_sent == null) {
+        if (item.data && item.data?.reminder_sent === null) {
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
         }
       });
@@ -572,14 +572,14 @@ const eventsSlice = createSlice({
     },
     typeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.typeList.items.find((item) => item.id == id);
+      const item = state.typeList.items.find((item) => item.id === id);
       state.typeList.items = state.typeList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     typeLoaded: (state, action: PayloadAction<ZetkinActivity>) => {
       const activity = action.payload;
-      const item = state.typeList.items.find((item) => item.id == activity.id);
+      const item = state.typeList.items.find((item) => item.id === activity.id);
 
       if (!item) {
         throw new Error('Finished loading item that never started loading');
@@ -617,7 +617,7 @@ const eventsSlice = createSlice({
     userResponseDeleted: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.userEventList.items = state.userEventList.items.filter(
-        (item) => item.id != eventId
+        (item) => item.id !== eventId
       );
     },
   },
@@ -626,7 +626,7 @@ const eventsSlice = createSlice({
 function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
   events.forEach((event) => {
     const eventListItem = state.eventList.items.find(
-      (item) => item.id == event.id
+      (item) => item.id === event.id
     );
 
     if (eventListItem) {
@@ -644,7 +644,7 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
     let oldDateStr: string | undefined = undefined;
     for (const date in state.eventsByDate) {
       const item = state.eventsByDate[date].items.find(
-        (item) => item.id == event.id
+        (item) => item.id === event.id
       );
       if (item) {
         oldDateStr = item.data?.start_time.slice(0, 10);
@@ -686,7 +686,7 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
 
       const eventByCampIdItem = state.eventsByCampaignId[
         campaign.id
-      ].items.find((item) => item.id == event.id);
+      ].items.find((item) => item.id === event.id);
 
       if (eventByCampIdItem) {
         eventByCampIdItem.data = { ...eventByCampIdItem.data, ...event };

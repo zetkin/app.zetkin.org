@@ -21,7 +21,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   const viewTree = useViewTree(orgId);
   const personViews = viewTree.data?.views ?? [];
 
-  const view = personViews.find((v) => v.id == config.view);
+  const view = personViews.find((v) => v.id === config.view);
   const operator = config.operator;
 
   const op = filter.op || OPERATION.ADD;

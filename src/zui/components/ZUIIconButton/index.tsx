@@ -31,10 +31,10 @@ const getColor = (variant: ZUIButtonVariant) => {
 };
 
 const getPadding = (size: ZUISize, variant: ZUIButtonVariant) => {
-  if (variant == 'secondary') {
-    if (size == 'small') {
+  if (variant === 'secondary') {
+    if (size === 'small') {
       return '0.25rem';
-    } else if (size == 'medium') {
+    } else if (size === 'medium') {
       return '0.344rem';
     } else {
       return '0.406rem';
@@ -60,7 +60,7 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
   size = 'medium',
   variant,
 }) => {
-  const isLoading = variant == 'loading';
+  const isLoading = variant === 'loading';
   return (
     <Button
       color={variant ? getColor(variant) : undefined}
@@ -120,19 +120,19 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
       type={actionType}
       variant={variant ? getVariant(variant) : undefined}
     >
-      {variant == 'loading' && (
+      {variant === 'loading' && (
         <CircularProgress
-          size={size == 'small' ? '0.875rem' : '1rem'}
-          sx={{ margin: size == 'small' ? '0.188rem' : '0.25rem' }}
+          size={size === 'small' ? '0.875rem' : '1rem'}
+          sx={{ margin: size === 'small' ? '0.188rem' : '0.25rem' }}
         />
       )}
-      {variant != 'loading' && (
+      {variant !== 'loading' && (
         <Icon
           sx={(theme) => {
             let color: string | undefined = '';
 
             if (!disabled) {
-              if (variant == 'primary' || variant == 'destructive') {
+              if (variant === 'primary' || variant === 'destructive') {
                 color = theme.palette.common.white;
               } else if (variant) {
                 color = theme.palette.primary.main;
@@ -144,7 +144,7 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
 
             return {
               color,
-              fontSize: size == 'small' ? '1.25rem' : '1.5rem',
+              fontSize: size === 'small' ? '1.25rem' : '1.5rem',
             };
           }}
         />

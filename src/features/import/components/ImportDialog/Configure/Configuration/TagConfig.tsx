@@ -61,7 +61,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <>
-          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          {index !== 0 && <Divider sx={{ marginY: 1 }} />}
           <TagConfigRow
             assignedTags={getAssignedTags(uniqueValue)}
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}

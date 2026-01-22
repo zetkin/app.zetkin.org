@@ -69,14 +69,14 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   }, [errorMessageRef.current]);
 
   useEffect(() => {
-    if (status == 'submitted' || status == 'error') {
+    if (status === 'submitted' || status === 'error') {
       setIsLoading(false);
     }
   }, [status]);
 
-  const showForm = status == 'editing' || status == 'error';
-  const showSuccess = status == 'submitted';
-  const showErrorAlert = status == 'error';
+  const showForm = status === 'editing' || status === 'error';
+  const showSuccess = status === 'submitted';
+  const showErrorAlert = status === 'error';
 
   const privacyUrl =
     process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
@@ -177,7 +177,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                           />
                         </Box>
                       )}
-                      {survey.signature == 'allow_anonymous' && (
+                      {survey.signature === 'allow_anonymous' && (
                         <ZUIPublicSurveyOption
                           control={<Radio required />}
                           label={

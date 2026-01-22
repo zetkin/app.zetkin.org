@@ -43,9 +43,9 @@ const EditHouseholdPage: FC<Props> = ({
   }, [household]);
 
   const nothingHasBeenEdited =
-    title == household.title &&
-    floor == household.level &&
-    color == household.color;
+    title === household.title &&
+    floor === household.level &&
+    color === household.color;
 
   return (
     <PageBase

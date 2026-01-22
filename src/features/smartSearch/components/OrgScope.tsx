@@ -16,7 +16,7 @@ const OrgScope: FC<Props> = ({ orgId, organizations }) => {
   const orgs = useSubOrganizations(orgId);
   const titles = Array.isArray(organizations)
     ? organizations
-        .map((oid) => orgs.data?.find((org) => org.id == oid)?.title ?? '')
+        .map((oid) => orgs.data?.find((org) => org.id === oid)?.title ?? '')
         .filter((str) => !!str)
     : [];
 
@@ -28,11 +28,11 @@ const OrgScope: FC<Props> = ({ orgId, organizations }) => {
 
   let content: ReactElement | string | null = null;
 
-  if (organizations == 'all') {
+  if (organizations === 'all') {
     content = <Msg id={messageIds.orgScope.all} />;
-  } else if (organizations == 'suborgs') {
+  } else if (organizations === 'suborgs') {
     content = <Msg id={messageIds.orgScope.suborgs} />;
-  } else if (organizations.length == 1 && organizations[0] == orgId) {
+  } else if (organizations.length === 1 && organizations[0] === orgId) {
     return null;
   } else {
     content = orgString;

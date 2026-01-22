@@ -116,8 +116,8 @@ const renderTree = (
       {breadcrumbs.slice(0, 9).map((item, index) => (
         <BreadCrumbSibling
           key={item.href}
-          isCurrentItem={currentItemHref == item.href}
-          isLast={isLastLevel && index == breadcrumbs.length - 1}
+          isCurrentItem={currentItemHref === item.href}
+          isLast={isLastLevel && index === breadcrumbs.length - 1}
           item={item}
         >
           {!isLastLevel

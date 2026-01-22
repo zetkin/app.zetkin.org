@@ -47,10 +47,10 @@ const SurveyResponsesConfig = ({
   return (
     <ZUIFuture future={surveysWithElementsFuture}>
       {(data) => {
-        const selectedSurvey = data.find((survey) => survey.id == surveyId);
+        const selectedSurvey = data.find((survey) => survey.id === surveyId);
         const questionFromSurvey: ZetkinSurveyQuestionElement[] =
           selectedSurvey?.elements.filter(
-            (elem) => elem.type == ELEMENT_TYPE.QUESTION
+            (elem) => elem.type === ELEMENT_TYPE.QUESTION
           ) as ZetkinSurveyQuestionElement[];
 
         return (

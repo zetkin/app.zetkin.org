@@ -13,11 +13,11 @@ export default function useItemSummary(
 
   return new ResolvedFuture({
     folders: itemsFuture.data.folders.filter(
-      (folder) => folder.parent?.id == folderId
+      (folder) => folder.parent?.id === folderId
     ).length,
     views: itemsFuture.data.views.filter((view) => {
       if (view) {
-        return view.folder?.id == folderId;
+        return view.folder?.id === folderId;
       }
     }).length,
   });

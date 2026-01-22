@@ -50,7 +50,7 @@ export default class PersonTagColumnType implements IColumnType {
     let tag: ZetkinTag | null = null;
 
     if (!accessLevel) {
-      const tagItem = tagListState.items.find((item) => item.id == tagId);
+      const tagItem = tagListState.items.find((item) => item.id === tagId);
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
         actionOnLoad: () => tagLoad(tagId),
@@ -101,7 +101,7 @@ export default class PersonTagColumnType implements IColumnType {
       return;
     }
 
-    if (ev.key == 'Enter' || ev.key == ' ') {
+    if (ev.key === 'Enter' || ev.key === ' ') {
       viewGrid.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
     }

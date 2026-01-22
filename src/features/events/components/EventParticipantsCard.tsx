@@ -45,7 +45,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   const messages = useMessages(messageIds);
 
   const remindedParticipants =
-    participants.filter((p) => p.reminder_sent != null && !p.cancelled)
+    participants.filter((p) => p.reminder_sent !== null && !p.cancelled)
       .length ?? 0;
 
   const availParticipants = event?.num_participants_available ?? 0;
@@ -91,8 +91,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                 onClickAway={() => {
                   setAnchorEl(null);
                   if (
-                    newReqParticipants != null &&
-                    newReqParticipants != reqParticipants
+                    newReqParticipants !== null &&
+                    newReqParticipants !== reqParticipants
                   ) {
                     setReqParticipants(newReqParticipants);
                   }
@@ -106,20 +106,20 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                       onChange={(ev) => {
                         const val = ev.target.value;
 
-                        if (val == '') {
+                        if (val === '') {
                           setNewReqParticipants(null);
                           return;
                         }
 
                         const intVal = parseInt(val);
-                        if (!isNaN(intVal) && intVal.toString() == val) {
+                        if (!isNaN(intVal) && intVal.toString() === val) {
                           setNewReqParticipants(intVal);
                         }
                       }}
                       onKeyDown={(ev) => {
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
-                          if (newReqParticipants != null) {
+                          if (newReqParticipants !== null) {
                             setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {

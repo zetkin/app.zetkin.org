@@ -73,7 +73,7 @@ const HouseholdsPage: FC<Props> = ({
     const floor0 = h0.level ?? Infinity;
     const floor1 = h1.level ?? Infinity;
 
-    if (floor0 == floor1) {
+    if (floor0 === floor1) {
       return h0.title.localeCompare(h1.title);
     }
 
@@ -110,7 +110,7 @@ const HouseholdsPage: FC<Props> = ({
         >
           <Box alignItems="center" display="flex" gap={0.5}>
             <Checkbox
-              checked={selectedHouseholdIds.length == sortedHouseholds.length}
+              checked={selectedHouseholdIds.length === sortedHouseholds.length}
               indeterminate={
                 selectedHouseholdIds.length > 0 &&
                 selectedHouseholdIds.length < sortedHouseholds.length
@@ -151,7 +151,7 @@ const HouseholdsPage: FC<Props> = ({
         </Box>
       )}
       <Box display="flex" flexDirection="column" flexGrow={2}>
-        {location.num_known_households == 0 && (
+        {location.num_known_households === 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
             <Msg id={messageIds.households.page.empty} />
           </Typography>
@@ -160,7 +160,7 @@ const HouseholdsPage: FC<Props> = ({
           {sortedHouseholds.map((household, index) => {
             const prevFloor = sortedHouseholds[index - 1]?.level ?? 0;
             const curFloor = household.level ?? 0;
-            const firstOnFloor = index == 0 || curFloor != prevFloor;
+            const firstOnFloor = index === 0 || curFloor !== prevFloor;
 
             const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
@@ -169,8 +169,8 @@ const HouseholdsPage: FC<Props> = ({
               !!successMetric &&
               mostRecentVisit.metrics.some(
                 (metric) =>
-                  metric.metric_id == successMetric.id &&
-                  metric.response == 'yes'
+                  metric.metric_id === successMetric.id &&
+                  metric.response === 'yes'
               );
 
             return (
@@ -266,7 +266,7 @@ const HouseholdsPage: FC<Props> = ({
 
               // Since this button adds households to the unknown floor, we only count those households
               const householdsOnUnknownFloor = sortedHouseholds.filter(
-                ({ level }) => level == null
+                ({ level }) => level === null
               );
               const title = messages.households.householdDefaultTitle({
                 householdNumber: householdsOnUnknownFloor.length + 1,

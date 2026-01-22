@@ -11,7 +11,7 @@ export default function useEventType(
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
   const typeItem = useAppSelector((state) =>
-    state.events.typeList.items.find((item) => item.id == typeId)
+    state.events.typeList.items.find((item) => item.id === typeId)
   );
 
   return loadItemIfNecessary(typeItem, dispatch, {

@@ -49,7 +49,7 @@ const HouseholdsPage2: FC<Props> = ({
     location.id
   );
 
-  const shouldStartInEditMode = households.length == 0;
+  const shouldStartInEditMode = households.length === 0;
   const initialDraft = {
     draftHouseholdCount: 1,
     existingHouseholds: [],
@@ -79,7 +79,7 @@ const HouseholdsPage2: FC<Props> = ({
           minHeight: '100%',
         }}
       >
-        {households.length == 0 && (
+        {households.length === 0 && (
           <Box
             sx={{
               display: 'flex',

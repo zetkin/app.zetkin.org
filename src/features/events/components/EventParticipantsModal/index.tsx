@@ -99,7 +99,7 @@ const EventParticipantsModal: FC<Props> = ({ onClose, open }) => {
             {messages.participantsModal.discardButton()}
           </Button>
           <Button
-            disabled={affectedParticipantIds.length == 0}
+            disabled={affectedParticipantIds.length === 0}
             onClick={() => {
               execute();
               onClose();

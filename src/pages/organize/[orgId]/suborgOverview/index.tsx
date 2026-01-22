@@ -134,8 +134,8 @@ export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
             >
               {Object.entries(suborgWithFullStats.stats.numCallsByCallDate).map(
                 ([callDate, numCalls]) => {
-                  const noDateHasCalls = mostCalls == 0;
-                  const thisDateHadNoCalls = numCalls == 0;
+                  const noDateHasCalls = mostCalls === 0;
+                  const thisDateHadNoCalls = numCalls === 0;
                   return (
                     <Tooltip
                       key={`${callDate}-calls`}
@@ -194,8 +194,8 @@ export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
               {Object.entries(
                 suborgWithFullStats.stats.numBookedByEventsByStartDate
               ).map(([startDate, numBooked]) => {
-                const noEventsHadParticipants = mostParticipants == 0;
-                const thisDateHadNoParticipants = numBooked == 0;
+                const noEventsHadParticipants = mostParticipants === 0;
+                const thisDateHadNoParticipants = numBooked === 0;
 
                 return (
                   <Tooltip
@@ -254,8 +254,8 @@ export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
               {Object.entries(
                 suborgWithFullStats.stats.numSubmissionsBySubmitDate
               ).map(([submitDate, numSubmissions]) => {
-                const noDateHadSubmissions = mostSubmissions == 0;
-                const thisDateHadNoSubmissions = numSubmissions == 0;
+                const noDateHadSubmissions = mostSubmissions === 0;
+                const thisDateHadNoSubmissions = numSubmissions === 0;
 
                 return (
                   <Tooltip

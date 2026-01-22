@@ -18,7 +18,7 @@ const Template: StoryFn<typeof ZUIReorderable> = (args) => {
         {...args}
         items={items}
         onReorder={(ids) => {
-          setItems(ids.map((id) => args.items.find((item) => item.id == id)!));
+          setItems(ids.map((id) => args.items.find((item) => item.id === id)!));
         }}
       />
     </div>

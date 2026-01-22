@@ -54,16 +54,16 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
 
   const previousCalls = outgoingCalls.filter((call) => {
     const matches = matchesSearch(call);
-    const isFinishedCall = call.state != 0;
-    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
+    const isFinishedCall = call.state !== 0;
+    const isNotCurrentCall = currentCall ? currentCall.id !== call.id : true;
 
     return matches && isFinishedCall && isNotCurrentCall;
   });
 
   const unfinishedCalls = outgoingCalls.filter((call) => {
     const matches = matchesSearch(call);
-    const isUnfinishedCall = call.state == 0;
-    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
+    const isUnfinishedCall = call.state === 0;
+    const isNotCurrentCall = currentCall ? currentCall.id !== call.id : true;
 
     return matches && isUnfinishedCall && isNotCurrentCall;
   });

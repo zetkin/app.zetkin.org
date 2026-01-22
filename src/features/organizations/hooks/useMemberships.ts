@@ -17,6 +17,6 @@ export default function useMemberships(): IFuture<ZetkinMembership[]> {
     loader: () =>
       apiClient
         .get<ZetkinMembership[]>(`/api/users/me/memberships`)
-        .then((response) => response.filter((m) => m.role != null)),
+        .then((response) => response.filter((m) => m.role !== null)),
   });
 }

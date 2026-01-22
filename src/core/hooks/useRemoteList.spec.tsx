@@ -91,14 +91,14 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
       list: initialList || remoteList(),
     },
     reducer: (state, action) => {
-      if (action.type == 'load') {
+      if (action.type === 'load') {
         return {
           list: {
             ...remoteList(),
             isLoading: true,
           },
         };
-      } else if (action.type == 'loaded') {
+      } else if (action.type === 'loaded') {
         return {
           list: {
             ...remoteList(),

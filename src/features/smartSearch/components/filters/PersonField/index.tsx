@@ -144,13 +144,13 @@ const PersonField = ({
       </StyledSelect>
     );
 
-    if (!type || type == CUSTOM_FIELD_TYPE.JSON) {
+    if (!type || type === CUSTOM_FIELD_TYPE.JSON) {
       // TODO: If this case is not relevant error handle it
       // Using null here causes a type error for FilterForm
       // eslint-disable-next-line react/jsx-no-useless-fragment
       return <></>;
     } else {
-      if (type == CUSTOM_FIELD_TYPE.DATE) {
+      if (type === CUSTOM_FIELD_TYPE.DATE) {
         return (
           <Msg
             id={localMessageIds.edit.date}
@@ -168,7 +168,7 @@ const PersonField = ({
             }}
           />
         );
-      } else if (type == CUSTOM_FIELD_TYPE.URL) {
+      } else if (type === CUSTOM_FIELD_TYPE.URL) {
         return (
           <Msg
             id={localMessageIds.edit.url}
@@ -185,7 +185,7 @@ const PersonField = ({
           />
         );
       } else if (
-        type == CUSTOM_FIELD_TYPE.ENUM &&
+        type === CUSTOM_FIELD_TYPE.ENUM &&
         selectedField?.enum_choices
       ) {
         return (

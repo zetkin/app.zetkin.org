@@ -81,7 +81,7 @@ const AccountSettings: FC<Props> = ({ user }) => {
                   <ZUIButton
                     actionType="submit"
                     disabled={
-                      savingEmail || !email.length || email == user.email
+                      savingEmail || !email.length || email === user.email
                     }
                     label={messages.settings.accountSettings.email.saveButton()}
                     size="large"

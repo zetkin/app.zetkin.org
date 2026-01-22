@@ -14,7 +14,7 @@ export default function useJourneyInstance(
     (state) => state.journeys.journeyInstanceList
   );
   const instanceItem = instanceList.items.find(
-    (instance) => instance.id == instanceId
+    (instance) => instance.id === instanceId
   );
 
   return loadItemIfNecessary(instanceItem, dispatch, {

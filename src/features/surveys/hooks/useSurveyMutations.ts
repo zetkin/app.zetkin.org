@@ -114,7 +114,7 @@ export default function useSurveyMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const surveyData = useAppSelector((state) =>
-    state.surveys.surveyList.items.find((item) => item.id == surveyId)
+    state.surveys.surveyList.items.find((item) => item.id === surveyId)
   )?.data;
 
   async function updateSurvey(data: ZetkinSurveyPatchBody) {

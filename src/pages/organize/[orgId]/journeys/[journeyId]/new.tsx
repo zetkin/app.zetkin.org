@@ -209,18 +209,18 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     onAssignTag={(tag) => setTags([...tags, tag])}
                     onRemoveAssignee={(person) =>
                       setAssignees(
-                        assignees.filter((assignee) => assignee.id != person.id)
+                        assignees.filter((assignee) => assignee.id !== person.id)
                       )
                     }
                     onRemoveSubject={(person) =>
                       setSubjects(
-                        subjects.filter((subject) => subject.id != person.id)
+                        subjects.filter((subject) => subject.id !== person.id)
                       )
                     }
                     onTagEdited={(editedTag) => {
                       setTags(
                         tags.map((tag) => {
-                          if (tag.id == editedTag.id) {
+                          if (tag.id === editedTag.id) {
                             return { ...editedTag, value: tag.value };
                           } else {
                             return tag;
@@ -229,7 +229,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                       );
                     }}
                     onUnassignTag={(tagToUnassign) =>
-                      setTags(tags.filter((tag) => tag.id != tagToUnassign.id))
+                      setTags(tags.filter((tag) => tag.id !== tagToUnassign.id))
                     }
                   />
                 </Grid>

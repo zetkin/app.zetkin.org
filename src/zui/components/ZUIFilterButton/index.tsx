@@ -35,7 +35,7 @@ const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
   label,
   onClick,
 }) => {
-  const hasTextLabel = typeof label == 'string';
+  const hasTextLabel = typeof label === 'string';
   const hasIconLabel = !hasTextLabel;
 
   const renderContent = () => {

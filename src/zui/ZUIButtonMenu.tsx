@@ -77,7 +77,7 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
         }}
         transformOrigin={{
           horizontal: alignHorizontal,
-          vertical: alignVertical == 'bottom' ? 'top' : 'bottom',
+          vertical: alignVertical === 'bottom' ? 'top' : 'bottom',
         }}
       >
         {items.map((item, idx) => {

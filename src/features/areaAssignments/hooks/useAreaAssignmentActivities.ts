@@ -43,7 +43,7 @@ export default function useAreaAssignmentActivities(
     return new ResolvedFuture(
       future.data
         .filter((assignment) => {
-          return !campId || assignment.project_id == campId;
+          return !campId || assignment.project_id === campId;
         })
         .map((assignment) => ({
           data: assignment,

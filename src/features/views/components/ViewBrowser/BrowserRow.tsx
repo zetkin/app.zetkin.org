@@ -36,15 +36,15 @@ const BrowserRow: FC<BrowserRowProps> = ({ item, rowProps }) => {
   >({
     accept: 'ITEM',
     canDrop: (draggedItem) =>
-      draggedItem.type == 'view' || draggedItem.id != item.id,
+      draggedItem.type === 'view' || draggedItem.id !== item.id,
     collect: (monitor) => {
       return {
         active: monitor.isOver() && monitor.canDrop(),
       };
     },
     drop: (draggedItem) => {
-      if (draggedItem.type == 'folder' || draggedItem.type == 'view') {
-        const parentId = item.type == 'back' ? item.folderId : item.data.id;
+      if (draggedItem.type === 'folder' || draggedItem.type === 'view') {
+        const parentId = item.type === 'back' ? item.folderId : item.data.id;
         moveItem(draggedItem.type, draggedItem.data.id, parentId);
       }
     },
@@ -52,7 +52,7 @@ const BrowserRow: FC<BrowserRowProps> = ({ item, rowProps }) => {
 
   let content = <GridRow {...rowProps} />;
 
-  if (item.type != 'view') {
+  if (item.type !== 'view') {
     // If it's not a view, wrap it in a drop target
     content = (
       <Box

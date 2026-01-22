@@ -21,7 +21,7 @@ const TimelineAssigned: React.FunctionComponent<Props> = ({ update }) => {
       <Msg
         id={
           messageIds.updates.journeyinstance[
-            update.type == UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE
+            update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE
               ? 'addassignee'
               : 'removeassignee'
           ]

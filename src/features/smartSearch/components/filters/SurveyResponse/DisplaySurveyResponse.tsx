@@ -37,7 +37,7 @@ const DisplaySurveyResponse = ({
     : undefined;
 
   const question =
-    questionElement?.type == ELEMENT_TYPE.QUESTION
+    questionElement?.type === ELEMENT_TYPE.QUESTION
       ? questionElement.question.question
       : undefined;
 

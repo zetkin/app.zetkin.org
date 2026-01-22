@@ -65,7 +65,7 @@ const ActivistPortalHeader: FC<Props> = ({
   );
 
   const memberships = useMemberships().data || [];
-  const isOfficial = memberships.find((membership) => membership.role != null);
+  const isOfficial = memberships.find((membership) => membership.role !== null);
 
   return (
     <Box
@@ -133,7 +133,7 @@ const ActivistPortalHeader: FC<Props> = ({
             }}
           >
             <Box>
-              {typeof title == 'string' ? (
+              {typeof title === 'string' ? (
                 <ZUIText variant="headingLg">{title}</ZUIText>
               ) : (
                 title
@@ -144,7 +144,7 @@ const ActivistPortalHeader: FC<Props> = ({
         )}
         {subtitle && (
           <Box sx={{ whiteSpace: 'pre-line' }}>
-            {typeof subtitle == 'string' ? (
+            {typeof subtitle === 'string' ? (
               <ZUIText>{subtitle}</ZUIText>
             ) : (
               subtitle

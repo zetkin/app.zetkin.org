@@ -128,7 +128,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
 
   const content = props.content;
   const hasContent = !!content;
-  const hasStringContent = hasContent && typeof content == 'string';
+  const hasStringContent = hasContent && typeof content === 'string';
   const hasArrayContent = hasContent && Array.isArray(content);
 
   const hasImage = hasImageElement || hasImageSrc;
@@ -202,7 +202,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
           {hasArrayContent && (
             <Stack spacing="0.5rem">
               {content.map((c) => {
-                if (typeof c == 'string') {
+                if (typeof c === 'string') {
                   return (
                     <ZUIText key={c} color="secondary" variant="bodySmRegular">
                       {c}

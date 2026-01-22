@@ -15,11 +15,11 @@ interface BrowserItemIconProps {
 
 const BrowserItemIcon: FC<BrowserItemIconProps> = ({ item }) => {
   const dropProps = useContext(BrowserRowContext);
-  if (item.type == 'folder') {
+  if (item.type === 'folder') {
     return dropProps.active ? <FolderOpen /> : <Folder />;
-  } else if (item.type == 'back') {
+  } else if (item.type === 'back') {
     return <ArrowBack />;
-  } else if (item.type == 'view') {
+  } else if (item.type === 'view') {
     return <InsertDriveFileOutlined />;
   } else {
     // Will never happen

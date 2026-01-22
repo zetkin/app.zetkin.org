@@ -93,7 +93,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
           const options =
-            metric.type == 'bool'
+            metric.type === 'bool'
               ? [
                   {
                     label: messages.visit.household.yesButtonLabel(),
@@ -112,7 +112,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                   { label: 5, value: 5 },
                 ];
 
-          const stepIsCurrent = index == step;
+          const stepIsCurrent = index === step;
           const completed = metric.id in responseByMetricId;
 
           return (
@@ -162,7 +162,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                     {!stepIsCurrent && index < step && <Undo />}
                   </Box>
 
-                  {completed && step != index && (
+                  {completed && step !== index && (
                     <Typography variant="body2">
                       {responseByMetricId[metric.id].response}
                     </Typography>

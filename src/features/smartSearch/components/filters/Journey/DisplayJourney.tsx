@@ -81,7 +81,7 @@ const DisplayJourney: FC<DisplayJourneyProps> = ({ filter }): JSX.Element => {
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         closedTimeFrame:
-          state == 'closed' ? (
+          state === 'closed' ? (
             <DisplayTimeFrame config={closedTimeFrame} />
           ) : null,
         condition: getCondition(),

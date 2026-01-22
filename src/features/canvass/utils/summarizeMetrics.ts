@@ -20,23 +20,23 @@ export default function summarizeMetrics(
   return {
     metrics: Object.values(responsesByMetricId).map((responses) => {
       const firstResp = responses[0].response;
-      const isBool = firstResp == 'yes' || firstResp == 'no';
+      const isBool = firstResp === 'yes' || firstResp === 'no';
 
       if (isBool) {
         return {
           metric_id: responses[0].metric_id,
-          num_no: responses.filter((resp) => resp.response == 'no').length,
-          num_yes: responses.filter((resp) => resp.response == 'yes').length,
+          num_no: responses.filter((resp) => resp.response === 'no').length,
+          num_yes: responses.filter((resp) => resp.response === 'yes').length,
         };
       } else {
         return {
           metric_id: responses[0].metric_id,
           num_values: [
-            responses.filter((resp) => resp.response == 1).length,
-            responses.filter((resp) => resp.response == 2).length,
-            responses.filter((resp) => resp.response == 3).length,
-            responses.filter((resp) => resp.response == 4).length,
-            responses.filter((resp) => resp.response == 5).length,
+            responses.filter((resp) => resp.response === 1).length,
+            responses.filter((resp) => resp.response === 2).length,
+            responses.filter((resp) => resp.response === 3).length,
+            responses.filter((resp) => resp.response === 4).length,
+            responses.filter((resp) => resp.response === 5).length,
           ],
         };
       }

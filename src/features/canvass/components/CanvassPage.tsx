@@ -21,7 +21,7 @@ const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
 }) => {
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const orgFuture = useOrganization(assignment.organization_id);
-  const selectedArea = areas.find((area) => area.id == areaId);
+  const selectedArea = areas.find((area) => area.id === areaId);
   const router = useRouter();
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
@@ -141,7 +141,7 @@ type CanvassPageProps = {
 const CanvassPage: FC<CanvassPageProps> = ({ areaAssId, areaId }) => {
   const myAssignments = useMyAreaAssignments();
   const assignment = myAssignments.find(
-    (assignment) => assignment.id == areaAssId
+    (assignment) => assignment.id === areaAssId
   );
 
   if (!assignment) {

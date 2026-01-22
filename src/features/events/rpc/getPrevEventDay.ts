@@ -49,7 +49,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     );
 
     const filtered = events.filter(
-      (event) => !campaignId || event.campaign?.id == campaignId
+      (event) => !campaignId || event.campaign?.id === campaignId
     );
 
     const sorted = filtered.sort(
@@ -61,7 +61,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     if (mostRecentEvent) {
       const mostRecentDateStr = mostRecentEvent.start_time.slice(0, 10);
       const relevantEvents = filtered.filter(
-        (event) => event.start_time.slice(0, 10) == mostRecentDateStr
+        (event) => event.start_time.slice(0, 10) === mostRecentDateStr
       );
 
       return {

@@ -148,7 +148,7 @@ const EmailDelivery = ({ email, onClose, orgId }: EmailDeliveryProps) => {
               }}
             >
               <Button
-                disabled={tab === 'later' && sendingDate == null}
+                disabled={tab === 'later' && sendingDate === null}
                 onClick={() => {
                   updateEmail({
                     published:

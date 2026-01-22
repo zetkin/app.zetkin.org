@@ -29,10 +29,10 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   if (!activeOrgs.length) {
     return null;
   }
-  const org = activeOrgs.find((org) => org.id == orgId);
+  const org = activeOrgs.find((org) => org.id === orgId);
 
   const sortedActiveOrgs = activeOrgs
-    .filter((org) => org.id != orgId)
+    .filter((org) => org.id !== orgId)
     .sort((orgA, orgB) => {
       return orgA.title.localeCompare(orgB.title);
     });
@@ -78,7 +78,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <Box key={index}>
-          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          {index !== 0 && <Divider sx={{ marginY: 1 }} />}
           <OrgConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectOrg={() => deselectOrg(uniqueValue)}

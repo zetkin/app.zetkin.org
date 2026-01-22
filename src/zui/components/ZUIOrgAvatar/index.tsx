@@ -32,7 +32,7 @@ const ZUIOrgAvatar: FC<ZUIOrgAvatarProps> = ({
   const wordsInTitle = title.split(' ');
 
   let initials = '';
-  if (wordsInTitle.length == 1) {
+  if (wordsInTitle.length === 1) {
     initials = wordsInTitle[0].slice(0, 2);
   } else {
     initials = `${wordsInTitle[0][0]}${wordsInTitle[1][0]}`;

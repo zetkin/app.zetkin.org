@@ -38,7 +38,7 @@ const ZUIOrgScopeSelect: FC<Props> = ({
     value,
   });
 
-  const curOrgTitle = organizations.find((org) => org.id == orgId)?.title ?? '';
+  const curOrgTitle = organizations.find((org) => org.id === orgId)?.title ?? '';
 
   return (
     <Box alignItems="center" display="flex" gap={1}>
@@ -69,7 +69,7 @@ const ZUIOrgScopeSelect: FC<Props> = ({
           <Msg id={messageIds.orgScopeSelect.scope.specific} />
         </MenuItem>
       </Select>
-      {scope == 'specific' && (
+      {scope === 'specific' && (
         <Autocomplete
           filterOptions={(options, state) =>
             options.filter((opt) =>
@@ -120,7 +120,7 @@ const ZUIOrgScopeSelect: FC<Props> = ({
             width: '50%',
           }}
           value={orgs.map(
-            (orgId) => organizations.find((org) => org.id == orgId)!
+            (orgId) => organizations.find((org) => org.id === orgId)!
           )}
         />
       )}

@@ -36,9 +36,9 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
             list: viewTitle,
           }),
         }}
-        getOptionDisabled={(option) => rows.some((row) => row.id == option.id)}
+        getOptionDisabled={(option) => rows.some((row) => row.id === option.id)}
         getOptionExtraLabel={(option) => {
-          return rows.some((row) => row.id == option.id)
+          return rows.some((row) => row.id === option.id)
             ? messages.footer.alreadyInView()
             : '';
         }}

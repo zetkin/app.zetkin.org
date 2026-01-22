@@ -8,7 +8,7 @@ export default function insertAtPlaceholder(
   frame: MJMLJsonObject,
   content: MJMLJsonObject[]
 ): MJMLJsonObject[] {
-  if (frame.tagName == 'placeholder') {
+  if (frame.tagName === 'placeholder') {
     return content;
   } else if (hasChildren(frame)) {
     const children: MJMLJsonObject[] = [];

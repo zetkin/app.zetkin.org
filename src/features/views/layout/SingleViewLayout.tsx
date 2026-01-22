@@ -144,7 +144,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     id: 'duplicate-view',
     label: messages.viewLayout.ellipsisMenu.duplicate(),
     onSelect: async () => {
-      if (view != null) {
+      if (view !== null) {
         const copiedList = await duplicateView(
           viewId,
           view.folder?.id ?? null,

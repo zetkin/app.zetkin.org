@@ -81,7 +81,7 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
                 <Select
                   label={messages.configuration.configure.orgs.organizations()}
                   onChange={(event) => {
-                    if (typeof event.target.value == 'number') {
+                    if (typeof event.target.value === 'number') {
                       onSelectOrg(event.target.value);
                     }
                   }}

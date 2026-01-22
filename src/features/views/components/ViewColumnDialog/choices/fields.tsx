@@ -25,7 +25,7 @@ export const fullName: ColumnChoice = {
     return fieldsToAdd.every((fieldName) =>
       columns.some(
         (col) =>
-          col.type == COLUMN_TYPE.PERSON_FIELD && col.config.field == fieldName
+          col.type === COLUMN_TYPE.PERSON_FIELD && col.config.field === fieldName
       )
     );
   },
@@ -54,8 +54,8 @@ export const fullName: ColumnChoice = {
       (nameCol) =>
         !existingColumns.some(
           (exCol) =>
-            exCol.type == COLUMN_TYPE.PERSON_FIELD &&
-            exCol.config.field == nameCol.config.field
+            exCol.type === COLUMN_TYPE.PERSON_FIELD &&
+            exCol.config.field === nameCol.config.field
         )
     );
   },
@@ -69,7 +69,7 @@ export const pickFields: ColumnChoice = {
     return Object.values(NATIVE_PERSON_FIELDS).every((fieldName) =>
       columns.some(
         (col) =>
-          col.type == COLUMN_TYPE.PERSON_FIELD && col.config.field == fieldName
+          col.type === COLUMN_TYPE.PERSON_FIELD && col.config.field === fieldName
       )
     );
   },
@@ -100,7 +100,7 @@ function createFieldChoice(
     alreadyInView: (columns) => {
       return columns.some(
         (col) =>
-          col.type == COLUMN_TYPE.PERSON_FIELD && col.config.field == field
+          col.type === COLUMN_TYPE.PERSON_FIELD && col.config.field === field
       );
     },
     color: blue,

@@ -22,7 +22,7 @@ const getCampaignStatus = (campaign: ZetkinCampaign): CampaignStatus => {
     return CampaignStatus.DRAFT;
   }
 
-  if (campaign.visibility == 'open') {
+  if (campaign.visibility === 'open') {
     return CampaignStatus.PUBLIC;
   }
 

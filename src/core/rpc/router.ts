@@ -10,7 +10,7 @@ export class RPCRouter {
   async handle(req: NextApiRequest, res: NextApiResponse) {
     // TODO: Handle auth here?
 
-    if (req.method != 'POST') {
+    if (req.method !== 'POST') {
       return res.status(400).end();
     }
 

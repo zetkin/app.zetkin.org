@@ -22,7 +22,7 @@ export default function prepareImportOperations(
   const preparedOps: BulkOp[] = [];
 
   sheet.rows.forEach((row, index) => {
-    if (sheet.firstRowIsHeaders && index == 0) {
+    if (sheet.firstRowIsHeaders && index === 0) {
       return;
     }
 
@@ -36,13 +36,13 @@ export default function prepareImportOperations(
       if (col.selected) {
         const value = row.data[index];
 
-        if (col.kind == ColumnKind.FIELD) {
+        if (col.kind === ColumnKind.FIELD) {
           const fieldKey = col.field;
           let value = row.data[index];
 
           if (value) {
             //Parse phone numbers to international format
-            if (fieldKey == 'phone' || fieldKey == 'alt_phone') {
+            if (fieldKey === 'phone' || fieldKey === 'alt_phone') {
               const parsedPhoneNumber = parsePhoneNumber(
                 cleanPhoneNumber(value),
                 countryCode
@@ -50,41 +50,41 @@ export default function prepareImportOperations(
               value = parsedPhoneNumber.format('E.164');
             }
 
-            if (fieldKey == 'email') {
+            if (fieldKey === 'email') {
               value = value.toString().trim();
             }
 
             fields[col.field] = value;
           }
-        } else if (col.kind == ColumnKind.ID_FIELD) {
+        } else if (col.kind === ColumnKind.ID_FIELD) {
           if (value) {
-            if (col.idField == 'ext_id') {
+            if (col.idField === 'ext_id') {
               extId = value.toString();
-            } else if (col.idField == 'id') {
+            } else if (col.idField === 'id') {
               zetkinId = parseInt(value.toString());
             }
           }
-        } else if (col.kind == ColumnKind.DATE) {
+        } else if (col.kind === ColumnKind.DATE) {
           if (col.dateFormat && value) {
             const parser = parserFactory(col.dateFormat);
             fields[col.field] = parser.parse(value.toString());
           }
-        } else if (col.kind == ColumnKind.GENDER) {
+        } else if (col.kind === ColumnKind.GENDER) {
           col.mapping.forEach((mapping) => {
-            if (mapping.value == value) {
+            if (mapping.value === value) {
               fields.gender = mapping.gender;
             }
           });
-        } else if (col.kind == ColumnKind.ENUM) {
+        } else if (col.kind === ColumnKind.ENUM) {
           col.mapping.forEach((mapping) => {
-            if (mapping.value == value) {
+            if (mapping.value === value) {
               fields[col.field] = mapping.key;
             }
           });
-        } else if (col.kind == ColumnKind.TAG) {
+        } else if (col.kind === ColumnKind.TAG) {
           col.mapping.forEach((mapping) => {
             if (
-              value == mapping.value ||
+              value === mapping.value ||
               (value === '' && mapping.value === null)
             ) {
               mapping.tags.forEach((tag) => {
@@ -95,9 +95,9 @@ export default function prepareImportOperations(
               });
             }
           });
-        } else if (col.kind == ColumnKind.ORGANIZATION) {
+        } else if (col.kind === ColumnKind.ORGANIZATION) {
           col.mapping.forEach((mapping) => {
-            if (mapping.value == value && mapping.orgId) {
+            if (mapping.value === value && mapping.orgId) {
               subOps.push({
                 op: 'person.addtoorg',
                 org_id: mapping.orgId,

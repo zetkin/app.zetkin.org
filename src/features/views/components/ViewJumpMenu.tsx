@@ -38,7 +38,7 @@ const ViewJumpMenu: FunctionComponent = () => {
 
   const views: ZetkinView[] =
     itemsFuture.data
-      ?.filter((item) => item.type == 'view')
+      ?.filter((item) => item.type === 'view')
       .map((item: ViewBrowserItem) => (item as ViewBrowserViewItem).data) ?? [];
   const {
     getInputProps,
@@ -87,7 +87,7 @@ const ViewJumpMenu: FunctionComponent = () => {
     inputValue.length ? groupedOptions : views || []
   ) as ZetkinView[];
 
-  const options = allOptions.filter((view) => view.id != viewId);
+  const options = allOptions.filter((view) => view.id !== viewId);
   const tfProps = getInputProps();
 
   return (
@@ -104,13 +104,13 @@ const ViewJumpMenu: FunctionComponent = () => {
         data-testid="view-jump-menu-popover"
         onClose={() => setJumpMenuAnchor(null)}
         onKeyDown={(ev) => {
-          if (ev.code == 'ArrowUp') {
+          if (ev.code === 'ArrowUp') {
             const nextIndex = activeIndex - 1;
             setActiveIndex(nextIndex >= 0 ? nextIndex : options.length - 1);
-          } else if (ev.code == 'ArrowDown') {
+          } else if (ev.code === 'ArrowDown') {
             const nextIndex = activeIndex + 1;
             setActiveIndex(nextIndex < options.length ? nextIndex : 0);
-          } else if (ev.code == 'Enter') {
+          } else if (ev.code === 'Enter') {
             const selectedView = options[activeIndex];
             if (selectedView) {
               setJumpMenuAnchor(null);
@@ -160,7 +160,7 @@ const ViewJumpMenu: FunctionComponent = () => {
                     passHref
                   >
                     <ListItem component="a" tabIndex={-1}>
-                      <ListItemButton selected={idx == activeIndex}>
+                      <ListItemButton selected={idx === activeIndex}>
                         <ListItemText>{view.title}</ListItemText>
                       </ListItemButton>
                     </ListItem>

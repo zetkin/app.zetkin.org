@@ -37,7 +37,7 @@ const LocaleSwitcher: FC<PropsWithChildren> = ({ children }) => {
           exclusive
           fullWidth
           onChange={(event, newLocale) => {
-            if (newLocale != null) {
+            if (newLocale !== null) {
               setLocale(newLocale);
             }
           }}

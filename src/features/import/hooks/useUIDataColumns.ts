@@ -33,7 +33,7 @@ export default function useImportConfigState(): UseUIDataColumnsReturn {
   });
 
   const noSelectedColumns = originalColumns.every(
-    (column) => column.selected == false
+    (column) => column.selected === false
   );
 
   return {

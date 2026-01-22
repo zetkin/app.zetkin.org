@@ -19,7 +19,7 @@ export default function isPointInsidePolygon(
     const yj = polygon[j].lng;
 
     const intersects =
-      yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
 
     if (intersects) {
       inside = !inside;

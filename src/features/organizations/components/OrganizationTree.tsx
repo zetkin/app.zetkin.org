@@ -33,7 +33,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
               <ProceduralColorIcon id={item.id} />
             </Box>
             <Typography
-              sx={{ fontWeight: orgId == item.id ? 'bold' : 'normal' }}
+              sx={{ fontWeight: orgId === item.id ? 'bold' : 'normal' }}
               variant="body2"
             >
               {item.title}
@@ -62,7 +62,7 @@ function OrganizationTree({
       <SimpleTreeView
         defaultExpandedItems={
           // If there is only one top-level org, expand it by default
-          treeItemData.length == 1 ? [treeItemData[0].id.toString()] : undefined
+          treeItemData.length === 1 ? [treeItemData[0].id.toString()] : undefined
         }
         disableSelection
         slots={{ collapseIcon: ExpandMore, expandIcon: ChevronRight }}

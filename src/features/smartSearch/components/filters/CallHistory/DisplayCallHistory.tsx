@@ -45,7 +45,7 @@ const DisplayCallHistory = ({
         ),
         callSelect: <UnderlinedMsg id={localMessageIds.callSelect[operator]} />,
         minTimes:
-          operator == CALL_OPERATOR.NOTREACHED ? null : (
+          operator === CALL_OPERATOR.NOTREACHED ? null : (
             <UnderlinedMsg
               id={localMessageIds.minTimes}
               values={{ minTimes: minTimes || 1 }}

@@ -49,7 +49,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const { orgId, campId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
   const focusWeekStartDay =
-    dayjs(focusDate).isoWeekday() == 7
+    dayjs(focusDate).isoWeekday() === 7
       ? dayjs(focusDate).add(-1, 'day')
       : dayjs(focusDate);
 
@@ -100,7 +100,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
               <DayHeader
                 date={weekdayDate}
                 focused={
-                  new Date().toDateString() == weekdayDate.toDateString()
+                  new Date().toDateString() === weekdayDate.toDateString()
                 }
                 onClick={() => onClickDay(weekdayDate)}
               />

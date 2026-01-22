@@ -88,11 +88,11 @@ const TagSelect: FC<TagSelectProps> = ({
           fullWidth
           onChange={(ev) => setInputValue(ev.target.value)}
           onKeyUp={(ev) => {
-            if (ev.key == 'Enter') {
+            if (ev.key === 'Enter') {
               if (selectedValueTag) {
                 handleSubmitValue();
               }
-            } else if (ev.key == 'Escape') {
+            } else if (ev.key === 'Escape') {
               if (selectedValueTag) {
                 setSelectedValueTag(null);
               } else if (inputValue) {

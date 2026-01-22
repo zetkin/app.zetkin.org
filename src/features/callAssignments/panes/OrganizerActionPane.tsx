@@ -27,7 +27,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
 }) => {
   const { rowsFuture } = useViewGrid(orgId, viewId);
   const rows = rowsFuture.data;
-  const row = rows?.find((r) => r.id == personId);
+  const row = rows?.find((r) => r.id === personId);
   let calls = row?.content[columnIdx] as ZetkinOrganizerAction[];
   if (!calls) {
     calls = [];

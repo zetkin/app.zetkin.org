@@ -176,7 +176,7 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
                   <text
                     key={index}
                     className="indexNumber"
-                    x={index == 4 ? dot.x : dot.x}
+                    x={index === 4 ? dot.x : dot.x}
                     y="25"
                   >
                     {index + 1}

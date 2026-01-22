@@ -28,10 +28,10 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
       keysPressed[ev.key] = true;
 
       const shiftAndEnterPressedTogether =
-        (keysPressed['Shift'] && ev.key == 'Enter') ||
-        (keysPressed['Enter'] && ev.key == 'Shift');
+        (keysPressed['Shift'] && ev.key === 'Enter') ||
+        (keysPressed['Enter'] && ev.key === 'Shift');
 
-      if (ev.key == '1' && inputRef.current != document.activeElement) {
+      if (ev.key === '1' && inputRef.current !== document.activeElement) {
         onReportUpdate({
           ...report,
           callerLog: message,
@@ -40,7 +40,7 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
         });
       } else if (
         shiftAndEnterPressedTogether &&
-        inputRef.current == document.activeElement
+        inputRef.current === document.activeElement
       ) {
         onReportUpdate({
           ...report,

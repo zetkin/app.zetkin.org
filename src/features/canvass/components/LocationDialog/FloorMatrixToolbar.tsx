@@ -60,10 +60,10 @@ const FloorMatrixToolbar: FC<Props> = ({
         gap: 1,
         p: 2,
         position: 'sticky',
-        pt: mode == 'select' ? 2 : 1,
+        pt: mode === 'select' ? 2 : 1,
       }}
     >
-      {mode == 'select' && (
+      {mode === 'select' && (
         <Box
           sx={{
             alignItems: 'center',
@@ -100,7 +100,7 @@ const FloorMatrixToolbar: FC<Props> = ({
           gap: 1,
         }}
       >
-        {mode == 'browse' && (
+        {mode === 'browse' && (
           <>
             <Button fullWidth onClick={() => onEditStart()} variant="outlined">
               Edit Floorplan
@@ -114,7 +114,7 @@ const FloorMatrixToolbar: FC<Props> = ({
             </Button>
           </>
         )}
-        {mode == 'edit' && (
+        {mode === 'edit' && (
           <>
             <Box sx={{ mr: 'auto' }}>
               <Typography variant="body2">
@@ -137,7 +137,7 @@ const FloorMatrixToolbar: FC<Props> = ({
             </Button>
           </>
         )}
-        {mode == 'select' && (
+        {mode === 'select' && (
           <>
             <Chip
               color="primary"

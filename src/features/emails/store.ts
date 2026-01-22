@@ -71,14 +71,14 @@ const emailsSlice = createSlice({
     },
     emailLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      const item = state.emailList.items.find((item) => item.id == id);
+      const item = state.emailList.items.find((item) => item.id === id);
       state.emailList.items = state.emailList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     emailLoaded: (state, action: PayloadAction<ZetkinEmail>) => {
       const id = action.payload.id;
-      const item = state.emailList.items.find((item) => item.id == id);
+      const item = state.emailList.items.find((item) => item.id === id);
       if (item) {
         item.data = action.payload;
         item.loaded = new Date().toISOString();
@@ -88,19 +88,19 @@ const emailsSlice = createSlice({
     },
     emailUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
-      const item = state.emailList.items.find((item) => item.id == id);
+      const item = state.emailList.items.find((item) => item.id === id);
       if (item) {
         item.mutating = mutating;
       }
     },
     emailUpdated: (state, action: PayloadAction<[ZetkinEmail, string[]]>) => {
       const [email, mutating] = action.payload;
-      const item = state.emailList.items.find((item) => item.id == email.id);
+      const item = state.emailList.items.find((item) => item.id === email.id);
       const statsItem = state.statsById[email.id];
 
       //Only set stats as stale if query or locked state has updated
       if (
-        (statsItem && email.locked != item?.data?.locked) ||
+        (statsItem && email.locked !== item?.data?.locked) ||
         JSON.stringify(email.target.filter_spec) !=
           JSON.stringify(item?.data?.target.filter_spec)
       ) {
@@ -117,7 +117,7 @@ const emailsSlice = createSlice({
       }
 
       state.emailList.items = state.emailList.items
-        .filter((mail) => mail.id != email.id)
+        .filter((mail) => mail.id !== email.id)
         .concat([remoteItem(email.id, { data: email })]);
     },
     emailsLoad: (state) => {

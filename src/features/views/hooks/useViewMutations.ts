@@ -69,7 +69,7 @@ export default function useViewMutations(
     title: string
   ) => {
     const view = await apiClient.rpc(duplicate, {
-      folderId: typeof folderId == 'number' ? folderId : undefined,
+      folderId: typeof folderId === 'number' ? folderId : undefined,
       oldViewId,
       orgId,
       title,

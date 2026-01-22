@@ -32,6 +32,6 @@ export default function useUpcomingCampaignEvents(
 
   return futureCampaignEvents.filter((event) => {
     const eventState = getEventState(event);
-    return eventState == EventState.OPEN || eventState == EventState.SCHEDULED;
+    return eventState === EventState.OPEN || eventState === EventState.SCHEDULED;
   });
 }

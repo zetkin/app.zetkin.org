@@ -17,7 +17,7 @@ const IntInput: FC<{
   onChange,
   value,
 }) => {
-  const vertical = labelPlacement == 'vertical';
+  const vertical = labelPlacement === 'vertical';
 
   return (
     <Box

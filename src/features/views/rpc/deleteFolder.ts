@@ -55,14 +55,14 @@ async function deleteFolder(
 ) {
   // First delete it's child folders recursively
   const childFolders = folders.filter(
-    (folder) => folder.parent?.id == folderId
+    (folder) => folder.parent?.id === folderId
   );
   for await (const childFolder of childFolders) {
     await deleteFolder(apiClient, orgId, childFolder.id, views, folders, stats);
   }
 
   // Then delete any views in the folder
-  const childViews = views.filter((view) => view.folder?.id == folderId);
+  const childViews = views.filter((view) => view.folder?.id === folderId);
   for await (const childView of childViews) {
     await apiClient.delete(`/api/orgs/${orgId}/people/views/${childView.id}`);
     stats.viewsDeleted.push(childView.id);

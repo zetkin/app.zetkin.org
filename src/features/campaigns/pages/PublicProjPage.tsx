@@ -89,7 +89,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
 
   const filters = [
     {
-      active: dateFilterState == 'today',
+      active: dateFilterState === 'today',
       key: 'today',
       label: messages.publicProjectPage.eventList.filterButtonLabels.today(),
       onClick: () => {
@@ -102,7 +102,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       },
     },
     {
-      active: dateFilterState == 'tomorrow',
+      active: dateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.publicProjectPage.eventList.filterButtonLabels.tomorrow(),
       onClick: () => {
@@ -115,7 +115,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       },
     },
     {
-      active: dateFilterState == 'thisWeek',
+      active: dateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.publicProjectPage.eventList.filterButtonLabels.thisWeek(),
       onClick: () => {
@@ -128,10 +128,10 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       },
     },
     {
-      active: dateFilterState == 'custom',
+      active: dateFilterState === 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
@@ -228,7 +228,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           />
         </Box>
       )}
-      {allEvents.length != 0 && (
+      {allEvents.length !== 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -264,7 +264,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {filteredEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -327,7 +327,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       ))}
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'calendar'}
+        open={drawerContent === 'calendar'}
       >
         <Box
           alignItems="center"
@@ -391,7 +391,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'eventTypes'}
+        open={drawerContent === 'eventTypes'}
       >
         <List>
           {eventTypeFilter.eventTypeLabels.map((eventType) => (

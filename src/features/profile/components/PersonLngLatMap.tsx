@@ -26,10 +26,10 @@ function isLngLatValue(
   value: ZetkinCustomFieldValue
 ): value is ZetkinLngLatFieldValue {
   return (
-    value != null &&
-    typeof value == 'object' &&
-    typeof value['lng'] == 'number' &&
-    typeof value['lat'] == 'number'
+    value !== null &&
+    typeof value === 'object' &&
+    typeof value['lng'] === 'number' &&
+    typeof value['lat'] === 'number'
   );
 }
 
@@ -43,13 +43,13 @@ const PersonLngLatMap: FC<Props> = ({
   const [map, setMap] = useState<MapType | null>(null);
 
   const lngLatFields = customFields.filter(
-    (field) => field.type == CUSTOM_FIELD_TYPE.LNGLAT
+    (field) => field.type === CUSTOM_FIELD_TYPE.LNGLAT
   );
   const lngLatFieldsWithValues = lngLatFields.filter(
     (field) => !!person[field.slug]
   );
 
-  if (lngLatFieldsWithValues.length == 0) {
+  if (lngLatFieldsWithValues.length === 0) {
     return null;
   }
 

@@ -102,7 +102,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         lengthRef.current < options.length
       ) {
         const lastOption = options[options.length - 1];
-        if (lastOption.text == '') {
+        if (lastOption.text === '') {
           // Only focus the last added option if it's empty, i.e. if it was
           // added individually, to be edited after adding (not bulk).
           setAddedOptionId(lastOption.id);
@@ -232,7 +232,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                     </Box>
                     <TextField
                       // eslint-disable-next-line jsx-a11y/no-autofocus
-                      autoFocus={addedOptionId == option.id}
+                      autoFocus={addedOptionId === option.id}
                       fullWidth
                       onBlur={(ev) => {
                         updateElementOption(
@@ -244,7 +244,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       onChange={(ev) => {
                         setOptions(
                           options.map((oldOpt) =>
-                            oldOpt.id == option.id
+                            oldOpt.id === option.id
                               ? { ...oldOpt, text: ev.target.value }
                               : oldOpt
                           )

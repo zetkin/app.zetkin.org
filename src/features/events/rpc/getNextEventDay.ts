@@ -49,7 +49,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     );
 
     const filtered = events.filter(
-      (event) => !campaignId || event.campaign?.id == campaignId
+      (event) => !campaignId || event.campaign?.id === campaignId
     );
 
     const sorted = filtered.sort(

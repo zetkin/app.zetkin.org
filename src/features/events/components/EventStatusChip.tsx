@@ -43,7 +43,7 @@ const EventStatusChip: FC<EventStatusChipProps> = ({ state }) => {
     };
   }, [state]);
 
-  if (state == EventState.UNKNOWN) {
+  if (state === EventState.UNKNOWN) {
     return null;
   }
 

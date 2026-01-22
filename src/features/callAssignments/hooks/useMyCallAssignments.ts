@@ -23,6 +23,6 @@ export default function useMyCallAssignments() {
     ({ end_date, start_date }) =>
       start_date &&
       start_date <= today &&
-      (end_date == null || end_date >= today)
+      (end_date === null || end_date >= today)
   );
 }

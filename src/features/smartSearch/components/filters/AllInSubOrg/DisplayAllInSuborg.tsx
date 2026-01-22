@@ -26,7 +26,7 @@ const DisplayAllInSuborg: FC<Props> = ({ filter }) => {
 
   const op = filter.op || OPERATION.ADD;
 
-  if (filter.config.organizations == 'suborgs') {
+  if (filter.config.organizations === 'suborgs') {
     return (
       <Msg
         id={messageIds.filters.allInSuborg.inputString.any}
@@ -42,10 +42,10 @@ const DisplayAllInSuborg: FC<Props> = ({ filter }) => {
     );
   } else if (
     Array.isArray(filter.config.organizations) &&
-    filter.config.organizations.length == 1
+    filter.config.organizations.length === 1
   ) {
     const selectedSuborg = activeSuborgs.find(
-      (suborg) => suborg.id == filter.config.organizations[0]
+      (suborg) => suborg.id === filter.config.organizations[0]
     );
     return (
       <Msg

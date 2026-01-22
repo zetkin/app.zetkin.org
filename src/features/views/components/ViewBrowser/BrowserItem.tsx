@@ -30,7 +30,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, onClick }) => {
     textDecoration: 'none',
   };
 
-  if (item.type == 'back') {
+  if (item.type === 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
 
     return (

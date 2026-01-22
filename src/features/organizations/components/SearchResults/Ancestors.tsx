@@ -24,7 +24,7 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
         //Take all the elements that represent an ancestor in the "bread crumb trail"
         const childElements = Array.from(container.querySelectorAll('.crumb'));
 
-        if (width == 0) {
+        if (width === 0) {
           return;
         }
 
@@ -84,7 +84,7 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
                 >
                   {crumbStates[index] ? ancestor.title : '...'}
                 </Typography>
-                {index == ancestors.length - 1 ? (
+                {index === ancestors.length - 1 ? (
                   ''
                 ) : (
                   <ChevronRight color="secondary" fontSize="small" />

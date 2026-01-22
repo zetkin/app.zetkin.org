@@ -16,7 +16,7 @@ type Props = {
 const SubOrgsPage: FC<Props> = ({ orgId }) => {
   const allSubOrgs = usePublicSubOrgs(orgId);
   const subOrgsSorted = allSubOrgs
-    .filter((org) => org.parent?.id == orgId)
+    .filter((org) => org.parent?.id === orgId)
     .sort((so1, so2) => {
       return so1.title.localeCompare(so2.title);
     });
@@ -25,7 +25,7 @@ const SubOrgsPage: FC<Props> = ({ orgId }) => {
     <List>
       {subOrgsSorted.map((org) => {
         const hasSubOrgs = !!allSubOrgs.find(
-          (subOrg) => subOrg.parent?.id == org.id
+          (subOrg) => subOrg.parent?.id === org.id
         );
 
         const baseUrl = `/o/${org.id}`;

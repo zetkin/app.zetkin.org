@@ -55,7 +55,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
           s: typedSlug,
         };
       } else {
-        const field = customFields.find((field) => field.slug == slug);
+        const field = customFields.find((field) => field.slug === slug);
 
         if (!field) {
           throw new Error('Referencing unknown custom field');

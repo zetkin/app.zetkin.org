@@ -42,7 +42,7 @@ const journeysSlice = createSlice({
     invalidateJourneyInstance: (state, action: PayloadAction<number>) => {
       const instanceId = action.payload;
       const instanceItem = state.journeyInstanceList.items.find(
-        (item) => item.id == instanceId
+        (item) => item.id === instanceId
       );
 
       if (instanceItem) {
@@ -85,7 +85,7 @@ const journeysSlice = createSlice({
       const id = action.payload;
 
       state.journeyInstanceList.items = state.journeyInstanceList.items.map(
-        (item) => (item.id == id ? { ...item, deleted: true } : item)
+        (item) => (item.id === id ? { ...item, deleted: true } : item)
       );
 
       for (const journeyId in state.journeyInstancesByJourneyId) {
@@ -98,10 +98,10 @@ const journeysSlice = createSlice({
     journeyInstanceLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.journeyInstanceList.items.find(
-        (item) => item.id == id
+        (item) => item.id === id
       );
       state.journeyInstanceList.items = state.journeyInstanceList.items
-        .filter((item) => item.id != id)
+        .filter((item) => item.id !== id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
     },
     journeyInstanceLoaded: (
@@ -110,7 +110,7 @@ const journeysSlice = createSlice({
     ) => {
       const id = action.payload.id;
       const item = state.journeyInstanceList.items.find(
-        (item) => item.id == id
+        (item) => item.id === id
       );
 
       if (!item) {
@@ -128,7 +128,7 @@ const journeysSlice = createSlice({
       if (state.journeyInstancesByJourneyId[journeyId]) {
         state.journeyInstancesByJourneyId[journeyId].items =
           state.journeyInstancesByJourneyId[journeyId].items
-            .filter((item) => item.id != id)
+            .filter((item) => item.id !== id)
             .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
       }
     },
@@ -138,7 +138,7 @@ const journeysSlice = createSlice({
     ) => {
       const [id, attributes] = action.payload;
       const instanceItem = state.journeyInstanceList.items.find(
-        (item) => item.id == id
+        (item) => item.id === id
       );
 
       if (instanceItem) {
@@ -153,7 +153,7 @@ const journeysSlice = createSlice({
     ) => {
       const journeyInstance = action.payload;
       const instanceItem = state.journeyInstanceList.items.find(
-        (item) => item.id == journeyInstance.id
+        (item) => item.id === journeyInstance.id
       );
 
       if (instanceItem) {
@@ -184,18 +184,18 @@ const journeysSlice = createSlice({
     journeyLoad: (state, action: PayloadAction<number>) => {
       const journeyId = action.payload;
       const journeyItem = state.journeyList.items.find(
-        (item) => item.id == journeyId
+        (item) => item.id === journeyId
       );
 
       state.journeyList.items = state.journeyList.items
-        .filter((item) => item.id != journeyId)
+        .filter((item) => item.id !== journeyId)
         .concat([
           remoteItem(journeyId, { data: journeyItem?.data, isLoading: true }),
         ]);
     },
     journeyLoaded: (state, action: PayloadAction<ZetkinJourney>) => {
       const id = action.payload.id;
-      const item = state.journeyList.items.find((item) => item.id == id);
+      const item = state.journeyList.items.find((item) => item.id === id);
 
       if (!item) {
         throw new Error(

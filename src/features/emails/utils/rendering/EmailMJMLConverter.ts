@@ -16,7 +16,7 @@ export default class EmailMJMLConverter {
     const blockChildren: MJMLJsonObject[] = [];
 
     content.blocks.forEach((block) => {
-      if (block.kind == 'image') {
+      if (block.kind === 'image') {
         blockChildren.push({
           tagName: 'mj-image',
           attributes: {
@@ -25,7 +25,7 @@ export default class EmailMJMLConverter {
             src: block.data.src,
           },
         });
-      } else if (block.kind == 'paragraph') {
+      } else if (block.kind === 'paragraph') {
         const contentHtml = inlineNodesToPlainHTML(block.data.content);
 
         blockChildren.push({
@@ -33,9 +33,9 @@ export default class EmailMJMLConverter {
           attributes: {},
           content: `<p>${contentHtml}</p>`,
         });
-      } else if (block.kind == 'button') {
+      } else if (block.kind === 'button') {
         let href = escapeAttribute(block.data.href);
-        if (href.match(/^https?:\/\/.*/) == null) {
+        if (href.match(/^https?:\/\/.*/) === null) {
           href = '';
         }
 
@@ -48,8 +48,8 @@ export default class EmailMJMLConverter {
           },
           content: block.data.text,
         });
-      } else if (block.kind == 'header') {
-        if (typeof block.data.level != 'number') {
+      } else if (block.kind === 'header') {
+        if (typeof block.data.level !== 'number') {
           block.data.level = 1;
         }
 
@@ -113,23 +113,23 @@ function inlineNodesToPlainHTML(nodes: EmailContentInlineNode[]): string {
   let output = '';
 
   nodes.forEach((node) => {
-    if (node.kind == 'string') {
+    if (node.kind === 'string') {
       output += escapeHTMLContent(node.value);
-    } else if (node.kind == 'bold') {
+    } else if (node.kind === 'bold') {
       const htmlContent = inlineNodesToPlainHTML(node.content);
       output += `<b>${htmlContent}</b>`;
-    } else if (node.kind == 'italic') {
+    } else if (node.kind === 'italic') {
       const htmlContent = inlineNodesToPlainHTML(node.content);
       output += `<i>${htmlContent}</i>`;
-    } else if (node.kind == 'link') {
+    } else if (node.kind === 'link') {
       let href = escapeAttribute(node.href);
-      if (href.match(/^https?:\/\/.*/) == null) {
+      if (href.match(/^https?:\/\/.*/) === null) {
         href = '';
       }
       const htmlContent = inlineNodesToPlainHTML(node.content);
       const tag = escapeAttribute(node.tag);
       output += `<a class="email-link-${tag}" href="${href}">${htmlContent}</a>`;
-    } else if (node.kind == 'lineBreak') {
+    } else if (node.kind === 'lineBreak') {
       output += '<br>';
     }
   });

@@ -88,7 +88,7 @@ export default function useActivitiyOverview(
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
   overview.today = sortedActivities.filter((activity) => {
-    if (activity.kind == ACTIVITIES.EVENT) {
+    if (activity.kind === ACTIVITIES.EVENT) {
       const startDate = new Date(activity.data.start_time);
       return isSameDate(startDate, todayDate);
     } else {
@@ -100,7 +100,7 @@ export default function useActivitiyOverview(
   });
 
   overview.tomorrow = sortedActivities.filter((activity) => {
-    if (activity.kind == ACTIVITIES.EVENT) {
+    if (activity.kind === ACTIVITIES.EVENT) {
       const startDate = new Date(activity.data.start_time);
       return isSameDate(startDate, tomorrowDate);
     } else {

@@ -89,7 +89,7 @@ const AreaCard: FC<AreaCardProps> = ({
       {areas.map((area) => {
         const areaData = data.find(
           (graphData) =>
-            graphData.area_id === area.area_id || graphData.area_id == null
+            graphData.area_id === area.area_id || graphData.area_id === null
         );
         const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (

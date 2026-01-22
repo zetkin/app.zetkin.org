@@ -31,8 +31,8 @@ const EditLocationPage: FC<EditLocationPageProps> = ({
   }, [location]);
 
   const nothingHasBeenEdited =
-    title == location.title &&
-    (description == location.description ||
+    title === location.title &&
+    (description === location.description ||
       (!description && !location.description));
 
   return (

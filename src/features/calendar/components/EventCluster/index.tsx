@@ -35,7 +35,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, compact, height }) => {
       }}
       sx={{ cursor: 'pointer' }}
     >
-      {cluster.kind == CLUSTER_TYPE.SINGLE && (
+      {cluster.kind === CLUSTER_TYPE.SINGLE && (
         <Single
           event={cluster.events[0]}
           height={height}
@@ -44,7 +44,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, compact, height }) => {
           width={'100%'}
         />
       )}
-      {cluster.kind == CLUSTER_TYPE.MULTI_LOCATION && (
+      {cluster.kind === CLUSTER_TYPE.MULTI_LOCATION && (
         <MultiLocation
           events={cluster.events}
           height={height}
@@ -54,7 +54,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, compact, height }) => {
           width="100%"
         />
       )}
-      {cluster.kind == CLUSTER_TYPE.MULTI_SHIFT && (
+      {cluster.kind === CLUSTER_TYPE.MULTI_SHIFT && (
         <MultiShift
           events={cluster.events}
           height={height}
@@ -64,7 +64,7 @@ const EventCluster: FC<EventClusterProps> = ({ cluster, compact, height }) => {
           width="100%"
         />
       )}
-      {cluster.kind == CLUSTER_TYPE.ARBITRARY && (
+      {cluster.kind === CLUSTER_TYPE.ARBITRARY && (
         <Arbitrary
           events={cluster.events}
           height={height}

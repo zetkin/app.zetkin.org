@@ -24,8 +24,8 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
     return null;
   }
 
-  const isScheduled = result.status == 'pending';
-  const isComplete = result.status == 'completed';
+  const isScheduled = result.status === 'pending';
+  const isComplete = result.status === 'completed';
 
   return (
     <Box
@@ -39,7 +39,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
         <ImportHeader onClose={onClose} />
         <Box display="flex" flexDirection="column" sx={{ overflowY: 'auto' }}>
           <Box paddingY={2}>
-            {result.status == 'error' && (
+            {result.status === 'error' && (
               <ImportMessage
                 description={messages.importStatus.error.desc()}
                 onClickBack={onClickBack}
@@ -47,7 +47,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
                 title={messages.importStatus.error.title()}
               />
             )}
-            {result.status == 'completed' && (
+            {result.status === 'completed' && (
               <ImportMessage
                 description={messages.importStatus.completed.desc()}
                 onClickBack={onClickBack}
@@ -55,7 +55,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
                 title={messages.importStatus.completed.title()}
               />
             )}
-            {result.status == 'pending' && (
+            {result.status === 'pending' && (
               <ImportMessage
                 description={messages.importStatus.scheduled.desc()}
                 onClickBack={onClickBack}
@@ -88,7 +88,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
             : messages.actionButtons.done()
         }
         secondaryButtonMsg={
-          result.status == 'error' ? messages.actionButtons.back() : undefined
+          result.status === 'error' ? messages.actionButtons.back() : undefined
         }
       />
     </Box>

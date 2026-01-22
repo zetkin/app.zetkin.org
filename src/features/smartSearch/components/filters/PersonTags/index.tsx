@@ -148,7 +148,7 @@ const PersonTags = ({
               </StyledSelect>
             ),
             condition:
-              selected == 'some' ? (
+              selected === 'some' ? (
                 <Msg
                   id={localMessageIds.condition.edit.some}
                   values={{

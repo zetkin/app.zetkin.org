@@ -13,7 +13,7 @@ interface ZUICircularProgressProps {
 const ZUICircularProgress: FC<ZUICircularProgressProps> = ({
   size = 'medium',
 }) => {
-  return <CircularProgress size={size == 'medium' ? '2rem' : '1rem'} />;
+  return <CircularProgress size={size === 'medium' ? '2rem' : '1rem'} />;
 };
 
 export default ZUICircularProgress;

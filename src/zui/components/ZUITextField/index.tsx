@@ -173,7 +173,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
     }}
     placeholder={placeholder}
     required={required}
-    size={size == 'medium' ? 'small' : 'medium'}
+    size={size === 'medium' ? 'small' : 'medium'}
     slotProps={{
       htmlInput: {
         'aria-describedby': ariaDescribedBy,
@@ -184,7 +184,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
           letterSpacing: '1%',
           lineHeight: '1.5rem',
           paddingX: '0.75rem',
-          paddingY: size == 'medium' ? '0.594rem' : '',
+          paddingY: size === 'medium' ? '0.594rem' : '',
         }),
       },
       input: {
@@ -223,7 +223,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
         fontWeight: '500',
         letterSpacing: '3%',
         transform: `translate(0.688rem, ${
-          size == 'medium' ? '0.563rem' : '1rem'
+          size === 'medium' ? '0.563rem' : '1rem'
         })`,
       },
       '& > label[data-shrink="true"]': {

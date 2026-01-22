@@ -25,7 +25,7 @@ const ZUIDataChip: FC<ZUIDataChipProps> = ({ color = 'grey', value }) => (
   <Box
     sx={(theme) => ({
       backgroundColor:
-        color == 'grey' ? theme.palette.grey[100] : theme.palette.data[color],
+        color === 'grey' ? theme.palette.grey[100] : theme.palette.data[color],
       borderRadius: '2rem',
       display: 'inline-flex',
       overflow: 'hidden',
@@ -35,7 +35,7 @@ const ZUIDataChip: FC<ZUIDataChipProps> = ({ color = 'grey', value }) => (
     <Typography
       sx={(theme) => ({
         color:
-          color == 'grey' || color == 'final'
+          color === 'grey' || color === 'final'
             ? theme.palette.common.black
             : theme.palette.common.white,
       })}
