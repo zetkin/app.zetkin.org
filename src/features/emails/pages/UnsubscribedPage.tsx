@@ -7,20 +7,23 @@ import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
-type Props =
-  | {
-      org: ZetkinOrganization;
-      senderEmail?: never;
-      senderName?: never;
-    }
-  | {
-      org?: never;
-      senderEmail: string;
-      senderName: string;
-    };
+type PropsWithOrg = {
+  org: ZetkinOrganization;
+};
 
-const UnsubscribedPage: FC<Props> = ({ org, senderName, senderEmail }) => {
-  const isSender = !!senderName && !!senderEmail;
+type PropsWithSender = {
+  senderEmail: string;
+  senderName: string;
+};
+
+const isPropsWithSender = (
+  props: PropsWithOrg | PropsWithSender
+): props is PropsWithSender => {
+  return 'senderName' in props;
+};
+
+const UnsubscribedPage: FC<PropsWithOrg | PropsWithSender> = (props) => {
+  const hasSender = isPropsWithSender(props);
 
   return (
     <Box
@@ -37,15 +40,18 @@ const UnsubscribedPage: FC<Props> = ({ org, senderName, senderEmail }) => {
           <Msg id={messageIds.unsubscribedPage.h} />
         </Typography>
         <Typography>
-          {isSender ? (
+          {hasSender ? (
             <Msg
               id={messageIds.unsubscribedPage.senderInfo}
-              values={{ senderEmail, senderName }}
+              values={{
+                senderEmail: props.senderEmail,
+                senderName: props.senderName,
+              }}
             />
           ) : (
             <Msg
               id={messageIds.unsubscribedPage.info}
-              values={{ org: org!.title }}
+              values={{ org: props.org.title }}
             />
           )}
         </Typography>

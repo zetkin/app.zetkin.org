@@ -10,7 +10,6 @@ type PageProps = {
     orgId: string;
   };
   searchParams: {
-    sender?: string;
     senderEmail?: string;
     senderName?: string;
     unsub?: string;
