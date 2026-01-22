@@ -96,22 +96,22 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               </Typography>
             )}
           </Box>
-          <Box display="flex" justifyContent="flex-end" my={2}>
-            {call && !call.organizer_action_taken ? (
-              <Button
-                onClick={() =>
-                  setOrganizerActionTaken(
-                    call.assignment.organization_id,
-                    call.id
-                  )
-                }
-                startIcon={<Check />}
-                variant="contained"
-              >
-                <Msg id={messageIds.organizerActionPane.markAsSolved} />
-              </Button>
-            ) : (
-              call && (
+          {!!call && (
+            <Box display="flex" justifyContent="flex-end" my={2}>
+              {!call.organizer_action_taken ? (
+                <Button
+                  onClick={() =>
+                    setOrganizerActionTaken(
+                      call.assignment.organization_id,
+                      call.id
+                    )
+                  }
+                  startIcon={<Check />}
+                  variant="contained"
+                >
+                  <Msg id={messageIds.organizerActionPane.markAsSolved} />
+                </Button>
+              ) : (
                 <Button
                   onClick={() =>
                     setOrganizerActionNeeded(
@@ -124,9 +124,9 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
                 >
                   <Msg id={messageIds.organizerActionPane.markAsUnsolved} />
                 </Button>
-              )
-            )}
-          </Box>
+              )}
+            </Box>
+          )}
         </Box>
       ))}
     </>
