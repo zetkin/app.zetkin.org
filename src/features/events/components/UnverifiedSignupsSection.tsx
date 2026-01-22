@@ -11,7 +11,7 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import useUnverifiedSignupMutations from '../hooks/useUnverifiedSignupMutations';
 import { EventSignupModelType } from '../models';
-import filterParticipants from '../utils/filterParticipants';
+import { filterUnverifiedSignups } from '../utils/filterParticipants';
 import { UnverifiedSignupLinkDialog } from './UnverifiedSignupLinkDialog';
 
 interface UnverifiedSignupsSectionProps {
@@ -229,15 +229,11 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
         {description}
       </Typography>
 
-      <DataGridPro<EventSignupModelType>
+      <DataGridPro
         autoHeight
         checkboxSelection={false}
         columns={columns}
-        rows={
-          filterString
-            ? (filterParticipants(rows, filterString) as EventSignupModelType[])
-            : rows
-        }
+        rows={filterString ? filterUnverifiedSignups(rows, filterString) : rows}
         sx={{
           '& .MuiDataGrid-row:hover': {
             cursor: 'pointer',

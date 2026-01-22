@@ -56,8 +56,12 @@ export interface ZetkinEventResponse {
   action_id: number;
   id: number;
   person: {
+    email?: string | null;
+    first_name?: string | null;
     id: number;
+    last_name?: string | null;
     name: string;
+    phone?: string | null;
   };
   response_date: string;
 }

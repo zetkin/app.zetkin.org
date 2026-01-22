@@ -13,7 +13,7 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
 import { FC, ReactNode } from 'react';
 
-import filterParticipants from '../utils/filterParticipants';
+import { filterSignupOrParticipantRows } from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
@@ -418,7 +418,9 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         checkboxSelection={false}
         columns={columns}
         rows={
-          filterString ? filterParticipants(rows, filterString) : rows ?? []
+          filterString
+            ? filterSignupOrParticipantRows(rows, filterString)
+            : rows ?? []
         }
         sx={{
           '& .MuiDataGrid-row:hover': {
