@@ -14,6 +14,7 @@ import ZUICheckbox from 'zui/components/ZUICheckbox';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILink from 'zui/components/ZUILink';
 import { ZetkinEventWithStatus } from 'features/home/types';
+import usePublicEventSignup from 'features/organizations/hooks/usePublicEventSignup';
 import messageIds from 'features/surveys/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';
 
@@ -30,12 +31,26 @@ export const PublicEventSignup: FC<Props> = ({ event, onSignupSuccess }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [gdprConsent, setGdprConsent] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const privacyUrl =
     process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
+
+  const { isSubmitting, submit } = usePublicEventSignup(event, {
+    onError: setError,
+    onSuccess: () => {
+      setSuccess(true);
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPhone('');
+      setGdprConsent(false);
+      onSignupSuccess?.();
+    },
+    signupErrorMessage: eventMessages.publicEventSignup.errors.signupError(),
+    signupFailedMessage: eventMessages.publicEventSignup.errors.signupFailed(),
+  });
 
   const handleSubmit = async () => {
     if (!firstName.trim() || !lastName.trim()) {
@@ -72,63 +87,13 @@ export const PublicEventSignup: FC<Props> = ({ event, onSignupSuccess }) => {
     }
 
     setError(null);
-    setIsSubmitting(true);
-
-    try {
-      const body: {
-        created: string;
-        email?: string;
-        first_name: string;
-        gdpr_consent: boolean;
-        last_name: string;
-        phone?: string;
-      } = {
-        created: new Date().toISOString(),
-        first_name: firstName.trim(),
-        gdpr_consent: gdprConsent,
-        last_name: lastName.trim(),
-      };
-
-      if (trimmedEmail) {
-        body.email = trimmedEmail;
-      }
-      if (normalizedPhone) {
-        body.phone = normalizedPhone;
-      }
-
-      const response = await fetch(
-        `/beta/orgs/${event.organization.id}/events/${event.id}`,
-        {
-          body: JSON.stringify(body),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(
-          errorData.error ||
-            eventMessages.publicEventSignup.errors.signupFailed()
-        );
-        setIsSubmitting(false);
-        return;
-      }
-
-      setSuccess(true);
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setPhone('');
-      setGdprConsent(false);
-      onSignupSuccess?.();
-    } catch (err) {
-      setError(eventMessages.publicEventSignup.errors.signupError());
-    } finally {
-      setIsSubmitting(false);
-    }
+    await submit({
+      email: trimmedEmail || undefined,
+      firstName: firstName.trim(),
+      gdprConsent,
+      lastName: lastName.trim(),
+      phone: normalizedPhone || undefined,
+    });
   };
 
   if (success) {
