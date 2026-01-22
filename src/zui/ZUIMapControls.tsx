@@ -31,7 +31,10 @@ const ZUIMapControls: React.FC<Props> = ({
 
   useEffect(() => {
     return () => {
-      if (geolocationWatchIdRef.current !== null) {
+      if (
+        geolocationWatchIdRef.current !== null &&
+        geolocationWatchIdRef.current !== undefined
+      ) {
         navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
         geolocationWatchIdRef.current = null;
       }
@@ -89,7 +92,11 @@ const ZUIMapControls: React.FC<Props> = ({
     const latestPosition = latestPositionRef.current;
     const latestAccuracy = latestAccuracyRef.current ?? null;
 
-    if (latestPosition && geolocationWatchIdRef.current !== null) {
+    if (
+      latestPosition &&
+      geolocationWatchIdRef.current !== null &&
+      geolocationWatchIdRef.current !== undefined
+    ) {
       onGeolocate(latestPosition, latestAccuracy);
       return;
     }
@@ -105,7 +112,10 @@ const ZUIMapControls: React.FC<Props> = ({
       },
       () => {
         setIsAwaitingInitialPosition(false);
-        if (geolocationWatchIdRef.current !== null) {
+        if (
+          geolocationWatchIdRef.current !== null &&
+          geolocationWatchIdRef.current !== undefined
+        ) {
           navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
           geolocationWatchIdRef.current = null;
         }

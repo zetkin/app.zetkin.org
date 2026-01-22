@@ -79,11 +79,12 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
               />
             </Box>
             <Box display="flex" flexDirection="column" width="50%">
-              {columnIndexBeingConfigured !== null && (
-                <Configuration
-                  columnIndexBeingConfigured={columnIndexBeingConfigured}
-                />
-              )}
+              {columnIndexBeingConfigured !== null &&
+                columnIndexBeingConfigured !== undefined && (
+                  <Configuration
+                    columnIndexBeingConfigured={columnIndexBeingConfigured}
+                  />
+                )}
               {columnIndexBeingConfigured === null && (
                 <Box
                   alignItems="center"

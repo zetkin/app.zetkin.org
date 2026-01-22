@@ -9,6 +9,7 @@ import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 export interface ArbitraryProps {
   showTopBadge: boolean;
@@ -85,7 +86,7 @@ function createArbitraryFields({
   ];
 
   return fields.filter((field): field is Field => {
-    return field !== null;
+    return notEmpty(field);
   });
 }
 

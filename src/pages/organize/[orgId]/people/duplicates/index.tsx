@@ -13,6 +13,7 @@ import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
+import notEmpty from 'utils/notEmpty';
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   return {
@@ -27,7 +28,7 @@ const DuplicatesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const router = useRouter();
   const [page, setPage] = useState(
-    router.query.page !== undefined ? Number(router.query.page) : 1
+    notEmpty(router.query.page) ? Number(router.query.page) : 1
   );
   const pageSize = 100;
   const containerRef = useRef<HTMLDivElement>(null);

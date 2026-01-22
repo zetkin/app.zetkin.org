@@ -160,7 +160,7 @@ export const usePersonSelect: UsePersonSelect = ({
         onChange(value as ZetkinPerson);
       },
       onInputChange: (ev: unknown, value: string) => {
-        if (ev !== null) {
+        if (ev !== null && ev !== undefined) {
           setSearchFieldValue(value);
           setQuery(value);
         }

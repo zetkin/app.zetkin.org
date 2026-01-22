@@ -59,7 +59,7 @@ export default function useUIDataColumn(
   const valueInFirstRow = cellValues[0];
   const title =
     firstRowIsHeaders && valueInFirstRow !== null
-      ? valueInFirstRow.toString()
+      ? valueInFirstRow?.toString() ?? ''
       : messages.configuration.mapping.defaultColumnHeader({
           columnIndex: columnIndex + 1,
         });

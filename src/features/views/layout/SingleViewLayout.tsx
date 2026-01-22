@@ -24,6 +24,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useView from '../hooks/useView';
+import notEmpty from 'utils/notEmpty';
 
 interface SingleViewLayoutProps {
   children: React.ReactNode;
@@ -144,7 +145,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     id: 'duplicate-view',
     label: messages.viewLayout.ellipsisMenu.duplicate(),
     onSelect: async () => {
-      if (view !== null) {
+      if (notEmpty(view)) {
         const copiedList = await duplicateView(
           viewId,
           view.folder?.id ?? null,

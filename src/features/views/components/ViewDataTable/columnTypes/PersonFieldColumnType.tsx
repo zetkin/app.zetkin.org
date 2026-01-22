@@ -7,6 +7,7 @@ import {
   PersonFieldViewColumn,
   ZetkinViewColumn,
 } from '../../types';
+import notEmpty from 'utils/notEmpty';
 
 type SimpleData = string | number | boolean | null;
 
@@ -15,7 +16,7 @@ const getValue = (cell: SimpleData, column: PersonFieldViewColumn) => {
     const choice = column.config.enum_choices.find((c) => c.key === cell);
     return choice?.label ?? '';
   } else {
-    return cell !== null ? cell.toString() : '';
+    return notEmpty(cell) ? cell.toString() : '';
   }
 };
 

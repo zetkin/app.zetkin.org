@@ -16,6 +16,7 @@ import {
   ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
+import notEmpty from 'utils/notEmpty';
 
 interface SurveyEditorProps {
   orgId: number;
@@ -37,10 +38,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
     if (elements) {
       // If the previous length is null, it's because it only now loaded for the
       // first time and the length has not really been read before.
-      if (
-        lengthRef.current !== undefined &&
-        lengthRef.current < elements.length
-      ) {
+      if (notEmpty(lengthRef.current) && lengthRef.current < elements.length) {
         const lastElement = elements[elements.length - 1];
         setIdOfBlockInEditMode(lastElement.id);
       }

@@ -29,6 +29,7 @@ import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import useSurveySubmissionMutations from '../hooks/useSurveySubmissionMutations';
+import notEmpty from 'utils/notEmpty';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -85,7 +86,7 @@ const SurveySubmissionsList = ({
       renderCell: (
         params: GridRenderCellParams<ZetkinSurveySubmission, string>
       ) => {
-        if (params.row.respondent !== null) {
+        if (notEmpty(params.row.respondent)) {
           return <Box>{params.row.respondent[field]}</Box>;
         }
         return (
@@ -103,7 +104,7 @@ const SurveySubmissionsList = ({
       valueGetter: (
         params: GridRenderCellParams<ZetkinSurveySubmission, string>
       ) => {
-        if (params.row.respondent !== null) {
+        if (notEmpty(params.row.respondent)) {
           return params.row.respondent[field] || '';
         } else {
           return messages.submissions.anonymous();

@@ -32,11 +32,11 @@ export default function summarizeMetrics(
         return {
           metric_id: responses[0].metric_id,
           num_values: [
-            responses.filter((resp) => resp.response === 1).length,
-            responses.filter((resp) => resp.response === 2).length,
-            responses.filter((resp) => resp.response === 3).length,
-            responses.filter((resp) => resp.response === 4).length,
-            responses.filter((resp) => resp.response === 5).length,
+            responses.filter((resp) => Number(resp.response) === 1).length,
+            responses.filter((resp) => Number(resp.response) === 2).length,
+            responses.filter((resp) => Number(resp.response) === 3).length,
+            responses.filter((resp) => Number(resp.response) === 4).length,
+            responses.filter((resp) => Number(resp.response) === 5).length,
           ],
         };
       }

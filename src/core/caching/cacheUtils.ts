@@ -9,6 +9,7 @@ import {
   RemoteListFuture,
 } from './futures';
 import { RemoteItem, RemoteList } from 'utils/storeUtils';
+import notEmpty from 'utils/notEmpty';
 
 /**
  * Used by data fetching hooks to manage cache invalidation and fetching for their collection.
@@ -80,7 +81,9 @@ export function loadListIfNecessary<
     return loadList(
       dispatch,
       hooks,
-      remoteList?.items.map((item) => item.data).filter((item) => item !== null)
+      remoteList?.items
+        .map((item) => item.data)
+        .filter((item) => notEmpty(item))
     );
   }
 

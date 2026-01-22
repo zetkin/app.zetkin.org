@@ -21,6 +21,7 @@ import StatusCardItem from './StatusCardItem';
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 interface CallAssignmentStatusCardsProps {
   orgId: number;
@@ -86,7 +87,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                       onClickAway={() => {
                         setAnchorEl(null);
                         if (
-                          newCooldown !== null &&
+                          notEmpty(newCooldown) &&
                           newCooldown !== callAssignment?.cooldown
                         ) {
                           updateCallAssignment({ cooldown: newCooldown });
@@ -115,7 +116,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                               if (ev.key === 'Enter') {
                                 setAnchorEl(null);
                                 if (
-                                  newCooldown !== null &&
+                                  notEmpty(newCooldown) &&
                                   newCooldown !== callAssignment?.cooldown
                                 ) {
                                   updateCallAssignment({

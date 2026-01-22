@@ -14,6 +14,7 @@ import {
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import ZUIMapControls from 'zui/ZUIMapControls';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   customFields: ZetkinCustomField[];
@@ -26,7 +27,7 @@ function isLngLatValue(
   value: ZetkinCustomFieldValue
 ): value is ZetkinLngLatFieldValue {
   return (
-    value !== null &&
+    notEmpty(value) &&
     typeof value === 'object' &&
     typeof value['lng'] === 'number' &&
     typeof value['lat'] === 'number'

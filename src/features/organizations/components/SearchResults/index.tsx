@@ -3,6 +3,7 @@ import { Box, Link, Typography, useTheme } from '@mui/material';
 import Ancestors from './Ancestors';
 import ProceduralColorIcon from '../ProceduralColorIcon';
 import { TreeItemData } from '../../types';
+import notEmpty from 'utils/notEmpty';
 
 interface SearchResultsProps {
   flatOrgData: TreeItemData[];
@@ -31,7 +32,7 @@ const SearchResults = ({
     };
 
     let parent = getParent(node);
-    while (parent !== null) {
+    while (notEmpty(parent)) {
       ancestors.push(parent);
       parent = getParent(parent);
     }

@@ -5,6 +5,7 @@ import {
   TaskFilterConfig,
   TIME_FRAME,
 } from 'features/smartSearch/components/types';
+import notEmpty from 'utils/notEmpty';
 
 export interface TimeFrameConfig {
   after?: Date;
@@ -78,19 +79,19 @@ export const getMatchingWithConfig = (config?: {
   const max = config?.max;
   const min = config?.min;
 
-  if (min !== undefined && max !== undefined) {
+  if (notEmpty(max) && notEmpty(min)) {
     return {
       config: config,
       option: MATCHING.BETWEEN,
     };
   }
-  if (min !== undefined) {
+  if (notEmpty(min)) {
     return {
       config,
       option: MATCHING.MIN,
     };
   }
-  if (max !== undefined) {
+  if (notEmpty(max)) {
     return {
       config,
       option: MATCHING.MAX,

@@ -10,6 +10,7 @@ import TopBadge from './TopBadge';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 function createMultiLocationFields({
   events,
@@ -76,7 +77,7 @@ function createMultiLocationFields({
   ];
 
   return fields.filter((field): field is Field => {
-    return field !== null;
+    return notEmpty(field);
   });
 }
 

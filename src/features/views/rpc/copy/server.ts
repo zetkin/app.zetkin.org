@@ -7,6 +7,7 @@ import {
 } from '../../components/types';
 import { Params, paramsSchema, Result } from './client';
 import { ZetkinQuery } from 'utils/types/zetkin';
+import notEmpty from 'utils/notEmpty';
 
 export const copyViewRouteDef = {
   handler: handle,
@@ -52,7 +53,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   }
 
   if (
-    oldView.content_query !== null &&
+    notEmpty(oldView.content_query) &&
     oldView.content_query.filter_spec.length !== 0
   ) {
     // Copy filters

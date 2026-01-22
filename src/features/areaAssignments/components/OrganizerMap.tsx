@@ -43,6 +43,7 @@ import messageIds from 'features/areas/l10n/messageIds';
 import messageIdsAss from '../l10n/messageIds';
 import { ZetkinOrgUser } from 'features/user/types';
 import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
+import notEmpty from 'utils/notEmpty';
 
 type OrganizerMapProps = {
   areaAssId: number;
@@ -124,7 +125,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const filteredAreas = filterAreas(areas, filterText);
 
   useEffect(() => {
-    if (navigateToAreaId !== undefined && !Array.isArray(navigateToAreaId)) {
+    if (notEmpty(navigateToAreaId) && !Array.isArray(navigateToAreaId)) {
       setSelectedId(navigateToAreaId);
       setSettingsOpen('select');
     }

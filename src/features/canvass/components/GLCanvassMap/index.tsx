@@ -190,7 +190,12 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
 
     let accuracyPx = 18;
 
-    if (userAccuracy !== null && mapZoom !== null) {
+    if (
+      userAccuracy !== null &&
+      userAccuracy !== undefined &&
+      mapZoom !== null &&
+      mapZoom !== undefined
+    ) {
       const lat = userLocation[1];
       const metersPerPixel =
         (156543.03392 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, mapZoom);

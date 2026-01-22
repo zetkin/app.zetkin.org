@@ -9,6 +9,7 @@ import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekC
 import EventCluster from '../EventCluster';
 import { getDstChangeAtDate } from '../utils';
 import { Msg } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 type DayProps = {
   clusters: AnyClusteredEvent[];
@@ -61,7 +62,7 @@ const Day = ({
           <FormattedDate day="numeric" value={date} />
         </Typography>
       </Box>
-      {dstChange !== undefined && (
+      {notEmpty(dstChange) && (
         <Box paddingLeft="4px">
           <Typography color={oldTheme.palette.grey[500]} variant="body2">
             <Msg

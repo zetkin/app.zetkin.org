@@ -27,6 +27,7 @@ import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
 import { tagLoad, tagLoaded } from 'features/tags/store';
 import { RemoteList } from 'utils/storeUtils';
 import ZUITagChip from 'zui/components/ZUITagChip';
+import notEmpty from 'utils/notEmpty';
 
 type PersonTagViewCell = null | {
   value?: string;
@@ -128,7 +129,7 @@ const Cell: FC<CellProps> = ({ cellValue, personId, tag }) => {
     return null;
   } else if (!tag) {
     return <span>{cellValue?.value || ''}</span>;
-  } else if (tag.value_type !== null) {
+  } else if (notEmpty(tag.value_type)) {
     if (!cellValue) {
       return (
         <Box

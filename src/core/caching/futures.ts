@@ -1,3 +1,4 @@
+import notEmpty from 'utils/notEmpty';
 import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
 /**
@@ -122,7 +123,7 @@ export class RemoteListFuture<DataType>
   constructor(list: RemoteList<DataType>) {
     super(
       list.items
-        .filter((item) => item.data !== null)
+        .filter((item) => notEmpty(item))
         .map((item) => item.data) as DataType[],
       list.error,
       list.isLoading

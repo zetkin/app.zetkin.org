@@ -61,7 +61,8 @@ const EmailActionButtons = ({
       {state === EmailState.DRAFT && <DeliveryButton email={email} />}
       {email.published &&
         state === EmailState.SENT &&
-        email.processed !== null && (
+        email.processed !== null &&
+        email.processed !== undefined && (
           <Box alignItems="center" display="flex">
             <Send color="secondary" sx={{ mr: 1 }} />
             <Typography color="secondary">

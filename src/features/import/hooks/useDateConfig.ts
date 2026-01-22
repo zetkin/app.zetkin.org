@@ -5,6 +5,7 @@ import { DateColumn } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import parserFactory from '../utils/dateParsing/parserFactory';
 import { IDateParser } from '../utils/dateParsing/types';
+import notEmpty from 'utils/notEmpty';
 
 export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const dispatch = useAppDispatch();
@@ -80,7 +81,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   };
 
   const isCustomFormat =
-    dateFormat !== null &&
+    notEmpty(dateFormat) &&
     !Object.keys(dateFormats).includes(dateFormat) &&
     !isPersonNumberFormat(dateFormat);
 

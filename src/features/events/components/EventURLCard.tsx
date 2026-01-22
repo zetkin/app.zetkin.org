@@ -21,7 +21,7 @@ const EventURLCard = ({
   const messages = useMessages(messageIds);
   const eventUrl = useMemo(
     () =>
-      event !== null && event.data
+      event !== null && event !== undefined && event.data
         ? `${location.protocol}//${location.host}/o/${event.data.organization.id}/events/${eventId}`
         : '',
     [event?.data, eventId]

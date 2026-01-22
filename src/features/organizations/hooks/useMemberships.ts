@@ -3,6 +3,7 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { userMembershipsLoad, userMembershipsLoaded } from '../store';
+import notEmpty from 'utils/notEmpty';
 
 export default function useMemberships(): IFuture<ZetkinMembership[]> {
   const apiClient = useApiClient();
@@ -17,6 +18,6 @@ export default function useMemberships(): IFuture<ZetkinMembership[]> {
     loader: () =>
       apiClient
         .get<ZetkinMembership[]>(`/api/users/me/memberships`)
-        .then((response) => response.filter((m) => m.role !== null)),
+        .then((response) => response.filter((m) => notEmpty(m.role))),
   });
 }

@@ -28,6 +28,7 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import BrowserItemIcon from './ViewBrowser/BrowserItemIcon';
 import { ViewTreeData } from 'pages/api/views/tree';
+import notEmpty from 'utils/notEmpty';
 
 const folderById = (id: number | null, viewTree: ViewTreeData) => {
   if (id === null) {
@@ -42,7 +43,7 @@ const getAllParentFolderIds = (
 ) => {
   let parentFolderIds: number[] = [];
 
-  while (folderId !== null) {
+  while (notEmpty(folderId)) {
     parentFolderIds = [folderId, ...parentFolderIds];
 
     const folder = folderById(folderId, viewTree);

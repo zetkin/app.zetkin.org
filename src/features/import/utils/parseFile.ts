@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import { parse } from 'papaparse';
 
 import { CellData, ImportedFile, Row } from './types';
+import notEmpty from 'utils/notEmpty';
 
 export async function parseCSVFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
@@ -92,7 +93,7 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
             });
 
             // Only include if there are non-null values in the row
-            if (rowValues.find((v) => v !== null)) {
+            if (rowValues.find((v) => notEmpty(v))) {
               table.rows.push({
                 data: rowValues.flat(),
               });

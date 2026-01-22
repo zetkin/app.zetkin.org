@@ -153,7 +153,7 @@ const CallPanels: FC<Props> = ({
           position: 'absolute',
           transition: lane.step !== LaneStep.SUMMARY ? 'left 0.5s' : '',
           width: 1 / 3,
-          zIndex: lane.step === LaneStep.REPORT || LaneStep.CALL ? 2 : '',
+          zIndex: lane.step === (LaneStep.REPORT || LaneStep.CALL) ? '2' : '',
         })}
       >
         <InstructionsSection

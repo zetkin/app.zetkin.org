@@ -9,6 +9,7 @@ import LocationLabel from 'features/events/components/LocationLabel';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import Event, { Field } from './Event';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 function createSingleFields({
   event,
@@ -61,7 +62,7 @@ function createSingleFields({
   ];
 
   return fields.filter((field): field is Field => {
-    return field !== null;
+    return notEmpty(field);
   });
 }
 

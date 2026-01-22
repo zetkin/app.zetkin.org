@@ -19,6 +19,7 @@ import {
   ZetkinView,
   ZetkinViewColumn,
 } from 'features/views/components/types';
+import notEmpty from 'utils/notEmpty';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -96,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
       }
       return null;
     })
-  ).then((result) => result.find((v) => v !== null));
+  ).then((result) => result.find((v) => notEmpty(v)));
 
   if (!view) {
     view = await apiClient.post<ZetkinView, Partial<ZetkinView>>(

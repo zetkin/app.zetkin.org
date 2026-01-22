@@ -45,8 +45,12 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   const messages = useMessages(messageIds);
 
   const remindedParticipants =
-    participants.filter((p) => p.reminder_sent !== null && !p.cancelled)
-      .length ?? 0;
+    participants.filter(
+      (p) =>
+        p.reminder_sent !== null &&
+        p.reminder_sent !== undefined &&
+        !p.cancelled
+    ).length ?? 0;
 
   const availParticipants = event?.num_participants_available ?? 0;
   const reqParticipants = event?.num_participants_required ?? 0;
@@ -92,6 +96,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                   setAnchorEl(null);
                   if (
                     newReqParticipants !== null &&
+                    newReqParticipants !== undefined &&
                     newReqParticipants !== reqParticipants
                   ) {
                     setReqParticipants(newReqParticipants);
@@ -119,7 +124,10 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                       onKeyDown={(ev) => {
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
-                          if (newReqParticipants !== null) {
+                          if (
+                            newReqParticipants !== null &&
+                            newReqParticipants !== undefined
+                          ) {
                             setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {

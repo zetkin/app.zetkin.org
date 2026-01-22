@@ -12,6 +12,7 @@ import EventURLCard from 'features/events/components/EventURLCard';
 import useEvent from 'features/events/hooks/useEvent';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
+import notEmpty from 'utils/notEmpty';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -71,7 +72,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
               <EventRelatedCard data={data} orgId={parseInt(orgId)} />
               <EventURLCard
                 eventId={parseInt(eventId)}
-                isOpen={data.published !== null}
+                isOpen={notEmpty(data.published)}
                 orgId={parseInt(orgId)}
               />
             </Grid>

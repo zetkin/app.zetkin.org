@@ -19,6 +19,7 @@ import { ZetkinAssignmentAreaStatsItem } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areaAssignments/l10n/messageIds';
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
+import notEmpty from 'utils/notEmpty';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -109,7 +110,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                         message={messages.overview.progress.headers.successful()}
                         secondNumber={stats.num_visits}
                       />
-                      {stats.num_households_visited !== null && (
+                      {notEmpty(stats.num_households_visited) && (
                         <>
                           <Divider flexItem orientation="vertical" />
                           <NumberCard

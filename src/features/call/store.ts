@@ -12,6 +12,7 @@ import {
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import { SerializedError } from './hooks/useAllocateCall';
+import notEmpty from 'utils/notEmpty';
 
 export interface CallStoreSlice {
   activeLaneIndex: number;
@@ -84,8 +85,8 @@ const CallSlice = createSlice({
       const currentLane = state.lanes[currentLaneIndex];
 
       if (currentLane && currentLane.currentCallId === null) {
-        const filteredLanes = state.lanes.filter(
-          (lane) => lane.currentCallId !== null
+        const filteredLanes = state.lanes.filter((lane) =>
+          notEmpty(lane.currentCallId)
         );
 
         state.lanes = filteredLanes;
@@ -403,8 +404,8 @@ const CallSlice = createSlice({
       const currentLane = state.lanes[currentLaneIndex];
 
       if (currentLane && currentLane.currentCallId === null) {
-        const filteredLanes = state.lanes.filter(
-          (lane) => lane.currentCallId !== null
+        const filteredLanes = state.lanes.filter((lane) =>
+          notEmpty(lane.currentCallId)
         );
 
         state.lanes = filteredLanes;

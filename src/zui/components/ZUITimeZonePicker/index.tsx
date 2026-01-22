@@ -85,7 +85,7 @@ const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
         </Typography>
       }
       onChange={(_, tzGroup) => {
-        if (tzGroup !== null) {
+        if (tzGroup !== null && tzGroup !== undefined) {
           setValue(tzGroup);
           onChange(tzGroup.tzValue.split(' ')[0]);
         }

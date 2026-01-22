@@ -1,4 +1,5 @@
 import { Box, Divider, Theme, Typography, useTheme } from '@mui/material';
+import notEmpty from 'utils/notEmpty';
 
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUINumberChip from 'zui/ZUINumberChip';
@@ -30,7 +31,7 @@ const StatusCardHeader = ({
           <Typography variant="h4">{title}</Typography>
           <Typography color="secondary">{subtitle}</Typography>
         </Box>
-        {value !== undefined && (
+        {notEmpty(value) && (
           <ZUIAnimatedNumber value={value || 0}>
             {(animatedValue) => (
               <ZUINumberChip color={color} size="lg" value={animatedValue} />

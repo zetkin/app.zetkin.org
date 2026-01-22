@@ -20,6 +20,7 @@ import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ZUIFuture from 'zui/ZUIFuture';
+import notEmpty from 'utils/notEmpty';
 
 interface SurveyResponseConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -96,7 +97,7 @@ const SurveyResponseConfig = ({
                 fullWidth
                 getOptionLabel={(option) => option.question.question}
                 onChange={(evt, value) => {
-                  if (value !== null) {
+                  if (notEmpty(value)) {
                     setSelectedQuestion(value);
                     if (value.question.response_type === RESPONSE_TYPE.TEXT) {
                       const columns = makeTextColumn(
@@ -114,7 +115,7 @@ const SurveyResponseConfig = ({
                         SURVEY_QUESTION_OPTIONS.ALL_OPTIONS,
                         surveyId
                       );
-                      if (columns !== undefined) {
+                      if (notEmpty(columns)) {
                         onOutputConfigured(columns);
                       }
                     }
@@ -221,7 +222,7 @@ const makeOptionColumns = (
     return [];
   }
 
-  if (selectedQuestion !== undefined && selectedQuestion !== null) {
+  if (notEmpty(selectedQuestion)) {
     if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
       return [
         {

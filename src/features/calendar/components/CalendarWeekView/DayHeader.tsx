@@ -7,6 +7,7 @@ import oldTheme from 'theme';
 import { getDstChangeAtDate } from '../utils';
 import { Msg } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
+import notEmpty from 'utils/notEmpty';
 
 export interface DayHeaderProps {
   date: Date;
@@ -56,7 +57,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       </Box>
       {/* Empty */}
       <Box />
-      {dstChange !== undefined && (
+      {notEmpty(dstChange) && (
         <Box gridColumn={'1 / span 3'} gridRow={2}>
           <Typography color={oldTheme.palette.grey[500]} variant="body2">
             <Msg

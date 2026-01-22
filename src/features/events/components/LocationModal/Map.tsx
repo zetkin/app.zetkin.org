@@ -135,7 +135,7 @@ const Map: FC<MapProps> = ({
                         onMarkerClick(location.id);
                       },
                       dragend: ({ target: marker }) => {
-                        if (marker !== null) {
+                        if (marker !== null && marker !== undefined) {
                           setNewPosition(marker.getLatLng());
                           onMarkerDragEnd(
                             marker.getLatLng().lat,

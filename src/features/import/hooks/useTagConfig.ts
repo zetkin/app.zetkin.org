@@ -15,7 +15,7 @@ export default function useTagConfig(
   const tags = tagsFuture.data;
 
   const assignTag = (tag: { id: number }, value: CellData) => {
-    if (column.kind === ColumnKind.TAG && tags !== null) {
+    if (column.kind === ColumnKind.TAG && notEmpty(tags)) {
       const map = column.mapping.find((map) => map.value === value);
 
       if (!map) {
@@ -67,7 +67,7 @@ export default function useTagConfig(
   };
 
   const getAssignedTags = (value: CellData): ZetkinAppliedTag[] => {
-    if (column.kind === ColumnKind.TAG && tags !== null) {
+    if (column.kind === ColumnKind.TAG && notEmpty(tags)) {
       const map = column.mapping.find((m) => m.value === value);
       const assignedTags = map?.tags
         .map((tag) => tags.find((t) => t.id === tag.id))

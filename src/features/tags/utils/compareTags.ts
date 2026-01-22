@@ -1,3 +1,4 @@
+import notEmpty from 'utils/notEmpty';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export default function compareTags(
@@ -17,8 +18,8 @@ export default function compareTags(
   }
 
   // If 'title' properties are equal, proceed to compare 'value' properties
-  if (tag0 && tag0.value !== null) {
-    if (tag1 && tag1.value !== null) {
+  if (tag0 && notEmpty(tag0.value)) {
+    if (tag1 && notEmpty(tag1.value)) {
       if (typeof tag0.value === 'string' && typeof tag1.value === 'string') {
         if (isNaN(Number(tag0.value)) && isNaN(Number(tag1.value))) {
           return tag0.value.localeCompare(tag1.value);

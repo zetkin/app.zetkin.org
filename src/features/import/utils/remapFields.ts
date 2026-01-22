@@ -1,3 +1,4 @@
+import notEmpty from 'utils/notEmpty';
 import { ImportPreview, PersonImport } from './types';
 
 type TransformFunction = (k: string) => string;
@@ -8,7 +9,7 @@ const objectRecursiveKeyMap = (obj: object, fn: TransformFunction) =>
   Object.fromEntries(
     Object.entries(obj).map(([key, value]) => {
       const getValue = (v: unknown): unknown =>
-        typeof v === 'object' && v !== null ? objectRecursiveKeyMap(v, fn) : v;
+        typeof v === 'object' && notEmpty(v) ? objectRecursiveKeyMap(v, fn) : v;
       return [
         fn(key),
         Array.isArray(value)

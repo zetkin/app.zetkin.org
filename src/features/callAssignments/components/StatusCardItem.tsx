@@ -1,5 +1,6 @@
 import { Box, ListItem, Typography } from '@mui/material';
 
+import notEmpty from 'utils/notEmpty';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 interface StatusCardItemProps {
@@ -23,7 +24,7 @@ const StatusCardItem = ({ action, title, value }: StatusCardItemProps) => {
           </Typography>
           <ZUIAnimatedNumber value={value || 0}>
             {(animatedValue) => {
-              const output = value !== undefined ? animatedValue : '-';
+              const output = notEmpty(value) ? animatedValue : '-';
               return <Typography variant="h3">{output}</Typography>;
             }}
           </ZUIAnimatedNumber>

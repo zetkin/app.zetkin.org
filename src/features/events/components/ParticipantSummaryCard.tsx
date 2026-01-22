@@ -99,6 +99,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                   setAnchorEl(null);
                   if (
                     newReqParticipants !== null &&
+                    newReqParticipants !== undefined &&
                     newReqParticipants !== reqParticipants
                   ) {
                     setReqParticipants(newReqParticipants);
@@ -126,7 +127,10 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                       onKeyDown={(ev) => {
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
-                          if (newReqParticipants !== null) {
+                          if (
+                            newReqParticipants !== null &&
+                            newReqParticipants !== undefined
+                          ) {
                             setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {

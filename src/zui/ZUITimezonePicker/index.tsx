@@ -66,7 +66,7 @@ const ZUITimezonePicker = ({
       getOptionLabel={(option) => option.tzValue}
       isOptionEqualToValue={(option, value) => option.tzValue === value.tzValue}
       onChange={(_, tzGroup) => {
-        if (tzGroup !== null) {
+        if (tzGroup !== null && tzGroup !== undefined) {
           setValue(tzGroup);
           onChange(tzGroup.tzValue.split(' ')[0]);
         }
