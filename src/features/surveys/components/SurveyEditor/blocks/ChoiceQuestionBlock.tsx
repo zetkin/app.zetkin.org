@@ -119,8 +119,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       onEditModeEnter,
       onEditModeExit,
       readOnly,
-      save: () => {
-        updateElement(element.id, {
+      save: async () => {
+        await Promise.all(
+          options.map((option) =>
+            updateElementOption(element.id, option.id, option.text)
+          )
+        );
+
+        await updateElement(element.id, {
           question: {
             description: description,
             question: title,
