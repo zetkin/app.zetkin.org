@@ -13,7 +13,7 @@ describe('filterUnverifiedSignups()', () => {
   it('filters unverified signups by name', () => {
     const rows: EventSignupModelType[] = [
       {
-        created: new Date('2024-01-01'),
+        created: '2024-01-01T00:00:00.000Z',
         email: 'clara@kpd.org',
         eventId: 1,
         first_name: 'Clara',
@@ -24,7 +24,7 @@ describe('filterUnverifiedSignups()', () => {
         phone: '123',
       },
       {
-        created: new Date('2024-01-01'),
+        created: '2024-01-01T00:00:00.000Z',
         email: 'organizer@example.com',
         eventId: 1,
         first_name: 'Organizer',

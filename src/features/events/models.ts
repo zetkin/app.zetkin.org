@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 export type EventSignupModelType = {
-  created: Date | string;
+  created: string;
   email?: string;
   eventId: number;
   first_name: string;
@@ -14,7 +14,7 @@ export type EventSignupModelType = {
 };
 
 const eventSignupSchema = new mongoose.Schema<EventSignupModelType>({
-  created: { default: Date.now, type: Date },
+  created: { default: () => new Date().toISOString(), type: String },
   email: String,
   eventId: { required: true, type: Number },
   first_name: { required: true, type: String },

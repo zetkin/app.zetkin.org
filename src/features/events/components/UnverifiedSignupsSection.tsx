@@ -166,13 +166,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
       minWidth: 160,
       renderCell: (params) =>
         params.row.created ? (
-          <ZUIRelativeTime
-            datetime={
-              typeof params.row.created === 'string'
-                ? params.row.created
-                : params.row.created.toISOString()
-            }
-          />
+          <ZUIRelativeTime datetime={params.row.created} />
         ) : (
           <Typography>—</Typography>
         ),
