@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
-import icsFromEvents from 'features/events/utils/icsFromEvents';
+import icsFromEvents from 'features/public/utils/icsFromEvents';
 
 export async function GET(
   _req: Request,

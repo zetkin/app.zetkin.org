@@ -252,7 +252,7 @@ describe('useClusteredActivities()', () => {
         mockEvent(3, {
           campaign: {
             id: 3,
-            title: 'Going home',
+            title: 'Going my',
           },
           location: {
             id: 3,

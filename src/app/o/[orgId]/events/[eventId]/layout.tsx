@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import PublicEventLayout from 'features/organizations/layouts/PublicEventLayout';
+import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
+import PublicEventLayout from 'features/public/layouts/PublicEventLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';

@@ -158,7 +158,7 @@ const CallHeader: FC<Props> = ({
               ? SkipNext
               : undefined
           }
-          href={lane.step == LaneStep.START ? '/my/home' : undefined}
+          href={lane.step == LaneStep.START ? '/my/my' : undefined}
           label={messages.header.secondaryButton[lane.step]()}
           onClick={() => {
             if (lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY) {

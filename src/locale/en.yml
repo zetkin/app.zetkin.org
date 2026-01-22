@@ -3,7 +3,7 @@ glob:
     configure: 'Edit configure '
 core:
   err404:
-    backToHomePage: Back to home page
+    backToHomePage: Back to my page
     pageNotFound: Page not found
   home:
     redirecting: Redirecting...
