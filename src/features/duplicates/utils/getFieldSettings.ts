@@ -1,13 +1,14 @@
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import sortValuesByFrequency from '../utils/sortValuesByFrequency';
-import { ZetkinPerson } from 'utils/types/zetkin';
-import useCustomFields from 'features/profile/hooks/useCustomFields';
-import { useNumericRouteParams } from 'core/hooks';
+import sortValuesByFrequency from './sortValuesByFrequency';
+import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 
-export default function useFieldSettings(duplicates: ZetkinPerson[]) {
-  const { orgId } = useNumericRouteParams();
-  const customFields = useCustomFields(orgId).data ?? [];
-
+export default function getFieldSettings({
+  duplicates,
+  customFields,
+}: {
+  customFields: ZetkinCustomField[];
+  duplicates: ZetkinPerson[];
+}) {
   const sortedPersonFields: string[] = [
     NATIVE_PERSON_FIELDS.FIRST_NAME,
     NATIVE_PERSON_FIELDS.LAST_NAME,

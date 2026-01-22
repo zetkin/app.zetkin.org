@@ -119,8 +119,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       onEditModeEnter,
       onEditModeExit,
       readOnly,
-      save: () => {
-        updateElement(element.id, {
+      save: async () => {
+        await Promise.all(
+          options.map((option) =>
+            updateElementOption(element.id, option.id, option.text)
+          )
+        );
+
+        await updateElement(element.id, {
           question: {
             description: description,
             question: title,
@@ -228,7 +234,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus={addedOptionId == option.id}
                       fullWidth
-                      inputProps={props}
                       onBlur={(ev) => {
                         updateElementOption(
                           element.id,
@@ -245,6 +250,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                           )
                         );
                       }}
+                      slotProps={{ htmlInput: props }}
                       value={option.text}
                     />
                   </Box>

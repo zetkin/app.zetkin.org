@@ -303,6 +303,14 @@ export default makeMessages('feat.views', {
       'Do you really want to delete this list? This will delete any data stored in the list such as notes and toggles (but will not delete the people from the database)?'
     ),
   },
+  deleteRowsDialog: {
+    title: m<{ numPeople: number }>(
+      'Delete all records of {numPeople, plural, =1 {one person} other {# persons}}'
+    ),
+    warning: m(
+      'If you confirm this action, all records of these people will be deleted from the entire organization.'
+    ),
+  },
   editViewTitleAlert: {
     error: m('Error. Title not updated'),
     success: m('Updated title!'),
@@ -402,14 +410,13 @@ export default makeMessages('feat.views', {
     },
   },
   toolbar: {
+    bulk: {
+      createList: m('Create list from selection'),
+      delete: m('Delete selected people from organization'),
+      handleSelection: m('Handle selection'),
+      removeFromList: m('Remove selected people from list'),
+    },
     createColumn: m('New column'),
-    createFromSelection: m('Create list from selection'),
-    removeFromSelection: m<{ numSelected: number }>(
-      'Remove {numSelected, plural, one {1 person} other {{numSelected} people} } from list'
-    ),
-    removeTooltip: m(
-      'Smart search lists do not currently support removing rows'
-    ),
   },
   viewLayout: {
     actions: {

@@ -89,7 +89,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   }));
 
   return (
-    <DefaultLayout>
+    <DefaultLayout title={title}>
       {alertMsg && (
         <Alert
           action={
@@ -124,6 +124,13 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           <Tabs
             aria-label="campaign tabs"
             onChange={(_, selected) => selectTab(selected)}
+            slotProps={{
+              list: {
+                sx: {
+                  overflowX: 'auto',
+                },
+              },
+            }}
             value={currentTab}
           >
             {tabs.map((tab) => {

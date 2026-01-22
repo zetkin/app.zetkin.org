@@ -8,6 +8,7 @@ import {
   remoteList,
 } from 'utils/storeUtils';
 import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinPersonNote } from './types';
 
 export type PersonOrgData = {
   id: string;
@@ -20,11 +21,13 @@ export type PersonOrgData = {
 export interface ProfilesStoreSlice {
   fieldsList: RemoteList<ZetkinCustomField>;
   orgsByPersonId: Record<number, RemoteItem<PersonOrgData>>;
+  notesByPersonId: Record<number, RemoteList<ZetkinPersonNote>>;
   personById: Record<number, RemoteItem<ZetkinPerson>>;
 }
 
 const initialState: ProfilesStoreSlice = {
   fieldsList: remoteList(),
+  notesByPersonId: {},
   orgsByPersonId: {},
   personById: {},
 };
@@ -53,6 +56,56 @@ const profilesSlice = createSlice({
         data,
         loaded: new Date().toISOString(),
       });
+    },
+    personNoteAdded: (
+      state,
+      action: PayloadAction<[ZetkinPersonNote, number]>
+    ) => {
+      const [note, personId] = action.payload;
+      if (!state.notesByPersonId[personId]) {
+        state.notesByPersonId[personId] = remoteList();
+      }
+      state.notesByPersonId[personId].items = state.notesByPersonId[
+        personId
+      ].items
+        .filter((c) => c.id != note.id)
+        .concat([remoteItem(note.id, { data: note })]);
+    },
+    personNoteDelete: (state, action: PayloadAction<[number, number]>) => {
+      const [personId, noteId] = action.payload;
+
+      const noteItem = state.notesByPersonId[personId].items.find(
+        (item) => item.id == noteId
+      );
+
+      if (noteItem) {
+        noteItem.isLoading = true;
+      }
+    },
+    personNoteDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [personId, noteId] = action.payload;
+
+      state.notesByPersonId[personId].items = state.notesByPersonId[
+        personId
+      ].items.filter((item) => item.id != noteId);
+    },
+    personNotesLoad: (state, action: PayloadAction<number>) => {
+      const personId = action.payload;
+      if (!state.notesByPersonId[personId]) {
+        state.notesByPersonId[personId] = remoteList();
+      }
+      state.notesByPersonId[personId].isLoading = true;
+    },
+    personNotesLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinPersonNote[]]>
+    ) => {
+      const [personId, notes] = action.payload;
+      if (!state.notesByPersonId[personId]) {
+        state.notesByPersonId[personId] = remoteList();
+      }
+      state.notesByPersonId[personId] = remoteList(notes);
+      state.notesByPersonId[personId].loaded = new Date().toISOString();
     },
     personOrgAdded: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
@@ -98,6 +151,15 @@ const profilesSlice = createSlice({
         item.mutating = [];
       }
     },
+    personsDeleted: (state, action: PayloadAction<number[]>) => {
+      const ids = action.payload;
+
+      ids.forEach((id) => {
+        if (state.personById[id]) {
+          state.personById[id].deleted = true;
+        }
+      });
+    },
     personsMerged: (state, action: PayloadAction<number[]>) => {
       const ids = action.payload;
 
@@ -122,11 +184,17 @@ export const {
   fieldsLoaded,
   personLoad,
   personLoaded,
+  personNoteAdded,
+  personNoteDelete,
+  personNoteDeleted,
+  personNotesLoad,
+  personNotesLoaded,
   personOrgsLoad,
   personOrgsLoaded,
   personOrgAdded,
   personOrgRemoved,
   personUpdate,
   personUpdated,
+  personsDeleted,
   personsMerged,
 } = profilesSlice.actions;

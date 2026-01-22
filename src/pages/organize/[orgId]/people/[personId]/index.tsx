@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
-import { Grid } from '@mui/material';
+import { CircularProgress, Grid } from '@mui/material';
 import Head from 'next/head';
-import { useContext } from 'react';
+import { Suspense, useContext } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/profile/l10n/messageIds';
@@ -23,6 +23,9 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
+import PersonNotes from 'features/profile/components/PersonNotes';
+import { PERSON_NOTES } from 'utils/featureFlags';
+import useFeature from 'utils/featureFlags/useFeature';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -57,6 +60,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 const PersonProfilePage: PageWithLayout = () => {
   const { orgId, personId } = useNumericRouteParams();
+
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
@@ -65,6 +69,8 @@ const PersonProfilePage: PageWithLayout = () => {
   const person = personFuture.data;
   const personTagsFuture = usePersonTags(orgId, personId);
   const journeysFuture = useJourneys(orgId);
+
+  const hasPersonNotesFeature = useFeature(PERSON_NOTES);
 
   if (!person) {
     return null;
@@ -128,6 +134,13 @@ const PersonProfilePage: PageWithLayout = () => {
         <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
         </Grid>
+        {hasPersonNotesFeature && (
+          <Grid size={{ lg: 4, xs: 12 }}>
+            <Suspense fallback={<CircularProgress />}>
+              <PersonNotes orgId={orgId} person={person} />
+            </Suspense>
+          </Grid>
+        )}
       </Grid>
     </>
   );
