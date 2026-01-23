@@ -32,7 +32,7 @@ test.describe('View detail page', () => {
       AllMembersColumns
     );
 
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 203);
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 201);
     moxy.setZetkinApiMock(
       `/orgs/1/people/views/${NewView.id}/columns`,
       'post',

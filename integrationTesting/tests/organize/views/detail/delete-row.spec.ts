@@ -25,7 +25,7 @@ test.describe('View detail page', () => {
 
   test('lets user remove row from view', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock(
-      '/v1/orgs/1/people/views/1/rows/1',
+      '/orgs/1/people/views/1/rows/1',
       'delete',
       undefined,
       204
@@ -44,7 +44,14 @@ test.describe('View detail page', () => {
     // Show modal on click remove button -> click confirm to close modal
     await page.locator(removeButton).click();
     await expect(page.locator(confirmButtonInModal)).toBeVisible();
-    await page.locator(confirmButtonInModal).click();
+
+    await Promise.all([
+      page.waitForResponse((res) =>
+        res.url().includes('/api/views/removeRows')
+      ),
+      page.locator(confirmButtonInModal).click(),
+    ]);
+
     await expect(page.locator(confirmButtonInModal)).toBeHidden();
 
     // Check for delete request
