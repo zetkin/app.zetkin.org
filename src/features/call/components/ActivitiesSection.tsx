@@ -503,7 +503,7 @@ const ActivitiesSectionContent: FC<{
 
   return (
     <>
-      <Box id="accctivitiesSecitonOuter" sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ height: '100%', width: '100%' }}>
         {selectedSurvey && <Survey survey={selectedSurvey} />}
         {!selectedSurvey && (
           <ZUISection
