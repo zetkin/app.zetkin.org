@@ -168,15 +168,15 @@ const Activities: FC<ActivitiesProps> = ({
   );
 };
 
-type ActivitiesSectionProps = {
-  assignment: ZetkinCallAssignment;
-  target: ZetkinCallTarget | null;
-};
-
-const ActivitiesSectionContent: FC<{
+type ActivitiesSectionContentProps = {
   assignment: ZetkinCallAssignment;
   target: ZetkinCallTarget;
-}> = ({ assignment, target }) => {
+};
+
+const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
+  assignment,
+  target,
+}) => {
   const messages = useMessages(messageIds);
   const intl = useIntl();
   const dispatch = useAppDispatch();
@@ -700,6 +700,11 @@ const ActivitiesSectionContent: FC<{
       </ZUIDrawerModal>
     </>
   );
+};
+
+type ActivitiesSectionProps = {
+  assignment: ZetkinCallAssignment;
+  target: ZetkinCallTarget | null;
 };
 
 const ActivitiesSection: FC<ActivitiesSectionProps> = ({
