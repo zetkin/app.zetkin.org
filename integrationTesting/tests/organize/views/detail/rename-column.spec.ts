@@ -51,7 +51,13 @@ test.describe('View detail page', () => {
     );
 
     await page.fill('#rename-column-title-field', newTitle);
-    await page.click('button:text("Save")');
+
+    await Promise.all([
+      page.waitForResponse((res) =>
+        res.url().includes(`/views/1/columns/${AllMembersColumns[0].id}`)
+      ),
+      page.click('button:text("Save")'),
+    ]);
 
     // Check body of request
     const columnPatchRequest = moxy
