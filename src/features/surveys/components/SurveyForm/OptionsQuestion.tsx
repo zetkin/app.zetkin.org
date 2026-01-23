@@ -80,10 +80,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
               </ZUIText>
             </FormLabel>
             {question.description && (
-              <ZUIText
-                id={`description-${element.id}`}
-                style={{ whiteSpace: 'pre-line' }}
-              >
+              <ZUIText id={`description-${element.id}`} renderLineBreaks={true}>
                 <LinkifiedText text={question.description} />
               </ZUIText>
             )}
@@ -121,7 +118,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
               {question.description && (
                 <ZUIText
                   id={`description-${element.id}`}
-                  style={{ whiteSpace: 'pre-line' }}
+                  renderLineBreaks={true}
                 >
                   <LinkifiedText text={question.description} />
                 </ZUIText>

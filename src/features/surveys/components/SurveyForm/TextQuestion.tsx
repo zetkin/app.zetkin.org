@@ -36,10 +36,7 @@ const TextQuestion: FC<SurveyTextQuestionProps> = ({
             </ZUIText>
           </FormLabel>
           {element.question.description && (
-            <ZUIText
-              id={`description-${element.id}`}
-              style={{ whiteSpace: 'pre-line' }}
-            >
+            <ZUIText id={`description-${element.id}`} renderLineBreaks={true}>
               <LinkifiedText text={element.question.description} />
             </ZUIText>
           )}

@@ -65,7 +65,7 @@ const SurveyForm: FC<SurveyFormProps> = ({
                   <ZUIText variant="headingMd">
                     {element.text_block.header}
                   </ZUIText>
-                  <ZUIText style={{ whiteSpace: 'pre-line' }}>
+                  <ZUIText renderLineBreaks={true}>
                     {element.text_block.content && (
                       <LinkifiedText text={element.text_block.content} />
                     )}
