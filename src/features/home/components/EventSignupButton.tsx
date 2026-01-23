@@ -11,9 +11,11 @@ import useUser from 'core/hooks/useUser';
 
 export const EventSignupButton = ({
   event,
+  fullWidth,
   onClickSignUp,
 }: {
   event: ZetkinEventWithStatus;
+  fullWidth?: boolean;
   onClickSignUp?: (ev: React.MouseEvent<HTMLButtonElement>) => void;
 }): JSX.Element => {
   const messages = useMessages(messageIds);
@@ -38,6 +40,7 @@ export const EventSignupButton = ({
       <>
         <ZUIButton
           key="action"
+          fullWidth={fullWidth}
           label={messages.activityList.actions.undoSignup()}
           onClick={() => undoSignup()}
           size="large"
@@ -53,8 +56,23 @@ export const EventSignupButton = ({
   }
 
   if (!user) {
+    if (onClickSignUp) {
+      return (
+        <ZUIButton
+          fullWidth={fullWidth}
+          label={messages.activityList.actions.signUp()}
+          onClick={(ev) => {
+            onClickSignUp(ev);
+          }}
+          size="large"
+          variant="primary"
+        />
+      );
+    }
+
     return (
       <ZUIButton
+        fullWidth={fullWidth}
         href={`/login?redirect=${encodeURIComponent(
           `/o/${event.organization.id}/events/${event.id}`
         )}`}
@@ -73,6 +91,7 @@ export const EventSignupButton = ({
     <>
       <ZUIButton
         key="action"
+        fullWidth={fullWidth}
         label={buttonLabel}
         onClick={(ev) => {
           if (onClickSignUp) {
