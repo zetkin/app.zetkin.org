@@ -88,7 +88,8 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       minWidth: 300,
       renderCell: (params) => {
         const matchingMembership = userMemberships.data?.find(
-          (membership) => membership.organization.id === orgId
+          (membership) =>
+            membership.role !== null && membership.organization.id === orgId
         );
         if (params.row.profile.id === matchingMembership?.profile.id) {
           return <Typography>{messages.officials.you()}</Typography>;
