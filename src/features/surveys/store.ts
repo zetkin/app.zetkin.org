@@ -248,6 +248,13 @@ const surveysSlice = createSlice({
         new Date().toISOString();
       state.extendedSurveyBySurveyId[surveyId].isStale = false;
     },
+    responseStatsError: (state, action: PayloadAction<[number, unknown]>) => {
+      const [surveyId, error] = action.payload;
+      if (!state.responseStatsBySurveyId[surveyId]) {
+        state.responseStatsBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.responseStatsBySurveyId[surveyId].error = error;
+    },
     responseStatsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
       if (!state.responseStatsBySurveyId[surveyId]) {
@@ -515,6 +522,7 @@ export const {
   elementsReordered,
   extendedSurveyLoad,
   extendedSurveyLoaded,
+  responseStatsError,
   responseStatsLoad,
   responseStatsLoaded,
   submissionLoad,
