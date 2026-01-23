@@ -150,8 +150,6 @@ feat:
         copyMenuHeader: Kopieer {numberOfEvents} gebeurtenissen naar
         createShift: Na elke gebeurtenis (maak shift aan)
         duplicate: Zelfde tijd en datum (kopiëren)
-        move: Verplaatsen
-        moveMenuHeader: Verplaats {numberOfEvents} gebeurtenissen naar
         nextDay: Volgende dag {dates}
         nextWeek: Volgende week {dates}
     shortWeek: w {weekNumber}
@@ -289,7 +287,6 @@ feat:
         filter: Filter resultaten
         standalones: Op zichzelf staande gebeurtenissen
         surveys: Vragenlijsten
-      heading: Alle projecten
       indefinite: Onbepaald
       unsorted: Ongesorteerde projecten
       upcoming: '{numEvents, number} aankomende gebeurtenissen.'
@@ -1340,10 +1337,8 @@ feat:
         title: Recente organisaties
   profile:
     delete:
-      button: Verwijder persoon
       confirm: Weet u zeker dat u {name} uit {org} en alle gerelateerde organisaties
         wilt verwijderen? Dit is een permanente actie.
-      title: Verwijder account
       warning: Dit kan niet ongedaan worden gemaakt!
     details:
       title: Details
@@ -2588,10 +2583,6 @@ feat:
         openButton: Toon
     toolbar:
       createColumn: Nieuwe kolom
-      createFromSelection: Maak lijst van selectie
-      removeFromSelection: Verwijder {numSelected, plural, one {1 person} other
-        {{numSelected} people} } uit de lijst
-      removeTooltip: In Slim Zoeken lijsten kun je momenteel geen rijen verwijderen
     viewLayout:
       actions:
         share: Deel

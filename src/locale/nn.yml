@@ -46,7 +46,7 @@ feat:
         areas: Områder
         name: Navn
     default:
-      title: Dør til dør-oppdrag uten navn
+      title: Dørbankingsoppdrag uten navn
     instructions:
       editor:
         confirm: Vil du slette alle ulagrede endringer og gå tilbake til lagret?
@@ -180,7 +180,7 @@ feat:
         subheader: Velg hvilket spørsmål som skal avgjøre når et besøk er vellykket. Når
           spørsmålet besvares med ja kommer besøket til å regnes som vellykket.
       toolBar:
-        title: Legg til spørsmål for dør til dør-oppdrag
+        title: Legg til spørsmål for dørbankingsoppdrag
   areas:
     areas:
       areaSettings:
@@ -193,7 +193,7 @@ feat:
           title: Områdeetiketter
       controlLabels:
         filters: Filtre
-        layers: Datavisualisering
+        layers: Visning
         select: Velg
       default:
         description: Ingen beskrivelse
@@ -212,7 +212,7 @@ feat:
     elements:
       activities: Aktiviteter
       archive: Arkiv
-      areaassignments: Dør til dør-oppdrag
+      areaassignments: Dørbankingsoppdrag
       assignees: Kontaktpersoner
       calendar: Kalender
       callassignments: Ringeoppdrag
@@ -318,15 +318,79 @@ feat:
         copyMenuHeader: Kopier {numberOfEvents} arrangementer til
         createShift: Etter hvert arrangement (legg til et skift)
         duplicate: Samme tid og dato (dupliser)
-        move: Flytt
-        moveMenuHeader: Flytt {numberOfEvents} arrangementer til
         nextDay: Neste dag {dates}
         nextWeek: Neste uke {dates}
     shortWeek: uke {weekNumber}
     showMore: Vis
     today: I dag
   call:
+    about:
+      events: '{numEvents} arrangementer'
+      noParticipation: '{name} har ikke deltatt på arrangementer før.'
+      participation: '{name} deltok på {events}, den siste er {titleAndTime}'
+      previousActivityHeader: Tidligere aktivitet
+      tagsHeader: Etiketter
+      title: Om {name}
+    activities:
+      description: Handler på vegne av {name}
+      filters:
+        basic:
+          alreadyIn: Finnes fra før i
+          events: Arrangementer
+          surveys: Spørreundersøkelser
+          thisCall: Denne samtalen
+        events:
+          thisWeek: Denne uka
+          today: I dag
+          tomorrow: I morgen
+        organizations:
+          noSelected: Organisasjoner
+          selected: '{numOrgs} organisasjoner'
+      projects:
+        wihoutProjectLabel: Inget prosjekt
+      title: Aktiviteter
+    callLog:
+      openCallLogButton: Samtalehistorikk
+      previousCall:
+        logNew: Registrer en ny samtale
+      searchLabel: Skriv for å søke
+      title: Samtalehistorikk
+      unfinishedCall:
+        abandon: Forkast
+        switch: Bytt til
+    callingInfo:
+      title: Hvordan ringe med Zetkin
+      tutorial:
+        call:
+          description: Avhengig av hvordan ringeoppdraget er satt opp ringer du enten med
+            din egen telefon, eller med datamaskinen.
+          title: Gjennomdør telefonsamtalen
+        oldCalls:
+          description: Hvis du trykker på "Samtalehistorikk" kan du logge en ny samtale
+            med noen du har ringt til. Det er nyttig hvis folk ringer tilbake.
+          title: Tidligere samtaler
+        personInfo:
+          description: Du ser hvilke arrangementer personen har deltatt på og annen
+            informasjon på denne siden.
+          title: Bli kjent med personen.
+        report:
+          description: Når du er ferdig med samtalen sender du inn en rapport.
+          title: Rapporter samtalen
+        start:
+          description: Du er i ferd med å begynne å ringe. Les veiledningen og forbered
+            det, så trykker du på "Ring" for å starte den første samtalen.
+          title: Begynn å ringe
+    error:
+      description: Forsøk å laste siden på nytt. Hvis det fortsatt funker, logg ut og
+        inn igjen. Hvis det fortsatt ikke funker, kontakt support.
+      title: En uventet feil oppsto.
+    header:
+      primaryButton:
+        undefined: Ring
+      secondaryButton:
+        undefined: Avslutt
     instructions:
+      noInstructions: Dette ringeoppdraget har ingen veiledning
       title: Veiledning
     report:
       steps:
@@ -441,8 +505,25 @@ feat:
             phoneSingle: 'Ett telefonnumer er feil: {phone}'
       summary:
         editButtonLabel: Rediger
+      title: Rapport
+    skipCallDialog:
+      cancelButton: Nei, fortsett samtale
+      confirmButton: Ja, hopp over {name}
+      title: Hopp over samtale med {name}?
     stats:
       callsMade: gjennomførte telefonoppringinger
+      description: Dette er framgangen i ringeoppdraget
+      inTargetGroup: folk i målgruppa
+      successful: vellyket
+      successfulCalls: vellykkede samtaler
+      targets: mål
+      title: Statistikk for oppdraget
+    summary:
+      title: Hurra!
+      unfinishedCallsMessage: Før du går videre, du har samtaler som ikke er ferdige,
+        ordne med dem først!
+    switchedAssignmentsAlert:
+      message: Bytta ringeoppdrag. Nå ringer du i {assignmentTitle}
   callAssignments:
     actions:
       delete: Slett
@@ -553,6 +634,9 @@ feat:
       extraActivities: + {numExtra} fler
       goToActivities: Se alle kommende aktiviteter
       noActivities: Ingen aktiviteter denne uka
+      noDescription:
+        addOneNow: Legg til
+        text: Dette prosjektet har ingen beskrivelse ennå. {addOneNow}
       nothingTomorrow: Ingen ting planlagt for i morgen
       startsTomorrow: Begynner i morgen
       subtitles:
@@ -577,13 +661,12 @@ feat:
       cardCTA: Gå til prosjekt
       create: Nytt prosjekt
       filter:
-        areaAssignments: Dør til dør-aksjoner
+        areaAssignments: Dørbankingsoppdrag
         calls: Ringeoppdrag
         emails: E-poster
         filter: Filtrer resultater
         standalones: Frittstående arrangementer
         surveys: Spørreundersøkelser
-      heading: Pågående prosjekter
       indefinite: Uten sluttdato
       unsorted: Usorterte prosjekter
       upcoming: '{numEvents, number} kommende arrangementer.'
@@ -597,7 +680,7 @@ feat:
       moveButtonLabel: Flytt
     createButton:
       createActivity: Opprett
-      createAreaAssignment: Dør til dør-oppdrag
+      createAreaAssignment: Dørbankingsoppdrag
       createCallAssignment: Ringeoppdrag
       createEmail: E-post
       createEvent: Arrangement
@@ -657,7 +740,7 @@ feat:
       overview: Oversikt
     linkGroup:
       createActivity: Ny aktivitet
-      createAreaAssignment: Dør til dør-oppdrag
+      createAreaAssignment: Dørbankingsoppdrag
       createCallAssignment: Nytt ringeoppdrag
       createEmail: Ny e-post
       createEvent: Nytt arrangement
@@ -672,11 +755,14 @@ feat:
       heading: Mobilisering og kontakt (ingen satt opp)
     noManager: Ingen prosjektansvarlig
     publicProjectPage:
+      calendarLinkCopied: Kopierte kalenderlenke
+      copyIcsUrl: Kopier kalenderlenke
       eventList:
         emptyList:
           message: Fant ingen arrangementer
           removeFiltersButton: Tøm filtre
         filterButtonLabels:
+          locations: '{count} steder'
           thisWeek: Denne uka
           today: I dag
           tomorrow: I morgen
@@ -714,17 +800,79 @@ feat:
         insights: Analyse
         summary: Oppsummering
     tasks: Innhold
+    urlCard:
+      nowAccepting: Folk kan melde seg på med denne lenka
+      open: Åpen for påmeldinger
+      preview: Forhåndsvis prosjekt
+      previewPortal: Forhåndsvis prosjektet i aktivistportalen
+      visitPortal: Se prosjektet i aktivistportalen
+      willAccept: Folk kan melde seg på med denne lenka
   canvass:
     default:
       description: Ingen beskrivelse
       floor: Ukjent etasje
       location: Adresse uten tittel
     households:
+      bulkEditHouseholds:
+        floorLabel: Rediger etasje
+        header: |+
+          Rediger {numHouseholds, plural, one {1 dør} other {# dører}}
+
+        saveButtonLabel: |+
+          Lagre {numHouseholds, plural, one {1 dør} other {# dører}}
+
+      colorPicker:
+        colorNames:
+          black: Sort
+          darkAqua: Mørk aqua
+          darkBlue: Mørk blå
+          darkGreen: Mørk grønn
+          darkIndigo: Mørk indigo
+          darkLime: Mørk lime
+          darkOrange: Mørk oransje
+          darkPink: Mørk rosa
+          darkPurple: Mørk lilla
+          darkRed: Mørk rød
+          darkTurqouise: Mørk turkis
+          darkYellow: Mørk gul
+          grey: Grå
+          lightAqua: Lys aqua
+          lightBlue: Lys blå
+          lightGreen: Lys grønn
+          lightIndigo: Lys indigo
+          lightLime: Lys lime
+          lightOrange: Lyr oransje
+          lightPink: Lys rosa
+          lightPurple: Lys lilla
+          lightRed: Lys rød
+          lightTurquoise: Lys turkis
+          lightYellow: Lysegul
+          mediumAqua: Aqua
+          mediumBlue: Blå
+          mediumGreen: Grønn
+          mediumIndigo: Indigo
+          mediumLime: Lime
+          mediumOrange: Oransje
+          mediumPink: Rosa
+          mediumPurple: Lilla
+          mediumRed: Rød
+          mediumTurqouise: Turkis
+          mediumYellow: Gul
+        inputLabel: Rediger døra sin farge
+        noColor: Ingen farge
       createMultiple:
         createButtonLabel: Opprett {numHouseholds, plural, one {En dør} other {# dører}}
         header: Opprett dører
         numberOfFloorsInput: Antall etasjer
         numberOfHouseholdsInput: Dører per etasje
+      delete:
+        title: Slett dør
+        warningText: Er du sikker på at du vil slette døra? Dette kan ikke angres.
+      editSingleHousehold:
+        floorLabel: Rediger etasje
+        header: Rediger {title}
+        saveButtonLabel: Lagre
+        titleLabel: Rediger tittel
       householdDefaultTitle: Dør {householdNumber}
       page:
         empty: Denne adressen har ingen dører ennå
@@ -733,10 +881,14 @@ feat:
         logVisitButtonLabel: Registrer besøk
         subtitle: '{floorNumber}. etasje'
         wasVisited: Denne døra har blitt besøkt i dette oppdraget
+      stackItem:
+        detailsButtonLabel: Detaljer
+        visitButtonLabel: Besøk
     instructions:
       areas: Områder
       instructionsHeader: Veiledning
       ready: Du er klar
+      selectArea: Velg område
       start: Start oppdrag
       visitedHouseholds: Besøkte dører
       visitedLocations: Besøkte adresser
@@ -764,6 +916,8 @@ feat:
         cancel: Avbryt
         create: Opprett adresse
         inputPlaceholder: Gi adressen et navn
+    selectArea:
+      noAreas: Ingen områder er tilgjengelig
     sidebar:
       instructions:
         title: Instruks
@@ -775,8 +929,11 @@ feat:
           title: All tid
         header:
           households: Dører
+          householdsSuccessful: Vellykkede besøk
           locations: Adresser
+          successfulVisits: Vellykkede besøk
           title: Framgang
+          visits: Besøk
         session:
           team: Lag
           title: Økt (i dag)
@@ -838,6 +995,8 @@ feat:
     page:
       dismiss: Se bort fra
       noDuplicates: Ingen duplikater
+      noDuplicatesContactUs: Hvis duplikatverktøyet finner færre duplikater enn du
+        tror det skal være, kontakt Zetkin Foundation.
       noDuplicatesDescription: Hurra! alle folkene i organisasjonen ser ut til å være unike individer.
       possibleDuplicates: Mulige duplikater
       possibleDuplicatesDescription: Disse {numPeople} folkene ser veldig like ut
@@ -1102,6 +1261,7 @@ feat:
       columnName: Navn
       columnNotified: Varslet
       columnPhone: Telefon
+      columnSignedUp: Meldte seg på
       contactTooltip: Kontaktperson
       descriptionBooked: Dette er de som er registrert og som du stoler på at møter
         opp. For å avmelde seg må de kontakte deg så du kan melde dem av
@@ -1186,6 +1346,11 @@ feat:
       open: Åpen
       scheduled: Planlagt
       unknown: Ukjent
+    filterButtonLabels:
+      eventTypes: >+
+        {numEventTypes, plural,=0 {arrangementstyper} =1 {{singleEventType}}
+        other {# arrengementstyper}}
+
     list:
       events: Arrangementer
       noEvents: Ingen arrangementer...
@@ -1334,6 +1499,10 @@ feat:
       noLocation: Ingen fysisk plassering
     footer:
       privacyPolicy: Personvernerklæring
+    newLandingPageAlert:
+      description: Hvis du ser etter administrasjonssidene kan du finne dem ved å
+        klikke på knappen under
+      title: Dette er den nye landingssida
     settings:
       accountSettings:
         email:
@@ -1472,6 +1641,7 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} og {numEmpty, plural, =1 {en tom
             rad} other {# tomme rader}}.'
           twoValuesNoEmpty: '{firstValue} og {secondValue}.'
+        notEnoughRows: Filen inneholder ikke nok rader til å importere data
         organization: Organisasjon
         selectZetkinField: Importér som...
         tags: Etiketter
@@ -1809,6 +1979,7 @@ feat:
         message: Finner ingen arrangementer
         removeFiltersButton: Tøm filter
       filterButtonLabels:
+        locations: '{count} adresser'
         organizations: '{numOrgs, plural,=0 {Organizations} =1 {En organisasjon} other
           {# organisasjoner}}'
         thisWeek: Denne uka
@@ -1824,11 +1995,13 @@ feat:
       cancelledHeader: Arrangementet har blitt avlyst
       cancelledParagraph: Du kan ikke lenger melde deg på og hvis du var påmeldt
         forventes det ikke lenger at du møter opp.
-      contactPerson: '{name} er kontaktperson'
       defaultTitle: Arrangement uten tittel
       loading: Laster...
       noLocation: Ingen fysisk plassering
       partOfProject: En del av {projectLink}
+      participatingInfo: |+
+        {participatingCount, plural, =1 {# person} other {#  folk}} deltar
+
       today: I dag
     gen3:
       description: Dette er den nye (generasjon 3) nettapplikasjonen. Hvis du er kjent
@@ -1840,13 +2013,22 @@ feat:
       footer:
         privacyPolicy: Personvernerklæring
       header:
+        calendarLinkCopied: Lenka ble kopiert
         connect: Koble til
+        copyIcsUrl: Kopier lenke for å abonnere på kalender
         follow: Følg
         login: Logg inn og koble til
+        organize: Organiser
         unfollow: Slutt å følge
       map:
         viewInList: Vis i liste
         viewInMap: Vis i kart
+      menu:
+        allEvents: Alle arrangementer
+        logout: Logg ut
+        myActivities: Mine aktiviteter
+        myZetkin: Min Zetkin
+        settings: Innstillinger
       tabs:
         calendar: Kalender
         suborgs: Utforsk
@@ -1859,6 +2041,9 @@ feat:
         må du kontakte de som er ansvarlige for organisasjonen din.
       myPageButton: Gå til aktivistportalen
       title: Du har ikke tilgang som administrator
+    overview:
+      suborgs:
+        title: Underorganisasjoner
     page:
       title: Velg organisasjon
     sidebar:
@@ -1878,10 +2063,8 @@ feat:
       showButton: Vis alle arrangementer
   profile:
     delete:
-      button: Fjern person
       confirm: Er du sikker på at du vil slette {name} fra {org}, og alle relaterte
         organisasjoner? Denne handlingen kan ikke angres.
-      title: Slett konto
       warning: Dette kan ikke angres!
     details:
       title: Detaljer
@@ -1906,6 +2089,8 @@ feat:
       removeError: Organisasjonen kunne ikke fjernes
       title: Organisasjoner
     resetButton: Tilbakestill
+    role:
+      noRole: Ingen rolle
     saveButton: Lagre
     tabs:
       manage: Behandle
@@ -2003,6 +2188,12 @@ feat:
           description: Velg basert på informasjon fra innhold i SV-Appen
           title: Innhold
       filters:
+        all:
+          description: Finn folk basert på hvilke underorganisasjoner de er i.
+          title: Alle i en underorganisasjon
+        area:
+          description: Søk basert på adresser innenfor eller utenfor et område
+          title: Adresse (område)
         call_history:
           description: Finn folk som har blitt ringt, nådd, eller forsøkt ringt.
           title: Ringehistorikk
@@ -2068,6 +2259,31 @@ feat:
         startWithSelect:
           'false': en tom liste
           'true': alle i organisasjonen
+      allInSuborg:
+        examples:
+          one: Legg til alle som er i underorganisasjonen Hamar SV
+          two: Fjern alle som er i en underorganisasjon
+        inputString:
+          any: |+
+            {addRemoveSelect} alle som er i {suborgScopeSelect}.
+
+          multiple: '{addRemoveSelect} alle som er i {suborgScopeSelect}:
+            {multipleSuborgSelect}'
+          single: '{addRemoveSelect} alle som er i {suborgScopeSelect}
+            {singleSuborgSelect}'
+        suborgScopeSelect:
+          any: hvilken som helst underorganisasjon
+          multiple: hvilken som helst av følgende underorganisasjoner
+          single: underorganisasjonen
+      area:
+        examples:
+          one: Legg til folk med hjemmeadresse innenfor området Alta
+          two: Fjern folk med hjemmeadresse utenfor området Bergen
+        inputString: '{addRemoveSelect} folk med {InglatFieldSelect}
+          {withinOutsideSelect} området {areaSelect}'
+        slice:
+          in: innenfor
+          out: utenfor
       callBlocked:
         inputString: '{addRemoveSelect} folk som er blokkert fra å ringes'
       callHistory:
@@ -2267,18 +2483,22 @@ feat:
           edit:
             callassignment_goal: '{querySelect} for ringeoppdraget "{titleSelect}"'
             callassignment_target: '{querySelect} for ringeoppdraget "{titleSelect}"'
+            email_target: '{querySelect} for e-posten "{titleSelect}"'
           preview:
             callassignment_goal: fullføringsgruppa for ringeoppdraget "{queryTitle}"
             callassignment_target: målgruppa for ringeoppdraget  "{queryTitle}"
+            email_target: målgruppa for e-posten "{queryTitle}"
             standalone: smartsøket "{queryTitle}"
           selectLabel:
             callassignment_goal: fullførtgruppa
             callassignment_target: målgruppa
+            email_target: målgruppa
             none: et smartsøk
             standalone: smartsøket
           selectOptions:
             callassignment_goal: fullførtgruppa for et ringeoppdrag
             callassignment_target: målgruppa for et ringeoppdrag
+            email_target: målgruppa for en e-post
             none: Denne organisasjonen har ingen ringeoppdrag eller smartsøk ennå.
             standalone: et annet smartsøk
       surveyOption:
@@ -2526,9 +2746,37 @@ feat:
         subheader: Denne undersøkelsen har begynt å få inn svar. Hvis du redigerer den
           nå kan det bli problemer med informasjonen i svarene. Utvis
           forsiktighet.
+    insights:
+      export:
+        errorUnknown: En ukjent feil oppsto nå Zetkin eksporterte.
+        toPdf: Eksporter som PDF
+        toPng: Eksporter som PNG
+      optionsFields:
+        subheader: >+
+          Det er totalt {answerCount, plural, =1 {1 svar} other {# svar}} og
+          {totalSelectedOptionsCount, plural, =1 {1 valgt alternativ} other {#
+          valgte alternativer}}.
+
+        tabs:
+          barPlot: Søyler
+          piePlot: Kake
+        warningMultipleSelectedOptionsPie: Merk at det er mulig å velge mer enn et
+          alternativ, and {respondentCount, plural, =1 {1 person} other {#
+          personer}} gjorde det. Det betyr at kakediagrammet kan være
+          misvisende.
+      textFields:
+        subheader: Det er totalt {answerCount, plural, =1 {1 svar} other {# svar}},
+          {totalWordCount, plural, =1 {1 ord} other {# ord}} and
+          {totalUniqueWordCount, plural, =1 {1 unikt ord} other {# unike ord}}.
+        tabs:
+          responses: Svar
+          wordCloud: Sky
+          wordFrequencies: Søyler
     layout:
       actions:
+        createList: Lag liste av svarene
         delete: Slett undersøkelse
+        duplicate: Kopier
         move: Flytt
         publish: Samle svar
         unpublish: Steng
@@ -2587,6 +2835,10 @@ feat:
       description: Personen du skal koble til har ikke e-postadresse, men de har
         oppgitt en i undersøkelsen, vil du legge adressen til personen i Zetkin?
       title: Legg til e-postadresse
+    surveyDuplicated:
+      error: 'Feil: Kunne ikke kopiere undersøkelsen'
+      success: Undersøkelsen din har blitt kopiert.
+      title: Kopierte undersøkelsen
     surveyForm:
       accept: Jeg aksepterer vilkårene under
       error: Noe gikk galt med å sende inn svarene, forsøk igjen senere.
@@ -2603,6 +2855,7 @@ feat:
           aktivitet. Behandlingen følger Zetkins personvernerklæring.
         title: Personvernerklæring
     surveyFormSubmitted:
+      retakeSurvey: Bruk undersøkelsen på nytt
       text: Dine svar på "{title}" har blitt sendt inn.
       title: Undersøkelse sendt inn
     surveySignature:
@@ -2615,7 +2868,11 @@ feat:
         anonymous: Signer anonymt
         email: Signer med navn og e-post
         user: Signer som {person} med e-posten {email}
+    surveyToList:
+      error: Kunne ikke opprette liste over svar på grunn av en ukjent feil.
+      title: Svar fra {surveyTitle}
     tabs:
+      insights: Innsikt
       overview: Oversikt
       questions: Spørsmål
       submissions: Svar
@@ -3133,10 +3390,6 @@ feat:
         openButton: Vis
     toolbar:
       createColumn: Ny kolonne
-      createFromSelection: Opprett liste av valgte
-      removeFromSelection: Fjern {numSelected, plural, one {1 person} other
-        {{numSelected} folk} } from view
-      removeTooltip: Smartsøk støtter ikke fjerning av rader
     viewLayout:
       actions:
         share: Del
@@ -3325,6 +3578,10 @@ zui:
     geography: Dør til dør
     home: Hjem
     journeys: Planer
+    myPagesInfoText: Gå til min side
+    myPagesMenuItemLabel: Min side
+    mySettingsMenuItemLabel: Mine innstillinger
+    overview: Oversikt
     people: Folk
     projects: Prosjekter
     search: Søk

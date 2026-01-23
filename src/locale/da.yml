@@ -255,7 +255,6 @@ feat:
         filter: Filtrer resultater
         standalones: Selvstændig begivenhed
         surveys: Spørgeskemaer
-      heading: Alle projekter
       indefinite: Ubestemt
       unsorted: Usortede projekter
       upcoming: '{numEvents, number} kommende begivenheder.'
@@ -528,8 +527,6 @@ feat:
       title: 'Vælg organisation:'
   profile:
     delete:
-      button: Fjern person
-      title: Slet profil
       warning: Dette kan ikke gøres om!
     details:
       title: Detaljer
@@ -1501,10 +1498,6 @@ feat:
         openButton: Vis
     toolbar:
       createColumn: Ny kolonne
-      createFromSelection: Skab liste fra udvalg
-      removeFromSelection: Fjern {numSelected, plural, one {1 person} other
-        {{numSelected} people} } fra liste
-      removeTooltip: Det er ikke muligt at fjerne rækker i en Smart Søgning
     viewLayout:
       actions:
         share: Del

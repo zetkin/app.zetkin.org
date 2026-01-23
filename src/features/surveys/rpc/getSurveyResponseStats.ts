@@ -145,14 +145,17 @@ const collectIncrementalStats = (
         return;
       }
 
-      if (isOptionsResponse(response) || response.response.length > 0) {
+      if (
+        isOptionsResponse(response) ||
+        (isTextResponse(response) && response.response.length > 0)
+      ) {
         responseStatsCounters[response.question_id].answerCounter++;
       }
 
       if (isTextResponse(response)) {
         const wordList = response.response
           .toLowerCase()
-          .replace(/[^a-z0-9]+/gi, ' ')
+          .replace(/[^\p{L}\p{N}]+/giu, ' ')
           .split(/\s+/)
           .filter(Boolean);
         responseStatsCounters[response.question_id].totalWordCounts +=
@@ -169,15 +172,18 @@ const collectIncrementalStats = (
         return;
       }
 
-      responseStatsCounters[response.question_id].totalSelectedOptionsCounts +=
-        response.options.length;
-      response.options.forEach((option) => {
-        responseStatsCounters[response.question_id].selectedOptions[option]
-          .count++;
-      });
-      if (response.options.length > 1) {
-        responseStatsCounters[response.question_id]
-          .multipleSelectedOptionsCount++;
+      if (isOptionsResponse(response)) {
+        responseStatsCounters[
+          response.question_id
+        ].totalSelectedOptionsCounts += response.options.length;
+        response.options.forEach((option) => {
+          responseStatsCounters[response.question_id].selectedOptions[option]
+            .count++;
+        });
+        if (response.options.length > 1) {
+          responseStatsCounters[response.question_id]
+            .multipleSelectedOptionsCount++;
+        }
       }
     });
   });

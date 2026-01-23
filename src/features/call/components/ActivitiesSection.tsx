@@ -384,11 +384,14 @@ const ActivitiesSectionContent: FC<{
             active: !!projectIdsToFilterActivitiesBy.length,
             key: 'context',
             label:
-              projectIdsToFilterActivitiesBy.length > 0
-                ? messages.activities.filters.projects.selected({
+              projectIdsToFilterActivitiesBy.length != 1
+                ? messages.activities.filters.projects({
                     numProjects: projectIdsToFilterActivitiesBy.length,
                   })
-                : messages.activities.filters.projects.noSelected(),
+                : projects.find(
+                    (project) => project.id == projectIdsToFilterActivitiesBy[0]
+                  )?.title ||
+                  messages.activities.filters.projects({ numProjects: 0 }),
             onClick: () => {
               if (projectIdsToFilterActivitiesBy.length) {
                 dispatch(

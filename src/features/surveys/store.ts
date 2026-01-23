@@ -22,6 +22,7 @@ import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
+  extendedSurveyBySurveyId: Record<number, RemoteItem<ZetkinSurveyExtended>>;
   responseStatsBySurveyId: Record<number, RemoteItem<SurveyResponseStats>>;
   submissionList: RemoteList<ZetkinSurveySubmission>;
   submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
@@ -33,6 +34,7 @@ export interface SurveysStoreSlice {
 
 const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
+  extendedSurveyBySurveyId: {},
   responseStatsBySurveyId: {},
   statsBySurveyId: {},
   submissionList: remoteList(),
@@ -228,6 +230,24 @@ const surveysSlice = createSlice({
             newOrder.default.indexOf(el1.data?.id ?? 0)
         );
     },
+    extendedSurveyLoad: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+      if (!state.extendedSurveyBySurveyId[surveyId]) {
+        state.extendedSurveyBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.extendedSurveyBySurveyId[surveyId].isLoading = true;
+    },
+    extendedSurveyLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveyExtended]>
+    ) => {
+      const [surveyId, survey] = action.payload;
+      state.extendedSurveyBySurveyId[surveyId].data = survey;
+      state.extendedSurveyBySurveyId[surveyId].isLoading = false;
+      state.extendedSurveyBySurveyId[surveyId].loaded =
+        new Date().toISOString();
+      state.extendedSurveyBySurveyId[surveyId].isStale = false;
+    },
     responseStatsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
       if (!state.responseStatsBySurveyId[surveyId]) {
@@ -399,7 +419,8 @@ const surveysSlice = createSlice({
     },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
-      state.submissionsBySurveyId[action.payload] = remoteList();
+      state.submissionsBySurveyId[action.payload] =
+        state.submissionsBySurveyId[action.payload] || remoteList();
       state.submissionsBySurveyId[action.payload].isLoading = true;
       state.submissionList.isLoading = true;
     },
@@ -492,6 +513,8 @@ export const {
   elementsLoad,
   elementsLoaded,
   elementsReordered,
+  extendedSurveyLoad,
+  extendedSurveyLoaded,
   responseStatsLoad,
   responseStatsLoaded,
   submissionLoad,

@@ -15,6 +15,7 @@ import {
 import { Latitude, Longitude } from 'features/areas/types';
 
 export interface ZetkinCampaign {
+  archived: boolean;
   color: string;
   info_text: string;
   title: string;
@@ -24,7 +25,7 @@ export interface ZetkinCampaign {
     id: number;
     name: string;
   };
-  visibility: string;
+  visibility: 'hidden' | 'open';
   published: boolean;
 }
 
@@ -56,8 +57,12 @@ export interface ZetkinEventResponse {
   action_id: number;
   id: number;
   person: {
+    email?: string | null;
+    first_name?: string | null;
     id: number;
+    last_name?: string | null;
     name: string;
+    phone?: string | null;
   };
   response_date: string;
 }
@@ -362,6 +367,9 @@ export type ZetkinSurveyQuestionResponse =
     }
   | {
       options: number[];
+      question_id: number;
+    }
+  | {
       question_id: number;
     };
 

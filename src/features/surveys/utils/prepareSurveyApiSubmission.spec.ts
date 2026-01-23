@@ -65,8 +65,46 @@ describe('prepareSurveyApiSubmission()', () => {
 
   it('signs as the logged-in account when a logged-in user requests to sign as themself', () => {
     formData.set('sig', 'user');
-    const submission = prepareSurveyApiSubmission(formData, true);
+    const submission = prepareSurveyApiSubmission(
+      formData,
+      {
+        email: 'testuser@example.org',
+        first_name: 'test',
+        id: 0,
+        is_verifiend: true,
+        lang: null,
+        last_name: 'user',
+        phone: null,
+        phone_is_verified: true,
+        username: 'testuser',
+      },
+      true
+    );
     expect(submission.signature).toEqual('user');
+  });
+
+  it('signs as the account contact info when a logged-in user requests to sign as themself, but is not connected to the organization', () => {
+    formData.set('sig', 'user');
+    const submission = prepareSurveyApiSubmission(
+      formData,
+      {
+        email: 'testuser@example.org',
+        first_name: 'test',
+        id: 0,
+        is_verifiend: true,
+        lang: null,
+        last_name: 'user',
+        phone: null,
+        phone_is_verified: true,
+        username: 'testuser',
+      },
+      false
+    );
+    expect(submission.signature).toMatchObject({
+      email: 'testuser@example.org',
+      first_name: 'test',
+      last_name: 'user',
+    });
   });
 
   it('signs with custom contact details when a name and email are given', () => {

@@ -7,21 +7,22 @@ import {
   Typography,
 } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
-import Link from 'next/link';
 
 import noPropagate from 'utils/noPropagate';
 import oldTheme from 'theme';
+import { useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 type horizontalType = 'left' | 'center' | 'right';
 type verticalType = 'top' | 'center' | 'bottom';
 
-interface MenuItem {
+export interface MenuItem {
   disabled?: boolean;
   divider?: boolean;
   href?: string;
   id?: string;
   label: string | React.ReactNode;
-  onSelect?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+  onSelect?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   startIcon?: ReactElement;
   subMenuItems?: Omit<MenuItem, 'subMenuItems'>[];
   textColor?: string;
@@ -38,6 +39,8 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
   anchorOrigin,
   transformOrigin,
 }) => {
+  const messages = useMessages(messageIds);
+
   const [menuActivator, setMenuActivator] = useState<null | HTMLElement>(null);
   const [subMenuActivator, setSubMenuActivator] = useState<null | HTMLElement>(
     null
@@ -48,6 +51,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
   return (
     <>
       <Button
+        aria-label={messages.ellipsisMenu.ariaLabel()}
         color="inherit"
         data-testid="ZUIEllipsisMenu-menuActivator"
         disableElevation
@@ -80,19 +84,24 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
         }
       >
         {items.map((item, idx) => {
-          const menuItem = (
+          const componentProps = item.href
+            ? ({ component: 'a', href: item.href } as const)
+            : {};
+
+          return (
             <MenuItem
               key={item.id || idx}
+              {...componentProps}
               data-testid={`ZUIEllipsisMenu-item-${item.id || idx}`}
               disabled={item.disabled}
               divider={item.divider}
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
                 if (item.onSelect) {
                   item.onSelect(e);
                   setMenuActivator(null);
                 }
                 if (item.subMenuItems) {
-                  setSubMenuActivator(e.currentTarget as HTMLElement);
+                  setSubMenuActivator(e.currentTarget);
                 }
               }}
             >
@@ -134,14 +143,6 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
                 </Menu>
               )}
             </MenuItem>
-          );
-
-          return item.href ? (
-            <Link key={item.id || idx} href={item.href} passHref>
-              {menuItem}
-            </Link>
-          ) : (
-            menuItem
           );
         })}
       </Menu>
