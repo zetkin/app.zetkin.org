@@ -89,7 +89,7 @@ const getTagColumns = (
   tagColumns.forEach((colData) => {
     const col = makeJourneyTagColumn(colData);
 
-    if (col.type == JourneyTagColumnType.TAG_GROUP) {
+    if (col.type === JourneyTagColumnType.TAG_GROUP) {
       const tagsById: Record<string, ZetkinTag> = {};
       journeyInstances
         .flatMap((instance) => col.tagsGetter(instance.tags))
@@ -148,7 +148,7 @@ const getTagColumns = (
           return col.tagsGetter(instance.tags);
         },
       });
-    } else if (col.type == JourneyTagColumnType.VALUE_TAG) {
+    } else if (col.type === JourneyTagColumnType.VALUE_TAG) {
       colDefs.push({
         field: `valueTag${col.tag.id}`,
         headerName: col.tag.title,
@@ -164,7 +164,7 @@ const getTagColumns = (
         valueGetter: (params) =>
           col.valueGetter(params.row as ZetkinJourneyInstance),
       });
-    } else if (col.type == JourneyTagColumnType.UNSORTED) {
+    } else if (col.type === JourneyTagColumnType.UNSORTED) {
       const tagsById: Record<string, ZetkinTag> = {};
       journeyInstances
         .flatMap((instance) => col.tagsGetter(instance.tags))

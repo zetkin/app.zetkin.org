@@ -64,16 +64,16 @@ test.describe('View detail page', () => {
     const moxyLog = moxy.log<{ title: string }>();
     const columnPostLogs = moxyLog.filter(
       (log) =>
-        log.path == `/v1/orgs/1/people/views/${NewView.id}/columns` &&
-        log.method == 'POST'
+        log.path === `/v1/orgs/1/people/views/${NewView.id}/columns` &&
+        log.method === 'POST'
     );
     const viewPostLogs = moxyLog.filter(
-      (log) => log.path == '/v1/orgs/1/people/views' && log.method == 'POST'
+      (log) => log.path === '/v1/orgs/1/people/views' && log.method === 'POST'
     );
     const rowPutLogs = moxyLog.filter(
       (log) =>
         log.path.startsWith(`/v1/orgs/1/people/views/${NewView.id}/rows/`) &&
-        log.method == 'PUT'
+        log.method === 'PUT'
     );
 
     // Expect requests to be made

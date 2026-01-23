@@ -19,8 +19,8 @@ export function isAllDay(start: string, end: string): boolean {
   if (startDate.toDateString() !== endDate.toDateString()) {
     // If start time and end time are 00:00:00 return true
     if (
-      startDate.toString().split(' ')[4] == '00:00:00' &&
-      endDate.toString().split(' ')[4] == '00:00:00'
+      startDate.toString().split(' ')[4] === '00:00:00' &&
+      endDate.toString().split(' ')[4] === '00:00:00'
     ) {
       return true;
     }

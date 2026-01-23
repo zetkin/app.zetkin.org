@@ -39,7 +39,7 @@ type ReportStep = {
 export const reportSteps: ReportStep[] = [
   {
     getRenderVariant: (report) => {
-      if (report.step == 'successOrFailure') {
+      if (report.step === 'successOrFailure') {
         return 'question';
       } else {
         return 'summary';
@@ -101,7 +101,7 @@ export const reportSteps: ReportStep[] = [
         return null;
       }
 
-      return report.step == 'couldTalk' ? 'question' : 'summary';
+      return report.step === 'couldTalk' ? 'question' : 'summary';
     },
     name: 'couldTalk',
     renderQuestion: (report, onReportUpdate, target) => (
@@ -158,7 +158,7 @@ export const reportSteps: ReportStep[] = [
         return null;
       }
 
-      return report.step == 'failureReason' ? 'question' : 'summary';
+      return report.step === 'failureReason' ? 'question' : 'summary';
     },
     name: 'failureReason',
     renderQuestion: (report, onReportUpdate, target) => {
@@ -215,13 +215,13 @@ export const reportSteps: ReportStep[] = [
       if (report.success) {
         // Don't render this step at all if the call was successful.
         return null;
-      } else if (report.failureReason != 'noPickup') {
+      } else if (report.failureReason !== 'noPickup') {
         // Also don't render this step if the failed call was because of
         // any other reason than the target not picking up.
         return null;
       }
 
-      return report.step == 'leftMessage' ? 'question' : 'summary';
+      return report.step === 'leftMessage' ? 'question' : 'summary';
     },
     name: 'leftMessage',
     renderQuestion: (report, onReportUpdate) => (
@@ -274,13 +274,13 @@ export const reportSteps: ReportStep[] = [
         // Don't render this step for successfull calls where
         // the target had time to talk right now.
         return null;
-      } else if (!report.success && report.failureReason != 'notAvailable') {
+      } else if (!report.success && report.failureReason !== 'notAvailable') {
         // Don't render this step for failed calls unless the
         // reason was that caller is not available
         return null;
       }
 
-      return report.step == 'callBack' ? 'question' : 'summary';
+      return report.step === 'callBack' ? 'question' : 'summary';
     },
     name: 'callBack',
     renderQuestion: (report, onReportUpdate) => (
@@ -295,7 +295,7 @@ export const reportSteps: ReportStep[] = [
         return null;
       }
 
-      const isAnyTimeOfDay = report.callBackAfter.slice(-5) == '00:00';
+      const isAnyTimeOfDay = report.callBackAfter.slice(-5) === '00:00';
 
       return (
         <Summary
@@ -342,12 +342,12 @@ export const reportSteps: ReportStep[] = [
       if (report.success) {
         // Don't render this step at all if the call was successful.
         return null;
-      } else if (report.failureReason != 'wrongNumber') {
+      } else if (report.failureReason !== 'wrongNumber') {
         // Don't render this if failure was anything but wrong number.
         return null;
       } else {
         if (phone && altPhone) {
-          return report.step == 'wrongNumber' ? 'question' : 'summary';
+          return report.step === 'wrongNumber' ? 'question' : 'summary';
         } else {
           // Don't render this when there is only one number
           return null;
@@ -382,7 +382,7 @@ export const reportSteps: ReportStep[] = [
       const altPhone = target.alt_phone || '';
       const phone = target.phone || '';
 
-      const bothAreWrong = wrongNumber == 'both' && altPhone && phone;
+      const bothAreWrong = wrongNumber === 'both' && altPhone && phone;
 
       return (
         <Summary
@@ -407,7 +407,7 @@ export const reportSteps: ReportStep[] = [
               <Msg
                 id={messageIds.report.steps.wrongNumber.summary.phoneSingle}
                 values={{
-                  phone: report.wrongNumber == 'altPhone' ? altPhone : phone,
+                  phone: report.wrongNumber === 'altPhone' ? altPhone : phone,
                 }}
               />
             )
@@ -418,7 +418,7 @@ export const reportSteps: ReportStep[] = [
   },
   {
     getRenderVariant: (report) => {
-      return report.step == 'organizerAction' ? 'question' : 'summary';
+      return report.step === 'organizerAction' ? 'question' : 'summary';
     },
     name: 'organizerAction',
     renderQuestion: (report, onReportUpdate, target, disableCallerNotes) => (
@@ -472,7 +472,7 @@ export const reportSteps: ReportStep[] = [
         return null;
       }
 
-      return report.step == 'organizerLog' ? 'question' : 'summary';
+      return report.step === 'organizerLog' ? 'question' : 'summary';
     },
     name: 'organizerLog',
     renderQuestion: (report, onReportUpdate, target, disableCallerNotes) => {
@@ -526,7 +526,7 @@ export const reportSteps: ReportStep[] = [
         return null;
       }
 
-      return report.step == 'callerLog' ? 'question' : 'summary';
+      return report.step === 'callerLog' ? 'question' : 'summary';
     },
     name: 'callerLog',
     renderQuestion: (report, onReportUpdate) => (

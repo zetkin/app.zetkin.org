@@ -49,9 +49,9 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
   const widgetType = question.response_config.widget_type;
   const options = question.options || [];
 
-  const hasRadios = !widgetType || widgetType == 'radio';
+  const hasRadios = !widgetType || widgetType === 'radio';
   const hasCheckboxes = widgetType === 'checkbox';
-  const hasDropdown = widgetType == 'select';
+  const hasDropdown = widgetType === 'select';
 
   return (
     <FormControl fullWidth>
@@ -193,13 +193,13 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                     } else {
                       setSelectedCheckboxes(
                         selectedCheckboxes.filter(
-                          (id) => id != option.id.toString()
+                          (id) => id !== option.id.toString()
                         )
                       );
                       if (onChange) {
                         onChange(
                           selectedCheckboxes.filter(
-                            (id) => id != option.id.toString()
+                            (id) => id !== option.id.toString()
                           )
                         );
                       }

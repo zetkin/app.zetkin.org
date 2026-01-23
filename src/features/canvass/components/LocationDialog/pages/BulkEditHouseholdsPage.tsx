@@ -31,7 +31,7 @@ const BulkEditHouseholdsPage: FC<Props> = ({
     setcolor(null);
   }, [householdIds]);
 
-  const nothingHasBeenEdited = !color && floor == null;
+  const nothingHasBeenEdited = !color && floor === null;
 
   return (
     <PageBase

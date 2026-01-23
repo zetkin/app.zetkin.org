@@ -22,7 +22,7 @@ export default function useAllEvents() {
   });
 
   return events.map<ZetkinEventWithStatus>((event) => {
-    const myEvent = myEvents.find((candidate) => candidate.id == event.id);
+    const myEvent = myEvents.find((candidate) => candidate.id === event.id);
 
     return (
       myEvent || {

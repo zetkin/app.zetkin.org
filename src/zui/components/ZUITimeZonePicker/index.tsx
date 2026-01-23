@@ -11,6 +11,7 @@ import {
 
 import messageIds from 'zui/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 type ZUITimezonePickerProps = {
   /**
@@ -26,7 +27,7 @@ type ZUITimezonePickerProps = {
 
 export const findCurrentTZ = () => {
   const tzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return timezones.find((timezone) => timezone.tzCode == tzCode)!;
+  return timezones.find((timezone) => timezone.tzCode === tzCode)!;
 };
 
 const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
@@ -85,7 +86,7 @@ const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
         </Typography>
       }
       onChange={(_, tzGroup) => {
-        if (tzGroup !== null) {
+        if (notEmpty(tzGroup)) {
           setValue(tzGroup);
           onChange(tzGroup.tzValue.split(' ')[0]);
         }
@@ -165,7 +166,7 @@ const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {filteredCities.length == 0 && (
+                    {filteredCities.length === 0 && (
                       <Typography
                         sx={(theme) => ({
                           color: theme.palette.secondary.main,

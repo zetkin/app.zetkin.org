@@ -65,7 +65,7 @@ const AreaSelect: FC<Props> = ({
   const { orgId } = useNumericRouteParams();
   const { unassignArea } = useAreaAssignmentMutations(orgId, areaAssId);
   const selectedAreaAssignees = sessions
-    .filter((session) => session.area_id == selectedArea?.id)
+    .filter((session) => session.area_id === selectedArea?.id)
     .map((session) => session.user_id);
 
   const locationsInSelectedArea: ZetkinLocation[] = [];
@@ -162,11 +162,11 @@ const AreaSelect: FC<Props> = ({
           >
             {filterAreas(areas, filterText).map((area, index) => {
               const assignees = sessions
-                .filter((session) => session.area_id == area.id)
+                .filter((session) => session.area_id === area.id)
                 .map((session) => session.user_id);
               return (
                 <>
-                  {index != 0 && <Divider />}
+                  {index !== 0 && <Divider />}
                   <Box
                     key={area.id}
                     display="flex"
@@ -178,7 +178,7 @@ const AreaSelect: FC<Props> = ({
                         color: theme.palette.primary.main,
                       },
                       cursor: 'pointer',
-                      pt: index == 0 ? 1 : 0,
+                      pt: index === 0 ? 1 : 0,
                     }}
                   >
                     <Typography>{area.title || 'Untitled area'}</Typography>
@@ -194,7 +194,7 @@ const AreaSelect: FC<Props> = ({
                               />
                             </Box>
                           );
-                        } else if (index == 4) {
+                        } else if (index === 4) {
                           return (
                             <Box
                               alignItems="center"

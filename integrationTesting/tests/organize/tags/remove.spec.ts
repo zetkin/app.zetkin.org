@@ -51,7 +51,7 @@ test.describe('Tags manager', () => {
     await deleteButton.waitFor({ state: 'visible' });
 
     await Promise.all([
-      page.waitForRequest((req) => req.method() == 'DELETE'),
+      page.waitForRequest((req) => req.method() === 'DELETE'),
       deleteButton.click(),
     ]);
 

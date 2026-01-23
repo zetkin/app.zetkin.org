@@ -14,8 +14,8 @@ describe('findOrAddItem', () => {
     const list = remoteList();
     const result = findOrAddItem(list, newId);
 
-    expect(list.items.find((item) => item.id == newId)).toBeTruthy();
-    expect(result.id == newId).toBeTruthy();
+    expect(list.items.find((item) => item.id === newId)).toBeTruthy();
+    expect(result.id === newId).toBeTruthy();
   });
 
   it('Fetches an existing item', () => {
@@ -23,8 +23,8 @@ describe('findOrAddItem', () => {
 
     const result = findOrAddItem(list, existingId);
 
-    expect(list.items.find((item) => item.id == existingId)).toBeTruthy();
-    expect(result.id == existingId).toBeTruthy();
+    expect(list.items.find((item) => item.id === existingId)).toBeTruthy();
+    expect(result.id === existingId).toBeTruthy();
   });
 
   it('Sets loaded field to recent time for a created item', () => {

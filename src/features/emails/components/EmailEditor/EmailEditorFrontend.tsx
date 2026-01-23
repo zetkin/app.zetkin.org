@@ -146,7 +146,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       const currentBlockIndex =
         editorInstance.current?.blocks.getCurrentBlockIndex();
       if (
-        typeof currentBlockIndex == 'number' &&
+        typeof currentBlockIndex === 'number' &&
         currentBlockIndex >= 0 &&
         currentBlockIndex !== blockIndexRef.current
       ) {

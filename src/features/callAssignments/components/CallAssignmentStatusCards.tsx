@@ -21,6 +21,7 @@ import StatusCardItem from './StatusCardItem';
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 interface CallAssignmentStatusCardsProps {
   orgId: number;
@@ -86,8 +87,8 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                       onClickAway={() => {
                         setAnchorEl(null);
                         if (
-                          newCooldown != null &&
-                          newCooldown != callAssignment?.cooldown
+                          notEmpty(newCooldown) &&
+                          newCooldown !== callAssignment?.cooldown
                         ) {
                           updateCallAssignment({ cooldown: newCooldown });
                         }
@@ -101,13 +102,13 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                             onChange={(ev) => {
                               const val = ev.target.value;
 
-                              if (val == '') {
+                              if (val === '') {
                                 setNewCooldown(null);
                                 return;
                               }
 
                               const intVal = parseInt(val);
-                              if (!isNaN(intVal) && intVal.toString() == val) {
+                              if (!isNaN(intVal) && intVal.toString() === val) {
                                 setNewCooldown(intVal);
                               }
                             }}
@@ -115,8 +116,8 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                               if (ev.key === 'Enter') {
                                 setAnchorEl(null);
                                 if (
-                                  newCooldown != null &&
-                                  newCooldown != callAssignment?.cooldown
+                                  notEmpty(newCooldown) &&
+                                  newCooldown !== callAssignment?.cooldown
                                 ) {
                                   updateCallAssignment({
                                     cooldown: newCooldown,

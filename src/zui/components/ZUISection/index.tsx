@@ -220,7 +220,7 @@ const ZUISection: FC<SectionProps> = (props) => {
   const hasSubSections = isSectionWithSubSections(props);
   const hasContent = isSectionWithContent(props);
   const hasVerticalSubSections =
-    hasSubSections && props.subSectionOrientation == 'vertical';
+    hasSubSections && props.subSectionOrientation === 'vertical';
 
   const showVerticalDivider =
     (hasRightHeaderContent && !!props.dataPoint) || hasFullWidthHeaderContent;
@@ -365,7 +365,7 @@ const ZUISection: FC<SectionProps> = (props) => {
                 }}
               >
                 <SubSection subSection={subSection} />
-                {index != props.subSections.length - 1 && (
+                {index !== props.subSections.length - 1 && (
                   <ZUIDivider
                     flexItem
                     orientation={

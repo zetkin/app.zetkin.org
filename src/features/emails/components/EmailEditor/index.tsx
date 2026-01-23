@@ -19,6 +19,7 @@ import zetkinBlocksToEditorjsBlocks from 'features/emails/utils/zetkinBlocksToEd
 import { ZetkinEmail, ZetkinEmailPostBody } from 'utils/types/zetkin';
 import useDebounce from 'utils/hooks/useDebounce';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
+import notEmpty from 'utils/notEmpty';
 
 const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
   ssr: false,
@@ -57,12 +58,12 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
 
   useEffect(() => {
     if (
-      blocksRef.current !== undefined &&
+      notEmpty(blocksRef.current) &&
       blocksRef.current.length < content.blocks.length
     ) {
       for (let i = 0; i < blocksRef.current.length; i++) {
         const block = blocksRef.current[i];
-        if (block.id != content.blocks[i].id) {
+        if (block.id !== content.blocks[i].id) {
           setSelectedBlockIndex(i);
           break;
         }

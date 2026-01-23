@@ -47,7 +47,7 @@ test.describe('Journey instance detail page', () => {
     );
 
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PATCH'),
+      page.waitForResponse((res) => res.request().method() === 'PATCH'),
       page.click('data-testid=SubmitCancelButtons-submitButton'),
     ]);
 

@@ -9,7 +9,7 @@ export default function getVisitState(
   let numberOfVisitedHouseholds = 0;
   households.forEach((household) => {
     const hasVisitsInCurrentAssignment = household.visits.some((visit) => {
-      return visit.assignment_id == areaAssId;
+      return visit.assignment_id === areaAssId;
     });
 
     if (hasVisitsInCurrentAssignment) {
@@ -19,7 +19,7 @@ export default function getVisitState(
 
   if (
     numberOfVisitedHouseholds > 0 &&
-    numberOfVisitedHouseholds == households.length
+    numberOfVisitedHouseholds === households.length
   ) {
     return 'all';
   } else if (

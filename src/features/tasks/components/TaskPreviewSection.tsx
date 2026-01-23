@@ -8,6 +8,7 @@ import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUISection from 'zui/ZUISection';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import notEmpty from 'utils/notEmpty';
 
 interface TaskPreviewSectionProps {
   task: ZetkinTask;
@@ -38,7 +39,7 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
         />
         <Box p={2}>
           <Typography variant="h4">{task.title}</Typography>
-          {task.time_estimate !== null && (
+          {notEmpty(task.time_estimate) && (
             <Typography
               color="textSecondary"
               style={{ display: 'flex', gap: 4, marginTop: 4 }}

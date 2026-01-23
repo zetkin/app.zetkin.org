@@ -17,7 +17,7 @@ const PageBaseHeader: FC<Props> = ({
   subtitle,
   title,
 }) => {
-  const subtitleIsAString = subtitle && typeof subtitle == 'string';
+  const subtitleIsAString = subtitle && typeof subtitle === 'string';
 
   return (
     <Box

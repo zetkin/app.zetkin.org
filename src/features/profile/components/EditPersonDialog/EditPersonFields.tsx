@@ -175,7 +175,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
       />
       {customFields.map((field) => {
         const fieldWritable =
-          field.organization.id == orgId || field.org_write == 'suborgs';
+          field.organization.id === orgId || field.org_write === 'suborgs';
         if (field.type === CUSTOM_FIELD_TYPE.JSON) {
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {

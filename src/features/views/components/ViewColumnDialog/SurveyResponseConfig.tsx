@@ -20,6 +20,7 @@ import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ZUIFuture from 'zui/ZUIFuture';
+import notEmpty from 'utils/notEmpty';
 
 interface SurveyResponseConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -65,12 +66,12 @@ const SurveyResponseConfig = ({
   return (
     <ZUIFuture future={surveysWithElementsFuture}>
       {(data) => {
-        const selectedSurvey = data.find((survey) => survey.id == surveyId);
+        const selectedSurvey = data.find((survey) => survey.id === surveyId);
         const questionsFromSurvey: ZetkinSurveyQuestionElement[] =
           (selectedSurvey?.elements.filter(
             (elem) =>
-              elem.type == ELEMENT_TYPE.QUESTION &&
-              (elem.question.response_type == RESPONSE_TYPE.TEXT ||
+              elem.type === ELEMENT_TYPE.QUESTION &&
+              (elem.question.response_type === RESPONSE_TYPE.TEXT ||
                 elem.question.options?.length)
           ) as ZetkinSurveyQuestionElement[]) ?? [];
         return (
@@ -96,7 +97,7 @@ const SurveyResponseConfig = ({
                 fullWidth
                 getOptionLabel={(option) => option.question.question}
                 onChange={(evt, value) => {
-                  if (value !== null) {
+                  if (notEmpty(value)) {
                     setSelectedQuestion(value);
                     if (value.question.response_type === RESPONSE_TYPE.TEXT) {
                       const columns = makeTextColumn(
@@ -114,7 +115,7 @@ const SurveyResponseConfig = ({
                         SURVEY_QUESTION_OPTIONS.ALL_OPTIONS,
                         surveyId
                       );
-                      if (columns !== undefined) {
+                      if (notEmpty(columns)) {
                         onOutputConfigured(columns);
                       }
                     }
@@ -156,7 +157,7 @@ const SurveyResponseConfig = ({
                       evt.target.value,
                       surveyId
                     );
-                    if (columns !== undefined) {
+                    if (notEmpty(columns)) {
                       onOutputConfigured(columns);
                     }
                   }
@@ -215,13 +216,13 @@ const makeOptionColumns = (
   surveyId: number
 ) => {
   if (
-    selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
-    selectedQuestion.question.response_type != RESPONSE_TYPE.OPTIONS
+    selectedQuestion?.type !== ELEMENT_TYPE.QUESTION ||
+    selectedQuestion.question.response_type !== RESPONSE_TYPE.OPTIONS
   ) {
     return [];
   }
 
-  if (selectedQuestion !== undefined && selectedQuestion !== null) {
+  if (notEmpty(selectedQuestion)) {
     if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
       return [
         {

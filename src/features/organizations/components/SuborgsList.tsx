@@ -81,7 +81,7 @@ const SuborgsList: FC<{
   const organization = useOrganization(orgId).data;
   const suborgsWithStats = useSuborgsWithStats(orgId);
 
-  if (suborgsWithStats.length == 0) {
+  if (suborgsWithStats.length === 0) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <ZUIEmptyState
@@ -98,7 +98,7 @@ const SuborgsList: FC<{
       <Stack divider={<Divider />}>
         {suborgsWithStats.map((orgWithStats) => {
           if (isError(orgWithStats)) {
-            if (orgWithStats.id == 'loadingError') {
+            if (orgWithStats.id === 'loadingError') {
               return (
                 <Alert severity="error">{`Error loading suborg data`}</Alert>
               );

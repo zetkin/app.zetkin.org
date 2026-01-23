@@ -29,21 +29,21 @@ const WrongNumber: FC<Props> = ({
 
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key == '1') {
+      if (ev.key === '1') {
         onReportUpdate({
           ...report,
           organizerActionNeeded: true,
           step: 'organizerLog',
           wrongNumber: 'phone',
         });
-      } else if (ev.key == '2') {
+      } else if (ev.key === '2') {
         onReportUpdate({
           ...report,
           organizerActionNeeded: true,
           step: 'organizerLog',
           wrongNumber: 'altPhone',
         });
-      } else if (ev.key == '3') {
+      } else if (ev.key === '3') {
         onReportUpdate({
           ...report,
           organizerActionNeeded: true,

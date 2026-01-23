@@ -23,6 +23,7 @@ import ZUICreatePerson from './ZUICreatePerson';
 import ZUIPerson from 'zui/ZUIPerson';
 import { Msg, useMessages } from 'core/i18n';
 import ZUIBulkPersonSelect from './ZUIBulkPersonSelect';
+import notEmpty from 'utils/notEmpty';
 
 interface UsePersonSelectProps {
   getOptionDisabled?: (option: ZetkinPerson) => boolean;
@@ -107,7 +108,7 @@ export const usePersonSelect: UsePersonSelect = ({
 
   if (isLoading) {
     searchLabel = messages.personSelect.searching();
-  } else if (results?.length == 0) {
+  } else if (results?.length === 0) {
     searchLabel = messages.personSelect.noResult();
   }
 
@@ -146,7 +147,7 @@ export const usePersonSelect: UsePersonSelect = ({
       getOptionDisabled,
       getOptionLabel: (person: ZetkinPerson) => `${person.id}`,
       getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) =>
-        option?.id == value?.id,
+        option?.id === value?.id,
       getOptionValue: (person: ZetkinPerson) => person.id || null,
       inputRef,
       inputValue: searchFieldValue,
@@ -160,7 +161,7 @@ export const usePersonSelect: UsePersonSelect = ({
         onChange(value as ZetkinPerson);
       },
       onInputChange: (ev: unknown, value: string) => {
-        if (ev !== null) {
+        if (notEmpty(ev)) {
           setSearchFieldValue(value);
           setQuery(value);
         }

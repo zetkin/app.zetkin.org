@@ -30,7 +30,7 @@ export default async function Page({ params }: Props) {
     '/api/users/me/call_assignments'
   );
   const assignment = assignments.find(
-    (assignment) => assignment.id == parseInt(params.callAssId)
+    (assignment) => assignment.id === parseInt(params.callAssId)
   );
 
   if (!assignment) {

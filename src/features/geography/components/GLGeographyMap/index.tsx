@@ -45,7 +45,7 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
   });
 
   const areasExceptSelected = useMemo(
-    () => areas.filter((area) => area.id != selectedArea?.id),
+    () => areas.filter((area) => area.id !== selectedArea?.id),
     [areas, selectedArea]
   );
 

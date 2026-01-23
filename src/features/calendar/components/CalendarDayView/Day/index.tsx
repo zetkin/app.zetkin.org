@@ -8,6 +8,7 @@ import Event from './Event';
 import messageIds from 'features/calendar/l10n/messageIds';
 import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
   const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
@@ -24,7 +25,7 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
     >
       <Box display="flex" flexDirection="column" width={'200px'}>
         <DateLabel date={date} />
-        {dstChange !== undefined && (
+        {notEmpty(dstChange) && (
           <Box padding="8px 12px">
             <Typography color={oldTheme.palette.grey[600]} variant="body2">
               <Msg

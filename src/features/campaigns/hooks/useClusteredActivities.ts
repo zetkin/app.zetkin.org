@@ -60,7 +60,7 @@ export function clusterEvents(
   sortedEvents.forEach((event, index) => {
     const lastEvent = sortedEvents[index - 1];
 
-    if (lastEvent?.start_time.slice(0, 10) != event.start_time.slice(0, 10)) {
+    if (lastEvent?.start_time.slice(0, 10) !== event.start_time.slice(0, 10)) {
       // This event is the first of this day, so we can reset all
       // cluster lookups, to speed up future lookups
       allClusters = allClusters.concat(pendingClusters);
@@ -73,17 +73,17 @@ export function clusterEvents(
       const lastClusterEventTitle = lastClusterEvent.title || '';
       const eventTitle = event.title || '';
 
-      if (cluster.kind == CLUSTER_TYPE.SINGLE) {
+      if (cluster.kind === CLUSTER_TYPE.SINGLE) {
         if (
-          event.activity?.id != lastClusterEvent.activity?.id ||
-          eventTitle != lastClusterEventTitle
+          event.activity?.id !== lastClusterEvent.activity?.id ||
+          eventTitle !== lastClusterEventTitle
         ) {
           continue;
         }
 
         if (
-          event.location?.id == lastClusterEvent.location?.id &&
-          event.start_time == lastClusterEvent.end_time
+          event.location?.id === lastClusterEvent.location?.id &&
+          event.start_time === lastClusterEvent.end_time
         ) {
           pendingClusters[i] = {
             events: [...cluster.events, event],
@@ -99,20 +99,20 @@ export function clusterEvents(
           };
           return;
         }
-      } else if (cluster.kind == CLUSTER_TYPE.MULTI_SHIFT) {
+      } else if (cluster.kind === CLUSTER_TYPE.MULTI_SHIFT) {
         // If activity and location is the same, and this event
         // starts right after the last event in the group ends,
         // the event is part of this cluster.
         if (
-          lastClusterEvent.activity?.id == event.activity?.id &&
-          lastClusterEventTitle == eventTitle &&
-          lastClusterEvent.location?.id == event.location?.id &&
-          lastClusterEvent.end_time == event.start_time
+          lastClusterEvent.activity?.id === event.activity?.id &&
+          lastClusterEventTitle === eventTitle &&
+          lastClusterEvent.location?.id === event.location?.id &&
+          lastClusterEvent.end_time === event.start_time
         ) {
           pendingClusters[i].events.push(event);
           return;
         }
-      } else if (cluster.kind == CLUSTER_TYPE.MULTI_LOCATION) {
+      } else if (cluster.kind === CLUSTER_TYPE.MULTI_LOCATION) {
         if (doesMultipleLocationEventsMatch(lastClusterEvent, event)) {
           pendingClusters[i].events.push(event);
           return;
@@ -138,7 +138,7 @@ export default function useClusteredActivities(
   const otherActivities: NonEventActivity[] = [];
 
   activities.forEach((activity) => {
-    if (activity.kind == ACTIVITIES.EVENT) {
+    if (activity.kind === ACTIVITIES.EVENT) {
       eventActivities.push(activity);
     } else {
       otherActivities.push(activity);

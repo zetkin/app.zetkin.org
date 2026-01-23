@@ -47,7 +47,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     .replace(/\r?\n|\r/g, '');
 
   const someLoading = fileUploads.some(
-    (fileUpload) => fileUpload.state == FileUploadState.UPLOADING
+    (fileUpload) => fileUpload.state === FileUploadState.UPLOADING
   );
 
   async function onSubmitHandler(evt: FormEvent<HTMLFormElement>) {

@@ -40,7 +40,7 @@ const ClientContext: FC<ClientContextProps> = ({
   messages,
   user,
 }) => {
-  const onServer = typeof window == 'undefined';
+  const onServer = typeof window === 'undefined';
   const storeRef = useRef<Store | null>(null);
 
   if (!storeRef.current) {

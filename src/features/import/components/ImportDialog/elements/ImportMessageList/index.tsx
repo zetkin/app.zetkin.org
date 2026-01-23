@@ -25,10 +25,10 @@ const ImportMessageList: FC<Props> = ({
 
   useEffect(() => {
     const warningCount = problems.filter(
-      (problem) => levelForProblem(problem) == 'warning'
+      (problem) => levelForProblem(problem) === 'warning'
     ).length;
 
-    onAllChecked(numChecked == warningCount);
+    onAllChecked(numChecked === warningCount);
   }, [numChecked]);
 
   return (

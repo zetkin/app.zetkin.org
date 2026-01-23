@@ -100,7 +100,7 @@ export default function useFileUploads(
 
       setFileUploads(
         filesRef.current.map((file) =>
-          file.key == upload.key
+          file.key === upload.key
             ? { ...file, apiData: payload.data, state: FileUploadState.SUCCESS }
             : file
         )
@@ -113,7 +113,7 @@ export default function useFileUploads(
       // TODO: Handle error more gracefully
       setFileUploads(
         filesRef.current.map((file) =>
-          file.key == upload.key
+          file.key === upload.key
             ? { ...file, state: FileUploadState.FAILURE }
             : file
         )
@@ -139,7 +139,7 @@ export default function useFileUploads(
   return {
     cancelFileUpload: (fileUpload) => {
       setFileUploads(
-        fileUploads.filter((candidate) => candidate.key != fileUpload.key)
+        fileUploads.filter((candidate) => candidate.key !== fileUpload.key)
       );
     },
     fileUploads,

@@ -79,7 +79,7 @@ const MergeModal: FC<Props> = ({
             initiallyShowManualSearch={initiallyShowManualSearch}
             onDeselect={(person: ZetkinPerson) => {
               const isPredefined = persons.some(
-                (predefinedPerson) => predefinedPerson.id == person.id
+                (predefinedPerson) => predefinedPerson.id === person.id
               );
 
               if (isPredefined) {
@@ -89,14 +89,14 @@ const MergeModal: FC<Props> = ({
                 setSelectedIds(filteredIds);
               } else {
                 const filteredAdditionals = additionalPeople.filter(
-                  (item) => item.id != person.id
+                  (item) => item.id !== person.id
                 );
                 setAdditionalPeople(filteredAdditionals);
               }
             }}
             onSelect={(person: ZetkinPerson) => {
               const isPredefined = persons.some(
-                (predefinedPerson) => predefinedPerson.id == person.id
+                (predefinedPerson) => predefinedPerson.id === person.id
               );
               if (isPredefined) {
                 const selectedIdsUpdated = [...selectedIds, person.id];

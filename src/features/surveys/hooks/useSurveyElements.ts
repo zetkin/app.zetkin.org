@@ -30,6 +30,6 @@ export default function useSurveyElements(
 
   return {
     ...futureToObject(future),
-    surveyIsEmpty: !future.data || future.data.length == 0,
+    surveyIsEmpty: !future.data || future.data.length === 0,
   };
 }

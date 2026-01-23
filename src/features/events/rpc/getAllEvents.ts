@@ -36,7 +36,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
     // Find the org of the followed membership
     const weFollowThisOrg = allMemberships.some(
-      (membership) => membership.organization.id == org.id && membership.follow
+      (membership) => membership.organization.id === org.id && membership.follow
     );
 
     if (weFollowThisOrg) {
@@ -44,11 +44,11 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     }
 
     // Found the root
-    if (org.parent == null) {
+    if (org.parent === null) {
       return newBest;
     }
 
-    const parent = allOrganizations.find((o) => o.id == org.parent?.id);
+    const parent = allOrganizations.find((o) => o.id === org.parent?.id);
     if (!parent) {
       return newBest;
     }
@@ -64,7 +64,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         return acc;
       }
       const memberOrg = allOrganizations.find(
-        (org) => org.id == membership.organization.id
+        (org) => org.id === membership.organization.id
       );
       if (!memberOrg) {
         return acc;
@@ -96,6 +96,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   return events.filter((event) => {
     const state = getEventState(event);
-    return state == EventState.OPEN || state == EventState.SCHEDULED;
+    return state === EventState.OPEN || state === EventState.SCHEDULED;
   });
 }

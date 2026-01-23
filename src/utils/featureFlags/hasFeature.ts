@@ -8,6 +8,6 @@ export default function hasFeature(
   const settings = envValue?.split(',') || [];
 
   return settings.some((setting) => {
-    return setting == '*' || setting == orgId.toString();
+    return setting === '*' || setting === orgId.toString();
   });
 }

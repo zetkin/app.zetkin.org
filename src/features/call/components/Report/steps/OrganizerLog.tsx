@@ -49,10 +49,10 @@ const OrganizerLog: FC<Props> = ({
       keysPressed[ev.key] = true;
 
       const shiftAndEnterPressedTogether =
-        (keysPressed['Shift'] && ev.key == 'Enter') ||
-        (keysPressed['Enter'] && ev.key == 'Shift');
+        (keysPressed['Shift'] && ev.key === 'Enter') ||
+        (keysPressed['Enter'] && ev.key === 'Shift');
 
-      if (ev.key == '1' && inputRef.current != document.activeElement) {
+      if (ev.key === '1' && inputRef.current !== document.activeElement) {
         onReportUpdate({
           ...report,
           organizerLog: message,
@@ -60,7 +60,7 @@ const OrganizerLog: FC<Props> = ({
         });
       } else if (
         shiftAndEnterPressedTogether &&
-        inputRef.current == document.activeElement
+        inputRef.current === document.activeElement
       ) {
         onReportUpdate({
           ...report,

@@ -134,7 +134,7 @@ test.describe('Journey instance detail page sidebar', () => {
       // Track A waits for HTTP requests and updates mocks to reflect that
       // an assignee has been deleted
       (async () => {
-        await page.waitForRequest((res) => res.method() == 'DELETE');
+        await page.waitForRequest((res) => res.method() === 'DELETE');
 
         // Update journey instance mock with no assignees
         moxy.setZetkinApiMock(
@@ -300,7 +300,7 @@ test.describe('Journey instance detail page sidebar', () => {
     // Set up two parallel async tracks
     await Promise.all([
       (async () => {
-        await page.waitForRequest((req) => req.method() == 'DELETE');
+        await page.waitForRequest((req) => req.method() === 'DELETE');
 
         // Update journey instance mocke, with no subjects
         moxy.setZetkinApiMock(

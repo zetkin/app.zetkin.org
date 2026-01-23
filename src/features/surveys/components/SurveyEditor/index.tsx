@@ -16,6 +16,7 @@ import {
   ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
+import notEmpty from 'utils/notEmpty';
 
 interface SurveyEditorProps {
   orgId: number;
@@ -37,10 +38,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
     if (elements) {
       // If the previous length is null, it's because it only now loaded for the
       // first time and the length has not really been read before.
-      if (
-        lengthRef.current !== undefined &&
-        lengthRef.current < elements.length
-      ) {
+      if (notEmpty(lengthRef.current) && lengthRef.current < elements.length) {
         const lastElement = elements[elements.length - 1];
         setIdOfBlockInEditMode(lastElement.id);
       }
@@ -61,8 +59,8 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                 items={elements.map((elem) => ({
                   id: elem.id,
                   renderContent: ({ dragging }) => {
-                    if (elem.type == ELEMENT_TYPE.QUESTION) {
-                      if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
+                    if (elem.type === ELEMENT_TYPE.QUESTION) {
+                      if (elem.question.response_type === RESPONSE_TYPE.TEXT) {
                         return (
                           <BlockWrapper
                             key={elem.id}
@@ -70,7 +68,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                             hidden={elem.hidden}
                           >
                             <OpenQuestionBlock
-                              editable={elem.id == idOfBlockInEditMode}
+                              editable={elem.id === idOfBlockInEditMode}
                               element={elem as ZetkinSurveyTextQuestionElement}
                               onEditModeEnter={() =>
                                 setIdOfBlockInEditMode(elem.id)
@@ -85,7 +83,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                           </BlockWrapper>
                         );
                       } else if (
-                        elem.question.response_type == RESPONSE_TYPE.OPTIONS
+                        elem.question.response_type === RESPONSE_TYPE.OPTIONS
                       ) {
                         return (
                           <BlockWrapper
@@ -94,7 +92,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                             hidden={elem.hidden}
                           >
                             <ChoiceQuestionBlock
-                              editable={elem.id == idOfBlockInEditMode}
+                              editable={elem.id === idOfBlockInEditMode}
                               element={
                                 elem as ZetkinSurveyOptionsQuestionElement
                               }
@@ -111,7 +109,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                           </BlockWrapper>
                         );
                       }
-                    } else if (elem.type == ELEMENT_TYPE.TEXT) {
+                    } else if (elem.type === ELEMENT_TYPE.TEXT) {
                       return (
                         <BlockWrapper
                           key={elem.id}
@@ -119,7 +117,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
                           hidden={elem.hidden}
                         >
                           <TextBlock
-                            editable={elem.id == idOfBlockInEditMode}
+                            editable={elem.id === idOfBlockInEditMode}
                             element={elem}
                             onEditModeEnter={() =>
                               setIdOfBlockInEditMode(elem.id)

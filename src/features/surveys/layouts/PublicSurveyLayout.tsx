@@ -18,7 +18,7 @@ type Props = {
 const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
   const isMobile = useIsMobile();
   const searchParams = useSearchParams();
-  const showOrganization = searchParams?.get('hideOrganization') != 'true';
+  const showOrganization = searchParams?.get('hideOrganization') !== 'true';
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>

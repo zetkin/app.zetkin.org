@@ -77,7 +77,7 @@ const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
   const onDrop = useCallback((acceptedFiles: File[]): void => {
     acceptedFiles.map(async (file: File) => {
       const uploadStatus = await parseData(file);
-      if (uploadStatus == 'success') {
+      if (uploadStatus === 'success') {
         onSuccess();
       }
     });

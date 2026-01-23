@@ -29,7 +29,7 @@ const DurationHoursMins: FC<DurationHoursMinsProps> = ({ end, start }) => {
       </Typography>
     );
   } else {
-    if (diffMinute % 60 == 0) {
+    if (diffMinute % 60 === 0) {
       return (
         <Typography>
           {messages.eventShiftModal.hours({

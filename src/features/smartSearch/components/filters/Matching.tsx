@@ -29,13 +29,13 @@ const Matching = ({
   const [min, setMin] = useState(matching.config?.min);
 
   useEffect(() => {
-    if (option == MATCHING.MAX) {
+    if (option === MATCHING.MAX) {
       onChange({ max: max, min: undefined });
-    } else if (option == MATCHING.MIN) {
+    } else if (option === MATCHING.MIN) {
       onChange({ max: undefined, min: min });
-    } else if (option == MATCHING.BETWEEN) {
+    } else if (option === MATCHING.BETWEEN) {
       onChange({ max: max || DEFAULT_MAX, min: min || DEFAULT_MIN });
-    } else if (option == MATCHING.ONCE) {
+    } else if (option === MATCHING.ONCE) {
       onChange({ max: undefined, min: undefined });
     }
   }, [min, max, option]);
@@ -68,25 +68,25 @@ const Matching = ({
 
   return (
     <Typography display="inline" variant="h4">
-      {option == 'between' && (
+      {option === 'between' && (
         <Msg
           id={messageIds.matching.edit.between}
           values={{ matchingSelect, maxInput, minInput }}
         />
       )}
-      {option == 'max' && (
+      {option === 'max' && (
         <Msg
           id={messageIds.matching.edit.max}
           values={{ matchingSelect, max: max || 1, maxInput }}
         />
       )}
-      {option == 'min' && (
+      {option === 'min' && (
         <Msg
           id={messageIds.matching.edit.min}
           values={{ matchingSelect, min: min || 1, minInput }}
         />
       )}
-      {option == 'once' && (
+      {option === 'once' && (
         <Msg id={messageIds.matching.edit.once} values={{ matchingSelect }} />
       )}
     </Typography>

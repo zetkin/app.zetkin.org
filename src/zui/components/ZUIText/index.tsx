@@ -45,7 +45,7 @@ const ZUIText: FC<ZUITextProps> = ({
 }) => (
   <Typography
     {...boxProps}
-    color={color == 'inherit' ? '' : color}
+    color={color === 'inherit' ? '' : color}
     component={component}
     gutterBottom={gutterBottom}
     noWrap={noWrap}

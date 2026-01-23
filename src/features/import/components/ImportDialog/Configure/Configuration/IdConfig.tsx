@@ -20,7 +20,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   return (
     <Box display="flex" flexDirection="column" padding={2}>
       <Box display="flex" flexDirection="column" gap={1}>
-        {uiDataColumn.originalColumn.idField == 'id' && (
+        {uiDataColumn.originalColumn.idField === 'id' && (
           <>
             <Typography variant="h5">
               <Msg id={messageIds.configuration.configure.ids.zetkinID} />
@@ -39,7 +39,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             )}
           </>
         )}
-        {uiDataColumn.originalColumn.idField == 'ext_id' && (
+        {uiDataColumn.originalColumn.idField === 'ext_id' && (
           <>
             <Typography variant="h5">
               <Msg id={messageIds.configuration.configure.ids.externalID} />

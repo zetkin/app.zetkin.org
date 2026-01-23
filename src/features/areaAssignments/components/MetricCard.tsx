@@ -56,7 +56,7 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
           </IconButton>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
-          {metric.type == 'scale5' && (
+          {metric.type === 'scale5' && (
             <Typography color="secondary" fontStyle="italic" mb={1}>
               <Msg id={messageIds.report.metricCard.ratingDescription} />
             </Typography>
@@ -77,7 +77,7 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
           />
           <Box display="flex" gap={1} justifyContent="right" width="100%">
             <Button
-              disabled={question == ''}
+              disabled={question === ''}
               onClick={() => {
                 onSave({
                   defines_success: definesDone,

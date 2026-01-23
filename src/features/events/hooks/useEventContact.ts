@@ -23,7 +23,7 @@ export default function useEventContact(
 
   const setContact = async (contactId: number) => {
     const eventParticipantsList = participantsFuture.data;
-    if (!eventParticipantsList?.find((item) => item.id == contactId)) {
+    if (!eventParticipantsList?.find((item) => item.id === contactId)) {
       await addParticipant(contactId);
     }
     updateEvent({

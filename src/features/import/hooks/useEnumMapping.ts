@@ -6,7 +6,7 @@ export default function useEnumMapping(column: Column, columnIndex: number) {
   const dispatch = useAppDispatch();
 
   const getSelectedOption = (value: CellData) => {
-    if (column.kind == ColumnKind.ENUM) {
+    if (column.kind === ColumnKind.ENUM) {
       const map = column.mapping.find((m) => m.value === value);
       return map?.key || null;
     }
@@ -14,9 +14,9 @@ export default function useEnumMapping(column: Column, columnIndex: number) {
   };
 
   const selectOption = (key: string, value: CellData) => {
-    if (column.kind == ColumnKind.ENUM) {
+    if (column.kind === ColumnKind.ENUM) {
       // Check if there is already a map for this row value to a key
-      const map = column.mapping.find((map) => map.value == value);
+      const map = column.mapping.find((map) => map.value === value);
       // If no map for that value
       if (!map) {
         const newMap = { key: key, value: value };
@@ -33,7 +33,7 @@ export default function useEnumMapping(column: Column, columnIndex: number) {
       } else {
         // If there is already a map, replace it
         // Find mappings that are not for this row value
-        const filteredMapping = column.mapping.filter((m) => m.value != value);
+        const filteredMapping = column.mapping.filter((m) => m.value !== value);
         // New key for that row value
         const updatedMap = { ...map, key: key };
 
@@ -51,7 +51,7 @@ export default function useEnumMapping(column: Column, columnIndex: number) {
   };
 
   const selectOptions = (mapping: { key: string; value: CellData }[]) => {
-    if (column.kind == ColumnKind.ENUM) {
+    if (column.kind === ColumnKind.ENUM) {
       dispatch(
         columnUpdate([
           columnIndex,
@@ -65,10 +65,10 @@ export default function useEnumMapping(column: Column, columnIndex: number) {
   };
 
   const deselectOption = (value: CellData) => {
-    if (column.kind == ColumnKind.ENUM) {
-      const map = column.mapping.find((map) => map.value == value);
+    if (column.kind === ColumnKind.ENUM) {
+      const map = column.mapping.find((map) => map.value === value);
       if (map) {
-        const filteredMapping = column.mapping.filter((m) => m.value != value);
+        const filteredMapping = column.mapping.filter((m) => m.value !== value);
 
         dispatch(
           columnUpdate([

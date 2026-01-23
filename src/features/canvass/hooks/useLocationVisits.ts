@@ -22,5 +22,5 @@ export default function useLocationVisits(
       ),
   });
 
-  return visits.filter((visit) => visit.location_id == locationId);
+  return visits.filter((visit) => visit.location_id === locationId);
 }

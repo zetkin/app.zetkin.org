@@ -140,7 +140,7 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
           />
         </ZUIText>
       )}
-      {call.target.past_actions.num_actions == 0 && (
+      {call.target.past_actions.num_actions === 0 && (
         <ZUIText color="secondary">
           <Msg
             id={messageIds.about.noParticipation}

@@ -44,9 +44,9 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
   );
 
   const lnglatFields =
-    customFields.filter((e) => e.type == CUSTOM_FIELD_TYPE.LNGLAT) || [];
+    customFields.filter((e) => e.type === CUSTOM_FIELD_TYPE.LNGLAT) || [];
   const initialLnglatField: string =
-    lnglatFields && lnglatFields?.length != 0 ? lnglatFields[0].slug : '';
+    lnglatFields && lnglatFields?.length !== 0 ? lnglatFields[0].slug : '';
   if (!filter.config.field) {
     setConfig({
       ...filter.config,
@@ -125,7 +125,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
 
   return (
     <FilterForm
-      disableSubmit={filter.config.area == 0}
+      disableSubmit={filter.config.area === 0}
       onCancel={() => onCancel()}
       onSubmit={(ev) => {
         ev.preventDefault();

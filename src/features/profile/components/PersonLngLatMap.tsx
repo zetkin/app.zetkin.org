@@ -14,6 +14,7 @@ import {
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import ZUIMapControls from 'zui/ZUIMapControls';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   customFields: ZetkinCustomField[];
@@ -26,10 +27,10 @@ function isLngLatValue(
   value: ZetkinCustomFieldValue
 ): value is ZetkinLngLatFieldValue {
   return (
-    value != null &&
-    typeof value == 'object' &&
-    typeof value['lng'] == 'number' &&
-    typeof value['lat'] == 'number'
+    notEmpty(value) &&
+    typeof value === 'object' &&
+    typeof value['lng'] === 'number' &&
+    typeof value['lat'] === 'number'
   );
 }
 
@@ -43,13 +44,13 @@ const PersonLngLatMap: FC<Props> = ({
   const [map, setMap] = useState<MapType | null>(null);
 
   const lngLatFields = customFields.filter(
-    (field) => field.type == CUSTOM_FIELD_TYPE.LNGLAT
+    (field) => field.type === CUSTOM_FIELD_TYPE.LNGLAT
   );
   const lngLatFieldsWithValues = lngLatFields.filter(
     (field) => !!person[field.slug]
   );
 
-  if (lngLatFieldsWithValues.length == 0) {
+  if (lngLatFieldsWithValues.length === 0) {
     return null;
   }
 

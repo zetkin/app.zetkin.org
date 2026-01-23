@@ -58,7 +58,7 @@ export default class SurveyResponseColumnType
   getSearchableStrings(cell: SurveyResponseViewCell): string[] {
     return cell
       .map((response) => response?.text)
-      .filter((e) => typeof e == 'string');
+      .filter((e) => typeof e === 'string');
   }
 }
 
@@ -124,7 +124,7 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
           submissions={cell.map((sub, index) => ({
             id: sub.submission_id,
             matchingContent:
-              index == 0 && sub.text ? getEllipsedString(sub.text, 300) : null,
+              index === 0 && sub.text ? getEllipsedString(sub.text, 300) : null,
             submitted: sub.submitted,
           }))}
         />

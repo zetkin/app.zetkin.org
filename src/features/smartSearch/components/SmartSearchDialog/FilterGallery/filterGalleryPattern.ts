@@ -121,7 +121,7 @@ export default function filterGalleryPattern(
     pattern = PATTERN_TEMPLATES.pattern16;
   } else if (slug === FILTER_TYPE.AREA) {
     pattern = PATTERN_TEMPLATES.pattern17;
-  } else if (slug == FILTER_TYPE.ALL) {
+  } else if (slug === FILTER_TYPE.ALL) {
     pattern = PATTERN_TEMPLATES.pattern13;
   } else {
     pattern = PATTERN_TEMPLATES.pattern15;

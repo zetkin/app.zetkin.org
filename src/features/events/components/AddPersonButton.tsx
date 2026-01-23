@@ -137,7 +137,7 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
                   }}
                   getOptionDisabled={(option) =>
                     participants.some(
-                      (participant) => participant.id == option.id
+                      (participant) => participant.id === option.id
                     )
                   }
                   getOptionExtraLabel={(option) => {

@@ -111,7 +111,7 @@ export default async function handle(
     await session.save();
 
     res.status(result.httpStatus);
-    if (result.httpStatus == 204) {
+    if (result.httpStatus === 204) {
       res.end();
     } else {
       res.json(result.data);

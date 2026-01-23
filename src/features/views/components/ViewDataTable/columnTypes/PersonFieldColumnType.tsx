@@ -9,15 +9,16 @@ import {
   PersonFieldViewColumn,
   ZetkinViewColumn,
 } from '../../types';
+import notEmpty from 'utils/notEmpty';
 
 type SimpleData = string | number | boolean | null;
 
 const getValue = (cell: SimpleData, column: PersonFieldViewColumn) => {
   if (column.config.enum_choices) {
-    const choice = column.config.enum_choices.find((c) => c.key == cell);
+    const choice = column.config.enum_choices.find((c) => c.key === cell);
     return choice?.label ?? '';
   } else {
-    return cell != null ? cell.toString() : '';
+    return notEmpty(cell) ? cell.toString() : '';
   }
 };
 
@@ -35,7 +36,7 @@ export default class PersonFieldColumnType
         const cell = params.row[params.field];
         const value = getValue(cell, column);
 
-        if (column.config.field == NATIVE_PERSON_FIELDS.EMAIL) {
+        if (column.config.field === NATIVE_PERSON_FIELDS.EMAIL) {
           return <Link href={`mailto:${value}`}>{value}</Link>;
         }
 
@@ -47,8 +48,8 @@ export default class PersonFieldColumnType
         }
 
         if (
-          column.config.field == NATIVE_PERSON_FIELDS.PHONE ||
-          column.config.field == NATIVE_PERSON_FIELDS.ALT_PHONE
+          column.config.field === NATIVE_PERSON_FIELDS.PHONE ||
+          column.config.field === NATIVE_PERSON_FIELDS.ALT_PHONE
         ) {
           return <Link href={`tel:${value}`}>{value}</Link>;
         }

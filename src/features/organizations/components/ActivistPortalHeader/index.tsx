@@ -14,6 +14,7 @@ import { useMessages } from 'core/i18n';
 import ZUIMenu, { MenuItem } from 'zui/components/ZUIMenu';
 import ZUIButton from 'zui/components/ZUIButton';
 import useMemberships from 'features/organizations/hooks/useMemberships';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   button?: JSX.Element;
@@ -65,7 +66,9 @@ const ActivistPortalHeader: FC<Props> = ({
   );
 
   const memberships = useMemberships().data || [];
-  const isOfficial = memberships.find((membership) => membership.role != null);
+  const isOfficial = memberships.find((membership) =>
+    notEmpty(membership.role)
+  );
 
   return (
     <Box
@@ -133,7 +136,7 @@ const ActivistPortalHeader: FC<Props> = ({
             }}
           >
             <Box>
-              {typeof title == 'string' ? (
+              {typeof title === 'string' ? (
                 <ZUIText variant="headingLg">{title}</ZUIText>
               ) : (
                 title
@@ -144,7 +147,7 @@ const ActivistPortalHeader: FC<Props> = ({
         )}
         {subtitle && (
           <Box sx={{ whiteSpace: 'pre-line' }}>
-            {typeof subtitle == 'string' ? (
+            {typeof subtitle === 'string' ? (
               <ZUIText>{subtitle}</ZUIText>
             ) : (
               subtitle

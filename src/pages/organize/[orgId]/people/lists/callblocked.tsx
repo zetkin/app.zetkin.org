@@ -19,6 +19,7 @@ import {
   ZetkinView,
   ZetkinViewColumn,
 } from 'features/views/components/types';
+import notEmpty from 'utils/notEmpty';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -71,13 +72,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
       const firstFilter = v.content_query?.filter_spec[0];
 
       // TODO: Create better types for smart search
-      if (firstFilter?.type != FILTER_TYPE.CALL_BLOCKED) {
+      if (firstFilter?.type !== FILTER_TYPE.CALL_BLOCKED) {
         return null;
       }
 
       const filterConfig = firstFilter.config as CallBlockedFilterConfig;
 
-      if (filterConfig.reason == callBlockedFilter.config.reason) {
+      if (filterConfig.reason === callBlockedFilter.config.reason) {
         // Check the columns
         const columns = await apiClient.get<ZetkinViewColumn[]>(
           `/api/orgs/${orgId}/people/views/${v.id}/columns`
@@ -86,7 +87,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
           targetColumns.every((targetCol): boolean => {
             return columns.some(
               (c: ZetkinViewColumn) =>
-                c.type == targetCol.type &&
+                c.type === targetCol.type &&
                 isEqualWith(targetCol.config, c.config)
             );
           })
@@ -96,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
       }
       return null;
     })
-  ).then((result) => result.find((v) => v !== null));
+  ).then((result) => result.find((v) => notEmpty(v)));
 
   if (!view) {
     view = await apiClient.post<ZetkinView, Partial<ZetkinView>>(

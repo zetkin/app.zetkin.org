@@ -5,6 +5,7 @@ import { DateColumn } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import parserFactory from '../utils/dateParsing/parserFactory';
 import { IDateParser } from '../utils/dateParsing/types';
+import notEmpty from 'utils/notEmpty';
 
 export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     setDateFormat(column.dateFormat || null);
   }, [columnIndex]);
 
-  const noCustomFormat = dateFormat == '';
+  const noCustomFormat = dateFormat === '';
 
   let parser: IDateParser | null = null;
   if (column.dateFormat) {
@@ -66,7 +67,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const isPersonNumberFormat = (
     dateFormat: string
   ): dateFormat is PersonNumberFormat => {
-    return !!personNumberFormats.find((format) => format == dateFormat);
+    return !!personNumberFormats.find((format) => format === dateFormat);
   };
 
   const onDateFormatChange = (newFormat: string) => {
@@ -80,7 +81,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   };
 
   const isCustomFormat =
-    dateFormat != null &&
+    notEmpty(dateFormat) &&
     !Object.keys(dateFormats).includes(dateFormat) &&
     !isPersonNumberFormat(dateFormat);
 

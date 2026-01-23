@@ -26,7 +26,7 @@ const PreviewTab: FC = () => {
   const [emailError, setEmailError] = useState(false);
   const [destinationEmailAddress, setDestinationEmailAddress] = useState('');
   useEffect(() => {
-    if (user && destinationEmailAddress == '') {
+    if (user && destinationEmailAddress === '') {
       setDestinationEmailAddress(user.email);
     }
   }, [user?.email]);

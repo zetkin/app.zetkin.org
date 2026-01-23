@@ -27,7 +27,7 @@ export default function useEventParticipantsWithChanges(
   );
   const event = useAppSelector(
     (state) =>
-      state.events.eventList.items.find((item) => item.id == eventId)?.data ??
+      state.events.eventList.items.find((item) => item.id === eventId)?.data ??
       null
   );
   const dispatch = useAppDispatch();
@@ -63,9 +63,9 @@ export default function useEventParticipantsWithChanges(
 
       const movedAway = pendingOps.some(
         (op) =>
-          op.eventId == eventId &&
-          op.personId == person.id &&
-          op.kind == ParticipantOpKind.REMOVE
+          op.eventId === eventId &&
+          op.personId === person.id &&
+          op.kind === ParticipantOpKind.REMOVE
       );
 
       if (movedAway) {
@@ -84,25 +84,25 @@ export default function useEventParticipantsWithChanges(
     pendingOps
       .concat()
       .sort((a, b) => {
-        if (a.kind == ParticipantOpKind.ADD) {
+        if (a.kind === ParticipantOpKind.ADD) {
           return -1;
-        } else if (b.kind == ParticipantOpKind.ADD) {
+        } else if (b.kind === ParticipantOpKind.ADD) {
           return 1;
         } else {
           return 0;
         }
       })
       .forEach((op) => {
-        const participant = allParticipants.find((p) => p.id == op.personId);
+        const participant = allParticipants.find((p) => p.id === op.personId);
 
         if (participant) {
           const addingToThisEvent =
-            op.kind == ParticipantOpKind.ADD && op.eventId == eventId;
+            op.kind === ParticipantOpKind.ADD && op.eventId === eventId;
           const addedPreviously = addedIds.includes(op.personId);
           const removingFromAnotherEvent =
-            op.kind == ParticipantOpKind.REMOVE && op.eventId != eventId;
+            op.kind === ParticipantOpKind.REMOVE && op.eventId !== eventId;
           const alreadyBooked = bookedParticipants.find(
-            (p) => p.person.id == op.personId
+            (p) => p.person.id === op.personId
           );
 
           if (addingToThisEvent) {
@@ -128,7 +128,7 @@ export default function useEventParticipantsWithChanges(
   return {
     bookedParticipants,
     numParticipantsAvailable: bookedParticipants.filter(
-      (p) => p.status == 'booked' || p.status == 'added'
+      (p) => p.status === 'booked' || p.status === 'added'
     ).length,
     numParticipantsRequired: event?.num_participants_required ?? 0,
     pendingParticipants,

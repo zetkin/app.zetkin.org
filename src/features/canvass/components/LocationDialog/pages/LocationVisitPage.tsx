@@ -80,7 +80,7 @@ const LocationVisitPage: FC<Props> = ({
 
               await onLogVisit(
                 metricIds.map((metricId) =>
-                  valuesByMetricId[metricId].length == 2
+                  valuesByMetricId[metricId].length === 2
                     ? {
                         metric_id: metricId,
                         num_no: valuesByMetricId[metricId][1] || 0,
@@ -123,10 +123,10 @@ const LocationVisitPage: FC<Props> = ({
             const numYes = valuesByMetricId[metric.id]?.[0] ?? 0;
             const numNo = valuesByMetricId[metric.id]?.[1] ?? 0;
             const numHouseholds = numYes + numNo;
-            const stepIsCurrent = index == step;
-            const stepIsLast = index == metrics.length - 1;
+            const stepIsCurrent = index === step;
+            const stepIsLast = index === metrics.length - 1;
 
-            if (metric.type == 'bool') {
+            if (metric.type === 'bool') {
               const values = valuesByMetricId[metric.id] || [0, 0];
               return (
                 <Step
@@ -152,7 +152,7 @@ const LocationVisitPage: FC<Props> = ({
                       {metric.question}
                     </Typography>
 
-                    {completed && step != index && (
+                    {completed && step !== index && (
                       <Typography variant="body2">
                         <Msg
                           id={messageIds.visit.location.completed}
@@ -220,7 +220,7 @@ const LocationVisitPage: FC<Props> = ({
                   </StepContent>
                 </Step>
               );
-            } else if (metric.type == 'scale5') {
+            } else if (metric.type === 'scale5') {
               const values = valuesByMetricId[metric.id] || [0, 0, 0, 0, 0];
               const numHouseholds = values.reduce((sum, val) => sum + val, 0);
               const sumTotal = values.reduce(
@@ -253,7 +253,7 @@ const LocationVisitPage: FC<Props> = ({
                       {metric.question}
                     </Typography>
 
-                    {completed && step != index && (
+                    {completed && step !== index && (
                       <Typography variant="body2">
                         <Msg
                           id={messageIds.visit.location.average}

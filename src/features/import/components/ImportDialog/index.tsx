@@ -37,7 +37,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
       open={open}
     >
       <Box display="flex" flexDirection="column" overflow="hidden" padding={2}>
-        {activeStep == ImportStep.PARSE && (
+        {activeStep === ImportStep.PARSE && (
           <ParseFile
             onClose={onClose}
             onSuccess={() => {
@@ -46,7 +46,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
             }}
           />
         )}
-        {activeStep == ImportStep.CONFIGURE && (
+        {activeStep === ImportStep.CONFIGURE && (
           <Configure
             onClose={() => {
               onClose();

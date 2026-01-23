@@ -49,7 +49,7 @@ const DesktopModal: FC<ZUIModalProps> = ({
         sx={(theme) => ({
           border: `0.063rem solid ${theme.palette.dividers.main}`,
           boxShadow: theme.elevation.bottom.big.medium,
-          height: size == 'full' ? 'calc(100dvh - 3.75rem)' : 'auto',
+          height: size === 'full' ? 'calc(100dvh - 3.75rem)' : 'auto',
           left: '50%',
           maxWidth: 'calc(100dvw - 2.5rem)',
           minWidth: '25rem',

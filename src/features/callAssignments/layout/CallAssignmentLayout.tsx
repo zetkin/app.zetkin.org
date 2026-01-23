@@ -82,8 +82,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={
-        state == CallAssignmentState.OPEN ||
-        state == CallAssignmentState.ACTIVE ? (
+        state === CallAssignmentState.OPEN ||
+        state === CallAssignmentState.ACTIVE ? (
           <Button onClick={() => end()} variant="outlined">
             <Msg id={messageIds.actions.end} />
           </Button>

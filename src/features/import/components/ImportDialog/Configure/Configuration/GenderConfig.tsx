@@ -48,7 +48,7 @@ const GenderConfig: FC<GenderConfigProps> = ({ uiDataColumn }) => {
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <>
-          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          {index !== 0 && <Divider sx={{ marginY: 1 }} />}
           <GenderConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectGender={() => deselectGender(uniqueValue)}

@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       scopes = [`level${level}`];
     }
   }
-  if (typeof redirect == 'string') {
+  if (typeof redirect === 'string') {
     // We want to remove any base-URL that was passed in the query parameter,
     // which we do by parsing and then using only pathname and query-parameters.
     // URL.pathname always starts with `/`.

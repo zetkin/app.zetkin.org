@@ -10,6 +10,7 @@ import SelectedMarker from './SelectedMarker';
 import { DivIconMarker } from './DivIconMarker';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import { useEnv } from 'core/hooks';
+import notEmpty from 'utils/notEmpty';
 
 interface MapProps {
   currentEventId: number | null;
@@ -112,7 +113,7 @@ const Map: FC<MapProps> = ({
                 url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
               />
               {filteredLocations.map((location) => {
-                const isSelectedMarker = selectedLocation?.id == location.id;
+                const isSelectedMarker = selectedLocation?.id === location.id;
                 const noOfRelevantEvents = relatedEvents.filter(
                   (event) =>
                     event.location?.id === location.id &&
@@ -135,7 +136,7 @@ const Map: FC<MapProps> = ({
                         onMarkerClick(location.id);
                       },
                       dragend: ({ target: marker }) => {
-                        if (marker !== null) {
+                        if (notEmpty(marker)) {
                           setNewPosition(marker.getLatLng());
                           onMarkerDragEnd(
                             marker.getLatLng().lat,

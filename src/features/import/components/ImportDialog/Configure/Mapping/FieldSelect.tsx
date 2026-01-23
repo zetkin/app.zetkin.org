@@ -27,27 +27,27 @@ const FieldSelect: FC<FieldSelectProps> = ({
   const messages = useMessages(messageIds);
 
   const getValue = () => {
-    if (column.originalColumn.kind == ColumnKind.FIELD) {
+    if (column.originalColumn.kind === ColumnKind.FIELD) {
       return `field:${column.originalColumn.field}`;
     }
 
-    if (column.originalColumn.kind == ColumnKind.DATE) {
+    if (column.originalColumn.kind === ColumnKind.DATE) {
       return `date:${column.originalColumn.field}`;
     }
 
-    if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+    if (column.originalColumn.kind === ColumnKind.ID_FIELD) {
       return column.originalColumn.idField || '';
     }
 
-    if (column.originalColumn.kind == ColumnKind.ENUM) {
+    if (column.originalColumn.kind === ColumnKind.ENUM) {
       return `enum:${column.originalColumn.field}`;
     }
 
-    if (column.originalColumn.kind == ColumnKind.GENDER) {
+    if (column.originalColumn.kind === ColumnKind.GENDER) {
       return `field:gender`;
     }
 
-    if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
+    if (column.originalColumn.kind !== ColumnKind.UNKNOWN) {
       return column.originalColumn.kind.toString();
     }
 
@@ -82,35 +82,35 @@ const FieldSelect: FC<FieldSelectProps> = ({
       label={messages.configuration.mapping.selectZetkinField()}
       onChange={(event) => {
         clearConfiguration();
-        if (event.target.value == 'ext_id') {
+        if (event.target.value === 'ext_id') {
           onChange({
             idField: 'ext_id',
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'id') {
+        } else if (event.target.value === 'id') {
           onChange({
             idField: 'id',
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'org') {
+        } else if (event.target.value === 'org') {
           onChange({
             kind: ColumnKind.ORGANIZATION,
             mapping: [],
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'tag') {
+        } else if (event.target.value === 'tag') {
           onChange({
             kind: ColumnKind.TAG,
             mapping: [],
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'field:gender') {
+        } else if (event.target.value === 'field:gender') {
           onChange({
             field: event.target.value,
             kind: ColumnKind.GENDER,

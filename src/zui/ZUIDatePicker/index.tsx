@@ -195,7 +195,7 @@ const DateTextField: FC<DateTextFieldProps> = ({ label, onChange, value }) => {
       label={label}
       onBlur={(ev) => {
         // If user leaves the field empty, clear
-        if (ev.target.value == '') {
+        if (ev.target.value === '') {
           onChange(null);
           return;
         }

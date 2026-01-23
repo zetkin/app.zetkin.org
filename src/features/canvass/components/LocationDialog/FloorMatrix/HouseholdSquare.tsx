@@ -11,11 +11,11 @@ type Props = {
 };
 
 const HouseholdSquare: FC<Props> = ({ active, color, content }) => {
-  const isCheck = content == 'check';
-  const isCross = content == 'cross';
+  const isCheck = content === 'check';
+  const isCross = content === 'cross';
   const isLiteral = !isCheck && !isCross;
 
-  color = color == 'clear' ? null : color;
+  color = color === 'clear' ? null : color;
   const backgroundColor = active ? 'black' : '#bbb';
 
   return (

@@ -66,7 +66,7 @@ const tagsSlice = createSlice({
       for (const personId in state.tagsByPersonId) {
         state.tagsByPersonId[personId].items = state.tagsByPersonId[
           personId
-        ].items.filter((item) => item.id != tagId);
+        ].items.filter((item) => item.id !== tagId);
       }
     },
     tagGroupCreate: (state) => {
@@ -113,7 +113,7 @@ const tagsSlice = createSlice({
       // Update tags on people
       Object.values(state.tagsByPersonId).forEach((tagList) => {
         tagList.items.forEach((item) => {
-          if (item.id == tag.id) {
+          if (item.id === tag.id) {
             item.data = { ...tag, value: item.data?.value || null };
           }
         });

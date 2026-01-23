@@ -64,6 +64,6 @@ export class AnyFormatDateParser implements IDateParser {
 
     const dateString = makeDate(this.format, dateParts);
 
-    return dateString == stringValue;
+    return dateString === stringValue;
   }
 }

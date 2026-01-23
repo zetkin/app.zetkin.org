@@ -47,7 +47,7 @@ const ZUIPercentageBar = ({
   const height = sizes[size];
 
   const colors =
-    values.length == 3
+    values.length === 3
       ? [
           theme.palette.data.main,
           theme.palette.data.mid3,

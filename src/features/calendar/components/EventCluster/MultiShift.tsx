@@ -13,6 +13,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import { availableHeightByEvent, fieldsToPresent } from './utils';
 import Event, { Field, FIELD_PRESENTATION } from './Event';
 import { Msg, useMessages } from 'core/i18n';
+import notEmpty from 'utils/notEmpty';
 
 function createMultiShiftFieldGroups({
   events,
@@ -133,7 +134,7 @@ function createMultiShiftFieldGroups({
     }
 
     return fields.filter((field): field is Field => {
-      return field !== null;
+      return notEmpty(field);
     });
   });
 

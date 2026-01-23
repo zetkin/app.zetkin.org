@@ -13,6 +13,7 @@ import {
 } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
+import notEmpty from 'utils/notEmpty';
 
 export interface UseViewGridReturn {
   columnsFuture: IFuture<ZetkinViewColumn[]>;
@@ -104,7 +105,7 @@ export default function useViewGrid(
     colId: number,
     data: CellType
   ) => {
-    if (data !== null) {
+    if (notEmpty(data)) {
       setCellData(personId, colId, data);
     } else {
       clearCellData(personId, colId);

@@ -49,11 +49,11 @@ export default class LocalBoolColumnType implements IColumnType {
     ev: MuiEvent<KeyboardEvent<HTMLElement>>,
     accessLevel: ZetkinObjectAccess['level'] | null
   ): void {
-    if (accessLevel == 'readonly') {
+    if (accessLevel === 'readonly') {
       return;
     }
 
-    if (ev.key == 'Enter' || ev.key == ' ') {
+    if (ev.key === 'Enter' || ev.key === ' ') {
       viewGrid.setCellValue(personId, column.id, !data);
       ev.defaultMuiPrevented = true;
       ev.preventDefault();

@@ -27,6 +27,7 @@ import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
 import { tagLoad, tagLoaded } from 'features/tags/store';
 import { RemoteList } from 'utils/storeUtils';
 import ZUITagChip from 'zui/components/ZUITagChip';
+import notEmpty from 'utils/notEmpty';
 
 type PersonTagViewCell = null | {
   value?: string;
@@ -50,7 +51,7 @@ export default class PersonTagColumnType implements IColumnType {
     let tag: ZetkinTag | null = null;
 
     if (!accessLevel) {
-      const tagItem = tagListState.items.find((item) => item.id == tagId);
+      const tagItem = tagListState.items.find((item) => item.id === tagId);
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
         actionOnLoad: () => tagLoad(tagId),
@@ -64,7 +65,7 @@ export default class PersonTagColumnType implements IColumnType {
 
     return {
       align: 'center',
-      editable: !accessLevel && tag?.value_type !== null,
+      editable: !accessLevel && notEmpty(tag?.value_type),
       headerAlign: 'center',
       renderCell: (
         params: GridRenderCellParams<ZetkinViewRow, ZetkinAppliedTag>
@@ -101,7 +102,7 @@ export default class PersonTagColumnType implements IColumnType {
       return;
     }
 
-    if (ev.key == 'Enter' || ev.key == ' ') {
+    if (ev.key === 'Enter' || ev.key === ' ') {
       viewGrid.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
     }
@@ -128,7 +129,7 @@ const Cell: FC<CellProps> = ({ cellValue, personId, tag }) => {
     return null;
   } else if (!tag) {
     return <span>{cellValue?.value || ''}</span>;
-  } else if (tag.value_type !== null) {
+  } else if (notEmpty(tag.value_type)) {
     if (!cellValue) {
       return (
         <Box

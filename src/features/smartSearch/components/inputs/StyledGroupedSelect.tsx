@@ -31,7 +31,7 @@ const StyledGroupedSelect: FC<Props> = (props) => {
       }
 
       props.items
-        .filter((item) => item.group == groupTitle)
+        .filter((item) => item.group === groupTitle)
         .sort((item0, item1) => item0.label.localeCompare(item1.label))
         .forEach((item) => {
           options.push(
@@ -63,7 +63,7 @@ const StyledGroupedSelect: FC<Props> = (props) => {
         },
         select: {
           renderValue: (value) =>
-            props.items.find((item) => item.id == value)?.label ?? '',
+            props.items.find((item) => item.id === value)?.label ?? '',
           ...props.SelectProps,
           sx: {
             fontSize: oldTheme.typography.h4.fontSize,

@@ -12,6 +12,7 @@ import UnderlinedText from '../../UnderlinedText';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
+import notEmpty from 'utils/notEmpty';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -36,16 +37,16 @@ const DisplayPersonField = ({
 
   const fieldType = field?.type || '';
   if (
-    fieldType != CUSTOM_FIELD_TYPE.DATE &&
-    fieldType != CUSTOM_FIELD_TYPE.TEXT &&
-    fieldType != CUSTOM_FIELD_TYPE.URL &&
-    fieldType != CUSTOM_FIELD_TYPE.ENUM
+    fieldType !== CUSTOM_FIELD_TYPE.DATE &&
+    fieldType !== CUSTOM_FIELD_TYPE.TEXT &&
+    fieldType !== CUSTOM_FIELD_TYPE.URL &&
+    fieldType !== CUSTOM_FIELD_TYPE.ENUM
   ) {
     // TODO:
     return null;
   }
   let fieldMessage;
-  if (fieldType == CUSTOM_FIELD_TYPE.DATE) {
+  if (fieldType === CUSTOM_FIELD_TYPE.DATE) {
     fieldMessage = (
       <Msg
         id={localMessageIds.preview.date}
@@ -56,9 +57,9 @@ const DisplayPersonField = ({
       />
     );
   } else if (
-    fieldType == CUSTOM_FIELD_TYPE.ENUM &&
+    fieldType === CUSTOM_FIELD_TYPE.ENUM &&
     field?.enum_choices &&
-    search !== undefined
+    notEmpty(search)
   ) {
     fieldMessage = (
       <Msg
@@ -68,7 +69,7 @@ const DisplayPersonField = ({
           searchTerm: (
             <UnderlinedText
               text={
-                field?.enum_choices.find((c) => c.key == search)?.label ||
+                field?.enum_choices.find((c) => c.key === search)?.label ||
                 search
               }
             />

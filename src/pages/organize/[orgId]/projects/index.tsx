@@ -113,7 +113,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   //The shared card is currently only visible when there are shared surveys, but there will be more shared activities in the future.
   const sharedSurveys = surveys.filter(
     (survey) =>
-      survey.org_access === 'suborgs' && survey.organization.id != orgId
+      survey.org_access === 'suborgs' && survey.organization.id !== orgId
   );
 
   return (

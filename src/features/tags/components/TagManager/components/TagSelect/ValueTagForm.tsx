@@ -15,7 +15,7 @@ const ValueTagForm: React.FC<{
   tag: ZetkinTag;
 }> = ({ inputValue, onCancel, onChange, onSubmit, tag }) => {
   useEffect(() => {
-    if (inputValue == '') {
+    if (inputValue === '') {
       onChange(null);
     } else {
       onChange(inputValue);

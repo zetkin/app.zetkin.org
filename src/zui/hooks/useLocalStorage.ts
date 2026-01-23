@@ -28,7 +28,7 @@ function getLocalStorageValue<T>(
   const isBrowser = typeof window !== 'undefined';
   const stringValue = isBrowser ? localStorage.getItem(key) : null;
 
-  if (stringValue === null || stringValue.length == 0) {
+  if (stringValue === null || stringValue.length === 0) {
     if (isBrowser) {
       localStorage.setItem(key, JSON.stringify(defaultValue));
     }

@@ -22,7 +22,7 @@ describe('remoteItemUpdated', () => {
     const list = remoteList();
     remoteItemUpdated(list, newData);
 
-    const foundItemInList = list.items.find((item) => item.id == newId);
+    const foundItemInList = list.items.find((item) => item.id === newId);
 
     expect(foundItemInList).toBeTruthy();
     expect(foundItemInList?.data).toBe(newData);
@@ -100,9 +100,9 @@ describe('remoteItemUpdated', () => {
     const resultNew = remoteItemUpdated(list, newData);
 
     const foundUpdatedItemInList = list.items.find(
-      (item) => item.id == existingId
+      (item) => item.id === existingId
     );
-    const foundNewItemInList = list.items.find((item) => item.id == newId);
+    const foundNewItemInList = list.items.find((item) => item.id === newId);
 
     expect(foundUpdatedItemInList).toBeDefined();
     expect(foundUpdatedItemInList?.data).toBe(existingUpdatedData);

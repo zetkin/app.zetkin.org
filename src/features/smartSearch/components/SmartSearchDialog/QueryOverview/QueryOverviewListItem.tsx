@@ -34,7 +34,7 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
   const { orgId } = useNumericRouteParams();
 
   const render = (renderable: Renderable): ReactNode => {
-    if (typeof renderable == 'function') {
+    if (typeof renderable === 'function') {
       return renderable(hovered);
     }
     return renderable;

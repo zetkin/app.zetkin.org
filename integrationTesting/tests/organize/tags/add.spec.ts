@@ -93,7 +93,7 @@ test.describe('Tag manager', () => {
       .type('Revolutionary');
 
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PUT'),
+      page.waitForResponse((res) => res.request().method() === 'PUT'),
       page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
     ]);
 

@@ -12,6 +12,7 @@ import {
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import { SerializedError } from './hooks/useAllocateCall';
+import notEmpty from 'utils/notEmpty';
 
 export interface CallStoreSlice {
   activeLaneIndex: number;
@@ -83,18 +84,18 @@ const CallSlice = createSlice({
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
 
-      if (currentLane && currentLane.currentCallId == null) {
-        const filteredLanes = state.lanes.filter(
-          (lane) => lane.currentCallId !== null
+      if (currentLane && currentLane.currentCallId === null) {
+        const filteredLanes = state.lanes.filter((lane) =>
+          notEmpty(lane.currentCallId)
         );
 
         state.lanes = filteredLanes;
       }
 
       const indexOfExistingLane = state.lanes.findIndex(
-        (lane) => lane.currentCallId == newCall.id
+        (lane) => lane.currentCallId === newCall.id
       );
-      if (indexOfExistingLane != -1) {
+      if (indexOfExistingLane !== -1) {
         state.activeLaneIndex = indexOfExistingLane;
       } else {
         const newLane = {
@@ -131,7 +132,7 @@ const CallSlice = createSlice({
     callSkippedLoaded: (state, action: PayloadAction<[number, ZetkinCall]>) => {
       const [skippedCallId, newCall] = action.payload;
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (item) => item.id != skippedCallId
+        (item) => item.id !== skippedCallId
       );
 
       state.queueHasError = null;
@@ -169,7 +170,7 @@ const CallSlice = createSlice({
       const lane = state.lanes[state.activeLaneIndex];
       const eventIds = lane.respondedEventIds;
 
-      lane.respondedEventIds = eventIds.filter((id) => id != eventIdToRemove);
+      lane.respondedEventIds = eventIds.filter((id) => id !== eventIdToRemove);
     },
     eventsLoad: (state) => {
       state.upcomingEventsList.isLoading = true;
@@ -194,10 +195,10 @@ const CallSlice = createSlice({
       const [assignmentId, lanes] = action.payload;
 
       const indexOfExistingLane = lanes.findIndex(
-        (lane) => lane.assignmentId == assignmentId
+        (lane) => lane.assignmentId === assignmentId
       );
 
-      if (indexOfExistingLane != -1) {
+      if (indexOfExistingLane !== -1) {
         state.lanes = lanes;
         state.activeLaneIndex = indexOfExistingLane;
       } else {
@@ -287,7 +288,7 @@ const CallSlice = createSlice({
       const lane = state.lanes[state.activeLaneIndex];
 
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (item) => item.id != deletedCallId
+        (item) => item.id !== deletedCallId
       );
 
       lane.currentCallId = null;
@@ -308,7 +309,7 @@ const CallSlice = createSlice({
       const updatedCall = action.payload;
 
       const callItem = state.outgoingCalls.items.find(
-        (item) => item.id == updatedCall.id
+        (item) => item.id === updatedCall.id
       );
 
       if (callItem) {
@@ -316,7 +317,7 @@ const CallSlice = createSlice({
 
         if (data) {
           state.outgoingCalls.items = state.outgoingCalls.items.filter(
-            (call) => call.id != updatedCall.id
+            (call) => call.id !== updatedCall.id
           );
           state.outgoingCalls.items.push({
             ...callItem,
@@ -379,13 +380,13 @@ const CallSlice = createSlice({
     unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
       const abandonedCallId = action.payload;
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (item) => item.id != abandonedCallId
+        (item) => item.id !== abandonedCallId
       );
 
       const indexOfLaneWithAbandonedCall = state.lanes.findIndex(
-        (lane) => lane.currentCallId == abandonedCallId
+        (lane) => lane.currentCallId === abandonedCallId
       );
-      if (indexOfLaneWithAbandonedCall != -1) {
+      if (indexOfLaneWithAbandonedCall !== -1) {
         state.lanes.splice(indexOfLaneWithAbandonedCall, 1);
 
         if (state.activeLaneIndex >= indexOfLaneWithAbandonedCall) {
@@ -402,18 +403,18 @@ const CallSlice = createSlice({
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
 
-      if (currentLane && currentLane.currentCallId == null) {
-        const filteredLanes = state.lanes.filter(
-          (lane) => lane.currentCallId !== null
+      if (currentLane && currentLane.currentCallId === null) {
+        const filteredLanes = state.lanes.filter((lane) =>
+          notEmpty(lane.currentCallId)
         );
 
         state.lanes = filteredLanes;
       }
 
       const indexOfExistingLane = state.lanes.findIndex(
-        (lane) => lane.currentCallId == unfinishedCallId
+        (lane) => lane.currentCallId === unfinishedCallId
       );
-      if (indexOfExistingLane != -1) {
+      if (indexOfExistingLane !== -1) {
         state.activeLaneIndex = indexOfExistingLane;
       } else {
         const newLane = {

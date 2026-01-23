@@ -61,9 +61,9 @@ const MappingRow: FC<MappingRowProps> = ({
   );
 
   const getMappingRowButtonMessageId = () => {
-    if (column.originalColumn.kind == ColumnKind.DATE) {
+    if (column.originalColumn.kind === ColumnKind.DATE) {
       return messageIds.configuration.mapping.configButton;
-    } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+    } else if (column.originalColumn.kind === ColumnKind.ID_FIELD) {
       return messageIds.configuration.mapping.infoButton;
     } else {
       return messageIds.configuration.mapping.mapValuesButton;

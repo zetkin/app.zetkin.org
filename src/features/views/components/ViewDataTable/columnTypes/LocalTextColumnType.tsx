@@ -35,7 +35,7 @@ export default class LocalTextColumnType implements IColumnType {
       editable: true,
       renderCell: (params) => <Cell cell={params.value} />,
       renderEditCell: (params) => (
-        <Textarea {...params} isEditable={accessLevel != 'readonly'} />
+        <Textarea {...params} isEditable={accessLevel !== 'readonly'} />
       ),
       width: 250,
     };

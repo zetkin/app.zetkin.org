@@ -104,7 +104,7 @@ const TimeFrame = ({
 
   return (
     <Box display="inline">
-      {selected == 'afterDate' && (
+      {selected === 'afterDate' && (
         <Msg
           id={messageIds.timeFrame.edit.afterDate}
           values={{
@@ -113,7 +113,7 @@ const TimeFrame = ({
           }}
         />
       )}
-      {selected == 'beforeDate' && (
+      {selected === 'beforeDate' && (
         <Msg
           id={messageIds.timeFrame.edit.beforeDate}
           values={{
@@ -122,13 +122,13 @@ const TimeFrame = ({
           }}
         />
       )}
-      {selected == 'beforeToday' && (
+      {selected === 'beforeToday' && (
         <Msg
           id={messageIds.timeFrame.edit.beforeToday}
           values={{ timeFrameSelect }}
         />
       )}
-      {selected == 'between' && (
+      {selected === 'between' && (
         <Msg
           id={messageIds.timeFrame.edit.between}
           values={{
@@ -138,16 +138,16 @@ const TimeFrame = ({
           }}
         />
       )}
-      {selected == 'ever' && (
+      {selected === 'ever' && (
         <Msg id={messageIds.timeFrame.edit.ever} values={{ timeFrameSelect }} />
       )}
-      {selected == 'future' && (
+      {selected === 'future' && (
         <Msg
           id={messageIds.timeFrame.edit.future}
           values={{ timeFrameSelect }}
         />
       )}
-      {selected == 'lastFew' && (
+      {selected === 'lastFew' && (
         <Msg
           id={messageIds.timeFrame.edit.lastFew}
           values={{

@@ -16,6 +16,7 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import useRowCountValidation from '../../../hooks/useRowCountValidation';
+import notEmpty from 'utils/notEmpty';
 
 interface ConfigureProps {
   onClose: () => void;
@@ -79,7 +80,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
               />
             </Box>
             <Box display="flex" flexDirection="column" width="50%">
-              {columnIndexBeingConfigured !== null && (
+              {notEmpty(columnIndexBeingConfigured) && (
                 <Configuration
                   columnIndexBeingConfigured={columnIndexBeingConfigured}
                 />
