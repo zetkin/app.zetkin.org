@@ -9,6 +9,10 @@ import {
 import { ZetkinMembership, ZetkinUser } from 'utils/types/zetkin';
 import { ZetkinOrgUser } from './types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
+import {
+  orgFollowed,
+  orgUnfollowed,
+} from 'features/organizations/store';
 
 export interface UserStoreSlice {
   membershipList: RemoteList<ZetkinMembership & { id: number }>;
@@ -23,6 +27,30 @@ const initialState: UserStoreSlice = {
 };
 
 const userSlice = createSlice({
+  extraReducers: (builder) => {
+    builder.addCase(orgFollowed, (state, action) => {
+      const membership = action.payload;
+      const existingItem = state.membershipList.items.find(
+        (item) => item?.data?.organization.id === membership.organization.id
+      );
+
+      if (existingItem?.data) {
+        existingItem.data.follow = true;
+        existingItem.loaded = new Date().toISOString();
+      }
+    });
+    builder.addCase(orgUnfollowed, (state, action) => {
+      const orgId = action.payload;
+      const existingItem = state.membershipList.items.find(
+        (item) => item?.data?.organization.id === orgId
+      );
+
+      if (existingItem?.data) {
+        existingItem.data.follow = false;
+        existingItem.loaded = new Date().toISOString();
+      }
+    });
+  },
   initialState: initialState,
   name: 'user',
   reducers: {

@@ -71,6 +71,12 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
             value: 'feed',
           },
           {
+            href: `/my/organizations`,
+            label: messages.tabs.myOrganisations(),
+            value: 'organizations',
+          },
+
+          {
             href: `/my/settings`,
             label: messages.tabs.settings(),
             value: 'settings',

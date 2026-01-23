@@ -11,7 +11,7 @@ export default makeMessages('feat.home', {
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
     },
-    emptyListMessage: m('You are not signed up for any acitvities'),
+    emptyListMessage: m('You are not signed up for any activities'),
     eventStatus: {
       booked: m<{ org: string }>(
         'You have been booked for this event and organizers are expecting you. Contact {org} if you need to cancel.'
@@ -83,7 +83,35 @@ export default makeMessages('feat.home', {
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
+    myOrganisations: m('My organizations'),
     settings: m('Settings'),
+  },
+  myOrganisations: {
+    emptyState: m(
+      'You are not a member of any organizations yet. Join an organization to see it here.'
+    ),
+    drawer: {
+      title: m('Notification settings'),
+      subtitle: m<{ orgName: string }>('Settings for {orgName}'),
+    },
+    notifications: {
+      follow: {
+        label: m('Following'),
+        description: m('Show activities from this organization in your feed'),
+      },
+      email: {
+        label: m('Email notifications'),
+        description: m('Coming soon'),
+      },
+      calls: {
+        label: m('Call notifications'),
+        description: m('Coming soon'),
+      },
+    },
+    role: m<{ role: string }>('Role: {role}'),
+    viewOrganisation: m('View organization'),
+    settingsUpdated: m('Settings updated'),
+    settingsError: m('Failed to update settings'),
   },
   title: m('My Zetkin'),
 });
