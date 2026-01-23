@@ -21,14 +21,9 @@ export default function useSurveyResponseStats(
   );
 
   return loadItemIfNecessary(statsItem, dispatch, {
+    actionOnError: (err) => responseStatsError([surveyId, err]),
     actionOnLoad: () => responseStatsLoad(surveyId),
     actionOnSuccess: (stats) => responseStatsLoaded([surveyId, stats]),
-    loader: () =>
-      apiClient
-        .rpc(getSurveyResponseStats, { orgId, surveyId })
-        .catch((err) => {
-          dispatch(responseStatsError([surveyId, err]));
-          return null;
-        }),
+    loader: () => apiClient.rpc(getSurveyResponseStats, { orgId, surveyId }),
   });
 }

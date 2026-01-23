@@ -264,12 +264,9 @@ const surveysSlice = createSlice({
     },
     responseStatsLoaded: (
       state,
-      action: PayloadAction<[number, SurveyResponseStats | null]>
+      action: PayloadAction<[number, SurveyResponseStats]>
     ) => {
       const [surveyId, stats] = action.payload;
-      if (!stats) {
-        return;
-      }
       state.responseStatsBySurveyId[surveyId].data = stats;
       state.responseStatsBySurveyId[surveyId].isLoading = false;
       state.responseStatsBySurveyId[surveyId].loaded = new Date().toISOString();
