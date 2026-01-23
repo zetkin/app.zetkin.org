@@ -9,10 +9,7 @@ import {
 import { ZetkinMembership, ZetkinUser } from 'utils/types/zetkin';
 import { ZetkinOrgUser } from './types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
-import {
-  orgFollowed,
-  orgUnfollowed,
-} from 'features/organizations/store';
+import { orgFollowed, orgUnfollowed } from 'features/organizations/store';
 
 export interface UserStoreSlice {
   membershipList: RemoteList<ZetkinMembership & { id: number }>;

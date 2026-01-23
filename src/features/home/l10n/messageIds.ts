@@ -48,6 +48,33 @@ export default makeMessages('feat.home', {
   footer: {
     privacyPolicy: m('Privacy policy'),
   },
+  myOrganisations: {
+    drawer: {
+      subtitle: m<{ orgName: string }>('Settings for {orgName}'),
+      title: m('Notification settings'),
+    },
+    emptyState: m(
+      'You are not a member of any organizations yet. Join an organization to see it here.'
+    ),
+    notifications: {
+      calls: {
+        description: m('Coming soon'),
+        label: m('Call notifications'),
+      },
+      email: {
+        description: m('Coming soon'),
+        label: m('Email notifications'),
+      },
+      follow: {
+        description: m('Show activities from this organization in your feed'),
+        label: m('Following'),
+      },
+    },
+    role: m<{ role: string }>('Role: {role}'),
+    settingsError: m('Failed to update settings'),
+    settingsUpdated: m('Settings updated'),
+    viewOrganisation: m('View organization'),
+  },
   newLandingPageAlert: {
     description: m(
       'If you are looking for the organizer pages, you can find them from now on by clicking the button in the header below.'
@@ -85,33 +112,6 @@ export default makeMessages('feat.home', {
     home: m('My activities'),
     myOrganisations: m('My organizations'),
     settings: m('Settings'),
-  },
-  myOrganisations: {
-    emptyState: m(
-      'You are not a member of any organizations yet. Join an organization to see it here.'
-    ),
-    drawer: {
-      title: m('Notification settings'),
-      subtitle: m<{ orgName: string }>('Settings for {orgName}'),
-    },
-    notifications: {
-      follow: {
-        label: m('Following'),
-        description: m('Show activities from this organization in your feed'),
-      },
-      email: {
-        label: m('Email notifications'),
-        description: m('Coming soon'),
-      },
-      calls: {
-        label: m('Call notifications'),
-        description: m('Coming soon'),
-      },
-    },
-    role: m<{ role: string }>('Role: {role}'),
-    viewOrganisation: m('View organization'),
-    settingsUpdated: m('Settings updated'),
-    settingsError: m('Failed to update settings'),
   },
   title: m('My Zetkin'),
 });

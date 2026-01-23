@@ -95,7 +95,7 @@ const OrganisationSettingsDrawer: FC<OrganisationSettingsDrawerProps> = ({
               sx={{ height: 48, width: 48 }}
             />
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <ZUIText variant="bodyLgSemiBold">{orgTitle}</ZUIText>
+              <ZUIText variant="headingSm">{orgTitle}</ZUIText>
               {membership.role && (
                 <ZUIText color="secondary" variant="bodySmRegular">
                   {messages.myOrganisations.role({ role: membership.role })}
@@ -116,13 +116,11 @@ const OrganisationSettingsDrawer: FC<OrganisationSettingsDrawerProps> = ({
                 label={messages.myOrganisations.notifications.follow.label()}
                 onChange={handleFollowToggle}
               />
-              <ZUIText
-                color="secondary"
-                sx={{ ml: 6, mt: -0.5 }}
-                variant="bodySmRegular"
-              >
-                {messages.myOrganisations.notifications.follow.description()}
-              </ZUIText>
+              <Box sx={{ ml: 6, mt: -0.5 }}>
+                <ZUIText color="secondary" variant="bodySmRegular">
+                  {messages.myOrganisations.notifications.follow.description()}
+                </ZUIText>
+              </Box>
             </Box>
 
             <Box>
@@ -132,13 +130,11 @@ const OrganisationSettingsDrawer: FC<OrganisationSettingsDrawerProps> = ({
                 label={messages.myOrganisations.notifications.email.label()}
                 onChange={() => {}}
               />
-              <ZUIText
-                color="secondary"
-                sx={{ ml: 6, mt: -0.5 }}
-                variant="bodySmRegular"
-              >
-                {messages.myOrganisations.notifications.email.description()}
-              </ZUIText>
+              <Box sx={{ ml: 6, mt: -0.5 }}>
+                <ZUIText color="secondary" variant="bodySmRegular">
+                  {messages.myOrganisations.notifications.email.description()}
+                </ZUIText>
+              </Box>
             </Box>
 
             <Box>
@@ -148,13 +144,11 @@ const OrganisationSettingsDrawer: FC<OrganisationSettingsDrawerProps> = ({
                 label={messages.myOrganisations.notifications.calls.label()}
                 onChange={() => {}}
               />
-              <ZUIText
-                color="secondary"
-                sx={{ ml: 6, mt: -0.5 }}
-                variant="bodySmRegular"
-              >
-                {messages.myOrganisations.notifications.calls.description()}
-              </ZUIText>
+              <Box sx={{ ml: 6, mt: -0.5 }}>
+                <ZUIText color="secondary" variant="bodySmRegular">
+                  {messages.myOrganisations.notifications.calls.description()}
+                </ZUIText>
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -173,10 +167,9 @@ const OrganisationListItem: FC<OrganisationListItemProps> = ({
   onOpenSettings,
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId, orgTitle, role } = {
+  const { orgId, orgTitle } = {
     orgId: membership.organization.id,
     orgTitle: membership.organization.title,
-    role: membership.role,
   };
   const isFollowing = membership.follow !== false;
 
@@ -218,7 +211,7 @@ const OrganisationListItem: FC<OrganisationListItemProps> = ({
           onClick={(e) => e.stopPropagation()}
           style={{ textDecoration: 'none' }}
         >
-          <ZUIText
+          <Box
             sx={{
               '&:hover': {
                 textDecoration: 'underline',
@@ -227,10 +220,9 @@ const OrganisationListItem: FC<OrganisationListItemProps> = ({
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
             }}
-            variant="bodyLgSemiBold"
           >
-            {orgTitle}
-          </ZUIText>
+            <ZUIText variant="bodyMdSemiBold">{orgTitle}</ZUIText>
+          </Box>
         </Link>
         {isFollowing && (
           <Box sx={{ mt: 0.5 }}>
