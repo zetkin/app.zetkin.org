@@ -46,8 +46,8 @@ export default class PersonFieldColumnType
 
         return <div>{value}</div>;
       },
-      valueGetter: (params) => {
-        const cell = params.row[params.field];
+      valueGetter: (value, row, column2) => {
+        const cell = row[column2.field];
         return getValue(cell, column);
       },
     };

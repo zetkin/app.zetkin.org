@@ -1,11 +1,7 @@
 import { useRouter } from 'next/router';
 import { Box, Chip } from '@mui/material';
 import { FC, useState } from 'react';
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from '@mui/x-data-grid-pro';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 import { ZetkinViewColumn } from '../../types';
 import { ZetkinSurveyOption } from 'utils/types/zetkin';
@@ -48,8 +44,8 @@ export default class SurveyOptionsColumnType
           surveyOptionsColumnSortRank(v1) - surveyOptionsColumnSortRank(v2)
         );
       },
-      valueGetter: (params: GridValueGetterParams) => {
-        const cell: SurveyOptionsViewCell = params.row[params.field];
+      valueGetter: (value, row) => {
+        const cell: SurveyOptionsViewCell = row[value];
         if (!cell?.length) {
           return '';
         }

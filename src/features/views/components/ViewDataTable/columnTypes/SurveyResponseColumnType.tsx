@@ -1,11 +1,7 @@
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from '@mui/x-data-grid-pro';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { History } from '@mui/icons-material';
 
 import { getEllipsedString } from 'utils/stringUtils';
@@ -36,8 +32,7 @@ export default class SurveyResponseColumnType
         return <Cell cell={params.row[params.field]} />;
       },
       sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
-      valueGetter: (params: GridValueGetterParams) => {
-        const cell: SurveyResponseViewCell = params.row[params.field];
+      valueGetter: (cell: SurveyResponseViewCell) => {
         if (!cell?.length) {
           return '';
         }
