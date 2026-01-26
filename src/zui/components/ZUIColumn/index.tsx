@@ -1,8 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 
-import theme from 'zui/theme';
-
 type Props = {
   children: React.ReactNode;
   /**
@@ -19,27 +17,31 @@ type Props = {
   sx?: object;
 };
 
-const ZUIColumn: FC<Props> = (props) => {
-  const mergedSx = Object.assign(
-    {
-      display: 'flex',
-      flexBasis: 'auto',
-      flexDirection: 'column',
-      flexGrow: props.size ? 0 : 1,
-      gap: 2,
-      maxWidth: '100%',
-      minWidth: 0,
-      ...(props.size
-        ? {
-            [theme.containerQueries.up('sm')]: {
-              width: `calc(100% * ${props.size} / var(--parentColumns) - (var(--parentColumns) - ${props.size}) * var(--parentSpacing) / var(--parentColumns))`,
-            },
-          }
-        : {}),
-    },
-    props.sx
-  );
-  return <Box {...{ sx: mergedSx }}>{props.children}</Box>;
-};
+const ZUIColumn: FC<Props> = ({ children, size, sx }) => (
+  <Box
+    sx={[
+      {
+        display: 'flex',
+        flexBasis: 'auto',
+        flexDirection: 'column',
+        flexGrow: size ? 0 : 1,
+        gap: 2,
+        maxWidth: '100%',
+        minWidth: 0,
+      },
+      (theme) =>
+        size
+          ? {
+              [theme.containerQueries.up('sm')]: {
+                width: `calc(100% * ${size} / var(--parentColumns) - (var(--parentColumns) - ${size}) * var(--parentSpacing) / var(--parentColumns))`,
+              },
+            }
+          : {},
+      ...(Array.isArray(sx) ? sx : [sx]),
+    ]}
+  >
+    {children}
+  </Box>
+);
 
 export default ZUIColumn;

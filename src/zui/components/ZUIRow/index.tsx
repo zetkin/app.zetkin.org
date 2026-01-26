@@ -2,16 +2,17 @@ import { Stack } from '@mui/material';
 import { FC, ReactElement } from 'react';
 
 import ZUIColumn from '../ZUIColumn';
-import theme from 'zui/theme';
 
 type Props = {
   children?: ReactElement<typeof ZUIColumn> | ReactElement<typeof ZUIColumn>[];
   sx?: object;
 };
 
-const ZUIRow: FC<Props> = (props) => {
-  const mergedSx = Object.assign(
-    {
+const ZUIRow: FC<Props> = ({ children, sx }) => (
+  <Stack
+    direction="row"
+    sx={[
+      (theme) => ({
       '--parentColumns': 12,
       '--parentSpacing': theme.spacing(2),
       alignItems: 'flex-start',
@@ -19,14 +20,13 @@ const ZUIRow: FC<Props> = (props) => {
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: 'var(--parentSpacing)',
-    },
-    props.sx
-  );
-  return (
-    <Stack direction="row" useFlexGap {...{ sx: mergedSx }}>
-      {props.children}
+      }),
+      ...(Array.isArray(sx) ? sx : [sx]),
+    ]}
+    useFlexGap
+  >
+    {children}
     </Stack>
   );
-};
 
 export default ZUIRow;
