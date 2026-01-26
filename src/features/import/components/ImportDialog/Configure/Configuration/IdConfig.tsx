@@ -38,7 +38,10 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   }, [importID]);
 
   const idField = uiDataColumn.originalColumn.idField;
-  const selectedImportIDIsOther = importID && importID != idField;
+
+  const importIDHasBeenSelected = !!importID;
+  const selectedImportIDIsOtherThanTheFieldBeingConfigured =
+    importIDHasBeenSelected && importID != idField;
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
@@ -91,7 +94,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                   <Checkbox
                     checked={importID == idField}
                     onChange={() => {
-                      if (selectedImportIDIsOther) {
+                      if (selectedImportIDIsOtherThanTheFieldBeingConfigured) {
                         showConfirmDialog({
                           onSubmit: () => updateImportID(idField),
                           title:
