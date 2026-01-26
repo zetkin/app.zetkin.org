@@ -215,8 +215,7 @@ export const getStaticColumns = (
           </ZUIPersonHoverCard>
         )),
       sortComparator: (value0, value1) => sortByName(value0, value1),
-      valueFormatter: (params) =>
-        getPeopleString(params.value as ZetkinPersonType[]),
+      valueFormatter: (value: ZetkinPersonType[]) => getPeopleString(value),
     },
     {
       field: 'subjects',
@@ -234,8 +233,7 @@ export const getStaticColumns = (
         makeEmptyFilterOperator(messages),
       ],
       sortComparator: (value0, value1) => sortByName(value0, value1),
-      valueFormatter: (params) =>
-        getPeopleString(params.value as ZetkinPersonType[]),
+      valueFormatter: (value: ZetkinPersonType[]) => getPeopleString(value),
     },
     {
       field: 'created',
@@ -247,7 +245,7 @@ export const getStaticColumns = (
         />
       ),
       type: 'date',
-      valueFormatter: (params) => new Date(params.value),
+      valueFormatter: (value) => new Date(value),
     },
     {
       field: 'updated',
@@ -259,7 +257,7 @@ export const getStaticColumns = (
         />
       ),
       type: 'date',
-      valueFormatter: (params) => new Date(params.value),
+      valueFormatter: (value) => new Date(value),
     },
     {
       field: 'nextMilestoneTitle',
@@ -285,8 +283,8 @@ export const getStaticColumns = (
             ).next_milestone?.id.toString() !== item.value
         ),
       ],
-      valueGetter: (params) =>
-        (params.row as ZetkinJourneyInstance).next_milestone?.title,
+      valueGetter: (value, row: ZetkinJourneyInstance) =>
+        row.next_milestone?.title,
     },
     {
       field: 'nextMilestoneDeadline',
@@ -300,9 +298,9 @@ export const getStaticColumns = (
           />
         ) : null,
       type: 'date',
-      valueFormatter: (params) => new Date(params.value),
-      valueGetter: (params) =>
-        (params.row as ZetkinJourneyInstance).next_milestone?.deadline,
+      valueFormatter: (value) => new Date(value),
+      valueGetter: (value, row: ZetkinJourneyInstance) =>
+        row.next_milestone?.deadline,
     },
     {
       field: 'summary',
