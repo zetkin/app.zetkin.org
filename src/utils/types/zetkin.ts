@@ -138,10 +138,11 @@ export interface ZetkinOrganizerAction {
 
 export interface ZetkinUser {
   email: string;
+  email_is_verified: boolean;
   first_name: string;
   id: number;
   is_superuser?: boolean;
-  is_verifiend: boolean;
+  is_verified: boolean;
   lang: string | null;
   last_name: string;
   phone: string | null;
@@ -217,6 +218,7 @@ export interface ZetkinSession {
   created: string;
   level: number;
   user: ZetkinUser;
+  factors: ('email_password' | 'phone_otp' | 'api_key')[];
 }
 
 export interface ZetkinCallAssignment {
