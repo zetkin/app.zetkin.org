@@ -26,7 +26,6 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import NoEventsBlurb from '../components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
-import ZUIModal from 'zui/components/ZUIModal';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from '../../../zui/components/ZUIButton';
@@ -37,6 +36,7 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import SignupChoiceModal from '../components/SignupChoiceModal';
 
 type Props = {
   orgId: number;
@@ -514,26 +514,13 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </List>
       </ZUIDrawerModal>
-      <ZUIModal
-        onClose={() => setPostAuthEvent(null)}
-        open={!!postAuthEvent}
-        primaryButton={{
-          href: `/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`,
-          label: messages.authDialog.loginButton(),
-        }}
-        secondaryButton={{
-          label: messages.authDialog.cancelButton(),
-          onClick: () => setPostAuthEvent(null),
-        }}
-        size="small"
-        title={messages.authDialog.label()}
-      >
-        <Box sx={{ paddingTop: '0.75rem' }}>
-          <ZUIText>
-            <Msg id={messageIds.authDialog.content} />
-          </ZUIText>
-        </Box>
-      </ZUIModal>
+      {postAuthEvent && (
+        <SignupChoiceModal
+          eventId={postAuthEvent.id}
+          onClose={() => setPostAuthEvent(null)}
+          orgId={postAuthEvent.organization.id}
+        />
+      )}
     </Box>
   );
 };
