@@ -71,15 +71,17 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
       }}
       onColumnVisibilityModelChange={(newModel) => setVisibleColumns(newModel)}
       rows={rows}
-      slotProps={{
-        toolbar: {
-          gridColumns: columnsWithHeaderTitles,
-          onQuickSearchChange: setQuickSearch,
-          onSortModelChange: modelGridProps.onSortModelChange,
-          sortModel: modelGridProps.sortModel,
-        },
+      slots={{
+        toolbar: (props) => (
+          <Toolbar
+            {...props}
+            gridColumns={columnsWithHeaderTitles}
+            onSortModelChange={modelGridProps.onSortModelChange}
+            setQuickSearch={setQuickSearch}
+            sortModel={modelGridProps.sortModel}
+          />
+        ),
       }}
-      slots={{ toolbar: Toolbar }}
       {...modelGridProps}
       {...dataGridProps}
     />

@@ -44,7 +44,7 @@ test.describe('View detail page', () => {
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`
@@ -88,7 +88,7 @@ test.describe('View detail page', () => {
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`

@@ -48,8 +48,8 @@ import { ChartPluginOptions } from '@mui/x-charts/internals';
 import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
-import { BoxOwnProps } from '@mui/system/Box/Box';
 import { scaleLog } from 'd3-scale';
+import { BoxOwnProps } from '@mui/system';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
