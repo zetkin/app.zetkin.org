@@ -108,7 +108,17 @@ const TagChip: React.FunctionComponent<{
         arrow
         title={
           <>
-            {tag.title} <br /> {tag.description || ''}
+            <Box component="p" sx={{ margin: 0 }}>
+              <span>{tag.title}</span>
+              {isAppliedTag && tag.value && (
+                <Box component="span">: {tag.value}</Box>
+              )}
+            </Box>
+            {tag.description && (
+              <Box component="p" sx={{ marginBottom: 0 }}>
+                {tag.description}
+              </Box>
+            )}
           </>
         }
       >
@@ -118,31 +128,31 @@ const TagChip: React.FunctionComponent<{
             display: 'flex',
           }}
         >
-            <Box
-              className="title"
-              data-testid="TagChip-value"
-              sx={{
+          <Box
+            className="title"
+            data-testid="TagChip-value"
+            sx={{
               backgroundColor: tag.color || DEFAULT_TAG_COLOR,
               ...commonTextStyle,
               color: getContrastColor(tag.color || DEFAULT_TAG_COLOR),
-              }}
-            >
+            }}
+          >
             {tag.title}
-            </Box>
-            {isAppliedTag && (
-              <Box
-                className="valueArea"
-                sx={{
+          </Box>
+          {isAppliedTag && (
+            <Box
+              className="valueArea"
+              sx={{
                 ...commonTextStyle,
                 color: getContrastColor(
                   rgbToHex(lighten(tag.color || DEFAULT_TAG_COLOR, 0.7))
                 ),
-                  minWidth: '3ch',
-                }}
-              >
+                minWidth: '3ch',
+              }}
+            >
               {tag.value}
-              </Box>
-            )}
+            </Box>
+          )}
         </Box>
       </Tooltip>
       {deleteButton}
