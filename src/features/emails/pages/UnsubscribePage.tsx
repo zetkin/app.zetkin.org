@@ -13,14 +13,30 @@ import messageIds from '../l10n/messageIds';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 
-type Props = {
-  org: ZetkinOrganization;
+type PropsBase = {
   unsubUrl: string;
 };
 
-const UnsubscribePage: FC<Props> = ({ org, unsubUrl }) => {
+type PropsWithSender = PropsBase & {
+  senderEmail: string;
+  senderName: string;
+};
+
+type PropsWithOrg = PropsBase & {
+  org: ZetkinOrganization;
+};
+
+const isPropsWithSender = (
+  props: PropsWithOrg | PropsWithSender
+): props is PropsWithSender => {
+  return 'senderName' in props;
+};
+
+const UnsubscribePage: FC<PropsWithOrg | PropsWithSender> = (props) => {
   const [checked, setChecked] = useState(false);
   const messages = useMessages(messageIds);
+
+  const hasSender = isPropsWithSender(props);
 
   return (
     <Box
@@ -34,10 +50,32 @@ const UnsubscribePage: FC<Props> = ({ org, unsubUrl }) => {
     >
       <Box maxWidth={500}>
         <Typography mb={1} variant="h4">
-          <Msg id={messageIds.unsubscribePage.h} values={{ org: org.title }} />
+          {hasSender ? (
+            <Msg id={messageIds.unsubscribePage.senderH} />
+          ) : (
+            <Msg
+              id={messageIds.unsubscribePage.h}
+              values={{ org: props.org.title }}
+            />
+          )}
         </Typography>
+        {hasSender && (
+          <Typography mb={1} variant="h6">
+            <Msg
+              id={messageIds.unsubscribePage.senderDetails}
+              values={{
+                senderEmail: props.senderEmail,
+                senderName: props.senderName,
+              }}
+            />
+          </Typography>
+        )}
         <Typography>
-          <Msg id={messageIds.unsubscribePage.info} />
+          {hasSender ? (
+            <Msg id={messageIds.unsubscribePage.senderInfo} />
+          ) : (
+            <Msg id={messageIds.unsubscribePage.info} />
+          )}
         </Typography>
         <Box my={2}>
           <FormControlLabel
@@ -54,7 +92,7 @@ const UnsubscribePage: FC<Props> = ({ org, unsubUrl }) => {
           />
         </Box>
         {checked && (
-          <Button href={unsubUrl} variant="outlined">
+          <Button href={props.unsubUrl} variant="outlined">
             <Msg id={messageIds.unsubscribePage.unsubButton} />
           </Button>
         )}
