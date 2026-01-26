@@ -41,7 +41,6 @@
     "@mui/lab": "^7.0.0-beta.10",
     "@mui/material": "^7.0.1",
     "@mui/material-nextjs": "^7.0.0",
-    "@mui/styles": "^5.10.6",
     "@mui/system": "^7.0.1",
     "@mui/x-charts-pro": "^8.19.0",
     "@mui/x-data-grid-pro": "7.29.12",
