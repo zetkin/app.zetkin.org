@@ -97,6 +97,12 @@ export default makeMessages('feat.smartSearch', {
         ),
         title: m('People on a journey'),
       },
+      official: {
+        description: m(
+          'Find people who are officials (organizers or administrators) in an organization'
+        ),
+        title: m('Officials'),
+      },
       person_data: {
         description: m('Name, address, email and more!'),
         title: m('Personal info'),
@@ -443,6 +449,23 @@ export default makeMessages('feat.smartSearch', {
       }>('{numPeople, plural, one {person} other {people}}'),
       numPeopleSelect:
         m<{ numPeopleSelect: ReactElement | number }>('{numPeopleSelect}'),
+    },
+    official: {
+      examples: {
+        one: m('Add all people who are officials in the organization.'),
+        two: m('Remove all people who are administrators in the organization.'),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        roleSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} all people who are {roleSelect} in the organization.'
+      ),
+      roleSelect: {
+        admin: m('administrators'),
+        any: m('officials'),
+        organizer: m('organizers'),
+      },
     },
     personData: {
       ellipsis: m('...'),
