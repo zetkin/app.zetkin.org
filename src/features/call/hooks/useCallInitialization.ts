@@ -10,6 +10,8 @@ import useUser from 'core/hooks/useUser';
 import { RootState } from 'core/store';
 import useMyAssignments from './useMyAssignments';
 
+const LANES_TTL = 3_600_000;
+
 export default function useCallInitialization() {
   const dispatch = useAppDispatch();
   const queryParams = useSearchParams();
@@ -76,14 +78,19 @@ export default function useCallInitialization() {
       !!user &&
       callLanes.userId == user.id;
     const savedLanesAreFresh =
-      callLanes.timestamp > new Date().getTime() - 3_600_000;
+      callLanes.timestamp > new Date().getTime() - LANES_TTL;
     canInitialize = thisUserHasSavedLanes && savedLanesAreFresh;
   }
 
   const initialize = () => {
     if (assignmentIdFromQuery) {
+      const savedLanesAreFresh =
+        callLanes && callLanes.timestamp > new Date().getTime() - LANES_TTL;
       dispatch(
-        initiateAssignment([parseInt(assignmentIdFromQuery), activeLanes])
+        initiateAssignment([
+          parseInt(assignmentIdFromQuery),
+          savedLanesAreFresh ? activeLanes : [],
+        ])
       );
       history.replaceState(null, '', '/call');
     } else if (callLanes) {
