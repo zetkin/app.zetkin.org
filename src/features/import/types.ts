@@ -92,8 +92,8 @@ export type DateColumn = BaseColumn & {
   kind: ColumnKind.DATE;
 };
 
-export const genders = ['f', 'm', 'o'] as const;
 export type Gender = 'f' | 'm' | 'o';
+export const genders: readonly Gender[] = ['f', 'm', 'o'];
 
 export type GenderColumn = BaseColumn & {
   field: string;
