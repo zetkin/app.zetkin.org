@@ -46,7 +46,7 @@ The CI server will run eslint and typescript to verify type safety and code
 style. You can run the linter yourself like this:
 
 ```
-$ yarn lint
+$ npm run lint
 ```
 
 ### Automatic formatting with Prettier
@@ -113,7 +113,7 @@ When the GUI is rendered, translations take precedence. This means that **if you
 to change a string** that already exists, you need to update it in `messageIds` and
 then delete the entry for that string in the relevant YAML file for all languages.
 
-Changes to the YAML files should only ever happen using `yarn make-yaml`. But you do
+Changes to the YAML files should only ever happen using `npm run make-yaml`. But you do
 not need to do this.
 
 More information about how our internationalization system works can be found in
@@ -143,7 +143,7 @@ try to assess whether the changes to the code break anything.
 When you submit your first PR, our CI will need to be approved by a core team member
 before it runs.
 
-You can be quite certain that CI will pass if you run `yarn suite` locally and it
+You can be quite certain that CI will pass if you run `npm run suite` locally and it
 passes on your machine.
 
 ### Review process
@@ -162,7 +162,7 @@ Here's a list of all the steps to contribute, in summary:
 - [ ] Write a comment on the issue saying something like "I'm giving this a try!" and include your questions if you have any
 - [ ] Create a branch according to naming convention, e.g. `issue-1234/month-calendar-view`
 - [ ] Work on the task
-- [ ] Run `yarn lint` to verify code style and formatting
+- [ ] Run `npm run lint` to verify code style and formatting
 - [ ] Make a commits according to conventions, e.g. "Render grid of 7 days by 6 weeks"
 - [ ] Push your branch
 - [ ] Create a pull request and wait for review
