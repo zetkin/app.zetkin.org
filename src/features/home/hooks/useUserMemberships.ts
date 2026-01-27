@@ -10,6 +10,8 @@ export default function useUserMemberships() {
     actionOnLoad: () => membershipsLoad(),
     actionOnSuccess: (data) => membershipsLoaded(data),
     loader: () =>
-      apiClient.get<ZetkinMembership[]>('/api/users/me/memberships'),
+      apiClient
+        .get<ZetkinMembership[]>('/api/users/me/memberships')
+        .catch(() => []),
   });
 }
