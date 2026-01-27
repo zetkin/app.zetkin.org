@@ -40,6 +40,8 @@ import { removeOffset } from 'utils/dateUtils';
 import useUserMemberships from 'features/home/hooks/useUserMemberships';
 import useUser from 'core/hooks/useUser';
 import { PublicEventSignup } from '../components/PublicEventSignup';
+import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
+import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
 
 type Props = {
   eventId: number;
@@ -332,6 +334,10 @@ const SignUpSection: FC<{
   const user = useUser();
   const pathname = usePathname();
   const [signupSuccessful, setSignupSuccessful] = useState(false);
+  const hasUnauthSignup = useFeatureWithOrg(
+    UNAUTH_EVENT_SIGNUP,
+    event.organization.id
+  );
 
   if (event.cancelled) {
     return (
@@ -342,6 +348,9 @@ const SignUpSection: FC<{
       />
     );
   }
+
+  const notAuthenticated = !user;
+  const showUnauthSignup = notAuthenticated && hasUnauthSignup;
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
@@ -357,7 +366,7 @@ const SignUpSection: FC<{
       )}
 
       <Box alignItems="center" display="flex" flexDirection="column" gap={1}>
-        {!user ? (
+        {showUnauthSignup ? (
           <>
             <Box width="100%">
               <PublicEventSignup

@@ -14,6 +14,7 @@ import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
 
 import EventListItem from 'features/home/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/home/types';
@@ -37,12 +38,15 @@ import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import SignupChoiceModal from '../components/SignupChoiceModal';
+import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
+import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const router = useRouter();
   const isMobile = useIsMobile();
   const intl = useIntl();
   const messages = useMessages(messageIds);
@@ -59,6 +63,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     orgIdsToFilterBy,
   } = useAppSelector((state) => state.organizations.filters);
 
+  const hasUnauthSignup = useFeatureWithOrg(UNAUTH_EVENT_SIGNUP, orgId);
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const [drawerContent, setDrawerContent] = useState<
@@ -364,8 +369,14 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                   href={`/o/${event.organization.id}/events/${event.id}`}
                   onClickSignUp={(ev) => {
                     if (!user) {
-                      setPostAuthEvent(event);
-                      ev.preventDefault();
+                      if (hasUnauthSignup) {
+                        setPostAuthEvent(event);
+                        ev.preventDefault();
+                      } else {
+                        router.push(
+                          `/o/${event.organization.id}/events/${event.id}`
+                        );
+                      }
                     }
                   }}
                 />
