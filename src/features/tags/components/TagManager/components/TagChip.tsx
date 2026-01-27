@@ -27,9 +27,14 @@ const TagChip: React.FunctionComponent<{
   const isAppliedTag = isValueTag(tag);
 
   const commonTextStyle = {
+    '&:last-of-type': {
+      paddingInline: isAppliedTag ? '0.375rem 0.75rem' : '0.75rem',
+    },
+    lineHeight: '1.375',
     maxWidth: '100%',
     overflow: 'hidden',
-    padding: '0.125rem 0.75rem ',
+    paddingBlock: '0.0625rem',
+    paddingInline: '0.75rem 0.375rem',
     textOverflow: 'ellipsis',
     transition: 'translate 0.1s',
     whiteSpace: 'nowrap',
@@ -80,7 +85,7 @@ const TagChip: React.FunctionComponent<{
             translate: '-1.25rem  0',
           },
           'div:last-of-type': {
-            translate: deletable ? '-0.5rem 0' : '0',
+            translate: deletable ? '-0.375rem 0' : '0',
           },
         },
 
@@ -88,11 +93,12 @@ const TagChip: React.FunctionComponent<{
         backgroundColor: isAppliedTag
           ? lighten(tag.color || DEFAULT_TAG_COLOR, 0.7)
           : 'currentColor',
-        border: '0.0625rem solid currentColor',
+        border: '0.125rem solid currentColor',
         borderRadius: '1rem',
         color: tag.color || DEFAULT_TAG_COLOR,
         cursor: clickable && !disabled ? 'pointer' : 'default',
         display: 'inline-flex',
+
         fontSize: {
           large: '1.2em',
           medium: '1.0em',
