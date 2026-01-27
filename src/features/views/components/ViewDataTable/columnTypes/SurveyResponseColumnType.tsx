@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 import {
@@ -63,27 +62,8 @@ export default class SurveyResponseColumnType
   }
 }
 
-const useStyles = makeStyles({
-  cell: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '100%',
-    width: '100%',
-  },
-  content: {
-    '-webkit-box-orient': 'vertical',
-    '-webkit-line-clamp': 2,
-    display: '-webkit-box',
-    maxHeight: '100%',
-    overflow: 'hidden',
-    whiteSpace: 'normal',
-    width: '100%',
-  },
-});
-
 const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
   const { orgId } = useRouter().query;
-  const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
   const { open: openPopper, close: closePopper } = useToggleDebounce(
@@ -101,11 +81,26 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
     return d1.getTime() - d0.getTime();
   });
   return (
-    <Box className={styles.cell}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        height: '100%',
+        width: '100%',
+      }}
+    >
       <Box
-        className={styles.content}
         onMouseOut={closePopper}
         onMouseOver={openPopper}
+        sx={{
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+          display: '-webkit-box',
+          maxHeight: '100%',
+          overflow: 'hidden',
+          whiteSpace: 'normal',
+          width: '100%',
+        }}
       >
         <Box alignItems="center" display="flex" justifyContent="space-between">
           {sorted[0].text}

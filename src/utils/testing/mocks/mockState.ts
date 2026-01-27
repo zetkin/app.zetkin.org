@@ -86,6 +86,7 @@ export default function mockState(overrides?: RootState) {
       selectedEventIds: [],
       statsByEventId: {},
       typeList: remoteList(),
+      unverifiedParticipantsByEventId: {},
       userEventList: remoteList(),
     },
     files: {
@@ -130,6 +131,7 @@ export default function mockState(overrides?: RootState) {
     },
     profiles: {
       fieldsList: remoteList(),
+      notesByPersonId: {},
       orgsByPersonId: {},
       personById: {},
     },
@@ -145,6 +147,7 @@ export default function mockState(overrides?: RootState) {
     },
     surveys: {
       elementsBySurveyId: {},
+      extendedSurveyBySurveyId: {},
       responseStatsBySurveyId: {},
       statsBySurveyId: {},
       submissionList: remoteList(),

@@ -1,7 +1,9 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { Link } from '@mui/material';
 
+import globalMessageIds from 'core/i18n/messageIds';
 import { IColumnType } from '.';
+import { Msg } from 'core/i18n';
 import {
   NATIVE_PERSON_FIELDS,
   PersonFieldViewColumn,
@@ -35,6 +37,13 @@ export default class PersonFieldColumnType
 
         if (column.config.field == NATIVE_PERSON_FIELDS.EMAIL) {
           return <Link href={`mailto:${value}`}>{value}</Link>;
+        }
+
+        if (column.config.field == NATIVE_PERSON_FIELDS.GENDER) {
+          if (value == 'm' || value == 'f' || value == 'o') {
+            return <Msg id={globalMessageIds.genderOptions[value]} />;
+          }
+          return <Msg id={globalMessageIds.genderOptions.unspecified} />;
         }
 
         if (

@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import React from 'react';
 import {
   FormatBold,
@@ -8,6 +7,7 @@ import {
   FormatQuote,
   FormatStrikethrough,
 } from '@mui/icons-material';
+import { Box } from '@mui/system';
 
 import {
   AddAttachmentButton,
@@ -17,21 +17,18 @@ import {
   RemoveLinkButton,
 } from './toolbarButtons';
 
-const useStyles = makeStyles({
-  container: {
-    '& button': {
-      padding: 6,
-    },
-    marginTop: 12,
-  },
-});
-
 const Toolbar: React.FunctionComponent<{ onClickAttach?: () => void }> = ({
   onClickAttach,
 }) => {
-  const classes = useStyles();
   return (
-    <div className={classes.container}>
+    <Box
+      sx={{
+        '& button': {
+          padding: '6px',
+        },
+        marginTop: '12px',
+      }}
+    >
       <MarkButton format="bold" MarkIcon={FormatBold} />
       <MarkButton format="italic" MarkIcon={FormatItalic} />
       <MarkButton format="strikeThrough" MarkIcon={FormatStrikethrough} />
@@ -41,7 +38,7 @@ const Toolbar: React.FunctionComponent<{ onClickAttach?: () => void }> = ({
       <BlockButton BlockIcon={FormatListBulleted} format="bulleted-list" />
       <BlockButton BlockIcon={FormatListNumbered} format="numbered-list" />
       {!!onClickAttach && <AddAttachmentButton onClick={onClickAttach} />}
-    </div>
+    </Box>
   );
 };
 

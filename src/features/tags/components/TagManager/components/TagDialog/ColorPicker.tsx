@@ -12,40 +12,14 @@ const ColorPicker: React.FunctionComponent<{
   const messages = useMessages(messageIds);
 
   const error = !!value && !hexRegex.test(value);
+  /*
+   */
 
   return (
     <TextField
       error={error}
       fullWidth
       helperText={error && messages.dialog.colorErrorText()}
-      inputProps={{ 'data-testid': 'TagManager-TagDialog-colorField' }}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <Box
-              alignItems="center"
-              bgcolor={value ? `#${value}` : DEFAULT_TAG_COLOR}
-              borderRadius="7px"
-              display="flex"
-              height={30}
-              justifyContent="center"
-              width={30}
-            >
-              <ReplayIcon
-                fontSize="small"
-                onClick={() => {
-                  const newColor = randomColor();
-                  onChange({ valid: hexRegex.test(newColor), value: newColor });
-                }}
-                style={{
-                  cursor: 'pointer',
-                  opacity: 0.7,
-                }}
-              />
-            </Box>
-          </InputAdornment>
-        ),
-      }}
       label={messages.dialog.colorLabel()}
       margin="normal"
       onChange={(e) => {
@@ -56,6 +30,39 @@ const ColorPicker: React.FunctionComponent<{
       }}
       onClick={(e) => (e.target as HTMLInputElement).focus()}
       placeholder={messages.dialog.colorLabel()}
+      slotProps={{
+        htmlInput: { 'data-testid': 'TagManager-TagDialog-colorField' },
+        input: {
+          startAdornment: (
+            <InputAdornment position="start">
+              <Box
+                alignItems="center"
+                bgcolor={value ? `#${value}` : DEFAULT_TAG_COLOR}
+                borderRadius="7px"
+                display="flex"
+                height={30}
+                justifyContent="center"
+                width={30}
+              >
+                <ReplayIcon
+                  fontSize="small"
+                  onClick={() => {
+                    const newColor = randomColor();
+                    onChange({
+                      valid: hexRegex.test(newColor),
+                      value: newColor,
+                    });
+                  }}
+                  style={{
+                    cursor: 'pointer',
+                    opacity: 0.7,
+                  }}
+                />
+              </Box>
+            </InputAdornment>
+          ),
+        },
+      }}
       value={value || ''}
       variant="outlined"
     />

@@ -51,10 +51,13 @@ test.describe('View detail page', () => {
 
     await page.locator('[role=cell] >> input[type=checkbox]').nth(0).click();
     await page.locator('[role=cell] >> input[type=checkbox]').nth(1).click();
+    await page.locator('button:has-text("handle selection")').click();
 
     await Promise.all([
       page.waitForNavigation(),
-      page.click('data-testid=ViewDataTableToolbar-createFromSelection'),
+      page
+        .locator('[role="menuitem"]:has-text("create list from selection")')
+        .click(),
     ]);
 
     // Get POST requests for creating new view and columns

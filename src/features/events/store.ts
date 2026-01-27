@@ -16,6 +16,7 @@ import {
   ZetkinLocation,
 } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/home/types';
+import { EventSignupModelType } from './models';
 
 export enum ACTION_FILTER_OPTIONS {
   CONTACT_MISSING = 'missing',
@@ -69,6 +70,10 @@ export interface EventsStoreSlice {
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
+  unverifiedParticipantsByEventId: Record<
+    number,
+    RemoteList<EventSignupModelType>
+  >;
   userEventList: RemoteList<ZetkinEventWithStatus>;
 }
 
@@ -91,6 +96,7 @@ const initialState: EventsStoreSlice = {
   selectedEventIds: [],
   statsByEventId: {},
   typeList: remoteList(),
+  unverifiedParticipantsByEventId: {},
   userEventList: remoteList(),
 };
 
@@ -598,6 +604,48 @@ const eventsSlice = createSlice({
       state.typeList = remoteList(eventTypes);
       state.typeList.loaded = new Date().toISOString();
     },
+    unverifiedParticipantsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      if (!state.unverifiedParticipantsByEventId[eventId]) {
+        state.unverifiedParticipantsByEventId[eventId] = remoteList();
+      }
+
+      state.unverifiedParticipantsByEventId[eventId].isLoading = true;
+    },
+    unverifiedParticipantsLoaded: (
+      state,
+      action: PayloadAction<[number, EventSignupModelType[]]>
+    ) => {
+      const [eventId, unverifiedParticipants] = action.payload;
+      state.unverifiedParticipantsByEventId[eventId] = remoteList(
+        unverifiedParticipants
+      );
+      state.unverifiedParticipantsByEventId[eventId].loaded =
+        new Date().toISOString();
+    },
+    unverifiedSignupDeleted: (
+      state,
+      action: PayloadAction<[number, string]>
+    ) => {
+      const [eventId, signupId] = action.payload;
+      const list = state.unverifiedParticipantsByEventId[eventId];
+      if (list) {
+        list.items = list.items.filter((item) => item.id !== signupId);
+      }
+    },
+    unverifiedSignupUpdated: (
+      state,
+      action: PayloadAction<[number, EventSignupModelType]>
+    ) => {
+      const [eventId, updatedSignup] = action.payload;
+      const list = state.unverifiedParticipantsByEventId[eventId];
+      if (list) {
+        const item = list.items.find((item) => item.id === updatedSignup.id);
+        if (item) {
+          item.data = { ...item.data, ...updatedSignup };
+        }
+      }
+    },
     userEventsLoad: (state) => {
       state.userEventList.isLoading = true;
     },
@@ -787,6 +835,10 @@ export const {
   typeLoaded,
   typesLoad,
   typesLoaded,
+  unverifiedParticipantsLoad,
+  unverifiedParticipantsLoaded,
+  unverifiedSignupDeleted,
+  unverifiedSignupUpdated,
   userEventsLoad,
   userEventsLoaded,
   userResponseAdded,

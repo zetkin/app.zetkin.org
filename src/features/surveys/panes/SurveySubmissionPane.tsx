@@ -1,7 +1,7 @@
-import { makeStyles } from '@mui/styles';
-import { Box, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
 import { FC, ReactNode } from 'react';
+import NextLink from 'next/link';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';
 import { Msg } from 'core/i18n';
@@ -19,46 +19,7 @@ interface SurveySubmissionPaneProps {
   id: number;
 }
 
-const useStyles = makeStyles({
-  element: {
-    marginBottom: 20,
-  },
-  fullName: {
-    display: 'inline-block',
-    marginRight: '5.8em',
-  },
-  hidden: { fontSize: '1em' },
-  hiddenChip: {
-    backgroundColor: '#EBEBEB',
-    borderRadius: '16px',
-    display: 'flex',
-    fontSize: '0.8em',
-    marginLeft: '0.6em',
-    padding: '0.2em 0.7em',
-  },
-  linkedChip: {
-    backgroundColor: '#A7DFB1',
-    borderRadius: '16px',
-    fontSize: '0.8em',
-    marginLeft: '0.6em',
-    padding: '0.2em 0.7em',
-  },
-  question: {
-    fontWeight: 'bold',
-  },
-  response: {
-    marginTop: 10,
-  },
-  textContent: {},
-  textHeader: {
-    fontSize: '1.2em',
-    fontWeight: 'bold',
-  },
-});
-
 const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
-  const styles = useStyles();
-
   const subFuture = useHydratedSurveySubmission(orgId, id);
 
   return (
@@ -72,7 +33,15 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 <ZUIPersonLink
                   person={{ ...sub.respondent, id: sub.respondent.id }}
                 />
-                <Box className={styles.linkedChip}>
+                <Box
+                  sx={{
+                    backgroundColor: '#A7DFB1',
+                    borderRadius: '16px',
+                    fontSize: '0.8em',
+                    marginLeft: '0.6em',
+                    padding: '0.2em 0.7em',
+                  }}
+                >
                   <Msg id={messageIds.submissionPane.linked} />
                 </Box>
               </Box>
@@ -80,7 +49,10 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
           } else {
             person = (
               <Typography
-                className={styles.fullName}
+                sx={{
+                  display: 'inline-block',
+                  marginRight: '5.8em',
+                }}
               >{`${sub.respondent.first_name} ${sub.respondent.last_name}`}</Typography>
             );
           }
@@ -98,7 +70,18 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                   }}
                 />
               }
-              title={sub.survey.title}
+              title={
+                <Link
+                  color={'inherit'}
+                  component={NextLink}
+                  href={`/organize/${sub.organization.id}/projects/${
+                    sub.campaign ? sub.campaign.id : 'standalone'
+                  }/surveys/${sub.survey.id}`}
+                  underline={'hover'}
+                >
+                  {sub.survey.title}
+                </Link>
+              }
             />
             {sub.elements.map((elem) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
@@ -130,13 +113,21 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 );
               } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
                 return (
-                  <Box key={elem.id} className={styles.element}>
-                    <Typography className={styles.textHeader}>
+                  <Box
+                    key={elem.id}
+                    sx={{
+                      marginBottom: '20px',
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: '1.2em',
+                        fontWeight: 'bold',
+                      }}
+                    >
                       {elem.header}
                     </Typography>
-                    <Typography className={styles.textContent}>
-                      {elem.text}
-                    </Typography>
+                    <Typography>{elem.text}</Typography>
                   </Box>
                 );
               }
@@ -153,26 +144,35 @@ const Question: FC<{
   hidden: boolean;
   question: string;
 }> = ({ children, hidden, question }) => {
-  const styles = useStyles();
   return (
-    <Box className={styles.element}>
+    <Box
+      sx={{
+        marginBottom: '20px',
+      }}
+    >
       <Box display="flex" justifyContent="space-between">
-        <Typography
-          className={styles.question}
-          sx={{ opacity: hidden ? 0.4 : 1 }}
-        >
+        <Typography sx={{ fontWeight: 'bold', opacity: hidden ? 0.4 : 1 }}>
           {question}
         </Typography>
         {hidden && (
-          <Box className={styles.hiddenChip}>
+          <Box
+            sx={{
+              backgroundColor: '#EBEBEB',
+              borderRadius: '16px',
+              display: 'flex',
+              fontSize: '0.8em',
+              marginLeft: '0.6em',
+              padding: '0.2em 0.7em',
+            }}
+          >
             <EyeClosed />
-            <Box className={styles.hidden}>
+            <Box sx={{ fontSize: '1em' }}>
               <Msg id={messageIds.submissionPane.hidden} />
             </Box>
           </Box>
         )}
       </Box>
-      <Box className={styles.response} sx={{ opacity: hidden ? 0.4 : 1 }}>
+      <Box sx={{ marginTop: '10px', opacity: hidden ? 0.4 : 1 }}>
         {children}
       </Box>
     </Box>
