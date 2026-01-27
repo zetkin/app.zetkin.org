@@ -6,6 +6,7 @@ import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
 
 import EventListItem from 'features/home/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/home/types';
@@ -26,6 +27,8 @@ import { filtersUpdated } from '../store';
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import SignupChoiceModal from 'features/organizations/components/SignupChoiceModal';
+import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
+import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
 
 type Props = {
   campId: number;
@@ -34,11 +37,13 @@ type Props = {
 
 const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const intl = useIntl();
+  const router = useRouter();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
   const user = useUser();
   const dispatch = useAppDispatch();
   const campaign = useCampaign(orgId, campId).campaignFuture.data;
+  const hasUnauthSignup = useFeatureWithOrg(UNAUTH_EVENT_SIGNUP, orgId);
 
   const {
     allEvents,
@@ -313,8 +318,14 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
                   href={`/o/${event.organization.id}/events/${event.id}`}
                   onClickSignUp={(ev) => {
                     if (!user) {
-                      setPostAuthEvent(event);
-                      ev.preventDefault();
+                      if (hasUnauthSignup) {
+                        setPostAuthEvent(event);
+                        ev.preventDefault();
+                      } else {
+                        router.push(
+                          `/o/${event.organization.id}/events/${event.id}`
+                        );
+                      }
                     }
                   }}
                 />
