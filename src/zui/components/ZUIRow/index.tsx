@@ -3,8 +3,14 @@ import { FC, ReactElement } from 'react';
 
 import ZUIColumn from '../ZUIColumn';
 
+type ColumnOrFalsy =
+  | ReactElement<typeof ZUIColumn>
+  | null
+  | undefined
+  | boolean;
+
 type Props = {
-  children?: ReactElement<typeof ZUIColumn> | ReactElement<typeof ZUIColumn>[];
+  children?: ColumnOrFalsy | ColumnOrFalsy[];
   sx?: object;
 };
 
@@ -13,20 +19,20 @@ const ZUIRow: FC<Props> = ({ children, sx }) => (
     direction="row"
     sx={[
       (theme) => ({
-      '--parentColumns': 12,
-      '--parentSpacing': theme.spacing(2),
-      alignItems: 'flex-start',
-      containerType: 'inline-size',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 'var(--parentSpacing)',
+        '--parentColumns': 12,
+        '--parentSpacing': theme.spacing(2),
+        alignItems: 'flex-start',
+        containerType: 'inline-size',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 'var(--parentSpacing)',
       }),
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}
     useFlexGap
   >
     {children}
-    </Stack>
-  );
+  </Stack>
+);
 
 export default ZUIRow;
