@@ -9,8 +9,10 @@ const meta: Meta<typeof ZUIRow> = {
 export default meta;
 
 const columnStyle = {
+  alignItems: 'center',
   backgroundColor: 'swatches.purple.100',
   height: '200px',
+  justifyContent: 'center',
 };
 
 type Story = StoryObj<typeof ZUIRow>;
@@ -44,7 +46,7 @@ export const SizedAndAuto: Story = {
   },
 };
 
-export const MultipleSizedAndAuto: Story = {
+export const MultipleSizedAndNull: Story = {
   args: {
     children: [
       <ZUIColumn key="1" size={3} sx={columnStyle}>
@@ -56,8 +58,8 @@ export const MultipleSizedAndAuto: Story = {
       <ZUIColumn key="3" size={3} sx={columnStyle}>
         Size 3 column
       </ZUIColumn>,
-      <ZUIColumn key="4" sx={columnStyle}>
-        No size column
+      <ZUIColumn key="4" size={null} sx={columnStyle}>
+        Null size column
       </ZUIColumn>,
     ],
   },

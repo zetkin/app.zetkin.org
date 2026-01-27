@@ -16,8 +16,10 @@ const meta: Meta<typeof ZUIColumn> = {
 export default meta;
 
 const columnStyle = {
+  alignItems: 'center',
   backgroundColor: 'swatches.purple.100',
   height: '200px',
+  justifyContent: 'center',
 };
 
 type Story = StoryObj<typeof ZUIColumn>;
