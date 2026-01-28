@@ -514,9 +514,9 @@ const eventsSlice = createSlice({
       state.remindingByEventId[eventId] = false;
       state.participantsByEventId[eventId].items.map((item) => {
         if (
-            item.data &&
-            item.data?.reminder_sent == null &&
-            item.data?.cancelled == null
+          item.data &&
+          item.data?.reminder_sent == null &&
+          item.data?.cancelled == null
         ) {
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
         }
