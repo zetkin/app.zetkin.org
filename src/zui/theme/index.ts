@@ -5,7 +5,7 @@ import {
   deDE as dataGridDeDE,
   nbNO as dataGridNbNO,
   svSE as dataGridSvSE,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-pro/locales';
 import {
   daDK as pickersDaDK,
   deDE as pickersDeDE,

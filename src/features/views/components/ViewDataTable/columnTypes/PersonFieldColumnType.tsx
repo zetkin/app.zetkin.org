@@ -55,9 +55,8 @@ export default class PersonFieldColumnType
 
         return <div>{value}</div>;
       },
-      valueGetter: (params) => {
-        const cell = params.row[params.field];
-        return getValue(cell, column);
+      valueGetter: (value: SimpleData) => {
+        return getValue(value, column);
       },
     };
   }

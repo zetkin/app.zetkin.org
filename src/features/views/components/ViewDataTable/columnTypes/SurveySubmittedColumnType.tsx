@@ -1,11 +1,7 @@
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from '@mui/x-data-grid-pro';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
 
 import { IColumnType } from '.';
@@ -33,8 +29,7 @@ export default class SurveySubmittedColumnType
         return <Cell cell={params.row[params.field]} />;
       },
       type: 'date',
-      valueGetter: (params: GridValueGetterParams) => {
-        const submissions: SurveySubmittedViewCell = params.row[params.field];
+      valueGetter: (submissions: SurveySubmittedViewCell) => {
         if (submissions?.length) {
           const lastSub = submissions[submissions.length - 1];
           return new Date(lastSub.submitted);
