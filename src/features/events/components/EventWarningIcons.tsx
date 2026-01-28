@@ -34,10 +34,13 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
     <EventWarningIconsSansModel
       compact={compact}
       hasContact={!!event.contact}
-      numParticipants={verifiedParticipantsFuture.data?.length ?? 0}
+      numParticipants={
+        verifiedParticipantsFuture.data?.filter((p) => !p.cancelled).length ?? 0
+      }
       numRemindersSent={
-        verifiedParticipantsFuture.data?.filter((p) => !!p.reminder_sent)
-          .length ?? 0
+        verifiedParticipantsFuture.data?.filter((p) => {
+          return !!p.reminder_sent && !p.cancelled;
+        }).length ?? 0
       }
       numSignups={numSignedUpParticipants}
       participantsLoading={!verifiedParticipantsFuture.data}
