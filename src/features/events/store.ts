@@ -513,7 +513,11 @@ const eventsSlice = createSlice({
       const eventId = action.payload;
       state.remindingByEventId[eventId] = false;
       state.participantsByEventId[eventId].items.map((item) => {
-        if (item.data && item.data?.reminder_sent == null) {
+        if (
+            item.data &&
+            item.data?.reminder_sent == null &&
+            item.data?.cancelled == null
+        ) {
           item.data = { ...item.data, reminder_sent: new Date().toISOString() };
         }
       });
