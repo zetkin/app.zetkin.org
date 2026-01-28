@@ -2,7 +2,7 @@ import { CountryCode } from 'libphonenumber-js';
 
 import { ImportProblemKind } from './types';
 import { predictProblems } from './predictProblems';
-import { ColumnKind, Sheet } from '../types';
+import { ColumnKind, Sheet } from '../../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 
 function makeFullSheet(overrides: Partial<Sheet>): Sheet {
@@ -111,8 +111,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
         {
@@ -143,8 +143,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
       ],
@@ -168,8 +168,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
       ],
@@ -203,8 +203,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
         {
@@ -333,8 +333,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
       ],
