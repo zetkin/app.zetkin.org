@@ -1,25 +1,41 @@
 /* eslint-disable @next/next/no-sync-scripts */
+import Document, {
+  DocumentInitialProps,
+  Head,
+  Html,
+  Main,
+  NextScript,
+} from 'next/document';
+import { ServerStyleSheets } from '@mui/styles';
 import { Children } from 'react';
-import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
-import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 import oldTheme from '../theme';
 
 // boilerplate page taken from https://github.com/mui-org/material-ui/tree/master/examples/nextjs
 
-export default class MyDocument extends Document {
+interface ExtendedDocumentProps extends DocumentInitialProps {
+  nonce?: string;
+}
+
+export default class MyDocument extends Document<ExtendedDocumentProps> {
   render(): JSX.Element {
+    const { nonce } = this.props;
+    if (typeof nonce === 'undefined') {
+      throw new Error('nonce undefined in document renderer');
+    }
+
     return (
       <Html lang="en" style={{ overscrollBehaviorX: 'none' }}>
-        <Head>
+        <Head nonce={nonce}>
           {/* PWA primary color */}
           <meta content={oldTheme.palette.primary.main} name="theme-color" />
           <link href="https://use.typekit.net/tqq3ylv.css" rel="stylesheet" />
           <link href="/logo-zetkin.png" rel="shortcut icon" />
+          <meta content={nonce} name="csp-nonce" />
         </Head>
         <body style={{ overscrollBehaviorX: 'none' }}>
           <Main />
-          <NextScript />
+          <NextScript nonce={nonce} />
         </body>
       </Html>
     );
@@ -27,6 +43,11 @@ export default class MyDocument extends Document {
 }
 
 MyDocument.getInitialProps = async (ctx) => {
+  const nonce = ctx.req?.headers?.['x-nonce'] as string | undefined;
+  if (typeof nonce === 'undefined') {
+    throw new Error('nonce undefined in document initial props generation');
+  }
+
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
@@ -39,6 +60,7 @@ MyDocument.getInitialProps = async (ctx) => {
 
   return {
     ...initialProps,
+    nonce,
     styles: [
       ...Children.toArray(initialProps.styles),
       sheets.getStyleElement(),
