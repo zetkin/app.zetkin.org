@@ -11,7 +11,7 @@ export default makeMessages('feat.home', {
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
     },
-    emptyListMessage: m('You are not signed up for any acitvities'),
+    emptyListMessage: m('You are not signed up for any activities'),
     eventStatus: {
       booked: m<{ org: string }>(
         'You have been booked for this event and organizers are expecting you. Contact {org} if you need to cancel.'
@@ -48,6 +48,33 @@ export default makeMessages('feat.home', {
   footer: {
     privacyPolicy: m('Privacy policy'),
   },
+  myOrganisations: {
+    drawer: {
+      subtitle: m<{ orgName: string }>('Settings for {orgName}'),
+      title: m('Notification settings'),
+    },
+    emptyState: m(
+      'You are not a member of any organizations yet. Join an organization to see it here.'
+    ),
+    notifications: {
+      calls: {
+        description: m('Coming soon'),
+        label: m('Call notifications'),
+      },
+      email: {
+        description: m('Coming soon'),
+        label: m('Email notifications'),
+      },
+      follow: {
+        description: m('Show activities from this organization in your feed'),
+        label: m('Following'),
+      },
+    },
+    role: m<{ role: string }>('Role: {role}'),
+    settingsError: m('Failed to update settings'),
+    settingsUpdated: m('Settings updated'),
+    viewOrganisation: m('View organization'),
+  },
   newLandingPageAlert: {
     description: m(
       'If you are looking for the organizer pages, you can find them from now on by clicking the button in the header below.'
@@ -83,6 +110,7 @@ export default makeMessages('feat.home', {
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
+    myOrganisations: m('My organizations'),
     settings: m('Settings'),
   },
   title: m('My Zetkin'),
