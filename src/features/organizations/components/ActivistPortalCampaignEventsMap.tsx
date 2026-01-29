@@ -1,6 +1,5 @@
 import { FC, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { SxProps } from '@mui/material';
 
 import { ActivistPortalEventMap } from './ActivistPortalEventMap';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
@@ -10,10 +9,9 @@ import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampa
 type Props = {
   campId: number;
   orgId: number;
-  sx?: SxProps;
 };
 
-const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId, sx }) => {
+const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId }) => {
   const { allEvents } = useFilteredCampaignEvents(orgId, campId);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.organizations.filters);
@@ -37,7 +35,6 @@ const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId, sx }) => {
       events={allEvents}
       locationFilter={filters.geojsonToFilterBy}
       setLocationFilter={onLocationFilterChange}
-      sx={sx}
     />
   );
 };

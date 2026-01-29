@@ -102,30 +102,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
           }
         />
       }
-      renderMap={(isMobile) => {
-        if (isMobile) {
-          return (
-            <ActivistPortalOrgEventsMap
-              orgId={org.id}
-              sx={{
-                height: '100%',
-              }}
-            />
-          );
-        } else {
-          return (
-            <ActivistPortalOrgEventsMap
-              orgId={org.id}
-              sx={{
-                height: '100dvh',
-                position: 'sticky',
-                top: 0,
-                width: '100%',
-              }}
-            />
-          );
-        }
-      }}
+      renderMap={() => <ActivistPortalOrgEventsMap orgId={org.id} />}
       showMap={true}
     >
       {children}

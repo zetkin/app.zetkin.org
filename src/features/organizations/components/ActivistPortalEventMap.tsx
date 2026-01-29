@@ -1,4 +1,4 @@
-import { Box, SxProps } from '@mui/material';
+import { Box } from '@mui/material';
 import { Layer, Map, Source } from '@vis.gl/react-maplibre';
 import { Map as MapType } from 'maplibre-gl';
 import { FC, useCallback, useMemo, useState } from 'react';
@@ -17,8 +17,7 @@ export const ActivistPortalEventMap: FC<{
   events: ZetkinEventWithStatus[];
   locationFilter: GeoJSON.Feature[];
   setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
-  sx?: SxProps;
-}> = ({ events, locationFilter, setLocationFilter, sx }) => {
+}> = ({ events, locationFilter, setLocationFilter }) => {
   const [map, setMap] = useState<MapType | null>(null);
 
   const onMarkerClick = useCallback(
@@ -116,7 +115,7 @@ export const ActivistPortalEventMap: FC<{
 
   return (
     <Box
-      sx={{ flexGrow: 1, height: '100px', position: 'relative', ...(sx ?? {}) }}
+      sx={{ flexGrow: 1, height: '100%', position: 'relative', width: '100%' }}
     >
       <ZUIMapControls
         onFitBounds={() => {

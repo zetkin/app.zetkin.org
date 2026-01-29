@@ -1,6 +1,5 @@
 import { FC, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { SxProps } from '@mui/material';
 
 import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { ActivistPortalEventMap } from './ActivistPortalEventMap';
@@ -9,10 +8,9 @@ import { filtersUpdated } from '../store';
 
 type Props = {
   orgId: number;
-  sx?: SxProps;
 };
 
-const ActivistPortalOrgEventsMap: FC<Props> = ({ orgId, sx }) => {
+const ActivistPortalOrgEventsMap: FC<Props> = ({ orgId }) => {
   const { allEvents } = useFilteredOrgEvents(orgId);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.organizations.filters);
@@ -40,7 +38,6 @@ const ActivistPortalOrgEventsMap: FC<Props> = ({ orgId, sx }) => {
       events={allEvents}
       locationFilter={filters.geojsonToFilterBy}
       setLocationFilter={onLocationFilterChange}
-      sx={sx}
     />
   );
 };

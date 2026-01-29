@@ -67,32 +67,12 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
           }
         />
       }
-      renderMap={(isMobile) => {
-        if (isMobile) {
-          return (
-            <ActivistPortalCampaignEventsMap
-              campId={campaign.id}
-              orgId={campaign.organization.id}
-              sx={{
-                height: '100%',
-              }}
-            />
-          );
-        } else {
-          return (
-            <ActivistPortalCampaignEventsMap
-              campId={campaign.id}
-              orgId={campaign.organization.id}
-              sx={{
-                height: '100dvh',
-                position: 'sticky',
-                top: 0,
-                width: '100%',
-              }}
-            />
-          );
-        }
-      }}
+      renderMap={() => (
+        <ActivistPortalCampaignEventsMap
+          campId={campaign.id}
+          orgId={campaign.organization.id}
+        />
+      )}
       showMap={true}
     >
       {children}

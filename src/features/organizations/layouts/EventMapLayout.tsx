@@ -35,7 +35,7 @@ const transitionSettings: SxProps = {
 type Props = {
   children: ReactNode;
   header: JSX.Element;
-  renderMap: (isMobile: boolean) => JSX.Element;
+  renderMap: () => JSX.Element;
   showMap: boolean;
 };
 
@@ -117,7 +117,13 @@ const EventMapLayout: FC<Props> = ({
             </Box>
           ) : (
             <>
-              {renderMap(true)}
+              <Box
+                sx={{
+                  height: '100%',
+                }}
+              >
+                {renderMap()}
+              </Box>
               <Box
                 sx={{
                   bottom: 15,
@@ -158,7 +164,16 @@ const EventMapLayout: FC<Props> = ({
             }}
           >
             {shouldMountMap ? (
-              renderMap(false)
+              <Box
+                sx={{
+                  height: '100dvh',
+                  position: 'sticky',
+                  top: 0,
+                  width: '100%',
+                }}
+              >
+                {renderMap()}
+              </Box>
             ) : showMapDesktop ? (
               <Box
                 alignItems="center"
