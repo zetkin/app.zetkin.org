@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, SxProps } from '@mui/material';
+import { Box, Button, NoSsr, SxProps } from '@mui/material';
 import { FC, ReactNode, Suspense, useEffect, useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/system';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -122,7 +122,7 @@ const EventMapLayout: FC<Props> = ({
                   height: '100%',
                 }}
               >
-                {renderMap()}
+                <NoSsr>{renderMap()}</NoSsr>
               </Box>
               <Box
                 sx={{
@@ -172,7 +172,7 @@ const EventMapLayout: FC<Props> = ({
                   width: '100%',
                 }}
               >
-                {renderMap()}
+                <NoSsr>{renderMap()}</NoSsr>
               </Box>
             ) : showMapDesktop ? (
               <Box

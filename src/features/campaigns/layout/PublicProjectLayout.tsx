@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/material';
+import { Box, NoSsr } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
 import NextLink from 'next/link';
 import { CalendarMonth } from '@mui/icons-material';
@@ -75,7 +75,7 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
       )}
       showMap={true}
     >
-      {children}
+      <NoSsr>{children}</NoSsr>
     </EventMapLayout>
   );
 };

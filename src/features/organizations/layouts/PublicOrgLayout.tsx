@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/material';
+import { Box, NoSsr } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
 import { usePathname } from 'next/navigation';
 import { CalendarMonth, NorthWest } from '@mui/icons-material';
@@ -105,7 +105,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
       renderMap={() => <ActivistPortalOrgEventsMap orgId={org.id} />}
       showMap={true}
     >
-      {children}
+      <NoSsr>{children}</NoSsr>
     </EventMapLayout>
   );
 };
