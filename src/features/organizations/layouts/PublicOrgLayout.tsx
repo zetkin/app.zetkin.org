@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import { ActivistPortalEventMap } from '../components/ActivistPortalEventMap';
 
 type Props = {
   children: ReactNode;
@@ -69,27 +70,22 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
     (state) => state.organizations.filters
   );
 
-  const setLocationFilter = (geojsonToFilterBy: GeoJSON.Feature[]) => {
-    dispatch(
-      filtersUpdated({
-        geojsonToFilterBy,
-      })
-    );
-  };
-
   const onLocationFilterChange = useCallback(
     (geojsonToFilterBy: GeoJSON.Feature[]) => {
-      setLocationFilter(geojsonToFilterBy);
+      dispatch(
+        filtersUpdated({
+          geojsonToFilterBy,
+        })
+      );
       if (lastSegment === 'suborgs') {
         router.push(`/o/${org.id}`);
       }
     },
-    [setLocationFilter, lastSegment, router.push, org.id]
+    [dispatch, filtersUpdated, lastSegment, router.push, org.id]
   );
 
   return (
     <EventMapLayout
-      events={filteredEvents}
       header={
         <ActivistPortalHeader
           button={
@@ -130,8 +126,34 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
           }
         />
       }
-      locationFilter={geojsonToFilterBy}
-      setLocationFilter={onLocationFilterChange}
+      renderMap={(isMobile) => {
+        if (isMobile) {
+          return (
+            <ActivistPortalEventMap
+              events={filteredEvents}
+              locationFilter={geojsonToFilterBy}
+              setLocationFilter={onLocationFilterChange}
+              sx={{
+                height: '100%',
+              }}
+            />
+          );
+        } else {
+          return (
+            <ActivistPortalEventMap
+              events={filteredEvents}
+              locationFilter={geojsonToFilterBy}
+              setLocationFilter={onLocationFilterChange}
+              sx={{
+                height: '100dvh',
+                position: 'sticky',
+                top: 0,
+                width: '100%',
+              }}
+            />
+          );
+        }
+      }}
       showMap={true}
     >
       {children}

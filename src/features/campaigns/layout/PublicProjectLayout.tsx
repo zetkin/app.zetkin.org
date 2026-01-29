@@ -17,6 +17,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import { ActivistPortalEventMap } from 'features/organizations/components/ActivistPortalEventMap';
 
 type Props = {
   campaign: ZetkinCampaign;
@@ -55,7 +56,6 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
 
   return (
     <EventMapLayout
-      events={filteredEvents}
       header={
         <ActivistPortalHeader
           button={
@@ -87,8 +87,34 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
           }
         />
       }
-      locationFilter={geojsonToFilterBy}
-      setLocationFilter={setLocationFilter}
+      renderMap={(isMobile) => {
+        if (isMobile) {
+          return (
+            <ActivistPortalEventMap
+              events={filteredEvents}
+              locationFilter={geojsonToFilterBy}
+              setLocationFilter={setLocationFilter}
+              sx={{
+                height: '100%',
+              }}
+            />
+          );
+        } else {
+          return (
+            <ActivistPortalEventMap
+              events={filteredEvents}
+              locationFilter={geojsonToFilterBy}
+              setLocationFilter={setLocationFilter}
+              sx={{
+                height: '100dvh',
+                position: 'sticky',
+                top: 0,
+                width: '100%',
+              }}
+            />
+          );
+        }
+      }}
       showMap={allEvents.length > 0}
     >
       {children}
