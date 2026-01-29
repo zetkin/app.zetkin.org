@@ -123,7 +123,7 @@ export default function mockState(overrides?: RootState) {
         geojsonToFilterBy: [],
         orgIdsToFilterBy: [],
       },
-      orgData: remoteItem(0),
+      orgList: remoteList(),
       statsBySuborgId: {},
       subOrgsByOrgId: {},
       suborgsWithStats: remoteList(),
