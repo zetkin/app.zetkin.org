@@ -8,16 +8,13 @@ import { CalendarMonth } from '@mui/icons-material';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
-import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import EventMapLayout from 'features/organizations/layouts/EventMapLayout';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated } from '../store';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import { ActivistPortalEventMap } from 'features/organizations/components/ActivistPortalEventMap';
+import ActivistPortalCampaignEventsMap from 'features/organizations/components/ActivistPortalCampaignEventsMap';
 
 type Props = {
   campaign: ZetkinCampaign;
@@ -25,26 +22,9 @@ type Props = {
 };
 
 const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
-  const dispatch = useAppDispatch();
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
-  const { allEvents, filteredEvents } = useFilteredCampaignEvents(
-    campaign.organization.id,
-    campaign.id
-  );
-
-  const { geojsonToFilterBy } = useAppSelector(
-    (state) => state.campaigns.filters
-  );
-
-  const setLocationFilter = (geojsonToFilterBy: GeoJSON.Feature[]) => {
-    dispatch(
-      filtersUpdated({
-        geojsonToFilterBy,
-      })
-    );
-  };
   function copyUrlToClipboard() {
     const url = `${location.protocol}//${location.host}/o/${campaign.organization.id}/projects/${campaign.id}/events.ics`;
     navigator.clipboard.writeText(url);
@@ -90,10 +70,9 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
       renderMap={(isMobile) => {
         if (isMobile) {
           return (
-            <ActivistPortalEventMap
-              events={filteredEvents}
-              locationFilter={geojsonToFilterBy}
-              setLocationFilter={setLocationFilter}
+            <ActivistPortalCampaignEventsMap
+              campId={campaign.id}
+              orgId={campaign.organization.id}
               sx={{
                 height: '100%',
               }}
@@ -101,10 +80,9 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
           );
         } else {
           return (
-            <ActivistPortalEventMap
-              events={filteredEvents}
-              locationFilter={geojsonToFilterBy}
-              setLocationFilter={setLocationFilter}
+            <ActivistPortalCampaignEventsMap
+              campId={campaign.id}
+              orgId={campaign.organization.id}
               sx={{
                 height: '100dvh',
                 position: 'sticky',
@@ -115,7 +93,7 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
           );
         }
       }}
-      showMap={allEvents.length > 0}
+      showMap={true}
     >
       {children}
     </EventMapLayout>
