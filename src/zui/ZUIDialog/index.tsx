@@ -43,7 +43,6 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
           zIndex: onTop ? theme.zIndex.tooltip + 9999 : theme.zIndex.modal,
         }}
       >
-        <h1>HELO</h1>
         <Box p={2}>
           {title && <DialogTitle>{title}</DialogTitle>}
           <DialogContent sx={{ height: contentHeight }}>
