@@ -169,7 +169,6 @@ export default function mockState(overrides?: RootState) {
       tasksList: remoteList(),
     },
     user: {
-      membershipList: remoteList(),
       orgUserList: remoteList(),
       userItem: remoteItem('me'),
     },

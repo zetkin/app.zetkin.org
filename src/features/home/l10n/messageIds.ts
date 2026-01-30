@@ -48,6 +48,11 @@ export default makeMessages('feat.home', {
   footer: {
     privacyPolicy: m('Privacy policy'),
   },
+  myOrgs: {
+    followButton: m('Follow'),
+    organizeButton: m('Organize'),
+    unfollowButton: m('Unfollow'),
+  },
   newLandingPageAlert: {
     description: m(
       'If you are looking for the organizer pages, you can find them from now on by clicking the button in the header below.'
@@ -83,6 +88,7 @@ export default makeMessages('feat.home', {
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
+    orgs: m('My organizations'),
     settings: m('Settings'),
   },
   title: m('My Zetkin'),
