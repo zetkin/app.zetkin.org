@@ -10,10 +10,10 @@ import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import useUser from 'core/hooks/useUser';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
-import useMemberships from 'features/organizations/hooks/useMemberships';
 import messageIds from '../l10n/messageIds';
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import ZUIText from 'zui/components/ZUIText';
+import useUserMemberships from '../hooks/useUserMemberships';
 
 type Props = {
   children: ReactNode;
@@ -43,7 +43,7 @@ const NewLandingPageAlert: FC<{ userId: number }> = ({ userId }) => {
 const HomeLayout: FC<Props> = ({ children, title }) => {
   const messages = useMessages(messageIds);
   const user = useUser();
-  const memberships = useMemberships().data || [];
+  const memberships = useUserMemberships();
   const isOfficial = memberships.find((membership) => membership.role != null);
 
   const path = usePathname();
