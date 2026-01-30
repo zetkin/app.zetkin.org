@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import EditPersonFields from './EditPersonFields';
+import PersonalInfoForm from 'zui/ZUICreatePerson/PersonalInfoForm';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useEditPerson from 'features/profile/hooks/useEditPerson';
@@ -37,7 +37,6 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
     fieldsToUpdate,
     hasInvalidFields,
     hasUpdatedValues,
-    invalidFields,
     onFieldValueChange,
     setFieldsToUpdate,
   } = useEditPerson(person, orgId);
@@ -87,19 +86,26 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
           </IconButton>
         </Box>
         <Box overflow="auto" width="100%">
-          <EditPersonFields
-            fieldsToUpdate={fieldsToUpdate}
-            fieldValues={fieldValues}
-            invalidFields={invalidFields}
+          <PersonalInfoForm
+            defaultFormValues={person}
+            editMode={true}
             onChange={(field, newValue) => {
-              onFieldValueChange(field, newValue?.trim() ?? null);
-              setFieldValues({ ...fieldValues, [field]: newValue });
+              onFieldValueChange(
+                field,
+                (newValue as string | null)?.trim() ?? null
+              );
+              setFieldValues({
+                ...fieldValues,
+                [field]: newValue as string | null,
+              });
             }}
             onReset={(field) => {
               onFieldValueChange(field, person[field]?.toString() ?? null);
               setFieldValues({ ...fieldValues, [field]: person[field] });
             }}
             orgId={orgId}
+            personalInfo={fieldValues}
+            tags={[]}
           />
         </Box>
         <Box
