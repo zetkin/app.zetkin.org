@@ -36,7 +36,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   const messages = useMessages(messageIds);
   const { data: recipient } = usePerson(orgId, personId);
 
-  const { setOrganizerActionNeeded, setOrganizerActionTaken } = useCall(orgId);
+  const { setOrganizerActionNeeded, setOrganizerActionTaken } = useCall();
 
   const sorted: ZetkinOrganizerAction[] = useMemo(
     () =>
@@ -96,25 +96,37 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               </Typography>
             )}
           </Box>
-          <Box display="flex" justifyContent="flex-end" my={2}>
-            {!call?.organizer_action_taken ? (
-              <Button
-                onClick={() => call && setOrganizerActionTaken(call.id)}
-                startIcon={<Check />}
-                variant="contained"
-              >
-                <Msg id={messageIds.organizerActionPane.markAsSolved} />
-              </Button>
-            ) : (
-              <Button
-                onClick={() => call && setOrganizerActionNeeded(call.id)}
-                startIcon={<PriorityHigh />}
-                variant="text"
-              >
-                <Msg id={messageIds.organizerActionPane.markAsUnsolved} />
-              </Button>
-            )}
-          </Box>
+          {!!call && (
+            <Box display="flex" justifyContent="flex-end" my={2}>
+              {!call.organizer_action_taken ? (
+                <Button
+                  onClick={() =>
+                    setOrganizerActionTaken(
+                      call.assignment.organization_id,
+                      call.id
+                    )
+                  }
+                  startIcon={<Check />}
+                  variant="contained"
+                >
+                  <Msg id={messageIds.organizerActionPane.markAsSolved} />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    setOrganizerActionNeeded(
+                      call.assignment.organization_id,
+                      call.id
+                    )
+                  }
+                  startIcon={<PriorityHigh />}
+                  variant="text"
+                >
+                  <Msg id={messageIds.organizerActionPane.markAsUnsolved} />
+                </Button>
+              )}
+            </Box>
+          )}
         </Box>
       ))}
     </>
