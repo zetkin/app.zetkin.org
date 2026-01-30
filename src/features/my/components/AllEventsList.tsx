@@ -18,12 +18,12 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useIntl } from 'react-intl';
 
 import useAllEvents from 'features/my/hooks/useAllEvents';
-import EventListItem from './EventListItem';
+import EventListItem from 'features/public/components/EventListItem';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import { ZetkinEventWithStatus } from '../types';
+import { ZetkinEventWithStatus } from 'features/public/types';
 import ZUIDate from 'zui/ZUIDate';
-import useIncrementalDelay from '../hooks/useIncrementalDelay';
+import useIncrementalDelay from 'features/public/hooks/useIncrementalDelay';
 import { getContrastColor } from 'utils/colorUtils';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from 'zui/components/ZUIButton';

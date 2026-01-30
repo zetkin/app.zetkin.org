@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Assignment, GroupWorkOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
-import MyActivityListItem from 'features/public/components/MyActivityListItem';
+import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import ZUIButton from 'zui/components/ZUIButton';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import ZUILabel from 'zui/components/ZUILabel';

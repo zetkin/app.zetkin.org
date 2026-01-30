@@ -1,6 +1,6 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
-export default makeMessages('feat.my', {
+export default makeMessages('feat.home', {
   activityList: {
     actions: {
       areaAssignment: m('Join'),

@@ -2,7 +2,7 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('core', {
   err404: {
-    backToHomePage: m('Back to my page'),
+    backToHomePage: m('Back to home page'),
     pageNotFound: m('Page not found'),
   },
   home: {

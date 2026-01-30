@@ -4,7 +4,7 @@ import { GroupWorkOutlined } from '@mui/icons-material';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import useCampaign from 'features/campaigns/hooks/useCampaign';
-import MyActivityListItem from './MyActivityListItem';
+import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import ZUIButton from 'zui/components/ZUIButton';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';

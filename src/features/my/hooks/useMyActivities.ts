@@ -1,7 +1,7 @@
 import useMyAreaAssignments from 'features/canvass/hooks/useMyAreaAssignments';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import useMyEvents from 'features/my/hooks/useMyEvents';
-import { MyActivity } from '../types';
+import { MyActivity } from 'features/public/types';
 
 export default function useMyActivities() {
   const areaAssignments = useMyAreaAssignments();

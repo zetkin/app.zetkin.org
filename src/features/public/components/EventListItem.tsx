@@ -6,7 +6,7 @@ import {
   WatchLaterOutlined,
 } from '@mui/icons-material';
 
-import MyActivityListItem from './MyActivityListItem';
+import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';

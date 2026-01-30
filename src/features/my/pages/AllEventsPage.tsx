@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { FC, Suspense } from 'react';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import AllEventsList from '../../public/components/AllEventsList';
+import AllEventsList from 'features/my/components/AllEventsList';
 
 const AllEventsPage: FC = () => {
   return (

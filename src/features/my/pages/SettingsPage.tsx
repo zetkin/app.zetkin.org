@@ -3,10 +3,10 @@
 import { Box } from '@mui/material';
 import { FC, Suspense } from 'react';
 
-import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import AppPreferences from '../../public/components/AppPreferences';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import AccountSettings from '../../public/components/AccountSettings';
+import AppPreferences from 'features/my/components/AppPreferences';
+import AccountSettings from 'features/my/components/AccountSettings';
+import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
 const AllEventsPage: FC = () => {
   const user = useCurrentUser();

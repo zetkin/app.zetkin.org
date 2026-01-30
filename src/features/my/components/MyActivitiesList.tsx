@@ -4,26 +4,29 @@ import { FC, useState } from 'react';
 import { Box, Fade } from '@mui/material';
 import { GroupWorkOutlined, Hotel } from '@mui/icons-material';
 
-import useMyActivities from '../hooks/useMyActivities';
-import MyActivityListItem from './MyActivityListItem';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
-import EventListItem from './EventListItem';
-import useIncrementalDelay from '../hooks/useIncrementalDelay';
+import MyActivityListItem from 'features/my/components/MyActivityListItem';
+import useMyActivities from 'features/my/hooks/useMyActivities';
+import messageIds from 'features/public/l10n/messageIds';
+import EventListItem from 'features/public/components/EventListItem';
+import useIncrementalDelay from 'features/public/hooks/useIncrementalDelay';
+import { MyActivity } from 'features/public/types';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
-import AreaAssignmentListItem from './AreaAssignmentListItem';
+import AreaAssignmentListItem from 'features/public/components/AreaAssignmentListItem';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
   const messages = useMessages(messageIds);
-  const [filteredKinds, setFilteredKinds] = useState<string[]>([]);
+  type KindOfActivity = MyActivity['kind'];
+
+  const [filteredKinds, setFilteredKinds] = useState<KindOfActivity[]>([]);
   const nextDelay = useIncrementalDelay();
 
   const kinds = Array.from(
     new Set(activities.map((activity) => activity.kind))
-  );
+  ) as KindOfActivity[];
 
   const filteredActivities = activities.filter((activity) => {
     const notFiltering = filteredKinds.length == 0;

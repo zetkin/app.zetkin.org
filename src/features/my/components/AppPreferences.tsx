@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
-import useUserMutations from '../hooks/useUserMutations';
 import { ZetkinUser } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import useUserMutations from 'features/public/hooks/useUserMutations';
 import ZUISection from 'zui/components/ZUISection';
 import ZUISelect from 'zui/components/ZUISelect';
 import ZUIButton from 'zui/components/ZUIButton';

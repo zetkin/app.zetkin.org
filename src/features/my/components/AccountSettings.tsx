@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { useMessages } from 'core/i18n';
 import { ZetkinUser } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
-import useUserMutations from '../hooks/useUserMutations';
+import useUserMutations from 'features/public/hooks/useUserMutations';
 import ZUISection from 'zui/components/ZUISection';
 import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';

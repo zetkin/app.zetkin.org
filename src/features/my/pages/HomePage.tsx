@@ -3,7 +3,7 @@
 import { FC, Suspense } from 'react';
 import { Box } from '@mui/material';
 
-import MyActivitiesList from 'features/public/components/MyActivitiesList';
+import MyActivitiesList from 'features/my/components/MyActivitiesList';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
 const HomePage: FC = () => {
