@@ -21,7 +21,7 @@ export default function useAreaSelection({
   onSelectFromMap,
 }: Props): Return {
   const [selectedId, setSelectedId] = useState(0);
-  const selectedArea = areas.find((area) => area.id === selectedId) || null;
+  const selectedArea = areas.find((area) => area.id == selectedId) || null;
 
   useEffect(() => {
     if (!map) {

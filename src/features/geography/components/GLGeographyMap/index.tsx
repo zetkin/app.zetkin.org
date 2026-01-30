@@ -11,6 +11,7 @@ import Map from '@vis.gl/react-maplibre';
 import { FC, startTransition, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import Fuse from 'fuse.js';
 
 import { Zetkin2Area } from 'features/areas/types';
 import ZUIMapControls from 'zui/ZUIMapControls';
@@ -32,8 +33,6 @@ type Props = {
   areas: Zetkin2Area[];
   orgId: number;
 };
-
-type AreaLayerStyle = 'filled' | 'outlined' | 'hide';
 
 const NO_SELECTED_AREA_ID = 0;
 const SETTINGS_PANEL_WIDTH_PX = 400;
@@ -71,30 +70,26 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
   });
 
   const normalizedSearchQuery = areaSearchQuery.trim().toLowerCase();
+  const areaFuse = useMemo(
+    () =>
+      new Fuse(areas, {
+        keys: ['title', 'description'],
+        threshold: 0.4,
+      }),
+    [areas]
+  );
   const matchingAreas = useMemo(() => {
     if (!normalizedSearchQuery) {
       return areas;
     }
 
-    return areas.filter((area) => {
-      const title = area.title?.toLowerCase() ?? '';
-      const description = area.description?.toLowerCase() ?? '';
-
-      return (
-        title.includes(normalizedSearchQuery) ||
-        description.includes(normalizedSearchQuery)
-      );
-    });
-  }, [areas, normalizedSearchQuery]);
+    return areaFuse.search(normalizedSearchQuery).map((result) => result.item);
+  }, [areas, areaFuse, normalizedSearchQuery]);
 
   const visibleAreas = useMemo(
     () => matchingAreas.filter((area) => area.id !== selectedArea?.id),
     [matchingAreas, selectedArea]
   );
-
-  const areaLayerStyle: AreaLayerStyle = 'filled';
-  const areaFillColor = theme.palette.secondary.main;
-  const areaFillOpacity = 0.6;
 
   const rightSideOverlayOpen = isAreasPanelOpen || !!selectedArea;
 
@@ -284,15 +279,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
           mapStyle={env.vars.MAPLIBRE_STYLE}
           RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         >
-          <Areas
-            areas={visibleAreas}
-            dashed
-            fillColor={areaFillColor}
-            fillOpacity={areaFillOpacity}
-            outlineColor="black"
-            outlineOpacity={0.6}
-            style={areaLayerStyle}
-          />
+          <Areas areas={visibleAreas} />
           {!!drawingPoints && <DrawingArea drawingPoints={drawingPoints} />}
 
           {!!selectedArea && (
