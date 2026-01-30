@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Check, Settings } from '@mui/icons-material';
+import { Settings } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
@@ -35,18 +35,17 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   const event = useEvent(orgId, eventId)?.data;
   const participantStatus = useParticipantStatus(orgId, eventId);
   const {
-    respondentsFuture,
+    numAllSignedParticipants,
     numAvailParticipants,
     numCancelledParticipants,
     numConfirmedParticipants,
     numNoshowParticipants,
     numRemindedParticipants,
-    numSignedParticipants,
-    bookedParticipants,
   } = useEventParticipants(orgId, eventId);
-  const { addParticipant, setReqParticipants, sendReminders } =
-    useEventParticipantsMutations(orgId, eventId);
-  const respondents = respondentsFuture.data;
+  const { setReqParticipants, sendReminders } = useEventParticipantsMutations(
+    orgId,
+    eventId
+  );
   const messages = useMessages(messageIds);
 
   const reqParticipants = event?.num_participants_required ?? 0;
@@ -69,8 +68,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     return null;
   }
 
-  const enventHasStarted =
-    new Date(removeOffset(event.start_time)) > new Date();
+  const eventHasStarted = new Date(removeOffset(event.start_time)) > new Date();
   const eventHasEnded = new Date(removeOffset(event.end_time)) < new Date();
   return (
     <Box>
@@ -151,32 +149,9 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
             <Typography color={'secondary'}>
               {messages.participantSummaryCard.pending()}
             </Typography>
-            <Box display="flex">
-              <Typography variant="h4">{numSignedParticipants}</Typography>
-              {numSignedParticipants > 0 && (
-                <Button
-                  onClick={() => {
-                    respondents?.map((r) => {
-                      if (
-                        !bookedParticipants.some((p) => p.id === r.person.id)
-                      ) {
-                        addParticipant(r.person.id);
-                      }
-                    });
-                  }}
-                  size="small"
-                  startIcon={<Check />}
-                  sx={{
-                    marginLeft: 2,
-                  }}
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.participantSummaryCard.bookButton} />
-                </Button>
-              )}
-            </Box>
+            <Typography variant="h4">{numAllSignedParticipants}</Typography>
           </Box>
-          {enventHasStarted ? (
+          {eventHasStarted ? (
             <Box display="flex" flexDirection="column">
               <Typography color={'secondary'}>
                 {messages.participantSummaryCard.booked()}

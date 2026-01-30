@@ -14,6 +14,7 @@ import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
 
 import EventListItem from 'features/public/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/public/types';
@@ -26,7 +27,6 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
 import NoEventsBlurb from '../components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
-import ZUIModal from 'zui/components/ZUIModal';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -37,12 +37,16 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from 'features/organizations/store';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import SignupChoiceModal from 'features/organizations/components/SignupChoiceModal';
+import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
+import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const router = useRouter();
   const isMobile = useIsMobile();
   const intl = useIntl();
   const messages = useMessages(messageIds);
@@ -59,6 +63,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     orgIdsToFilterBy,
   } = useAppSelector((state) => state.organizations.filters);
 
+  const hasUnauthSignup = useFeatureWithOrg(UNAUTH_EVENT_SIGNUP, orgId);
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const [drawerContent, setDrawerContent] = useState<
@@ -364,8 +369,14 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                   href={`/o/${event.organization.id}/events/${event.id}`}
                   onClickSignUp={(ev) => {
                     if (!user) {
-                      setPostAuthEvent(event);
-                      ev.preventDefault();
+                      if (hasUnauthSignup) {
+                        setPostAuthEvent(event);
+                        ev.preventDefault();
+                      } else {
+                        router.push(
+                          `/o/${event.organization.id}/events/${event.id}`
+                        );
+                      }
                     }
                   }}
                 />
@@ -514,26 +525,13 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </List>
       </ZUIDrawerModal>
-      <ZUIModal
-        onClose={() => setPostAuthEvent(null)}
-        open={!!postAuthEvent}
-        primaryButton={{
-          href: `/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`,
-          label: messages.authDialog.loginButton(),
-        }}
-        secondaryButton={{
-          label: messages.authDialog.cancelButton(),
-          onClick: () => setPostAuthEvent(null),
-        }}
-        size="small"
-        title={messages.authDialog.label()}
-      >
-        <Box sx={{ paddingTop: '0.75rem' }}>
-          <ZUIText>
-            <Msg id={messageIds.authDialog.content} />
-          </ZUIText>
-        </Box>
-      </ZUIModal>
+      {postAuthEvent && (
+        <SignupChoiceModal
+          eventId={postAuthEvent.id}
+          onClose={() => setPostAuthEvent(null)}
+          orgId={postAuthEvent.organization.id}
+        />
+      )}
     </Box>
   );
 };

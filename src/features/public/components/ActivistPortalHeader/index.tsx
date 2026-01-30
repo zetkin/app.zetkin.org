@@ -143,9 +143,9 @@ const ActivistPortalHeader: FC<Props> = ({
           </Box>
         )}
         {subtitle && (
-          <Box sx={{ whiteSpace: 'pre-line' }}>
+          <Box>
             {typeof subtitle == 'string' ? (
-              <ZUIText>{subtitle}</ZUIText>
+              <ZUIText renderLineBreaks={true}>{subtitle}</ZUIText>
             ) : (
               subtitle
             )}

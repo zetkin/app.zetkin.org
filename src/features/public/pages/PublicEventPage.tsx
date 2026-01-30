@@ -15,6 +15,7 @@ import {
 import { Map, Marker } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 import ZUIText from 'zui/components/ZUIText';
 import ZUIIcon from 'zui/components/ZUIIcon';
@@ -37,6 +38,10 @@ import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
 import useUserMemberships from 'features/public/hooks/useUserMemberships';
+import useUser from 'core/hooks/useUser';
+import { PublicEventSignup } from 'features/organizations/components/PublicEventSignup';
+import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
+import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
 
 type Props = {
   eventId: number;
@@ -45,6 +50,7 @@ type Props = {
 
 export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
+  const messages = useMessages(messageIds);
   const myEvents = useMyEvents();
   const userMemberships = useUserMemberships();
   const baseEvent = useEvent(orgId, eventId)?.data;
@@ -54,7 +60,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const myEvent = myEvents.find((userEvent) => userEvent.id == eventId);
   const event = myEvent || baseEventWithStatus;
 
-  // Split info_text into parapgraphs based on double newlines
+  // Split info_text into paragraphs based on double newlines
   // and then turn single newlines into <br /> tags
   const paragraphs = event?.info_text
     ?.split('\n\n')
@@ -78,6 +84,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const hasImage = !!event?.cover_file;
 
   const isFullScreen = !isMobile;
+  const showDescriptionSection = hasInfoText || isFullScreen;
 
   const contactPerson = event?.contact;
   const orgMembership = userMemberships.find(
@@ -95,7 +102,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
       return 'column-reverse';
     }
 
-    if (!hasInfoText) {
+    if (!showDescriptionSection) {
       return 'column';
     }
 
@@ -155,7 +162,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
               width: '100%',
             }}
           >
-            {/**TODO: figure out how to layout this properly for mobile and fullscreen without having this component apppear twice */}
+            {/**TODO: figure out how to layout this properly for mobile and fullscreen without having this component appear twice */}
             {isMobile && showContactDetails && (
               <ContactPersonSection
                 contactPerson={contactPerson}
@@ -166,15 +173,16 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
               sx={{
                 display: 'flex',
                 flexDirection: getFlexDirection(),
-                gap: hasInfoText || (!hasInfoText && isFullScreen) ? 2 : 0,
+                gap: showDescriptionSection ? 2 : 0,
               }}
             >
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: isFullScreen && hasInfoText ? 2 : 0,
-                  width: isFullScreen && hasInfoText ? '60%' : '100%',
+                  gap: isFullScreen && showDescriptionSection ? 2 : 0,
+                  width:
+                    isFullScreen && showDescriptionSection ? '60%' : '100%',
                 }}
               >
                 {isFullScreen && showContactDetails && (
@@ -191,23 +199,41 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                     />
                   </Box>
                 )}
-                {hasInfoText && (
-                  <Box
-                    bgcolor="white"
-                    borderRadius={2}
-                    minHeight={isFullScreen ? 400 : ''}
-                    padding={2}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 2,
-                    }}
-                  >
-                    <Box display="flex" flexDirection="column" gap={1}>
-                      {paragraphs}
+
+                {showDescriptionSection &&
+                  (hasInfoText ? (
+                    <Box
+                      bgcolor="white"
+                      borderRadius={2}
+                      minHeight={isFullScreen ? 400 : ''}
+                      padding={2}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                      }}
+                    >
+                      <Box display="flex" flexDirection="column" gap={1}>
+                        {paragraphs}
+                      </Box>
                     </Box>
-                  </Box>
-                )}
+                  ) : (
+                    <Box
+                      bgcolor="white"
+                      borderRadius={2}
+                      minHeight={isFullScreen ? 400 : ''}
+                      padding={2}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                      }}
+                    >
+                      <ZUIText color="secondary">
+                        {messages.eventPage.noDescription()}
+                      </ZUIText>
+                    </Box>
+                  ))}
               </Box>
               <Box
                 bgcolor="white"
@@ -217,7 +243,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 gap={2}
                 minHeight={isFullScreen ? 400 : ''}
                 padding={2}
-                width={isFullScreen && hasInfoText ? '40%' : '100%'}
+                width={isFullScreen && showDescriptionSection ? '40%' : '100%'}
               >
                 <SignUpSection event={event} />
                 <DateAndLocation event={event} />
@@ -305,6 +331,13 @@ const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
 }> = ({ event }) => {
   const messages = useMessages(messageIds);
+  const user = useUser();
+  const pathname = usePathname();
+  const [signupSuccessful, setSignupSuccessful] = useState(false);
+  const hasUnauthSignup = useFeatureWithOrg(
+    UNAUTH_EVENT_SIGNUP,
+    event.organization.id
+  );
 
   if (event.cancelled) {
     return (
@@ -315,6 +348,9 @@ const SignUpSection: FC<{
       />
     );
   }
+
+  const notAuthenticated = !user;
+  const showUnauthSignup = notAuthenticated && hasUnauthSignup;
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
@@ -328,8 +364,31 @@ const SignUpSection: FC<{
           <ZUISignUpChip status="booked" />
         </Box>
       )}
-      <Box alignItems="center" display="flex" gap={1}>
-        <EventSignupButton event={event} />
+
+      <Box alignItems="center" display="flex" flexDirection="column" gap={1}>
+        {showUnauthSignup ? (
+          <>
+            <Box width="100%">
+              <PublicEventSignup
+                event={event}
+                onSignupSuccess={() => setSignupSuccessful(true)}
+              />
+            </Box>
+            {!signupSuccessful && (
+              <ZUIButton
+                fullWidth
+                href={`/login?redirect=${encodeURIComponent(
+                  pathname || `/o/${event.organization.id}/events/${event.id}`
+                )}`}
+                label={messages.eventPage.haveAccount()}
+                size="large"
+                variant="secondary"
+              />
+            )}
+          </>
+        ) : (
+          <EventSignupButton event={event} fullWidth />
+        )}
       </Box>
     </Box>
   );

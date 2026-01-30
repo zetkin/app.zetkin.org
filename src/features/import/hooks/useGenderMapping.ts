@@ -1,9 +1,7 @@
 import { columnUpdate } from '../store';
 import { useAppDispatch } from 'core/hooks';
-import { CellData, Column, ColumnKind } from '../utils/types';
-
-export const genders = ['f', 'm', 'o'] as const;
-export type Gender = 'f' | 'm' | 'o';
+import { CellData, Column, ColumnKind } from '../types';
+import { Gender } from '../types';
 
 export default function useGenderMapping(column: Column, columnIndex: number) {
   const dispatch = useAppDispatch();
