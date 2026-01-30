@@ -74,17 +74,18 @@ $ git config core.hooksPath .githooks
 Although some of us care deeply about this kind of thing, you don't have to. But if you do
 want to follow the same conventions that the core team does, here's a distilled version:
 
-* When you start working on a new issue, branch off of the `main` branch and do your work
+- When you start working on a new issue, branch off of the `main` branch and do your work
   in the new branch
-* Name branches `issue-N/some-description` where `N` is the number of the issue on GitHub,
+- Name branches `issue-N/some-description` where `N` is the number of the issue on GitHub,
   and `some-description` is your own "slugified" short description of the issue.
-* Name branches `undocumented/some-description` if there is no issue for the thing that you
+- Name branches `undocumented/some-description` if there is no issue for the thing that you
   want to contribute (e.g. an update to a README, config or whatever)
-* As a general style, we write our commit messages as short sentences in
-[imperative mood](https://en.wikipedia.org/wiki/Imperative_mood), e.g. "_Add_
-MyList component" rather than "_Added_ MyList component".
+- As a general style, we write our commit messages as short sentences in
+  [imperative mood](https://en.wikipedia.org/wiki/Imperative_mood), e.g. "_Add_
+  MyList component" rather than "_Added_ MyList component".
 
 ## 4. Handling text (and i18n)
+
 The Zetkin codebase is internationalized and is continuously translated to multiple
 languages. For that purpose, we never use statically defined ("hard-coded") strings
 in UI components.
