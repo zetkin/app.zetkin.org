@@ -23,6 +23,7 @@ import {
   ZetkinQuery,
   ZetkinTag,
 } from 'utils/types/zetkin';
+import { personsDeleted } from 'features/profile/store';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -51,6 +52,16 @@ const initialState: ViewsStoreSlice = {
 const viewsSlice = createSlice({
   extraReducers: (builder) =>
     builder
+      .addCase(personsDeleted, (state, action) => {
+        const deletedPersonIds = action.payload;
+        deletedPersonIds.forEach((deletedPersonId) => {
+          Object.values(state.rowsByViewId).forEach((rowList) => {
+            rowList.items = rowList.items.filter(
+              (item) => item.id != deletedPersonId
+            );
+          });
+        });
+      })
       .addCase(tagAssigned, (state, action) => {
         const [personId, tag] = action.payload;
         setTagOnRelevantRows(state, personId, tag.id, tag);

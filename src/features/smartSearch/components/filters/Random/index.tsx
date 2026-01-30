@@ -119,12 +119,6 @@ const Random = ({
                 values={{
                   numInput: (
                     <StyledNumberInput
-                      inputProps={{
-                        min: '1',
-                        ...(selected === QUANTITY.PERCENT && {
-                          max: '99',
-                        }),
-                      }}
                       onChange={(e) => {
                         if (
                           selected === QUANTITY.PERCENT &&
@@ -133,6 +127,14 @@ const Random = ({
                           return;
                         }
                         setQuantityDisplay(+e.target.value);
+                      }}
+                      slotProps={{
+                        htmlInput: {
+                          min: '1',
+                          ...(selected === QUANTITY.PERCENT && {
+                            max: '99',
+                          }),
+                        },
                       }}
                       value={quantityDisplay}
                     />

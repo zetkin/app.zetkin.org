@@ -72,6 +72,7 @@ import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
 import oldTheme from 'theme';
+import useViewBulkActions from 'features/views/hooks/useViewBulkActions';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -161,6 +162,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const dispatch = useAppDispatch();
+  const apiClient = useApiClient();
+  const tagListState = useAppSelector((state) => state.tags.tagList);
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
   const [columnToCreate, setColumnToCreate] =
@@ -198,6 +202,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
+  const { bulkDeletePersons } = useViewBulkActions(orgId);
 
   const showError = useCallback(
     (error: VIEW_DATA_TABLE_ERROR) => {
@@ -328,6 +333,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setColumnToRename, updateColumn]
   );
 
+  const onRowsDelete = useCallback(async () => {
+    bulkDeletePersons(selection);
+  }, [selection]);
+
   const onRowsRemove = useCallback(async () => {
     setWaiting(true);
     try {
@@ -406,10 +415,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     },
     [colIdFromFieldName, columns, debouncedUpdateColumnOrder]
   );
-
-  const dispatch = useAppDispatch();
-  const apiClient = useApiClient();
-  const tagListState = useAppSelector((state) => state.tags.tagList);
 
   const unConfiguredGridColumns = useMemo(
     () => [
@@ -525,6 +530,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         isLoading,
         isSmartSearch: !!view.content_query,
         onColumnCreate,
+        onRowsDelete,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,
         onViewCreate,

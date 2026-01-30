@@ -1,6 +1,6 @@
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
-import { CellData, ColumnKind, Sheet } from './types';
+import { CellData, ColumnKind, Sheet } from '../types';
 import parserFactory from './dateParsing/parserFactory';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { BulkOp, BulkSubOp } from '../types';
@@ -30,6 +30,7 @@ export default function prepareImportOperations(
 
     let zetkinId: number | null = null;
     let extId: string | null = null;
+    let emailId: string | null = null;
 
     const fields: Partial<ZetkinPerson> = {};
     sheet.columns.forEach((col, index) => {
@@ -62,6 +63,9 @@ export default function prepareImportOperations(
               extId = value.toString();
             } else if (col.idField == 'id') {
               zetkinId = parseInt(value.toString());
+            } else if (col.idField == 'email') {
+              emailId = value.toString().trim();
+              fields.email = value.toString().trim();
             }
           }
         } else if (col.kind == ColumnKind.DATE) {
@@ -138,6 +142,13 @@ export default function prepareImportOperations(
         key: {
           id: zetkinId,
         },
+        op: 'person.get',
+        ops: subOps,
+      });
+    } else if (emailId) {
+      preparedOps.push({
+        if_none: sheet.skipUnknown ? 'skip' : undefined,
+        key: { email: emailId },
         op: 'person.get',
         ops: subOps,
       });

@@ -320,8 +320,6 @@ feat:
         copyMenuHeader: Kopiera {numberOfEvents} event till
         createShift: Skapa skift efter varje event
         duplicate: Samma tid och datum (duplicera)
-        move: Flytta
-        moveMenuHeader: Flytta {numberOfEvents} event till
         nextDay: Nästa dag {dates}
         nextWeek: Nästa vecka {dates}
     shortWeek: v {weekNumber}
@@ -585,7 +583,6 @@ feat:
         filter: Filtrera resultat
         standalones: Fristående event
         surveys: Enkäter
-      heading: Alla projekt
       indefinite: Obestämd
       unsorted: Osorterade projekt
       upcoming: '{numEvents, number} framtida event.'
@@ -1963,10 +1960,8 @@ feat:
       showButton: Visa alla events
   profile:
     delete:
-      button: Ta bort person
       confirm: Är du säker på att du vill ta bort {name} från {org} och alla
         relaterade organisationer? Det är permanent och går inte att ångra.
-      title: Radera konto
       warning: Detta kan inte ångras!
     details:
       title: Detaljer
@@ -3300,11 +3295,6 @@ feat:
         openButton: Visa
     toolbar:
       createColumn: Ny kolumn
-      createFromSelection: Skapa lista från urval
-      removeFromSelection: Ta bort {numSelected, plural, one {1 person} other
-        {{numSelected} personer} } från listan
-      removeTooltip: För tillfället går det inte att ta bort rader i listor som
-        baseras på en Smart sökning
     viewLayout:
       actions:
         share: Dela

@@ -119,7 +119,7 @@ const HouseholdsPage2: FC<Props> = ({
               }}
               onSelectHousehold={onSelectHousehold}
               onUpdateSelection={(selectedIds) =>
-                onSelectHouseholds(selectedIds)
+                onSelectHouseholds([...new Set(selectedIds)])
               }
               selectedHouseholdIds={selectedHouseholdIds}
             />

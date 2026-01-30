@@ -266,7 +266,11 @@ const SurveySubmissionsList = ({
       const respondentEmail = row.respondent?.email;
       if (person) {
         const personHasNoEmail = person.email == null || person.email == '';
-        if (personHasNoEmail && respondentEmail != undefined) {
+        const personHasDifferentEmail = person.email !== respondentEmail;
+        if (
+          (personHasNoEmail && respondentEmail != undefined) ||
+          (personHasDifferentEmail && respondentEmail != undefined)
+        ) {
           setDialogEmail(respondentEmail);
           setDialogPerson(person);
         }

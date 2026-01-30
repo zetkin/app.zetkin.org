@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box, Button, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { OrgColumn } from 'features/import/utils/types';
+import { OrgColumn } from 'features/import/types';
 import OrgConfigRow from './OrgConfigRow';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useGuessOrganization from 'features/import/hooks/useGuessOrganization';

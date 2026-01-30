@@ -1,5 +1,6 @@
 import { FormattedDate } from 'react-intl';
 import { FunctionComponent } from 'react';
+import { Box } from '@mui/material';
 
 import CampaignActionButtons from 'features/campaigns/components/CampaignActionButtons';
 import EditableCampaignTitle from '../components/EditableCampaignTitle';
@@ -10,6 +11,7 @@ import useCampaign from '../hooks/useCampaign';
 import useCampaignEvents from '../hooks/useCampaignEvents';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
+import CampaignStatusChip from '../components/CampaignStatusChip';
 
 interface SingleCampaignLayoutProps {
   children: React.ReactNode;
@@ -38,24 +40,29 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
       defaultTab="/"
       fixedHeight={fixedHeight}
       subtitle={
-        firstEvent && lastEvent ? (
-          <>
-            <FormattedDate
-              day="2-digit"
-              month="long"
-              value={removeOffset(firstEvent.start_time)}
-            />
-            {` - `}
-            <FormattedDate
-              day="2-digit"
-              month="long"
-              value={removeOffset(lastEvent.end_time)}
-              year="numeric"
-            />
-          </>
-        ) : (
-          <Msg id={messageIds.indefinite} />
-        )
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          <CampaignStatusChip campaign={campaign} />
+          <Box>
+            {firstEvent && lastEvent ? (
+              <>
+                <FormattedDate
+                  day="2-digit"
+                  month="long"
+                  value={removeOffset(firstEvent.start_time)}
+                />
+                {` - `}
+                <FormattedDate
+                  day="2-digit"
+                  month="long"
+                  value={removeOffset(lastEvent.end_time)}
+                  year="numeric"
+                />
+              </>
+            ) : (
+              <Msg id={messageIds.indefinite} />
+            )}
+          </Box>
+        </Box>
       }
       tabs={[
         { href: `/`, label: messages.layout.overview() },
