@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box } from '@mui/material';
 
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -12,10 +12,10 @@ import messageIds from '../l10n/messageIds';
 type Props = {
   onAbandonCall: () => void;
   onSwitchToCall: () => void;
-  unfinishedCall: ZetkinCall;
+  unfinishedCall: UnfinishedCall;
 };
 
-const UnfinishedCall: FC<Props> = ({
+const UnfinishedCallListItem: FC<Props> = ({
   onAbandonCall,
   onSwitchToCall,
   unfinishedCall,
@@ -91,4 +91,4 @@ const UnfinishedCall: FC<Props> = ({
   );
 };
 
-export default UnfinishedCall;
+export default UnfinishedCallListItem;

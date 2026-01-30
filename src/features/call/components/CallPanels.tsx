@@ -7,7 +7,7 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import { LaneState, LaneStep, Report, ZetkinCall } from '../types';
+import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
 import AssignmentStats, { DesktopStats } from './AssignmentStats';
 import InstructionsSection from './InstructionsSection';
 import AboutSection from './AboutSection';
@@ -18,19 +18,19 @@ import { reportUpdated } from '../store';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
-import UnfinishedCall from './UnfinishedCall';
+import UnfinishedCallListItem from './UnfinishedCall';
 import callSummarySentence from './utils/callSummarySentence';
 import ZUIDivider from 'zui/components/ZUIDivider';
 
 type Props = {
   assignment: ZetkinCallAssignment;
-  call: ZetkinCall | null;
+  call: UnfinishedCall | null;
   lane: LaneState;
   onAbandonUnfinishedCall: (callId: number) => void;
   onOpenCallLog: () => void;
   onSwitchToUnfinishedCall: (callId: number, assignmentId: number) => void;
   report: Report;
-  unfinishedCalls: ZetkinCall[];
+  unfinishedCalls: UnfinishedCall[];
 };
 
 const CallPanels: FC<Props> = ({
@@ -302,7 +302,7 @@ const CallPanels: FC<Props> = ({
             <Box>
               {unfinishedCalls.map((unfinishedCall, index) => (
                 <Fragment key={unfinishedCall.id}>
-                  <UnfinishedCall
+                  <UnfinishedCallListItem
                     onAbandonCall={() =>
                       onAbandonUnfinishedCall(unfinishedCall.id)
                     }

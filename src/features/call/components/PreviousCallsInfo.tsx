@@ -13,14 +13,14 @@ import {
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import { MUIIcon } from 'zui/components/types';
 
 type PreviousCallsInfoProps = {
-  call: ZetkinCall;
+  call: UnfinishedCall;
 };
 
 export const labels: Record<number, string> = {

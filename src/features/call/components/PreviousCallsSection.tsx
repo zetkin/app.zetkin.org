@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { FC, Fragment } from 'react';
 
 import useCallMutations from '../hooks/useCallMutations';
-import useOutgoingCalls from '../hooks/useOutgoingCalls';
+import useUnfinishedCalls from '../hooks/useUnfinishedCalls';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -11,9 +11,10 @@ import { labels, colors } from './PreviousCallsInfo';
 import { ZetkinCall } from '../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useCurrentCall from '../hooks/useCurrentCall';
-import UnfinishedCall from './UnfinishedCall';
+import UnfinishedCallListItem from './UnfinishedCall';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useFinishedCalls from '../hooks/useFinishedCalls';
 
 type PreviousCallsSectionProps = {
   onCall: (assignmentId: number) => void;
@@ -33,7 +34,9 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     switchToUnfinishedCall,
   } = useCallMutations(orgId);
   const currentCall = useCurrentCall();
-  const outgoingCalls = useOutgoingCalls();
+  const unfinishedCalls = useUnfinishedCalls();
+  const finishedCalls = useFinishedCalls();
+
   const search = searchTerm?.toLowerCase().trim();
 
   //TODO: Use Fuse libray to fuzzy search.
@@ -52,27 +55,22 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     );
   };
 
-  const previousCalls = outgoingCalls.filter((call) => {
+  const filteredFinishedCalls = finishedCalls.filter((call) =>
+    matchesSearch(call)
+  );
+
+  const filteredUnfinishedCalls = unfinishedCalls.filter((call) => {
     const matches = matchesSearch(call);
-    const isFinishedCall = call.state != 0;
-    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
+    const isCurrentCall = currentCall ? currentCall.id == call.id : false;
 
-    return matches && isFinishedCall && isNotCurrentCall;
-  });
-
-  const unfinishedCalls = outgoingCalls.filter((call) => {
-    const matches = matchesSearch(call);
-    const isUnfinishedCall = call.state == 0;
-    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
-
-    return matches && isUnfinishedCall && isNotCurrentCall;
+    return matches && !isCurrentCall;
   });
 
   return (
     <Box>
-      {unfinishedCalls.map((unfinishedCall) => (
+      {filteredUnfinishedCalls.map((unfinishedCall) => (
         <Fragment key={unfinishedCall.id}>
-          <UnfinishedCall
+          <UnfinishedCallListItem
             onAbandonCall={() => abandonUnfinishedCall(unfinishedCall.id)}
             onSwitchToCall={() => {
               switchToUnfinishedCall(
@@ -86,7 +84,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
           <ZUIDivider />
         </Fragment>
       ))}
-      {previousCalls.map((previousCall) => (
+      {filteredFinishedCalls.map((previousCall) => (
         <Fragment key={previousCall.id}>
           <Box
             sx={{

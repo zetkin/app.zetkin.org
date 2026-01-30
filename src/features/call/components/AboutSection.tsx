@@ -11,7 +11,7 @@ import {
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITagChip from 'zui/components/ZUITagChip';
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import PreviousCallsInfo from './PreviousCallsInfo';
 import ZUIIcon from 'zui/components/ZUIIcon';
@@ -21,10 +21,10 @@ import messageIds from '../l10n/messageIds';
 import globalMessageIds from 'core/i18n/messageIds';
 
 type AboutSectionProps = {
-  call: ZetkinCall | null;
+  call: UnfinishedCall | null;
 };
 
-export const AboutContent = ({ call }: { call: ZetkinCall }) => {
+export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
   const isMobile = useIsMobile();
 
   return (
