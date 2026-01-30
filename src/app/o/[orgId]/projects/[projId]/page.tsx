@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import PublicProjPage from 'features/campaigns/pages/PublicProjPage';
+import PublicProjPage from 'features/public/pages/PublicProjPage';
 
 type Props = {
   params: {
