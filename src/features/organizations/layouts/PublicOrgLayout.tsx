@@ -1,15 +1,14 @@
 'use client';
 
-import { Box } from '@mui/material';
-import { FC, ReactNode, useCallback, useContext } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { Box, NoSsr } from '@mui/material';
+import { FC, ReactNode, useContext } from 'react';
+import { usePathname } from 'next/navigation';
 import { CalendarMonth, NorthWest } from '@mui/icons-material';
 import NextLink from 'next/link';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinOrganization } from 'utils/types/zetkin';
-import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
@@ -17,10 +16,9 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import FollowUnfollowLoginButton from '../components/ActivistPortalHeader/FollowUnfollowLoginButton';
 import EventMapLayout from './EventMapLayout';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated } from '../store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import ActivistPortalOrgEventsMap from '../components/ActivistPortalOrgEventsMap';
 
 type Props = {
   children: ReactNode;
@@ -28,14 +26,11 @@ type Props = {
 };
 
 const PublicOrgLayout: FC<Props> = ({ children, org }) => {
-  const dispatch = useAppDispatch();
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const messages = useMessages(messageIds);
   const subOrgs = usePublicSubOrgs(org.id);
-  const { filteredEvents } = useFilteredOrgEvents(org.id);
   const path = usePathname();
-  const router = useRouter();
 
   const lastSegment = path?.split('/')[3] ?? 'home';
   const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
@@ -65,31 +60,8 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
     );
   }
 
-  const { geojsonToFilterBy } = useAppSelector(
-    (state) => state.organizations.filters
-  );
-
-  const setLocationFilter = (geojsonToFilterBy: GeoJSON.Feature[]) => {
-    dispatch(
-      filtersUpdated({
-        geojsonToFilterBy,
-      })
-    );
-  };
-
-  const onLocationFilterChange = useCallback(
-    (geojsonToFilterBy: GeoJSON.Feature[]) => {
-      setLocationFilter(geojsonToFilterBy);
-      if (lastSegment === 'suborgs') {
-        router.push(`/o/${org.id}`);
-      }
-    },
-    [setLocationFilter, lastSegment, router.push, org.id]
-  );
-
   return (
     <EventMapLayout
-      events={filteredEvents}
       header={
         <ActivistPortalHeader
           button={
@@ -130,11 +102,10 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
           }
         />
       }
-      locationFilter={geojsonToFilterBy}
-      setLocationFilter={onLocationFilterChange}
+      renderMap={() => <ActivistPortalOrgEventsMap orgId={org.id} />}
       showMap={true}
     >
-      {children}
+      <NoSsr>{children}</NoSsr>
     </EventMapLayout>
   );
 };

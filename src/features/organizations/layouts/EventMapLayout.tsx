@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, SxProps } from '@mui/material';
+import { Box, Button, NoSsr, SxProps } from '@mui/material';
 import { FC, ReactNode, Suspense, useEffect, useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/system';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -8,9 +8,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import { ActivistPortalEventMap } from '../components/ActivistPortalEventMap';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
-import { ZetkinEventWithStatus } from 'features/home/types';
 
 const useDelayOnTrue = (durationMs: number, value: boolean) => {
   const [delayedValue, setDelayedValue] = useState(false);
@@ -36,19 +34,15 @@ const transitionSettings: SxProps = {
 
 type Props = {
   children: ReactNode;
-  events: ZetkinEventWithStatus[];
   header: JSX.Element;
-  locationFilter: GeoJSON.Feature[];
-  setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
+  renderMap: () => JSX.Element;
   showMap: boolean;
 };
 
 const EventMapLayout: FC<Props> = ({
   children,
-  events,
   header,
-  locationFilter,
-  setLocationFilter,
+  renderMap,
   showMap,
 }) => {
   const [mobileMapVisible, setMobileMapVisible] = useState(false);
@@ -122,14 +116,14 @@ const EventMapLayout: FC<Props> = ({
               )}
             </Box>
           ) : (
-            <ActivistPortalEventMap
-              events={events}
-              locationFilter={locationFilter}
-              setLocationFilter={setLocationFilter}
-              sx={{
-                height: '100%',
-              }}
-            >
+            <>
+              <Box
+                sx={{
+                  height: '100%',
+                }}
+              >
+                <NoSsr>{renderMap()}</NoSsr>
+              </Box>
               <Box
                 sx={{
                   bottom: 15,
@@ -150,7 +144,7 @@ const EventMapLayout: FC<Props> = ({
                   <Msg id={messageIds.home.map.viewInList} />
                 </Button>
               </Box>
-            </ActivistPortalEventMap>
+            </>
           )}
         </Suspense>
         {!showMapMobile && mobileMapVisible && <ZUIPublicFooter />}
@@ -170,17 +164,16 @@ const EventMapLayout: FC<Props> = ({
             }}
           >
             {shouldMountMap ? (
-              <ActivistPortalEventMap
-                events={events}
-                locationFilter={locationFilter}
-                setLocationFilter={setLocationFilter}
+              <Box
                 sx={{
                   height: '100dvh',
                   position: 'sticky',
                   top: 0,
                   width: '100%',
                 }}
-              />
+              >
+                <NoSsr>{renderMap()}</NoSsr>
+              </Box>
             ) : showMapDesktop ? (
               <Box
                 alignItems="center"
