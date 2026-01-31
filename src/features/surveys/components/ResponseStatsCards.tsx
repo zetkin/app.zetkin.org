@@ -306,11 +306,20 @@ const QuestionStatsBarPlot = ({
   questionStats: QuestionStats;
 }) => {
   const theme = useTheme();
+  const isOptions = isOptionsStats(questionStats);
+  const answerCount = isOptions ? questionStats.answerCount : 0;
+  const countSelection = isOptions
+    ? questionStats.totalSelectedOptionsCount
+    : 0;
+  const percentBase = countSelection || answerCount;
+  const absolutetoPercent = (count: number) =>
+    percentBase ? Math.round((count / percentBase) * 100) : 0;
+  const formatpercentBase = (value: number | null) => value == null ? '' : `${value}%`;
 
   const data = useMemo(() => {
     const bars = isOptionsStats(questionStats)
       ? questionStats.options.map((o) => ({
-          count: o.count,
+        count: absolutetoPercent(o.count),
           option: o.option.text,
         }))
       : Object.entries(questionStats.topWordFrequencies).map(
@@ -342,6 +351,7 @@ const QuestionStatsBarPlot = ({
         series={[
           {
             data: data.map((option) => option.count),
+            valueFormatter: isOptions ? formatpercentBase : undefined,
           },
         ]}
         slotProps={{
@@ -367,6 +377,7 @@ const QuestionStatsBarPlot = ({
           {
             disableLine: true,
             tickLabelStyle: { fill: theme.palette.grey['700'] },
+            valueFormatter: isOptions ? formatpercentBase : undefined,
           },
         ]}
         yAxis={[
@@ -395,11 +406,21 @@ const QuestionStatsPie = ({
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
+  const isOptions = isOptionsStats(questionStats);
+  const answerCount = isOptions ? questionStats.answerCount : 0;
+  const selectionCount = isOptions
+    ? questionStats.totalSelectedOptionsCount
+    : 0;
+  const percentBase = selectionCount || answerCount;
+  const absolutetoPercent = (count: number) =>
+    percentBase ? Math.round((count / percentBase) * 100) : 0;
+  type PieItem = { value: number };
+  const piePercentFormat = (item: PieItem) => `${item.value}%`;
   const data = useMemo(() => {
     const items = isOptionsStats(questionStats)
       ? questionStats.options.map((o) => ({
           label: getEllipsedString(o.option.text, 60),
-          value: o.count,
+          value: absolutetoPercent(o.count),
         }))
       : Object.entries(questionStats.topWordFrequencies).map(
           ([word, count]) => ({
@@ -452,11 +473,12 @@ const QuestionStatsPie = ({
           height={CHART_HEIGHT}
           series={[
             {
-              arcLabel: 'value',
+              arcLabel: isOptions ? piePercentFormat : 'value',
               cornerRadius: 5,
               data,
               innerRadius: 80,
               outerRadius: 180,
+              valueFormatter: isOptions ? piePercentFormat : undefined,
             },
           ]}
           slotProps={{
