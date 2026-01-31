@@ -20,7 +20,8 @@ describe('ZUIDataTableSorting.tsx', () => {
           title: field,
           type: COLUMN_TYPE.PERSON_FIELD,
         }),
-        null
+        null,
+        {}
       ),
     };
   });
