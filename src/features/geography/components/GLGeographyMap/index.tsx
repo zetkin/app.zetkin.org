@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { Pentagon } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
-import { FC, startTransition, useCallback, useMemo, useState } from 'react';
+import { FC, startTransition, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Fuse from 'fuse.js';

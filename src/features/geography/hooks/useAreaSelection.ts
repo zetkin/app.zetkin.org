@@ -20,7 +20,7 @@ export default function useAreaSelection({
   areas,
   map,
   onSelectFromMap,
-  isDrawing = () => false
+  isDrawing = () => false,
 }: Props): Return {
   const [selectedId, setSelectedId] = useState(0);
   const selectedArea = areas.find((area) => area.id == selectedId) || null;
