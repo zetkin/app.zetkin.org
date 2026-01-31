@@ -11,7 +11,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
 
@@ -66,6 +66,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const [isBooking, setBooking] = useState(false);
 
   const showPublishButton =
     state == EventState.DRAFT ||
@@ -80,8 +81,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const signedParticipants = respondents.filter(
     (r) => !participants.some((p) => p.id === r.id)
   );
-  const bookSignedParticipants = () =>
-    addParticipants(signedParticipants.map((p) => p.person.id));
+
+  const bookSignedParticipants = async () => {
+    setBooking(true);
+    await addParticipants(signedParticipants.map((p) => p.person.id));
+    setBooking(false);
+  };
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
@@ -231,14 +236,17 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                 />
               </Box>
               <Box alignItems="center" display="flex">
-                <Button
-                  color="primary"
-                  data-testid="ZUIEllipsisMenu-menuActivator"
-                  disableElevation
-                  onClick={() => bookSignedParticipants()}
-                >
-                  {messages.eventPopper.bookAll().toLocaleUpperCase()}
-                </Button>
+                {isBooking && <CircularProgress />}
+                {!isBooking && (
+                  <Button
+                    color="primary"
+                    data-testid="ZUIEllipsisMenu-menuActivator"
+                    disableElevation
+                    onClick={() => bookSignedParticipants()}
+                  >
+                    {messages.eventPopper.bookAll().toLocaleUpperCase()}
+                  </Button>
+                )}
                 <Typography
                   color={
                     (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
