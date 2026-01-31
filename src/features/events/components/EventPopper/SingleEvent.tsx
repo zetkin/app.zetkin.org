@@ -11,7 +11,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
 
@@ -40,6 +40,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import useEventParticipantsMutations from 'features/events/hooks/useEventParticipantsMutations';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -57,6 +58,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
     useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
+  const { addParticipants } = useEventParticipantsMutations(orgId, event.id);
 
   const dispatch = useAppDispatch();
   const participants = participantsFuture.data || [];
@@ -64,6 +66,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const [isBooking, setBooking] = useState(false);
 
   const showPublishButton =
     state == EventState.DRAFT ||
@@ -78,6 +81,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const signedParticipants = respondents.filter(
     (r) => !participants.some((p) => p.id === r.id)
   );
+
+  const bookSignedParticipants = async () => {
+    setBooking(true);
+    await addParticipants(signedParticipants.map((p) => p.person.id));
+    setBooking(false);
+  };
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
@@ -226,13 +235,26 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                   size="xs"
                 />
               </Box>
-              <Typography
-                color={
-                  (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
-                }
-              >
-                {signedParticipants.length ?? 0}
-              </Typography>
+              <Box alignItems="center" display="flex">
+                {isBooking && <CircularProgress />}
+                {!isBooking && (
+                  <Button
+                    color="primary"
+                    data-testid="ZUIEllipsisMenu-menuActivator"
+                    disableElevation
+                    onClick={() => bookSignedParticipants()}
+                  >
+                    {messages.eventPopper.bookAll().toLocaleUpperCase()}
+                  </Button>
+                )}
+                <Typography
+                  color={
+                    (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
+                  }
+                >
+                  {signedParticipants.length ?? 0}
+                </Typography>
+              </Box>
             </Box>
             <ParticipantAvatars
               orgId={orgId}
