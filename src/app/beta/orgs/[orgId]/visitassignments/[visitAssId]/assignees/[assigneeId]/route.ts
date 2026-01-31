@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinVisitAssigneeModel } from 'features/visitassignments/models';
-import { ZetkinUser } from 'utils/types/zetkin';
+import { ZetkinOrgUser } from 'features/user/types';
 
 type RouteMeta = {
   params: {
@@ -55,8 +55,8 @@ export async function PUT(request: NextRequest, { params }: RouteMeta) {
         await mongoose.connect(process.env.MONGODB_URL || '');
       }
 
-      const assigneeInfo = await apiClient.get<ZetkinUser>(
-        `/api/orgs/${orgId}/people/${params.assigneeId}`
+      const assigneeInfo = await apiClient.get<ZetkinOrgUser>(
+        `/api2/orgs/${orgId}/users/${params.assigneeId}`
       );
       if (!assigneeInfo) {
         return new NextResponse(

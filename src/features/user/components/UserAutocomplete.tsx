@@ -16,9 +16,10 @@ import { ZetkinOrgUser } from '../types';
 type Props = {
   onSelect: (user: ZetkinOrgUser | null) => void;
   orgId: number;
+  placeholder?: string;
 };
 
-const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
+const UserAutocomplete: FC<Props> = ({ onSelect, orgId, placeholder }) => {
   const users = useOrgUsers(orgId);
 
   const filterOptions = (
@@ -52,6 +53,7 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
       renderInput={(params) => (
         <TextField
           {...params}
+          placeholder={placeholder}
           slotProps={{
             htmlInput: {
               ...params.inputProps,

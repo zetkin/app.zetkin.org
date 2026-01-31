@@ -20,10 +20,9 @@ import useVisitAssignees from 'features/visitassignments/hooks/useVisitAssignees
 import useVisitAssignment from 'features/visitassignments/hooks/useVisitAssignment';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/visitassignments/l10n/messageIds';
-import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
-import zuiMessageIds from 'zui/l10n/messageIds';
 import AssigneeConfigDialog from 'features/visitassignments/components/AssigneeConfigDialog';
 import VisitAssignmentAssigneesList from 'features/visitassignments/components/VisitAssignmentAssigneesList';
+import UserAutocomplete from 'features/user/components/UserAutocomplete';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -46,15 +45,12 @@ const AssigneesPage: PageWithLayout = () => {
   const { orgId, visitAssId } = useNumericRouteParams();
   const onServer = useServerSide();
   const messages = useMessages(messageIds);
-  const zuiMessages = useMessages(zuiMessageIds);
   const { data: visitAssignment } = useVisitAssignment(orgId, visitAssId);
   const {
     addAssignee,
     filteredAssigneesFuture,
-    isAssignee,
     removeAssignee,
     searchString,
-    selectInputRef,
     selectedAssignee,
     setAssigneeTags,
     setSearchString,
@@ -100,42 +96,19 @@ const AssigneesPage: PageWithLayout = () => {
               onCustomize={(assignee) => setSelectedAssignee(assignee)}
               onRemove={(assignee) => removeAssignee(assignee.id)}
             />
+            <Box marginTop={2}>
+              <UserAutocomplete
+                onSelect={(user) => {
+                  if (user) {
+                    addAssignee(user.id);
+                  }
+                }}
+                orgId={orgId}
+                placeholder={messages.map.areaInfo.assignees.add()}
+              />
+            </Box>
           </Box>
         </Paper>
-        <Box marginTop={2}>
-          <MUIOnlyPersonSelect
-            bulkSelection={{
-              entityToAddTo: visitAssignment?.title || undefined,
-              onSelectMultiple: (ids) => {
-                // TODO #2789: Optimize this, e.g. using RPC
-                ids.forEach((id) => {
-                  if (!isAssignee(id)) {
-                    addAssignee(id);
-                  }
-                });
-              },
-            }}
-            createPersonLabels={{
-              submitLabel: zuiMessages.createPerson.submitLabel.add(),
-              title: zuiMessages.createPerson.title.canvasser(),
-            }}
-            getOptionDisabled={(person) => isAssignee(person.id)}
-            getOptionExtraLabel={(person) =>
-              isAssignee(person.id) ? messages.assignees.add.alreadyAdded() : ''
-            }
-            inputRef={selectInputRef}
-            onChange={(person) => {
-              addAssignee(person.id);
-
-              // Blur and re-focus input to reset, so that user can type again to
-              // add another person, without taking their hands off the keyboard.
-              selectInputRef?.current?.blur();
-              selectInputRef?.current?.focus();
-            }}
-            placeholder={messages.assignees.add.placeholder()}
-            selectedPerson={null}
-          />
-        </Box>
         <AssigneeConfigDialog
           assignee={selectedAssignee}
           onClose={() => setSelectedAssignee(null)}
