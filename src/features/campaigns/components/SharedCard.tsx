@@ -17,7 +17,6 @@ import { useNumericRouteParams } from 'core/hooks';
 const SharedCard = (): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-
   const title = messages.shared.title();
 
   return (
@@ -61,7 +60,7 @@ const SharedCard = (): JSX.Element => {
             }}
             variant="button"
           >
-            <Msg id={messageIds.all.cardCTA} />
+            <Msg id={messageIds.shared.cta} />
           </Typography>
         </CardActions>
       </CardActionArea>
