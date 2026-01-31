@@ -29,7 +29,6 @@ const TimelineJourneyStart: React.FC<TimelineJourneyStartProps> = ({
       />
       <ZUIMarkdown
         BoxProps={{ margin: '1rem 0' }}
-        forceTargetBlank={true}
         markdown={update.details.data.opening_note}
       />
     </UpdateContainer>

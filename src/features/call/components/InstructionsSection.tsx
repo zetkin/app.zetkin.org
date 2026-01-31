@@ -20,7 +20,7 @@ const Instructions = ({ instructions }: { instructions: string }) => (
   <ZUIText component="div">
     {instructions ? (
       <Box sx={{ paddingBottom: 10 }}>
-        <ZUIMarkdown forceTargetBlank={true} markdown={instructions} />
+        <ZUIMarkdown markdown={instructions} />
       </Box>
     ) : (
       <Msg id={messageIds.instructions.noInstructions} />

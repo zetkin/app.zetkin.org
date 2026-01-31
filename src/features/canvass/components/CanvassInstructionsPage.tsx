@@ -70,10 +70,7 @@ const Page: FC<{
                     mx: 1,
                   }}
                 >
-                  <ZUIMarkdown
-                    forceTargetBlank={true}
-                    markdown={assignment.instructions}
-                  />
+                  <ZUIMarkdown markdown={assignment.instructions} />
                 </Box>
               </Card>
             ) : (

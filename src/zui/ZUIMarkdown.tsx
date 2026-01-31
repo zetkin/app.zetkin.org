@@ -12,7 +12,8 @@ interface ZUIMarkdownProps {
 const ZUIMarkdown: React.FC<ZUIMarkdownProps> = ({
   BoxProps,
   markdown,
-  forceTargetBlank,
+  // defaulting to true assuming this is the correct behavior in most cases
+  forceTargetBlank = true,
 }) => {
   const dirtyHtml = marked(markdown, { breaks: true });
   const targetBlankRef = forceTargetBlank

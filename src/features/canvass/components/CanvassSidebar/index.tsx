@@ -160,10 +160,7 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
             />
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
             <Typography sx={{ pb: 2, pt: 2 }} variant="body2">
-              <ZUIMarkdown
-                forceTargetBlank={true}
-                markdown={assignment.instructions}
-              />
+              <ZUIMarkdown markdown={assignment.instructions} />
             </Typography>
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
           </ListItem>
