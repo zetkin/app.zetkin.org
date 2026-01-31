@@ -773,7 +773,6 @@ feat:
         viewInListButton: Vis i liste
         viewInMapButton: Vis i kart
     shared:
-      cta: Gå til prosjekt
       noActivities: Alle pågående aktiviteter som er delt med organisasjonen din vil
         vises her.
       noArchives: Alle tidligere aktiviteter som har blitt delt med organisasjonen din

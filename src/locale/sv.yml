@@ -689,7 +689,6 @@ feat:
         viewInListButton: Visa i lista
         viewInMapButton: Visa på karta
     shared:
-      cta: Gå till projekt
       noActivities: Alla pågående aktiviteter som delas med din organisation kommer
         synas här.
       noArchives: Alla utgångna aktiviteter som delas med din organisation kommer
