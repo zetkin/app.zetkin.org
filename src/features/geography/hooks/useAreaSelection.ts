@@ -6,9 +6,9 @@ import { Zetkin2Area } from 'features/areas/types';
 
 type Props = {
   areas: Zetkin2Area[];
+  isDrawing?: () => boolean;
   map: MapType | null;
   onSelectFromMap?: (id: number) => void;
-  isDrawing?: () => boolean;
 };
 
 type Return = {
