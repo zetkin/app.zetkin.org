@@ -45,25 +45,27 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
   const [isAreasPanelOpen, setIsAreasPanelOpen] = useState(false);
   const [areaSearchQuery, setAreaSearchQuery] = useState('');
   const [map, setMap] = useState<MapType | null>(null);
+  const [drawing, setDrawing] = useState<boolean>(false);
   const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({
     areas,
     map,
+    drawing,
     onSelectFromMap: () => {
       startTransition(() => {
         setIsAreasPanelOpen(false);
       });
     },
   });
+
   const {
     cancelDrawing,
     canFinishDrawing,
     creating,
-    drawing,
     drawingPoints,
     finishDrawing,
     startDrawing,
-  } = useAreaDrawing({ map, orgId, setSelectedId });
+  } = useAreaDrawing({ map, orgId, setSelectedId, setDrawing });
   const { draggingPoints, editing, editingArea, setEditing } = useAreaEditing({
     map,
     selectedArea,
