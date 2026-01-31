@@ -1,4 +1,4 @@
-import { ArrowForward } from '@mui/icons-material';
+import { ArrowDownward, ArrowForward } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  TextField,
   Typography,
 } from '@mui/material';
 
@@ -54,17 +55,17 @@ const SurveyLinkDialog = ({
             </Typography>
           </Box>
 
-          <Box alignItems="center" display="flex" mb={2}>
-            {email}
+          <Box alignItems="center" display="flex" flexDirection="column" mb={2}>
+            <TextField aria-readonly value={email} variant="outlined" style={{width: '100%', marginTop: '5px'}} />
             <Box alignItems="center" display="flex" ml={2} mr={2}>
-              <ArrowForward
+              <ArrowDownward
                 color="secondary"
                 sx={{
                   opacity: '50%',
                 }}
               />
             </Box>
-            {person.email}
+            <TextField aria-readonly value={person.email} variant="outlined" style={{width: '100%', marginTop: '5px'}} />
           </Box>
           {messages.surveyDialogDifferentEmail.description()}
         </DialogContent>
