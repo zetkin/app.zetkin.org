@@ -48,6 +48,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
   const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({
     areas,
+    isDrawing: () => drawing,
     map,
     onSelectFromMap: () => {
       startTransition(() => {
