@@ -225,10 +225,11 @@ export default makeMessages('feat.surveys', {
   },
   surveyDialog: {
     add: m('Add'),
-    cancel: m("Don't add"),
+    cancelLinking: m('Cancel'),
     description: m(
       'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
     ),
+    doNotAdd: m("Don't add"),
     title: m('Add email address'),
   },
   surveyDialogDifferentEmail: {
