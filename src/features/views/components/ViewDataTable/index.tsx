@@ -33,7 +33,7 @@ import EmptyView from 'features/views/components/EmptyView';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import useCreateView from 'features/views/hooks/useCreateView';
-import { useMessages } from 'core/i18n';
+import { useMessages, UseMessagesMap } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
 import useViewGrid from 'features/views/hooks/useViewGrid';
@@ -72,6 +72,7 @@ import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
 import oldTheme from 'theme';
 import useViewBulkActions from 'features/views/hooks/useViewBulkActions';
+import { dayOfMonthOperator, monthOperator } from './customFilters/date';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -103,7 +104,10 @@ declare module '@mui/x-data-grid-pro' {
   }
 }
 
-const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
+const getFilterOperators = (
+  col: Omit<GridColDef, 'field'>,
+  messages: UseMessagesMap<typeof messageIds>
+) => {
   if (col.filterOperators) {
     return col.filterOperators;
   }
@@ -113,10 +117,18 @@ const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
   );
   const defaultTypes = getGridDefaultColumnTypes();
   if (col.type && col.type in defaultTypes) {
-    const defaultOperators = defaultTypes[col.type].filterOperators?.filter(
-      (op) => op.value !== 'isAnyOf'
-    );
-    return defaultOperators ?? stringOperators;
+    const defaultOperators =
+      defaultTypes[col.type].filterOperators?.filter(
+        (op) => op.value !== 'isAnyOf'
+      ) ?? stringOperators;
+    if (col.type === 'date') {
+      return [
+        ...defaultOperators,
+        monthOperator(messages.customFilters),
+        dayOfMonthOperator(messages.customFilters),
+      ];
+    }
+    return defaultOperators;
   }
 
   return stringOperators;
@@ -432,7 +444,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         });
         return {
           field: `col_${col.id}`,
-          filterOperators: getFilterOperators(colDef),
+          filterOperators: getFilterOperators(colDef, messages),
           headerName: col.title,
           minWidth: 100,
           resizable: true,
@@ -451,6 +463,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       apiClient,
       dispatch,
       orgId,
+      messages,
     ]
   );
 
