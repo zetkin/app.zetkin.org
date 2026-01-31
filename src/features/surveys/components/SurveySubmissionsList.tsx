@@ -29,6 +29,7 @@ import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import useSurveySubmissionMutations from '../hooks/useSurveySubmissionMutations';
+import usePersonMutations from 'features/profile/hooks/usePersonMutations';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -42,14 +43,23 @@ const SurveySubmissionsList = ({
   const [dialogPerson, setDialogPerson] = useState<ZetkinPerson | null>(null);
   const [dialogEmail, setDialogEmail] = useState('');
   const [createPersonOpen, setCreatePersonOpen] = useState<number>(-1);
-  const { setRespondentId } = useSurveySubmissionResponder(
-    orgId,
-    createPersonOpen
-  );
+  const { setRespondentId: setNewRowRespondentId } =
+    useSurveySubmissionResponder(orgId, createPersonOpen);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { deleteSurveySubmission } = useSurveySubmissionMutations(
     Number(orgId)
+  );
+
+  const [editingRowSurveySubmissionId, setEditingRowSurveySubmissionId] =
+    useState<number | null>();
+  const { setRespondentId: setEditingRowRespondentId } =
+    useSurveySubmissionResponder(orgId, editingRowSurveySubmissionId!);
+
+  const [editingRowPersonId, setEditingRowPersonId] = useState<number | null>();
+  const { updatePerson: updateEditingRowPerson } = usePersonMutations(
+    orgId,
+    editingRowPersonId!
   );
 
   const sortedSubmissions = useMemo(() => {
@@ -261,16 +271,17 @@ const SurveySubmissionsList = ({
         field: 'respondent',
         id: row.id,
       });
-      setRespondentId(person?.id || null);
+      setEditingRowSurveySubmissionId(row.id);
+      setEditingRowPersonId(person?.id || null);
+
+      // Handle unlink action
+      if (person?.id === undefined) {
+        setRespondentId(null);
+      }
 
       const respondentEmail = row.respondent?.email;
       if (person) {
-        const personHasNoEmail = person.email == null || person.email == '';
-        const personHasDifferentEmail = person.email !== respondentEmail;
-        if (
-          (personHasNoEmail && respondentEmail != undefined) ||
-          (personHasDifferentEmail && respondentEmail != undefined)
-        ) {
+        if (respondentEmail != undefined) {
           setDialogEmail(respondentEmail);
           setDialogPerson(person);
         }
@@ -292,6 +303,23 @@ const SurveySubmissionsList = ({
   const creatingFromSubmission = submissions.find(
     (sub) => sub.id == createPersonOpen
   );
+
+  function onUpdateEmail(email: string) {
+    if (editingRowPersonId && editingRowSurveySubmissionId) {
+      setEditingRowRespondentId(editingRowPersonId);
+      updateEditingRowPerson({ email });
+      setEditingRowPersonId(undefined);
+      setEditingRowSurveySubmissionId(undefined);
+    }
+  }
+
+  function onKeepEmail() {
+    if (editingRowPersonId && editingRowSurveySubmissionId) {
+      setEditingRowRespondentId(editingRowPersonId);
+      setEditingRowPersonId(undefined);
+      setEditingRowSurveySubmissionId(undefined);
+    }
+  }
 
   return (
     <Box
@@ -342,7 +370,7 @@ const SurveySubmissionsList = ({
             if (createPersonOpen == -1) {
               return;
             }
-            setRespondentId(person.id);
+            setNewRowRespondentId(person.id);
           }}
           open={createPersonOpen != -1}
           submitLabel={messages.submissions.createPersonSubmit()}
@@ -353,6 +381,8 @@ const SurveySubmissionsList = ({
         <SurveyLinkDialog
           email={dialogEmail}
           onClose={() => setDialogPerson(null)}
+          onKeepEmail={onKeepEmail}
+          onUpdateEmail={onUpdateEmail}
           open={!!dialogPerson}
           person={dialogPerson}
         />

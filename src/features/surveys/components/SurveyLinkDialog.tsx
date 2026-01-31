@@ -13,28 +13,30 @@ import {
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
-import usePersonMutations from 'features/profile/hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 
 const SurveyLinkDialog = ({
   email,
   onClose,
+  onKeepEmail,
+  onUpdateEmail,
   open,
   person,
 }: {
   email: string;
   onClose: () => void;
+  onKeepEmail: () => void;
+  onUpdateEmail: (email: string) => void;
   open: boolean;
   person: ZetkinPerson;
 }) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { updatePerson } = usePersonMutations(orgId, person.id);
 
   if (person.email && email !== person.email) {
     return (
-      <Dialog open={open}>
+      <Dialog onClose={onClose} open={open}>
         <DialogTitle>{messages.surveyDialogDifferentEmail.title()}</DialogTitle>
         <Divider />
         <DialogContent>
@@ -69,12 +71,26 @@ const SurveyLinkDialog = ({
           {messages.surveyDialogDifferentEmail.description()}
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>
+          <Box sx={{ display: 'flex', flexGrow: 1 }}>
+            <Button
+              onClick={() => {
+                onClose();
+              }}
+            >
+              {messages.surveyDialog.cancelLinking()}
+            </Button>
+          </Box>
+          <Button
+            onClick={() => {
+              onKeepEmail();
+              onClose();
+            }}
+          >
             {messages.surveyDialogDifferentEmail.keep()}
           </Button>
           <Button
             onClick={() => {
-              updatePerson({ email });
+              onUpdateEmail(email);
               onClose();
             }}
             variant="contained"
@@ -87,7 +103,7 @@ const SurveyLinkDialog = ({
   }
 
   return (
-    <Dialog open={open}>
+    <Dialog onClose={onClose} open={open}>
       <DialogTitle>{messages.surveyDialog.title()}</DialogTitle>
       <Divider />
       <DialogContent>
@@ -110,11 +126,11 @@ const SurveyLinkDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant="outlined">
-          {messages.surveyDialog.cancel()}
+          {messages.surveyDialog.doNotAdd()}
         </Button>
         <Button
           onClick={() => {
-            updatePerson({ email });
+            onUpdateEmail(email);
             onClose();
           }}
           variant="contained"
