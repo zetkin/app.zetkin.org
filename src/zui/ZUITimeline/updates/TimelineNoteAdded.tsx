@@ -92,6 +92,7 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
                 },
               },
             }}
+            forceTargetBlank={true}
             markdown={update.details.note.text}
           />
           {!!miscFiles.length && (
