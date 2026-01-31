@@ -10,7 +10,6 @@ import lngLat from '../utils/lngLat';
 type Props = {
   map: MapType | null;
   orgId: number;
-  setDrawing: (drawing: boolean) => void;
   setSelectedId: (id: number) => void;
 };
 
@@ -18,6 +17,7 @@ type Return = {
   canFinishDrawing: boolean;
   cancelDrawing: () => void;
   creating: boolean;
+  drawing: boolean;
   drawingPoints: Zetkin2AreaLine | null;
   finishDrawing: () => void;
   startDrawing: () => void;
@@ -27,7 +27,6 @@ export default function useAreaDrawing({
   map,
   orgId,
   setSelectedId,
-  setDrawing,
 }: Props): Return {
   const messages = useMessages(messageIds);
   const [drawingPoints, setDrawingPoints] = useState<Zetkin2AreaLine | null>(
@@ -52,7 +51,6 @@ export default function useAreaDrawing({
       setSelectedId(area.id);
     }
     setDrawingPoints(null);
-    setDrawing(false);
   }
 
   useEffect(() => {
@@ -93,17 +91,16 @@ export default function useAreaDrawing({
   return {
     canFinishDrawing: !!drawingPoints && drawingPoints.length > 2,
     cancelDrawing() {
-      setDrawing(false);
       setDrawingPoints(null);
     },
     creating,
+    drawing: !!drawingPoints,
     drawingPoints:
       startedDrawing && mousePos && !creating
         ? [...drawingPoints, mousePos]
         : drawingPoints,
     finishDrawing,
     startDrawing() {
-      setDrawing(true);
       setDrawingPoints([]);
     },
   };

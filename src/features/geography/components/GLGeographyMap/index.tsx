@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { Pentagon } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
-import { FC, startTransition, useMemo, useState } from 'react';
+import { FC, startTransition, useCallback, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Fuse from 'fuse.js';
@@ -45,27 +45,26 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
   const [isAreasPanelOpen, setIsAreasPanelOpen] = useState(false);
   const [areaSearchQuery, setAreaSearchQuery] = useState('');
   const [map, setMap] = useState<MapType | null>(null);
-  const [drawing, setDrawing] = useState<boolean>(false);
   const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({
     areas,
     map,
-    drawing,
+    isDrawing: () => drawing,
     onSelectFromMap: () => {
       startTransition(() => {
         setIsAreasPanelOpen(false);
       });
     },
   });
-
   const {
     cancelDrawing,
     canFinishDrawing,
     creating,
+    drawing,
     drawingPoints,
     finishDrawing,
     startDrawing,
-  } = useAreaDrawing({ map, orgId, setSelectedId, setDrawing });
+  } = useAreaDrawing({ map, orgId, setSelectedId });
   const { draggingPoints, editing, editingArea, setEditing } = useAreaEditing({
     map,
     selectedArea,
