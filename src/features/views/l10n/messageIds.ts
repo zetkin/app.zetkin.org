@@ -280,6 +280,33 @@ export default makeMessages('feat.views', {
     save: m('Save'),
     title: m('Title'),
   },
+  customFilters: {
+    choose: m('Choose'),
+    date: {
+      dayOfMonth: {
+        label: m('Day of month'),
+      },
+      month: {
+        label: m('Month'),
+        months: {
+          /* eslint-disable sort-keys */
+          January: m('January'),
+          February: m('February'),
+          March: m('March'),
+          April: m('April'),
+          May: m('May'),
+          June: m('June'),
+          July: m('July'),
+          August: m('August'),
+          September: m('September'),
+          October: m('October'),
+          November: m('November'),
+          December: m('December'),
+          /* eslint-enable sort-keys */
+        },
+      },
+    },
+  },
   dataTableErrors: {
     create_column: m('There was an error creating the column'),
     delete_column: m('There was an error deleting the column'),
