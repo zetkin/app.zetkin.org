@@ -10,6 +10,7 @@ export default makeMessages('feat.home', {
       loginToSignUp: m('Log in to sign up'),
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
+      visitAssignment: m('Start visiting'),
     },
     emptyListMessage: m('You are not signed up for any acitvities'),
     eventStatus: {
@@ -23,6 +24,7 @@ export default makeMessages('feat.home', {
       call: m('Call'),
       canvass: m('Areas'),
       event: m('Events'),
+      visit: m('Visits'),
     },
   },
   allEventsList: {
@@ -44,6 +46,7 @@ export default makeMessages('feat.home', {
     callAssignment: m('Untitled call assignment'),
     event: m('Untitled event'),
     noLocation: m('No physical location'),
+    visitAssignment: m('Untitled visit assignment'),
   },
   footer: {
     privacyPolicy: m('Privacy policy'),

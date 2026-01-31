@@ -25,6 +25,7 @@ export type EnvVars = {
   FEAT_OFFICIALS?: string;
   FEAT_TASKS?: string;
   FEAT_UNAUTH_EVENT_SIGNUP?: string;
+  FEAT_VISITS?: string;
   INSTANCE_OWNER_HREF?: string;
   INSTANCE_OWNER_NAME?: string;
   MAPLIBRE_STYLE?: string;

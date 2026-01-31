@@ -36,7 +36,7 @@ export default function useCreateCampaignActivity(
     const promise = apiClient
       .rpc(createCallAssignmentRpc, {
         callAssignment: callAssignmentBody,
-        campId,
+        campId: campId,
         orgId,
       })
       .then((callAssignment) => {

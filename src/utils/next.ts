@@ -211,6 +211,7 @@ export const scaffold =
           FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
           FEAT_TASKS: process.env.FEAT_TASKS,
           FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
+          FEAT_VISITS: process.env.FEAT_VISITS,
           INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
           INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
           MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
