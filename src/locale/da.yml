@@ -865,6 +865,7 @@ feat:
     timeFrame:
       edit:
         afterDate: '{timeFrameSelect} {afterDateSelect}'
+        onDate: '{timeFrameSelect} {onDateSelect}'
         beforeDate: '{timeFrameSelect} {beforeDateSelect}'
         beforeToday: '{timeFrameSelect}'
         between: '{timeFrameSelect} {afterDateSelect} og {beforeDateSelect}'
@@ -873,6 +874,7 @@ feat:
         lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {dag} other {dage}}'
       preview:
         afterDate: efter {afterDate}
+        onDate: on {afterDate}
         beforeDate: før {beforeDate}
         beforeToday: før i dag
         between: mellem {afterDate} og {beforeDate}
@@ -881,6 +883,7 @@ feat:
         lastFew: indenfor de sidste {days} {days, plural, one {dag} other {dage}}
       timeFrameSelectLabel:
         afterDate: efter
+        onDate: on
         beforeDate: før
         beforeToday: før i dag
         between: mellem
@@ -889,6 +892,7 @@ feat:
         lastFew: indenfor de sidste
       timeFrameSelectOptions:
         afterDate: efter en given dato
+        onDate: on a certain date
         beforeDate: før en given dato
         beforeToday: før i dag
         between: mellem to datoer
