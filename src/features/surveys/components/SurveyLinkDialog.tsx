@@ -56,7 +56,7 @@ const SurveyLinkDialog = ({
             </Typography>
           </Box>
 
-          <Box alignItems="center" display="flex" mb={2}>
+          <Box alignItems="center" display="flex" flexWrap="wrap" mb={2}>
             {email}
             <Box alignItems="center" display="flex" ml={2} mr={2}>
               <ArrowForward
@@ -70,7 +70,7 @@ const SurveyLinkDialog = ({
           </Box>
           {messages.surveyDialogDifferentEmail.description()}
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ padding: '16px 18px' }}>
           <Box sx={{ display: 'flex', flexGrow: 1 }}>
             <Button
               onClick={() => {
@@ -124,7 +124,7 @@ const SurveyLinkDialog = ({
         </Box>
         {messages.surveyDialog.description()}
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ padding: '16px 18px' }}>
         <Button onClick={onClose} variant="outlined">
           {messages.surveyDialog.doNotAdd()}
         </Button>
