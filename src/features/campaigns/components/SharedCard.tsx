@@ -17,9 +17,17 @@ const SharedCard = (): JSX.Element => {
   const { orgId } = useNumericRouteParams();
 
   return (
-    <Card data-testid="campaign-card">
+    <Card data-testid="campaign-card" sx={{ height: '100%' }}>
       <CardContent>
-        <Box display="flex" justifyContent="space-between">
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            height: '35px',
+            justifyContent: 'space-between',
+          }}
+        >
           <Typography gutterBottom noWrap variant="h6">
             <Msg id={messageIds.shared.title} />
           </Typography>
