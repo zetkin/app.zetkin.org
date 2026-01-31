@@ -2737,6 +2737,7 @@ feat:
     timeFrame:
       edit:
         afterDate: '{timeFrameSelect} {afterDateSelect}'
+        onDate: '{timeFrameSelect} {onDateSelect}'
         beforeDate: '{timeFrameSelect} {beforeDateSelect}'
         beforeToday: '{timeFrameSelect}'
         between: '{timeFrameSelect} {afterDateSelect} und {beforeDateSelect}'
@@ -2745,6 +2746,7 @@ feat:
         lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {Tag} other {Tage}}'
       preview:
         afterDate: nach {afterDate}
+        onDate: on {afterDate}
         beforeDate: vor {beforeDate}
         beforeToday: vor heute
         between: zwischen {afterDate} und {beforeDate}
@@ -2753,6 +2755,7 @@ feat:
         lastFew: während des/r letzten {days} {days, plural, one {Tages} other {Tage}}
       timeFrameSelectLabel:
         afterDate: nach
+        onDate: on
         beforeDate: vor
         beforeToday: vor heute
         between: zwischen
@@ -2761,6 +2764,7 @@ feat:
         lastFew: während der letzten
       timeFrameSelectOptions:
         afterDate: nach einem bestimmten Datum
+        onDate: on a certain date
         beforeDate: vor einem bestimmten Datum
         beforeToday: vor heute
         between: zwischen zwei Zeitpunkten

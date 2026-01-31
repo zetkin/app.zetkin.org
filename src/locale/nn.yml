@@ -2645,10 +2645,12 @@ feat:
       output: etter
     timeFrame:
       edit:
+        onDate: '{timeFrameSelect} {onDateSelect}'
         between: '{timeFrameSelect} {afterDateSelect} og {beforeDateSelect}'
         lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {dag} other {dager}}'
       preview:
         afterDate: etter {afterDate}
+        onDate: on {afterDate}
         beforeDate: før {beforeDate}
         beforeToday: før i dag
         between: mellom {afterDate} og {beforeDate}
@@ -2657,6 +2659,7 @@ feat:
         lastFew: i løpet av siste {days} {days, plural, one {dag} other {dager}}
       timeFrameSelectLabel:
         afterDate: etter
+        onDate: on
         beforeDate: før
         beforeToday: før i dag
         between: mellom
@@ -2665,6 +2668,7 @@ feat:
         lastFew: i løpet av siste
       timeFrameSelectOptions:
         afterDate: etter en gitt dato
+        onDate: on a certain date
         beforeDate: før en gitt dato
         beforeToday: før i dag
         between: mellom to datoer

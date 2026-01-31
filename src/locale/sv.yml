@@ -2549,6 +2549,7 @@ feat:
     timeFrame:
       edit:
         afterDate: '{timeFrameSelect} {afterDateSelect}'
+        onDate: '{timeFrameSelect} {onDateSelect}'
         beforeDate: '{timeFrameSelect} {beforeDateSelect}'
         beforeToday: '{timeFrameSelect}'
         between: '{timeFrameSelect} {afterDateSelect} och {beforeDateSelect}'
@@ -2558,6 +2559,7 @@ feat:
           {dagarna}}'
       preview:
         afterDate: efter {afterDate}
+        onDate: on {afterDate}
         beforeDate: före {beforeDate}
         beforeToday: innan idag
         between: mellan {afterDate} och {beforeDate}
@@ -2566,6 +2568,7 @@ feat:
         lastFew: under de senaste {days} {days, plural, one {dag} other {dagarna}}
       timeFrameSelectLabel:
         afterDate: efter
+        onDate: on
         beforeDate: före
         beforeToday: innan idag
         between: mellan
@@ -2574,6 +2577,7 @@ feat:
         lastFew: under de senaste
       timeFrameSelectOptions:
         afterDate: efter ett särskilt datum
+        onDate: on a certain date
         beforeDate: innan ett särskilt datum
         beforeToday: innan idag
         between: mellan två datum
