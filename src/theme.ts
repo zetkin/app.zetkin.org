@@ -2,7 +2,7 @@ import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import { createElement } from 'react';
 import { createTheme } from '@mui/material/styles';
 import { Localization } from '@mui/x-data-grid/utils/getGridLocalization';
-import { daDK, deDE, nbNO, svSE } from '@mui/x-data-grid-pro';
+import { daDK, deDE, frFR, nbNO, svSE } from '@mui/x-data-grid-pro';
 
 import { oldThemePalette } from 'oldThemePalette';
 
@@ -136,6 +136,7 @@ const theme = createTheme({
 const locales: Record<string, Localization> = {};
 locales['da'] = daDK;
 locales['de'] = deDE;
+locales['fr'] = frFR;
 locales['nn'] = nbNO;
 locales['sv'] = svSE;
 
