@@ -209,7 +209,7 @@ export default makeMessages('feat.campaigns', {
     },
   },
   shared: {
-    cta: m('Go to project'),
+    cta: m('View shared activities'),
     noActivities: m(
       'All ongoing activities shared with your organization will appear here.'
     ),
