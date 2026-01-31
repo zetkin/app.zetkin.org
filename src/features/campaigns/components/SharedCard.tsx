@@ -17,7 +17,6 @@ import { useNumericRouteParams } from 'core/hooks';
 const SharedCard = (): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const title = messages.shared.title();
 
   return (
     <Card
@@ -25,7 +24,7 @@ const SharedCard = (): JSX.Element => {
       sx={{ border: `2px solid ${oldTheme.palette.primary.main}` }}
     >
       <CardActionArea
-        aria-label={messages.all.cardAriaLabel({ title })}
+        aria-label={messages.shared.cta()}
         component={NextLink}
         href={`/organize/${orgId}/projects/shared`}
       >
