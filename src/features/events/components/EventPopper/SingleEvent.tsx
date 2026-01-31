@@ -58,7 +58,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
     useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
-  const { addParticipant } = useEventParticipantsMutations(orgId, event.id);
+  const { addParticipants } = useEventParticipantsMutations(orgId, event.id);
 
   const dispatch = useAppDispatch();
   const participants = participantsFuture.data || [];
@@ -81,7 +81,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     (r) => !participants.some((p) => p.id === r.id)
   );
   const bookSignedParticipants = () =>
-    signedParticipants.forEach((p) => addParticipant(p.person.id));
+    addParticipants(signedParticipants.map((p) => p.person.id));
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);

@@ -17,6 +17,7 @@ export enum participantStatus {
 
 type useEventParticipantsMutationsMutationsReturn = {
   addParticipant: (personId: number) => void;
+  addParticipants: (personIds: number[]) => void;
   deleteParticipant: (participantId: number) => void;
   sendReminders: (eventId: number) => void;
   setParticipantStatus: (
@@ -44,6 +45,10 @@ export default function useEventParticipantsMutations(
       {}
     );
     dispatch(participantAdded([eventId, participant]));
+  };
+
+  const addParticipants = async (parsonIds: number[]) => {
+    await Promise.all(parsonIds.map((id) => addParticipant(id)));
   };
 
   const deleteParticipant = async (participantId: number) => {
@@ -92,6 +97,7 @@ export default function useEventParticipantsMutations(
 
   return {
     addParticipant,
+    addParticipants,
     deleteParticipant,
     sendReminders,
     setParticipantStatus,
