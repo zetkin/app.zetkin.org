@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { Pentagon } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
-import { FC, startTransition, useMemo, useState } from 'react';
+import { FC, startTransition, useEffect, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Fuse from 'fuse.js';
@@ -110,6 +110,20 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
       });
     }
   };
+
+  const handleEscapeKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelDrawing();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscapeKeydown);
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKeydown);
+    };
+  });
 
   return (
     <Box
