@@ -1,11 +1,17 @@
-import { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Check, PriorityHigh } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Tooltip } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Tooltip,
+} from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
 import { useAppSelector } from 'core/hooks';
 import messageIds from 'features/events/l10n/messageIds';
 import useEventParticipants from '../hooks/useEventParticipants';
+import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
 
 interface RemindAllButtonProps {
   contactPerson?: null | { id: number; name: string };
@@ -28,6 +34,12 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
     useEventParticipants(orgId, eventId);
 
   const messages = useMessages(messageIds);
+  const [isConfirmReminderOpen, setIsConfirmReminderOpen] = useState(false);
+
+  function handleConfirm() {
+    sendReminders(eventId);
+    setIsConfirmReminderOpen(false);
+  }
 
   return (
     <Tooltip
@@ -47,7 +59,7 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
             numRemindedParticipants >= numAvailParticipants
           }
           onClick={() => {
-            sendReminders(eventId);
+            setIsConfirmReminderOpen(true);
           }}
           size="small"
           startIcon={
@@ -68,6 +80,16 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
         >
           <Msg id={messageIds.participantSummaryCard.remindButton} />
         </Button>
+
+        <ZUIConfirmDialog
+          onCancel={() => setIsConfirmReminderOpen(false)}
+          onSubmit={handleConfirm}
+          open={isConfirmReminderOpen}
+          title={messages.eventPopper.confirmRemindersTitle()}
+          warningText={messages.eventPopper.confirmRemindersMessage({
+            numReminders: numAvailParticipants - numRemindedParticipants
+          })}
+        />
       </Box>
     </Tooltip>
   );
