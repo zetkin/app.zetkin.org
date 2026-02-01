@@ -20,6 +20,7 @@ export interface CallStoreSlice {
   myAssignmentsList: RemoteList<ZetkinCallAssignment>;
   outgoingCalls: RemoteList<ZetkinCall>;
   queueHasError: SerializedError | null;
+  unfinishedCalls: RemoteList<ZetkinCall>;
 }
 
 const emptyFilters: ActivityFilters = {
@@ -55,6 +56,7 @@ const initialState: CallStoreSlice = {
   myAssignmentsList: remoteList(),
   outgoingCalls: remoteList(),
   queueHasError: null,
+  unfinishedCalls: remoteList(),
   upcomingEventsList: remoteList(),
 };
 
@@ -72,6 +74,7 @@ const CallSlice = createSlice({
       lane.respondedEventIds = [];
       lane.callIsBeingAllocated = false;
       state.outgoingCalls.isLoading = false;
+      state.unfinishedCalls.isLoading = false;
     },
     allocateNewCall: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
@@ -124,6 +127,16 @@ const CallSlice = createSlice({
           loaded: new Date().toISOString(),
         })
       );
+      if (newCall.state === 0) {
+        state.unfinishedCalls.items.push(
+          remoteItem(newCall.id, {
+            data: newCall,
+            isLoading: false,
+            isStale: false,
+            loaded: new Date().toISOString(),
+          })
+        );
+      }
     },
     callSkippedLoad: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
@@ -131,6 +144,9 @@ const CallSlice = createSlice({
     callSkippedLoaded: (state, action: PayloadAction<[number, ZetkinCall]>) => {
       const [skippedCallId, newCall] = action.payload;
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id != skippedCallId
+      );
+      state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
         (item) => item.id != skippedCallId
       );
 
@@ -147,6 +163,16 @@ const CallSlice = createSlice({
           loaded: new Date().toISOString(),
         })
       );
+      if (newCall.state === 0) {
+        state.unfinishedCalls.items.push(
+          remoteItem(newCall.id, {
+            data: newCall,
+            isLoading: false,
+            isStale: false,
+            loaded: new Date().toISOString(),
+          })
+        );
+      }
 
       lane.step = LaneStep.CALL;
       lane.submissionDataBySurveyId = {};
@@ -259,6 +285,16 @@ const CallSlice = createSlice({
           loaded: new Date().toISOString(),
         })
       );
+      if (newCall.state === 0) {
+        state.unfinishedCalls.items.push(
+          remoteItem(newCall.id, {
+            data: newCall,
+            isLoading: false,
+            isStale: false,
+            loaded: new Date().toISOString(),
+          })
+        );
+      }
 
       lane.step = LaneStep.CALL;
       lane.respondedEventIds = [];
@@ -289,6 +325,9 @@ const CallSlice = createSlice({
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
         (item) => item.id != deletedCallId
       );
+      state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
+        (item) => item.id != deletedCallId
+      );
 
       lane.currentCallId = null;
       lane.step = LaneStep.START;
@@ -307,9 +346,9 @@ const CallSlice = createSlice({
       lane.updateCallError = false;
       const updatedCall = action.payload;
 
-      const callItem = state.outgoingCalls.items.find(
-        (item) => item.id == updatedCall.id
-      );
+      const callItem =
+        state.outgoingCalls.items.find((item) => item.id == updatedCall.id) ||
+        state.unfinishedCalls.items.find((item) => item.id == updatedCall.id);
 
       if (callItem) {
         const data = callItem.data;
@@ -318,7 +357,7 @@ const CallSlice = createSlice({
           state.outgoingCalls.items = state.outgoingCalls.items.filter(
             (call) => call.id != updatedCall.id
           );
-          state.outgoingCalls.items.push({
+          const newCall = {
             ...callItem,
             data: {
               ...data,
@@ -329,8 +368,17 @@ const CallSlice = createSlice({
               state: updatedCall.state,
               update_time: new Date().toISOString(),
             },
-          });
+          };
+          state.outgoingCalls.items.push(newCall);
           sortOutgoingCalls(state.outgoingCalls);
+
+          if (data.state === 0) {
+            state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
+              (call) => call.id != updatedCall.id
+            );
+            state.unfinishedCalls.items.push(newCall);
+            sortOutgoingCalls(state.unfinishedCalls);
+          }
         }
       }
     },
@@ -379,6 +427,9 @@ const CallSlice = createSlice({
     unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
       const abandonedCallId = action.payload;
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id != abandonedCallId
+      );
+      state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
         (item) => item.id != abandonedCallId
       );
 
@@ -436,6 +487,14 @@ const CallSlice = createSlice({
       }
 
       sortOutgoingCalls(state.outgoingCalls);
+      sortOutgoingCalls(state.unfinishedCalls);
+    },
+    unfinishedCallsLoad: (state) => {
+      state.unfinishedCalls.isLoading = true;
+    },
+    unfinishedCallsLoaded: (state, action: PayloadAction<ZetkinCall[]>) => {
+      state.unfinishedCalls = remoteList(action.payload);
+      state.unfinishedCalls.loaded = new Date().toISOString();
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
@@ -492,4 +551,6 @@ export const {
   updateLaneStep,
   unfinishedCallAbandoned,
   unfinishedCallSwitched,
+  unfinishedCallsLoad,
+  unfinishedCallsLoaded,
 } = CallSlice.actions;

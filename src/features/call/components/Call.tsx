@@ -10,7 +10,6 @@ import { updateLaneStep } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import ZUIText from 'zui/components/ZUIText';
-import useOutgoingCalls from '../hooks/useOutgoingCalls';
 import useCallMutations from '../hooks/useCallMutations';
 import CallSwitchModal from '../components/CallSwitchModal';
 import ZUIModal from 'zui/components/ZUIModal';
@@ -20,6 +19,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
+import useUnfinishedCalls from 'features/call/hooks/useUnfinishedCalls';
 
 const Call: FC = () => {
   const messages = useMessages(messageIds);
@@ -38,7 +38,6 @@ const Call: FC = () => {
 
   const { abandonUnfinishedCall, skipCurrentCall, switchToUnfinishedCall } =
     useCallMutations(assignment.organization.id);
-  const outgoingCalls = useOutgoingCalls();
 
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
@@ -47,11 +46,8 @@ const Call: FC = () => {
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
 
-  const unfinishedCalls = outgoingCalls.filter((c) => {
-    const isUnfinishedCall = c.state == 0;
-    const isNotCurrentCall = call ? call.id != c.id : true;
-
-    return isUnfinishedCall && isNotCurrentCall;
+  const unfinishedCalls = useUnfinishedCalls().filter((c) => {
+    return call ? call.id != c.id : true;
   });
 
   const switchedTo = allUserAssignments.find(

@@ -7,9 +7,13 @@ export default function useCurrentCall(): ZetkinCall | null {
   const activeLane = state.lanes[state.activeLaneIndex];
   const currentCallId = activeLane.currentCallId;
 
-  const currentCall = state.outgoingCalls.items.find(
-    (item: RemoteItem<ZetkinCall>) => item.id === currentCallId
-  );
+  const currentCall =
+    state.outgoingCalls.items.find(
+      (item: RemoteItem<ZetkinCall>) => item.id === currentCallId
+    ) ||
+    state.unfinishedCalls.items.find(
+      (item: RemoteItem<ZetkinCall>) => item.id === currentCallId
+    );
 
   return currentCall?.data ?? null;
 }

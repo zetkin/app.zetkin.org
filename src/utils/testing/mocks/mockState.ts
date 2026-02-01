@@ -27,6 +27,7 @@ export default function mockState(overrides?: RootState) {
       myAssignmentsList: remoteList(),
       outgoingCalls: remoteList(),
       queueHasError: null,
+      unfinishedCalls: remoteList(),
       upcomingEventsList: remoteList(),
     },
     callAssignments: {
