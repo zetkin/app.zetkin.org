@@ -14,7 +14,7 @@ import Fuse from 'fuse.js';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
-import { useApiClient } from 'core/hooks';
+import { useApiClient, useEnv } from 'core/hooks';
 import searchLocation from 'features/events/rpc/searchLocation';
 
 interface LocationSearchProps {
@@ -45,6 +45,8 @@ const LocationSearch: FC<LocationSearchProps> = ({
   const lastGeocodeQueryString = useRef<string>('');
   const lastFuseQueryString = useRef<string>('');
 
+  const env = useEnv();
+
   useEffect(() => {
     if (inputValue === '') {
       setGeocodedOptions([]);
@@ -52,6 +54,10 @@ const LocationSearch: FC<LocationSearchProps> = ({
     }
 
     if (!open || lastGeocodeQueryString.current === inputValue) {
+      return;
+    }
+
+    if (!env.vars.NOMINATIM_API) {
       return;
     }
 
@@ -71,11 +77,11 @@ const LocationSearch: FC<LocationSearchProps> = ({
       setGeocodedOptions(options);
       setLoading(false);
       setHasLoaded(true);
-    }, 1000);
+    }, 400);
     return () => {
       clearTimeout(debounceTimeout);
     };
-  }, [inputValue, open, apiClient]);
+  }, [inputValue, open, apiClient, env.vars.NOMINATIM_API]);
 
   const theme = useTheme();
 
