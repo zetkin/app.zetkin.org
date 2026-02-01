@@ -1,6 +1,7 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Dialog, Typography } from '@mui/material';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Map as MapType } from 'maplibre-gl';
 
 import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
@@ -53,6 +54,7 @@ const LocationModal: FC<LocationModalProps> = ({
   const [inMoveState, setInMoveState] = useState(false);
   const [newLatLng, setNewLatLng] =
     useState<Pick<ZetkinLocation, 'lat' | 'lng'>>();
+  const map = useRef<MapType>(null);
 
   const selectedLocation = locations.find(
     (location) => location.id === selectedLocationId
@@ -84,6 +86,7 @@ const LocationModal: FC<LocationModalProps> = ({
         <LocationModalMap
           inMoveState={inMoveState}
           locations={locations}
+          mapRef={map}
           onMapClick={(latlng: PendingLocation) => {
             setSelectedLocationId(null);
             setPendingLocation(latlng);
@@ -114,6 +117,19 @@ const LocationModal: FC<LocationModalProps> = ({
         >
           <LocationSearch
             onChange={(value: ZetkinLocation) => {
+              if (map.current) {
+                map.current.panTo(
+                  {
+                    lat: value.lat,
+                    lng: value.lng,
+                  },
+                  {
+                    animate: true,
+                    zoom: 15,
+                  }
+                );
+              }
+
               if (value.id === -1) {
                 setSelectedLocationId(null);
                 setPendingLocation({
@@ -138,6 +154,18 @@ const LocationModal: FC<LocationModalProps> = ({
                 navigator.geolocation.getCurrentPosition(
                   // Success getting location
                   (position) => {
+                    if (map.current) {
+                      map.current.panTo(
+                        {
+                          lat: position.coords.latitude,
+                          lng: position.coords.longitude,
+                        },
+                        {
+                          animate: true,
+                          zoom: 15,
+                        }
+                      );
+                    }
                     setPendingLocation({
                       lat: position.coords.latitude,
                       lng: position.coords.longitude,
