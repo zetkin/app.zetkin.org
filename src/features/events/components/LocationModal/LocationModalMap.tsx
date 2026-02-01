@@ -1,6 +1,7 @@
 import {
   Dispatch,
   FC,
+  MutableRefObject,
   SetStateAction,
   useCallback,
   useEffect,
@@ -29,6 +30,7 @@ import useMapMarkerDrag from 'features/events/hooks/useMapMarkerDrag';
 interface MapProps {
   inMoveState: boolean;
   locations: ZetkinLocation[];
+  mapRef: MutableRefObject<MapType | null>;
   onMapClick: (latlng: Pick<ZetkinLocation, 'lat' | 'lng'>) => void;
   onMarkerClick: (locationId: number) => void;
   onMarkerDragEnd: (lat: number, lng: number) => void;
@@ -43,6 +45,7 @@ interface MapProps {
 const LocationModalMap: FC<MapProps> = ({
   inMoveState,
   locations,
+  mapRef,
   onMapClick,
   onMarkerClick,
   onMarkerDragEnd,
@@ -52,6 +55,10 @@ const LocationModalMap: FC<MapProps> = ({
   setSelectedLocationId,
 }) => {
   const [map, setMap] = useState<MapType | null>(null);
+
+  useEffect(() => {
+    mapRef.current = map;
+  }, [map]);
 
   const { dragPosition } = useMapMarkerDrag({
     inMoveState,
@@ -130,15 +137,6 @@ const LocationModalMap: FC<MapProps> = ({
   );
 
   useMapMarkerClick(map, onMarkerClickGeoJson);
-
-  useEffect(() => {
-    if (!selectedLocation && !pendingLocation) {
-      return;
-    }
-    map?.panTo(selectedLocation || pendingLocation!, {
-      animate: true,
-    });
-  }, [map, selectedLocation, pendingLocation]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
     const features =
