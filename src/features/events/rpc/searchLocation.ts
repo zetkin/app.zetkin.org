@@ -38,7 +38,12 @@ type NominatimResult = {
 };
 
 async function searchAddress(query: string) {
-  const url = new URL('https://nominatim.openstreetmap.org/search');
+  const nominatimAPI = process.env.NOMINATIM_API;
+  if (!nominatimAPI) {
+    return [];
+  }
+
+  const url = new URL(`${nominatimAPI}/search`);
   url.searchParams.append('q', query);
   url.searchParams.append('format', 'json');
   url.searchParams.append('addressdetails', '1');

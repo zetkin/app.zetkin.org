@@ -214,6 +214,7 @@ export const scaffold =
           INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
           MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+          NOMINATIM_API: process.env.NOMINATIM_API,
           TILESERVER:
             process.env.TILESERVER || 'https://tile.openstreetmap.org',
           ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
