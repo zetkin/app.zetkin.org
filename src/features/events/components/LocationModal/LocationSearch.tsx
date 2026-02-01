@@ -48,16 +48,22 @@ const LocationSearch: FC<LocationSearchProps> = ({
   const env = useEnv();
 
   useEffect(() => {
+    if (!env.vars.NOMINATIM_API) {
+      return;
+    }
+
     if (inputValue === '') {
       setGeocodedOptions([]);
       return;
     }
 
-    if (!open || lastGeocodeQueryString.current === inputValue) {
+    if (!open) {
       return;
     }
 
-    if (!env.vars.NOMINATIM_API) {
+    if (lastGeocodeQueryString.current === inputValue) {
+      setLoading(false);
+      setHasLoaded(true);
       return;
     }
 
