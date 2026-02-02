@@ -33,6 +33,7 @@ import { surveyToListDef } from 'features/surveys/rpc/surveyToList';
 import { duplicateSurveyDef } from 'features/surveys/rpc/duplicateSurvey';
 import { loadPersonFieldsDef } from 'features/duplicates/rpc/loadPersonFields';
 import { getSurveyResponseStatsDef } from 'features/surveys/rpc/getSurveyResponseStats';
+import { getAutoLinkableSubmissionsDef } from 'features/surveys/rpc/getAutoLinkableSubmissions';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -42,6 +43,7 @@ export function createRPCRouter() {
   rpcRouter.register(createNewViewRouteDef);
   rpcRouter.register(copyViewRouteDef);
   rpcRouter.register(getSurveyStatsDef);
+  rpcRouter.register(getAutoLinkableSubmissionsDef);
   rpcRouter.register(getSurveyResponseStatsDef);
   rpcRouter.register(duplicateSurveyDef);
   rpcRouter.register(surveyToListDef);
