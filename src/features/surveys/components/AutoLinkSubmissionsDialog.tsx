@@ -12,6 +12,8 @@ import {
 } from 'utils/types/zetkin';
 import { useSurveySubmissionBulkSetResponder } from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/surveys/l10n/messageIds';
 
 export const AutoLinkSubmissionsDialog: FC<{
   onClose: () => void;
@@ -43,12 +45,36 @@ export const AutoLinkSubmissionsDialog: FC<{
       sortable: true,
     });
     return [
-      makeSimpleColumn('first_name', 'First name', 'respondent'),
-      makeSimpleColumn('last_name', 'Last name', 'respondent'),
-      makeSimpleColumn('email', 'Email', 'respondent'),
-      makeSimpleColumn('email', 'Matched email', 'suggestion'),
-      makeSimpleColumn('last_name', 'Matched last name', 'suggestion'),
-      makeSimpleColumn('first_name', 'Matched first name', 'suggestion'),
+      makeSimpleColumn(
+        'first_name',
+        messages.autoLink.columns.submissionFirstName(),
+        'respondent'
+      ),
+      makeSimpleColumn(
+        'last_name',
+        messages.autoLink.columns.submissionLastName(),
+        'respondent'
+      ),
+      makeSimpleColumn(
+        'email',
+        messages.autoLink.columns.submissionEmail(),
+        'respondent'
+      ),
+      makeSimpleColumn(
+        'email',
+        messages.autoLink.columns.matchedEmail(),
+        'suggestion'
+      ),
+      makeSimpleColumn(
+        'last_name',
+        messages.autoLink.columns.matchedLastName(),
+        'suggestion'
+      ),
+      makeSimpleColumn(
+        'first_name',
+        messages.autoLink.columns.matchedFirstName(),
+        'suggestion'
+      ),
     ];
   }, []);
 
@@ -93,13 +119,14 @@ export const AutoLinkSubmissionsDialog: FC<{
   }, [selection, autoLinkableSubmissions.data, bulkSetRespondentId]);
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const messages = useMessages(messageIds);
 
   return (
     <ZUIDialog
       maxWidth={'xl'}
       onClose={onClose}
       open={open}
-      title={'Review auto linkable submissions'}
+      title={messages.autoLink.title()}
     >
       <ZUIFuture future={autoLinkableSubmissions}>
         {(data) => (
@@ -130,14 +157,14 @@ export const AutoLinkSubmissionsDialog: FC<{
         }}
       >
         <Button onClick={onClose} variant={'outlined'}>
-          Cancel
+          {messages.autoLink.close()}
         </Button>
         <Tooltip
           placement={'top'}
           title={
             selection.length === 0
-              ? 'You need to select at least one row to start'
-              : 'Start auto linking'
+              ? messages.autoLink.tooltips.notEnoughRowsSelected()
+              : messages.autoLink.tooltips.startAutoLinking()
           }
         >
           <span>
@@ -149,7 +176,7 @@ export const AutoLinkSubmissionsDialog: FC<{
                     onClose();
                     showSnackbar(
                       'success',
-                      `Auto linked ${count} submissions!`
+                      messages.autoLink.success({ count })
                     );
                   })
                   .catch((err) => {
@@ -161,12 +188,15 @@ export const AutoLinkSubmissionsDialog: FC<{
                     } else {
                       msg = JSON.stringify(err);
                     }
-                    showSnackbar('error', `Error while auto linking. (${msg})`);
+                    showSnackbar(
+                      'error',
+                      messages.autoLink.error({ err: msg })
+                    );
                   });
               }}
               variant={'contained'}
             >
-              Link selected
+              {messages.autoLink.linkSelected()}
             </Button>
           </span>
         </Tooltip>
