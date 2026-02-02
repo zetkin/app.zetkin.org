@@ -1,4 +1,4 @@
-import { Box, Button, Chip, MenuItem, Typography } from '@mui/material';
+import { Box, Button, MenuItem, Typography } from '@mui/material';
 import { FormEvent, useState } from 'react';
 import Fuse from 'fuse.js';
 
@@ -21,6 +21,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import { groupTags } from 'features/tags/components/TagManager/utils';
+import TagChip from 'features/tags/components/TagManager/components/TagChip';
 
 const localMessageIds = messageIds.filters.personTags;
 
@@ -126,11 +127,11 @@ const PersonTags = ({
   }[] = [];
   groupedTags.forEach((group) => {
     sortedGroupedTags.push(
-      ...group.tags.map((tag) => ({
+      ...group.tags /* .map((tag) => ({
         group: tag.group,
         id: tag.id,
         title: tag.title,
-      }))
+      })) */
     );
   });
 
@@ -213,17 +214,21 @@ const PersonTags = ({
               <Box
                 alignItems="center"
                 display="inline-flex"
-                style={{ verticalAlign: 'middle' }}
+                sx={{
+                  alignItems: 'center',
+                  display: 'inline-flex',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                }}
               >
                 {sortedGroupedSelectedTags.map((tag) => {
                   return (
-                    <Chip
-                      key={tag.id}
-                      label={tag.title}
-                      onDelete={() => handleTagDelete(tag)}
-                      style={{ margin: '3px' }}
-                      variant="outlined"
-                    />
+                    <Box key={tag.id} sx={{ fontSize: '1.1rem' }}>
+                      <TagChip
+                        onDelete={() => handleTagDelete(tag)}
+                        tag={tag as ZetkinTag}
+                      />
+                    </Box>
                   );
                 })}
                 {selectedTags.length < tags.length && (
@@ -340,7 +345,41 @@ const PersonTags = ({
                               />
                             </Button>
                           </Box>
-                          <p>{params.children}</p>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: 1,
+                              padding: 1,
+                            }}
+                          >
+                            {params.children}
+                          </Box>
+                        </Box>
+                      );
+                    }}
+                    renderOption={(params, tag) => {
+                      const alreadySelected = !!selectedTags.find(
+                        (t) => t.id == tag.id
+                      );
+
+                      const existingTags = tags.filter(
+                        (tag) =>
+                          !!filter.config.tags.some((tagId) => tagId == tag.id)
+                      );
+                      return (
+                        <Box
+                          key={tag.id}
+                          component="li"
+                          sx={{ display: 'flex' }}
+                        >
+                          <TagChip
+                            disabled={alreadySelected}
+                            onClick={() =>
+                              handleTagChange([...existingTags, tag])
+                            }
+                            tag={tag as ZetkinTag}
+                          />
                         </Box>
                       );
                     }}
