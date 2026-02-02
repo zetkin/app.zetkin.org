@@ -236,7 +236,18 @@ const PersonTags = ({
                         .search(lowerCaseSearchPhrase)
                         .map((fuseResult) => fuseResult.item);
 
-                      return matchingTags;
+                      if (!lowerCaseSearchPhrase) {
+                        return tags;
+                      }
+
+                      return matchingTags.sort((tag1, tag2) => {
+                        const tag1Group =
+                          tag1.group?.title || messages.noGroup();
+                        const tag2Group =
+                          tag2.group?.title || messages.noGroup();
+
+                        return tag1Group.localeCompare(tag2Group);
+                      });
                     }}
                     getOptionDisabled={(t) =>
                       selectedTags.some((selected) => selected.id === t.id)
@@ -245,7 +256,12 @@ const PersonTags = ({
                       option.group?.title || messages.noGroup()
                     }
                     onChange={(_, v) => handleTagChange(v)}
-                    options={sortedGroupedTags}
+                    options={sortedGroupedTags.sort((tag1, tag2) => {
+                      const tag1Group = tag1.group?.title || messages.noGroup();
+                      const tag2Group = tag2.group?.title || messages.noGroup();
+
+                      return tag1Group.localeCompare(tag2Group);
+                    })}
                     renderGroup={(params) => {
                       const group = groupedTags.find(
                         (tagGroup) => tagGroup.title == params.group
@@ -316,7 +332,12 @@ const PersonTags = ({
                               }}
                               size="small"
                             >
-                              Add all
+                              <Msg
+                                id={
+                                  messageIds.filters.personTags
+                                    .addAllFromGroupButton
+                                }
+                              />
                             </Button>
                           </Box>
                           <p>{params.children}</p>
