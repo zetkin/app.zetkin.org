@@ -21,6 +21,7 @@ export const AutoLinkSubmissionsDialog: FC<{
   orgId: number;
   surveyId: number;
 }> = ({ orgId, surveyId, onClose, open }) => {
+  const messages = useMessages(messageIds);
   const autoLinkableSubmissions = useSurveyAutoLinkableSubmissions(
     orgId,
     surveyId
@@ -119,7 +120,6 @@ export const AutoLinkSubmissionsDialog: FC<{
   }, [selection, autoLinkableSubmissions.data, bulkSetRespondentId]);
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const messages = useMessages(messageIds);
 
   return (
     <ZUIDialog
