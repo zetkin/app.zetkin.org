@@ -73,14 +73,18 @@ const SubmissionWarningAlert = ({
                   my: '5px',
                 }}
                 variant={'body2'}
-              >{`${sub.autoLinkableSubmissionCount} submissions can be auto linked`}</Typography>
+              >
+                {messages.unlinkedWarningAlert.autoLink.canBeAutoLinkedText({
+                  countStr: sub.autoLinkableSubmissionCount,
+                })}
+              </Typography>
               <Button
                 disabled={sub.autoLinkableSubmissionCount === '0'}
                 onClick={() => setAutoLinkModalOpen(true)}
                 size={'small'}
                 variant={'outlined'}
               >
-                Auto link submissions
+                {messages.unlinkedWarningAlert.autoLink.openDialogButton()}
               </Button>
               {autoLinkModalOpen && (
                 <AutoLinkSubmissionsDialog
