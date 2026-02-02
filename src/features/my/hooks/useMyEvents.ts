@@ -10,16 +10,18 @@ export default function useMyEvents() {
 
   const now = new Date();
   const today = now.toISOString().slice(0, 10);
+  const url = `/api/users/me/actions?filter=end_time>=${today}`;
 
   return useRemoteList(list, {
     actionOnLoad: () => userEventsLoad(),
     actionOnSuccess: (data) => userEventsLoaded(data),
+    cacheKey: url,
     loader: async () => {
       const bookedEventIds: number[] = [];
 
       try {
         const bookedEvents = await apiClient
-          .get<ZetkinEvent[]>(`/api/users/me/actions?filter=end_time>=${today}`)
+          .get<ZetkinEvent[]>(url)
           .then((events) =>
             events.map<ZetkinEventWithStatus>((event) => {
               bookedEventIds.push(event.id);

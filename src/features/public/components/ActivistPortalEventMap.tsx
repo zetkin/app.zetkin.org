@@ -1,8 +1,7 @@
-import { Box, SxProps } from '@mui/material';
+import { Box } from '@mui/material';
 import { Layer, Map, Source } from '@vis.gl/react-maplibre';
 import { Map as MapType } from 'maplibre-gl';
-import { FC, PropsWithChildren, useCallback, useMemo, useState } from 'react';
-import { GeoJSON } from 'geojson';
+import { FC, useCallback, useMemo, useState } from 'react';
 
 import notEmpty from 'utils/notEmpty';
 import ZUIMapControls from 'zui/ZUIMapControls';
@@ -14,14 +13,11 @@ import { Latitude, Longitude } from 'features/areas/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import useMapMarkerClick from '../hooks/useMapMarkerClick';
 
-export const ActivistPortalEventMap: FC<
-  PropsWithChildren<{
-    events: ZetkinEventWithStatus[];
-    locationFilter: GeoJSON.Feature[];
-    setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
-    sx?: SxProps;
-  }>
-> = ({ children, events, locationFilter, setLocationFilter, sx }) => {
+export const ActivistPortalEventMap: FC<{
+  events: ZetkinEventWithStatus[];
+  locationFilter: GeoJSON.Feature[];
+  setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
+}> = ({ events, locationFilter, setLocationFilter }) => {
   const [map, setMap] = useState<MapType | null>(null);
 
   const onMarkerClick = useCallback(
@@ -119,7 +115,7 @@ export const ActivistPortalEventMap: FC<
 
   return (
     <Box
-      sx={{ flexGrow: 1, height: '100px', position: 'relative', ...(sx ?? {}) }}
+      sx={{ flexGrow: 1, height: '100%', position: 'relative', width: '100%' }}
     >
       <ZUIMapControls
         onFitBounds={() => {
@@ -179,7 +175,6 @@ export const ActivistPortalEventMap: FC<
           />
         </Source>
       </Map>
-      {children}
     </Box>
   );
 };
