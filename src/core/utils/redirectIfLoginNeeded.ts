@@ -8,7 +8,6 @@ const getUser = async (apiClient: BackendApiClient, redirectPath: string) => {
   try {
     return await apiClient.get<ZetkinUser>('/api/users/me');
   } catch (err) {
-    // User fetch failed, redirect to login
     redirect(`/login?redirect=${redirectPath}`);
   }
 };
@@ -20,7 +19,6 @@ const getSession = async (
   try {
     return await apiClient.get<ZetkinSession>('/api/session');
   } catch (err) {
-    // User fetch failed, redirect to login
     redirect(`/login?redirect=${redirectPath}`);
   }
 };

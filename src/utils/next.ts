@@ -127,20 +127,18 @@ export const scaffold =
       apiSession = apiSessionRes.data.data as ZetkinSession;
       authLevel = apiSession.level;
     } catch (err) {
-      // Not logged in, so auth level is zero (anonymous)
       authLevel = 0;
     }
 
     if (ctx.user && apiSession && apiSession.factors) {
       const hasEmailAuth = apiSession.factors.includes('email_password');
+      const hasUnverifiedEmail = !ctx.user.email_is_verified;
+      const unverifiedIsNotAllowed = !options?.allowUnverified;
 
-      // Only redirect to email verification if user used email authentication
-      // and their email is not verified. Phone-only authentication is fine.
-      if (
-        hasEmailAuth &&
-        !ctx.user.email_is_verified &&
-        !options?.allowUnverified
-      ) {
+      const needsToVerifyEmail =
+        hasEmailAuth && hasUnverifiedEmail && unverifiedIsNotAllowed;
+
+      if (needsToVerifyEmail) {
         return {
           redirect: {
             destination: '/verify',
