@@ -56,9 +56,9 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
           ),
         tags: (
           <Box
-            alignItems="start"
-            display="inline-flex"
             sx={{
+              alignItems: 'start',
+              display: 'inline-flex',
               flexWrap: 'wrap',
               gap: 1,
               marginTop: isDesktop ? '10px' : null,
