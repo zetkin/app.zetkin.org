@@ -9,7 +9,7 @@ import StyledSelect from '../../inputs/StyledSelect';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
+import { ZetkinTag } from 'utils/types/zetkin';
 import {
   CONDITION_OPERATOR,
   NewSmartSearchFilter,
@@ -120,11 +120,7 @@ const PersonTags = ({
   );
 
   const groupedTags = groupTags(tags, messages.noGroup());
-  const sortedGroupedTags: {
-    group: ZetkinTagGroup | null;
-    id: number;
-    title: string;
-  }[] = [];
+  const sortedGroupedTags: ZetkinTag[] = [];
   groupedTags.forEach((group) => {
     sortedGroupedTags.push(...group.tags);
   });
@@ -220,7 +216,7 @@ const PersonTags = ({
                     <Box key={tag.id} sx={{ fontSize: '1.1rem' }}>
                       <TagChip
                         onDelete={() => handleTagDelete(tag)}
-                        tag={tag as ZetkinTag}
+                        tag={tag}
                       />
                     </Box>
                   );
