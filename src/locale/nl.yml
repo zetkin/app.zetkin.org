@@ -1881,7 +1881,6 @@ feat:
     timeFrame:
       edit:
         afterDate: '{timeFrameSelect} {afterDateSelect}'
-        onDate: '{timeFrameSelect} {onDateSelect}'
         beforeDate: '{timeFrameSelect} {beforeDateSelect}'
         beforeToday: '{timeFrameSelect}'
         between: '{timeFrameSelect} {afterDateSelect} and {beforeDateSelect}'
@@ -1890,7 +1889,6 @@ feat:
         lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}'
       preview:
         afterDate: na {afterDate}
-        onDate: on {afterDate}
         beforeDate: voor {beforeDate}
         beforeToday: voor vandaag
         between: tussen {afterDate} en {beforeDate}
@@ -1899,7 +1897,6 @@ feat:
         lastFew: gedurende de laatste {days} {days, plural, one {day} other {days}}
       timeFrameSelectLabel:
         afterDate: na
-        onDate: on
         beforeDate: voor
         beforeToday: voor vandaag
         between: tussen
@@ -1908,7 +1905,6 @@ feat:
         lastFew: gedurende de laatste
       timeFrameSelectOptions:
         afterDate: na een bepaalde datum
-        onDate: on a certain date
         beforeDate: voor een bepaalde datum
         beforeToday: voor vandaag
         between: tussen twee datums

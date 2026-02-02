@@ -1894,7 +1894,6 @@ feat:
     timeFrame:
       edit:
         afterDate: '{timeFrameSelect} {afterDateSelect}'
-        onDate: '{timeFrameSelect} {onDateSelect}'
         beforeDate: '{timeFrameSelect} {beforeDateSelect}'
         beforeToday: '{timeFrameSelect}'
         between: '{timeFrameSelect} {afterDateSelect} and {beforeDateSelect}'
@@ -1903,7 +1902,6 @@ feat:
         lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}'
       preview:
         afterDate: after {afterDate}
-        onDate: on {afterDate}
         beforeDate: before {beforeDate}
         beforeToday: before today
         between: between {afterDate} and {beforeDate}
@@ -1912,7 +1910,6 @@ feat:
         lastFew: during the last {days} {days, plural, one {day} other {days}}
       timeFrameSelectLabel:
         afterDate: after
-        onDate: on
         beforeDate: before
         beforeToday: before today
         between: between
@@ -1921,7 +1918,6 @@ feat:
         lastFew: during the last
       timeFrameSelectOptions:
         afterDate: after a certain date
-        onDate: on a certain date
         beforeDate: before a certain date
         beforeToday: before today
         between: between two dates
