@@ -126,13 +126,7 @@ const PersonTags = ({
     title: string;
   }[] = [];
   groupedTags.forEach((group) => {
-    sortedGroupedTags.push(
-      ...group.tags /* .map((tag) => ({
-        group: tag.group,
-        id: tag.id,
-        title: tag.title,
-      })) */
-    );
+    sortedGroupedTags.push(...group.tags);
   });
 
   const groupedSelectedTags = groupTags(selectedTags, messages.noGroup());
