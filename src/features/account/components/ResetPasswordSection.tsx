@@ -124,9 +124,7 @@ const ResetPasswordSection: FC<ResetPasswordSectionProps> = ({
           </Box>
         );
       }}
-      renderRightHeaderContent={() => {
-        return <ZUILogo />;
-      }}
+      renderRightHeaderContent={() => <ZUILogo />}
       title={messages.resetPassword.title()}
     />
   );

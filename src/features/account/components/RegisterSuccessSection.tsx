@@ -86,9 +86,7 @@ const RegisterSuccessSection: FC<RegisterSuccessSectionProps> = ({
           </Box>
         );
       }}
-      renderRightHeaderContent={() => {
-        return <ZUILogo />;
-      }}
+      renderRightHeaderContent={() => <ZUILogo />}
       subtitle={messages.register.description()}
       title={messages.register.title()}
     />

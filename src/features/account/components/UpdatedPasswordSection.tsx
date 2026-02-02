@@ -73,9 +73,7 @@ const UpdatedPasswordSection = () => {
           </Box>
         );
       }}
-      renderRightHeaderContent={() => {
-        return <ZUILogo />;
-      }}
+      renderRightHeaderContent={() => <ZUILogo />}
       title={messages.resetPassword.title()}
     />
   );
