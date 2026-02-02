@@ -30,17 +30,6 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
         }}
       />
     );
-  } 
-  else if (timeFrame == TIME_FRAME.ON_DATE) {
-    return (
-      <UnderlinedMsg
-        id={messageIds.timeFrame.preview.onDate}
-        values={{
-          //withAfter and withBefore are replacable in this case
-          ...withAfter,
-        }}
-      />
-    );
   } else if (timeFrame == TIME_FRAME.BEFORE_DATE) {
     return (
       <UnderlinedMsg

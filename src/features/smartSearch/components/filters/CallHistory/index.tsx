@@ -215,7 +215,6 @@ const CallHistory = ({
                 options={[
                   TIME_FRAME.EVER,
                   TIME_FRAME.AFTER_DATE,
-                  TIME_FRAME.ON_DATE,
                   TIME_FRAME.BEFORE_DATE,
                   TIME_FRAME.BETWEEN,
                   TIME_FRAME.LAST_FEW_DAYS,

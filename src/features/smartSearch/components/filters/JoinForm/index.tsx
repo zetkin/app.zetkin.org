@@ -101,7 +101,6 @@ const JoinFormFilter: FC<Props> = ({
                 }
                 options={[
                   TIME_FRAME.AFTER_DATE,
-                  TIME_FRAME.ON_DATE,
                   TIME_FRAME.BEFORE_DATE,
                   TIME_FRAME.BEFORE_TODAY,
                   TIME_FRAME.BETWEEN,

@@ -50,10 +50,6 @@ const TimeFrame = ({
     if (selected === TIME_FRAME.AFTER_DATE) {
       onChange({ after: after.toISOString().slice(0, 10) });
     }
-    if (selected === TIME_FRAME.ON_DATE) {
-      const date = after.toISOString().slice(0, 10);
-      onChange({ after: date, before: date });
-    }
     if (selected === TIME_FRAME.BETWEEN) {
       onChange({
         after: after.toISOString().slice(0, 10),
@@ -82,7 +78,6 @@ const TimeFrame = ({
       value={dayjs(before)}
     />
   );
-  const onDateSelect = afterDateSelect;
   const timeFrameSelect = (
     <StyledSelect
       onChange={(e) => setSelected(e.target.value as TIME_FRAME)}
@@ -131,12 +126,6 @@ const TimeFrame = ({
         <Msg
           id={messageIds.timeFrame.edit.beforeToday}
           values={{ timeFrameSelect }}
-        />
-      )}
-      {selected == TIME_FRAME.ON_DATE && (
-        <Msg
-          id={messageIds.timeFrame.edit.onDate}
-          values={{ onDateSelect, timeFrameSelect }}
         />
       )}
       {selected == 'between' && (

@@ -961,10 +961,6 @@ export default makeMessages('feat.smartSearch', {
         beforeDateSelect: ReactElement;
         timeFrameSelect: ReactElement;
       }>('{timeFrameSelect} {beforeDateSelect}'),
-      onDate: m<{
-        onDateSelect: ReactElement;
-        timeFrameSelect: ReactElement;
-      }>('{timeFrameSelect} {onDateSelect}'),
       beforeToday: m<{ timeFrameSelect: ReactElement }>('{timeFrameSelect}'),
       between: m<{
         afterDateSelect: ReactElement;
@@ -985,7 +981,6 @@ export default makeMessages('feat.smartSearch', {
     },
     preview: {
       afterDate: m<{ afterDate: string }>('after {afterDate}'),
-      onDate: m<{ afterDate: string }>('on {afterDate}'),
       beforeDate: m<{ beforeDate: string }>('before {beforeDate}'),
       beforeToday: m('before today'),
       between: m<{ afterDate: string; beforeDate: string }>(
@@ -999,7 +994,6 @@ export default makeMessages('feat.smartSearch', {
     },
     timeFrameSelectLabel: {
       afterDate: m('after'),
-      onDate: m('on'),
       beforeDate: m('before'),
       beforeToday: m('before today'),
       between: m('between'),
@@ -1009,7 +1003,6 @@ export default makeMessages('feat.smartSearch', {
     },
     timeFrameSelectOptions: {
       afterDate: m('after a certain date'),
-      onDate: m('on a certain date'),
       beforeDate: m('before a certain date'),
       beforeToday: m('before today'),
       between: m('between two dates'),

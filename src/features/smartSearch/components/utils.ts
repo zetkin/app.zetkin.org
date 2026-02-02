@@ -39,13 +39,6 @@ export const getTimeFrameWithConfig = (config: {
   } else if (before === 'now') {
     return { timeFrame: TIME_FRAME.BEFORE_TODAY };
   } else if (after && before) {
-    if (after === before) {
-      return {
-        after: new Date(after),
-        before: new Date(before),
-        timeFrame: TIME_FRAME.ON_DATE,
-      };
-    }
     return {
       after: new Date(after),
       before: new Date(before),
