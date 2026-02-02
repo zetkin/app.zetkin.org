@@ -7,7 +7,7 @@ import {
   WatchLaterOutlined,
 } from '@mui/icons-material';
 
-import MyActivityListItem from 'features/home/components/MyActivityListItem';
+import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import { timeSpanToString } from 'zui/utils/timeSpanString';
 import { removeOffset } from 'utils/dateUtils';
 import useEventCallActions from '../hooks/useEventCallActions';
