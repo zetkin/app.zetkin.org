@@ -524,6 +524,7 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     personTags: {
+      addAllFromGroupButton: m('Add all'),
       condition: {
         conditionSelect: {
           all: m('all'),
