@@ -304,12 +304,12 @@ const ChartWrapper = (props: BoxOwnProps) => {
 type DisplayMode = 'absolute' | 'percent';
 
 const QuestionStatsBarPlot = ({
-  exportApi,
   displayMode,
+  exportApi,
   questionStats,
 }: {
-  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   displayMode: DisplayMode;
+  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
   const theme = useTheme();
@@ -407,12 +407,12 @@ const QuestionStatsBarPlot = ({
 };
 
 const QuestionStatsPie = ({
-  exportApi,
   displayMode,
+  exportApi,
   questionStats,
 }: {
-  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   displayMode: DisplayMode;
+  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
   const isOptions = isOptionsStats(questionStats);
@@ -569,15 +569,15 @@ const OptionsStatsCard = ({
     >
       {tab === 'bar-plot' && (
         <QuestionStatsBarPlot
-          exportApi={exportApi}
           displayMode={displayMode}
+          exportApi={exportApi}
           questionStats={questionStats}
         />
       )}
       {tab === 'pie-chart' && (
         <QuestionStatsPie
-          exportApi={exportApi}
           displayMode={displayMode}
+          exportApi={exportApi}
           questionStats={questionStats}
         />
       )}
@@ -996,8 +996,8 @@ const TextStatsCard = ({
         )}
         {tab === 'word-frequency-bars' && (
           <QuestionStatsBarPlot
-            exportApi={exportApi}
             displayMode="absolute"
+            exportApi={exportApi}
             questionStats={questionStats}
           />
         )}
