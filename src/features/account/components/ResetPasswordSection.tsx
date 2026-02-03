@@ -12,26 +12,29 @@ import ZUILogo from 'zui/ZUILogo';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITextField from 'zui/components/ZUITextField';
-import { UseSetPasswordResetToken } from '../hooks/useSetPasswordResetToken';
+import { useSetPasswordResetToken } from '../hooks/useSetPasswordResetToken';
 import ZUIAlert from 'zui/components/ZUIAlert';
 
 type ResetPasswordSectionProps = {
+  onError: () => void;
   onSuccess: () => void;
   token: string;
   userId: string;
 };
 
 const ResetPasswordSection: FC<ResetPasswordSectionProps> = ({
+  onError,
   onSuccess,
   token,
   userId,
 }) => {
   const messages = useMessages(messageIds);
   const isMobile = useIsMobile();
-  const { loading, resetPassword } = UseSetPasswordResetToken(token, userId);
-  const [newPassword, setNewPassword] = useState<string>('');
+  const { loading, resetPassword } = useSetPasswordResetToken(token, userId);
+  const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordFormatError, setPasswordFormatError] = useState(false);
+  const [passwordResetError, setPasswordResetError] = useState(false);
 
   return (
     <ZUISection
@@ -44,74 +47,82 @@ const ResetPasswordSection: FC<ResetPasswordSectionProps> = ({
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
+              justifyContent: 'space-between',
             }}
           >
-            <form
-              onSubmit={async (ev) => {
-                ev.preventDefault();
-                if (newPassword.length < 6) {
-                  setPasswordError(true);
-                } else {
-                  await resetPassword(newPassword);
-                  onSuccess();
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  alignItems: 'left',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexGrow: 1,
-                  gap: 2,
-                  justifyContent: 'center',
-                }}
-              >
-                <ZUIText variant="bodyMdRegular">
-                  <Msg id={messageIds.resetPassword.description} />
-                </ZUIText>
-                {passwordError && (
-                  <ZUIAlert
-                    severity={'error'}
-                    title={messages.resetPassword.validation()}
-                  />
-                )}
-                <ZUITextField
-                  endIcon={showPassword ? VisibilityOff : Visibility}
-                  fullWidth
-                  label={messages.resetPassword.actions.labelPassword()}
-                  onChange={(newValue) => {
-                    setNewPassword(newValue);
-                    setPasswordError(false);
-                  }}
-                  onEndIconClick={() => setShowPassword((prev) => !prev)}
-                  size="large"
-                  type={showPassword ? 'text' : 'password'}
-                />
-                <ZUIButton
-                  actionType="submit"
-                  disabled={loading || !newPassword}
-                  fullWidth
-                  label={messages.resetPassword.actions.save()}
-                  variant={loading ? 'loading' : 'primary'}
-                />
-              </Box>
-            </form>
             <Box
               sx={{
-                bottom: { md: 'auto', xs: 0 },
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 2,
-                left: { md: 'auto', xs: 0 },
-                mt: { md: 25, xs: 0 },
-                position: { md: 'static', xs: 'absolute' },
-                px: isMobile ? 2 : 0,
-                py: isMobile ? 2 : 0,
-                right: { md: 'auto', xs: 0 },
+                height: '100%',
+                justifyContent: 'space-between',
+                paddingBottom: 2,
               }}
             >
-              <NextLink href="/login">
+              <form
+                onSubmit={async (ev) => {
+                  ev.preventDefault();
+                  setPasswordResetError(false);
+                  if (newPassword.length < 6) {
+                    setPasswordFormatError(true);
+                  } else {
+                    const result = await resetPassword(newPassword);
+                    if (result.success) {
+                      onSuccess();
+                    } else {
+                      onError();
+                      setPasswordResetError(true);
+                    }
+                  }
+                }}
+              >
+                <Box
+                  sx={{
+                    alignItems: 'left',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    gap: 2,
+                    justifyContent: 'center',
+                  }}
+                >
+                  {passwordResetError && (
+                    <ZUIAlert
+                      severity="error"
+                      title={messages.resetPassword.unexpectedError()}
+                    />
+                  )}
+                  {passwordFormatError && (
+                    <ZUIAlert
+                      severity="error"
+                      title={messages.resetPassword.validation()}
+                    />
+                  )}
+                  <ZUIText variant="bodyMdRegular">
+                    <Msg id={messageIds.resetPassword.description} />
+                  </ZUIText>
+                  <ZUITextField
+                    endIcon={showPassword ? VisibilityOff : Visibility}
+                    fullWidth
+                    label={messages.resetPassword.actions.labelPassword()}
+                    onChange={(newValue) => {
+                      setNewPassword(newValue);
+                      setPasswordFormatError(false);
+                    }}
+                    onEndIconClick={() => setShowPassword((prev) => !prev)}
+                    size="large"
+                    type={showPassword ? 'text' : 'password'}
+                  />
+                  <ZUIButton
+                    actionType="submit"
+                    disabled={loading || !newPassword}
+                    fullWidth
+                    label={messages.resetPassword.actions.save()}
+                    variant={loading ? 'loading' : 'primary'}
+                  />
+                </Box>
+              </form>
+              <NextLink href="/login" passHref>
                 <ZUIButton
                   fullWidth
                   label={messages.lostPassword.actions.signIn()}
@@ -119,6 +130,8 @@ const ResetPasswordSection: FC<ResetPasswordSectionProps> = ({
                   variant="secondary"
                 />
               </NextLink>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <AccountFooter />
             </Box>
           </Box>

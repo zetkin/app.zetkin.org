@@ -12,7 +12,7 @@ type UseSetPasswordResetTokenReturn = {
   resetPassword: (newPassword: string) => Promise<SetPasswordResetTokenStatus>;
 };
 
-export function UseSetPasswordResetToken(
+export function useSetPasswordResetToken(
   token: string,
   userId: string
 ): UseSetPasswordResetTokenReturn {

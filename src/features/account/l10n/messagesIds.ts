@@ -66,6 +66,9 @@ export default makeMessages('feat.account', {
       'Your password was updated. You can sign in using your new password.'
     ),
     title: m('Reset password'),
+    unexpectedError: m(
+      'There was an unexpected error when resetting the password, please try again.'
+    ),
     validation: m('Password must be at least 6 characters long.'),
   },
   verify: {

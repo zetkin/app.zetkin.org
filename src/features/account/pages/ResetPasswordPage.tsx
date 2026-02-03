@@ -12,7 +12,8 @@ const ResetPasswordPage = () => {
   const rawToken = searchParams?.get('token');
   const userId = rawToken?.split('$')[0];
   const token = rawToken?.includes('$') ? rawToken.split('$')[1] : rawToken;
-  const [success, setSuccess] = useState(true);
+  const [passwordResetWasSuccessful, setPasswordResetWasSuccessful] =
+    useState(false);
 
   if (!token || !userId) {
     return null;
@@ -32,14 +33,15 @@ const ResetPasswordPage = () => {
         </Box>
       }
     >
-      {success ? (
+      {passwordResetWasSuccessful ? (
+        <UpdatedPasswordSection />
+      ) : (
         <ResetPasswordSection
-          onSuccess={() => setSuccess(false)}
+          onError={() => setPasswordResetWasSuccessful(false)}
+          onSuccess={() => setPasswordResetWasSuccessful(true)}
           token={token}
           userId={userId}
         />
-      ) : (
-        <UpdatedPasswordSection />
       )}
     </Suspense>
   );

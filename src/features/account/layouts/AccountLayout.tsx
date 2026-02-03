@@ -13,8 +13,8 @@ const AccountLayout: FC<Props> = ({ children }) => {
       sx={{
         alignItems: 'center',
         display: 'flex',
+        height: '100vh',
         justifyContent: 'center',
-        minHeight: '100vh',
         p: { md: 2, xs: 0 },
       }}
     >
@@ -24,6 +24,7 @@ const AccountLayout: FC<Props> = ({ children }) => {
           borderRadius: { md: 1, xs: 0 },
           display: 'flex',
           flexDirection: 'column',
+          height: '100%',
           maxWidth: { md: 400, xs: '100%' },
           minHeight: { md: 'auto', xs: '100vh' },
           overflow: 'hidden',
