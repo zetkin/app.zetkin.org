@@ -980,8 +980,8 @@ export default makeMessages('feat.smartSearch', {
       ),
       onDate: m<{
         onDateSelect: ReactElement;
-        timeFrameSelect: ReactElement;
-      }>('{timeFrameSelect} {onDateSelect}'),
+        onTimeFrameSelect: ReactElement;
+      }>('{onTimeFrameSelect} {onDateSelect}'),
     },
     preview: {
       afterDate: m<{ afterDate: string }>('after {afterDate}'),

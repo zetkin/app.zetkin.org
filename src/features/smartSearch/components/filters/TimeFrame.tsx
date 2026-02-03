@@ -30,6 +30,7 @@ const TimeFrame = ({
     timeFrame.after || getNewDateWithOffset(today, -30)
   );
   const [numDays, setNumDays] = useState(timeFrame.numDays || 30);
+  const dateOnMessageId = messageIds.timeFrame.edit.onDate;
 
   useEffect(() => {
     if (selected === TIME_FRAME.EVER) {
@@ -135,8 +136,8 @@ const TimeFrame = ({
       )}
       {selected == TIME_FRAME.ON_DATE && (
         <Msg
-          id={messageIds.timeFrame.edit.onDate}
-          values={{ onDateSelect, timeFrameSelect }}
+          id={dateOnMessageId}
+          values={{ onDateSelect, onTimeFrameSelect: timeFrameSelect }}
         />
       )}
       {selected == 'between' && (
