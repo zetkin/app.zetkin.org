@@ -18,7 +18,8 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 import { useNumericRouteParams } from 'core/hooks';
 import useDetailedPersons from '../hooks/useDetailedPerson';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
-import ZUIFutures from 'zui/ZUIFutures';
+import ZUIFutures, { isEmptyData } from 'zui/ZUIFutures';
+import useMergeFormState from '../hooks/useMergeFormState';
 
 type Props = {
   initiallyShowManualSearch?: boolean;
@@ -60,9 +61,14 @@ const MergeModal: FC<Props> = ({
     (person) => !selectedIds.includes(person.id)
   );
 
-  const [overrides, setOverrides] = useState<Partial<ZetkinPerson> | null>(
-    null
-  );
+  const { overrides, fieldValues, hasConflictingValues, setOverride } =
+    useMergeFormState({
+      customFields: customFields.data ?? [],
+      duplicates: detailedPersons.data ?? [],
+    });
+
+  const isFormReady =
+    !isEmptyData(customFields) && !isEmptyData(detailedPersons);
 
   useEffect(() => {
     setSelectedIds(persons.map((person) => person.id) ?? []);
@@ -117,16 +123,15 @@ const MergeModal: FC<Props> = ({
           width="50%"
         >
           <ZUIFutures futures={{ customFields, detailedPersons }}>
-            {({ data: { customFields, detailedPersons } }) => (
+            {({ data: { detailedPersons } }) => (
               <FieldSettings
-                customFields={customFields}
                 duplicates={detailedPersons}
+                fieldValues={fieldValues}
+                hasConflictingValues={hasConflictingValues}
                 onChange={(field, value) => {
-                  if (overrides) {
-                    setOverrides({ ...overrides, [`${field}`]: value });
-                  }
+                  setOverride(field, value);
                 }}
-                setOverrides={setOverrides}
+                overrides={overrides}
               />
             )}
           </ZUIFutures>
@@ -144,15 +149,9 @@ const MergeModal: FC<Props> = ({
         </Button>
         <Button
           disabled={
-            !overrides || additionalPeople.length + selectedIds.length <= 1
+            !isFormReady || additionalPeople.length + selectedIds.length <= 1
           }
           onClick={() => {
-            if (!overrides) {
-              // This should never happen, because we disable the button above when `overrides` is falsy
-              throw new Error(
-                'Operation not allowed. Merge data not available'
-              );
-            }
             const idSet = new Set([
               ...selectedIds,
               ...additionalPeople.map((person) => person.id),

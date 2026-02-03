@@ -6,7 +6,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
@@ -20,6 +20,7 @@ interface FieldSettingsRowProps {
   duplicates: ZetkinPerson[];
   field: NATIVE_PERSON_FIELDS;
   onChange: (selectedValue: string) => void;
+  value: string;
   values: string[];
 }
 
@@ -27,11 +28,11 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
   duplicates,
   field,
   onChange,
+  value,
   values,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const [selectedValue, setSelectedValue] = useState(values[0]);
   const { orgId } = useNumericRouteParams();
   const getFieldTitle = useFieldTitle(orgId);
 
@@ -111,11 +112,10 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
           <FormControl fullWidth size="small">
             <Select
               onChange={(event) => {
-                setSelectedValue(event.target.value);
                 onChange(event.target.value);
               }}
-              renderValue={() => getLabel(selectedValue)}
-              value={selectedValue}
+              renderValue={() => getLabel(value)}
+              value={value}
             >
               {values.map((value, index) => (
                 <MenuItem

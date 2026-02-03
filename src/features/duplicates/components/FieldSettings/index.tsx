@@ -7,46 +7,31 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 
 import FieldSettingsRow from './FieldSettingsRow';
 import messageIds from 'features/duplicates/l10n/messageIds';
-import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import { useMessages } from 'core/i18n';
-import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
-import getFieldSettings from 'features/duplicates/utils/getFieldSettings';
+import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 interface FieldSettingsProps {
-  customFields: ZetkinCustomField[];
   duplicates: ZetkinPerson[];
+  overrides: Partial<ZetkinPerson>;
+  fieldValues: Record<NATIVE_PERSON_FIELDS, string[]>;
+  hasConflictingValues: boolean;
   onChange: (field: NATIVE_PERSON_FIELDS, selectedValue: string) => void;
-  setOverrides: React.Dispatch<
-    React.SetStateAction<Partial<ZetkinPerson> | null>
-  >;
 }
 
 const FieldSettings: FC<FieldSettingsProps> = ({
-  customFields,
   duplicates,
+  overrides,
+  fieldValues,
+  hasConflictingValues,
   onChange,
-  setOverrides,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const { hasConflictingValues, fieldValues, initialOverrides } = useMemo(
-    () => getFieldSettings({ customFields, duplicates }),
-    [customFields, duplicates]
-  );
-
-  useEffect(() => {
-    setOverrides((prev) => {
-      if (prev) {
-        return prev;
-      }
-
-      return initialOverrides;
-    });
-  }, [initialOverrides]);
 
   return (
     <Box>
@@ -84,18 +69,20 @@ const FieldSettings: FC<FieldSettingsProps> = ({
           marginBottom: 2,
         }}
       >
-        {Object.entries(fieldValues).map((entry) => {
-          const [field, values] = entry;
+        {Object.entries(fieldValues).map(([_field, values]) => {
+          const field = _field as NATIVE_PERSON_FIELDS;
+          const selectedValue = String(overrides[field] ?? values[0] ?? '');
+
           return (
             <React.Fragment key={field}>
               {field !== NATIVE_PERSON_FIELDS.FIRST_NAME && <Divider />}
               <FieldSettingsRow
-                key={field}
                 duplicates={duplicates}
-                field={field as NATIVE_PERSON_FIELDS}
+                field={field}
                 onChange={(selectedValue: string) =>
-                  onChange(field as NATIVE_PERSON_FIELDS, selectedValue)
+                  onChange(field, selectedValue)
                 }
+                value={selectedValue}
                 values={values}
               />
             </React.Fragment>
