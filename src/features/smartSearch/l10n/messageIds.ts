@@ -961,10 +961,6 @@ export default makeMessages('feat.smartSearch', {
         beforeDateSelect: ReactElement;
         timeFrameSelect: ReactElement;
       }>('{timeFrameSelect} {beforeDateSelect}'),
-      onDate: m<{
-        onDateSelect: ReactElement;
-        timeFrameSelect: ReactElement;
-      }>('{timeFrameSelect} {onDateSelect}'),
       beforeToday: m<{ timeFrameSelect: ReactElement }>('{timeFrameSelect}'),
       between: m<{
         afterDateSelect: ReactElement;
@@ -982,10 +978,13 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}'
       ),
+      onDate: m<{
+        onDateSelect: ReactElement;
+        timeFrameSelect: ReactElement;
+      }>('{timeFrameSelect} {onDateSelect}'),
     },
     preview: {
       afterDate: m<{ afterDate: string }>('after {afterDate}'),
-      onDate: m<{ afterDate: string }>('on {afterDate}'),
       beforeDate: m<{ beforeDate: string }>('before {beforeDate}'),
       beforeToday: m('before today'),
       between: m<{ afterDate: string; beforeDate: string }>(
@@ -996,26 +995,27 @@ export default makeMessages('feat.smartSearch', {
       lastFew: m<{ days: number }>(
         'during the last {days} {days, plural, one {day} other {days}}'
       ),
+      onDate: m<{ onDate: string }>('on {onDate}'),
     },
     timeFrameSelectLabel: {
       afterDate: m('after'),
-      onDate: m('on'),
       beforeDate: m('before'),
       beforeToday: m('before today'),
       between: m('between'),
       ever: m('at any point in time'),
       future: m('in the future'),
       lastFew: m('during the last'),
+      onDate: m('on'),
     },
     timeFrameSelectOptions: {
       afterDate: m('after a certain date'),
-      onDate: m('on a certain date'),
       beforeDate: m('before a certain date'),
       beforeToday: m('before today'),
       between: m('between two dates'),
       ever: m('at any point in time'),
       future: m('in the future'),
       lastFew: m('recently'),
+      onDate: m('on a certain date'),
     },
   },
 });
