@@ -228,6 +228,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
+          minHeight: 400,
           overflowX: 'hidden',
           paddingRight: 1,
           paddingTop: 2,
@@ -243,7 +244,21 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           startIcon={Search}
           value={searchString}
         />
-        <Suspense fallback={'loading unfinished'}>
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
           <UnfinishedCallsList
             onCall={(assignmentId) => {
               onSwitch(assignmentId);
