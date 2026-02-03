@@ -38,7 +38,7 @@ const ResetPasswordSection: FC<ResetPasswordSectionProps> = ({
 
   return (
     <ZUISection
-      borders={isMobile ? false : true}
+      borders={!isMobile}
       fullHeight
       renderContent={() => {
         return (

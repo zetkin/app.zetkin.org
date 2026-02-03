@@ -40,7 +40,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
   >(null);
   return (
     <ZUISection
-      borders={isMobile ? false : true}
+      borders={!isMobile}
       fullHeight
       renderContent={() => {
         return (
@@ -49,84 +49,80 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
+              justifyContent: 'space-between',
             }}
           >
-            <form
-              onSubmit={async (ev) => {
-                ev.preventDefault();
-
-                if (!isEmail(email)) {
-                  setEmailError('invalidEmail');
-                } else {
-                  setEmailError(null);
-
-                  const result = await sendPasswordResetToken(email);
-                  if (wasSuccessful(result)) {
-                    onSuccess(email);
-                  } else {
-                    setEmailError(result.errorCode);
-                  }
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexGrow: 1,
-                  gap: 2,
-                  overflowY: { md: 'visible', xs: 'auto' },
-                }}
-              >
-                <ZUIText variant="bodyMdRegular">
-                  <Msg id={messageIds.lostPassword.description} />
-                </ZUIText>
-                {emailError == 'unknownError' && (
-                  <ZUIAlert
-                    appear
-                    description={messages.lostPassword.errors.unknownError()}
-                    severity={'error'}
-                    title={messages.lostPassword.errors.unknownErrorTitle()}
-                  />
-                )}
-                <ZUITextField
-                  error={emailError == 'invalidEmail'}
-                  helperText={
-                    emailError == 'invalidEmail'
-                      ? messages.lostPassword.errors.invalidEmail()
-                      : ''
-                  }
-                  label={messages.lostPassword.emailFieldLabel()}
-                  onChange={(newValue) => {
-                    setEmail(newValue);
-                    setEmailError(null);
-                  }}
-                  size="large"
-                  value={email}
-                />
-                <ZUIButton
-                  actionType="submit"
-                  disabled={loading || !email}
-                  label={messages.lostPassword.actions.sendEmail()}
-                  size="large"
-                  variant={loading ? 'loading' : 'primary'}
-                />
-              </Box>
-            </form>
             <Box
               sx={{
-                bottom: { md: 'auto', xs: 0 },
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 2,
-                left: { md: 'auto', xs: 0 },
-                mt: { md: 25, xs: 0 },
-                position: { md: 'static', xs: 'absolute' },
-                px: isMobile ? 2 : 0,
-                py: isMobile ? 2 : 0,
-                right: { md: 'auto', xs: 0 },
+                height: '100%',
+                justifyContent: 'space-between',
+                paddingBottom: 2,
               }}
             >
+              <form
+                onSubmit={async (ev) => {
+                  ev.preventDefault();
+
+                  if (!isEmail(email)) {
+                    setEmailError('invalidEmail');
+                  } else {
+                    setEmailError(null);
+
+                    const result = await sendPasswordResetToken(email);
+                    if (wasSuccessful(result)) {
+                      onSuccess(email);
+                    } else {
+                      setEmailError(result.errorCode);
+                    }
+                  }
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    gap: 2,
+                    overflowY: { md: 'visible', xs: 'auto' },
+                  }}
+                >
+                  <ZUIText variant="bodyMdRegular">
+                    <Msg id={messageIds.lostPassword.description} />
+                  </ZUIText>
+                  {emailError == 'unknownError' && (
+                    <ZUIAlert
+                      appear
+                      description={messages.lostPassword.errors.unknownError()}
+                      severity={'error'}
+                      title={messages.lostPassword.errors.unknownErrorTitle()}
+                    />
+                  )}
+                  <ZUITextField
+                    error={emailError == 'invalidEmail'}
+                    helperText={
+                      emailError == 'invalidEmail'
+                        ? messages.lostPassword.errors.invalidEmail()
+                        : ''
+                    }
+                    label={messages.lostPassword.emailFieldLabel()}
+                    onChange={(newValue) => {
+                      setEmail(newValue);
+                      setEmailError(null);
+                    }}
+                    size="large"
+                    value={email}
+                  />
+                  <ZUIButton
+                    actionType="submit"
+                    disabled={loading || !email}
+                    label={messages.lostPassword.actions.sendEmail()}
+                    size="large"
+                    variant={loading ? 'loading' : 'primary'}
+                  />
+                </Box>
+              </form>
               <NextLink href="/login?redirect=/my">
                 <ZUIButton
                   fullWidth
@@ -135,6 +131,8 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                   variant="secondary"
                 />
               </NextLink>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <AccountFooter />
             </Box>
           </Box>
