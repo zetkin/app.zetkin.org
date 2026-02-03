@@ -16,6 +16,12 @@ export default makeMessages('feat.account', {
     ),
     emailFieldLabel: m('Email'),
     errors: {
+      alreadyLoggedIn: {
+        description: m(
+          'You cannot reset your password, as you are already logged in.'
+        ),
+        title: m('You are already logged in'),
+      },
       invalidEmail: m('Please enter a valid email address.'),
       unknownError: m('Something went wrong. Please try again later.'),
       unknownErrorTitle: m('Unexpected error'),

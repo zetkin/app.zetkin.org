@@ -6,10 +6,18 @@ import { Box } from '@mui/material';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import LostPasswordSection from '../components/LostPasswordSection';
 import CheckEmailSection from '../components/CheckEmailSection';
+import useUser from 'core/hooks/useUser';
 
 const LostPasswordPage: FC = () => {
-  const [success, setSuccess] = useState(true);
+  const user = useUser();
+
+  const [success, setSuccess] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+
+  const isLoggedIn = !!user;
+  const showEnterEmailForm = !success && !submittedEmail;
+  const passwordEmailHasBeenSent = !isLoggedIn && success && !!submittedEmail;
+
   return (
     <Suspense
       fallback={
@@ -24,21 +32,23 @@ const LostPasswordPage: FC = () => {
         </Box>
       }
     >
-      {success && submittedEmail ? (
+      {showEnterEmailForm && (
+        <LostPasswordSection
+          alreadyLoggedIn={isLoggedIn}
+          onSuccess={(email) => {
+            setSubmittedEmail(email);
+            setSuccess(true);
+          }}
+          submittedEmail={submittedEmail}
+        />
+      )}
+      {passwordEmailHasBeenSent && (
         <CheckEmailSection
           email={submittedEmail}
           onBack={(email) => {
             setSuccess(false);
             setSubmittedEmail(email);
           }}
-        />
-      ) : (
-        <LostPasswordSection
-          onSuccess={(email) => {
-            setSubmittedEmail(email);
-            setSuccess(true);
-          }}
-          submittedEmail={submittedEmail}
         />
       )}
     </Suspense>

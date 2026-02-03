@@ -14,6 +14,7 @@ import { PasswordResetStatus, PasswordSuccess } from '../types';
 import ResponsiveAccountSection from './ResponsiveAccountSection';
 
 type LostPasswordSectionProps = {
+  alreadyLoggedIn: boolean;
   onSuccess: (email: string) => void;
   submittedEmail: string | null;
 };
@@ -25,6 +26,7 @@ const wasSuccessful = (
 };
 
 const LostPasswordSection: FC<LostPasswordSectionProps> = ({
+  alreadyLoggedIn,
   submittedEmail,
   onSuccess,
 }) => {
@@ -74,6 +76,14 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                 overflowY: { md: 'visible', xs: 'auto' },
               }}
             >
+              {alreadyLoggedIn && (
+                <ZUIAlert
+                  appear
+                  description={messages.lostPassword.errors.alreadyLoggedIn.description()}
+                  severity={'error'}
+                  title={messages.lostPassword.errors.alreadyLoggedIn.title()}
+                />
+              )}
               <ZUIText variant="bodyMdRegular">
                 <Msg id={messageIds.lostPassword.description} />
               </ZUIText>
@@ -86,6 +96,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                 />
               )}
               <ZUITextField
+                disabled={alreadyLoggedIn}
                 error={emailError == 'invalidEmail'}
                 helperText={
                   emailError == 'invalidEmail'
@@ -102,21 +113,33 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
               />
               <ZUIButton
                 actionType="submit"
-                disabled={loading || !email}
+                disabled={alreadyLoggedIn || loading || !email}
                 label={messages.lostPassword.actions.sendEmail()}
                 size="large"
                 variant={loading ? 'loading' : 'primary'}
               />
             </Box>
           </form>
-          <NextLink href="/login?redirect=/my">
+          {alreadyLoggedIn && (
             <ZUIButton
+              disabled
               fullWidth
               label={messages.lostPassword.actions.signIn()}
               size="large"
               variant="secondary"
             />
-          </NextLink>
+          )}
+          {!alreadyLoggedIn && (
+            <NextLink href="/login?redirect=/my">
+              <ZUIButton
+                disabled={alreadyLoggedIn}
+                fullWidth
+                label={messages.lostPassword.actions.signIn()}
+                size="large"
+                variant="secondary"
+              />
+            </NextLink>
+          )}
         </Box>
       )}
       title={messages.lostPassword.title()}
