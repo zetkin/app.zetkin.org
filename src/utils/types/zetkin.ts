@@ -185,6 +185,13 @@ export interface ZetkinPersonNativeFields {
   phone: string | null;
 }
 
+export enum Gender {
+  FEMALE = 'f',
+  MALE = 'm',
+  OTHER = 'o',
+  UNKNOWN = 'unknown',
+}
+
 export type ZetkinCustomFieldValue =
   | string
   | number
