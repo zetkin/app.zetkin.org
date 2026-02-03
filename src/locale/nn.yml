@@ -1270,10 +1270,13 @@ feat:
         forsøker å registrere dem på nytt.
       descriptionSignups: Disse har meldt seg på i aktivistportalen, de kan fortsatt
         avmelde seg når som helst.
+      descriptionUnverifiedSignups: Disse har meldt seg på uten å logge inn, du må
+        koble dem til personer og bekrefte.
       dropDownAttended: Bekreftet deltakelse
       dropDownNoshow: Møtte ikke opp
       participantTooltip: Gjør til kontaktperson
       signUps: Påmeldinger
+      unverifiedSignups: Ukjente påmeldinger
     eventPopper:
       backToEvents: Tilbake til arrangementliste
       backToLocations: Tilbake til steder
@@ -1351,6 +1354,18 @@ feat:
         {numEventTypes, plural,=0 {arrangementstyper} =1 {{singleEventType}}
         other {# arrengementstyper}}
 
+    linkSignupDialog:
+      bookButton: Registrer
+      cancelButton: Avbryt
+      createPersonButton: Opprett person
+      helperText: Registrer denne påmeldingen ved å velge en person, eller opprett en
+        dersom du ikke finner noen som passer.
+      keepTyping: Fortsett å skrive for å søke
+      noResults: Fant ingen personer
+      searchLabel: Søk etter person
+      searchPlaceholder: Søk etter navn, e-post, eller telefonnummer
+      signupDetails: Påmeldingsdetaljer
+      title: Fant ingen personer, velg en person.
     list:
       events: Arrangementer
       noEvents: Ingen arrangementer...
@@ -1410,6 +1425,33 @@ feat:
       statusText: '{personCount, plural, =1 {En person} other {# folk}} blir flyttet'
       submitButton: Utfør
       title: Behandle deltakere
+    publicEventSignup:
+      alert:
+        error: Feil
+        signupSuccessful: Du er påmeldt
+        thankYou: Takk for at du meldte deg på!
+      errors:
+        emailOrPhoneRequired: Du må oppgi enten e-post eller telefonnummer
+        gdprConsentRequired: Du må akseptere vilkårene
+        invalidEmail: Vær grei og oppgi en gyldig e-postadresse
+        nameRequired: Fornavn og etternavn må fylles ut
+        phoneFormat: Telefonnummer må være i internasjonalt format, f.eks. +4799999999
+        signupError: Det oppstod en feil med påmeldingen
+        signupFailed: Kunne ikke melde på
+      fields:
+        email: E-post
+        firstName: Fornavn
+        lastName: Etternavn
+        phone: Telefon
+      info:
+        description: Fyll ut navn og minst en måte du kan bli kontaktet på
+        title: Meld deg på
+      privacyPolicy: Når du melder deg på et arrangement blir informasjonen du oppgir
+        lagret og behandlet i Zetkin av organisasjonen som arrangerer, i henhold
+        til Zetkins personvernerklæring.
+      submit:
+        button: Meld på
+        submitting: Sender inn...
     search: Søk
     state:
       cancelled: Avlyst
@@ -1431,6 +1473,10 @@ feat:
         for hele {orgTitle}?
       tooltip: Klikk for å endre type
       uncategorized: Ukategorisert
+    unverifiedSignups:
+      actionFailed: Noe gikk galt, prøv igjen.
+      booked: '{name} har blitt registrert.'
+      exactMatchBooked: En person ble funnet. Denne påmeldingen er nå registrert som {name}.
     urlCard:
       nowAccepting: Kan ta imot påmeldinger på denne lenkeadressen nå
       open: Åpent for påmeldinger
@@ -1462,69 +1508,6 @@ feat:
       label: Type
       options:
         image: Bilder
-  home:
-    activityList:
-      actions:
-        areaAssignment: Bli med
-        call: Begynn å ringe
-        connectAndSignUp: Koble til og meld deg på
-        details: Les mer
-        loginToSignUp: Logg inn for å melde deg på
-        signUp: Meld på
-        undoSignup: Meld av
-      emptyListMessage: Du er ikke påmeldt noen aktiviteter
-      eventStatus:
-        booked: Du har blitt registrert på denne aktiviteten og vi regner med at du skal
-          møte opp. Kontakt {org} hvis du må avlyse.
-        needed: Du trengs
-        signedUp: Du har meldt deg på
-      filters:
-        call: Ring
-        canvass: Dør til dør
-        event: Arrangementer
-    allEventsList:
-      emptyList:
-        message: Finner ingen arrangementer
-        removeFiltersButton: Tøm filtre
-      filterButtonLabels:
-        organizations: '{numOrgs, plural,=0 {Organisasjoner} =1 {en organisasjon} other
-          {# organisasjoner}}'
-        thisWeek: Denne uka
-        today: I dag
-        tomorrow: I morgen
-    defaultTitles:
-      areaAssignment: Dør til dør aksjon uten navn
-      callAssignment: Ringeoppdrag uten navn
-      event: Arrangement uten navn
-      noLocation: Ingen fysisk plassering
-    footer:
-      privacyPolicy: Personvernerklæring
-    newLandingPageAlert:
-      description: Hvis du ser etter administrasjonssidene kan du finne dem ved å
-        klikke på knappen under
-      title: Dette er den nye landingssida
-    settings:
-      accountSettings:
-        email:
-          addInstructions: Legg til en e-postadresse så du kan logge inn med brukernavn og
-            passord.
-          changeInstructions: Hvis du vil endre e-postadresse på du sende en e-post til
-            info@zetkin.org
-          errorText: Det oppstod en feil. Prøv igjen eller kontakt Zetkin for støtte.
-          label: E-postadresse
-          saveButton: Lagre
-        header: Kontoinnstillinger
-      appPreferences:
-        header: Appinnstillinger
-        lang:
-          auto: Automatisk (nettleserinnstilling)
-          label: Språk
-          saveButton: Lagre og last inn på nytt
-    tabs:
-      feed: Alle arrangementer
-      home: Mine aktiviteter
-      settings: Innstillinger
-    title: Min Zetkin
   import:
     actionButtons:
       back: Tilbake
@@ -1581,14 +1564,30 @@ feat:
             o: Annet
             unknown: Ukjent
         ids:
-          externalID: Medlemsnummer
+          confirmIDChange:
+            description: Du kommer til å bytte import ID fra {currentImportID} til
+              {newImportID}.
+            title: Bekreft bytte av import ID
           externalIDInfo: Ekstern ID er et nummer som kommer fra et annet system enn
             Zetkin, for eksempel medlemsregisteret.
+          field:
+            email: E-post
+            undefined: Medlemsnummer
+          importCheckboxDescription: Dette feltet blir brukt til å finne folk som finnes i
+            Zetkin fra før, verdiene burde være unike.
+          importCheckboxLabel: Bruk {importID} som import ID
+          importIDDescription: >+
+            {importID, select, id {Zetkin ID vil bli brukt til å identifisere
+            folk i Zetkin.} email {E-post kan brukes til å finne og identifisere
+            folk i Zetkin.} other {Medlemsnummer kan brukes til å identifisere
+            folk i Zetkin.}}
+
+          skipRowDescription: Ingen nye folk blir oppretta
+          wrongEmailFormatWarning: Det er data i denne kolonnen som ikke er gyldige e-postadresser.
           wrongIDFormatWarning: Verdiene i denne kolonnen ser ikke ut som Zetkin IDer. En
             Zetkin ID består kun av tall, hvis noen av radene er tomme eller
             inneholder andre tegn enn tall, kan ikke kolonnen brukes som Zetkin
             ID.
-          zetkinID: Zetkin ID
           zetkinIDInfo: Zetkin ID er et nummer knyttet til en person som finnes i Zetkin
             fra før. Du finner det i data som er eksportert fra Zetkin.
         orgs:
@@ -1607,6 +1606,7 @@ feat:
       mapping:
         configButton: Sett opp
         defaultColumnHeader: Kolonne {coloumnIndex}
+        email: E-post
         emptyStateMessage: Begynn med å sette opp kolonnene i filen.
         externalID: Ekstern ID
         fileHeader: Fil
@@ -1614,8 +1614,6 @@ feat:
           verdier}} fra {dateFormat, select, se {Swedish personnummer} no
           {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}}
           til dato
-        finishedMappingIds: Setter opp {numValues, plural, =1 {ett nummer} other {#
-          numre}} som {idField, select, id {Zetkin ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {en person} other {#
           folk}} legges til i {numMappedTo, plural, =1 {En organisasjon} other
           {# organisasjoner}}'
@@ -1668,6 +1666,9 @@ feat:
           m: Mann
           o: Annet
           unknown: Ukjent
+        ids:
+          email: E-post
+          undefined: Medlemsnummer
         next: Neste
         noOrg: Ingen organisasjon
         noTags: Ingen etiketter
@@ -1973,6 +1974,69 @@ feat:
         overview: Oversikt
         timeline: Tidslinje
       title: Planer
+  home:
+    activityList:
+      actions:
+        areaAssignment: Bli med
+        call: Begynn å ringe
+        connectAndSignUp: Koble til og meld deg på
+        details: Les mer
+        loginToSignUp: Logg inn for å melde deg på
+        signUp: Meld på
+        undoSignup: Meld av
+      emptyListMessage: Du er ikke påmeldt noen aktiviteter
+      eventStatus:
+        booked: Du har blitt registrert på denne aktiviteten og vi regner med at du skal
+          møte opp. Kontakt {org} hvis du må avlyse.
+        needed: Du trengs
+        signedUp: Du har meldt deg på
+      filters:
+        call: Ring
+        canvass: Dør til dør
+        event: Arrangementer
+    allEventsList:
+      emptyList:
+        message: Finner ingen arrangementer
+        removeFiltersButton: Tøm filtre
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organisasjoner} =1 {en organisasjon} other
+          {# organisasjoner}}'
+        thisWeek: Denne uka
+        today: I dag
+        tomorrow: I morgen
+    defaultTitles:
+      areaAssignment: Dør til dør aksjon uten navn
+      callAssignment: Ringeoppdrag uten navn
+      event: Arrangement uten navn
+      noLocation: Ingen fysisk plassering
+    footer:
+      privacyPolicy: Personvernerklæring
+    newLandingPageAlert:
+      description: Hvis du ser etter administrasjonssidene kan du finne dem ved å
+        klikke på knappen under
+      title: Dette er den nye landingssida
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Legg til en e-postadresse så du kan logge inn med brukernavn og
+            passord.
+          changeInstructions: Hvis du vil endre e-postadresse på du sende en e-post til
+            info@zetkin.org
+          errorText: Det oppstod en feil. Prøv igjen eller kontakt Zetkin for støtte.
+          label: E-postadresse
+          saveButton: Lagre
+        header: Kontoinnstillinger
+      appPreferences:
+        header: Appinnstillinger
+        lang:
+          auto: Automatisk (nettleserinnstilling)
+          label: Språk
+          saveButton: Lagre og last inn på nytt
+    tabs:
+      feed: Alle arrangementer
+      home: Mine aktiviteter
+      settings: Innstillinger
+    title: Min Zetkin
   organizations:
     allEventsList:
       emptyList:
@@ -1995,8 +2059,13 @@ feat:
       cancelledHeader: Arrangementet har blitt avlyst
       cancelledParagraph: Du kan ikke lenger melde deg på og hvis du var påmeldt
         forventes det ikke lenger at du møter opp.
+      contactPerson:
+        default: '{name} er kontaktperson'
+        you: Du er kontaktperson
       defaultTitle: Arrangement uten tittel
+      haveAccount: Jeg har en konto
       loading: Laster...
+      noDescription: Arrangementet har ingen beskrivelse
       noLocation: Ingen fysisk plassering
       partOfProject: En del av {projectLink}
       participatingInfo: |+
@@ -2055,6 +2124,12 @@ feat:
       recent:
         clear: Fjern nylige
         title: Nylige organisasjoner
+    signupChoiceModal:
+      description: Bruk Zetkinkontoen din til å melde deg på. Du kan også melde deg på
+        uten konto.
+      title: Hvordan vil du melde deg på?
+      withAccount: Med konto
+      withoutAccount: Uten konto
     subOrgEventBlurb:
       description: Det er {eventsElem} {numEvents, plural, =1 {additional event} other
         {additional events}} i {orgsElem} {numOrgs, plural, =1 {suborganization}
@@ -2063,8 +2138,10 @@ feat:
       showButton: Vis alle arrangementer
   profile:
     delete:
+      button: Fjern person
       confirm: Er du sikker på at du vil slette {name} fra {org}, og alle relaterte
         organisasjoner? Denne handlingen kan ikke angres.
+      title: Slett konto
       warning: Dette kan ikke angres!
     details:
       title: Detaljer
@@ -2082,6 +2159,17 @@ feat:
     journeys:
       addButton: Start ny plan
       title: Planer
+    notes:
+      addNoteButton: Legg til notat
+      cancelButton: Avbryt
+      note:
+        author: '{authorName} la til et notat'
+        delete: Slett
+        deleteWarningDescription: Er du sikker på at du vil slette dette notatet om
+          {name}? Du kan ikke gjenopprette notatet senere.
+        deleteWarningTitle: Slett notat
+      placeHolder: Skriv et notat
+      title: Notater
     numberOfChangesMessage: Oppdaterer {number, plural, =1 {1 felt} other {# felter}}
     organizations:
       add: Legg til underorganisasjon
@@ -2451,6 +2539,7 @@ feat:
           one: "Legg til folk med minst 1 av følgende: 'Medlem', 'Aktivist'"
           two: "Fjern folk med alle av følgende: 'Styremedlem'"
         inputString: '{addRemoveSelect} folk med {condition} av følgende: {tags}'
+        noGroup: Ingen gruppe
       personView:
         examples:
           one: Legg til folk som er i lista 'Valgkamp'.
@@ -2835,6 +2924,12 @@ feat:
       description: Personen du skal koble til har ikke e-postadresse, men de har
         oppgitt en i undersøkelsen, vil du legge adressen til personen i Zetkin?
       title: Legg til e-postadresse
+    surveyDialogDifferentEmail:
+      description: Personen du skal koble har en annen e-post i systemet enn den som
+        er oppgitt i svaret. Vil erstatte den med adressen fra skjemaet?
+      keep: Nei, behold gammel e-post
+      title: Oppdater e-postadresse
+      update: Ja, oppdater e-post
     surveyDuplicated:
       error: 'Feil: Kunne ikke kopiere undersøkelsen'
       success: Undersøkelsen din har blitt kopiert.
@@ -3317,6 +3412,11 @@ feat:
       title: Slette liste?
       warningText: Er du sikker på at du vil slette lista? All informasjon i den, som
         notater og sjekklister (men folkene vil ikke bli slettet fra Zetkin)?
+    deleteRowsDialog:
+      title: Slett alle opplysninger om {numPeople, plural, =1 {en person} other {#
+        folk}}
+      warning: Hvis du bekrefter denne handlingen blir alle opplysningene om disse
+        folka fjernet fra hele organisasjonen.
     editViewTitleAlert:
       error: Kunne ikke endre tittelen
       success: Tittelen ble endret!
@@ -3389,6 +3489,11 @@ feat:
         header: Eldre besvarelser
         openButton: Vis
     toolbar:
+      bulk:
+        createList: Lag liste av valgte
+        delete: Slett valgte folk fra organisasjonen
+        handleSelection: Behandle utvalg
+        removeFromList: Fjern valgte folk fra lista
       createColumn: Ny kolonne
     viewLayout:
       actions:
@@ -3521,7 +3626,9 @@ zui:
     title: Søk
   dataTableSorting:
     addButton: Legg til sorteringskolonne
+    ascending: Stigende
     button: Sortér
+    descending: Synkende
     hint: 'Hint: hold inn {shiftKeyIcon} mens du trykker på flere kolonner'
     title: Sortér
   dateRange:
@@ -3547,6 +3654,8 @@ zui:
       noEmpty: Dette feltet kan ikke være tomt
   editableImage:
     add: Klikk for å legge til bilde
+  ellipsisMenu:
+    ariaLabel: Fler alternativer
   eventWarningIcons:
     contact: Ingen kontaktperson er angitt
     reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
@@ -3565,6 +3674,9 @@ zui:
       expand: Vis
   lists:
     showMore: Vis mer...
+  mobileOrganizeHeader:
+    sideBarMenuButtonDescription: Åpne sidemeny
+    userMenuButtonDescription: Åpne brukermeny
   orgScopeSelect:
     orgPlaceholder: Velg organisasjoner
     orgSelectionLabel: '{count} valgt'
@@ -3574,13 +3686,20 @@ zui:
       suborgs: Bare underorganisasjoner
       this: Bare {org}
   organizeSidebar:
+    collapse: Skjul
+    expand: Utvid
     filter: Skriv for å filtrere
+    filterLabel: Filtrer organisasjoner
     geography: Dør til dør
     home: Hjem
     journeys: Planer
     myPagesInfoText: Gå til min side
     myPagesMenuItemLabel: Min side
     mySettingsMenuItemLabel: Mine innstillinger
+    organizationAvatarAltText: Organisasjonslogo
+    organizationSwitcher:
+      hide: Skjul organisasjonsvelger
+      show: Vis organisasjonsvelger
     overview: Oversikt
     people: Folk
     projects: Prosjekter
@@ -3624,6 +3743,7 @@ zui:
       feministisk, antirasistisk, og bærekraftig retning.
   signUpChip:
     booked: Du er registrert
+    callSignUp: '{name} har meldt seg på'
     needed: Du trengs her
     signedUp: Du har meldt deg på
   snackbar:
