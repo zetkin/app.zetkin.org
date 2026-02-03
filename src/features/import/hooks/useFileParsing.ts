@@ -4,7 +4,7 @@ import { addFile } from '../store';
 import { parseCSVFile } from '../utils/parseFile';
 import { parseExcelFile } from '../utils/parseFile';
 import { useAppDispatch } from 'core/hooks';
-import { ColumnKind, ImportedFile } from '../utils/types';
+import { ColumnKind, ImportedFile } from '../types';
 
 function fileWithColumns(file: ImportedFile): ImportedFile {
   return {

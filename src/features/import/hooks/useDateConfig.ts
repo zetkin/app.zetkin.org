@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { columnUpdate } from '../store';
-import { DateColumn } from '../utils/types';
+import { DateColumn } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import parserFactory from '../utils/dateParsing/parserFactory';
 import { IDateParser } from '../utils/dateParsing/types';

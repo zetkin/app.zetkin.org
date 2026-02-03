@@ -94,6 +94,7 @@ export default function mockState(overrides?: RootState) {
       fileList: remoteList(),
     },
     import: {
+      importID: null,
       importResult: null,
       pendingFile: {
         selectedSheetIndex: 0,
@@ -123,7 +124,7 @@ export default function mockState(overrides?: RootState) {
         geojsonToFilterBy: [],
         orgIdsToFilterBy: [],
       },
-      orgData: remoteItem(0),
+      orgList: remoteList(),
       statsBySuborgId: {},
       subOrgsByOrgId: {},
       suborgsWithStats: remoteList(),

@@ -1,5 +1,5 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinPersonImportPostBody } from 'features/import/utils/types';
+import { ZetkinPersonImportPostBody } from 'features/import/types';
 import { personsDeleted } from 'features/profile/store';
 
 export default function useViewBulkActions(orgId: number) {
