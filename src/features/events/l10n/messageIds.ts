@@ -117,7 +117,7 @@ export default makeMessages('feat.events', {
     ),
     confirmCancel: m('Are you sure you want to cancel this event?'),
     confirmDelete: m('Are you sure you want to delete this event?'),
-    confirmRemindersMessage: m<{numReminders: number}>(
+    confirmRemindersMessage: m<{ numReminders: number }>(
       'Please confirm that you want to send out a reminder to {numReminders, plural, =1 {one participant} other {# participants}}'
     ),
     confirmRemindersTitle: m('Confirm sending out reminders'),

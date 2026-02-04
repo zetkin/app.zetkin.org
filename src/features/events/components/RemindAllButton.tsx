@@ -1,11 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Check, PriorityHigh } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Tooltip,
-} from '@mui/material';
+import { Box, Button, CircularProgress, Tooltip } from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
 import { useAppSelector } from 'core/hooks';
@@ -87,7 +82,7 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
           open={isConfirmReminderOpen}
           title={messages.eventPopper.confirmRemindersTitle()}
           warningText={messages.eventPopper.confirmRemindersMessage({
-            numReminders: numAvailParticipants - numRemindedParticipants
+            numReminders: numAvailParticipants - numRemindedParticipants,
           })}
         />
       </Box>
