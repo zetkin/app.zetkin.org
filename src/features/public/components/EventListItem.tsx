@@ -40,9 +40,16 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
       info={[
         {
           Icon: GroupWorkOutlined,
-          labels: [event.campaign?.title, event.organization.title].filter(
-            (label) => !!label
-          ) as string[],
+          labels: [
+            event.campaign && {
+              href: `/o/${event.organization.id}/projects/${event.campaign.id}`,
+              text: event.campaign.title,
+            },
+            {
+              href: `/o/${event.organization.id}`,
+              text: event.organization.title,
+            },
+          ].filter((label) => !!label),
         },
         {
           Icon: WatchLaterOutlined,
