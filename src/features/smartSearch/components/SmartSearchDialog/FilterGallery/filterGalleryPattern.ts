@@ -113,6 +113,8 @@ export default function filterGalleryPattern(
     pattern = PATTERN_TEMPLATES.pattern11;
   } else if (slug === FILTER_TYPE.USER) {
     pattern = PATTERN_TEMPLATES.pattern12;
+  } else if (slug === FILTER_TYPE.OFFICIAL) {
+    pattern = PATTERN_TEMPLATES.pattern5;
   } else if (slug === FILTER_TYPE.EMAIL_BLACKLIST) {
     pattern = PATTERN_TEMPLATES.pattern13;
   } else if (slug === FILTER_TYPE.EMAIL_CLICK) {
