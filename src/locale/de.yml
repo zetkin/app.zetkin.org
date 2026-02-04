@@ -1498,70 +1498,6 @@ feat:
       label: Typ
       options:
         image: Bilder
-  home:
-    activityList:
-      actions:
-        areaAssignment: Teilnehmen
-        call: Beginne mit dem Anrufen
-        connectAndSignUp: Verbinden & anmelden
-        details: Mehr lesen
-        loginToSignUp: Zum Anmelden einloggen
-        signUp: Anmelden
-        undoSignup: Abmelden
-      emptyListMessage: Du bist für keine Aktivitäten angemeldet
-      eventStatus:
-        booked: Du bist für diese Veranstaltung gebucht und die Organisator_innen
-          erwarten dich. Kontaktiere {org} wenn du absagen willst.
-        needed: Du wirst gebraucht.
-        signedUp: Du hast dich angemeldet.
-      filters:
-        call: Anrufen
-        canvass: Haustüreinsatz
-        event: Veranstaltungen
-    allEventsList:
-      emptyList:
-        message: Es konnten keine Veranstaltungen gefunden werden.
-        removeFiltersButton: Filter zurücksetzen.
-      filterButtonLabels:
-        organizations: '{numOrgs, plural,=0 {Organisationen} =1 {1 Organisation} other
-          {# Organisationen}}'
-        thisWeek: Diese Woche
-        today: Heute
-        tomorrow: Morgen
-    defaultTitles:
-      areaAssignment: Unbenannte Gebietszuordnung
-      callAssignment: Unbenannte Anruf-Aufgabe
-      event: Unbenannte Veranstaltung
-      noLocation: Kein Ort.
-    footer:
-      privacyPolicy: Datenschutzhinweise
-    newLandingPageAlert:
-      description: Den Organizing Bereich findest du über das Feld 'Organize' unter
-        diesem Banner.
-      title: Das ist deine neue Startseite
-    settings:
-      accountSettings:
-        email:
-          addInstructions: Fügen deinem Konto eine E-Mail-Adresse hinzu, um dich mit einem
-            Passwort anmelden zu können.
-          changeInstructions: Wenn du deine E-Mail-Adresse ändern möchtest, wende dich
-            bitte an info@zetkin.org.
-          errorText: Es ist ein Fehler aufgetreten. Versuche es noch einmal oder wenden
-            dich an die Zetkin-Stiftung für Unterstützung.
-          label: E-Mail Adresse
-          saveButton: Speichern
-        header: Account Einstellungen
-      appPreferences:
-        header: App Einstellungen
-        lang:
-          auto: Automatisch (im Browser konfiguriert)
-          label: Sprache
-          saveButton: Speichern & Neu laden
-    tabs:
-      feed: Alle Veranstaltungen
-      home: Meine Aktivitäten
-      settings: Einstellungen
-    title: Mein Zetkin
   import:
     actionButtons:
       back: Zurück
@@ -1621,7 +1557,6 @@ feat:
             o: Divers
             unknown: Keine Angabe
         ids:
-          externalID: Externe ID
           externalIDInfo: Eine externe ID ist eine ID, die von einem anderen System als
             Zetkin kommt, wie beispielsweise eine separate Mitgliedsnummer. Sie
             kann benutzt werden, um Personen in Zetkin zu identifizieren.
@@ -1629,7 +1564,6 @@ feat:
             Eine Zetkin ID besteht nur aus Zahlen. Wenn einige Zellen leer sind
             oder f.x. Buchstaben enthalten, kann es nicht als Zetkin ID genutzt
             werden.
-          zetkinID: Zetkin ID
           zetkinIDInfo: Eine Zetkin ID ist die ID einer Person, die bereits in Zetkin
             existiert. Du würdest diese Information in einer Datei haben, wenn
             du die Daten aus Zetkin exportiert hattest.
@@ -1656,8 +1590,6 @@ feat:
           values}} from {dateFormat, select, se {Swedish personnummer} no
           {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}}
           in Daten
-        finishedMappingIds: Zuordnen von {numValues, plural, =1 {1 Wert} other {#
-          Werte}} to {idField, select, id {Zetkin ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {1 Person} other {#
           Personen}} mapped to {numMappedTo, plural, =1 {1 Organisation} other
           {# Organisationen}}'
@@ -2030,6 +1962,70 @@ feat:
         overview: Übersicht
         timeline: Zeitleiste
       title: Journeys
+  home:
+    activityList:
+      actions:
+        areaAssignment: Teilnehmen
+        call: Beginne mit dem Anrufen
+        connectAndSignUp: Verbinden & anmelden
+        details: Mehr lesen
+        loginToSignUp: Zum Anmelden einloggen
+        signUp: Anmelden
+        undoSignup: Abmelden
+      emptyListMessage: Du bist für keine Aktivitäten angemeldet
+      eventStatus:
+        booked: Du bist für diese Veranstaltung gebucht und die Organisator_innen
+          erwarten dich. Kontaktiere {org} wenn du absagen willst.
+        needed: Du wirst gebraucht.
+        signedUp: Du hast dich angemeldet.
+      filters:
+        call: Anrufen
+        canvass: Haustüreinsatz
+        event: Veranstaltungen
+    allEventsList:
+      emptyList:
+        message: Es konnten keine Veranstaltungen gefunden werden.
+        removeFiltersButton: Filter zurücksetzen.
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organisationen} =1 {1 Organisation} other
+          {# Organisationen}}'
+        thisWeek: Diese Woche
+        today: Heute
+        tomorrow: Morgen
+    defaultTitles:
+      areaAssignment: Unbenannte Gebietszuordnung
+      callAssignment: Unbenannte Anruf-Aufgabe
+      event: Unbenannte Veranstaltung
+      noLocation: Kein Ort.
+    footer:
+      privacyPolicy: Datenschutzhinweise
+    newLandingPageAlert:
+      description: Den Organizing Bereich findest du über das Feld 'Organize' unter
+        diesem Banner.
+      title: Das ist deine neue Startseite
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Fügen deinem Konto eine E-Mail-Adresse hinzu, um dich mit einem
+            Passwort anmelden zu können.
+          changeInstructions: Wenn du deine E-Mail-Adresse ändern möchtest, wende dich
+            bitte an info@zetkin.org.
+          errorText: Es ist ein Fehler aufgetreten. Versuche es noch einmal oder wenden
+            dich an die Zetkin-Stiftung für Unterstützung.
+          label: E-Mail Adresse
+          saveButton: Speichern
+        header: Account Einstellungen
+      appPreferences:
+        header: App Einstellungen
+        lang:
+          auto: Automatisch (im Browser konfiguriert)
+          label: Sprache
+          saveButton: Speichern & Neu laden
+    tabs:
+      feed: Alle Veranstaltungen
+      home: Meine Aktivitäten
+      settings: Einstellungen
+    title: Mein Zetkin
   organizations:
     allEventsList:
       emptyList:
@@ -2122,8 +2118,10 @@ feat:
       showButton: Alle Veranstaltungen anzeigen
   profile:
     delete:
+      button: Person entfernen
       confirm: Bist du sicher, dass du {name} von {org} und allen damit verbundenen
         Organisationen löschen willst? Das kann nicht rückgängig gemacht werden.
+      title: Profil löschen
       warning: Diese Aktion kann nicht rückgängig gemacht werden!
     details:
       title: Details
@@ -3435,6 +3433,9 @@ feat:
       title: Liste löschen?
       warningText: Möchtest du diese Liste wirklich löschen? Alle Daten in der Liste
         wie Notizen und Checklisten werden gelöscht.
+    deleteRowsDialog:
+      warning: Wenn Sie diese Aktion bestätigen, werden alle Datensätze dieser
+        Personen aus der gesamten Organisation gelöscht.
     editViewTitleAlert:
       error: Fehler. Überschrift wurde nicht geändert
       success: Überschrift geändert!
@@ -3508,6 +3509,10 @@ feat:
         header: Ältere Teilnahmen
         openButton: Einblenden
     toolbar:
+      bulk:
+        createList: Liste aus Auswahl erstellen
+        delete: Ausgewählte Personen aus der Organisation löschen
+        removeFromList: Ausgewählte Personen aus der Liste entfernen
       createColumn: Neue Spalte
     viewLayout:
       actions:
@@ -3645,7 +3650,9 @@ zui:
     title: Suche
   dataTableSorting:
     addButton: Füge Sortierspalte hinzu
+    ascending: Aufsteigend
     button: Sortieren
+    descending: Absteigend
     hint: 'Hinweis: Drücke {shiftKeyIcon} während du mehrere Spalten anklickst'
     title: Sortieren
   dateRange:
@@ -3675,6 +3682,8 @@ zui:
       noEmpty: Dieses Feld kann nicht leer bleiben
   editableImage:
     add: Klick, um ein Bild hinzuzufügen
+  ellipsisMenu:
+    ariaLabel: Mehr Optionen
   eventWarningIcons:
     contact: Keine Kontaktperson wurde zugeteilt
     reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
@@ -3693,6 +3702,9 @@ zui:
       expand: Einblenden
   lists:
     showMore: Mehr anzeigen...
+  mobileOrganizeHeader:
+    sideBarMenuButtonDescription: Seitenleistenmenü öffnen
+    userMenuButtonDescription: Benutzermenü öffnen
   orgScopeSelect:
     orgPlaceholder: Wähle Organisationen aus
     orgSelectionLabel: '{count} ausgewählt'
@@ -3702,13 +3714,20 @@ zui:
       suborgs: Nur Unterorganisationen
       this: Nur {org}
   organizeSidebar:
+    collapse: Seitenleiste ausblenden
+    expand: Seitenleiste erweitern
     filter: Tippe, um zu filtern
+    filterLabel: Organisationen filtern
     geography: Geographie
     home: Startseite
     journeys: Anfragenvermittlung
     myPagesInfoText: Gehe zu Meine Seite
     myPagesMenuItemLabel: Meine Seite
     mySettingsMenuItemLabel: Meine Einstellungen
+    organizationAvatarAltText: Organisationssymbol
+    organizationSwitcher:
+      hide: Organisationsumschalter ausblenden
+      show: Organisationsumschalter einblenden
     overview: Überblick
     people: Personen
     projects: Projekte & Aktivitäten
@@ -3755,6 +3774,7 @@ zui:
       nachhaltige Richtung einsetzt.
   signUpChip:
     booked: Du bist angemeldet.
+    callSignUp: '{name} hat sich angemeldet'
     needed: Du wirst gebraucht
     signedUp: Du hast dich angemeldet
   snackbar:
