@@ -12,7 +12,6 @@ interface ZUIMarkdownProps {
 const ZUIMarkdown: React.FC<ZUIMarkdownProps> = ({
   BoxProps,
   markdown,
-  // defaulting to true assuming this is the correct behavior in most cases
   forceTargetBlank = true,
 }) => {
   const dirtyHtml = marked(markdown, { breaks: true });
@@ -29,7 +28,6 @@ const ZUIMarkdown: React.FC<ZUIMarkdownProps> = ({
 
   return (
     <ZUICleanHtml
-      // passing targetBlankRef first allows overriding this behavior
       BoxProps={{ ref: targetBlankRef, ...BoxProps }}
       dirtyHtml={dirtyHtml}
     />
