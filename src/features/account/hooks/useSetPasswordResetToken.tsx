@@ -7,7 +7,7 @@ export type SetPasswordResetTokenStatus = {
   success: boolean;
 };
 
-type UseSetPasswordResetTokenReturn = {
+type Return = {
   loading: boolean;
   resetPassword: (newPassword: string) => Promise<SetPasswordResetTokenStatus>;
 };
@@ -15,7 +15,7 @@ type UseSetPasswordResetTokenReturn = {
 export function useSetPasswordResetToken(
   token: string,
   userId: string
-): UseSetPasswordResetTokenReturn {
+): Return {
   const apiClient = useApiClient();
   const [loading, setLoading] = useState(false);
 

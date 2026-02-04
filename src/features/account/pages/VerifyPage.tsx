@@ -9,7 +9,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messagesIds';
 import messagesIds from '../l10n/messagesIds';
-import { UseSendVerification } from '../hooks/useSendVerification';
+import { useSendVerification } from '../hooks/useSendVerification';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import { SendFail, SendVerificationStatus } from '../types';
 import ResponsiveAccountSection from '../components/ResponsiveAccountSection';
@@ -20,7 +20,7 @@ const hasError = (result: SendVerificationStatus): result is SendFail => {
 
 const VerifyPage: FC = () => {
   const messages = useMessages(messageIds);
-  const { loading, sendVerification } = UseSendVerification();
+  const { loading, sendVerification } = useSendVerification();
   const [error, setError] = useState(false);
 
   return (

@@ -5,12 +5,12 @@ import { useApiClient } from 'core/hooks';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { SendVerificationStatus } from '../types';
 
-type UseSendVerificationProps = {
+type Return = {
   loading: boolean;
   sendVerification: () => Promise<SendVerificationStatus>;
 };
 
-export function UseSendVerification(): UseSendVerificationProps {
+export function useSendVerification(): Return {
   const apiClient = useApiClient();
   const [loading, setLoading] = useState(false);
   const router = useRouter();

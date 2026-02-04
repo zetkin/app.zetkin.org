@@ -5,12 +5,12 @@ import { ApiClientError } from 'core/api/errors';
 import { RegisterData } from '../components/RegisterFormSection';
 import { CreateNewAccountStatus } from '../types';
 
-type UseCreateNewAccountProps = {
+type Return = {
   createNewAccount: (formData: RegisterData) => Promise<CreateNewAccountStatus>;
   loading: boolean;
 };
 
-export function useCreateNewAccount(): UseCreateNewAccountProps {
+export function useCreateNewAccount(): Return {
   const apiClient = useApiClient();
   const [loading, setLoading] = useState(false);
 

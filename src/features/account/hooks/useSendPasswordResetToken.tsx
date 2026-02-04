@@ -4,12 +4,12 @@ import { useApiClient } from 'core/hooks';
 import { ApiClientError } from 'core/api/errors';
 import { PasswordResetStatus } from '../types';
 
-type UseSendPasswordResetTokenReturn = {
+type Return = {
   loading: boolean;
   sendPasswordResetToken: (email: string) => Promise<PasswordResetStatus>;
 };
 
-export function useSendPasswordResetToken(): UseSendPasswordResetTokenReturn {
+export function useSendPasswordResetToken(): Return {
   const apiClient = useApiClient();
   const [loading, setLoading] = useState(false);
 
