@@ -99,9 +99,9 @@ export default makeMessages('feat.smartSearch', {
       },
       official: {
         description: m(
-          'Find people who are officials (organizers or administrators) in an organization'
+          'Find people who have organizer or administrator access in an organization'
         ),
-        title: m('Officials'),
+        title: m('Based on their access level'),
       },
       person_data: {
         description: m('Name, address, email and more!'),
@@ -452,18 +452,18 @@ export default makeMessages('feat.smartSearch', {
     },
     official: {
       examples: {
-        one: m('Add all people who are officials in the organization.'),
-        two: m('Remove all people who are administrators in the organization.'),
+        one: m(
+          'Add all people who have access as either organizer or administrator.'
+        ),
+        two: m('Remove all people who have access as administrator.'),
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
         roleSelect: ReactElement;
-      }>(
-        '{addRemoveSelect} all people who are {roleSelect} in the organization.'
-      ),
+      }>('{addRemoveSelect} all people who have access as {roleSelect}.'),
       roleSelect: {
         admin: m('administrators'),
-        any: m('officials'),
+        any: m('either organizer or administrator'),
         organizer: m('organizers'),
       },
     },
