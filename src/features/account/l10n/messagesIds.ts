@@ -85,6 +85,7 @@ export default makeMessages('feat.account', {
       'Something went wrong. We were unable to send the verification link.'
     ),
     sendVerification: m('Send a new verification'),
+    success: m('A new verfication email was sent'),
     title: m('Verify your email address'),
   },
 });

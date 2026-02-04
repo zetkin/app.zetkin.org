@@ -22,6 +22,7 @@ const VerifyPage: FC = () => {
   const messages = useMessages(messageIds);
   const { loading, sendVerification } = useSendVerification();
   const [error, setError] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   return (
     <Suspense
@@ -47,6 +48,8 @@ const VerifyPage: FC = () => {
 
               if (hasError(result)) {
                 setError(true);
+              } else {
+                setVerificationSent(true);
               }
             }}
           >
@@ -57,14 +60,26 @@ const VerifyPage: FC = () => {
               {error && (
                 <ZUIAlert severity={'error'} title={messages.verify.error()} />
               )}
-              <ZUIButton
-                actionType="submit"
-                disabled={loading}
-                fullWidth
-                label={messages.verify.sendVerification()}
-                size="large"
-                variant={loading ? 'loading' : 'primary'}
-              />
+              {!verificationSent && (
+                <ZUIButton
+                  actionType="submit"
+                  disabled={loading}
+                  fullWidth
+                  label={messages.verify.sendVerification()}
+                  size="large"
+                  variant={loading ? 'loading' : 'primary'}
+                />
+              )}
+              {verificationSent && (
+                <ZUIAlert
+                  button={{
+                    label: 'OK!',
+                    onClick: () => setVerificationSent(false),
+                  }}
+                  severity="success"
+                  title={messages.verify.success()}
+                />
+              )}
             </Box>
           </form>
         )}
