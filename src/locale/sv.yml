@@ -326,6 +326,50 @@ feat:
     showMore: Visa
     today: Idag
   call:
+    about:
+      previousActivityHeader: Tidigare aktivitet
+      tagsHeader: Etiketter
+      title: Om {name}
+    activities:
+      filters:
+        basic:
+          events: Events
+          surveys: Enkäter
+          thisCall: Detta samtal
+        events:
+          thisWeek: Denna vecka
+          today: Idag
+          tomorrow: Imorgon
+        organizations:
+          noSelected: Organisationer
+      projects:
+        wihoutProjectLabel: Inget projekt
+      title: Aktiviteter
+    callLog:
+      openCallLogButton: Samtalslogg
+      previousCall:
+        logNew: Logga annat samtal
+      searchLabel: Skriv för att söka
+      title: Samtalslogg
+      unfinishedCall:
+        switch: Byt till
+    callingInfo:
+      tutorial:
+        oldCalls:
+          title: Tidigare samtal
+        personInfo:
+          title: Lär känna personen
+        start:
+          title: Börja ringa
+    error:
+      description: 'Försök ladda om sidan. Om felet kvarstår, försök logga ut och in
+        igen. Om felet fortfarande kvarstår, kontakta support. '
+      title: Ett oväntat fel inträffade.
+    header:
+      primaryButton:
+        undefined: Avsluta & rapportera
+      secondaryButton:
+        undefined: Avsluta
     instructions:
       title: Instruktioner
     report:
@@ -347,7 +391,7 @@ feat:
           summary:
             afterSpecificTime: Ring tillbaka efter {time}
             anyTime: Vi ringer tillbaka efter {date}
-            subtitle: Under tiden, {firstName} blir automatiskt bortplockad från kön
+            subtitle: Under tiden blir {firstName} automatiskt bortplockad från kön
         callerLog:
           question:
             noteLabel: Lägg till valfritt meddelande
@@ -392,7 +436,7 @@ feat:
           summary:
             didNotLeaveMessage: Lämnade inte ett meddelande på telefonsvararen
             leftMessage:
-              subtitle: Framtida ringar kommer att se att du lämnade ett meddelande
+              subtitle: Framtida ringare kommer att se att du lämnade ett meddelande
               title: Lämnade ett meddelande på telefonsvararen
         organizerAction:
           question:
@@ -408,7 +452,7 @@ feat:
           question:
             messageLabel: Lägg till valfritt meddelande
             shortcutHint: När du skriver, tryck SHIFT + ENTER för att lägga till meddelande.
-            title: Förklara problemet till organisatörerna
+            title: Beskriv problemet för organisatörerna
             withMessageButton: Inkludera meddelade
             withoutMessageButton: Spara utan meddelande
             wrongNumberMessages:
@@ -431,7 +475,7 @@ feat:
               title: Vi nådde inte {firstName}
             success:
               subtitle: Framtida ringare kommer att se att du pratade med {firstName}
-              title: '{firstName} blev nådd'
+              title: Nådde {firstName}
         wrongNumber:
           question:
             bothButton: Båda
@@ -441,12 +485,13 @@ feat:
             phoneSingle: 'Ett telefonnummer är inkorrekt: {phone}'
       summary:
         editButtonLabel: Redigera
+      title: Rapportera
     stats:
-      callsMade: samta gjorda
+      callsMade: samtal gjorda
   callAssignments:
     actions:
       delete: Radera
-      end: Avsluta ringuppdrag
+      end: Avsluta ringuppdraget
       move: Flytta
       start: Starta ringuppdrag
       warning: '"{title}" kommer raderas.'
@@ -546,6 +591,8 @@ feat:
       subtitle: Använd en Smart sökning för att definiera målgruppen för detta uppdrag.
       title: Målgrupp
   campaigns:
+    activeCampaigns:
+      header: Aktiv
     activitiesOverview:
       button: Bläddra bland alla aktiviteter
       empty: Inget under denna dag
@@ -553,6 +600,8 @@ feat:
       extraActivities: + {numExtra} fler
       goToActivities: Se alla framtida aktiviteter.
       noActivities: Det finns inga aktiviteter den här veckan
+      noDescription:
+        addOneNow: Lägg till en nu.
       nothingTomorrow: Ingenting planerat imorgon
       startsTomorrow: startar imorgon
       subtitles:
@@ -574,6 +623,7 @@ feat:
           fått en påminnelse'
         signups: Det finns väntande anmälningar
     all:
+      campaignFilterPlaceholder: Skriv för att filtrera projekt
       cardCTA: Gå till projekt
       create: Skapa nytt projekt
       filter:
@@ -583,6 +633,7 @@ feat:
         filter: Filtrera resultat
         standalones: Fristående event
         surveys: Enkäter
+      header: Projekt
       indefinite: Obestämd
       unsorted: Osorterade projekt
       upcoming: '{numEvents, number} framtida event.'
@@ -590,6 +641,11 @@ feat:
       noActivities: Om din organisation har aktiviteter som inte hör till ett projekt
         kommer de att visas här.
       viewArchive: Visa arkiv
+    archivedCampaigns:
+      header: Arkiverat
+      hideShowButton:
+        hide: Dölj arkiverade projekt
+        show: Visa arkiverade projekt
     assigneeActions: Uppgifter för ansvarig
     calendarView: Se alla i kalendern
     changeCampaignDialog:
@@ -609,6 +665,8 @@ feat:
       create: Skapa enkät
       heading: Feedback och Enkäter (ingen konfiguerad)
     form:
+      archiveCampaign:
+        archive: Arkivera projekt
       createAreaAssignment:
         defaultQuestion: Har du slutfört uppgiften?
       createCallAssignment:
@@ -709,6 +767,10 @@ feat:
       noActivities: Det finns ännu inga aktiviteter i det här projektet.
       noSearchResults: Din filtrering gav inga resultat.
       showPublicPage: Visa i aktivistportalen
+      status:
+        archived: Arkiverat
+        draft: Utkast
+        private: Privat
       viewArchive: Visa arkiv
     taskLayout:
       tabs:
@@ -876,7 +938,7 @@ feat:
           o: Annat
         noValue: Inget värde
         title: Data att slå samman
-      findCandidateManually: Skriv för att hitta potentiella dubletter
+      findCandidateManually: Skriv för att hitta potentiella dubbletter
       isDuplicateButton: Inkludera
       lists:
         hideManual: Göm manuella sökningar
@@ -889,17 +951,21 @@ feat:
         email: E-post
         name: Namn
         phone: Telefon
-      title: Slå samman dubletter
-      warningMessage: All relaterad data (exempelvis event-deltagande, inskickade
+      title: Slå samman dubbletter
+      warningMessage: All relaterad data (exempelvis eventdeltagande, inskickade
         enkäter och etiketter) kommer att föras över till den person som blir
         kvar efter sammanslagningen. Men de värden du väljer bort ovan kommer
         att förloras.
       warningTitle: Viss data kan försvinna
     page:
       dismiss: Avfärda
-      noDuplicates: Inga dubletter
-      noDuplicatesDescription: Yay! Alla personer i din organisation är unika individer.
-      possibleDuplicates: Eventuella dubletter
+      noDuplicates: Inga dubbletter
+      noDuplicatesContactUs: Om du upplever att dubblettalgoritmen inte hittar
+        tillräckligt med dubbletter, kontakta gärna Zetkin Foundation så att vi
+        kan undersöka detta.
+      noDuplicatesDescription: Zetkin har inte hittat några potentiella dubbletter.
+        Databasen skannas dagligen och potentiella dubbletter visas här.
+      possibleDuplicates: Eventuella dubbletter
       possibleDuplicatesDescription: De här {numPeople} personerna ser väldigt lika ut
       resolve: Slå samman
   emails:
@@ -1311,6 +1377,17 @@ feat:
         flyttas'
       submitButton: Utför
       title: Hantera deltagare
+    publicEventSignup:
+      alert:
+        error: Fel
+      errors:
+        nameRequired: För- och efternamn krävs
+      fields:
+        email: E-post
+        firstName: Förnamn
+        lastName: Efternamn
+      info:
+        title: Dags att anmäla dig
     search: Sök
     state:
       cancelled: Inställt
@@ -1332,6 +1409,8 @@ feat:
         för hela {orgTitle}?
       tooltip: Klicka här för att byta typ
       uncategorized: Okategoriserade
+    unverifiedSignups:
+      actionFailed: Något gick fel. Prova gärna igen.
     urlCard:
       nowAccepting: Anmälningar tas nu emot via denna länk
       open: Öppen för anmälningar
@@ -1363,67 +1442,6 @@ feat:
       label: Typ
       options:
         image: Bilder
-  home:
-    activityList:
-      actions:
-        areaAssignment: Anslut
-        call: Börja ringa
-        connectAndSignUp: Anslut & anmäl dig
-        details: Läs mer
-        loginToSignUp: Logga in för att anmäla dig
-        signUp: Anmäl dig
-        undoSignup: Ångra anmälan
-      emptyListMessage: Du är inte anmäld till några aktiviteter
-      eventStatus:
-        booked: Du har blivit bokad på det här eventet och organisatörerna förväntar sig
-          att du kommer. Kontakta {org} om du behöver ställa in.
-        needed: Du behövs
-        signedUp: Du har anmält dig
-      filters:
-        call: Ringa
-        canvass: Områden
-        event: Event
-    allEventsList:
-      emptyList:
-        message: Hittade inga events
-        removeFiltersButton: Nollställ filter
-      filterButtonLabels:
-        organizations: '{numOrgs, plural,=0 {Organisationer} =1 {1 organisation} other
-          {# organisationer}}'
-        thisWeek: Den här veckan
-        today: Idag
-        tomorrow: Imorgon
-    defaultTitles:
-      areaAssignment: Namnlöst områdesuppdrag
-      callAssignment: Icke namngivet ringuppdrag
-      event: Icke namngivet event
-      noLocation: Ingen fysisk plats
-    footer:
-      privacyPolicy: Sekretesspolicy
-    newLandingPageAlert:
-      title: Detta är din nya landningssida
-    settings:
-      accountSettings:
-        email:
-          addInstructions: Lägg till en e-postadress till ditt konto för att kunna logga
-            in genom att använda lösenord.
-          changeInstructions: Om du behöver ändra din e-postadress, kontakta info@zetkin.org.
-          errorText: Ett fel uppstod. Försök igen eller kontakta Zetkin Foundation för
-            support.
-          label: E-postadress
-          saveButton: Spara
-        header: Kontoinställningar
-      appPreferences:
-        header: Appinställningar
-        lang:
-          auto: Automatisk (configured in browser)
-          label: Språk
-          saveButton: Spara & ladda om
-    tabs:
-      feed: Alla event
-      home: Mina aktiviteter
-      settings: Inställningar
-    title: Mitt Zetkin
   import:
     actionButtons:
       back: Tillbaka
@@ -1482,14 +1500,18 @@ feat:
             o: Annat
             unknown: Okänd
         ids:
-          externalID: Externt ID
           externalIDInfo: Ett externt ID är ett ID som kommer från ett annat system än
             Zetkin, till exempel ett separat medlemsregister. Det kan användas
             för att hitta och identifiera personer i Zetkin.
+          field:
+            email: E-post
+            undefined: Externt ID
+            id: Zetkin ID
+          importID: Import ID
+          skipRowDescription: Inga nya personer kommer att skapas
           wrongIDFormatWarning: Den här kolumnen verkar inte innehålla Zetkin-ID. Ett
             Zetkin-ID består bara av siffror. Om vissa celler är tomma eller
             innehåller andra tecken kan de inte användas som Zetkin-ID.
-          zetkinID: Zetkin-ID
           zetkinIDInfo: Ett Zetkin ID är ett ID på en person som redan finns i Zetkin. Det
             bör du ha i en fil om du exporterar data från Zetkin.
         orgs:
@@ -1508,6 +1530,7 @@ feat:
       mapping:
         configButton: Konfigurera
         defaultColumnHeader: Kolumn {columnIndex}
+        email: E-post
         emptyStateMessage: Börja med att välja vad kolumnerna innehåller
         externalID: Externt ID
         fileHeader: Fil
@@ -1515,8 +1538,6 @@ feat:
           värden}} från {dateFormat, select, se {svenska personnummer} no
           {norska födelsenummer} dk {danska CPR-nummer} other {{dateFormat}}}
           till datum
-        finishedMappingIds: Översätter {numValues, plural, =1 {ett värde} other {#
-          värden}} till {idField, select, id {Zetkin-ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {en person} other {#
           personer}} läggs till i {numMappedTo, plural, =1 {en organisation}
           other {# organisationer}}'
@@ -1571,6 +1592,10 @@ feat:
           m: Man
           o: Annat
           unknown: Okänt
+        ids:
+          email: E-post
+          undefined: Externt ID
+          id: Zetkin ID
         next: Nästa
         noOrg: Ingen organisation
         noTags: Inga etiketter
@@ -1872,6 +1897,67 @@ feat:
         overview: Översikt
         timeline: Tidslinje
       title: Journeys
+  home:
+    activityList:
+      actions:
+        areaAssignment: Anslut
+        call: Börja ringa
+        connectAndSignUp: Anslut & anmäl dig
+        details: Läs mer
+        loginToSignUp: Logga in för att anmäla dig
+        signUp: Anmäl dig
+        undoSignup: Ångra anmälan
+      emptyListMessage: Du är inte anmäld till några aktiviteter
+      eventStatus:
+        booked: Du har blivit bokad på det här eventet och organisatörerna förväntar sig
+          att du kommer. Kontakta {org} om du behöver ställa in.
+        needed: Du behövs
+        signedUp: Du har anmält dig
+      filters:
+        call: Ringa
+        canvass: Områden
+        event: Event
+    allEventsList:
+      emptyList:
+        message: Hittade inga events
+        removeFiltersButton: Nollställ filter
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organisationer} =1 {1 organisation} other
+          {# organisationer}}'
+        thisWeek: Den här veckan
+        today: Idag
+        tomorrow: Imorgon
+    defaultTitles:
+      areaAssignment: Namnlöst områdesuppdrag
+      callAssignment: Icke namngivet ringuppdrag
+      event: Icke namngivet event
+      noLocation: Ingen fysisk plats
+    footer:
+      privacyPolicy: Sekretesspolicy
+    newLandingPageAlert:
+      title: Detta är din nya landningssida
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Lägg till en e-postadress till ditt konto för att kunna logga
+            in genom att använda lösenord.
+          changeInstructions: Om du behöver ändra din e-postadress, kontakta info@zetkin.org.
+          errorText: Ett fel uppstod. Försök igen eller kontakta Zetkin Foundation för
+            support.
+          label: E-postadress
+          saveButton: Spara
+        header: Kontoinställningar
+      appPreferences:
+        header: Appinställningar
+        lang:
+          auto: Automatisk (använder webbläsarens inställning)
+          label: Språk
+          saveButton: Spara & ladda om
+    tabs:
+      feed: Alla event
+      home: Mina aktiviteter
+      settings: Inställningar
+    title: Mitt Zetkin
   organizations:
     allEventsList:
       emptyList:
@@ -1894,8 +1980,13 @@ feat:
       cancelledHeader: Detta event har avbokats
       cancelledParagraph: Du kan inte längre anmälda dig och om du var anmäld så
         förväntas du inte längre att närvara.
+      contactPerson:
+        default: '{name} är kontaktpersonen'
+        you: Du är kontaktpersonen
       defaultTitle: Namnlöst event
+      haveAccount: Jag har inget konto
       loading: Laddar...
+      noDescription: 'Eventet har ingen beskrivning. '
       noLocation: Ingen fysisk plats
       partOfProject: Del av {projectLink}
       today: Idag
@@ -1952,6 +2043,12 @@ feat:
       recent:
         clear: Rensa
         title: Senaste organisationerna
+    signupChoiceModal:
+      description: 'Använd ditt Zetkinkonto för att anmäla dig till ett event. Oroa
+        dig inte, om du inte har ett konto kan du anmäla dig ändå. '
+      title: Hur vill du anmäla dig?
+      withAccount: Med mitt Zetkinkonto
+      withoutAccount: Utan Zetkinkonto
     subOrgEventBlurb:
       description: Det finns {eventsElem} {numEvents, plural, =1 {till event} other
         {andra event}} i {orgsElem} {numOrgs, plural, =1 {underorganisation}
@@ -1960,8 +2057,10 @@ feat:
       showButton: Visa alla events
   profile:
     delete:
+      button: Ta bort person
       confirm: Är du säker på att du vill ta bort {name} från {org} och alla
         relaterade organisationer? Det är permanent och går inte att ångra.
+      title: Radera konto
       warning: Detta kan inte ångras!
     details:
       title: Detaljer
@@ -1979,6 +2078,17 @@ feat:
     journeys:
       addButton: Starta ny journey
       title: Journeys
+    notes:
+      addNoteButton: Lägg till anteckning
+      cancelButton: Avbryt
+      note:
+        author: '{authorName} lade till en anteckning'
+        delete: Radera
+        deleteWarningDescription: 'Är du säker att du vill radera anteckningen om
+          {name}? Att radera en anteckning kan inte ångras. '
+        deleteWarningTitle: Radera anteckning
+      placeHolder: Skriv en anteckning
+      title: Anteckningar
     numberOfChangesMessage: Uppdaterar {number, plural, =1 {1 fält} other {# fält}}
     organizations:
       add: Lägg till en ny underorganisation
@@ -2344,6 +2454,7 @@ feat:
           one: "Lägg till personer som har minst en av följande etiketter: 'Medlem', 'Aktivist'"
           two: "Ta bort personer som har alla följande etiketter: 'Styrelseledamot'"
         inputString: '{addRemoveSelect} personer som {condition} följande etiketter: {tags}'
+        noGroup: Ingen grupp
       personView:
         examples:
           one: Lägg till personer som finns i listan "Aktiva medlemmar 2022".
@@ -2665,6 +2776,7 @@ feat:
       textFields:
         tabs:
           responses: Svar
+          wordCloud: Moln
           wordFrequencies: Stapel
     layout:
       actions:
@@ -2731,6 +2843,10 @@ feat:
       description: Personen som du ska länka enkäten till har ingen epost men enkäten
         innehåller en epostadress. Vill du lägga till den till personen?
       title: Lägg till epostadress
+    surveyDialogDifferentEmail:
+      keep: Nej, behåll tidigare e-postadress
+      title: Uppdatera e-postadress
+      update: Ja, uppdatera e-postadress
     surveyDuplicated:
       error: 'Fel: Kunde inte duplicera enkäten'
       success: Din enkät har duplicerats.
@@ -2752,6 +2868,7 @@ feat:
           enlighet med sekretesspolicyn.
         title: Sekretesspolicy
     surveyFormSubmitted:
+      retakeSurvey: Gör om enkät
       text: Dina svar på "{title}" har skickats in
       title: Enkäten skickades in
     surveySignature:
@@ -3294,6 +3411,11 @@ feat:
         header: Tidigare enkätsvar
         openButton: Visa
     toolbar:
+      bulk:
+        createList: Skapa en ny lista med valda personer
+        delete: Radera valda personer från organisationen
+        handleSelection: Hantera urval
+        removeFromList: Ta bort valda personer från lista
       createColumn: Ny kolumn
     viewLayout:
       actions:
@@ -3373,6 +3495,8 @@ zui:
   accessList:
     added: Tillagd av {sharer} {updated}
     removeAccess: Ta bort behörighet
+  autocomplete:
+    noOptionsDefaultText: Inga förslag matchar din sökning
   breadcrumbs:
     showMore: '{number} fler…'
   collapse:
@@ -3440,6 +3564,8 @@ zui:
     multiDayToday: Idag - {endDate}
     singleDay: '{date}'
     singleDayToday: Idag
+  drawerModal:
+    close: Stäng
   duration:
     days: '{n, plural, =1 {1 dag} other {# dagar}}'
     h: '{n}h'
@@ -3452,9 +3578,13 @@ zui:
       noEmpty: Den här får inte vara tom
   editableImage:
     add: Klicka för att lägga till bild
+  ellipsisMenu:
+    ariaLabel: Fler alternativ
   eventWarningIcons:
+    contact: Ingen kontaktperson har blivit tilldelad
     reminders: '{numMissing, plural, =1 {En} other {#}} deltagare har ännu inte
       mottagit påminnelser'
+    signUps: Det finns väntande anmälningar
   expandableText:
     showLess: Visa mindre
     showMore: Visa mer
@@ -3466,6 +3596,9 @@ zui:
       expand: Expandera
   lists:
     showMore: Visa mer...
+  mobileOrganizeHeader:
+    sideBarMenuButtonDescription: Öppna sidofältsmeny
+    userMenuButtonDescription: Öppna användarmeny
   orgScopeSelect:
     orgPlaceholder: Välj organisationer
     orgSelectionLabel: '{count} valda'
@@ -3475,10 +3608,17 @@ zui:
       suborgs: Endast underorganisationer
       this: Endast {org}
   organizeSidebar:
+    collapse: Kollapsa sidofält
+    expand: Expandera sidofält
     filter: Skriv för att filtrera
+    filterLabel: Filtrera organisationer
     geography: Geografi
     home: Hem
     journeys: Journeys
+    myPagesInfoText: Gå till mina sidor
+    myPagesMenuItemLabel: Mina sidor
+    mySettingsMenuItemLabel: Mina inställningar
+    overview: Översikt
     people: Människor
     projects: Projekt & Aktiviteter
     search: Sök
@@ -3495,18 +3635,24 @@ zui:
   personSelect:
     bulkAdd:
       backButton: Tillbaka
+      confirmTitle: Bekräfta att lägga till personer
+      fromView: Från ‘{viewTitle}’
     keepTyping: Fortsätt skriv för att börja söka
     noResult: Hittade ingen person som matchade
     search: Skriv för att börja söka
     searching: Söker...
   publicFooter:
     hostingOrganization: Denna kopia av Zetkin tillhandahålls och hanteras av {name}.
+    links:
+      foundation: Zetkin Foundation
     text: 'Zetkin är en plattform för att organisera aktivism. Zetkin är utvecklat
       av Zetkin Foundation som arbetar för radikal samhällsförändring i en
       socialistiskt, feministisk, antirasistisk och hållbar riktning. '
   signUpChip:
     booked: Du är bokad
+    callSignUp: '{name} har anmält sig'
     needed: Du behövs
+    signedUp: Du har anmält dig
   snackbar:
     error: Åh nej, något gick fel!
     success: Framgång

@@ -15,6 +15,7 @@ import oldTheme from 'theme';
 interface StyledItem {
   id: number;
   title: string;
+  group?: { title: string } | null;
 }
 
 type StyledItemSelectProps = Omit<

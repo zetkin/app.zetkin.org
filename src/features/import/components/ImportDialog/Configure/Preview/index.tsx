@@ -6,18 +6,22 @@ import DatePreview from './DatePreview';
 import EmptyPreview from './EmptyPreview';
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import OrgsPreview from './OrgsPreview';
 import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
-import { ColumnKind, Sheet } from 'features/import/utils/types';
+import { ColumnKind, Sheet } from 'features/import/types';
 import EnumPreview from './EnumPreview';
 import GenderPreview from './GenderPreview';
+import useImportID from 'features/import/hooks/useImportID';
+import PreviewGrid from './PreviewGrid';
 
 const Preview = () => {
   const theme = useTheme();
+  const messages = useMessages(messageIds);
+  const { importID } = useImportID();
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
@@ -107,67 +111,93 @@ const Preview = () => {
             })}
         {!previewIsEmpty && (
           <>
-            {currentSheet.columns.map((column, columnIdx) => {
-              if (column.selected) {
-                if (column.kind === ColumnKind.UNKNOWN) {
-                  const rowValue =
-                    currentSheet.rows[
-                      firstRowIsHeaders ? personIndex + 1 : personIndex
-                    ].data[columnIdx];
-                  return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
-                }
-
+            {currentSheet.columns
+              .toSorted((col1, col2) => {
                 if (
-                  column.kind === ColumnKind.FIELD ||
-                  column.kind === ColumnKind.ID_FIELD
+                  col1.kind == ColumnKind.ID_FIELD &&
+                  col1.idField == importID
                 ) {
-                  return (
-                    <FieldsPreview
-                      key={columnIdx}
-                      fieldKey={
-                        column.kind === ColumnKind.FIELD
-                          ? column.field
-                          : column.idField
-                      }
-                      fields={fields}
-                      kind={column.kind}
-                    />
-                  );
+                  return -1;
+                } else if (
+                  col2.kind == ColumnKind.ID_FIELD &&
+                  col2.idField == importID
+                ) {
+                  return +1;
+                } else {
+                  return 0;
                 }
+              })
+              .map((column, columnIdx) => {
+                if (column.selected) {
+                  if (column.kind === ColumnKind.UNKNOWN) {
+                    const rowValue =
+                      currentSheet.rows[
+                        firstRowIsHeaders ? personIndex + 1 : personIndex
+                      ].data[columnIdx];
+                    return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
+                  }
 
-                if (column.kind === ColumnKind.DATE) {
-                  return (
-                    <DatePreview
-                      key={columnIdx}
-                      fieldKey={column.field}
-                      fields={fields}
-                      orgId={orgId}
-                    />
-                  );
-                }
+                  if (column.kind == ColumnKind.ID_FIELD) {
+                    const fieldValue = fields?.[column.idField];
+                    return (
+                      <PreviewGrid
+                        columnHeader={messages.configuration.preview.ids[
+                          column.idField
+                        ]()}
+                        emptyLabel={
+                          !fieldValue
+                            ? messages.configuration.preview.noValue()
+                            : ''
+                        }
+                        isImportID={importID == column.idField}
+                        rowValue={fieldValue}
+                      />
+                    );
+                  }
 
-                if (column.kind === ColumnKind.ENUM) {
-                  return (
-                    <EnumPreview
-                      key={columnIdx}
-                      currentSheet={currentSheet}
-                      fieldKey={column.field}
-                      fields={fields}
-                    />
-                  );
+                  if (column.kind === ColumnKind.FIELD) {
+                    return (
+                      <FieldsPreview
+                        key={columnIdx}
+                        fieldKey={column.field}
+                        fields={fields}
+                      />
+                    );
+                  }
+
+                  if (column.kind === ColumnKind.DATE) {
+                    return (
+                      <DatePreview
+                        key={columnIdx}
+                        fieldKey={column.field}
+                        fields={fields}
+                        orgId={orgId}
+                      />
+                    );
+                  }
+
+                  if (column.kind === ColumnKind.ENUM) {
+                    return (
+                      <EnumPreview
+                        key={columnIdx}
+                        currentSheet={currentSheet}
+                        fieldKey={column.field}
+                        fields={fields}
+                      />
+                    );
+                  }
+                  if (column.kind === ColumnKind.GENDER) {
+                    return (
+                      <GenderPreview
+                        key={columnIdx}
+                        currentSheet={currentSheet}
+                        fieldKey={column.field}
+                        fields={fields}
+                      />
+                    );
+                  }
                 }
-                if (column.kind === ColumnKind.GENDER) {
-                  return (
-                    <GenderPreview
-                      key={columnIdx}
-                      currentSheet={currentSheet}
-                      fieldKey={column.field}
-                      fields={fields}
-                    />
-                  );
-                }
-              }
-            })}
+              })}
             {orgColumnSelected && (
               <OrgsPreview currentSheet={currentSheet} orgs={orgs} />
             )}

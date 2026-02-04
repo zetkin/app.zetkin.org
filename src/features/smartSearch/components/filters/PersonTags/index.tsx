@@ -1,5 +1,6 @@
-import { Box, Chip, MenuItem } from '@mui/material';
+import { Box, Button, MenuItem, Typography } from '@mui/material';
 import { FormEvent, useState } from 'react';
+import Fuse from 'fuse.js';
 
 import FilterForm from '../../FilterForm';
 import StyledItemSelect from 'features/smartSearch/components/inputs/StyledItemSelect';
@@ -18,7 +19,9 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
+import { groupTags } from 'features/tags/components/TagManager/utils';
+import TagChip from 'features/tags/components/TagManager/components/TagChip';
 
 const localMessageIds = messageIds.filters.personTags;
 
@@ -39,6 +42,7 @@ const PersonTags = ({
   onCancel,
   filter: initialFilter,
 }: PersonTagsProps): JSX.Element => {
+  const messages = useMessages(localMessageIds);
   const { orgId } = useNumericRouteParams();
   const { data } = useTags(orgId);
   const tags = data || [];
@@ -115,6 +119,23 @@ const PersonTags = ({
     </StyledSelect>
   );
 
+  const groupedTags = groupTags(tags, messages.noGroup());
+  const sortedGroupedTags: ZetkinTag[] = [];
+  groupedTags.forEach((group) => {
+    sortedGroupedTags.push(...group.tags);
+  });
+
+  const groupedSelectedTags = groupTags(selectedTags, messages.noGroup());
+  const sortedGroupedSelectedTags: ZetkinTag[] = [];
+  groupedSelectedTags.forEach((group) => {
+    sortedGroupedSelectedTags.push(...group.tags);
+  });
+
+  const fuse = new Fuse(tags, {
+    keys: ['title', 'group.title'],
+    threshold: 0.4,
+  });
+
   return (
     <FilterForm
       disableSubmit={!submittable}
@@ -183,29 +204,176 @@ const PersonTags = ({
               <Box
                 alignItems="center"
                 display="inline-flex"
-                style={{ verticalAlign: 'middle' }}
+                sx={{
+                  alignItems: 'center',
+                  display: 'inline-flex',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                }}
               >
-                {selectedTags.map((tag) => {
+                {sortedGroupedSelectedTags.map((tag) => {
                   return (
-                    <Chip
-                      key={tag.id}
-                      label={tag.title}
-                      onDelete={() => handleTagDelete(tag)}
-                      style={{ margin: '3px' }}
-                      variant="outlined"
-                    />
+                    <Box key={tag.id} sx={{ fontSize: '1.1rem' }}>
+                      <TagChip
+                        onDelete={() => handleTagDelete(tag)}
+                        tag={tag}
+                      />
+                    </Box>
                   );
                 })}
                 {selectedTags.length < tags.length && (
                   <StyledItemSelect
+                    filterOptions={(tags, state) => {
+                      const lowerCaseSearchPhrase =
+                        state.inputValue.toLowerCase();
+
+                      const matchingTags = fuse
+                        .search(lowerCaseSearchPhrase)
+                        .map((fuseResult) => fuseResult.item);
+
+                      if (!lowerCaseSearchPhrase) {
+                        return tags;
+                      }
+
+                      return matchingTags.sort((tag1, tag2) => {
+                        const tag1Group =
+                          tag1.group?.title || messages.noGroup();
+                        const tag2Group =
+                          tag2.group?.title || messages.noGroup();
+
+                        return tag1Group.localeCompare(tag2Group);
+                      });
+                    }}
                     getOptionDisabled={(t) =>
                       selectedTags.some((selected) => selected.id === t.id)
                     }
+                    groupBy={(option) =>
+                      option.group?.title || messages.noGroup()
+                    }
                     onChange={(_, v) => handleTagChange(v)}
-                    options={tags.map((t) => ({
-                      id: t.id,
-                      title: t.title,
-                    }))}
+                    options={sortedGroupedTags.sort((tag1, tag2) => {
+                      const tag1Group = tag1.group?.title || messages.noGroup();
+                      const tag2Group = tag2.group?.title || messages.noGroup();
+
+                      return tag1Group.localeCompare(tag2Group);
+                    })}
+                    renderGroup={(params) => {
+                      const group = groupedTags.find(
+                        (tagGroup) => tagGroup.title == params.group
+                      );
+
+                      const alreadySelectedTagsFromThisGroup =
+                        group?.tags.filter(
+                          (tag) =>
+                            !!filter.config.tags.some(
+                              (tagId) => tagId == tag.id
+                            )
+                        ) || [];
+
+                      const allTagsInGroupAreSelected =
+                        group?.tags.length ==
+                        alreadySelectedTagsFromThisGroup.length;
+
+                      return (
+                        <Box
+                          key={params.key}
+                          component="li"
+                          sx={{
+                            width: '100%',
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              paddingX: 1,
+                              width: '100%',
+                            }}
+                          >
+                            <Typography color="secondary">
+                              {params.group}
+                            </Typography>
+                            <Button
+                              disabled={allTagsInGroupAreSelected}
+                              onClick={() => {
+                                const group = groupedTags.find(
+                                  (tagGroup) => tagGroup.title == params.group
+                                );
+
+                                const existingTags = tags.filter(
+                                  (tag) =>
+                                    !!filter.config.tags.some(
+                                      (tagId) => tagId == tag.id
+                                    )
+                                );
+
+                                if (group) {
+                                  handleTagChange([
+                                    ...existingTags,
+                                    ...group.tags
+                                      .filter(
+                                        (tag) =>
+                                          !existingTags.some(
+                                            (t) => t.id == tag.id
+                                          )
+                                      )
+                                      .map((tag) => ({
+                                        id: tag.id,
+                                        title: tag.title,
+                                      })),
+                                  ]);
+                                }
+                              }}
+                              size="small"
+                            >
+                              <Msg
+                                id={
+                                  messageIds.filters.personTags
+                                    .addAllFromGroupButton
+                                }
+                              />
+                            </Button>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: 1,
+                              padding: 1,
+                            }}
+                          >
+                            {params.children}
+                          </Box>
+                        </Box>
+                      );
+                    }}
+                    renderOption={(params, tag) => {
+                      const alreadySelected = !!selectedTags.find(
+                        (t) => t.id == tag.id
+                      );
+
+                      const existingTags = tags.filter(
+                        (tag) =>
+                          !!filter.config.tags.some((tagId) => tagId == tag.id)
+                      );
+                      return (
+                        <Box
+                          key={tag.id}
+                          component="li"
+                          sx={{ display: 'flex' }}
+                        >
+                          <TagChip
+                            disabled={alreadySelected}
+                            onClick={() =>
+                              handleTagChange([...existingTags, tag])
+                            }
+                            tag={tag as ZetkinTag}
+                          />
+                        </Box>
+                      );
+                    }}
+                    sx={{ minWidth: '300px' }}
                     value={tags.filter((t) =>
                       filter.config.tags.includes(t.id)
                     )}
