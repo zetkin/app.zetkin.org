@@ -1,11 +1,7 @@
 import { useState } from 'react';
 
 import { useApiClient } from 'core/hooks';
-
-export type SetPasswordResetTokenStatus = {
-  errorCode?: string;
-  success: boolean;
-};
+import { SetPasswordResetTokenStatus } from '../types';
 
 type Return = {
   loading: boolean;
@@ -30,7 +26,7 @@ export function useSetPasswordResetToken(
       });
       return { success: true };
     } catch (err) {
-      return { errorCode: 'UNKNOWN_ERROR', success: false };
+      return { errorCode: 'unknownError', success: false };
     } finally {
       setLoading(false);
     }

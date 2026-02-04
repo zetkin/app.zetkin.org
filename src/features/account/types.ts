@@ -36,3 +36,8 @@ type PasswordFail = {
 };
 
 export type PasswordResetStatus = PasswordFail | PasswordSuccess;
+
+export type SetPasswordResetTokenStatus = {
+  errorCode?: 'unknownError';
+  success: boolean;
+};
