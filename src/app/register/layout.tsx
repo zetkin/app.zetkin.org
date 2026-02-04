@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 
-import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
+import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import AccountLayout from 'features/account/layouts/AccountLayout';
 
 type Props = {
