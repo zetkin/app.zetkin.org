@@ -5,7 +5,7 @@ import AddedOrgs from './AddedOrgs';
 import AddedTags from './AddedTags';
 import ChangedFields from './ChangedFields';
 import CreatedAndUpdated from './CreatedAndUpdated';
-import { PersonImportSummary } from 'features/import/utils/types';
+import { PersonImportSummary } from 'features/import/types';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import useTags from 'features/tags/hooks/useTags';
 

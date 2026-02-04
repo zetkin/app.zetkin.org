@@ -527,6 +527,8 @@ feat:
       title: 'Vælg organisation:'
   profile:
     delete:
+      button: Fjern person
+      title: Slet profil
       warning: Dette kan ikke gøres om!
     details:
       title: Detaljer

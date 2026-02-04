@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { ZetkinEventWithStatus } from 'features/home/types';
 import { ApiClientError } from 'core/api/errors';
 import { useApiClient } from 'core/hooks';
+import { ZetkinEventWithStatus } from 'features/public/types';
 
 type SubmitInput = {
   email?: string;
