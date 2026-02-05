@@ -19,9 +19,7 @@ export function useCreateNewAccount(): Return {
   ): Promise<CreateNewAccountStatus> => {
     setLoading(true);
     try {
-      await apiClient.post(`/api/users`, {
-        ...formData,
-      });
+      await apiClient.post(`/api/users`, formData);
       return { success: true };
     } catch (err) {
       if (err instanceof ApiClientError) {
