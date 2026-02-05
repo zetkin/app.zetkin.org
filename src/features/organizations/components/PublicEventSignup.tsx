@@ -13,7 +13,7 @@ import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUICheckbox from 'zui/components/ZUICheckbox';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILink from 'zui/components/ZUILink';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import { ZetkinEventWithStatus } from 'features/public/types';
 import usePublicEventSignup from 'features/organizations/hooks/usePublicEventSignup';
 import messageIds from 'features/surveys/l10n/messageIds';
 import eventMessageIds from 'features/events/l10n/messageIds';

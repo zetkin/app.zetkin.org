@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-import useMyEvents from 'features/events/hooks/useMyEvents';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import useMyEvents from 'features/my/hooks/useMyEvents';
+import { ZetkinEventWithStatus } from 'features/public/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 import { ZetkinEvent } from 'utils/types/zetkin';

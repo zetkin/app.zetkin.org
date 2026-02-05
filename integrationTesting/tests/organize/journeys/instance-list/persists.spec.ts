@@ -74,7 +74,5 @@ test.describe('Journey instance list', () => {
     expect(firstRowAfterRefresh).toContainText('Better');
     expect(secondRowAfterRefresh).toContainText('Another');
     expect(await rowsAfterRefresh.count()).toBe(3);
-
-    await page.waitForTimeout(5000);
   });
 });

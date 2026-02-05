@@ -6,6 +6,7 @@ import { Zetkin2Area } from 'features/areas/types';
 
 type Props = {
   areas: Zetkin2Area[];
+  isDrawing?: () => boolean;
   map: MapType | null;
   onSelectFromMap?: (id: number) => void;
 };
@@ -19,6 +20,7 @@ export default function useAreaSelection({
   areas,
   map,
   onSelectFromMap,
+  isDrawing = () => false,
 }: Props): Return {
   const [selectedId, setSelectedId] = useState(0);
   const selectedArea = areas.find((area) => area.id == selectedId) || null;
@@ -30,6 +32,10 @@ export default function useAreaSelection({
 
     const handleClick = (ev: MapLayerMouseEvent) => {
       if (!ev.features || ev.features.length === 0) {
+        return;
+      }
+
+      if (isDrawing()) {
         return;
       }
 
@@ -56,7 +62,7 @@ export default function useAreaSelection({
     return () => {
       map.off('click', 'areas', handleClick);
     };
-  }, [map, onSelectFromMap]);
+  }, [map, onSelectFromMap, isDrawing]);
 
   return {
     selectedArea,
