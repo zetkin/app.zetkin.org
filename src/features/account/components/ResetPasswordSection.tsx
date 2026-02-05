@@ -4,7 +4,7 @@ import NextLink from 'next/link';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messagesIds';
+import messageIds from '../l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITextField from 'zui/components/ZUITextField';

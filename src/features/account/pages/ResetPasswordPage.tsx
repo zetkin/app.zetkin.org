@@ -9,7 +9,7 @@ import UpdatedPasswordSection from 'features/account/components/UpdatedPasswordS
 import ResponsiveAccountSection from 'features/account/components/ResponsiveAccountSection';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import { useMessages } from 'core/i18n';
-import messagesIds from 'features/account/l10n/messagesIds';
+import messagesIds from 'features/account/l10n/messageIds';
 
 const ResetPasswordPage = () => {
   const messages = useMessages(messagesIds);

@@ -8,7 +8,7 @@ import isEmail from 'validator/lib/isEmail';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITextField from 'zui/components/ZUITextField';
 import { useMessages } from 'core/i18n';
-import messageIds from '../l10n/messagesIds';
+import messageIds from '../l10n/messageIds';
 import ZUICheckbox from 'zui/components/ZUICheckbox';
 import { useCreateNewAccount } from '../hooks/useCreateNewAccount';
 import ZUIAlert from 'zui/components/ZUIAlert';

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { MarkEmailUnreadOutlined } from '@mui/icons-material';
 
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messagesIds';
+import messageIds from '../l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 import ResponsiveAccountSection from './ResponsiveAccountSection';
 

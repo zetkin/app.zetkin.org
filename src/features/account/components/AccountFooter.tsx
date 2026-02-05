@@ -4,7 +4,7 @@ import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIText from 'zui/components/ZUIText';
 import { useMessages } from 'core/i18n';
-import messageIds from '../l10n/messagesIds';
+import messageIds from '../l10n/messageIds';
 
 const AccountFooter = () => {
   const messages = useMessages(messageIds);

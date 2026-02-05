@@ -9,7 +9,7 @@ import ZUITextField from 'zui/components/ZUITextField';
 import { useSendPasswordResetToken } from '../hooks/useSendPasswordResetToken';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messagesIds';
+import messageIds from '../l10n/messageIds';
 import { PasswordResetStatus, PasswordSuccess } from '../types';
 import ResponsiveAccountSection from './ResponsiveAccountSection';
 

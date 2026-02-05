@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import NextLink from 'next/link';
 
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messagesIds';
+import messageIds from '../l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ResponsiveAccountSection from './ResponsiveAccountSection';
