@@ -345,7 +345,6 @@ feat:
       heading: Mobilization and outreach (none configured)
     noManager: No Project Manager
     shared:
-      cta: Go to project
       noActivities: All ongoing activities shared with your organization will appear here.
       noArchives: All expired activities that have been shared with your organization
         will appear here.
