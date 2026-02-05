@@ -71,6 +71,10 @@ export default makeMessages('feat.account', {
     descriptionUpdated: m(
       'Your password was updated. You can sign in using your new password.'
     ),
+    error: {
+      errorMessage: m('Something went wrong, please try again'),
+      title: m('Error'),
+    },
     title: m('Reset password'),
     unexpectedError: m(
       'There was an unexpected error when resetting the password, please try again.'

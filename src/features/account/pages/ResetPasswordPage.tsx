@@ -4,19 +4,34 @@ import { Box } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import ResetPasswordSection from '../components/ResetPasswordSection';
-import UpdatedPasswordSection from '../components/UpdatedPasswordSection';
+import ResetPasswordSection from 'features/account/components/ResetPasswordSection';
+import UpdatedPasswordSection from 'features/account/components/UpdatedPasswordSection';
+import ResponsiveAccountSection from 'features/account/components/ResponsiveAccountSection';
+import ZUIAlert from 'zui/components/ZUIAlert';
+import { useMessages } from 'core/i18n';
+import messagesIds from 'features/account/l10n/messagesIds';
 
 const ResetPasswordPage = () => {
+  const messages = useMessages(messagesIds);
   const searchParams = useSearchParams();
   const rawToken = searchParams?.get('token');
-  const userId = rawToken?.split('$')[0];
-  const token = rawToken?.includes('$') ? rawToken.split('$')[1] : rawToken;
+  const userId = rawToken?.includes('$') ? rawToken.split('$')[0] : '';
+  const token = rawToken?.split('$')?.[1] || rawToken;
   const [passwordResetWasSuccessful, setPasswordResetWasSuccessful] =
     useState(false);
 
   if (!token || !userId) {
-    return null;
+    return (
+      <ResponsiveAccountSection
+        renderContent={() => (
+          <ZUIAlert
+            severity="error"
+            title={messages.resetPassword.error.errorMessage()}
+          />
+        )}
+        title={messages.resetPassword.error.title()}
+      />
+    );
   }
 
   return (
