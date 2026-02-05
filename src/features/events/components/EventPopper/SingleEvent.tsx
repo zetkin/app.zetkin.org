@@ -9,7 +9,7 @@ import {
   FaceOutlined,
   MailOutline,
   People,
-  PlaceOutlined,
+  PlaceOutlined
 } from '@mui/icons-material';
 import { Box, Button, Link, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
@@ -40,6 +40,8 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import RemindAllButton from 'features/events/components/RemindAllButton';
+import useEventParticipantsMutations from 'features/events/hooks/useEventParticipantsMutations';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -51,7 +53,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const messages = useMessages(messageIds);
   const orgId = event.organization.id;
   const { participantsFuture, respondentsFuture } = useEventParticipants(
-    event.organization.id,
+    orgId,
     event.id
   );
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
@@ -78,6 +80,14 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const signedParticipants = respondents.filter(
     (r) => !participants.some((p) => p.id === r.id)
   );
+
+  const numParticipants = availableParticipants.length;
+  const needsNotifying =
+    numParticipants > 0 &&
+    numRemindedParticipants < numParticipants &&
+    event.contact?.id;
+
+  const { sendReminders } = useEventParticipantsMutations(orgId, event.id);
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
@@ -254,7 +264,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             numerator={event.num_participants_available}
           />
         </Box>
-        {availableParticipants.length > 0 && (
+        {numParticipants > 0 && (
           <ParticipantAvatars
             orgId={orgId}
             participants={availableParticipants}
@@ -271,10 +281,22 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
               size="xs"
             />
           </Box>
-          <Quota
-            denominator={availableParticipants.length ?? 0}
-            numerator={numRemindedParticipants}
-          />
+          <Box alignItems="center" display="flex" gap={1} justifyContent="end">
+            {needsNotifying && (
+              <RemindAllButton
+                bold={true}
+                contactPerson={event.contact}
+                dense={true}
+                eventId={event.id}
+                orgId={orgId}
+                sendReminders={sendReminders}
+              />
+            )}
+            <Quota
+              denominator={numParticipants ?? 0}
+              numerator={numRemindedParticipants}
+            />
+          </Box>
         </Box>
       </Box>
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>

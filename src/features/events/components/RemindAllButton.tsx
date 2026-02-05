@@ -1,6 +1,12 @@
 import { FC } from 'react';
 import { Check, PriorityHigh } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Tooltip } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
 import { useAppSelector } from 'core/hooks';
@@ -12,6 +18,8 @@ interface RemindAllButtonProps {
   eventId: number;
   orgId: number;
   sendReminders: (eventId: number) => void;
+  dense?: boolean;
+  bold?: boolean;
 }
 
 const RemindAllButton: FC<RemindAllButtonProps> = ({
@@ -19,6 +27,8 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
   eventId,
   orgId,
   sendReminders,
+  dense = false,
+  bold = false,
 }) => {
   const isRemindingParticipants = useAppSelector(
     (state) => state.events.remindingByEventId[eventId]
@@ -28,7 +38,6 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
     useEventParticipants(orgId, eventId);
 
   const messages = useMessages(messageIds);
-
   return (
     <Tooltip
       arrow
@@ -46,12 +55,15 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
             isRemindingParticipants ||
             numRemindedParticipants >= numAvailParticipants
           }
+          loading={isRemindingParticipants}
           onClick={() => {
             sendReminders(eventId);
           }}
           size="small"
           startIcon={
-            contactPerson ? (
+            dense ? (
+              ''
+            ) : contactPerson ? (
               isRemindingParticipants ? (
                 <CircularProgress size={20} />
               ) : (
@@ -62,11 +74,13 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
             )
           }
           sx={{
-            marginLeft: 2,
+            marginLeft: dense ? 0 : 2,
           }}
-          variant="outlined"
+          variant={dense ? 'text' : 'outlined'}
         >
-          <Msg id={messageIds.participantSummaryCard.remindButton} />
+          <Typography variant={bold ? 'labelSmSemiBold' : 'labelMdRegular'}>
+            <Msg id={messageIds.participantSummaryCard.remindButton} />
+          </Typography>
         </Button>
       </Box>
     </Tooltip>
