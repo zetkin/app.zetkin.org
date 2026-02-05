@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { PublicEventPage } from 'features/organizations/pages/PublicEventPage';
+import { PublicEventPage } from 'features/public/pages/PublicEventPage';
 
 type Props = {
   params: {
