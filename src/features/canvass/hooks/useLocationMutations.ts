@@ -50,12 +50,17 @@ export default function useLocationMutations(
       );
       dispatch(householdUpdated([locationId, household]));
     },
-    updateLocation: async (data: ZetkinLocationPatchBody) => {
+    updateLocation: async (
+      oldLocation: ZetkinLocation,
+      data: ZetkinLocationPatchBody
+    ) => {
       const location = await apiClient.patch<
         ZetkinLocation,
         ZetkinLocationPatchBody
       >(`/api2/orgs/${orgId}/locations/${locationId}`, data);
-      dispatch(locationUpdated(location));
+      // to preserve the stats
+      const combined = { ...oldLocation, ...location };
+      dispatch(locationUpdated(combined));
     },
   };
 }
