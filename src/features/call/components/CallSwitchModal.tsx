@@ -13,12 +13,12 @@ import ZUIDivider from 'zui/components/ZUIDivider';
 import useCallMutations from '../hooks/useCallMutations';
 import useUnfinishedCalls from '../hooks/useUnfinishedCalls';
 import useCurrentCall from '../hooks/useCurrentCall';
-import useFinishedCalls from '../hooks/useFinishedCalls';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { colors, labels } from './PreviousCallsInfo';
+import useFinishedCalls from '../hooks/useFinishedCalls';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
@@ -89,8 +89,8 @@ const FinishedCallsList: FC<{
   searchString: string;
 }> = ({ onCall, orgId, searchString }) => {
   const messages = useMessages(messageIds);
-  const finishedCalls = useFinishedCalls();
   const { switchToPreviousCall } = useCallMutations(orgId);
+  const { loading, finishedCalls } = useFinishedCalls();
 
   const fuse = new Fuse(finishedCalls, {
     keys: [
@@ -113,6 +113,7 @@ const FinishedCallsList: FC<{
 
   return (
     <>
+      {loading && <CircularProgress />}
       {filteredFinishedCalls.map((finishedCall) => (
         <Fragment key={finishedCall.id}>
           <Box
@@ -268,30 +269,14 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
             searchString={searchString}
           />
         </Suspense>
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-                width: '100%',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
-          <FinishedCallsList
-            onCall={(assignmentId) => {
-              onSwitch(assignmentId);
-              onClose();
-            }}
-            orgId={assignment.organization.id}
-            searchString={searchString}
-          />
-        </Suspense>
+        <FinishedCallsList
+          onCall={(assignmentId) => {
+            onSwitch(assignmentId);
+            onClose();
+          }}
+          orgId={assignment.organization.id}
+          searchString={searchString}
+        />
       </Box>
     </ZUIModal>
   );
