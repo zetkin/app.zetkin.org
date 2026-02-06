@@ -10,7 +10,7 @@ const Heartbeat: FC = () => {
   useEffect(() => {
     const heartbeatTimer = setInterval(async () => {
       await apiClient.get('/api/heartbeat');
-    }, 5000);
+    }, 60000);
 
     return () => clearInterval(heartbeatTimer);
   }, []);
