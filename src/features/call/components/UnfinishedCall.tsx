@@ -84,7 +84,7 @@ const UnfinishedCallListItem: FC<Props> = ({
       >
         <ZUIText variant="bodyMdRegular">{unfinishedCall.target.phone}</ZUIText>
         <ZUIText color="secondary" noWrap>
-          <ZUIRelativeTime datetime={unfinishedCall.update_time} />
+          <ZUIRelativeTime datetime={unfinishedCall.update_time} forcePast />
         </ZUIText>
       </Box>
     </Box>
