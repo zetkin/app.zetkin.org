@@ -26,8 +26,8 @@ export const ActivistPortalEventMap: FC<{
         geojsonFeatures.map((feature) => {
           if (feature.geometry.type === 'Point') {
             return [
-              feature.geometry.coordinates[1] as Longitude,
-              feature.geometry.coordinates[0] as Latitude,
+              feature.geometry.coordinates[0] as Longitude,
+              feature.geometry.coordinates[1] as Latitude,
             ];
           } else {
             return [0 as Longitude, 0 as Latitude];
@@ -93,8 +93,9 @@ export const ActivistPortalEventMap: FC<{
             location
           );
 
+          const highlight = features.length > 0;
           const icon = `marker-${location.count}-${
-            features.length > 0 ? 'highlight' : 'regular'
+            highlight ? 'highlight' : 'regular'
           }`;
 
           return {
@@ -103,6 +104,8 @@ export const ActivistPortalEventMap: FC<{
               type: 'Point',
             },
             properties: {
+              count: location.count,
+              highlight,
               icon,
               location,
             },
@@ -161,14 +164,75 @@ export const ActivistPortalEventMap: FC<{
         }}
         style={{ height: '100%', width: '100%' }}
       >
-        <Source data={locationsGeoJson} id="locations" type="geojson">
+        <Source
+          cluster={true}
+          clusterMaxZoom={14}
+          clusterProperties={{
+            allHighlighted: ['all', ['get', 'highlight']],
+            totalCount: ['+', ['get', 'count']],
+          }}
+          clusterRadius={50}
+          data={locationsGeoJson}
+          id="locations"
+          type="geojson"
+        >
           <Layer
+            filter={['!', ['has', 'point_count']]}
             id="locationMarkers"
             layout={{
               'icon-allow-overlap': true,
               'icon-image': ['get', 'icon'],
               'icon-offset': [0, -15],
               'symbol-sort-key': ['get', 'z'],
+            }}
+            source="locations"
+            type="symbol"
+          />
+          <Layer
+            filter={['has', 'point_count']}
+            id="clusters"
+            paint={{
+              'circle-color': [
+                'case',
+                ['get', 'allHighlighted'],
+                '#000000',
+                '#ffffff',
+              ],
+              'circle-radius': [
+                'step',
+                ['get', 'totalCount'],
+                20,
+                100,
+                30,
+                750,
+                40,
+              ],
+              'circle-stroke-color': [
+                'case',
+                ['get', 'allHighlighted'],
+                '#ffffff',
+                '#000000',
+              ],
+              'circle-stroke-width': 3,
+            }}
+            source="locations"
+            type="circle"
+          />
+          <Layer
+            filter={['has', 'point_count']}
+            id="cluster-count"
+            layout={{
+              'text-field': ['get', 'totalCount'],
+              'text-font': ['Noto Sans Regular'],
+              'text-size': 12,
+            }}
+            paint={{
+              'text-color': [
+                'case',
+                ['get', 'allHighlighted'],
+                '#ffffff',
+                '#000000',
+              ],
             }}
             source="locations"
             type="symbol"
