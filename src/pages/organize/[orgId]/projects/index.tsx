@@ -1,7 +1,14 @@
 import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  PropsWithChildren,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Box,
   Button,
@@ -32,6 +39,8 @@ import { Msg, useMessages } from 'core/i18n';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import useActivitiyOverview from 'features/campaigns/hooks/useActivityOverview';
+import ZUIFutures from 'zui/ZUIFutures';
+import { IFuture } from 'core/caching/futures';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -107,6 +116,20 @@ const LoadingPageIndicator = () => {
   );
 };
 
+function LoadingBoundary<G extends Record<string, unknown>>({
+  children,
+  futures,
+}: { futures: { [I in keyof G]: IFuture<G[I]> } } & PropsWithChildren) {
+  return (
+    <Suspense fallback={<LoadingPageIndicator />}>
+      <ZUIFutures futures={futures} loadingIndicator={<LoadingPageIndicator />}>
+        {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+        <>{children}</>
+      </ZUIFutures>
+    </Suspense>
+  );
+}
+
 const AllCampaignsSummaryPage: PageWithLayout = () => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -172,26 +195,14 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
       survey.org_access === 'suborgs' && survey.organization.id != orgId
   );
 
-  const futures = [campaignsFuture, surveysFuture, activityOverviewFuture];
-  if (futures.some((future) => future.isLoading)) {
-    return <LoadingPageIndicator />;
-  }
-  const futureError = futures.find((future) => future.error);
-  if (futureError) {
-    return (
-      <>
-        <Head>
-          <title>{messages.layout.allCampaigns()}</title>
-        </Head>
-        <Box>
-          <Typography>{`Error loading content. ${futureError.error}`}</Typography>
-        </Box>
-      </>
-    );
-  }
-
   return (
-    <Suspense fallback={<LoadingPageIndicator />}>
+    <LoadingBoundary
+      futures={{
+        activityOverviewFuture,
+        campaignsFuture,
+        surveysFuture,
+      }}
+    >
       <Head>
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
@@ -301,7 +312,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
           )}
         </Box>
       )}
-    </Suspense>
+    </LoadingBoundary>
   );
 };
 
