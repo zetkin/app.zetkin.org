@@ -56,7 +56,12 @@ const SurveyLinkDialog = ({
           </Box>
 
           <Box alignItems="center" display="flex" flexDirection="column" mb={2}>
-            <TextField aria-readonly value={email} variant="outlined" style={{width: '100%', marginTop: '5px'}} />
+            <TextField
+              aria-readonly
+              value={email}
+              variant="outlined"
+              style={{ width: '100%', marginTop: '5px' }}
+            />
             <Box alignItems="center" display="flex" ml={2} mr={2}>
               <ArrowDownward
                 color="secondary"
@@ -65,7 +70,12 @@ const SurveyLinkDialog = ({
                 }}
               />
             </Box>
-            <TextField aria-readonly value={person.email} variant="outlined" style={{width: '100%', marginTop: '5px'}} />
+            <TextField
+              aria-readonly
+              value={person.email}
+              variant="outlined"
+              style={{ width: '100%', marginTop: '5px' }}
+            />
           </Box>
           {messages.surveyDialogDifferentEmail.description()}
         </DialogContent>
