@@ -149,7 +149,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           onBack={() => back()}
           onClose={onClose}
           onSave={async (title, description) => {
-            await updateLocation(location, {
+            await updateLocation({
               description,
               title,
             });
