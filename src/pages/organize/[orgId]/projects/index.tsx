@@ -1,19 +1,29 @@
 import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  PropsWithChildren,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Box,
   Button,
   Grid,
   IconButton,
+  Skeleton,
   TextField,
   Typography,
   useTheme,
 } from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
 
-import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
+import ActivitiesOverview, {
+  ActivitiesOverviewSkeleton,
+} from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import CampaignCard from 'features/campaigns/components/CampaignCard';
@@ -28,6 +38,9 @@ import useSurveys from 'features/surveys/hooks/useSurveys';
 import { Msg, useMessages } from 'core/i18n';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { ZetkinCampaign } from 'utils/types/zetkin';
+import useActivitiyOverview from 'features/campaigns/hooks/useActivityOverview';
+import ZUIFutures from 'zui/ZUIFutures';
+import { IFuture } from 'core/caching/futures';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -56,11 +69,77 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
+const LoadingPageIndicator = () => {
+  const messages = useMessages(messageIds);
+
+  return (
+    <>
+      <Head>
+        <title>{messages.layout.allCampaigns()}</title>
+      </Head>
+      <ActivitiesOverviewSkeleton />
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingTop: 8,
+        }}
+      >
+        <Typography sx={{ maxWidth: '100%' }} variant="h4">
+          <Skeleton sx={{ maxWidth: '100%' }} width={'400px'} />
+        </Typography>
+      </Box>
+      <Box component="section" mt={4} sx={{ maxWidth: '100%' }}>
+        <Box
+          component="header"
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingBottom: 1,
+          }}
+        >
+          <Typography mb={2} sx={{ maxWidth: '100%' }} variant="h5">
+            <Skeleton sx={{ maxWidth: '100%' }} width={'100px'} />
+          </Typography>
+        </Box>
+        <Grid container spacing={2}>
+          {new Array(8).fill(0).map((campaign, index) => (
+            <Grid key={index} size={{ lg: 3, md: 4, xs: 12 }}>
+              <Skeleton sx={{ height: '117px' }} variant={'rounded'} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </>
+  );
+};
+
+function LoadingBoundary<G extends Record<string, unknown>>({
+  children,
+  futures,
+}: { futures: { [I in keyof G]: IFuture<G[I]> } } & PropsWithChildren) {
+  return (
+    <Suspense fallback={<LoadingPageIndicator />}>
+      <ZUIFutures futures={futures} loadingIndicator={<LoadingPageIndicator />}>
+        {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+        <>{children}</>
+      </ZUIFutures>
+    </Suspense>
+  );
+}
+
 const AllCampaignsSummaryPage: PageWithLayout = () => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const campaigns = useCampaigns(orgId).data || [];
+
+  const campaignsFuture = useCampaigns(orgId);
+  const surveysFuture = useSurveys(orgId);
+  const activityOverviewFuture = useActivitiyOverview(orgId);
+
+  const campaigns = campaignsFuture.data || [];
   campaigns.reverse();
   const [searchString, setSearchString] = useState('');
   const [showArchived, setShowArchived] = useState(false);
@@ -74,7 +153,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   }, [showArchived]);
 
   const onServer = useServerSide();
-  const surveys = useSurveys(orgId).data ?? [];
+  const surveys = surveysFuture.data ?? [];
 
   const search = () => {
     const fuse = new Fuse(campaigns, {
@@ -117,13 +196,17 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   );
 
   return (
-    <>
+    <LoadingBoundary
+      futures={{
+        activityOverviewFuture,
+        campaignsFuture,
+        surveysFuture,
+      }}
+    >
       <Head>
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
-      <Suspense>
-        <ActivitiesOverview orgId={orgId} />
-      </Suspense>
+      <ActivitiesOverview orgId={orgId} />
       <Box
         sx={{
           alignItems: 'center',
@@ -229,7 +312,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
           )}
         </Box>
       )}
-    </>
+    </LoadingBoundary>
   );
 };
 
