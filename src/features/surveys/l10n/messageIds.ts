@@ -245,6 +245,9 @@ export default makeMessages('feat.surveys', {
     success: m('Your survey has been duplicated.'),
     title: m('Survey Duplicated'),
   },
+  surveyEditor: {
+    required: m('Require the user to answer this question'),
+  },
   surveyForm: {
     accept: m('I accept the terms stated below'),
     error: m(
