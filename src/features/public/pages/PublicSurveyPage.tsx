@@ -221,6 +221,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                   </ZUIText>
                   <ZUILink
                     href={privacyUrl}
+                    openInNewTab={true}
                     text={messages.surveyForm.policy.text()}
                   />
                 </FormGroup>
