@@ -9,21 +9,13 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-// TODO: Remove comment once we upgrade to React 19
-// Type definitions for useFormState don't exist in React 18
-// because it's an experimental feature. That's why we silence
-// the Typescript warning.
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { useFormState } from 'react-dom';
+import { FC, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Msg, useMessages } from 'core/i18n';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import {
   ZetkinSurveyExtended,
-  ZetkinSurveyFormStatus,
   ZetkinSurveySignatureType,
   ZetkinUser,
 } from 'utils/types/zetkin';
@@ -35,6 +27,11 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
 import { submit } from 'features/surveys/actions/submit';
 import messageIds from 'features/surveys/l10n/messageIds';
+import {
+  SurveySubmissionData,
+  useSurveyFormState,
+} from 'features/public/hooks/useSurveyFormState';
+import useServerSide from 'core/useServerSide';
 
 type PublicSurveyPageProps = {
   survey: ZetkinSurveyExtended;
@@ -48,10 +45,38 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   const [signatureType, setSignatureType] = useState<
     ZetkinSurveySignatureType | undefined
   >(undefined);
-  const [status, action] = useFormState<ZetkinSurveyFormStatus>(
-    submit,
-    'editing'
+
+  const [initialSurveyState, setSurveyState] = useSurveyFormState(survey.id);
+  const surveyStateRef = useRef<SurveySubmissionData | null>(null);
+
+  const onChangeSurveyState = useCallback(
+    (name: string, newValue: string | string[]) => {
+      const updatedSurveyState = {
+        ...surveyStateRef.current,
+        ...{ [name]: newValue },
+      };
+      surveyStateRef.current = updatedSurveyState;
+      setSurveyState(updatedSurveyState);
+    },
+    [initialSurveyState, setSurveyState]
   );
+
+  const [status, setStatus] = useState(
+    'editing' as 'editing' | 'error' | 'submitted'
+  );
+
+  const trySubmitSurvey = useCallback(async (e: FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const formData = new FormData(e.currentTarget);
+      await submit(status, formData);
+      setSurveyState(null, true);
+      setStatus('submitted');
+    } catch (e) {
+      setStatus('error');
+    }
+  }, []);
 
   const handleRadioChange = useCallback(
     (value: ZetkinSurveySignatureType) => {
@@ -95,9 +120,9 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
         )}
         {showForm && (
           <form
-            action={action as unknown as string}
-            onSubmit={() => {
+            onSubmit={(e) => {
               setIsLoading(true);
+              trySubmitSurvey(e);
             }}
           >
             <input name="orgId" type="hidden" value={survey.organization.id} />
@@ -110,7 +135,11 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                 padding: '1rem',
               }}
             >
-              <SurveyForm survey={survey} />
+              <SurveyForm
+                initialValues={initialSurveyState}
+                onChange={onChangeSurveyState}
+                survey={survey}
+              />
               <FormControl fullWidth>
                 <RadioGroup
                   aria-labelledby="survey-signature"
