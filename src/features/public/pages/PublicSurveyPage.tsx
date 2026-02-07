@@ -16,6 +16,7 @@ import SurveyForm from 'features/surveys/components/SurveyForm';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import {
   ZetkinSurveyExtended,
+  ZetkinSurveyFormStatus,
   ZetkinSurveySignatureType,
   ZetkinUser,
 } from 'utils/types/zetkin';
@@ -60,22 +61,25 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     [initialSurveyState, setSurveyState]
   );
 
-  const [status, setStatus] = useState(
-    'editing' as 'editing' | 'error' | 'submitted'
-  );
+  const [status, setStatus] = useState<ZetkinSurveyFormStatus>('editing');
 
-  const trySubmitSurvey = useCallback(async (e: FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault();
-      e.stopPropagation();
-      const formData = new FormData(e.currentTarget);
-      await submit(status, formData);
-      setSurveyState(null, true);
-      setStatus('submitted');
-    } catch (e) {
-      setStatus('error');
-    }
-  }, []);
+  const trySubmitSurvey = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const formData = new FormData(e.currentTarget);
+        const newState = await submit(status, formData);
+        if (newState === 'submitted') {
+          setSurveyState(null, true);
+        }
+        setStatus(newState);
+      } catch (e) {
+        setStatus('error');
+      }
+    },
+    [setSurveyState, setStatus]
+  );
 
   const handleRadioChange = useCallback(
     (value: ZetkinSurveySignatureType) => {
