@@ -31,7 +31,6 @@ import {
   SurveySubmissionData,
   useSurveyFormState,
 } from 'features/public/hooks/useSurveyFormState';
-import useServerSide from 'core/useServerSide';
 
 type PublicSurveyPageProps = {
   survey: ZetkinSurveyExtended;
