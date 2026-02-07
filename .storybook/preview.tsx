@@ -8,14 +8,27 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
-import { FC, PropsWithChildren } from 'react';
-import { StoryFn } from '@storybook/react';
+import React, {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Preview, StoryFn } from '@storybook/react';
+import { DARK_MODE_EVENT_NAME, useDarkMode } from 'storybook-dark-mode';
+import { addons } from '@storybook/preview-api';
+import { themes, ThemeVars, ThemeVarsColors } from '@storybook/theming';
 
 import newTheme from '../src/zui/theme';
 import '../src/styles.css';
 import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
 import { LicenseInfo } from '@mui/x-license';
+import CssBaseline from '@mui/material/CssBaseline';
+import { DocsContainer, DocsContainerProps } from '@storybook/blocks';
+import { createTheme } from '@mui/material/styles';
+import { darkPalette } from 'zui/theme/palette';
 
 dayjs.extend(isoWeek);
 
@@ -62,12 +75,21 @@ class MockApiClient extends FetchApiClient {
   }
 }
 
-export const decorators = [
-  (Story: StoryFn) => (
-    <ThemeProvider theme={newTheme}>
-      <Story />
-    </ThemeProvider>
-  ),
+export const decorators: Preview['decorators'] = [
+  (Story: StoryFn) => {
+    const themeMode = useDarkMode();
+    const theme = useMemo(
+      () =>
+        themeMode ? createTheme(newTheme, { palette: darkPalette }) : newTheme,
+      [themeMode]
+    );
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Story />
+      </ThemeProvider>
+    );
+  },
   (Story: StoryFn) => {
     const store = createStore();
     const env = new Environment(new MockApiClient());
@@ -92,7 +114,59 @@ export const decorators = [
   ),
 ];
 
+const darkTheme = {
+  ...themes.dark,
+  appBg: 'black',
+  barBg: 'black',
+  appContentBg: 'black',
+  appPreviewBg: 'black',
+} as ThemeVars;
+
+const lightTheme = { ...themes.normal } as ThemeVars;
+
+const channel = addons.getChannel();
+
 export const parameters = {
+  backgrounds: {
+    disable: true,
+  },
+  darkMode: {
+    dark: darkTheme,
+    light: lightTheme,
+    current: 'light',
+    userHasExplicitlySetTheTheme: true,
+  },
+  docs: {
+    container: (props: PropsWithChildren<DocsContainerProps>) => {
+      const [isDark, setDark] = useState(() => {
+        const existing = localStorage.getItem('storybook-dark-mode');
+        if (!existing) {
+          return null;
+        }
+        return existing === 'true';
+      });
+
+      useEffect(() => {
+        channel.on(DARK_MODE_EVENT_NAME, setDark);
+        return () => channel.removeListener(DARK_MODE_EVENT_NAME, setDark);
+      }, [channel, setDark]);
+
+      useEffect(() => {
+        if (isDark === null) {
+          return;
+        }
+        localStorage.setItem('storybook-dark-mode', isDark + '');
+      }, [isDark]);
+
+      const theme = isDark ? darkTheme : lightTheme;
+
+      if (isDark === null) {
+        return null;
+      }
+
+      return <DocsContainer {...props} theme={theme} />;
+    },
+  },
   options: {
     storySort: {
       order: ['Components'],
