@@ -3,7 +3,7 @@ import { FC, ReactElement, useEffect, useState } from 'react';
 import { addons } from '@storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 
-import { darkPalette, palette as lightPalette } from 'zui/theme/palette';
+import lightPalette, { darkPalette } from 'zui/theme/palette';
 
 const channel = addons.getChannel();
 

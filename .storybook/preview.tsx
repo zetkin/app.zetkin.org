@@ -27,6 +27,8 @@ import createStore from '../src/core/store';
 import { LicenseInfo } from '@mui/x-license';
 import CssBaseline from '@mui/material/CssBaseline';
 import { DocsContainer, DocsContainerProps } from '@storybook/blocks';
+import { createTheme } from '@mui/material/styles';
+import { darkPalette } from 'zui/theme/palette';
 
 dayjs.extend(isoWeek);
 
@@ -77,7 +79,8 @@ export const decorators: Preview['decorators'] = [
   (Story: StoryFn) => {
     const themeMode = useDarkMode();
     const theme = useMemo(
-      () => newTheme(themeMode ? 'dark' : 'light'),
+      () =>
+        themeMode ? createTheme(newTheme, { palette: darkPalette }) : newTheme,
       [themeMode]
     );
     return (
