@@ -1,12 +1,12 @@
-import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
-import palette from './theme/palette';
+import { Meta, ColorItem } from '@storybook/blocks';
+import { ThemedColorPalette } from './theme/ThemedColorPalette';
 
 <Meta title="Colors" />
 
 # Palette
 
-<ColorPalette>
-  {['red', 'blue', 'green', 'purple', 'yellow', 'grey', 'basic'].map(
+<ThemedColorPalette>
+  {(palette) => ['red', 'blue', 'green', 'purple', 'yellow', 'grey', 'basic'].map(
     (colorName) => (
       <ColorItem
         title={colorName[0].toUpperCase() + colorName.slice(1)}
@@ -14,12 +14,12 @@ import palette from './theme/palette';
       />
     )
   )}
-</ColorPalette>
+</ThemedColorPalette>
 
 # Fun colors
 
-<ColorPalette>
-  {Object.entries(palette.swatches)
+<ThemedColorPalette>
+  {(palette) => Object.entries(palette.swatches)
     .filter((tuple) => 'dark' in tuple[1])
     .map(([colorName, colorGroup]) => (
       <ColorItem
@@ -31,115 +31,119 @@ import palette from './theme/palette';
         }}
       />
     ))}
-</ColorPalette>
+</ThemedColorPalette>
 
 # Contextualised Palette
 
-<ColorPalette>
-  <ColorItem
-    title="activityStatusColors"
-    colors={{
-      cancelled: palette.activityStatusColors.cancelled,
-      closed: palette.activityStatusColors.closed,
-      draft: palette.activityStatusColors.draft,
-      ended: palette.activityStatusColors.ended,
-      published: palette.activityStatusColors.published,
-      scheduled: palette.activityStatusColors.scheduled,
-    }}
-  />
-  <ColorItem
-    title="Background"
-    colors={{
-      default: palette.background.default,
-      paper: palette.background.paper,
-    }}
-  />
-  <ColorItem
-    title="Common"
-    colors={{
-      black: palette.common.black,
-      white: palette.common.white,
-    }}
-  />
-  <ColorItem
-    title="Data"
-    colors={{
-      [100]: palette.data[100],
-      [300]: palette.data[300],
-      [500]: palette.data[500],
-      [700]: palette.data[700],
-      [900]: palette.data[900],
-    }}
-  />
-  <ColorItem
-    title="Dividers"
-    colors={{
-      main: palette.dividers.main,
-      lighter: palette.dividers.lighter,
-    }}
-  />
-  <ColorItem
-    title="Error"
-    colors={{
-      contrastText: palette.error.contrastText,
-      dark: palette.error.dark,
-      light: palette.error.light,
-      main: palette.error.main,
-    }}
-  />
-  <ColorItem
-    title="Info"
-    colors={{
-      contrastText: palette.info.contrastText,
-      dark: palette.info.dark,
-      light: palette.info.light,
-      main: palette.info.main,
-    }}
-  />
-  <ColorItem
-    title="Primary"
-    colors={{
-      contrastText: palette.primary.contrastText,
-      focus: palette.primary.focus,
-      focusVisible: palette.primary.focusVisible,
-      hover: palette.primary.hover,
-      main: palette.primary.main,
-      outlinedBorder: palette.primary.outlinedBorder,
-      selected: palette.primary.selected,
-    }}
-  />
-  <ColorItem
-    title="Secondary"
-    colors={{
-      light: palette.secondary.light,
-      main: palette.secondary.main,
-    }}
-  />
-  <ColorItem
-    title="Success"
-    colors={{
-      contrastText: palette.success.contrastText,
-      dark: palette.success.dark,
-      light: palette.success.light,
-      main: palette.success.main,
-    }}
-  />
-  <ColorItem
-    title="Text"
-    colors={{
-      disabled: palette.text.disabled,
-      primary: palette.text.primary,
-      secondary: palette.text.secondary,
-    }}
-  />
-  <ColorItem
-    title="Warning"
-    colors={{
-      contrastText: palette.warning.contrastText,
-      dark: palette.warning.dark,
-      light: palette.warning.light,
-      main: palette.warning.main,
-    }}
-    con
-  />
-</ColorPalette>
+<ThemedColorPalette>
+  {(palette) => (
+    <>
+      <ColorItem
+        title="activityStatusColors"
+        colors={{
+          cancelled: palette.activityStatusColors.cancelled,
+          closed: palette.activityStatusColors.closed,
+          draft: palette.activityStatusColors.draft,
+          ended: palette.activityStatusColors.ended,
+          published: palette.activityStatusColors.published,
+          scheduled: palette.activityStatusColors.scheduled,
+        }}
+      />
+      <ColorItem
+        title="Background"
+        colors={{
+          default: palette.background.default,
+          paper: palette.background.paper,
+        }}
+      />
+      <ColorItem
+        title="Common"
+        colors={{
+          black: palette.common.black,
+          white: palette.common.white,
+        }}
+      />
+      <ColorItem
+        title="Data"
+        colors={{
+          [100]: palette.data[100],
+          [300]: palette.data[300],
+          [500]: palette.data[500],
+          [700]: palette.data[700],
+          [900]: palette.data[900],
+        }}
+      />
+      <ColorItem
+        title="Dividers"
+        colors={{
+          main: palette.dividers.main,
+          lighter: palette.dividers.lighter,
+        }}
+      />
+      <ColorItem
+        title="Error"
+        colors={{
+          contrastText: palette.error.contrastText,
+          dark: palette.error.dark,
+          light: palette.error.light,
+          main: palette.error.main,
+        }}
+      />
+      <ColorItem
+        title="Info"
+        colors={{
+          contrastText: palette.info.contrastText,
+          dark: palette.info.dark,
+          light: palette.info.light,
+          main: palette.info.main,
+        }}
+      />
+      <ColorItem
+        title="Primary"
+        colors={{
+          contrastText: palette.primary.contrastText,
+          focus: palette.primary.focus,
+          focusVisible: palette.primary.focusVisible,
+          hover: palette.primary.hover,
+          main: palette.primary.main,
+          outlinedBorder: palette.primary.outlinedBorder,
+          selected: palette.primary.selected,
+        }}
+      />
+      <ColorItem
+        title="Secondary"
+        colors={{
+          light: palette.secondary.light,
+          main: palette.secondary.main,
+        }}
+      />
+      <ColorItem
+        title="Success"
+        colors={{
+          contrastText: palette.success.contrastText,
+          dark: palette.success.dark,
+          light: palette.success.light,
+          main: palette.success.main,
+        }}
+      />
+      <ColorItem
+        title="Text"
+        colors={{
+          disabled: palette.text.disabled,
+          primary: palette.text.primary,
+          secondary: palette.text.secondary,
+        }}
+      />
+      <ColorItem
+        title="Warning"
+        colors={{
+          contrastText: palette.warning.contrastText,
+          dark: palette.warning.dark,
+          light: palette.warning.light,
+          main: palette.warning.main,
+        }}
+        con
+      />
+    </>
+  )}
+</ThemedColorPalette>
