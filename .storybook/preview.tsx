@@ -8,7 +8,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useMemo } from 'react';
 import { StoryFn } from '@storybook/react';
 
 import newTheme from '../src/zui/theme';
@@ -63,11 +63,14 @@ class MockApiClient extends FetchApiClient {
 }
 
 export const decorators = [
-  (Story: StoryFn) => (
-    <ThemeProvider theme={newTheme}>
-      <Story />
-    </ThemeProvider>
-  ),
+  (Story: StoryFn) => {
+    const theme = useMemo(() => newTheme('light'), []);
+    return (
+      <ThemeProvider theme={theme}>
+        <Story />
+      </ThemeProvider>
+    );
+  },
   (Story: StoryFn) => {
     const store = createStore();
     const env = new Environment(new MockApiClient());
