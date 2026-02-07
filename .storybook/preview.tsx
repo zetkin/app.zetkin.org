@@ -18,7 +18,7 @@ import React, {
 import { Preview, StoryFn } from '@storybook/react';
 import { DARK_MODE_EVENT_NAME, useDarkMode } from 'storybook-dark-mode';
 import { addons } from '@storybook/preview-api';
-import { themes, ThemeVarsColors } from '@storybook/theming';
+import { themes, ThemeVars, ThemeVarsColors } from '@storybook/theming';
 
 import newTheme from '../src/zui/theme';
 import '../src/styles.css';
@@ -26,7 +26,7 @@ import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
 import { LicenseInfo } from '@mui/x-license';
 import CssBaseline from '@mui/material/CssBaseline';
-import { DocsContainer } from '@storybook/blocks';
+import { DocsContainer, DocsContainerProps } from '@storybook/blocks';
 
 dayjs.extend(isoWeek);
 
@@ -117,9 +117,9 @@ const darkTheme = {
   barBg: 'black',
   appContentBg: 'black',
   appPreviewBg: 'black',
-} as ThemeVarsColors;
+} as ThemeVars;
 
-const lightTheme = { ...themes.normal } as ThemeVarsColors;
+const lightTheme = { ...themes.normal } as ThemeVars;
 
 const channel = addons.getChannel();
 
@@ -134,7 +134,7 @@ export const parameters = {
     userHasExplicitlySetTheTheme: true,
   },
   docs: {
-    container: (props) => {
+    container: (props: PropsWithChildren<DocsContainerProps>) => {
       const [isDark, setDark] = useState(() => {
         const existing = localStorage.getItem('storybook-dark-mode');
         if (!existing) {
