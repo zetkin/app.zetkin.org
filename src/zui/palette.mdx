@@ -6,31 +6,35 @@ import { ThemedColorPalette } from './theme/ThemedColorPalette';
 # Palette
 
 <ThemedColorPalette>
-  {(palette) => ['red', 'blue', 'green', 'purple', 'yellow', 'grey', 'basic'].map(
-    (colorName) => (
-      <ColorItem
-        title={colorName[0].toUpperCase() + colorName.slice(1)}
-        colors={palette.swatches[colorName]}
-      />
+  {(palette) =>
+    ['red', 'blue', 'green', 'purple', 'yellow', 'grey', 'basic'].map(
+      (colorName) => (
+        <ColorItem
+          title={colorName[0].toUpperCase() + colorName.slice(1)}
+          colors={palette.swatches[colorName]}
+        />
+      )
     )
-  )}
+  }
 </ThemedColorPalette>
 
 # Fun colors
 
 <ThemedColorPalette>
-  {(palette) => Object.entries(palette.swatches)
-    .filter((tuple) => 'dark' in tuple[1])
-    .map(([colorName, colorGroup]) => (
-      <ColorItem
-        title={colorName[0].toUpperCase() + colorName.slice(1)}
-        colors={{
-          dark: colorGroup.dark.color,
-          light: colorGroup.light.color,
-          medium: colorGroup.medium.color,
-        }}
-      />
-    ))}
+  {(palette) =>
+    Object.entries(palette.swatches)
+      .filter((tuple) => 'dark' in tuple[1])
+      .map(([colorName, colorGroup]) => (
+        <ColorItem
+          title={colorName[0].toUpperCase() + colorName.slice(1)}
+          colors={{
+            dark: colorGroup.dark.color,
+            light: colorGroup.light.color,
+            medium: colorGroup.medium.color,
+          }}
+        />
+      ))
+  }
 </ThemedColorPalette>
 
 # Contextualised Palette
