@@ -149,7 +149,6 @@ export const parameters = {
       }, [channel, setDark]);
 
       useEffect(() => {
-        console.log('updating', isDark);
         if (isDark === null) {
           return;
         }
