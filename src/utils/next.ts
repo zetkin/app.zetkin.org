@@ -52,6 +52,7 @@ interface ScaffoldOptions {
   // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
   authLevelRequired?: number;
   allowNonOfficials?: boolean;
+  allowUnverified?: boolean;
   featuresRequired?: string[];
   localeScope?: string[];
 }
@@ -118,18 +119,36 @@ export const scaffold =
       ctx.user = null;
     }
 
-    if (options?.authLevelRequired) {
-      let authLevel;
+    let apiSession: ZetkinSession | null = null;
+    let authLevel = 0;
 
-      try {
-        const apiSessionRes = await ctx.z.resource('session').get();
-        const apiSession = apiSessionRes.data.data as ZetkinSession;
-        authLevel = apiSession.level;
-      } catch (err) {
-        // Not logged in, so auth level is zero (anonymous)
-        authLevel = 0;
+    try {
+      const apiSessionRes = await ctx.z.resource('session').get();
+      apiSession = apiSessionRes.data.data as ZetkinSession;
+      authLevel = apiSession.level;
+    } catch (err) {
+      authLevel = 0;
+    }
+
+    if (ctx.user && apiSession && apiSession.factors) {
+      const hasEmailAuth = apiSession.factors.includes('email_password');
+      const hasUnverifiedEmail = !ctx.user.email_is_verified;
+      const unverifiedIsNotAllowed = !options?.allowUnverified;
+
+      const needsToVerifyEmail =
+        hasEmailAuth && hasUnverifiedEmail && unverifiedIsNotAllowed;
+
+      if (needsToVerifyEmail) {
+        return {
+          redirect: {
+            destination: '/verify',
+            permanent: false,
+          },
+        };
       }
+    }
 
+    if (options?.authLevelRequired) {
       if (authLevel < options.authLevelRequired) {
         // Store the URL that the user tried to access, so that they
         // can be redirected back here after logging in

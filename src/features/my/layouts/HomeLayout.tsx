@@ -1,5 +1,6 @@
 'use client';
 
+import { NoSsr } from '@mui/base';
 import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
@@ -50,63 +51,65 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
   const lastSegment = path?.split('/').pop() ?? 'home';
 
   return (
-    <Box
-      sx={{
-        marginX: 'auto',
-        maxWidth: 960,
-      }}
-    >
-      {isOfficial && user && <NewLandingPageAlert userId={user.id} />}
-      <ActivistPortalHeader
-        selectedTab={lastSegment}
-        tabs={[
-          {
-            href: `/my/home`,
-            label: messages.tabs.home(),
-            value: 'home',
-          },
-          {
-            href: `/my/feed`,
-            label: messages.tabs.feed(),
-            value: 'feed',
-          },
-          {
-            href: `/my/settings`,
-            label: messages.tabs.settings(),
-            value: 'settings',
-          },
-        ]}
-        topLeftComponent={
-          <NextLink
-            href={'/my'}
-            style={{
-              textDecoration: 'none',
-            }}
-          >
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '10px',
-                justifyContent: 'center',
+    <NoSsr>
+      <Box
+        sx={{
+          marginX: 'auto',
+          maxWidth: 960,
+        }}
+      >
+        {isOfficial && user && <NewLandingPageAlert userId={user.id} />}
+        <ActivistPortalHeader
+          selectedTab={lastSegment}
+          tabs={[
+            {
+              href: `/my/home`,
+              label: messages.tabs.home(),
+              value: 'home',
+            },
+            {
+              href: `/my/feed`,
+              label: messages.tabs.feed(),
+              value: 'feed',
+            },
+            {
+              href: `/my/settings`,
+              label: messages.tabs.settings(),
+              value: 'settings',
+            },
+          ]}
+          topLeftComponent={
+            <NextLink
+              href={'/my'}
+              style={{
+                textDecoration: 'none',
               }}
             >
-              <ZUIText
-                style={{
-                  marginBottom: '3px',
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '10px',
+                  justifyContent: 'center',
                 }}
-                variant="headingLg"
               >
-                {title || messages.title()}
-              </ZUIText>
-            </Box>
-          </NextLink>
-        }
-      />
-      <Box minHeight="90dvh">{children}</Box>
-      <ZUIPublicFooter />
-    </Box>
+                <ZUIText
+                  style={{
+                    marginBottom: '3px',
+                  }}
+                  variant="headingLg"
+                >
+                  {title || messages.title()}
+                </ZUIText>
+              </Box>
+            </NextLink>
+          }
+        />
+        <Box minHeight="90dvh">{children}</Box>
+        <ZUIPublicFooter />
+      </Box>
+    </NoSsr>
   );
 };
 
