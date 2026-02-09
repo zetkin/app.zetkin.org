@@ -25,19 +25,34 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
       <Box>
         <Box display="flex" flex={1} flexDirection="column" gap={1}>
           {call.target.phone && (
-            <Box alignItems="center" display="flex" gap={1}>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
+            >
               <ZUIIcon color="secondary" icon={Phone} size="small" />
               <ZUIText>{call.target.phone}</ZUIText>
             </Box>
           )}
           {call.target.alt_phone && (
-            <Box alignItems="center" display="flex" gap={1}>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
+            >
               <ZUIIcon color="secondary" icon={Phone} size="small" />
               <ZUIText>{call.target.alt_phone}</ZUIText>
             </Box>
           )}
           {call.target.email && (
-            <Box alignItems="center" display="flex" gap={1}>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
+            >
               <ZUIIcon color="secondary" icon={MailOutline} size="small" />
               <ZUIText>{call.target.email}</ZUIText>
             </Box>
@@ -50,9 +65,15 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
           gap={1}
           mt={isMobile ? 1 : 0}
           paddingTop={1}
+          sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
         >
           {(call.target.co_address || call.target.street_address) && (
-            <Box alignItems="center" display="block" mt={isMobile ? 1 : 0}>
+            <Box
+              alignItems="center"
+              display="block"
+              mt={isMobile ? 1 : 0}
+              sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
+            >
               <ZUIText display="flex">
                 <ZUIIcon color="secondary" icon={HomeOutlined} size="small" />
                 <ZUIText ml={1}>
@@ -84,44 +105,48 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
         <Msg id={messageIds.about.previousActivityHeader} />
       </ZUIText>
       {call.target.past_actions.num_actions > 0 && (
-        <ZUIText component="span" display="inline">
-          <Msg
-            id={messageIds.about.participation}
-            values={{
-              events: (
-                <ZUIText display="inline" variant="bodyMdSemiBold">
-                  <Msg
-                    id={messageIds.about.events}
-                    values={{
-                      numEvents: call.target.past_actions.num_actions,
-                    }}
-                  />
-                </ZUIText>
-              ),
-              name: call.target.first_name,
-              titleAndTime: (
-                <>
+        <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+          <ZUIText component="span" display="inline">
+            <Msg
+              id={messageIds.about.participation}
+              values={{
+                events: (
                   <ZUIText display="inline" variant="bodyMdSemiBold">
-                    {call.target.past_actions.last_action?.title}
-                  </ZUIText>{' '}
-                  <ZUIRelativeTime
-                    datetime={
-                      call.target.past_actions.last_action?.end_time || ''
-                    }
-                  />
-                </>
-              ),
-            }}
-          />
-        </ZUIText>
+                    <Msg
+                      id={messageIds.about.events}
+                      values={{
+                        numEvents: call.target.past_actions.num_actions,
+                      }}
+                    />
+                  </ZUIText>
+                ),
+                name: call.target.first_name,
+                titleAndTime: (
+                  <>
+                    <ZUIText display="inline" variant="bodyMdSemiBold">
+                      {call.target.past_actions.last_action?.title}
+                    </ZUIText>{' '}
+                    <ZUIRelativeTime
+                      datetime={
+                        call.target.past_actions.last_action?.end_time || ''
+                      }
+                    />
+                  </>
+                ),
+              }}
+            />
+          </ZUIText>
+        </Box>
       )}
       {call.target.past_actions.num_actions == 0 && (
-        <ZUIText color="secondary">
-          <Msg
-            id={messageIds.about.noParticipation}
-            values={{ name: call.target.first_name }}
-          />
-        </ZUIText>
+        <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+          <ZUIText color="secondary">
+            <Msg
+              id={messageIds.about.noParticipation}
+              values={{ name: call.target.first_name }}
+            />
+          </ZUIText>
+        </Box>
       )}
       <PreviousCallsInfo call={call} />
     </>
