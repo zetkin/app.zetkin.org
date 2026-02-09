@@ -345,7 +345,6 @@ feat:
       heading: Mobilization and outreach (none configured)
     noManager: No Project Manager
     shared:
-      cta: Go to project
       noActivities: All ongoing activities shared with your organization will appear here.
       noArchives: All expired activities that have been shared with your organization
         will appear here.
@@ -845,42 +844,6 @@ feat:
       label: Type
       options:
         image: Images
-  home:
-    activityList:
-      actions:
-        call: Start calling
-        signUp: Sign up
-        undoSignup: Undo signup
-      emptyListMessage: You are not signed up for any acitvities
-      eventStatus:
-        booked: You have been booked for this event and organizers are expecting you.
-          Contact {org} if you need to cancel.
-        needed: You are needed
-        signedUp: You have signed up
-      filters:
-        call: Call
-        canvass: Canvass
-        event: Events
-    allEventsList:
-      emptyList:
-        message: Could not find any events
-        removeFiltersButton: Clear filters
-      filterButtonLabels:
-        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {#
-          organizations}}'
-        thisWeek: This week
-        today: Today
-        tomorrow: Tomorrow
-    defaultTitles:
-      callAssignment: Untitled call assignment
-      event: Untitled event
-      noLocation: No physical location
-    footer:
-      privacyPolicy: Privacy policy
-    tabs:
-      feed: All events
-      home: My activities
-    title: My Zetkin
   import:
     actionButtons:
       back: Back
@@ -937,14 +900,12 @@ feat:
             o: Other
             unknown: Unknown
         ids:
-          externalID: External ID
           externalIDInfo: An external ID is an ID that comes from another system than
             Zetkin, such as a separate member database. It can be used to find
             and identify people in Zetkin.
           wrongIDFormatWarning: The values in this column does not look like Zetkin IDs. A
             Zetkin ID only contains numbers. If some cells are empty or contain
             f.x. letters, it can not be used as Zetkin IDs.
-          zetkinID: Zetkin ID
           zetkinIDInfo: A Zetkin ID is the ID of a person already in Zetkin. You would
             have it in a file if you exported data from Zetkin.
         orgs:
@@ -969,8 +930,6 @@ feat:
         finishedMappingDates: Mapping {numValues, plural, =1 {1 value} other {# values}}
           from {dateFormat, select, se {Swedish personnummer} no {Norwegian
           fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates
-        finishedMappingIds: Mapping {numValues, plural, =1 {1 value} other {# values}}
-          to {idField, select, id {Zetkin ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {1 person} other {#
           people}} mapped to {numMappedTo, plural, =1 {1 organization} other {#
           organizations}}'
@@ -1310,6 +1269,42 @@ feat:
         overview: Overview
         timeline: Timeline
       title: Journeys
+  home:
+    activityList:
+      actions:
+        call: Start calling
+        signUp: Sign up
+        undoSignup: Undo signup
+      emptyListMessage: You are not signed up for any acitvities
+      eventStatus:
+        booked: You have been booked for this event and organizers are expecting you.
+          Contact {org} if you need to cancel.
+        needed: You are needed
+        signedUp: You have signed up
+      filters:
+        call: Call
+        canvass: Canvass
+        event: Events
+    allEventsList:
+      emptyList:
+        message: Could not find any events
+        removeFiltersButton: Clear filters
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {#
+          organizations}}'
+        thisWeek: This week
+        today: Today
+        tomorrow: Tomorrow
+    defaultTitles:
+      callAssignment: Untitled call assignment
+      event: Untitled event
+      noLocation: No physical location
+    footer:
+      privacyPolicy: Privacy policy
+    tabs:
+      feed: All events
+      home: My activities
+    title: My Zetkin
   organizations:
     gen3:
       description: This is the new (generation 3) organizer web app. If you are used
@@ -1339,8 +1334,10 @@ feat:
         title: Recent organizations
   profile:
     delete:
+      button: Remove person
       confirm: Are you sure you want to delete {name} from {org}, and all related
         organizations? This is a permanent action.
+      title: Delete person
       warning: This cannot be undone!
     details:
       title: Details

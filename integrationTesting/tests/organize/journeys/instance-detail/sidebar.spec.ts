@@ -457,8 +457,6 @@ test.describe('Journey instance detail page sidebar', () => {
     ]);
 
     await page.locator(`text="${ActivistTag.title}"`).hover();
-    const deleteButtonTransition = page.waitForTimeout(500);
-    await deleteButtonTransition;
     await page.locator(`[data-testid=TagChip-deleteButton]`).first().click();
 
     // Expect to have made request to delete tag
