@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import ZUIButton from 'zui/components/ZUIButton';
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
+import { ZetkinSurvey } from 'utils/types/zetkin';
 import ZUILabel from 'zui/components/ZUILabel';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
@@ -13,7 +13,7 @@ import { surveySubmissionDeleted } from '../store';
 
 type SurveyCardProps = {
   onSelectSurvey: (surveyId: number) => void;
-  survey: ZetkinSurveyExtended;
+  survey: ZetkinSurvey;
 };
 
 const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
