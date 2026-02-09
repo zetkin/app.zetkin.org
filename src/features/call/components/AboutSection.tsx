@@ -1,12 +1,6 @@
 import { FC } from 'react';
 import { Box } from '@mui/system';
-import {
-  Fingerprint,
-  HomeOutlined,
-  MailOutline,
-  Phone,
-  Transgender,
-} from '@mui/icons-material';
+import { HomeOutlined, MailOutline, Phone } from '@mui/icons-material';
 
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
@@ -18,7 +12,6 @@ import ZUIIcon from 'zui/components/ZUIIcon';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import globalMessageIds from 'core/i18n/messageIds';
 
 type AboutSectionProps = {
   call: ZetkinCall | null;
@@ -49,12 +42,6 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
               <ZUIText>{call.target.email}</ZUIText>
             </Box>
           )}
-          {call.target.ext_id && (
-            <Box alignItems="center" display="flex" gap={1}>
-              <ZUIIcon color="secondary" icon={Fingerprint} size="small" />
-              <ZUIText>{call.target.ext_id}</ZUIText>
-            </Box>
-          )}
         </Box>
         <Box
           display={isMobile ? 'block' : 'flex'}
@@ -64,18 +51,6 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
           mt={isMobile ? 1 : 0}
           paddingTop={1}
         >
-          <Box alignItems="center" display="flex" gap={1}>
-            <ZUIIcon color="secondary" icon={Transgender} size="small" />
-            <ZUIText>
-              <Msg
-                id={
-                  call.target.gender
-                    ? globalMessageIds.genderOptions[call.target.gender]
-                    : globalMessageIds.genderOptions.unspecified
-                }
-              />
-            </ZUIText>
-          </Box>
           {(call.target.co_address || call.target.street_address) && (
             <Box alignItems="center" display="block" mt={isMobile ? 1 : 0}>
               <ZUIText display="flex">
