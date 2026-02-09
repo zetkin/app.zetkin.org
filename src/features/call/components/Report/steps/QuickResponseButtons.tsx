@@ -12,6 +12,7 @@ import useIsMobile from '../../../../../utils/hooks/useIsMobile';
 import ZUIButton from '../../../../../zui/components/ZUIButton';
 
 type QuickResponseProps = {
+  callLogIsOpen: boolean;
   options: Option[];
 };
 
@@ -20,14 +21,21 @@ export interface Option {
   label: string;
 }
 
-export const QuickResponseButtons: FC<QuickResponseProps> = ({ options }) => {
+export const QuickResponseButtons: FC<QuickResponseProps> = ({
+  callLogIsOpen,
+  options,
+}) => {
   const isMobile = useIsMobile();
 
   useEffect(() => {
     const optionCount = options.length;
     const onKeyDown = (ev: KeyboardEvent) => {
       const pressedNumber = Number.parseInt(ev.key);
-      if (!Number.isNaN(pressedNumber) && pressedNumber <= optionCount) {
+      if (
+        !callLogIsOpen &&
+        !Number.isNaN(pressedNumber) &&
+        pressedNumber <= optionCount
+      ) {
         options[pressedNumber - 1].onSelect();
       }
     };

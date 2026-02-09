@@ -91,6 +91,7 @@ const Call: FC = () => {
           <CallPanels
             assignment={assignment}
             call={call}
+            callLogIsOpen={callLogOpen}
             lane={lane}
             onAbandonUnfinishedCall={(callId) => abandonUnfinishedCall(callId)}
             onOpenCallLog={() => setCallLogOpen(true)}

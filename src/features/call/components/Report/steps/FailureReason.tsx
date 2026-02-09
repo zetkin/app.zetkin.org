@@ -7,12 +7,14 @@ import { Report } from 'features/call/types';
 import { Option, QuickResponseButtons } from './QuickResponseButtons';
 
 type Props = {
+  callLogIsOpen: boolean;
   nextStepIfWrongNumber: 'wrongNumber' | 'organizerLog';
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
 };
 
 const FailureReason: FC<Props> = ({
+  callLogIsOpen,
   nextStepIfWrongNumber,
   onReportUpdate,
   report,
@@ -65,7 +67,7 @@ const FailureReason: FC<Props> = ({
       state="active"
       title={<Msg id={messageIds.report.steps.failureReason.question.title} />}
     >
-      <QuickResponseButtons options={options} />
+      <QuickResponseButtons callLogIsOpen={callLogIsOpen} options={options} />
     </StepBase>
   );
 };

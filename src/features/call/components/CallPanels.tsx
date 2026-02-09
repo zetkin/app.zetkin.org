@@ -25,6 +25,7 @@ import ZUIDivider from 'zui/components/ZUIDivider';
 type Props = {
   assignment: ZetkinCallAssignment;
   call: UnfinishedCall | null;
+  callLogIsOpen: boolean;
   lane: LaneState;
   onAbandonUnfinishedCall: (callId: number) => void;
   onOpenCallLog: () => void;
@@ -36,6 +37,7 @@ type Props = {
 const CallPanels: FC<Props> = ({
   assignment,
   call,
+  callLogIsOpen,
   lane,
   onAbandonUnfinishedCall,
   onOpenCallLog,
@@ -242,7 +244,9 @@ const CallPanels: FC<Props> = ({
             }
             return (
               <ReportForm
+                callLogIsOpen={callLogIsOpen}
                 disableCallerNotes={assignment.disable_caller_notes}
+                laneStep={lane.step}
                 onReportChange={(updatedReport) => {
                   dispatch(reportUpdated(updatedReport));
                 }}

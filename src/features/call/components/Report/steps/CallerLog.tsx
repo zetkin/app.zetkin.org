@@ -11,11 +11,12 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { Report } from 'features/call/types';
 
 type Props = {
+  callLogIsOpen: boolean;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
 };
 
-const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
+const CallerLog: FC<Props> = ({ callLogIsOpen, onReportUpdate, report }) => {
   const isMobile = useIsMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const messages = useMessages(messageIds);
@@ -31,23 +32,25 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
         (keysPressed['Shift'] && ev.key == 'Enter') ||
         (keysPressed['Enter'] && ev.key == 'Shift');
 
-      if (ev.key == '1' && inputRef.current != document.activeElement) {
-        onReportUpdate({
-          ...report,
-          callerLog: message,
-          completed: true,
-          step: 'summary',
-        });
-      } else if (
-        shiftAndEnterPressedTogether &&
-        inputRef.current == document.activeElement
-      ) {
-        onReportUpdate({
-          ...report,
-          callerLog: message,
-          completed: true,
-          step: 'summary',
-        });
+      if (!callLogIsOpen) {
+        if (ev.key == '1' && inputRef.current != document.activeElement) {
+          onReportUpdate({
+            ...report,
+            callerLog: message,
+            completed: true,
+            step: 'summary',
+          });
+        } else if (
+          shiftAndEnterPressedTogether &&
+          inputRef.current == document.activeElement
+        ) {
+          onReportUpdate({
+            ...report,
+            callerLog: message,
+            completed: true,
+            step: 'summary',
+          });
+        }
       }
     };
 

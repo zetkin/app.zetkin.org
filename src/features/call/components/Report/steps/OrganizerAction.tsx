@@ -7,6 +7,7 @@ import { Report } from 'features/call/types';
 import { QuickResponseButtons } from './QuickResponseButtons';
 
 type Props = {
+  callLogIsOpen: boolean;
   disableCallerNotes: boolean;
   onReportFinished?: () => void;
   onReportUpdate: (updatedReport: Report) => void;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const OrganizerAction: FC<Props> = ({
+  callLogIsOpen,
   disableCallerNotes,
   onReportFinished,
   onReportUpdate,
@@ -29,6 +31,7 @@ const OrganizerAction: FC<Props> = ({
       }
     >
       <QuickResponseButtons
+        callLogIsOpen={callLogIsOpen}
         options={[
           {
             label: messages.report.steps.organizerAction.question.yesButton(),

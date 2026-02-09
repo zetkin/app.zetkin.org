@@ -11,6 +11,7 @@ import { Report, ZetkinCallTarget } from 'features/call/types';
 import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
+  callLogIsOpen: boolean;
   disableCallerNotes: boolean;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 const OrganizerLog: FC<Props> = ({
+  callLogIsOpen,
   onReportUpdate,
   report,
   target,
@@ -52,21 +54,23 @@ const OrganizerLog: FC<Props> = ({
         (keysPressed['Shift'] && ev.key == 'Enter') ||
         (keysPressed['Enter'] && ev.key == 'Shift');
 
-      if (ev.key == '1' && inputRef.current != document.activeElement) {
-        onReportUpdate({
-          ...report,
-          organizerLog: message,
-          step: 'callerLog',
-        });
-      } else if (
-        shiftAndEnterPressedTogether &&
-        inputRef.current == document.activeElement
-      ) {
-        onReportUpdate({
-          ...report,
-          organizerLog: message,
-          step: 'callerLog',
-        });
+      if (!callLogIsOpen) {
+        if (ev.key == '1' && inputRef.current != document.activeElement) {
+          onReportUpdate({
+            ...report,
+            organizerLog: message,
+            step: 'callerLog',
+          });
+        } else if (
+          shiftAndEnterPressedTogether &&
+          inputRef.current == document.activeElement
+        ) {
+          onReportUpdate({
+            ...report,
+            organizerLog: message,
+            step: 'callerLog',
+          });
+        }
       }
     };
 

@@ -14,12 +14,14 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { Report } from 'features/call/types';
 
 type Props = {
+  callLogIsOpen: boolean;
   onReportUpdate: (updatedReport: Report) => void;
   phoneAndAltPhone: { altPhone: string; phone: string };
   report: Report;
 };
 
 const WrongNumber: FC<Props> = ({
+  callLogIsOpen,
   onReportUpdate,
   report,
   phoneAndAltPhone,
@@ -29,27 +31,29 @@ const WrongNumber: FC<Props> = ({
 
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key == '1') {
-        onReportUpdate({
-          ...report,
-          organizerActionNeeded: true,
-          step: 'organizerLog',
-          wrongNumber: 'phone',
-        });
-      } else if (ev.key == '2') {
-        onReportUpdate({
-          ...report,
-          organizerActionNeeded: true,
-          step: 'organizerLog',
-          wrongNumber: 'altPhone',
-        });
-      } else if (ev.key == '3') {
-        onReportUpdate({
-          ...report,
-          organizerActionNeeded: true,
-          step: 'organizerLog',
-          wrongNumber: 'both',
-        });
+      if (!callLogIsOpen) {
+        if (ev.key == '1') {
+          onReportUpdate({
+            ...report,
+            organizerActionNeeded: true,
+            step: 'organizerLog',
+            wrongNumber: 'phone',
+          });
+        } else if (ev.key == '2') {
+          onReportUpdate({
+            ...report,
+            organizerActionNeeded: true,
+            step: 'organizerLog',
+            wrongNumber: 'altPhone',
+          });
+        } else if (ev.key == '3') {
+          onReportUpdate({
+            ...report,
+            organizerActionNeeded: true,
+            step: 'organizerLog',
+            wrongNumber: 'both',
+          });
+        }
       }
     };
 
