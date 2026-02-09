@@ -11,10 +11,10 @@ import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import useUser from 'core/hooks/useUser';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
-import useMemberships from 'features/organizations/hooks/useMemberships';
 import messageIds from 'features/my/l10n/messageIds';
 import ActivistPortalHeader from 'features/public/components/ActivistPortalHeader';
 import ZUIText from 'zui/components/ZUIText';
+import useUserMemberships from 'features/public/hooks/useUserMemberships';
 
 type Props = {
   children: ReactNode;
@@ -44,7 +44,7 @@ const NewLandingPageAlert: FC<{ userId: number }> = ({ userId }) => {
 const HomeLayout: FC<Props> = ({ children, title }) => {
   const messages = useMessages(messageIds);
   const user = useUser();
-  const memberships = useMemberships().data || [];
+  const memberships = useUserMemberships();
   const isOfficial = memberships.find((membership) => membership.role != null);
 
   const path = usePathname();
@@ -71,6 +71,11 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
               href: `/my/feed`,
               label: messages.tabs.feed(),
               value: 'feed',
+            },
+            {
+              href: '/my/orgs',
+              label: messages.tabs.orgs(),
+              value: 'orgs',
             },
             {
               href: `/my/settings`,
