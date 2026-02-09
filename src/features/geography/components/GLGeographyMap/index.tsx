@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { Pentagon } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
-import { FC, startTransition, useMemo, useState } from 'react';
+import { FC, startTransition, useEffect, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Fuse from 'fuse.js';
@@ -48,6 +48,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
   const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({
     areas,
+    isDrawing: () => drawing,
     map,
     onSelectFromMap: () => {
       startTransition(() => {
@@ -110,6 +111,20 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
       });
     }
   };
+
+  const handleEscapeKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      cancelDrawing();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscapeKeydown);
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKeydown);
+    };
+  });
 
   return (
     <Box
@@ -275,6 +290,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
         )}
         <Map
           ref={(map) => setMap(map?.getMap() ?? null)}
+          cursor={drawingPoints ? 'crosshair' : undefined}
           initialViewState={{ bounds }}
           mapStyle={env.vars.MAPLIBRE_STYLE}
           RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"

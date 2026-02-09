@@ -371,7 +371,6 @@ feat:
       heading: Mobilisering en outreach (niet geconfigureerd)
     noManager: Geen project manager
     shared:
-      cta: Ga naar project
       noActivities: Alle lopende activiteiten die met je organisatie worden gedeeld,
         worden hier weergegeven.
       noArchives: Alle verlopen activiteiten die met je organisatie worden gedeeld,
@@ -868,42 +867,6 @@ feat:
       label: Type
       options:
         image: Afbeeldingen
-  home:
-    activityList:
-      actions:
-        call: Start met bellen
-        signUp: Aanmelden
-        undoSignup: Aanmelden annuleren
-      emptyListMessage: Je hebt geen activiteiten
-      eventStatus:
-        booked: Je bent geboekt voor deze gebeurtenis en de organizers verwachten je.
-          Neem contact op met {org} als je moet annuleren.
-        needed: Je bent nodig
-        signedUp: Je bent aangemeld
-      filters:
-        call: Call
-        canvass: Canvass
-        event: Evenement
-    allEventsList:
-      emptyList:
-        message: Kan geen gebeurtenissen vinden
-        removeFiltersButton: Reset filters
-      filterButtonLabels:
-        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {#
-          organizations}}'
-        thisWeek: Deze week
-        today: vandaag
-        tomorrow: morgen
-    defaultTitles:
-      callAssignment: Belopdracht zonder titel
-      event: Evenement zonder titel
-      noLocation: Geen fysieke locatie
-    footer:
-      privacyPolicy: Privacy policy
-    tabs:
-      feed: Alle gebeurtenissen
-      home: Mijn activiteiten
-    title: Mijn Zetkin
   import:
     actionButtons:
       back: Terug
@@ -947,12 +910,10 @@ feat:
           numberOfRows: '{numRows, plural, =1 {1 row} other {# rows}}'
           value: Waarde
         ids:
-          externalID: Extern ID
           externalIDInfo: Een extern ID is een ID van een ander systeem. Je kunt het
             gebruiken om personen te vinden in Zetkin.
           wrongIDFormatWarning: De waarde in deze kolom zijn geen of voldoen niet aan de
             standaard voor Zetkin ID's (cijfers).
-          zetkinID: Zetkin ID
           zetkinIDInfo: Zetkin ID is de ID van een persoon in Zetkin. Zit in het bestand
             als je een export hebt gemaakt.
         orgs:
@@ -977,8 +938,6 @@ feat:
         finishedMappingDates: Mapping {numValues, plural, =1 {1 value} other {# values}}
           from {dateFormat, select, se {Swedish personnummer} no {Norwegian
           fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates
-        finishedMappingIds: Mapping {numValues, plural, =1 {1 value} other {# values}}
-          to {idField, select, id {Zetkin ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {1 person} other {#
           people}} mapped to {numMappedTo, plural, =1 {1 organization} other {#
           organizations}}'
@@ -1308,6 +1267,42 @@ feat:
         overview: Overzicht
         timeline: Tijdlijn
       title: journeys
+  home:
+    activityList:
+      actions:
+        call: Start met bellen
+        signUp: Aanmelden
+        undoSignup: Aanmelden annuleren
+      emptyListMessage: Je hebt geen activiteiten
+      eventStatus:
+        booked: Je bent geboekt voor deze gebeurtenis en de organizers verwachten je.
+          Neem contact op met {org} als je moet annuleren.
+        needed: Je bent nodig
+        signedUp: Je bent aangemeld
+      filters:
+        call: Call
+        canvass: Canvass
+        event: Evenement
+    allEventsList:
+      emptyList:
+        message: Kan geen gebeurtenissen vinden
+        removeFiltersButton: Reset filters
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {#
+          organizations}}'
+        thisWeek: Deze week
+        today: vandaag
+        tomorrow: morgen
+    defaultTitles:
+      callAssignment: Belopdracht zonder titel
+      event: Evenement zonder titel
+      noLocation: Geen fysieke locatie
+    footer:
+      privacyPolicy: Privacy policy
+    tabs:
+      feed: Alle gebeurtenissen
+      home: Mijn activiteiten
+    title: Mijn Zetkin
   organizations:
     gen3:
       description: Dit is de nieuwe (generatie 3) organizer-webapp. Als je gewend bent
@@ -1337,8 +1332,10 @@ feat:
         title: Recente organisaties
   profile:
     delete:
+      button: Verwijder persoon
       confirm: Weet u zeker dat u {name} uit {org} en alle gerelateerde organisaties
         wilt verwijderen? Dit is een permanente actie.
+      title: Verwijder account
       warning: Dit kan niet ongedaan worden gemaakt!
     details:
       title: Details
