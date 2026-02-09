@@ -113,7 +113,6 @@ const FinishedCallsList: FC<{
 
   return (
     <>
-      {loading && <CircularProgress />}
       {filteredFinishedCalls.map((finishedCall) => (
         <Fragment key={finishedCall.id}>
           <Box
@@ -201,6 +200,18 @@ const FinishedCallsList: FC<{
           <ZUIDivider />
         </Fragment>
       ))}
+      {loading && (
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            height: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
     </>
   );
 };
