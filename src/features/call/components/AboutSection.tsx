@@ -25,36 +25,27 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
       <Box>
         <Box display="flex" flex={1} flexDirection="column" gap={1}>
           {call.target.phone && (
-            <Box
-              alignItems="center"
-              display="flex"
-              gap={1}
-              sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
-            >
+            <Box alignItems="center" display="flex" gap={1}>
               <ZUIIcon color="secondary" icon={Phone} size="small" />
-              <ZUIText>{call.target.phone}</ZUIText>
+              <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+                <ZUIText>{call.target.phone}</ZUIText>
+              </Box>
             </Box>
           )}
           {call.target.alt_phone && (
-            <Box
-              alignItems="center"
-              display="flex"
-              gap={1}
-              sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
-            >
+            <Box alignItems="center" display="flex" gap={1}>
               <ZUIIcon color="secondary" icon={Phone} size="small" />
-              <ZUIText>{call.target.alt_phone}</ZUIText>
+              <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+                <ZUIText>{call.target.alt_phone}</ZUIText>
+              </Box>
             </Box>
           )}
           {call.target.email && (
-            <Box
-              alignItems="center"
-              display="flex"
-              gap={1}
-              sx={{ minWidth: 0, overflowWrap: 'anywhere' }}
-            >
+            <Box alignItems="center" display="flex" gap={1}>
               <ZUIIcon color="secondary" icon={MailOutline} size="small" />
-              <ZUIText>{call.target.email}</ZUIText>
+              <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+                <ZUIText>{call.target.email}</ZUIText>
+              </Box>
             </Box>
           )}
         </Box>
