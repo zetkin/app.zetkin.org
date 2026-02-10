@@ -342,7 +342,6 @@ export const reportSteps: ReportStep[] = [
               callerLog: '',
               completed: false,
               organizerActionNeeded: false,
-              organizerLog: '',
               step: 'callBack',
               wrongNumber: null,
             })
