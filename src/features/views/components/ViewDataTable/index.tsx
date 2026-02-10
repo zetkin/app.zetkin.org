@@ -85,11 +85,14 @@ declare module '@mui/x-data-grid-pro' {
   }
 
   interface ToolbarPropsOverrides {
+    disableBulkActions?: boolean;
     disableConfigure?: boolean;
     disabled: boolean;
     gridColumns: GridColDef[];
+    isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
+    onRowsDelete: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -142,6 +145,12 @@ const style = {
 
 type Row = Record<string, unknown> & {
   id: number;
+};
+
+const slots = {
+  columnMenu: ViewDataTableColumnMenu,
+  footer: ViewDataTableFooter,
+  toolbar: ViewDataTableToolbar,
 };
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
@@ -513,6 +522,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           }, 200);
         },
       },
+      toolbar: {
+        disableBulkActions: selectionModel?.mode !== 'selectWithBulkActions',
+        disableConfigure,
+        disabled: waiting,
+        gridColumns,
+        isLoading,
+        isSmartSearch: !!view.content_query,
+        onColumnCreate,
+        onRowsDelete,
+        onRowsRemove,
+        onSortModelChange: modelGridProps.onSortModelChange,
+        onViewCreate,
+        selection,
+        setQuickSearch,
+        sortModel: modelGridProps.sortModel,
+      },
     }),
     [
       onColumnConfigure,
@@ -534,6 +559,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
+      onRowsDelete,
       setQuickSearch,
       modelGridProps.sortModel,
     ]
@@ -695,30 +721,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         processRowUpdate={processRowUpdate}
         rows={gridRows}
         slotProps={componentsProps}
-        slots={{
-          columnMenu: ViewDataTableColumnMenu,
-          footer: ViewDataTableFooter,
-          toolbar: (props) => {
-            const innerProps = {
-              disableBulkActions:
-                selectionModel?.mode !== 'selectWithBulkActions',
-              disableConfigure,
-              disabled: waiting,
-              gridColumns,
-              isLoading,
-              isSmartSearch: !!view.content_query,
-              onColumnCreate,
-              onRowsDelete,
-              onRowsRemove,
-              onSortModelChange: modelGridProps.onSortModelChange,
-              onViewCreate,
-              selection,
-              setQuickSearch,
-              sortModel: modelGridProps.sortModel,
-            };
-            return <ViewDataTableToolbar {...props} {...innerProps} />;
-          },
-        }}
+        slots={slots}
         style={style}
         sx={[
           mainSx,

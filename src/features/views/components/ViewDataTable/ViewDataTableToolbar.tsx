@@ -7,6 +7,7 @@ import {
 } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
 import {
+  DataGridProProps,
   GridColDef,
   GridSortModel,
   GridToolbarFilterButton,
@@ -32,7 +33,7 @@ export interface ViewDataTableToolbarProps {
   onViewCreate: () => void;
   selection: number[];
   setQuickSearch: (quickSearch: string) => void;
-  onSortModelChange: (sortModel: GridSortModel) => void;
+  onSortModelChange: DataGridProProps['onSortModelChange'];
   sortModel: GridSortModel;
 }
 
@@ -139,7 +140,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           />
           <ZUIDataTableSorting
             gridColumns={gridColumns}
-            onSortModelChange={(model) => onSortModelChange?.(model)}
+            onSortModelChange={onSortModelChange}
             sortModel={sortModel}
           />
           {!disableConfigure && (
