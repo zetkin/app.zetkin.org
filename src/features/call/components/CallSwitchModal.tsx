@@ -111,13 +111,18 @@ const FinishedCallsList: FC<{
     threshold: 0.4,
   });
 
-  const filteredFinishedCalls = useMemo(
-    () =>
-      searchString
-        ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
-        : finishedCalls,
-    [finishedCalls, searchString]
-  );
+  const filteredFinishedCalls = useMemo(() => {
+    const calls = searchString
+      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
+      : finishedCalls;
+
+    return calls.toSorted((call1, call2) => {
+      const call1AllocationTime = new Date(call1.allocation_time);
+      const call2AllocationTime = new Date(call2.allocation_time);
+
+      return call2AllocationTime.getTime() - call1AllocationTime.getTime();
+    });
+  }, [finishedCalls, searchString]);
 
   return (
     <>
