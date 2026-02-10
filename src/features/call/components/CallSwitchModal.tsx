@@ -1,4 +1,12 @@
-import React, { FC, Fragment, Suspense, useMemo, useState } from 'react';
+import React, {
+  FC,
+  Fragment,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import Fuse from 'fuse.js';
@@ -225,6 +233,17 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
 
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (modalRef.current) {
+      const addListener = (ev: KeyboardEvent) => ev.stopPropagation();
+      modalRef.current.addEventListener('keydown', addListener);
+
+      return () =>
+        modalRef.current?.removeEventListener('keydown', addListener);
+    }
+  }, [modalRef.current]);
+
   return (
     <ZUIModal
       onClose={() => {
@@ -236,6 +255,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
       title={messages.callLog.title()}
     >
       <Box
+        ref={modalRef}
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -250,7 +270,8 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
         <ZUITextField
           fullWidth
           label={messages.callLog.searchLabel()}
-          onChange={(newValue: string) => {
+          onChange={(newValue) => {
+            //event.stopPropagation();
             setSearchString(newValue);
           }}
           startIcon={Search}
