@@ -7,18 +7,12 @@ import { Report } from 'features/call/types';
 import { QuickResponseButtons } from './QuickResponseButtons';
 
 type Props = {
-  callLogIsOpen: boolean;
   firstName: string;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
 };
 
-const CouldTalk: FC<Props> = ({
-  callLogIsOpen,
-  firstName,
-  onReportUpdate,
-  report,
-}) => {
+const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
 
   return (
@@ -32,7 +26,6 @@ const CouldTalk: FC<Props> = ({
       }
     >
       <QuickResponseButtons
-        callLogIsOpen={callLogIsOpen}
         options={[
           {
             label: messages.report.steps.couldTalk.question.yesButton(),

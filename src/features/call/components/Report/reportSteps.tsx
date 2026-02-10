@@ -27,8 +27,7 @@ type ReportStep = {
     report: Report,
     onReportUpdate: (updatedReport: Report) => void,
     target: ZetkinCallTarget,
-    disableCallerNotes: boolean,
-    callLogIsOpen: boolean
+    disableCallerNotes: boolean
   ) => ReactNode;
   renderSummary: (
     report: Report,
@@ -47,16 +46,9 @@ export const reportSteps: ReportStep[] = [
       }
     },
     name: 'successOrFailure',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => (
+    renderQuestion: (report, onReportUpdate, target) => (
       <SuccessOrFailure
         key="successOrFailure"
-        callLogIsOpen={callLogIsOpen}
         firstName={target.first_name}
         onReportUpdate={onReportUpdate}
         report={report}
@@ -112,16 +104,9 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'couldTalk' ? 'question' : 'summary';
     },
     name: 'couldTalk',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => (
+    renderQuestion: (report, onReportUpdate, target) => (
       <CouldTalk
         key="couldTalk"
-        callLogIsOpen={callLogIsOpen}
         firstName={target.first_name}
         onReportUpdate={onReportUpdate}
         report={report}
@@ -176,20 +161,13 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'failureReason' ? 'question' : 'summary';
     },
     name: 'failureReason',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => {
+    renderQuestion: (report, onReportUpdate, target) => {
       const phone = target?.phone;
       const altPhone = target?.alt_phone;
 
       return (
         <FailureReason
           key="failureReason"
-          callLogIsOpen={callLogIsOpen}
           nextStepIfWrongNumber={
             phone && altPhone ? 'wrongNumber' : 'organizerLog'
           }
@@ -246,16 +224,9 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'leftMessage' ? 'question' : 'summary';
     },
     name: 'leftMessage',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => (
+    renderQuestion: (report, onReportUpdate) => (
       <LeftMessage
         key="leftMessage"
-        callLogIsOpen={callLogIsOpen}
         onReportUpdate={onReportUpdate}
         report={report}
       />
@@ -312,16 +283,9 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'callBack' ? 'question' : 'summary';
     },
     name: 'callBack',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      targe,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => (
+    renderQuestion: (report, onReportUpdate) => (
       <CallBack
         key="callBack"
-        callLogIsOpen={callLogIsOpen}
         onReportUpdate={onReportUpdate}
         report={report}
       />
@@ -390,18 +354,11 @@ export const reportSteps: ReportStep[] = [
       }
     },
     name: 'wrongNumber',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => {
+    renderQuestion: (report, onReportUpdate, target) => {
       if (target && target.alt_phone && target.phone) {
         return (
           <WrongNumber
             key="wrongNumber"
-            callLogIsOpen={callLogIsOpen}
             onReportUpdate={onReportUpdate}
             phoneAndAltPhone={{
               altPhone: target.alt_phone,
@@ -463,16 +420,9 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'organizerAction' ? 'question' : 'summary';
     },
     name: 'organizerAction',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => (
+    renderQuestion: (report, onReportUpdate, target, disableCallerNotes) => (
       <OrganizerAction
         key="organizerAction"
-        callLogIsOpen={callLogIsOpen}
         disableCallerNotes={disableCallerNotes}
         onReportUpdate={onReportUpdate}
         report={report}
@@ -524,17 +474,10 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'organizerLog' ? 'question' : 'summary';
     },
     name: 'organizerLog',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => {
+    renderQuestion: (report, onReportUpdate, target, disableCallerNotes) => {
       return (
         <OrganizerLog
           key="organizerLog"
-          callLogIsOpen={callLogIsOpen}
           disableCallerNotes={disableCallerNotes}
           onReportUpdate={onReportUpdate}
           report={report}
@@ -585,16 +528,9 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'callerLog' ? 'question' : 'summary';
     },
     name: 'callerLog',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      disableCallerNotes,
-      callLogIsOpen
-    ) => (
+    renderQuestion: (report, onReportUpdate) => (
       <CallerLog
         key="callerLog"
-        callLogIsOpen={callLogIsOpen}
         onReportUpdate={onReportUpdate}
         report={report}
       />

@@ -21,12 +21,11 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { Report } from 'features/call/types';
 
 type Props = {
-  callLogIsOpen: boolean;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
 };
 
-const CallBack: FC<Props> = ({ callLogIsOpen, onReportUpdate, report }) => {
+const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const timeInputRef = useRef<HTMLInputElement | null>(null);
@@ -145,21 +144,19 @@ const CallBack: FC<Props> = ({ callLogIsOpen, onReportUpdate, report }) => {
 
       const focusIsOutsideInputs = !dateInputIsActive && !timeInputIsActive;
 
-      if (!callLogIsOpen) {
-        if (focusIsOutsideInputs) {
-          if (ev.key == '1') {
-            onReportUpdate({
-              ...report,
-              callBackAfter,
-              step: 'organizerAction',
-            });
-          } else if (ev.key == '2') {
-            callBackLaterToday();
-          } else if (ev.key == '3') {
-            callBackTomorrow();
-          } else if (ev.key == '4') {
-            callBackNextWeek();
-          }
+      if (focusIsOutsideInputs) {
+        if (ev.key == '1') {
+          onReportUpdate({
+            ...report,
+            callBackAfter,
+            step: 'organizerAction',
+          });
+        } else if (ev.key == '2') {
+          callBackLaterToday();
+        } else if (ev.key == '3') {
+          callBackTomorrow();
+        } else if (ev.key == '4') {
+          callBackNextWeek();
         }
       }
     };
