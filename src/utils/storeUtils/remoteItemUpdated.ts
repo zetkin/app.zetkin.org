@@ -12,10 +12,11 @@ import { findOrAddItem } from './findOrAddItem';
  */
 export function remoteItemUpdated<DataType extends RemoteData>(
   list: RemoteList<DataType>,
-  updatedData: DataType
+  updatedData: DataType,
+  updateStategy?: (itemToUpdate: RemoteItem<DataType>) => DataType
 ): RemoteItem<DataType> {
   const item = findOrAddItem(list, updatedData.id);
-  item.data = updatedData;
+  item.data = updateStategy ? updateStategy(item) : updatedData;
   item.mutating = [];
   item.isLoading = false;
   item.isStale = false;
