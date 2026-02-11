@@ -794,6 +794,7 @@ feat:
         viewInListButton: In Liste anzeigen
         viewInMapButton: Auf Karte anzeigen
     shared:
+      cta: Gehe zum Projekt
       noActivities: Aktuelle Aktivitäten, die mit deiner Organisation geteilt wurden,
         erscheinen hier.
       noArchives: Abgelaufene Aktivitäten, die mit deiner Organisation geteilt wurden,
