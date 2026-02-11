@@ -85,7 +85,14 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
           <ZUIText variant="headingMd">
             <Msg id={messageIds.about.tagsHeader} />
           </ZUIText>
-          <Box alignItems="center" display="flex" gap={1}>
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 1,
+            }}
+          >
             {call.target.tags.map((tag) => {
               return <ZUITagChip key={tag.id} tag={tag} />;
             })}
