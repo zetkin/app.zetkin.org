@@ -118,16 +118,16 @@ export default makeMessages('feat.call', {
   },
   header: {
     primaryButton: {
-      [0]: m('Call'),
-      [1]: m('Finish & report'),
-      [2]: m('Send report'),
-      [3]: m('Next call'),
+      call: m('Finish & report'),
+      report: m('Send report'),
+      start: m('Call'),
+      summary: m('Next call'),
     },
     secondaryButton: {
-      [0]: m('Quit'),
-      [1]: m('Skip'),
-      [2]: m('Skip'),
-      [3]: m('Take a break'),
+      call: m('Skip'),
+      report: m('Skip'),
+      start: m('Quit'),
+      summary: m('Take a break'),
     },
   },
   instructions: {

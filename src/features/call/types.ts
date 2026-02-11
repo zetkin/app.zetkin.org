@@ -138,10 +138,10 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
 }
 
 export enum LaneStep {
-  START = 0,
-  CALL = 1,
-  REPORT = 2,
-  SUMMARY = 3,
+  START = 'start',
+  CALL = 'call',
+  REPORT = 'report',
+  SUMMARY = 'summary',
 }
 
 export type SurveySubmissionData = Record<string, string | string[]>;
