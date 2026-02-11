@@ -52,9 +52,6 @@ export const colors: Record<number, 'success' | 'warning' | 'error'> = {
 
 const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
   const isMobile = useIsMobile();
-  const fullName = call.caller.name;
-  const [callerFirstName, ...rest] = fullName.split(' ');
-  const callerLastName = rest.join(' ');
   const callLog = call.target.call_log || [];
 
   const hasPreviousCalls = callLog.length > 0;
@@ -71,6 +68,10 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
       )}
       {hasPreviousCalls &&
         callLog.map((previousCall, index) => {
+          const fullName = previousCall.caller.name;
+          const [callerFirstName, ...rest] = fullName.split(' ');
+          const callerLastName = rest.join(' ');
+
           return (
             <Box key={previousCall.id}>
               <Box mb={1}>
