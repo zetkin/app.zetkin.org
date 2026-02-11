@@ -52,7 +52,7 @@ export type ZetkinCall = UnfinishedCall | FinishedCall;
 
 export type CallStateString =
   | 'success'
-  | 'noResponse'
+  | 'noPickup'
   | 'lineBusy'
   | 'callBack'
   | 'notAvailable'
@@ -62,7 +62,7 @@ export type CallStateString =
 export const callStateToString: Record<FinishedCall['state'], CallStateString> =
   {
     [CallState.SUCCESSFUL]: 'success',
-    [CallState.NO_PICKUP]: 'noResponse',
+    [CallState.NO_PICKUP]: 'noPickup',
     [CallState.LINE_BUSY]: 'lineBusy',
     [CallState.CALL_BACK]: 'callBack',
     [CallState.NOT_AVAILABLE]: 'notAvailable',

@@ -23,7 +23,7 @@ export default makeMessages('feat.call', {
         callBack: m('Call back later'),
         leftMessage: m('Left voice mail'),
         lineBusy: m('Line busy'),
-        noResponse: m('No response'),
+        noPickup: m('Did not reach them'),
         notAvailable: m('Not available to talk'),
         success: m('Successful'),
         wrongNumber: m('Wrong number'),
@@ -333,6 +333,23 @@ export default makeMessages('feat.call', {
     title: m('Assignment stats'),
   },
   summary: {
+    callSummary: {
+      callBack: m<{ name: string }>(
+        'You reached {name}, but we have to call them back.'
+      ),
+      leftMessage: m<{ name: string }>(
+        '{name} did not pick up, you left a message on their answering machine.'
+      ),
+      lineBusy: m<{ name: string }>(
+        'The line was busy so you did not reach {name}'
+      ),
+      noPickup: m<{ name: string }>(
+        '{name} did not pick up, you did not leave a message.'
+      ),
+      notAvailable: m<{ name: string }>('We will call {name} back.'),
+      success: m<{ name: string }>('You talked to {name}'),
+      wrongNumber: m<{ name: string }>('We had the wrong number for ${name}'),
+    },
     title: m('Woop woop!'),
     unfinishedCallsMessage: m(
       'But, before you move on: you have unfinished calls, deal with them!'
