@@ -50,6 +50,26 @@ export type FinishedCall = CallBase & {
 
 export type ZetkinCall = UnfinishedCall | FinishedCall;
 
+export type CallStateString =
+  | 'success'
+  | 'noResponse'
+  | 'lineBusy'
+  | 'callBack'
+  | 'notAvailable'
+  | 'leftMessage'
+  | 'wrongNumber';
+
+export const callStateToString: Record<FinishedCall['state'], CallStateString> =
+  {
+    [CallState.SUCCESSFUL]: 'success',
+    [CallState.NO_PICKUP]: 'noResponse',
+    [CallState.LINE_BUSY]: 'lineBusy',
+    [CallState.CALL_BACK]: 'callBack',
+    [CallState.NOT_AVAILABLE]: 'notAvailable',
+    [CallState.LEFT_MESSAGE]: 'leftMessage',
+    [CallState.WRONG_NUMBER]: 'wrongNumber',
+  };
+
 type ZetkinCaller = {
   id: number;
   name: string;

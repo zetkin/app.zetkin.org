@@ -119,17 +119,17 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
                   </ZUIText>
                 ),
                 name: call.target.first_name,
-                titleAndTime: (
-                  <>
-                    <ZUIText display="inline" variant="bodyMdSemiBold">
-                      {call.target.past_actions.last_action?.title}
-                    </ZUIText>{' '}
-                    <ZUIRelativeTime
-                      datetime={
-                        call.target.past_actions.last_action?.end_time || ''
-                      }
-                    />
-                  </>
+                time: (
+                  <ZUIRelativeTime
+                    datetime={
+                      call.target.past_actions.last_action?.end_time || ''
+                    }
+                  />
+                ),
+                title: (
+                  <ZUIText display="inline" variant="bodyMdSemiBold">
+                    {call.target.past_actions.last_action?.title}
+                  </ZUIText>
                 ),
               }}
             />

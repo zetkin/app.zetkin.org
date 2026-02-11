@@ -9,9 +9,27 @@ export default makeMessages('feat.call', {
     participation: m<{
       events: JSX.Element;
       name: string;
-      titleAndTime: JSX.Element;
-    }>('{name} participated in {events}, the most recent being {titleAndTime}'),
+      time: JSX.Element;
+      title: JSX.Element;
+    }>('{name} participated in {events}, the most recent being {title} {time}'),
     previousActivityHeader: m('Previous activity'),
+    previousCalls: {
+      callBackAfter: m<{ name: string; time: JSX.Element }>(
+        'Call {name} back after {time}'
+      ),
+      hasNoPreviousCalls: m('Never been called'),
+      note: m<{ note: string }>('Note: {note}'),
+      status: {
+        callBack: m('Call back later'),
+        leftMessage: m('Left voice mail'),
+        lineBusy: m('Line busy'),
+        noResponse: m('No response'),
+        notAvailable: m('Not available to talk'),
+        success: m('Successful'),
+        wrongNumber: m('Wrong number'),
+      },
+      title: m('Previous calls'),
+    },
     tagsHeader: m('Tags'),
     title: m<{ name: string }>('About {name}'),
   },

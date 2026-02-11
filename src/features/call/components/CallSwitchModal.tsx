@@ -14,7 +14,7 @@ import Fuse from 'fuse.js';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIModal from 'zui/components/ZUIModal';
 import messageIds from '../l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import ZUITextField from 'zui/components/ZUITextField';
 import UnfinishedCallListItem from './UnfinishedCall';
 import ZUIDivider from 'zui/components/ZUIDivider';
@@ -25,8 +25,9 @@ import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { colors, labels } from './PreviousCallsInfo';
+import { colors } from './PreviousCallsInfo';
 import useFinishedCalls from '../hooks/useFinishedCalls';
+import { callStateToString } from '../types';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
@@ -202,7 +203,13 @@ const FinishedCallsList: FC<{
                 }}
               >
                 <ZUIText color="inherit" noWrap>
-                  {labels[finishedCall.state]}
+                  <Msg
+                    id={
+                      messageIds.about.previousCalls.status[
+                        callStateToString[finishedCall.state]
+                      ]
+                    }
+                  />
                 </ZUIText>
                 <ZUIText color="secondary" noWrap>
                   <ZUIRelativeTime datetime={finishedCall.update_time} />
