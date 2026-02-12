@@ -7,6 +7,14 @@ const surveyCacheKey = 'zetkin-survey-cache';
 
 export type SurveySubmissionData = Record<string, string | string[]>;
 
+const parseJSONSafe = (str: string) => {
+  try {
+    return JSON.parse(str) ?? {};
+  } catch (_) {
+    return {};
+  }
+};
+
 const loadSurveyCache = (): Record<number, SurveySubmissionData> => {
   if (typeof localStorage === 'undefined') {
     return {};
@@ -17,11 +25,7 @@ const loadSurveyCache = (): Record<number, SurveySubmissionData> => {
     return {};
   }
 
-  try {
-    return JSON.parse(surveyCacheStr) ?? {};
-  } catch (_) {
-    return {};
-  }
+  return parseJSONSafe(surveyCacheStr);
 };
 
 const updateSurveyCache = (
@@ -33,7 +37,7 @@ const updateSurveyCache = (
   }
 
   const surveyCacheStr = localStorage.getItem(surveyCacheKey) ?? '{}';
-  const surveyCache = JSON.parse(surveyCacheStr) as Record<
+  const surveyCache = parseJSONSafe(surveyCacheStr) as Record<
     number,
     SurveySubmissionData
   >;
