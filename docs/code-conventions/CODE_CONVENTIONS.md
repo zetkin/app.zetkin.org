@@ -7,12 +7,8 @@ This directory contains the project's agreed coding conventions. It serves as a 
 ### Current Rules
 
 - [`EQUALITY_OPERATOR.md`](./rules/EQUALITY_OPERATOR.md)
-- [`ENVIRONMENT_VARIABLES.md`](./rules/ENVIRONMENT_VARIABLES.md)
 - [`IMPORT_PATHS.md`](./rules/IMPORT_PATHS.md)
 - [`NULL_AND_TRUTHY_CHECKS.md`](./rules/NULL_AND_TRUTHY_CHECKS.md)
-- [`TESTING_JEST.md`](./rules/TESTING_JEST.md)
-- [`TESTING_PLAYWRIGHT.md`](./rules/TESTING_PLAYWRIGHT.md)
-- [`TIME_AND_DATES.md`](./rules/TIME_AND_DATES.md)
 - [`TEMPLATE.md`](./TEMPLATE.md) (for creating new rule files)
 
 ### In This Document
