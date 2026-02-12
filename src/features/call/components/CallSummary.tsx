@@ -7,29 +7,32 @@ import ZUIText from 'zui/components/ZUIText';
 import calculateReportState from './Report/utils/calculateReportState';
 import messageIds from 'features/call/l10n/messageIds';
 import { DesktopStats } from './AssignmentStats';
-import { ZetkinCallAssignmentStats } from 'features/callAssignments/apiTypes';
 import UnfinishedCallListItem from './UnfinishedCall';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 
 type Props = {
+  assignmentId: number;
   onAbandonUnfinishedCall: (unfinishedCallId: number) => void;
   onSwitchToUnfinishedCall: (
     unfinishedCallId: number,
     assignmentId: number
   ) => void;
+  orgId: number;
   report: Report;
-  stats: ZetkinCallAssignmentStats;
   unfinishedCalls: UnfinishedCall[];
 };
 
 const CallSummary: FC<Props> = ({
+  assignmentId,
   onAbandonUnfinishedCall,
   onSwitchToUnfinishedCall,
+  orgId,
   report,
-  stats,
   unfinishedCalls,
 }) => {
   const reportState = calculateReportState(report);
+  const stats = useSimpleCallAssignmentStats(orgId, assignmentId);
 
   const hasUnfinishedCalls = unfinishedCalls.length == 0;
 

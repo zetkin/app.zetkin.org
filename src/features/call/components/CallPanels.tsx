@@ -1,7 +1,6 @@
-import { FC } from 'react';
-import { Box, List, ListItem } from '@mui/material';
+import { FC, Suspense } from 'react';
+import { Box, CircularProgress, List, ListItem } from '@mui/material';
 
-import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
@@ -44,10 +43,6 @@ const CallPanels: FC<Props> = ({
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
 
-  const stats = useSimpleCallAssignmentStats(
-    assignment.organization.id,
-    assignment.id
-  );
   return (
     <>
       <Box
@@ -126,7 +121,25 @@ const CallPanels: FC<Props> = ({
           width: 1 / 3,
         })}
       >
-        <AssignmentStats stats={stats} />
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <AssignmentStats
+            assignmentId={assignment.id}
+            orgId={assignment.organization.id}
+          />
+        </Suspense>
       </Box>
       <Box
         sx={(theme) => ({
@@ -208,10 +221,25 @@ const CallPanels: FC<Props> = ({
           zIndex: lane.step == LaneStep.START ? -1 : 0,
         })}
       >
-        <ActivitiesSection
-          assignment={assignment}
-          target={call?.target ?? null}
-        />
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <ActivitiesSection
+            assignment={assignment}
+            target={call?.target ?? null}
+          />
+        </Suspense>
       </Box>
       <Box
         sx={(theme) => ({
@@ -274,14 +302,15 @@ const CallPanels: FC<Props> = ({
         }}
       >
         <CallSummary
+          assignmentId={assignment.id}
           onAbandonUnfinishedCall={(unfinishedCallId) =>
             onAbandonUnfinishedCall(unfinishedCallId)
           }
           onSwitchToUnfinishedCall={(unfinishedCallId, assignmentId) =>
             onSwitchToUnfinishedCall(unfinishedCallId, assignmentId)
           }
+          orgId={assignment.organization.id}
           report={report}
-          stats={stats}
           unfinishedCalls={unfinishedCalls}
         />
       </Box>
