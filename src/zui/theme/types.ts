@@ -198,9 +198,6 @@ declare module '@mui/material/styles' {
     swatches: Swatches;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface PaletteOptions extends Partial<Palette> {}
-
   interface SimplePaletteColorOptions {
     focus?: string;
     focusVisible?: string;

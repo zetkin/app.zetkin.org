@@ -60,9 +60,7 @@ import ViewDataTableColumnMenu, {
 import ViewDataTableFooter, {
   ViewDataTableFooterProps,
 } from 'features/views/components/ViewDataTable/ViewDataTableFooter';
-import ViewDataTableToolbar, {
-  ViewDataTableToolbarProps,
-} from './ViewDataTableToolbar';
+import ViewDataTableToolbar from './ViewDataTableToolbar';
 import {
   ZetkinPerson,
   ZetkinViewColumn,
@@ -87,11 +85,14 @@ declare module '@mui/x-data-grid-pro' {
   }
 
   interface ToolbarPropsOverrides {
+    disableBulkActions?: boolean;
     disableConfigure?: boolean;
     disabled: boolean;
     gridColumns: GridColDef[];
+    isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
+    onRowsDelete: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -481,7 +482,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const componentsProps: {
     columnMenu: ViewDataTableColumnMenuProps;
     footer: ViewDataTableFooterProps;
-    toolbar: ViewDataTableToolbarProps;
   } = useMemo(
     () => ({
       columnMenu: {
@@ -559,6 +559,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
+      onRowsDelete,
       setQuickSearch,
       modelGridProps.sortModel,
     ]
