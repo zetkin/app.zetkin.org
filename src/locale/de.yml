@@ -3512,6 +3512,7 @@ feat:
       bulk:
         createList: Liste aus Auswahl erstellen
         delete: Ausgewählte Personen aus der Organisation löschen
+        handleSelection: 'Auswahl bearbeiten ({numSelected})'
         removeFromList: Ausgewählte Personen aus der Liste entfernen
       createColumn: Neue Spalte
     viewLayout:
