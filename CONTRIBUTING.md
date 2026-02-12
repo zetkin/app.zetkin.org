@@ -90,7 +90,7 @@ languages. For that purpose, we never use statically defined ("hard-coded") stri
 in UI components.
 
 Localized strings are called "messages" and are defined in `messageIds` modules that
-exist for all features (e.g. `src/features/surveys/l01n/messageIds.ts`) and the ZUI design
+exist for all features (e.g. `src/features/surveys/l10n/messageIds.ts`) and the ZUI design
 system components (`src/zui/l10n/messageIds.ts`). The messages have an ID derived
 from their object structure, and a default (English) string.
 
