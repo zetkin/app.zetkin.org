@@ -73,23 +73,37 @@ export default function useCallInitialization() {
     canInitialize = true;
   } else if (callLanes) {
     const thisUserHasSavedLanes =
-      !!activeLanes &&
-      activeLanes.length > 0 &&
-      !!user &&
-      callLanes.userId == user.id;
+      activeLanes.length > 0 && !!user && callLanes.userId == user.id;
+
     const savedLanesAreFresh =
       callLanes.timestamp > new Date().getTime() - LANES_TTL;
+
     canInitialize = thisUserHasSavedLanes && savedLanesAreFresh;
   }
 
+  const clearCallLanesIfStale = () => {
+    const callLanesAreStale =
+      callLanes && callLanes.timestamp < new Date().getTime() - LANES_TTL;
+
+    if (callLanesAreStale) {
+      setLanes(null);
+    }
+  };
+
   const initialize = () => {
     if (assignmentIdFromQuery) {
+      const thisUserHasSavedLanes =
+        activeLanes.length > 0 && !!user && callLanes?.userId == user.id;
+
       const savedLanesAreFresh =
         callLanes && callLanes.timestamp > new Date().getTime() - LANES_TTL;
+
+      const canUseSavedLanes = thisUserHasSavedLanes && savedLanesAreFresh;
+
       dispatch(
         initiateAssignment([
           parseInt(assignmentIdFromQuery),
-          savedLanesAreFresh ? activeLanes : [],
+          canUseSavedLanes ? activeLanes : [],
         ])
       );
       history.replaceState(null, '', '/call');
@@ -102,6 +116,7 @@ export default function useCallInitialization() {
 
   return {
     canInitialize,
+    clearCallLanesIfStale,
     initialize,
   };
 }

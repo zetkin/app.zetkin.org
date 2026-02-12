@@ -15,12 +15,17 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 const CallPage: FC = () => {
-  const { initialize, canInitialize } = useCallInitialization();
+  const {
+    clearCallLanesIfStale: clearCallLanesIfOld,
+    initialize,
+    canInitialize,
+  } = useCallInitialization();
 
   useEffect(() => {
     if (canInitialize) {
       initialize();
-    } else {
+    } else if (!canInitialize) {
+      clearCallLanesIfOld();
       return redirect('/my');
     }
   }, []);
