@@ -47,7 +47,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   >(undefined);
 
   const [initialSurveyState, setSurveyState] = useSurveyFormState(survey.id);
-  const surveyStateRef = useRef<SurveySubmissionData | null>(null);
+  const surveyStateRef = useRef<SurveySubmissionData>(initialSurveyState);
 
   const onChangeSurveyState = useCallback(
     (name: string, newValue: string | string[]) => {
