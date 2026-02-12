@@ -283,7 +283,6 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           fullWidth
           label={messages.callLog.searchLabel()}
           onChange={(newValue) => {
-            //event.stopPropagation();
             setSearchString(newValue);
           }}
           startIcon={Search}
