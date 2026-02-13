@@ -10,7 +10,8 @@ import useUser from 'core/hooks/useUser';
 import { RootState } from 'core/store';
 import useMyAssignments from './useMyAssignments';
 
-const LANES_TTL = 3_600_000;
+const minute = 60 * 1000;
+const LANES_TTL = 60 * minute;
 
 export default function useCallInitialization() {
   const dispatch = useAppDispatch();
