@@ -51,16 +51,18 @@ const UnfinishedCallsList: FC<{
     currentCall ? currentCall.id != call.id : true
   );
 
-  const fuse = new Fuse(unfinishedCalls, {
-    keys: [
-      'target.first_name',
-      'target.last_name',
-      'target.name',
-      'target.phone',
-      'target.alt_phone',
-    ],
-    threshold: 0.4,
-  });
+  const fuse = useMemo(() => {
+    return new Fuse(unfinishedCalls, {
+      keys: [
+        'target.first_name',
+        'target.last_name',
+        'target.name',
+        'target.phone',
+        'target.alt_phone',
+      ],
+      threshold: 0.4,
+    });
+  }, [unfinishedCalls]);
 
   const filteredUnfinishedCalls = useMemo(
     () =>
@@ -101,16 +103,18 @@ const FinishedCallsList: FC<{
   const { switchToPreviousCall } = useCallMutations(orgId);
   const { loading, finishedCalls } = useFinishedCalls();
 
-  const fuse = new Fuse(finishedCalls, {
-    keys: [
-      'target.first_name',
-      'target.last_name',
-      'target.name',
-      'target.phone',
-      'target.alt_phone',
-    ],
-    threshold: 0.4,
-  });
+  const fuse = useMemo(() => {
+    return new Fuse(finishedCalls, {
+      keys: [
+        'target.first_name',
+        'target.last_name',
+        'target.name',
+        'target.phone',
+        'target.alt_phone',
+      ],
+      threshold: 0.4,
+    });
+  }, [finishedCalls]);
 
   const filteredFinishedCalls = useMemo(() => {
     const calls = searchString
