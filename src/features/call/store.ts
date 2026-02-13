@@ -408,11 +408,9 @@ const CallSlice = createSlice({
       const thereIsALaneWithTheUnfinishedCall =
         indexOfLaneWithUnfinishedCall != -1;
 
-      //set that lane id to the active lane
       if (thereIsALaneWithTheUnfinishedCall) {
         state.activeLaneIndex = indexOfLaneWithUnfinishedCall;
       } else {
-        //otherwise, make a new lane for the unfinished call's assignment
         const newLane = {
           assignmentId: unfinishedCallAssignmentId,
           callIsBeingAllocated: false,
@@ -432,9 +430,6 @@ const CallSlice = createSlice({
         const indexOfNewLane = state.lanes.length - 1;
         state.activeLaneIndex = indexOfNewLane;
       }
-
-      //sort the outgoing calls???
-      //sortCalls(state.unfinishedCalls);
     },
     unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
       const abandonedCallId = action.payload;
