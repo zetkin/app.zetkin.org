@@ -13,6 +13,7 @@ import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats'
 
 type Props = {
   assignmentId: number;
+  name: string;
   onAbandonUnfinishedCall: (unfinishedCallId: number) => void;
   onSwitchToUnfinishedCall: (
     unfinishedCallId: number,
@@ -25,6 +26,7 @@ type Props = {
 
 const CallSummary: FC<Props> = ({
   assignmentId,
+  name,
   onAbandonUnfinishedCall,
   onSwitchToUnfinishedCall,
   orgId,
@@ -58,13 +60,13 @@ const CallSummary: FC<Props> = ({
               id={
                 messageIds.summary.callSummary[callStateToString[reportState]]
               }
-              values={{ name: 'hello' }}
+              values={{ name }}
             />
           )}
         </ZUIText>
       </Box>
-      {unfinishedCalls.length == 0 && <DesktopStats stats={stats} />}
-      {unfinishedCalls.length > 0 && (
+      {!hasUnfinishedCalls && <DesktopStats stats={stats} />}
+      {hasUnfinishedCalls && (
         <Box
           sx={{
             display: 'flex',

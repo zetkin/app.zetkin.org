@@ -303,6 +303,7 @@ const CallPanels: FC<Props> = ({
       >
         <CallSummary
           assignmentId={assignment.id}
+          name={call?.target.first_name || ''}
           onAbandonUnfinishedCall={(unfinishedCallId) =>
             onAbandonUnfinishedCall(unfinishedCallId)
           }
