@@ -40,7 +40,10 @@ export const icons: Record<FinishedCall['state'], MUIIcon> = {
   [CallState.WRONG_NUMBER]: TurnSlightLeft,
 };
 
-export const colors: Record<number, 'success' | 'warning' | 'error'> = {
+export const colors: Record<
+  FinishedCall['state'],
+  'success' | 'warning' | 'error'
+> = {
   [CallState.SUCCESSFUL]: 'success',
   [CallState.NO_PICKUP]: 'error',
   [CallState.LINE_BUSY]: 'error',
