@@ -1,0 +1,2 @@
+#!/bin/sh
+yarn lint-staged && yarn check-types
