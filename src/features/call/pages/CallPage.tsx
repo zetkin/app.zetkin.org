@@ -21,7 +21,7 @@ const CallPage: FC = () => {
   useEffect(() => {
     if (canInitialize) {
       initialize();
-    } else if (!canInitialize) {
+    } else {
       clearStaleCallLanes();
       return redirect('/my');
     }
