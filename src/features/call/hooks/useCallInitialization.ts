@@ -81,7 +81,7 @@ export default function useCallInitialization() {
     canInitialize = thisUserHasSavedLanes && savedLanesAreFresh;
   }
 
-  const clearCallLanesIfStale = () => {
+  const clearStaleCallLanes = () => {
     const callLanesAreStale =
       callLanes && callLanes.timestamp < new Date().getTime() - LANES_TTL;
 
@@ -116,7 +116,7 @@ export default function useCallInitialization() {
 
   return {
     canInitialize,
-    clearCallLanesIfStale,
+    clearStaleCallLanes,
     initialize,
   };
 }
