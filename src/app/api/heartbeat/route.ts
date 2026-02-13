@@ -23,10 +23,12 @@ export async function GET(request: NextRequest) {
   }
 
   const responseHeaders = new Headers();
-  responseHeaders.set(
-    'Set-Cookie',
-    serverResponse.headers.get('Set-Cookie') || ''
-  );
+  if ('Set-Cookie' in serverResponse) {
+    responseHeaders.set(
+      'Set-Cookie',
+      serverResponse.headers.get('Set-Cookie') || ''
+    );
+  }
 
   return NextResponse.json(
     { data: null },
