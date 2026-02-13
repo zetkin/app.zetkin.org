@@ -53,9 +53,6 @@ const CallHeader: FC<Props> = ({
   } = useAllocateCall(assignment.organization.id, assignment.id);
   const { submitReport } = useSubmitReport(assignment.organization.id);
 
-  const hasBothPhoneAndAltPhone =
-    !!call?.target.phone && !!call?.target.alt_phone;
-
   return (
     <Box
       sx={(theme) => ({
@@ -128,9 +125,9 @@ const CallHeader: FC<Props> = ({
             />
             <ZUIText variant="headingLg">{call.target.name}</ZUIText>
             <ZUIText color="secondary" variant="headingLg">
-              {hasBothPhoneAndAltPhone
-                ? `${call.target.phone}/${call.target.alt_phone}`
-                : call.target.phone || call.target.alt_phone}
+              {[call.target.phone, call.target.alt_phone]
+                .filter((number) => !!number)
+                .join('/')}
             </ZUIText>
           </>
         )}
