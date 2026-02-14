@@ -2,7 +2,7 @@ import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import {
-  PropsWithChildren,
+  ReactElement,
   Suspense,
   useEffect,
   useMemo,
@@ -119,12 +119,14 @@ const LoadingPageIndicator = () => {
 function LoadingBoundary<G extends Record<string, unknown>>({
   children,
   futures,
-}: { futures: { [I in keyof G]: IFuture<G[I]> } } & PropsWithChildren) {
+}: {
+  children: ReactElement;
+  futures: { [I in keyof G]: IFuture<G[I]> };
+}) {
   return (
     <Suspense fallback={<LoadingPageIndicator />}>
       <ZUIFutures futures={futures} loadingIndicator={<LoadingPageIndicator />}>
-        {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
-        <>{children}</>
+        {children}
       </ZUIFutures>
     </Suspense>
   );
@@ -203,71 +205,44 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
         surveysFuture,
       }}
     >
-      <Head>
-        <title>{messages.layout.allCampaigns()}</title>
-      </Head>
-      <ActivitiesOverview orgId={orgId} />
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'space-between',
-          paddingTop: 8,
-        }}
-      >
-        <Typography variant="h4">
-          <Msg id={messageIds.all.header} />
-        </Typography>
-        <TextField
-          onChange={(evt) => {
-            setSearchString(evt.target.value);
-          }}
-          placeholder={messages.all.campaignFilterPlaceholder()}
-          slotProps={{
-            input: {
-              endAdornment: searchString ? (
-                <IconButton onClick={() => setSearchString('')}>
-                  <Close color="secondary" />
-                </IconButton>
-              ) : undefined,
-              startAdornment: (
-                <Search color="secondary" sx={{ marginRight: 1 }} />
-              ),
-            },
-          }}
-          value={searchString}
-          variant="outlined"
-        />
-      </Box>
-      <Box component="section" mt={4}>
+      <>
+        <Head>
+          <title>{messages.layout.allCampaigns()}</title>
+        </Head>
+        <ActivitiesOverview orgId={orgId} />
         <Box
-          component="header"
           sx={{
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'space-between',
-            paddingBottom: 1,
+            paddingTop: 8,
           }}
         >
-          <Typography mb={2} variant="h5">
-            <Msg id={messageIds.activeCampaigns.header} />
+          <Typography variant="h4">
+            <Msg id={messageIds.all.header} />
           </Typography>
+          <TextField
+            onChange={(evt) => {
+              setSearchString(evt.target.value);
+            }}
+            placeholder={messages.all.campaignFilterPlaceholder()}
+            slotProps={{
+              input: {
+                endAdornment: searchString ? (
+                  <IconButton onClick={() => setSearchString('')}>
+                    <Close color="secondary" />
+                  </IconButton>
+                ) : undefined,
+                startAdornment: (
+                  <Search color="secondary" sx={{ marginRight: 1 }} />
+                ),
+              },
+            }}
+            value={searchString}
+            variant="outlined"
+          />
         </Box>
-        <Grid container spacing={2}>
-          {sharedSurveys.length > 0 && (
-            <Grid size={{ lg: 3, md: 4, xs: 12 }}>
-              <SharedCard />
-            </Grid>
-          )}
-          {activeCampaigns.map((campaign) => (
-            <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
-              <CampaignCard campaign={campaign} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-      {archivedCampaigns.length > 0 && (
-        <Box component="section" sx={{ marginBottom: 16, marginTop: 4 }}>
+        <Box component="section" mt={4}>
           <Box
             component="header"
             sx={{
@@ -277,41 +252,70 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
               paddingBottom: 1,
             }}
           >
-            <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <Typography variant="h5">
-                <Msg id={messageIds.archivedCampaigns.header} />
-              </Typography>
-              <ZUINumberChip
-                color={theme.palette.grey[200]}
-                size="sm"
-                value={archivedCampaigns.length}
-              />
-            </Box>
-            <Button
-              onClick={() => {
-                setShowArchived(!showArchived);
+            <Typography mb={2} variant="h5">
+              <Msg id={messageIds.activeCampaigns.header} />
+            </Typography>
+          </Box>
+          <Grid container spacing={2}>
+            {sharedSurveys.length > 0 && (
+              <Grid size={{ lg: 3, md: 4, xs: 12 }}>
+                <SharedCard />
+              </Grid>
+            )}
+            {activeCampaigns.map((campaign) => (
+              <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
+                <CampaignCard campaign={campaign} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+        {archivedCampaigns.length > 0 && (
+          <Box component="section" sx={{ marginBottom: 16, marginTop: 4 }}>
+            <Box
+              component="header"
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
+                paddingBottom: 1,
               }}
             >
-              <Msg
-                id={
-                  showArchived
-                    ? messageIds.archivedCampaigns.hideShowButton.hide
-                    : messageIds.archivedCampaigns.hideShowButton.show
-                }
-              />
-            </Button>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                <Typography variant="h5">
+                  <Msg id={messageIds.archivedCampaigns.header} />
+                </Typography>
+                <ZUINumberChip
+                  color={theme.palette.grey[200]}
+                  size="sm"
+                  value={archivedCampaigns.length}
+                />
+              </Box>
+              <Button
+                onClick={() => {
+                  setShowArchived(!showArchived);
+                }}
+              >
+                <Msg
+                  id={
+                    showArchived
+                      ? messageIds.archivedCampaigns.hideShowButton.hide
+                      : messageIds.archivedCampaigns.hideShowButton.show
+                  }
+                />
+              </Button>
+            </Box>
+            {showArchived && (
+              <Grid ref={archivedRef} container spacing={2}>
+                {archivedCampaigns.map((campaign) => (
+                  <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
+                    <CampaignCard campaign={campaign} />
+                  </Grid>
+                ))}
+              </Grid>
+            )}
           </Box>
-          {showArchived && (
-            <Grid ref={archivedRef} container spacing={2}>
-              {archivedCampaigns.map((campaign) => (
-                <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
-                  <CampaignCard campaign={campaign} />
-                </Grid>
-              ))}
-            </Grid>
-          )}
-        </Box>
-      )}
+        )}
+      </>
     </LoadingBoundary>
   );
 };
