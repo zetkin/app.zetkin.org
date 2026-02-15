@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 import { makeRPCDef } from 'core/rpc/types';
 import {
@@ -9,6 +9,8 @@ import {
 import IApiClient from 'core/api/client/IApiClient';
 import getEventState from '../utils/getEventState';
 import { EventState } from '../hooks/useEventState';
+import { removeOffset } from 'utils/dateUtils';
+import dayjs from 'dayjs';
 
 const paramsSchema = z.object({});
 
@@ -96,6 +98,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   return events.filter((event) => {
     const state = getEventState(event);
-    return state == EventState.OPEN || state == EventState.SCHEDULED;
+    let isPublished = false;
+    if (event.published) {
+      const publishDate = dayjs(event.published);
+      isPublished = publishDate.valueOf() < dayjs().valueOf();
+    }
+    return (
+      (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
+    );
   });
 }
