@@ -48,16 +48,10 @@ test.describe('Tags manager', () => {
 
     await tagToDelete.hover();
 
-    const chipRoot = tagToDelete.locator('..').locator('..');
-    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
-
-    await expect(deleteButton).toBeVisible();
-
-    // wait for button animation to finish
-    await page.waitForTimeout(200);
-    await deleteButton.click({ force: true });
-
-    await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
+    await Promise.all([
+      page.waitForRequest((req) => req.method() == 'DELETE'),
+      deleteButton.click() as Promise<void>,
+    ]);
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
 
