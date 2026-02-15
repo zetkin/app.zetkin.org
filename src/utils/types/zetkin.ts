@@ -447,7 +447,10 @@ export interface ZetkinTag {
   value_type: 'text' | null;
 }
 
-export type ZetkinAppliedTag = ZetkinTag & { value: string | number | null };
+export type ZetkinAppliedTag = ZetkinTag & {
+  score?: number;
+  value: string | number | null;
+};
 
 export interface ZetkinTagPostBody
   extends Partial<Omit<ZetkinTag, 'id' | 'group' | 'organization'>> {
