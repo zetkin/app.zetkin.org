@@ -62,6 +62,7 @@ import ViewDataTableFooter, {
 } from 'features/views/components/ViewDataTable/ViewDataTableFooter';
 import ViewDataTableToolbar from './ViewDataTableToolbar';
 import {
+  ZetkinCustomField,
   ZetkinPerson,
   ZetkinViewColumn,
   ZetkinViewRow,
@@ -103,27 +104,27 @@ declare module '@mui/x-data-grid-pro' {
 }
 
 const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
+  if (col.filterOperators) {
+    return col.filterOperators;
+  }
+
   const stringOperators = getGridStringOperators().filter(
     (op) => op.value !== 'isAnyOf'
   );
-  if (col.filterOperators) {
-    return col.filterOperators;
-  } else {
-    const defaultTypes = getGridDefaultColumnTypes();
-    if (col.type && col.type in defaultTypes) {
-      return (
-        defaultTypes[col.type].filterOperators?.filter(
-          (op) => op.value !== 'isAnyOf'
-        ) ?? stringOperators
-      );
-    } else {
-      return stringOperators;
-    }
+  const defaultTypes = getGridDefaultColumnTypes();
+  if (col.type && col.type in defaultTypes) {
+    const defaultOperators = defaultTypes[col.type].filterOperators?.filter(
+      (op) => op.value !== 'isAnyOf'
+    );
+    return defaultOperators ?? stringOperators;
   }
+
+  return stringOperators;
 };
 
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
+  customFields?: ZetkinCustomField[];
   disableAdd?: boolean;
   disableConfigure?: boolean;
   rows: ZetkinViewRow[];
@@ -155,6 +156,7 @@ const slots = {
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
+  customFields,
   disableAdd = false,
   disableConfigure,
   rows,
@@ -420,38 +422,32 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const unConfiguredGridColumns = useMemo(
     () => [
       avatarColumn,
-      ...columns.map((col) => ({
-        field: `col_${col.id}`,
-        filterOperators: getFilterOperators(
-          columnTypes[col.type].getColDef(
-            col,
-            accessLevel,
-            tagListState,
-            apiClient,
-            dispatch,
-            orgId
-          )
-        ),
-        headerName: col.title,
-        minWidth: 100,
-        resizable: true,
-        sortable: true,
-        width: 150,
-        ...columnTypes[col.type].getColDef(
-          col,
-          accessLevel,
-          tagListState,
+      ...columns.map((col) => {
+        const colDef = columnTypes[col.type].getColDef(col, accessLevel, {
           apiClient,
+          customFieldsInfo: customFields ?? [],
           dispatch,
-          orgId
-        ),
-      })),
+          orgId,
+          tagListState,
+        });
+        return {
+          field: `col_${col.id}`,
+          filterOperators: getFilterOperators(colDef),
+          headerName: col.title,
+          minWidth: 100,
+          resizable: true,
+          sortable: true,
+          width: 150,
+          ...colDef,
+        };
+      }),
     ],
     [
       avatarColumn,
       columns,
       accessLevel,
       tagListState,
+      customFields,
       apiClient,
       dispatch,
       orgId,
