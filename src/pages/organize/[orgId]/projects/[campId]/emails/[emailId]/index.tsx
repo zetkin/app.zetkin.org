@@ -36,8 +36,13 @@ const EmailPage: PageWithLayout = () => {
     updateEmail,
     updateTargets,
   } = useEmail(orgId, emailId);
-  const { numBlocked, numTargetMatches, readyTargets, lockedReadyTargets } =
-    useEmailStats(orgId, emailId);
+  const {
+    numBlocked,
+    numTargetMatches,
+    readyTargets,
+    lockedReadyTargets,
+    numSent,
+  } = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
 
   const onServer = useServerSide();
@@ -53,44 +58,38 @@ const EmailPage: PageWithLayout = () => {
         <title>{email.title}</title>
       </Head>
       <Box>
-        <Grid container spacing={2}>
-          <Grid size={{ md: 8 }}>
-            <EmailTargets
-              email={email}
-              isLoading={mutating.includes('locked')}
-              isLocked={isLocked}
-              isTargeted={isTargeted}
-              onToggleLocked={() => updateEmail({ locked: !email.locked })}
-              readyTargets={readyTargets}
-              state={emailState}
-              targets={numTargetMatches}
-              updateTargets={updateTargets}
-            />
-          </Grid>
-          <Grid size={{ md: 4 }}>
-            <EmailURLCard
-              emailId={emailId}
-              isOpen={emailState == EmailState.SENT}
-              orgId={orgId}
-            />
-          </Grid>
-          <Grid size={{ md: 6 }}>
-            <EmailTargetsBlocked
-              blacklisted={numBlocked.blacklisted}
-              missingEmail={numBlocked.noEmail}
-              total={numBlocked.any}
-              unsubscribed={numBlocked.unsubscribed}
-            />
-          </Grid>
-          <Grid size={{ md: 6 }}>
-            <EmailTargetsReady
-              lockedReadyTargets={lockedReadyTargets}
-              missingEmail={numBlocked.noEmail}
-              readyTargets={readyTargets}
-              state={emailState}
-            />
-          </Grid>
-        </Grid>
+        <Box display="flex" flexDirection="column">
+          <EmailTargets
+            email={email}
+            isLoading={mutating.includes('locked')}
+            isLocked={isLocked}
+            isTargeted={isTargeted}
+            onToggleLocked={() => updateEmail({ locked: !email.locked })}
+            readyTargets={readyTargets}
+            state={emailState}
+            targets={numTargetMatches}
+            updateTargets={updateTargets}
+          />
+          <Box display="flex" gap={2} paddingTop={2}>
+            <Box flex={1}>
+              <EmailTargetsBlocked
+                blacklisted={numBlocked.blacklisted}
+                missingEmail={numBlocked.noEmail}
+                total={numBlocked.any}
+                unsubscribed={numBlocked.unsubscribed}
+              />
+            </Box>
+            <Box flex={1}>
+              <EmailTargetsReady
+                lockedReadyTargets={lockedReadyTargets}
+                missingEmail={numBlocked.noEmail}
+                numSent={numSent}
+                readyTargets={readyTargets}
+                state={emailState}
+              />
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </>
   );
