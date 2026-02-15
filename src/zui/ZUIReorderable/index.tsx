@@ -84,7 +84,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
         onReorder(order);
       }
     }
-  }, [activeId]);
+  }, [activeId, items, onReorder, order]);
 
   const yOffsetRef = useRef<number>();
   const containerRef = useRef<HTMLDivElement>();

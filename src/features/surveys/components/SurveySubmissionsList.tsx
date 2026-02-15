@@ -252,7 +252,7 @@ const SurveySubmissionsList = ({
       if (emailOrName.length > 2) {
         setQuery(emailOrName);
       }
-    }, [emailOrName]);
+    }, [emailOrName, setQuery]);
 
     const updateCellValue = (person: ZetkinPerson | null) => {
       api.current.stopCellEditMode({

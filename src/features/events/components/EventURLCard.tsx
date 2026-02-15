@@ -24,7 +24,7 @@ const EventURLCard = ({
       event != null && event.data
         ? `${location.protocol}//${location.host}/o/${event.data.organization.id}/events/${eventId}`
         : '',
-    [event?.data, eventId]
+    [event, eventId]
   );
 
   return (

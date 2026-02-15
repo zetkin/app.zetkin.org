@@ -67,6 +67,9 @@ const Random = ({
         size: quantityDisplay / 100,
       });
     }
+    // Syncs quantity UI state into filter config. Excludes filter.config
+    // (written by this effect via setConfig, would cause an infinite loop).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, quantityDisplay]);
 
   const handleSubmit = (e: FormEvent) => {

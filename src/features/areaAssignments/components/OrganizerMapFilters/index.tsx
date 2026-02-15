@@ -78,7 +78,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     });
 
     onFilteredIdsChange(filteredAreas.map((area) => area.id));
-  }, [activeGroupIds, activeTagIdsByGroup]);
+  }, [activeGroupIds, activeTagIdsByGroup, areas, onFilteredIdsChange]);
 
   return (
     <Box

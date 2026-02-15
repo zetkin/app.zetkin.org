@@ -46,7 +46,7 @@ const FieldSettings: FC<FieldSettingsProps> = ({
 
       return initialOverrides;
     });
-  }, [initialOverrides]);
+  }, [initialOverrides, setOverrides]);
 
   return (
     <Box>

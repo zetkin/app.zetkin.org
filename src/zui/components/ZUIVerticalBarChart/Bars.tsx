@@ -19,34 +19,34 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
   const [valuePos, setValuePos] = useState(0);
 
   useEffect(() => {
+    function calcHoverXPos(el: HTMLDivElement | null) {
+      const container = containerRef.current;
+      if (barIndex >= 0 && container && el) {
+        const hoveredBar = container.querySelector(
+          `.barContainer:nth-of-type(${barIndex + 1})`
+        ) as HTMLLIElement | null;
+        if (hoveredBar) {
+          const containerWidth = container.clientWidth;
+          const barOffset = hoveredBar.offsetLeft;
+          const barWidth = hoveredBar.clientWidth;
+          const elWidth = el.clientWidth;
+
+          const calculatedX = barOffset + barWidth / 2 - elWidth / 2;
+          const boundedX = Math.max(
+            0,
+            Math.min(calculatedX, containerWidth - elWidth)
+          );
+          return boundedX;
+        }
+      }
+      return 0;
+    }
+
     if (labelElem && valueElem) {
       setLabelPos(calcHoverXPos(labelElem));
       setValuePos(calcHoverXPos(valueElem));
     }
   }, [barIndex, valueElem, labelElem]);
-
-  function calcHoverXPos(el: HTMLDivElement | null) {
-    const container = containerRef.current;
-    if (barIndex >= 0 && container && el) {
-      const hoveredBar = container.querySelector(
-        `.barContainer:nth-of-type(${barIndex + 1})`
-      ) as HTMLLIElement | null;
-      if (hoveredBar) {
-        const containerWidth = container.clientWidth;
-        const barOffset = hoveredBar.offsetLeft;
-        const barWidth = hoveredBar.clientWidth;
-        const elWidth = el.clientWidth;
-
-        const calculatedX = barOffset + barWidth / 2 - elWidth / 2;
-        const boundedX = Math.max(
-          0,
-          Math.min(calculatedX, containerWidth - elWidth)
-        );
-        return boundedX;
-      }
-    }
-    return 0;
-  }
 
   return (
     <Box

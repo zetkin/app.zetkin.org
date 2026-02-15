@@ -43,7 +43,7 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
         onChangeNewOption(newType);
       }
     }
-  }, [types.length]);
+  }, [types.length, createdType, types, onChangeNewOption]);
 
   const allTypes: EventTypeOption[] = [
     ...types,

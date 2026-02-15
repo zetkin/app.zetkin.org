@@ -74,14 +74,17 @@ const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
     };
   }, [error, loading]);
 
-  const onDrop = useCallback((acceptedFiles: File[]): void => {
-    acceptedFiles.map(async (file: File) => {
-      const uploadStatus = await parseData(file);
-      if (uploadStatus == 'success') {
-        onSuccess();
-      }
-    });
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]): void => {
+      acceptedFiles.map(async (file: File) => {
+        const uploadStatus = await parseData(file);
+        if (uploadStatus == 'success') {
+          onSuccess();
+        }
+      });
+    },
+    [onSuccess, parseData]
+  );
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: {

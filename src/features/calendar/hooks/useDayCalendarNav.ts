@@ -86,7 +86,10 @@ export default function useDayCalendarNav(
         },
       ]);
     }
-  }, [focusDateStr]);
+    // Excludes focusDate (Date object identity changes every render) and
+    // eventsByDate (Redux state that changes on unrelated updates).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusDateStr, apiClient, orgId, campId]);
 
   return {
     nextActivityDay,

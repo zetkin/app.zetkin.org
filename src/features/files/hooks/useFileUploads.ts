@@ -125,9 +125,13 @@ export default function useFileUploads(
     filesRef.current = fileUploads;
   }, [fileUploads]);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    addFiles(acceptedFiles);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      addFiles(acceptedFiles);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const { getInputProps, getRootProps, isDragActive } = useDropzone({
     accept: props?.accept,

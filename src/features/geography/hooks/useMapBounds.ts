@@ -45,7 +45,7 @@ export default function useMapBounds({ areas, map }: Props): Return {
     if (bounds && shouldPan) {
       map.fitBounds(bounds, { animate: true, duration: 800 });
     }
-  }, [bounds]);
+  }, [bounds, map, userInteracted]);
 
   useEffect(() => {
     const handleInteraction = () => {

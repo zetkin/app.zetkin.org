@@ -47,7 +47,7 @@ const CanvassMapOverlays: FC<Props> = ({
     if (!selectedLocation && expanded) {
       setExpanded(false);
     }
-  }, [selectedLocation]);
+  }, [selectedLocation, expanded]);
 
   return (
     <>

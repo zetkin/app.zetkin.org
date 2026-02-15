@@ -93,11 +93,15 @@ export const useEventTypeFilter = (
         : [...state.eventTypeLabelsToFilterBy, eventTypeLabel];
       state.setEventTypeLabelsToFilterBy(newArray);
     },
-    [state]
+    // Excludes state object (inline param, new reference every render).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.setEventTypeLabelsToFilterBy, state.eventTypeLabelsToFilterBy]
   );
 
   const clearEventTypeFilter = useCallback(() => {
     state.setEventTypeLabelsToFilterBy([]);
+    // Excludes state object (inline param, new reference every render).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.setEventTypeLabelsToFilterBy]);
 
   return {

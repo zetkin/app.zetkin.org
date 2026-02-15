@@ -43,6 +43,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     if (value !== text) {
       setText(value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
       const width = spanRef.current.offsetWidth + (editing ? 30 : -5);
       inputRef.current.style.width = width + 'px';
     }
-  }, [spanRef.current, inputRef.current, editing, text]);
+  }, [editing, text]);
 
   useEffect(() => {
     if (editing) {
@@ -65,7 +66,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
         onBlur();
       }
     }
-  }, [editing]);
+  }, [editing, onBlur]);
 
   const startEditing = () => {
     if (!readonly) {

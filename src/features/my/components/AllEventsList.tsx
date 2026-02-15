@@ -118,7 +118,7 @@ const AllEventsList: FC = () => {
 
       router.push(pathname + '?' + params.toString());
     },
-    [pathname, router, searchParams, dateFilterState]
+    [pathname, router, searchParams]
   );
 
   const eventTypeFilter = useEventTypeFilter(allEvents, {

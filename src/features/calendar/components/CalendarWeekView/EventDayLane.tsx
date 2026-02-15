@@ -74,12 +74,14 @@ const EventDayLane: FC<EventDayLaneProps> = ({
       }
     }
 
-    laneRef.current?.addEventListener('mousedown', handleMouseDown);
+    const lane = laneRef.current;
+    lane?.addEventListener('mousedown', handleMouseDown);
 
     return () => {
-      laneRef.current?.removeEventListener('mousedown', handleMouseDown);
+      lane?.removeEventListener('mousedown', handleMouseDown);
     };
-  }, [laneRef.current]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box ref={laneRef} height="100%" sx={{ position: 'relative' }} width="100%">

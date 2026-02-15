@@ -79,18 +79,18 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onChangeNewOption(newEventType!.id);
       }
     }
-  }, [types.length]);
+  }, [types, createdType, onChangeNewOption, uncategorizedMsg]);
 
   useEffect(() => {
     if (spanRef.current) {
       const width = spanRef.current.offsetWidth;
       setDropdownListWidth(width);
     }
-  }, [spanRef.current, text]);
+  }, [text]);
 
   useEffect(() => {
     setText(value ? value.title : uncategorizedMsg);
-  }, [value]);
+  }, [value, uncategorizedMsg]);
 
   const allTypes: EventTypeOption[] = [
     ...types,

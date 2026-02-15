@@ -22,21 +22,21 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
   const [canvasWidth, setCanvasWidth] = useState(200);
   const [hovered, setHovered] = useState(false);
 
-  const render = (context: CanvasRenderingContext2D) => {
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
-    const renderer = new SankeyRenderer(
-      context,
-      {
-        ...config,
-        diagWidth: canvasWidth,
-      },
-      canvasHeight
-    );
-    renderer.drawSegments([segment], hovered ? 0 : -1);
-  };
-
   useEffect(() => {
+    const render = (context: CanvasRenderingContext2D) => {
+      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+      const renderer = new SankeyRenderer(
+        context,
+        {
+          ...config,
+          diagWidth: canvasWidth,
+        },
+        canvasHeight
+      );
+      renderer.drawSegments([segment], hovered ? 0 : -1);
+    };
+
     const context = canvasRef.current?.getContext('2d');
     if (context) {
       render(context);
@@ -54,8 +54,8 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
     return () => {
       cancelAnimationFrame(animFrameRef.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    canvasRef.current,
     canvasHeight,
     canvasWidth,
     config.arrowDepth,

@@ -185,7 +185,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     ) {
       selectionModel.onSelectionChange(selection);
     }
-  }, [selection]);
+  }, [selection, selectionModel]);
   const [waiting, setWaiting] = useState(false);
 
   const { gridProps: modelGridProps } = useModelsFromQueryString();
@@ -209,7 +209,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     (error: VIEW_DATA_TABLE_ERROR) => {
       showSnackbar('error', messages.dataTableErrors[error]());
     },
-    [showSnackbar]
+    [showSnackbar, messages.dataTableErrors]
   );
 
   const updateColumn = useCallback(
@@ -273,7 +273,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const colSpec = columns.find((col) => col.id === colId) || null;
       setColumnToConfigure(colSpec);
     },
-    [colIdFromFieldName, columns, setColumnToConfigure]
+    [columns, setColumnToConfigure]
   );
 
   const onColumnCreate = useCallback(() => {
@@ -307,14 +307,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         doDelete();
       }
     },
-    [
-      colIdFromFieldName,
-      columns,
-      deleteColumn,
-      showError,
-      showConfirmDialog,
-      messages.columnMenu,
-    ]
+    [columns, deleteColumn, showError, showConfirmDialog, messages.columnMenu]
   );
 
   const onColumnRename = useCallback(
@@ -323,7 +316,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const colSpec = columns.find((col) => col.id === colId) || null;
       setColumnToRename(colSpec);
     },
-    [colIdFromFieldName, columns, setColumnToRename]
+    [columns, setColumnToRename]
   );
 
   const onColumnRenameSave = useCallback(
@@ -336,7 +329,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const onRowsDelete = useCallback(async () => {
     bulkDeletePersons(selection);
-  }, [selection]);
+  }, [selection, bulkDeletePersons]);
 
   const onRowsRemove = useCallback(async () => {
     setWaiting(true);
@@ -347,7 +340,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     } finally {
       setWaiting(false);
     }
-  }, [viewGrid.removeRows, showError, setWaiting]);
+  }, [selection, viewGrid, showError]);
 
   const onViewCreate = useCallback(() => {
     createView(view.folder?.id ?? 0, selection);
@@ -414,7 +407,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ];
       debouncedUpdateColumnOrder(newColumnOrder);
     },
-    [colIdFromFieldName, columns, debouncedUpdateColumnOrder]
+    [columns, debouncedUpdateColumnOrder]
   );
 
   const unConfiguredGridColumns = useMemo(
@@ -544,7 +537,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       onColumnDelete,
       onColumnRename,
       columns,
-      colIdFromFieldName,
       addPerson,
       setAddedId,
       gridApiRef,
@@ -584,7 +576,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
       noRowsLabel: messages.empty.notice[contentSource](),
     }),
-    [theme.components, messages.empty.notice]
+    [theme.components, messages.empty.notice, contentSource]
   );
 
   const onCellEditStart = useCallback(
@@ -664,7 +656,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       }
       return after;
     },
-    [columns]
+    [columns, viewGrid]
   );
 
   const mainSx = useMemo(

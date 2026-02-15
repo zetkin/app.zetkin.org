@@ -58,7 +58,7 @@ const WrongNumber: FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, []);
+  }, [onReportUpdate, report]);
 
   return (
     <StepBase

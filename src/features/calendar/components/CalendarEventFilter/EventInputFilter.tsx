@@ -22,7 +22,7 @@ const EventInputFilter = ({
     if (reset === true) {
       setUserInput('');
     }
-  }, [userText]);
+  }, [reset, userText]);
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {
     onChangeFilterText(value);

@@ -20,7 +20,7 @@ const ValueTagForm: React.FC<{
     } else {
       onChange(inputValue);
     }
-  }, [inputValue]);
+  }, [inputValue, onChange]);
 
   return (
     <form

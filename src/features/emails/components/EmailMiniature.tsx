@@ -42,7 +42,7 @@ const EmailMiniature: FC<Props> = ({
     }
 
     load();
-  }, []);
+  }, [apiClient, emailId, orgId]);
 
   useEffect(() => {
     const elem = document.querySelector(`.email-link-${selectedTag}`);

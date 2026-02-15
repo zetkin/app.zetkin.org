@@ -66,6 +66,9 @@ const MergeModal: FC<Props> = ({
 
   useEffect(() => {
     setSelectedIds(persons.map((person) => person.id) ?? []);
+    // Resets selection when modal opens/closes. Excludes persons because its
+    // array reference changes on parent re-renders, which would reset user deselections.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (

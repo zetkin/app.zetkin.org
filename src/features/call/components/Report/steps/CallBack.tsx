@@ -166,7 +166,8 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [callBackAfter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [callBackAfter, onReportUpdate, report]);
 
   const dateIsValid = date.isValid() && date.isAfter(today.date());
 

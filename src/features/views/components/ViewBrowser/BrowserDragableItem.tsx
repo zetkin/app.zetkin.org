@@ -20,7 +20,7 @@ const BrowserDraggableItem: FC<BrowserDragItemProps> = ({ children, item }) => {
     // Use an empty image as drag/drop preview, to hide while dragging.
     // A nicer preview is rendered by the BrowserDragLayer component.
     preview(getEmptyImage(), { captureDraggingState: true });
-  }, []);
+  }, [preview]);
   return (
     <Box ref={dragRef} display="flex" gap={1}>
       {children}

@@ -40,6 +40,7 @@ export default function useDayCalendarEvents(
 
       setLastDate(newLastDate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusDate.toISOString()]);
 
   // When a new lastDate is set, load the next last date
@@ -58,6 +59,7 @@ export default function useDayCalendarEvents(
       setNextLastDate(nextLastDateStr ? new Date(nextLastDateStr) : null);
     }
     loadNextLastDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastDate.toISOString()]);
 
   const eventsState = useAppSelector((state) => state.events);

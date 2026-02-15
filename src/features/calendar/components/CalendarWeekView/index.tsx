@@ -78,6 +78,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
       laneHeight,
       eventsByDate.map((a) => a.lanes)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusDate]);
 
   return (

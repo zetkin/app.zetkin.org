@@ -58,7 +58,7 @@ function useOrgSwitcher(orgId: number, searchString: string) {
     return searchString
       ? recentOrgsFuse.search(searchString).map((fuseResult) => fuseResult.item)
       : recentOrgs;
-  }, [searchString]);
+  }, [searchString, recentOrgs, recentOrgsFuse]);
 
   const allOrgsFuse = useMemo(() => {
     return new Fuse(flatOrgData, {
@@ -72,7 +72,7 @@ function useOrgSwitcher(orgId: number, searchString: string) {
     return searchString
       ? allOrgsFuse.search(searchString).map((fuseResult) => fuseResult.item)
       : flatOrgData;
-  }, [searchString]);
+  }, [searchString, allOrgsFuse, flatOrgData]);
 
   const showLoadingState = treeDataList.isLoading;
   const showEmptyState = searchString.length > 0 && filteredAllOrgs.length == 0;

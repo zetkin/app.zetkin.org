@@ -60,8 +60,12 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const campaigns = useCampaigns(orgId).data || [];
-  campaigns.reverse();
+  const campaignsData = useCampaigns(orgId).data;
+  const campaigns = useMemo(() => {
+    const result = [...(campaignsData || [])];
+    result.reverse();
+    return result;
+  }, [campaignsData]);
   const [searchString, setSearchString] = useState('');
   const [showArchived, setShowArchived] = useState(false);
 
@@ -85,6 +89,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
     return fuse.search(searchString).map((fuseResult) => fuseResult.item);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const campaignsThatMatchSearch = useMemo(() => search(), [searchString]);
 
   const [activeCampaigns, archivedCampaigns] = useMemo(() => {
@@ -104,7 +109,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
     }
 
     return [active, archived];
-  }, [campaigns, searchString]);
+  }, [campaigns, searchString, campaignsThatMatchSearch]);
 
   if (onServer) {
     return null;

@@ -38,6 +38,9 @@ const Matching = ({
     } else if (option == MATCHING.ONCE) {
       onChange({ max: undefined, min: undefined });
     }
+    // Excludes onChange: it is an inline callback prop whose reference changes
+    // every render, which would re-trigger the effect continuously.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [min, max, option]);
 
   const matchingSelect = (

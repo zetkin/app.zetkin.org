@@ -17,5 +17,5 @@ export const useAutoResizeMap = (mapRef: MapType | null) => {
     const resizeObserver = new ResizeObserver(() => mapRef?.invalidateSize());
     resizeObserver.observe(containerElement);
     return () => resizeObserver.disconnect();
-  }, [containerElement]);
+  }, [containerElement, mapRef]);
 };

@@ -10,8 +10,9 @@ type Props = {
 
 const EncouragingSparkle: FC<Props> = ({ duration = 2000, onComplete }) => {
   useEffect(() => {
-    setTimeout(() => onComplete?.(), duration);
-  }, []);
+    const timer = setTimeout(() => onComplete?.(), duration);
+    return () => clearTimeout(timer);
+  }, [duration, onComplete]);
 
   const particleSx: SxProps = {
     '@keyframes hover': {

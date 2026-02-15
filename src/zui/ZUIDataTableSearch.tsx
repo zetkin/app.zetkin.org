@@ -56,7 +56,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
     if (!isTyping) {
       onChange(isActive ? searchString : '');
     }
-  }, [searchString, isTyping]);
+  }, [searchString, isTyping, isActive, onChange]);
 
   useEffect(() => {
     if (open) {

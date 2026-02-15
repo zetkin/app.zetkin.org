@@ -29,7 +29,7 @@ const PreviewTab: FC = () => {
     if (user && destinationEmailAddress == '') {
       setDestinationEmailAddress(user.email);
     }
-  }, [user?.email]);
+  }, [user, destinationEmailAddress]);
 
   if (!user) {
     return null;

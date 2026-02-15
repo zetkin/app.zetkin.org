@@ -112,14 +112,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
         window.removeEventListener('popstate', handlePopState);
       };
     }
-  }, []);
+  }, [onClose]);
 
   useEffect(() => {
     if (!pushedRef.current) {
       pushedRef.current = true;
       goto('location');
     }
-  }, []);
+  }, [goto]);
 
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null

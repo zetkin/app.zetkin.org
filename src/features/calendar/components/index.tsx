@@ -64,7 +64,7 @@ const Calendar = () => {
       undefined,
       { shallow: true }
     );
-  }, [focusDate, timeScale]);
+  }, [focusDate, timeScale, campId, orgId, router]);
 
   function navigateTo(timeScale: TimeScale, date: Date) {
     setPersistentTimeScale(timeScale);

@@ -175,6 +175,7 @@ const ResponseStatsCard = ({
       containerRef,
       exportApi,
       questionStats.question.question.question,
+      messages.insights.export,
     ]
   );
 
@@ -189,7 +190,7 @@ const ResponseStatsCard = ({
         onSelect: () => exportChart('pdf'),
       },
     ],
-    [exportChart]
+    [exportChart, messages.insights.export]
   );
 
   const [exportMenuAnchorEl, setExportMenuAnchorEl] =
@@ -495,7 +496,7 @@ const OptionsStatsCard = ({
         answerCount: questionStats.answerCount,
         totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       }),
-    [questionStats, messages.insights.optionsFields.subheader]
+    [questionStats, messages.insights.optionsFields]
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
@@ -610,7 +611,7 @@ const TextResponseWordCloud = ({
   const { publicAPI } = useChartProExport(exportOptions);
   useEffect(() => {
     exportApi.current = publicAPI as UseChartProExportPublicApi;
-  }, [publicAPI]);
+  }, [publicAPI, exportApi]);
 
   const [width, setWidth] = useState(600);
 
@@ -624,7 +625,7 @@ const TextResponseWordCloud = ({
   const getRotationDegree = useMemo(() => {
     const rng = makeDeterministicRNG(42);
     return () => (rng() > 0.5 ? 0 : 90);
-  }, [words, width]);
+  }, []);
 
   const fontScale = useMemo(() => {
     const values = words.map((w) => w.value);
@@ -906,7 +907,7 @@ const TextStatsCard = ({
         totalUniqueWordCount: questionStats.totalUniqueWordCount,
         totalWordCount: questionStats.totalWordCount,
       }),
-    [questionStats, messages.insights.textFields.subheader]
+    [questionStats, messages.insights.textFields]
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();

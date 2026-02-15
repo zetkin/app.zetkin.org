@@ -1,4 +1,4 @@
-import { RefObject, useContext, useEffect, useRef } from 'react';
+import { RefObject, useCallback, useContext, useEffect, useRef } from 'react';
 
 import { PageContainerContext } from './PageContainerContext';
 
@@ -13,7 +13,7 @@ export default function useResizablePane(fixedHeight: boolean): ResizablePane {
   const slideRef = useRef<HTMLDivElement>();
   const { container } = useContext(PageContainerContext);
 
-  const updatePaneHeight = () => {
+  const updatePaneHeight = useCallback(() => {
     const paneContainer = paneContainerRef.current;
     if (paneContainer) {
       const rect = paneContainer.getBoundingClientRect();
@@ -30,7 +30,7 @@ export default function useResizablePane(fixedHeight: boolean): ResizablePane {
         }
       }
     }
-  };
+  }, [fixedHeight]);
 
   useEffect(() => {
     if (container) {
@@ -42,10 +42,11 @@ export default function useResizablePane(fixedHeight: boolean): ResizablePane {
         container.removeEventListener('scroll', updatePaneHeight);
       };
     }
-  }, [container]);
+  }, [container, updatePaneHeight]);
 
   useEffect(() => {
     updatePaneHeight();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { paneContainerRef, slideRef, updatePaneHeight };
