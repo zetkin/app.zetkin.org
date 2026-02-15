@@ -21,10 +21,8 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const subOrgs = useSubOrganizations(orgId).data || [];
   const activeOrgs = subOrgs.filter((subOrg) => subOrg.is_active);
   const guessOrgs = useGuessOrganization(activeOrgs, uiDataColumn);
-  const { deselectOrg, getSelectedOrgId, selectOrg } = useOrgMapping(
-    uiDataColumn.originalColumn,
-    uiDataColumn.columnIndex
-  );
+  const { deselectOrg, getSelectedOrgId, getSelectedScore, selectOrg } =
+    useOrgMapping(uiDataColumn.originalColumn, uiDataColumn.columnIndex);
 
   if (!activeOrgs.length) {
     return null;
@@ -53,22 +51,18 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
         <Typography sx={{ paddingBottom: 2 }} variant="h5">
           <Msg id={messageIds.configuration.configure.orgs.header} />
         </Typography>
-        <Button
-          onClick={() => {
-            guessOrgs();
-          }}
-        >
+        <Button onClick={() => guessOrgs()}>
           {messages.configuration.configure.orgs.guess()}
         </Button>
       </Box>
 
       <Box alignItems="center" display="flex" paddingY={2}>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {messages.configuration.configure.orgs.status().toLocaleUpperCase()}
           </Typography>
         </Box>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {messages.configuration.configure.orgs
               .organizations()
@@ -85,6 +79,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             onSelectOrg={(orgId) => selectOrg(orgId, uniqueValue)}
             orgs={sortedActiveOrgs}
             selectedOrgId={getSelectedOrgId(uniqueValue)}
+            selectedScore={getSelectedScore(uniqueValue)}
             title={uniqueValue.toString()}
           />
         </Box>
@@ -99,6 +94,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             onSelectOrg={(orgId) => selectOrg(orgId, null)}
             orgs={activeOrgs}
             selectedOrgId={getSelectedOrgId(null)}
+            selectedScore={getSelectedScore(null)}
             title={messages.configuration.configure.tags.empty()}
           />
         </>

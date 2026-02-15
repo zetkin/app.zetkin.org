@@ -33,10 +33,14 @@ const useGuessOrganization = (
           );
           // If there is a match, guess it
           if (goodResults.length > 0) {
+            const bestTag = goodResults.sort(
+              (a, b) => (a.score ?? 1) - (b.score ?? 1)
+            )[0];
             return [
               ...acc,
               {
-                orgId: goodResults[0].item.id,
+                orgId: bestTag.item.id,
+                score: bestTag.score,
                 value: orgTitle,
               },
             ];
