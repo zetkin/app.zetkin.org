@@ -327,7 +327,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
         }
       }
     }
-  }, [areas, map]);
+  }, [areas, map, navigateToAreaId, zoomed]);
 
   const { assigneesFilter } = useContext(assigneesFilterContext);
 

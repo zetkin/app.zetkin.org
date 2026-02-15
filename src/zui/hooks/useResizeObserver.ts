@@ -6,19 +6,21 @@ export default function useResizeObserver<
   const elemRef = useRef<ElemType>(null);
 
   useEffect(() => {
+    const element = elemRef.current;
+
     function update() {
-      if (elemRef.current) {
-        onResize(elemRef.current);
+      if (element) {
+        onResize(element);
       }
     }
 
     const observer = new ResizeObserver(update);
-    if (elemRef.current) {
-      observer.observe(elemRef.current);
+    if (element) {
+      observer.observe(element);
     }
 
     return () => observer.disconnect();
-  }, [elemRef.current, onResize]);
+  }, [onResize]);
 
   return elemRef;
 }

@@ -92,6 +92,7 @@ const SurveyResponse = ({
         value: internalConfig.value || '',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveys.length]);
 
   // check if there are questions with response type of 'text'

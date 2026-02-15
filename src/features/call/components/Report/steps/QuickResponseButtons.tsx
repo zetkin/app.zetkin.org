@@ -37,7 +37,7 @@ export const QuickResponseButtons: FC<QuickResponseProps> = ({ options }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, []);
+  }, [options]);
 
   const numberButtons = [
     LooksOneOutlined,

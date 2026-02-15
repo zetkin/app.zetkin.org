@@ -98,6 +98,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
       }
     }
     loadSubject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const journeyFuture = useJourney(parseInt(orgId), parseInt(journeyId));

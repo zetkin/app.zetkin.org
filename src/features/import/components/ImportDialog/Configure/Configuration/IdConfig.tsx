@@ -35,7 +35,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
     if (skipUnknown) {
       updateSheetSettings({ skipUnknown: false });
     }
-  }, [importID]);
+  }, [importID, skipUnknown, updateSheetSettings]);
 
   const idField = uiDataColumn.originalColumn.idField;
 

@@ -73,6 +73,9 @@ const PersonData = ({
       ...filter.config,
       fields,
     });
+    // Syncs criteria into filter config. Excludes filter.config because the
+    // effect writes to it via setConfig, which would cause an infinite loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [criteria]);
 
   const addCriteria = (field: string) => {

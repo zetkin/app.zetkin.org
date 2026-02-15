@@ -55,7 +55,7 @@ export default function useModelsFromQueryString(): UseModelsFromQueryString {
         shallow: true,
       });
     }
-  }, [filterModel, sortModel]);
+  }, [filterModel, sortModel, router]);
 
   // Update model when router URL changes
   useEffect(() => {
@@ -69,6 +69,9 @@ export default function useModelsFromQueryString(): UseModelsFromQueryString {
     if (!isEqual(routerSortModel, sortModel)) {
       setSortModel(routerSortModel);
     }
+    // Syncs URL to local state. Excludes filterModel/sortModel because another
+    // effect syncs them TO the router, and including them creates a feedback loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
   return {

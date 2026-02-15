@@ -29,7 +29,7 @@ const ImportMessageList: FC<Props> = ({
     ).length;
 
     onAllChecked(numChecked == warningCount);
-  }, [numChecked]);
+  }, [numChecked, onAllChecked, problems]);
 
   return (
     <Stack spacing={2}>

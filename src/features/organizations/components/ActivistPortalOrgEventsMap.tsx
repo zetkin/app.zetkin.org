@@ -30,7 +30,7 @@ const ActivistPortalOrgEventsMap: FC<Props> = ({ orgId }) => {
         router.push(`/o/${orgId}`);
       }
     },
-    [dispatch, filtersUpdated, lastSegment, router.push, orgId]
+    [dispatch, lastSegment, router, orgId]
   );
 
   return (

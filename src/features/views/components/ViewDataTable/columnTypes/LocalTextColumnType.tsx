@@ -89,18 +89,21 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();
   const apiRef = useGridApiContext();
 
-  const handleTextAreaRef = useCallback((el: HTMLTextAreaElement | null) => {
-    if (el) {
-      if (!props.isEditable) {
-        return;
+  const handleTextAreaRef = useCallback(
+    (el: HTMLTextAreaElement | null) => {
+      if (el) {
+        if (!props.isEditable) {
+          return;
+        }
+        // When entering edit mode, focus the text area and put
+        // caret at the end of the text
+        el.focus();
+        el.setSelectionRange(el.value.length, el.value.length);
+        el.scrollTop = el.scrollHeight;
       }
-      // When entering edit mode, focus the text area and put
-      // caret at the end of the text
-      el.focus();
-      el.setSelectionRange(el.value.length, el.value.length);
-      el.scrollTop = el.scrollHeight;
-    }
-  }, []);
+    },
+    [props.isEditable]
+  );
 
   const handleRef = useCallback((el: HTMLElement | null) => {
     setAnchorEl(el);
@@ -118,7 +121,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
         event
       );
     },
-    [apiRef, field, id]
+    [apiRef, field, id, props.isEditable]
   );
 
   const handleKeyDown = useCallback<NonNullable<InputBaseProps['onKeyDown']>>(
@@ -128,7 +131,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
         event.stopPropagation();
       }
     },
-    [apiRef, id, field]
+    []
   );
 
   return (

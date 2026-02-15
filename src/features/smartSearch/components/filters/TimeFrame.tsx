@@ -56,7 +56,7 @@ const TimeFrame = ({
         before: before.toISOString().slice(0, 10),
       });
     }
-  }, [before, after, selected, numDays]);
+  }, [before, after, selected, numDays, onChange]);
 
   const afterDateSelect = (
     <StyledDatePicker

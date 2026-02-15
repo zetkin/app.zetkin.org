@@ -84,7 +84,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         id: 'folders/' + recentlyCreatedFolder.id,
       });
     }
-  }, [recentlyCreatedFolder]);
+  }, [recentlyCreatedFolder, gridApiRef]);
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {

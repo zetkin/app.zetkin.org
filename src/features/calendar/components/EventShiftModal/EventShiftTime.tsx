@@ -137,6 +137,10 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
         ]);
       }
     }
+    // Validates the shift the user just edited. Excludes invalidShiftTimes and
+    // onInvalidShiftTimesChange (written by this effect) and eventShifts/eventEndTime
+    // (read for context but should not re-trigger validation).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatedShift]);
 
   useEffect(() => {
@@ -153,6 +157,7 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
     } else {
       onInvalidEndTimeChange(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventStartTime, eventEndTime]);
 
   return (

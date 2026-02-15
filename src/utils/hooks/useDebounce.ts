@@ -16,8 +16,9 @@ export default function useDebounce<
   callback: CallbackFn<Args, ReturnType>,
   delay: number
 ): (...args: Args) => Promise<ReturnType> | undefined {
-  // Memoizing the callback because if it's an arrow function
-  // it would be different on each render
+  // Intentionally captures callback once. Including [callback] would recreate
+  // the memoized function every render, defeating the debounce mechanism.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedCallback = useCallback(callback, []);
   const debouncedFn = useRef(debounce(memoizedCallback, delay));
 

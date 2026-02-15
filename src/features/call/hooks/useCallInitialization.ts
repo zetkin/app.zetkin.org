@@ -37,7 +37,7 @@ export default function useCallInitialization() {
       }
     });
     return () => unsubscribe();
-  }, [store]);
+  }, [store, setLanes, user?.id]);
 
   const assignmentIdFromQuery = queryParams?.get('assignment');
 

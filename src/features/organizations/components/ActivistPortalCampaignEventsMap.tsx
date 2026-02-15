@@ -1,5 +1,4 @@
 import { FC, useCallback } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 
 import { ActivistPortalEventMap } from 'features/public/components/ActivistPortalEventMap';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
@@ -15,10 +14,6 @@ const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId }) => {
   const { allEvents } = useFilteredCampaignEvents(orgId, campId);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.organizations.filters);
-  const path = usePathname();
-  const router = useRouter();
-  const lastSegment = path?.split('/')[3] ?? 'home';
-
   const onLocationFilterChange = useCallback(
     (geojsonToFilterBy: GeoJSON.Feature[]) => {
       dispatch(
@@ -27,7 +22,7 @@ const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId }) => {
         })
       );
     },
-    [lastSegment, router.push, orgId]
+    [dispatch]
   );
 
   return (

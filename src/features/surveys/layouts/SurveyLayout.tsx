@@ -152,7 +152,16 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         showSnackbar('error', messages.surveyToList.error());
       }
     },
-    [apiClient, orgId, surveyId, router.push, surveyFuture.data]
+    [
+      apiClient,
+      orgId,
+      surveyId,
+      router,
+      showSnackbar,
+      surveyFuture.data,
+      messages.submissions,
+      messages.surveyToList,
+    ]
   );
 
   return (

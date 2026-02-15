@@ -1,5 +1,5 @@
 import { MapMouseEvent, Map as MapType } from 'maplibre-gl';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import useCreateArea from 'features/areas/hooks/useCreateArea';
@@ -36,7 +36,7 @@ export default function useAreaDrawing({
   const [creating, setCreating] = useState(false);
   const createArea = useCreateArea(orgId);
 
-  async function finishDrawing() {
+  const finishDrawing = useCallback(async () => {
     if (drawingPoints && drawingPoints.length > 2) {
       setCreating(true);
       const area = await createArea({
@@ -51,7 +51,7 @@ export default function useAreaDrawing({
       setSelectedId(area.id);
     }
     setDrawingPoints(null);
-  }
+  }, [drawingPoints, createArea, messages, setSelectedId]);
 
   useEffect(() => {
     const handleClick = (ev: MapMouseEvent) => {
@@ -84,7 +84,7 @@ export default function useAreaDrawing({
       map?.off('click', handleClick);
       map?.off('mousemove', handleMove);
     };
-  }, [drawingPoints, map]);
+  }, [drawingPoints, map, creating, finishDrawing]);
 
   const startedDrawing = !!drawingPoints && drawingPoints.length > 0;
 

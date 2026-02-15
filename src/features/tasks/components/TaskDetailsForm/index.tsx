@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import validator from 'validator';
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useMemo, useState } from 'react';
 import { MenuItem, TextField } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
@@ -104,49 +104,52 @@ const TaskDetailsForm = ({
     task?.reassign_limit ?? null
   );
 
-  const validate = (values: NewTaskValues) => {
-    const errors: Record<string, string | Record<string, string>> = {};
-    if (!values.title) {
-      errors.title = messages.form.required();
-    }
-    if (!values.type) {
-      errors.type = messages.form.required();
-    }
-    if (!values.instructions) {
-      errors.intructions = messages.form.required();
-    }
-    if (!values.campaign_id) {
-      errors.campaign_id = messages.form.required();
-    }
-    if (
-      values.type === TASK_TYPE.VISIT_LINK ||
-      values.type === TASK_TYPE.SHARE_LINK
-    ) {
-      const config = values.config as VisitLinkConfig;
-      errors.config = {};
-      if (!config?.url) {
-        errors.config.url = messages.form.required();
-      } else if (!validator.isURL(config.url, { require_protocol: true })) {
-        errors.config.url = messages.form.invalidUrl();
+  const validate = useCallback(
+    (values: NewTaskValues) => {
+      const errors: Record<string, string | Record<string, string>> = {};
+      if (!values.title) {
+        errors.title = messages.form.required();
       }
-    }
+      if (!values.type) {
+        errors.type = messages.form.required();
+      }
+      if (!values.instructions) {
+        errors.intructions = messages.form.required();
+      }
+      if (!values.campaign_id) {
+        errors.campaign_id = messages.form.required();
+      }
+      if (
+        values.type === TASK_TYPE.VISIT_LINK ||
+        values.type === TASK_TYPE.SHARE_LINK
+      ) {
+        const config = values.config as VisitLinkConfig;
+        errors.config = {};
+        if (!config?.url) {
+          errors.config.url = messages.form.required();
+        } else if (!validator.isURL(config.url, { require_protocol: true })) {
+          errors.config.url = messages.form.invalidUrl();
+        }
+      }
 
-    // Validate dates are in correct order
-    if (!isPublishedFirst(values)) {
-      errors.published =
-        messages.form.fields.timeValidationErrors.publishedNotFirst();
-    }
-    if (!isDeadlineSecond(values)) {
-      errors.deadline =
-        messages.form.fields.timeValidationErrors.deadlineNotSecond();
-    }
-    if (!isExpiresThird(values)) {
-      errors.expires =
-        messages.form.fields.timeValidationErrors.expiresNotThird();
-    }
+      // Validate dates are in correct order
+      if (!isPublishedFirst(values)) {
+        errors.published =
+          messages.form.fields.timeValidationErrors.publishedNotFirst();
+      }
+      if (!isDeadlineSecond(values)) {
+        errors.deadline =
+          messages.form.fields.timeValidationErrors.deadlineNotSecond();
+      }
+      if (!isExpiresThird(values)) {
+        errors.expires =
+          messages.form.fields.timeValidationErrors.expiresNotThird();
+      }
 
-    return errors;
-  };
+      return errors;
+    },
+    [messages]
+  );
 
   const composedValues: NewTaskValues = useMemo(() => {
     return {
@@ -190,7 +193,10 @@ const TaskDetailsForm = ({
     visitUrl,
   ]);
 
-  const errors = useMemo(() => validate(composedValues), [composedValues]);
+  const errors = useMemo(
+    () => validate(composedValues),
+    [composedValues, validate]
+  );
   const hasErrors = (
     obj: Record<string, string | Record<string, string>>
   ): boolean =>

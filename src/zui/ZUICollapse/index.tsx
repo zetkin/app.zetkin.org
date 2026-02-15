@@ -28,7 +28,7 @@ const ZUICollapse: React.FC<ZUICollapseProps> = ({
         setDidMeasure(true);
       }
     },
-    [setNeedsCollapse]
+    [setNeedsCollapse, collapsedSize, needsCollapse]
   );
 
   return (

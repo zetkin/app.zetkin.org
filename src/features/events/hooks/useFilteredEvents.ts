@@ -57,7 +57,7 @@ export default function useFilteredEvents({
       status:
         myEvents.find((userEvent) => userEvent.id == event.id)?.status || null,
     }));
-  }, [events]);
+  }, [events, myEvents]);
 
   const eventTypeFilter = useEventTypeFilter(allEvents, {
     eventTypeLabelsToFilterBy: eventTypesToFilterBy,

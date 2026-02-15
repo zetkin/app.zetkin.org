@@ -81,7 +81,7 @@ const OrganizerLog: FC<Props> = ({
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
     };
-  }, [message]);
+  }, [message, onReportUpdate, report]);
 
   return (
     <StepBase

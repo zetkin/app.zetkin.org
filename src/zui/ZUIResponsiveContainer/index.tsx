@@ -25,16 +25,19 @@ const FrontendResponsiveContainer: FC<
     if (onWidthChange && widthRef.current) {
       onWidthChange(width, widthRef.current);
     }
-  }, [width]);
+  }, [width, onWidthChange]);
 
   useEffect(() => {
-    if (widthRef.current) {
-      observerRef.current.observe(widthRef.current);
+    const element = widthRef.current;
+    const observer = observerRef.current;
+    if (element) {
+      observer.observe(element);
       return () => {
-        observerRef.current.disconnect();
+        observer.disconnect();
       };
     }
-  }, [widthRef.current]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div ref={widthRef} style={{ width: '100%' }}>

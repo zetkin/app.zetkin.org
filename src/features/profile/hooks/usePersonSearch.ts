@@ -60,7 +60,11 @@ export default function usePersonSearch(orgId: number): UsePersonSearchReturn {
           });
         });
     }
-  }, [isTyping]);
+    // Fires when debounce completes (isTyping becomes false). Excludes
+    // loadingByQueryString (written by this effect, would cause infinite loop)
+    // and queryString (effect should trigger on debounce completion, not keystrokes).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTyping, apiClient, orgId]);
 
   return {
     isLoading: !!loadingByQueryString[queryString],

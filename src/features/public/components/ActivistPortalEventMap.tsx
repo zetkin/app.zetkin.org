@@ -111,7 +111,7 @@ export const ActivistPortalEventMap: FC<{
         }) ?? [],
       type: 'FeatureCollection',
     };
-  }, [events, locationFilter]);
+  }, [eventCountByLocation, locationFilter]);
 
   return (
     <Box

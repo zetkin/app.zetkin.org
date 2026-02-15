@@ -19,11 +19,11 @@ export default function useActivityFilters(
 ) {
   const filtersKey = useMemo(
     () => `activities:${orgId}:${campId ?? 'all'}:${location}:filters`,
-    [campId, orgId]
+    [campId, orgId, location]
   );
   const searchKey = useMemo(
     () => `activities:${orgId}:${campId ?? 'all'}:${location}:search`,
-    [campId, orgId]
+    [campId, orgId, location]
   );
 
   const [filters, setFilters] = useLocalStorage<ACTIVITIES[]>(

@@ -24,7 +24,7 @@ export const CreateLocationCard: FC<CreateLocationCardProps> = ({
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState<string>('');
 
-  const titles = suggestions ?? [];
+  const titles = useMemo(() => suggestions ?? [], [suggestions]);
 
   const { tokenOriginalByLower, tokenCounts, bigramCounts } = useMemo(() => {
     const tokenOriginalByLower = new Map<string, string>();

@@ -69,6 +69,9 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
       }
     }
     blocksRef.current = content.blocks;
+    // Detects block insertion/removal only. Uses .length instead of .blocks
+    // because the array reference changes on every content edit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content.blocks.length]);
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {

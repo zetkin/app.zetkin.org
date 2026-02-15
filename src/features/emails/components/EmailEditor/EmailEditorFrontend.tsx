@@ -137,6 +137,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         }
       }
     };
+    // Mount-only: creates the EditorJS instance once. Re-running would destroy
+    // the editor and lose user content.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -157,6 +160,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     return () => {
       clearInterval(timer);
     };
+    // Mount-only: polling interval for selected block. Excludes onSelectBlock
+    // because it is an unstable inline callback that would recreate the interval.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const styleSheet: CSSStyleSheet = new CSSStyleSheet();

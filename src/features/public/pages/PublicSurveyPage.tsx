@@ -58,7 +58,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
       surveyStateRef.current = updatedSurveyState;
       setSurveyState(updatedSurveyState);
     },
-    [initialSurveyState, setSurveyState]
+    [setSurveyState]
   );
 
   const [status, setStatus] = useState<ZetkinSurveyFormStatus>('editing');
@@ -78,7 +78,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
         setStatus('error');
       }
     },
-    [setSurveyState, setStatus]
+    [setSurveyState, setStatus, status]
   );
 
   const handleRadioChange = useCallback(
@@ -94,7 +94,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     if (errorMessageRef.current) {
       errorMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [errorMessageRef.current]);
+  }, [status]);
 
   useEffect(() => {
     if (status == 'submitted' || status == 'error') {

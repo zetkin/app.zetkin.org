@@ -64,7 +64,7 @@ const LocationModal: FC<LocationModalProps> = ({
   useEffect(() => {
     setSelectedLocationId(locationId);
     setPendingLocation(null);
-  }, [open]);
+  }, [open, locationId]);
 
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>

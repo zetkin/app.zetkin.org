@@ -55,7 +55,7 @@ const CreateHouseholdsPage: FC<Props> = ({
         setScale(newScale);
       }
     },
-    [setNumFloors, setNumAptsPerFloor, container]
+    [setNumFloors, setNumAptsPerFloor, container, scale]
   );
 
   const numTotal =

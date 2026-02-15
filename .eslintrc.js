@@ -92,7 +92,7 @@ module.exports = {
         'react/prefer-stateless-function': 'error',
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
-        'react-hooks/exhaustive-deps': 'off',
+        'react-hooks/exhaustive-deps': 'warn',
         'react/self-closing-comp': [
           'error',
           {

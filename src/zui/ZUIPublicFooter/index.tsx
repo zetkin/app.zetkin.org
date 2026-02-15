@@ -35,7 +35,12 @@ const ZUIPublicFooter: FC = () => {
           ]
         : []),
     ],
-    [messages]
+    [
+      messages,
+      env.vars.ZETKIN_PRIVACY_POLICY_LINK,
+      env.vars.INSTANCE_OWNER_NAME,
+      env.vars.INSTANCE_OWNER_HREF,
+    ]
   );
 
   return (

@@ -37,7 +37,7 @@ const DuplicatesPage: PageWithLayout = () => {
       router.asPath.split('?')[0]
     }?page=${page}`;
     window.history.replaceState({}, '', url);
-  }, [page]);
+  }, [page, router.asPath]);
 
   if (onServer) {
     return null;

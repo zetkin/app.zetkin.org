@@ -87,7 +87,10 @@ const SubQuery = ({
         queries.find((q) => q.id === filter.config.query_id) || queries[0]
       );
     }
-  }, [standaloneQueries, assignments]);
+    // Excludes the full queries array (reconstructed from multiple sources every
+    // render). Uses queries.length to detect when async queries finish loading.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter.config.query_id, selectedQuery, queries.length]);
 
   const renderedOptions = queries.filter((q) => q.type === selectedQuery?.type);
   const renderedOptionsSorted = renderedOptions.sort((r1, r2) => {

@@ -79,6 +79,9 @@ const AreaOverlay: FC<Props> = ({
   useEffect(() => {
     setTitle(area.title);
     setDescription(area.description);
+    // Resets form state when switching areas. Excludes area.title/description
+    // to avoid overwriting the user's in-progress edits.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [area.id]);
 
   return (

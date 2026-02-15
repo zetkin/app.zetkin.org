@@ -111,7 +111,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
 
       lengthRef.current = options.length;
     }
-  }, [elemQuestion.options?.length]);
+  }, [elemQuestion.options]);
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({

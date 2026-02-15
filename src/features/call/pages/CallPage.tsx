@@ -23,7 +23,7 @@ const CallPage: FC = () => {
     } else {
       return redirect('/my');
     }
-  }, []);
+  }, [canInitialize, initialize]);
 
   const onServer = useServerSide();
 
