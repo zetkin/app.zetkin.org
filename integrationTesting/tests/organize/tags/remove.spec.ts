@@ -88,30 +88,23 @@ test.describe('Tags manager', () => {
       401
     );
 
+    const tagToDelete = page.locator(
+      `data-testid=TagManager-groupedTags-ungrouped >> text="${PlaysGuitarTag.title}"`
+    );
+    const deleteButton = page.locator('[data-testid=TagChip-deleteButton]');
+    const errorSnackbar = page.locator('[data-testid=Snackbar-error]');
+
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    await tagToDelete.waitFor({ state: 'visible' });
 
-    const tagChip = page
-      .locator('[data-testid=TagManager-groupedTags-ungrouped]')
-      .locator('[data-testid=TagChip-value]')
-      .filter({ hasText: PlaysGuitarTag.title });
+    await tagToDelete.hover();
+    await deleteButton.waitFor({ state: 'visible' });
 
-    await expect(tagChip).toBeVisible();
+    await Promise.all([
+      page.waitForRequest((req) => req.method() == 'DELETE'),
+      deleteButton.click() as Promise<void>,
+    ]);
 
-    await tagChip.hover();
-
-    const chipRoot = tagChip.locator('..').locator('..');
-    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
-
-    await expect(deleteButton).toBeVisible();
-
-    // wait for button animation to finish
-    await page.waitForTimeout(200);
-    await deleteButton.click({ force: true });
-
-    await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
-
-    const snackbar = page.locator('[data-testid=Snackbar-error]');
-
-    await expect(snackbar).toBeVisible();
+    await expect(errorSnackbar).toBeVisible();
   });
 });
