@@ -27,11 +27,17 @@ jest.mock('react-dnd', () => ({
   ],
 }));
 
-/**
- * Polyfill for URL.createObjectURL. See https://github.com/jsdom/jsdom/issues/1721.
- *
- * Required when importing `maplibre-gl` in tests.
- */
-if (typeof window.URL.createObjectURL === 'undefined') {
-  window.URL.createObjectURL = jest.fn();
+// Mock ImageData for JSDOM (used by ModalBackground)
+if (typeof ImageData === 'undefined') {
+  global.ImageData = class ImageData {
+    constructor(width: number, height: number) {
+      this.data = new Uint8ClampedArray(width * height * 4);
+      this.height = height;
+      this.width = width;
+    }
+
+    data: Uint8ClampedArray;
+    height: number;
+    width: number;
+  } as unknown as typeof ImageData;
 }

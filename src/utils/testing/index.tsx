@@ -13,7 +13,7 @@ import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import IApiClient from 'core/api/client/IApiClient';
 import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLuxemburgUser';
-import oldTheme from 'theme';
+import zuiTheme from 'zui/theme';
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
 import mockApiClient from './mocks/mockApiClient';
@@ -30,7 +30,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   return (
     <UserProvider user={null}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={oldTheme}>
+        <ThemeProvider theme={zuiTheme}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <IntlProvider
               defaultLocale="en"
