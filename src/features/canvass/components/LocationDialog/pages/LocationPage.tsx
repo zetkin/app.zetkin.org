@@ -92,12 +92,14 @@ const LocationPage: FC<LocationPageProps> = ({
             <Msg id={messageIds.location.page.quickReportButtonLabel} />
           </Button>
         )}
-        <Button onClick={() => onHouseholds(false)} variant="contained">
-          <Msg id={messageIds.location.page.householdsButtonLabel} />
-        </Button>
-        {hasHouseholds2 && (
+
+        {hasHouseholds2 ? (
           <Button onClick={() => onHouseholds(true)} variant="contained">
-            Households v2
+            <Msg id={messageIds.location.page.householdsButtonLabel} />
+          </Button>
+        ) : (
+          <Button onClick={() => onHouseholds(false)} variant="contained">
+            <Msg id={messageIds.location.page.householdsButtonLabel} />
           </Button>
         )}
       </Box>
