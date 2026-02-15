@@ -50,7 +50,7 @@ test.describe('Tags manager', () => {
 
     await Promise.all([
       page.waitForRequest((req) => req.method() == 'DELETE'),
-      deleteButton.click(),
+      deleteButton.click() as Promise<void>,
     ]);
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
