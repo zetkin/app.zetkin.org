@@ -20,6 +20,7 @@ import SurveyResponse from '../filters/SurveyResponse';
 import SurveySubmission from '../filters/SurveySubmission';
 import Task from '../filters/Task';
 import User from '../filters/User';
+import Official from '../filters/Official';
 import {
   AnyFilterConfig,
   FILTER_TYPE,
@@ -178,6 +179,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.USER && (
         <User
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.OFFICIAL && (
+        <Official
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

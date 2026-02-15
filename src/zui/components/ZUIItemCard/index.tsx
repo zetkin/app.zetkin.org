@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -40,11 +40,18 @@ type ItemCardBase = {
   title: string;
 };
 
-type AvatarCard = ItemCardBase & {
+type PersonAvatarCard = ItemCardBase & {
   /**
-   * An avatar to be displayed to the left of the card title.
+   * A Person avatar to be displayed to the left of the card title.
    */
   avatar: Omit<ZUIPersonAvatarProps, 'size' | 'variant'>;
+};
+
+type MiscAvatarCard = ItemCardBase & {
+  /**
+   * A miscellaneous avatar (any image URL) to be displayed to the left of the card title.
+   */
+  avatar: string;
 };
 
 type IconCard = ItemCardBase & {
@@ -54,7 +61,11 @@ type IconCard = ItemCardBase & {
   icon: MUIIcon;
 };
 
-type CardWithoutImage = ItemCardBase | AvatarCard | IconCard;
+type CardWithoutImage =
+  | ItemCardBase
+  | MiscAvatarCard
+  | PersonAvatarCard
+  | IconCard;
 
 type ImageSrcCard = CardWithoutImage & {
   /**
@@ -95,8 +106,14 @@ type CardWithActions = CardWithoutActions & {
 
 type ItemCard = CardWithoutActions | CardWithActions;
 
-const isAvatarCard = (itemCard: ItemCard): itemCard is AvatarCard => {
-  return 'avatar' in itemCard;
+const isPersonAvatarCard = (
+  itemCard: ItemCard
+): itemCard is PersonAvatarCard => {
+  return 'avatar' in itemCard && typeof itemCard.avatar == 'object';
+};
+
+const isMiscAvatarCard = (itemCard: ItemCard): itemCard is MiscAvatarCard => {
+  return 'avatar' in itemCard && typeof itemCard.avatar == 'string';
 };
 
 const isIconCard = (itemCard: ItemCard): itemCard is IconCard => {
@@ -122,7 +139,8 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
 
   const hasImageElement = isImageElementCard(props);
   const hasImageSrc = isImageSrcCard(props);
-  const hasAvatar = isAvatarCard(props);
+  const hasPersonAvatar = isPersonAvatarCard(props);
+  const hasImageAvatar = isMiscAvatarCard(props);
   const hasIcon = isIconCard(props);
   const hasActions = isCardWithActions(props);
 
@@ -179,7 +197,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
             {hasIcon && (
               <ZUIIcon color="secondary" icon={props.icon} size="large" />
             )}
-            {hasAvatar && (
+            {hasPersonAvatar && (
               <ZUIPersonAvatar
                 firstName={props.avatar.firstName}
                 id={props.avatar.id}
@@ -187,6 +205,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
                 size="large"
               />
             )}
+            {hasImageAvatar && <Avatar src={props.avatar} />}
             <Box
               sx={{ display: 'flex', flexDirection: 'column', gap: '0.125rem' }}
             >

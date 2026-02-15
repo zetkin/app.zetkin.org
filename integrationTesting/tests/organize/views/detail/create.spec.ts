@@ -32,7 +32,7 @@ test.describe('View detail page', () => {
       AllMembersColumns
     );
 
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 203);
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 201);
     moxy.setZetkinApiMock(
       `/orgs/1/people/views/${NewView.id}/columns`,
       'post',
@@ -49,8 +49,14 @@ test.describe('View detail page', () => {
 
     await page.goto(appUri + '/organize/1/people/lists/1');
 
-    await page.locator('[role=cell] >> input[type=checkbox]').nth(0).click();
-    await page.locator('[role=cell] >> input[type=checkbox]').nth(1).click();
+    await page
+      .locator('[data-colindex="1"] >> input[type=checkbox]')
+      .nth(0)
+      .click();
+    await page
+      .locator('[data-colindex="1"] >> input[type=checkbox]')
+      .nth(1)
+      .click();
     await page.locator('button:has-text("handle selection")').click();
 
     await Promise.all([

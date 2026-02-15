@@ -17,6 +17,7 @@ export default async function RootLayout({
   const apiClient = new BackendApiClient(headersObject);
 
   let user: ZetkinUser | null;
+
   try {
     user = await apiClient.get<ZetkinUser>('/api/users/me');
   } catch (e) {

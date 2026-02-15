@@ -1,8 +1,8 @@
 import { FC, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
-import { ActivistPortalEventMap } from './ActivistPortalEventMap';
+import useFilteredOrgEvents from 'features/public/hooks/useFilteredOrgEvents';
+import { ActivistPortalEventMap } from 'features/public/components/ActivistPortalEventMap';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 
