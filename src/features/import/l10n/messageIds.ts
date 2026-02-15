@@ -113,6 +113,7 @@ export default makeMessages('feat.import', {
         guess: m('Guess organisations'),
         header: m('Map values to organizations'),
         organizations: m('Organization'),
+        score: m('Score'),
         showOrganizationSelectButton: m('Map to...'),
         status: m('Status'),
       },
@@ -123,6 +124,7 @@ export default makeMessages('feat.import', {
         numberOfRows: m<{ numRows: number }>(
           '{numRows, plural, =1 {1 row} other {# rows}}'
         ),
+        score: m('Score'),
         tagsHeader: m('Tags'),
       },
     },

@@ -14,6 +14,19 @@ interface TagConfigRowProps {
   onAssignTag: (tag: ZetkinAppliedTag) => void;
   onUnassignTag: (tag: ZetkinAppliedTag) => void;
   title: string;
+  scores?: Record<string, number>;
+}
+
+const clamp = (v: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, v));
+
+// valueToHsl maps the value on a range from 0 to max to the colours green to red.
+// The current default of max is based on the filter defined in useGuessTags.ts.
+export function valueToHsl(value: number, max: number = 0.25) {
+  const v = clamp(Number(value) || 0, 0, max);
+  const t = v / max;
+  const hue = 120 - Math.round(t * 120);
+  return `hsl(${hue}, 70%, 45%)`;
 }
 
 const TagConfigRow: FC<TagConfigRowProps> = ({
@@ -23,6 +36,7 @@ const TagConfigRow: FC<TagConfigRowProps> = ({
   onAssignTag,
   onUnassignTag,
   title,
+  scores,
 }) => {
   return (
     <Box display="flex" flexDirection="column">
@@ -30,16 +44,16 @@ const TagConfigRow: FC<TagConfigRowProps> = ({
         <Box
           alignItems="flex-start"
           display="flex"
+          flex={1}
           justifyContent="space-between"
           paddingTop={1}
-          width="50%"
         >
           <Box display="flex" sx={{ wordBreak: 'break-all' }} width="100%">
             <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
           </Box>
           <ArrowForward color="secondary" sx={{ marginRight: 1 }} />
         </Box>
-        <Box width="50%">
+        <Box flex={1}>
           <TagManager
             assignedTags={assignedTags}
             disableEditTags
@@ -48,6 +62,21 @@ const TagConfigRow: FC<TagConfigRowProps> = ({
             onUnassignTag={(tag) => onUnassignTag(tag)}
           />
         </Box>
+        {!!scores && (
+          <Box width={50}>
+            {scores[title] != undefined && (
+              <Box
+                sx={{
+                  backgroundColor: valueToHsl(scores[title]),
+                  borderRadius: 5,
+                  height: 20,
+                  margin: '10px 15px',
+                  width: 20,
+                }}
+              />
+            )}
+          </Box>
+        )}
       </Box>
       <Typography color="secondary">
         <Msg
