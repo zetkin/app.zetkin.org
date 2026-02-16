@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -500,6 +500,20 @@ const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
         ]
       : []),
   ];
+
+  useEffect(() => {
+    const campaign = assignment.campaign;
+    const campaignHasActivities =
+      !!campaign && projectIdsWithActivities.includes(campaign.id);
+
+    if (campaignHasActivities) {
+      dispatch(
+        filtersUpdated({
+          projectIdsToFilterActivitiesBy: [campaign.id],
+        })
+      );
+    }
+  }, [target.id]);
 
   return (
     <>

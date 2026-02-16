@@ -1,14 +1,13 @@
-import { FC, Fragment } from 'react';
-import { Box, List, ListItem } from '@mui/material';
+import { FC, Suspense } from 'react';
+import { Box, CircularProgress, List, ListItem } from '@mui/material';
 
-import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import { LaneState, LaneStep, Report, ZetkinCall } from '../types';
-import AssignmentStats, { DesktopStats } from './AssignmentStats';
+import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
+import AssignmentStats from './AssignmentStats';
 import InstructionsSection from './InstructionsSection';
 import AboutSection from './AboutSection';
 import ActivitiesSection from './ActivitiesSection';
@@ -18,19 +17,17 @@ import { reportUpdated } from '../store';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
-import UnfinishedCall from './UnfinishedCall';
-import callSummarySentence from './utils/callSummarySentence';
-import ZUIDivider from 'zui/components/ZUIDivider';
+import CallSummary from './CallSummary';
 
 type Props = {
   assignment: ZetkinCallAssignment;
-  call: ZetkinCall | null;
+  call: UnfinishedCall | null;
   lane: LaneState;
   onAbandonUnfinishedCall: (callId: number) => void;
   onOpenCallLog: () => void;
   onSwitchToUnfinishedCall: (callId: number, assignmentId: number) => void;
   report: Report;
-  unfinishedCalls: ZetkinCall[];
+  unfinishedCalls: UnfinishedCall[];
 };
 
 const CallPanels: FC<Props> = ({
@@ -46,10 +43,6 @@ const CallPanels: FC<Props> = ({
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
 
-  const stats = useSimpleCallAssignmentStats(
-    assignment.organization.id,
-    assignment.id
-  );
   return (
     <>
       <Box
@@ -128,7 +121,25 @@ const CallPanels: FC<Props> = ({
           width: 1 / 3,
         })}
       >
-        <AssignmentStats stats={stats} />
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <AssignmentStats
+            assignmentId={assignment.id}
+            orgId={assignment.organization.id}
+          />
+        </Suspense>
       </Box>
       <Box
         sx={(theme) => ({
@@ -210,10 +221,25 @@ const CallPanels: FC<Props> = ({
           zIndex: lane.step == LaneStep.START ? -1 : 0,
         })}
       >
-        <ActivitiesSection
-          assignment={assignment}
-          target={call?.target ?? null}
-        />
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <ActivitiesSection
+            assignment={assignment}
+            target={call?.target ?? null}
+          />
+        </Suspense>
       </Box>
       <Box
         sx={(theme) => ({
@@ -275,51 +301,19 @@ const CallPanels: FC<Props> = ({
           width: 1 / 3,
         }}
       >
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-          }}
-        >
-          <ZUIText variant="headingLg">Woop woop!</ZUIText>
-          <ZUIText color="secondary" variant="headingSm">
-            {unfinishedCalls.length == 0
-              ? callSummarySentence(call?.target.first_name ?? '', report)
-              : messages.summary.unfinishedCallsMessage()}
-          </ZUIText>
-        </Box>
-        {unfinishedCalls.length == 0 && <DesktopStats stats={stats} />}
-        {unfinishedCalls.length > 0 && (
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-            }}
-          >
-            <Box>
-              {unfinishedCalls.map((unfinishedCall, index) => (
-                <Fragment key={unfinishedCall.id}>
-                  <UnfinishedCall
-                    onAbandonCall={() =>
-                      onAbandonUnfinishedCall(unfinishedCall.id)
-                    }
-                    onSwitchToCall={() => {
-                      onSwitchToUnfinishedCall(
-                        unfinishedCall.id,
-                        unfinishedCall.assignment_id
-                      );
-                    }}
-                    unfinishedCall={unfinishedCall}
-                  />
-                  {index != unfinishedCalls.length - 1 && <ZUIDivider />}
-                </Fragment>
-              ))}
-            </Box>
-          </Box>
-        )}
+        <CallSummary
+          assignmentId={assignment.id}
+          name={call?.target.first_name || ''}
+          onAbandonUnfinishedCall={(unfinishedCallId) =>
+            onAbandonUnfinishedCall(unfinishedCallId)
+          }
+          onSwitchToUnfinishedCall={(unfinishedCallId, assignmentId) =>
+            onSwitchToUnfinishedCall(unfinishedCallId, assignmentId)
+          }
+          orgId={assignment.organization.id}
+          report={report}
+          unfinishedCalls={unfinishedCalls}
+        />
       </Box>
       <Box
         sx={{

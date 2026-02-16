@@ -77,7 +77,7 @@ const SurveySubmissionsList = ({
       | 'firstNameColumn'
       | 'lastNameColumn'
       | 'personRecordColumn'
-  ) => {
+  ): GridColDef<ZetkinSurveySubmission> => {
     return {
       field: field,
       flex: 1,
@@ -100,11 +100,9 @@ const SurveySubmissionsList = ({
       },
       sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
       sortable: true,
-      valueGetter: (
-        params: GridRenderCellParams<ZetkinSurveySubmission, string>
-      ) => {
-        if (params.row.respondent !== null) {
-          return params.row.respondent[field] || '';
+      valueGetter: (value, row) => {
+        if (row.respondent !== null) {
+          return row.respondent[field] || '';
         } else {
           return messages.submissions.anonymous();
         }

@@ -13,7 +13,7 @@ import useUser from 'core/hooks/useUser';
 import { useMessages } from 'core/i18n';
 import ZUIMenu, { MenuItem } from 'zui/components/ZUIMenu';
 import ZUIButton from 'zui/components/ZUIButton';
-import useMemberships from 'features/organizations/hooks/useMemberships';
+import useUserMemberships from 'features/public/hooks/useUserMemberships';
 
 type Props = {
   button?: JSX.Element;
@@ -64,7 +64,7 @@ const ActivistPortalHeader: FC<Props> = ({
     [messages, router]
   );
 
-  const memberships = useMemberships().data || [];
+  const memberships = useUserMemberships();
   const isOfficial = memberships.find((membership) => membership.role != null);
 
   return (

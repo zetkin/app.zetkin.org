@@ -186,8 +186,8 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       },
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
-        return `${params.row.first_name || ''} ${params.row.last_name || ''}`;
+      valueGetter: (value, row) => {
+        return `${row.first_name || ''} ${row.last_name || ''}`;
       },
     },
     {
@@ -250,11 +250,11 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
       type: 'date',
-      valueGetter: (params) => {
-        if (params.row.person) {
-          return new Date(params.row.response_date);
+      valueGetter: (value, row) => {
+        if (row.person) {
+          return new Date(row.response_date);
         } else {
-          return new Date(params.row.reminder_sent);
+          return new Date(row.reminder_sent);
         }
       },
     },
@@ -380,10 +380,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       },
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
-        if (params.row.attended) {
+      valueGetter: (value, row) => {
+        if (row.attended) {
           return 1;
-        } else if (params.row.noshow) {
+        } else if (row.noshow) {
           return 2;
         } else {
           return 0;

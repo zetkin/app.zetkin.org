@@ -10,7 +10,7 @@ import { updateLaneStep } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import ZUIText from 'zui/components/ZUIText';
-import useOutgoingCalls from '../hooks/useOutgoingCalls';
+import useUnfinishedCalls from '../hooks/useUnfinishedCalls';
 import useCallMutations from '../hooks/useCallMutations';
 import CallSwitchModal from '../components/CallSwitchModal';
 import ZUIModal from 'zui/components/ZUIModal';
@@ -38,7 +38,7 @@ const Call: FC = () => {
 
   const { abandonUnfinishedCall, skipCurrentCall, switchToUnfinishedCall } =
     useCallMutations(assignment.organization.id);
-  const outgoingCalls = useOutgoingCalls();
+  const unfinishedCalls = useUnfinishedCalls();
 
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
@@ -47,12 +47,9 @@ const Call: FC = () => {
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
 
-  const unfinishedCalls = outgoingCalls.filter((c) => {
-    const isUnfinishedCall = c.state == 0;
-    const isNotCurrentCall = call ? call.id != c.id : true;
-
-    return isUnfinishedCall && isNotCurrentCall;
-  });
+  const filteredUnfinishedCalls = unfinishedCalls.filter((unfinishedCall) =>
+    call ? call.id != unfinishedCall.id : true
+  );
 
   const switchedTo = allUserAssignments.find(
     (oc) => oc.id == assignmentSwitchedTo
@@ -85,7 +82,7 @@ const Call: FC = () => {
         <CallHeader
           assignment={assignment}
           call={call}
-          hasUnfinishedCalls={unfinishedCalls.length > 0}
+          hasUnfinishedCalls={filteredUnfinishedCalls.length > 0}
           lane={lane}
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
@@ -104,7 +101,7 @@ const Call: FC = () => {
               }
             }}
             report={report}
-            unfinishedCalls={unfinishedCalls}
+            unfinishedCalls={filteredUnfinishedCalls}
           />
         </Box>
       </Box>
@@ -139,7 +136,9 @@ const Call: FC = () => {
           },
         }}
         size="small"
-        title={messages.skipCallDialog.title({ name: call?.target.name || '' })}
+        title={messages.skipCallDialog.title({
+          name: call?.target.name || '',
+        })}
       />
       <Snackbar
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}

@@ -3,11 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   LaneStep,
   LaneState,
-  ZetkinCall,
   SurveySubmissionData,
   Report,
   ZetkinCallPatchResponse,
   ActivityFilters,
+  FinishedCall,
+  UnfinishedCall,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
@@ -15,10 +16,11 @@ import { SerializedError } from './hooks/useAllocateCall';
 
 export interface CallStoreSlice {
   activeLaneIndex: number;
+  finishedCalls: RemoteList<FinishedCall>;
   upcomingEventsList: RemoteList<ZetkinEvent>;
   lanes: LaneState[];
   myAssignmentsList: RemoteList<ZetkinCallAssignment>;
-  outgoingCalls: RemoteList<ZetkinCall>;
+  unfinishedCalls: RemoteList<UnfinishedCall>;
   queueHasError: SerializedError | null;
 }
 
@@ -51,10 +53,11 @@ const emptyReport: Report = {
 
 const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
+  finishedCalls: remoteList(),
   lanes: [],
   myAssignmentsList: remoteList(),
-  outgoingCalls: remoteList(),
   queueHasError: null,
+  unfinishedCalls: remoteList(),
   upcomingEventsList: remoteList(),
 };
 
@@ -71,12 +74,12 @@ const CallSlice = createSlice({
       lane.submissionDataBySurveyId = {};
       lane.respondedEventIds = [];
       lane.callIsBeingAllocated = false;
-      state.outgoingCalls.isLoading = false;
+      state.unfinishedCalls.isLoading = false;
     },
     allocateNewCall: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
     },
-    allocatePreviousCall: (state, action: PayloadAction<ZetkinCall>) => {
+    allocatePreviousCall: (state, action: PayloadAction<UnfinishedCall>) => {
       const newCall = action.payload;
       state.queueHasError = null;
 
@@ -116,7 +119,7 @@ const CallSlice = createSlice({
         state.activeLaneIndex = state.lanes.length - 1;
       }
 
-      state.outgoingCalls.items.push(
+      state.unfinishedCalls.items.push(
         remoteItem(newCall.id, {
           data: newCall,
           isLoading: false,
@@ -128,18 +131,21 @@ const CallSlice = createSlice({
     callSkippedLoad: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
     },
-    callSkippedLoaded: (state, action: PayloadAction<[number, ZetkinCall]>) => {
+    callSkippedLoaded: (
+      state,
+      action: PayloadAction<[number, UnfinishedCall]>
+    ) => {
       const [skippedCallId, newCall] = action.payload;
-      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+      state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
         (item) => item.id != skippedCallId
       );
 
       state.queueHasError = null;
 
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.currentCallId = newCall.id;
+      const activeLane = state.lanes[state.activeLaneIndex];
+      activeLane.currentCallId = newCall.id;
 
-      state.outgoingCalls.items.push(
+      state.unfinishedCalls.items.push(
         remoteItem(newCall.id, {
           data: newCall,
           isLoading: false,
@@ -148,13 +154,13 @@ const CallSlice = createSlice({
         })
       );
 
-      lane.step = LaneStep.CALL;
-      lane.submissionDataBySurveyId = {};
-      lane.respondedEventIds = [];
-      lane.callIsBeingAllocated = false;
-      lane.report = emptyReport;
-      lane.filters = emptyFilters;
-      lane.selectedSurveyId = null;
+      activeLane.step = LaneStep.CALL;
+      activeLane.submissionDataBySurveyId = {};
+      activeLane.respondedEventIds = [];
+      activeLane.callIsBeingAllocated = false;
+      activeLane.report = emptyReport;
+      activeLane.filters = emptyFilters;
+      activeLane.selectedSurveyId = null;
     },
     clearReport: (state) => {
       state.lanes[state.activeLaneIndex].report = emptyReport;
@@ -186,6 +192,13 @@ const CallSlice = createSlice({
 
       const lane = state.lanes[state.activeLaneIndex];
       lane.filters = { ...lane.filters, ...updatedFilters };
+    },
+    finishedCallsLoad: (state) => {
+      state.finishedCalls.isLoading = true;
+    },
+    finishedCallsLoaded: (state, action: PayloadAction<FinishedCall[]>) => {
+      state.finishedCalls = remoteList(action.payload);
+      state.finishedCalls.loaded = new Date().toISOString();
     },
     initiateAssignment: (
       state,
@@ -245,13 +258,13 @@ const CallSlice = createSlice({
         (item) => (item.loaded = timestamp)
       );
     },
-    newCallAllocated: (state, action: PayloadAction<ZetkinCall>) => {
+    newCallAllocated: (state, action: PayloadAction<UnfinishedCall>) => {
       const newCall = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
       lane.currentCallId = action.payload.id;
       state.queueHasError = null;
 
-      state.outgoingCalls.items.push(
+      state.unfinishedCalls.items.push(
         remoteItem(newCall.id, {
           data: newCall,
           isLoading: false,
@@ -268,14 +281,7 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
-    outgoingCallsLoad: (state) => {
-      state.outgoingCalls.isLoading = true;
-    },
-    outgoingCallsLoaded: (state, action: PayloadAction<ZetkinCall[]>) => {
-      state.outgoingCalls = remoteList(action.payload);
-      state.outgoingCalls.loaded = new Date().toISOString();
-    },
-    previousCallAdd: (state, action: PayloadAction<ZetkinCall>) => {
+    previousCallAdd: (state, action: PayloadAction<UnfinishedCall>) => {
       const call = action.payload;
       state.lanes[state.activeLaneIndex].previousCall = call;
     },
@@ -286,7 +292,7 @@ const CallSlice = createSlice({
       const deletedCallId = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
 
-      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+      state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
         (item) => item.id != deletedCallId
       );
 
@@ -298,6 +304,7 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
+
     reportSubmitted: (
       state,
       action: PayloadAction<ZetkinCallPatchResponse>
@@ -307,7 +314,7 @@ const CallSlice = createSlice({
       lane.updateCallError = false;
       const updatedCall = action.payload;
 
-      const callItem = state.outgoingCalls.items.find(
+      const callItem = state.unfinishedCalls.items.find(
         (item) => item.id == updatedCall.id
       );
 
@@ -315,10 +322,10 @@ const CallSlice = createSlice({
         const data = callItem.data;
 
         if (data) {
-          state.outgoingCalls.items = state.outgoingCalls.items.filter(
+          state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
             (call) => call.id != updatedCall.id
           );
-          state.outgoingCalls.items.push({
+          state.finishedCalls.items.push({
             ...callItem,
             data: {
               ...data,
@@ -330,7 +337,6 @@ const CallSlice = createSlice({
               update_time: new Date().toISOString(),
             },
           });
-          sortOutgoingCalls(state.outgoingCalls);
         }
       }
     },
@@ -376,24 +382,7 @@ const CallSlice = createSlice({
       delete responsesBySurveyId[surveyId];
       lane.selectedSurveyId = null;
     },
-    unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
-      const abandonedCallId = action.payload;
-      state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (item) => item.id != abandonedCallId
-      );
-
-      const indexOfLaneWithAbandonedCall = state.lanes.findIndex(
-        (lane) => lane.currentCallId == abandonedCallId
-      );
-      if (indexOfLaneWithAbandonedCall != -1) {
-        state.lanes.splice(indexOfLaneWithAbandonedCall, 1);
-
-        if (state.activeLaneIndex >= indexOfLaneWithAbandonedCall) {
-          state.activeLaneIndex = Math.max(0, state.activeLaneIndex - 1);
-        }
-      }
-    },
-    unfinishedCallSwitched: (
+    switchedToUnfinishedCall: (
       state,
       action: PayloadAction<[number, number]>
     ) => {
@@ -402,19 +391,25 @@ const CallSlice = createSlice({
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
 
-      if (currentLane && currentLane.currentCallId == null) {
-        const filteredLanes = state.lanes.filter(
+      const weHaveNotStartedCallingInThisLane =
+        currentLane && currentLane.currentCallId == null;
+      if (weHaveNotStartedCallingInThisLane) {
+        const lanesWithCalls = state.lanes.filter(
           (lane) => lane.currentCallId !== null
         );
 
-        state.lanes = filteredLanes;
+        state.lanes = lanesWithCalls;
       }
 
-      const indexOfExistingLane = state.lanes.findIndex(
+      const indexOfLaneWithUnfinishedCall = state.lanes.findIndex(
         (lane) => lane.currentCallId == unfinishedCallId
       );
-      if (indexOfExistingLane != -1) {
-        state.activeLaneIndex = indexOfExistingLane;
+
+      const thereIsALaneWithTheUnfinishedCall =
+        indexOfLaneWithUnfinishedCall != -1;
+
+      if (thereIsALaneWithTheUnfinishedCall) {
+        state.activeLaneIndex = indexOfLaneWithUnfinishedCall;
       } else {
         const newLane = {
           assignmentId: unfinishedCallAssignmentId,
@@ -432,10 +427,33 @@ const CallSlice = createSlice({
         };
 
         state.lanes.push(newLane);
-        state.activeLaneIndex = state.lanes.length - 1;
+        const indexOfNewLane = state.lanes.length - 1;
+        state.activeLaneIndex = indexOfNewLane;
       }
+    },
+    unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
+      const abandonedCallId = action.payload;
+      state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
+        (item) => item.id != abandonedCallId
+      );
 
-      sortOutgoingCalls(state.outgoingCalls);
+      const indexOfLaneWithAbandonedCall = state.lanes.findIndex(
+        (lane) => lane.currentCallId == abandonedCallId
+      );
+      if (indexOfLaneWithAbandonedCall != -1) {
+        state.lanes.splice(indexOfLaneWithAbandonedCall, 1);
+
+        if (state.activeLaneIndex >= indexOfLaneWithAbandonedCall) {
+          state.activeLaneIndex = Math.max(0, state.activeLaneIndex - 1);
+        }
+      }
+    },
+    unfinishedCallsLoad: (state) => {
+      state.unfinishedCalls.isLoading = true;
+    },
+    unfinishedCallsLoaded: (state, action: PayloadAction<UnfinishedCall[]>) => {
+      state.unfinishedCalls = remoteList(action.payload);
+      state.unfinishedCalls.loaded = new Date().toISOString();
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
@@ -445,18 +463,6 @@ const CallSlice = createSlice({
     },
   },
 });
-
-const sortOutgoingCalls = (list: RemoteList<ZetkinCall>) => {
-  list.items.sort((a, b) => {
-    if (a.data && b.data) {
-      return (
-        new Date(b.data.update_time).getTime() -
-        new Date(a.data.update_time).getTime()
-      );
-    }
-    return 0;
-  });
-};
 
 export default CallSlice;
 export const {
@@ -469,6 +475,8 @@ export const {
   eventResponseAdded,
   eventResponseRemoved,
   filtersUpdated,
+  finishedCallsLoad,
+  finishedCallsLoaded,
   initiateAssignment,
   initiateWithoutAssignment,
   myAssignmentsLoaded,
@@ -476,8 +484,6 @@ export const {
   allocatePreviousCall,
   allocateNewCall,
   newCallAllocated,
-  outgoingCallsLoad,
-  outgoingCallsLoaded,
   previousCallAdd,
   previousCallClear,
   quitCall,
@@ -490,6 +496,8 @@ export const {
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,
+  unfinishedCallsLoad,
+  unfinishedCallsLoaded,
   unfinishedCallAbandoned,
-  unfinishedCallSwitched,
+  switchedToUnfinishedCall,
 } = CallSlice.actions;

@@ -107,6 +107,7 @@ export default makeMessages('feat.surveys', {
     },
   },
   insights: {
+    error: m('Unknown error occurred while loading.'),
     export: {
       errorUnknown: m('Unknown error occurred while exporting.'),
       toPdf: m('Export to pdf'),
