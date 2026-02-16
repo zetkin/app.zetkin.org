@@ -12,8 +12,9 @@ import InstructionsSection from './InstructionsSection';
 import AboutSection from './AboutSection';
 import ActivitiesSection from './ActivitiesSection';
 import ReportForm from './Report';
-import { useAppDispatch } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { reportUpdated } from '../store';
+import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
@@ -43,8 +44,19 @@ const CallPanels: FC<Props> = ({
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
 
+  const myQueueHasError = useAppSelector((state) => state.call.queueHasError);
+
   return (
     <>
+      {myQueueHasError ? (
+        <ZUIAlert
+          appear
+          description={messages.callAlert.description()}
+          severity="warning"
+          title={messages.callAlert.title()}
+        />
+      ) : null}
+
       <Box
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
