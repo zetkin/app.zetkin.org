@@ -2580,11 +2580,6 @@ feat:
         header: Oudere toevoegingen
         openButton: Toon
     toolbar:
-      bulk:
-        createList: Lijst uit selectie maken
-        delete: Geselecteerde personen uit de organisatie verwijderen
-        handleSelection: 'Selectie verwerken ({numSelected})'
-        removeFromList: Geselecteerde personen uit de lijst verwijderen
       createColumn: Nieuwe kolom
     viewLayout:
       actions:

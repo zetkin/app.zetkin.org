@@ -3414,7 +3414,6 @@ feat:
       bulk:
         createList: Skapa en ny lista med valda personer
         delete: Radera valda personer från organisationen
-        handleSelection: 'Hantera urval ({numSelected})'
         removeFromList: Ta bort valda personer från lista
       createColumn: Ny kolumn
     viewLayout:

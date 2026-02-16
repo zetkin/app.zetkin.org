@@ -1499,11 +1499,6 @@ feat:
         header: Ældre besvarelser
         openButton: Vis
     toolbar:
-      bulk:
-        createList: Opret liste fra udvalg
-        delete: Slet valgte personer fra organisationen
-        handleSelection: 'Behandle udvalg ({numSelected})'
-        removeFromList: Fjern valgte personer fra listen
       createColumn: Ny kolonne
     viewLayout:
       actions:
