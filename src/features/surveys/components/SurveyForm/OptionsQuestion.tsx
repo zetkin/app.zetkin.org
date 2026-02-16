@@ -43,7 +43,9 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
   const handleDropdownChange = useCallback((ev: SelectChangeEvent) => {
     setDropdownValue(ev.target.value);
   }, []);
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>(
+    Array.isArray(initialValue) ? initialValue : []
+  );
 
   const question = element.question;
   const widgetType = question.response_config.widget_type;
@@ -80,7 +82,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
               </ZUIText>
             </FormLabel>
             {question.description && (
-              <ZUIText id={`description-${element.id}`}>
+              <ZUIText id={`description-${element.id}`} renderLineBreaks={true}>
                 <LinkifiedText text={question.description} />
               </ZUIText>
             )}
@@ -116,7 +118,10 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                 </ZUIText>
               </FormLabel>
               {question.description && (
-                <ZUIText id={`description-${element.id}`}>
+                <ZUIText
+                  id={`description-${element.id}`}
+                  renderLineBreaks={true}
+                >
                   <LinkifiedText text={question.description} />
                 </ZUIText>
               )}

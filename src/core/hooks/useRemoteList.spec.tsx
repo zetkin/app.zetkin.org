@@ -5,11 +5,25 @@ import { Provider as ReduxProvider, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import useRemoteList from './useRemoteList';
+import usePromiseCache from './usePromiseCache';
 import { RemoteList, remoteList } from 'utils/storeUtils';
 
 type ListObjectForTest = { id: number; name: string };
 type StoreState = {
   list: RemoteList<ListObjectForTest>;
+};
+
+type RemoteListHooksForTest = {
+  actionOnError?: (err: unknown) => { payload: unknown; type: string };
+  actionOnLoad: () => { payload: undefined; type: string };
+  actionOnSuccess: (items: ListObjectForTest[]) => {
+    payload: ListObjectForTest[];
+    type: string;
+  };
+  cacheKey?: string;
+  isNecessary?: () => boolean;
+  loader: () => Promise<ListObjectForTest[]>;
+  staleWhileRevalidate?: boolean;
 };
 
 describe('useRemoteList()', () => {
@@ -61,7 +75,39 @@ describe('useRemoteList()', () => {
     expect(listItem?.tagName).toBe('LI');
   });
 
-  it('returns stale data while re-loading', async () => {
+  it('throws a promise on initial load', async () => {
+    const cacheKey = 'initial-load-test';
+    const { hooks, promise, store } = setupWrapperComponent();
+
+    hooks.cacheKey = cacheKey;
+
+    const ListComponent: FC = () => {
+      const list = useSelector<StoreState, RemoteList<ListObjectForTest>>(
+        (state) => state.list
+      );
+
+      useRemoteList(list, hooks);
+
+      return null;
+    };
+
+    render(
+      <ReduxProvider store={store}>
+        <Suspense fallback={<p>loading</p>}>
+          <ListComponent />
+        </Suspense>
+      </ReduxProvider>
+    );
+
+    const cachedPromise = usePromiseCache(cacheKey).getExistingPromise();
+    expect(cachedPromise).toBeInstanceOf(Promise);
+
+    await act(async () => {
+      await promise;
+    });
+  });
+
+  it('re-fetches when cached data is stale', async () => {
     const { hooks, promise, render, store } = setupWrapperComponent({
       ...remoteList([
         {
@@ -82,6 +128,8 @@ describe('useRemoteList()', () => {
 
     expect(hooks.loader).toHaveBeenCalled();
     expect(store.dispatch).toHaveBeenCalledTimes(2);
+    expect(queryByText('loading')).toBeNull();
+    expect(queryByText('loaded')).not.toBeNull();
   });
 });
 
@@ -119,7 +167,7 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
 
   const promise = Promise.resolve([{ id: 1, name: 'Clara Zetkin' }]);
 
-  const hooks = {
+  const hooks: RemoteListHooksForTest = {
     actionOnLoad: () => ({ payload: undefined, type: 'load' }),
     actionOnSuccess: (data: ListObjectForTest[]) => ({
       payload: data,

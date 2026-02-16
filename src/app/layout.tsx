@@ -17,6 +17,7 @@ export default async function RootLayout({
   const apiClient = new BackendApiClient(headersObject);
 
   let user: ZetkinUser | null;
+
   try {
     user = await apiClient.get<ZetkinUser>('/api/users/me');
   } catch (e) {
@@ -37,6 +38,7 @@ export default async function RootLayout({
               FEAT_HOUSEHOLDS2: process.env.FEAT_HOUSEHOLDS2,
               FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
               FEAT_TASKS: process.env.FEAT_TASKS,
+              FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
               INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
               INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
               MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,

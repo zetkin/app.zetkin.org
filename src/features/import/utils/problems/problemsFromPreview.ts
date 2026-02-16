@@ -1,4 +1,4 @@
-import { ImportPreview, ImportPreviewProblemCode } from '../types';
+import { ImportPreview, ImportPreviewProblemCode } from '../../types';
 import { ImportProblem, ImportProblemKind, ImportRowProblem } from './types';
 
 export default function problemsFromPreview(

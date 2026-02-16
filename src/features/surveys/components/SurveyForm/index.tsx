@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { FC } from 'react';
 
 import {
-  ZetkinSurveyExtended,
+  ZetkinSurvey,
   ZetkinSurveyQuestionElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
@@ -11,11 +11,13 @@ import TextQuestion from './TextQuestion';
 import OptionsQuestion from './OptionsQuestion';
 import useServerSide from 'core/useServerSide';
 import LinkifiedText from './LinkifiedText';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import ZUIFuture from 'zui/ZUIFuture';
 
 type SurveyFormProps = {
   initialValues?: Record<string, string | string[]>;
   onChange?: (name: string, value: string | string[]) => void;
-  survey: ZetkinSurveyExtended;
+  survey: ZetkinSurvey;
 };
 
 const isTextQuestionType = (
@@ -30,6 +32,7 @@ const SurveyForm: FC<SurveyFormProps> = ({
   survey,
 }) => {
   const isServer = useServerSide();
+  const extendedSurvey = useSurveyElements(survey.organization.id, survey.id);
 
   if (isServer) {
     return null;
@@ -44,61 +47,70 @@ const SurveyForm: FC<SurveyFormProps> = ({
         paddingY: '1rem',
       }}
     >
-      {survey.elements
-        .filter((element) => element.hidden !== true)
-        .map((element) => {
-          const isTextBlock = element.type == 'text';
-          const isTextQuestion = !isTextBlock && isTextQuestionType(element);
-          const isOptionsQuestion = !isTextBlock && !isTextQuestion;
+      <ZUIFuture future={extendedSurvey}>
+        {(data) => (
+          <>
+            {data
+              .filter((element) => element.hidden !== true)
+              .map((element) => {
+                const isTextBlock = element.type == 'text';
+                const isTextQuestion =
+                  !isTextBlock && isTextQuestionType(element);
+                const isOptionsQuestion = !isTextBlock && !isTextQuestion;
 
-          return (
-            <Box key={element.id}>
-              {isTextBlock && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  <ZUIText variant="headingMd">
-                    {element.text_block.header}
-                  </ZUIText>
-                  <ZUIText>
-                    {element.text_block.content && (
-                      <LinkifiedText text={element.text_block.content} />
+                return (
+                  <Box key={element.id}>
+                    {isTextBlock && (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.5rem',
+                          wordBreak: 'break-word',
+                        }}
+                      >
+                        <ZUIText variant="headingMd">
+                          {element.text_block.header}
+                        </ZUIText>
+                        <ZUIText renderLineBreaks={true}>
+                          {element.text_block.content && (
+                            <LinkifiedText text={element.text_block.content} />
+                          )}
+                        </ZUIText>
+                      </Box>
                     )}
-                  </ZUIText>
-                </Box>
-              )}
-              {isTextQuestion && (
-                <TextQuestion
-                  element={element}
-                  initialValue={initialValues[`${element.id}.text`] as string}
-                  name={`${element.id}.text`}
-                  onChange={(newValue) => {
-                    if (onChange) {
-                      onChange(`${element.id}.text`, newValue);
-                    }
-                  }}
-                />
-              )}
-              {isOptionsQuestion && (
-                <OptionsQuestion
-                  element={element}
-                  initialValue={initialValues[`${element.id}.options`]}
-                  name={`${element.id}.options`}
-                  onChange={(newValue) => {
-                    if (onChange) {
-                      onChange(`${element.id}.options`, newValue);
-                    }
-                  }}
-                />
-              )}
-            </Box>
-          );
-        })}
+                    {isTextQuestion && (
+                      <TextQuestion
+                        element={element}
+                        initialValue={
+                          initialValues[`${element.id}.text`] as string
+                        }
+                        name={`${element.id}.text`}
+                        onChange={(newValue) => {
+                          if (onChange) {
+                            onChange(`${element.id}.text`, newValue);
+                          }
+                        }}
+                      />
+                    )}
+                    {isOptionsQuestion && (
+                      <OptionsQuestion
+                        element={element}
+                        initialValue={initialValues[`${element.id}.options`]}
+                        name={`${element.id}.options`}
+                        onChange={(newValue) => {
+                          if (onChange) {
+                            onChange(`${element.id}.options`, newValue);
+                          }
+                        }}
+                      />
+                    )}
+                  </Box>
+                );
+              })}
+          </>
+        )}
+      </ZUIFuture>
     </Box>
   );
 };

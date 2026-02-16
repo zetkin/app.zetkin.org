@@ -11,7 +11,7 @@ import messageIds from 'features/import/l10n/messageIds';
 import Preview from './Preview';
 import SheetSettings from './SheetSettings';
 import useConfigure from 'features/import/hooks/useConfigure';
-import useImportConfigState from 'features/import/hooks/useUIDataColumns';
+import useImportConfigState from 'features/import/hooks/useImportConfigState';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEmptyState from 'zui/ZUIEmptyState';

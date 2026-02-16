@@ -17,7 +17,7 @@ type HeadlinePreviewableInputProps = {
 };
 
 const VARIANTS = {
-  content: { fontSize: '1.1em' },
+  content: { fontSize: '1.1em', whiteSpace: 'pre-line' },
   header: { fontSize: '2em' },
 } as const;
 

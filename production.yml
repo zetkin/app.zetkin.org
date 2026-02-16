@@ -1,6 +1,6 @@
-version: "3"
+version: '3'
 volumes:
-  certs:
+  certs: {}
 services:
   frontend:
     build:

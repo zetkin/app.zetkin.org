@@ -44,14 +44,20 @@ test.describe('View detail page', () => {
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`
     );
 
     await page.fill('#rename-column-title-field', newTitle);
-    await page.click('button:text("Save")');
+
+    await Promise.all([
+      page.waitForResponse((res) =>
+        res.url().includes(`/views/1/columns/${AllMembersColumns[0].id}`)
+      ),
+      page.click('button:text("Save")'),
+    ]);
 
     // Check body of request
     const columnPatchRequest = moxy
@@ -82,7 +88,7 @@ test.describe('View detail page', () => {
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`
