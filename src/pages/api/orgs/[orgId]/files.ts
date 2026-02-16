@@ -55,11 +55,7 @@ export default async function handler(
       },
       (apiRes) => {
         res.status(apiRes.statusCode!);
-
-        const contentType = apiRes.headers['content-type'];
-        if (contentType) {
-          res.setHeader('Content-Type', contentType);
-        }
+        res.setHeader('Content-Type', apiRes.headers['content-type']!);
 
         apiRes.on('data', (d) => {
           res.write(d);
