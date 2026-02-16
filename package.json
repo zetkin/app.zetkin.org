@@ -124,6 +124,8 @@
     "@storybook/nextjs": "^8.1.10",
     "@storybook/react": "^8.1.10",
     "@storybook/test": "^8.1.10",
+    "@storybook/manager-api": "8.1.10",
+    "@storybook/theming": "8.1.10",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/chance": "^1.1.3",

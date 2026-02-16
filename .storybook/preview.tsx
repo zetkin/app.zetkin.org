@@ -161,11 +161,12 @@ export const parameters = {
       const theme = isDark ? darkTheme : lightTheme;
 
       if (isDark === null) {
-        return null;
+        return <DocsContainer {...props} />;
       }
 
       return <DocsContainer {...props} theme={theme} />;
     },
+    theme: lightTheme,
   },
   options: {
     storySort: {
