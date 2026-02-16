@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { Stack } from '@mui/material';
 import { LooksOneOutlined } from '@mui/icons-material';
 
@@ -9,6 +9,7 @@ import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 import { Report, ZetkinCallTarget } from 'features/call/types';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 type Props = {
   disableCallerNotes: boolean;
@@ -26,8 +27,8 @@ const OrganizerLog: FC<Props> = ({
   const isMobile = useIsMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const messages = useMessages(messageIds);
-  let initialMessage = '';
 
+  let initialMessage = '';
   if (report.organizerLog) {
     initialMessage = report.organizerLog;
   } else if (!report.organizerLog && report.wrongNumber) {
@@ -40,7 +41,10 @@ const OrganizerLog: FC<Props> = ({
       ]({ altPhone, phone });
   }
 
-  const [message, setMessage] = useState(initialMessage);
+  const [message, setMessage] = useLocalStorage(
+    `pending-orgLog-${target.id}`,
+    initialMessage
+  );
 
   useEffect(() => {
     const keysPressed: Record<string, boolean> = {};
@@ -115,6 +119,7 @@ const OrganizerLog: FC<Props> = ({
               organizerLog: message,
               step: 'callerLog',
             });
+            localStorage.removeItem(`pending-orgLog-${target.id}`);
           }}
           variant="secondary"
         />

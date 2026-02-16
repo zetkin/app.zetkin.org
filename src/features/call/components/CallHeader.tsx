@@ -2,7 +2,7 @@ import { SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
-import { LaneState, LaneStep, Report, ZetkinCall } from '../types';
+import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -20,7 +20,7 @@ import messageIds from '../l10n/messageIds';
 
 type Props = {
   assignment: ZetkinCallAssignment;
-  call: ZetkinCall | null;
+  call: UnfinishedCall | null;
   hasUnfinishedCalls: boolean;
   lane: LaneState;
   onSkipCall: () => void;
@@ -124,11 +124,11 @@ const CallHeader: FC<Props> = ({
               lastName={call.target.last_name}
             />
             <ZUIText variant="headingLg">{call.target.name}</ZUIText>
-            <ZUIText color="secondary" variant="headingLg">{`${
-              call.target.phone
-            }${
-              call.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
-            }`}</ZUIText>
+            <ZUIText color="secondary" variant="headingLg">
+              {[call.target.phone, call.target.alt_phone]
+                .filter((number) => !!number)
+                .join('/')}
+            </ZUIText>
           </>
         )}
       </Box>

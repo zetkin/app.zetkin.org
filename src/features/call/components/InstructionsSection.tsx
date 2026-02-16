@@ -4,14 +4,14 @@ import { Box } from '@mui/material';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
-import { LaneStep, ZetkinCall } from '../types';
+import { LaneStep, UnfinishedCall } from '../types';
 import ZUITabView from 'zui/components/ZUITabView';
 import { AboutContent } from './AboutSection';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 type Props = {
-  call: ZetkinCall | null;
+  call: UnfinishedCall | null;
   instructions: string;
   step: LaneStep;
 };
