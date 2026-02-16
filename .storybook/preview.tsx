@@ -16,7 +16,7 @@ import React, {
   useState,
 } from 'react';
 import { Preview, StoryFn } from '@storybook/react';
-import { DARK_MODE_EVENT_NAME, useDarkMode } from 'storybook-dark-mode';
+import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { addons } from '@storybook/preview-api';
 import { themes, ThemeVars, ThemeVarsColors } from '@storybook/theming';
 
@@ -75,13 +75,37 @@ class MockApiClient extends FetchApiClient {
   }
 }
 
+const useIsDarkMode = () => {
+  const [isDark, setDark] = useState(() => {
+    const existing = localStorage.getItem('storybook-dark-mode');
+    if (!existing) {
+      return null;
+    }
+    return existing === 'true';
+  });
+
+  useEffect(() => {
+    channel.on(DARK_MODE_EVENT_NAME, setDark);
+    return () => channel.removeListener(DARK_MODE_EVENT_NAME, setDark);
+  }, [channel, setDark]);
+
+  useEffect(() => {
+    if (isDark === null) {
+      return;
+    }
+    localStorage.setItem('storybook-dark-mode', isDark + '');
+  }, [isDark]);
+
+  return isDark;
+};
+
 export const decorators: Preview['decorators'] = [
   (Story: StoryFn) => {
-    const themeMode = useDarkMode();
+    const isDark = useIsDarkMode();
     const theme = useMemo(
       () =>
-        themeMode ? createTheme(newTheme, { palette: darkPalette }) : newTheme,
-      [themeMode]
+        isDark ? createTheme(newTheme, { palette: darkPalette }) : newTheme,
+      [isDark]
     );
     return (
       <ThemeProvider theme={theme}>
@@ -138,25 +162,7 @@ export const parameters = {
   },
   docs: {
     container: (props: PropsWithChildren<DocsContainerProps>) => {
-      const [isDark, setDark] = useState(() => {
-        const existing = localStorage.getItem('storybook-dark-mode');
-        if (!existing) {
-          return null;
-        }
-        return existing === 'true';
-      });
-
-      useEffect(() => {
-        channel.on(DARK_MODE_EVENT_NAME, setDark);
-        return () => channel.removeListener(DARK_MODE_EVENT_NAME, setDark);
-      }, [channel, setDark]);
-
-      useEffect(() => {
-        if (isDark === null) {
-          return;
-        }
-        localStorage.setItem('storybook-dark-mode', isDark + '');
-      }, [isDark]);
+      const isDark = useIsDarkMode();
 
       const theme = isDark ? darkTheme : lightTheme;
 
