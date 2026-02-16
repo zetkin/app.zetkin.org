@@ -81,12 +81,13 @@ test.describe('Task detail page', () => {
       page.locator('data-testid=FileLibraryDialog-useButton').click(),
     ]);
 
-    const previewImageLocator = page.locator(
-      'data-testid=TaskPreviewSection-section >> img'
-    );
+    await page.locator('data-testid=TaskPreviewSection-section').waitFor();
 
-    await previewImageLocator.first().scrollIntoViewIfNeeded();
-    await expect(previewImageLocator.first()).toBeVisible();
+    expect(
+      await page
+        .locator('data-testid=TaskPreviewSection-section >> img')
+        .isVisible()
+    ).toBeTruthy();
   });
 
   test('lets user reset cover image', async ({
