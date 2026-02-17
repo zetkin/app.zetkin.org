@@ -44,11 +44,11 @@ const CallPanels: FC<Props> = ({
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
 
-  const myQueueHasError = useAppSelector((state) => state.call.queueHasError);
+  const queueError = useAppSelector((state) => state.call.queueError);
 
   return (
     <>
-      {myQueueHasError ? (
+      {queueError ? (
         <ZUIAlert
           appear
           description={messages.callAlert.description()}

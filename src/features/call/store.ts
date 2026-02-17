@@ -21,7 +21,7 @@ export interface CallStoreSlice {
   lanes: LaneState[];
   myAssignmentsList: RemoteList<ZetkinCallAssignment>;
   unfinishedCalls: RemoteList<UnfinishedCall>;
-  queueHasError: SerializedError | null;
+  queueError: SerializedError | null;
 }
 
 const emptyFilters: ActivityFilters = {
@@ -56,7 +56,7 @@ const initialState: CallStoreSlice = {
   finishedCalls: remoteList(),
   lanes: [],
   myAssignmentsList: remoteList(),
-  queueHasError: null,
+  queueError: null,
   unfinishedCalls: remoteList(),
   upcomingEventsList: remoteList(),
 };
@@ -67,7 +67,7 @@ const CallSlice = createSlice({
   reducers: {
     allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
-      state.queueHasError = error;
+      state.queueError = error;
 
       const lane = state.lanes[state.activeLaneIndex];
       lane.step = LaneStep.START;
@@ -81,7 +81,7 @@ const CallSlice = createSlice({
     },
     allocatePreviousCall: (state, action: PayloadAction<UnfinishedCall>) => {
       const newCall = action.payload;
-      state.queueHasError = null;
+      state.queueError = null;
 
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
@@ -140,7 +140,7 @@ const CallSlice = createSlice({
         (item) => item.id != skippedCallId
       );
 
-      state.queueHasError = null;
+      state.queueError = null;
 
       const activeLane = state.lanes[state.activeLaneIndex];
       activeLane.currentCallId = newCall.id;
@@ -262,7 +262,7 @@ const CallSlice = createSlice({
       const newCall = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
       lane.currentCallId = action.payload.id;
-      state.queueHasError = null;
+      state.queueError = null;
 
       state.unfinishedCalls.items.push(
         remoteItem(newCall.id, {
