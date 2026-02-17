@@ -1,27 +1,13 @@
 import { ColorPalette } from '@storybook/blocks';
-import { FC, ReactElement, useEffect, useState } from 'react';
-import { addons } from '@storybook/preview-api';
-import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
+import { FC, ReactElement } from 'react';
 
 import lightPalette, { darkPalette } from 'zui/theme/palette';
-
-const channel = addons.getChannel();
+import { useStorybookDarkMode } from 'zui/hooks/useStorybookDarkMode';
 
 export const ThemedColorPalette: FC<{
   children: ReactElement | ((theme: typeof lightPalette) => ReactElement);
 }> = ({ children }) => {
-  const [isDark, setDark] = useState(() => {
-    const existing = localStorage.getItem('storybook-dark-mode');
-    if (!existing) {
-      return null;
-    }
-    return existing === 'true';
-  });
-
-  useEffect(() => {
-    channel.on(DARK_MODE_EVENT_NAME, setDark);
-    return () => channel.removeListener(DARK_MODE_EVENT_NAME, setDark);
-  }, [channel, setDark]);
+  const isDark = useStorybookDarkMode();
 
   const palette = isDark ? darkPalette : lightPalette;
 
