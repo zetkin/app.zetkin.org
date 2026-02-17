@@ -104,6 +104,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
       }
       renderMap={() => <ActivistPortalOrgEventsMap orgId={org.id} />}
       showMap={true}
+      showMobileFab={lastSegment === navBarItems[0].value}
     >
       <NoSsr>{children}</NoSsr>
     </EventMapLayout>
