@@ -17,7 +17,8 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
     keys: ['title'],
   });
 
-  const guessTags = () => {
+  const guessTags = (): Record<string, number> => {
+    const scores: Partial<Record<string, number>> = {};
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
       (acc: TagColumn['mapping'], cellValue: CellData) => {
@@ -30,10 +31,14 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
           );
           // If there is a match, guess it
           if (goodResults.length > 0) {
+            const bestTag = goodResults.sort(
+              (a, b) => (a.score ?? 1) - (b.score ?? 1)
+            )[0];
+            scores[cellValue] = bestTag.score;
             return [
               ...acc,
               {
-                tags: [{ id: goodResults[0].item.id }],
+                tags: [{ id: bestTag.item.id }],
                 value: cellValue,
               },
             ];
@@ -45,6 +50,7 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
     );
 
     assignTags(matchedRows);
+    return scores as Record<string, number>;
   };
 
   return guessTags;

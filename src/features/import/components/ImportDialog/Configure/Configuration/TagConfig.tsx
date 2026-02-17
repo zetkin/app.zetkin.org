@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box, Button, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
@@ -24,6 +24,9 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex
   );
+  const [scores, setScores] = useState<Record<string, number> | undefined>(
+    undefined
+  );
 
   return (
     <Box
@@ -39,25 +42,34 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
         </Typography>
         <Button
           onClick={() => {
-            guessTags();
+            setScores(guessTags());
           }}
         >
           {messages.configuration.configure.tags.guess()}
         </Button>
       </Box>
       <Box alignItems="center" display="flex" paddingY={2}>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {uiDataColumn.title.toLocaleUpperCase()}
           </Typography>
         </Box>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {messages.configuration.configure.tags
               .tagsHeader()
               .toLocaleUpperCase()}
           </Typography>
         </Box>
+        {!!scores && (
+          <Box width={50}>
+            <Typography variant="body2">
+              {messages.configuration.configure.tags
+                .score()
+                .toLocaleUpperCase()}
+            </Typography>
+          </Box>
+        )}
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <>
@@ -69,6 +81,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
               assignTag({ id: tag.id }, uniqueValue)
             }
             onUnassignTag={(tag: ZetkinTag) => unAssignTag(tag.id, uniqueValue)}
+            scores={scores}
             title={uniqueValue.toString()}
           />
         </>
@@ -82,6 +95,7 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
             numRows={uiDataColumn.numberOfEmptyRows}
             onAssignTag={(tag: ZetkinTag) => assignTag({ id: tag.id }, null)}
             onUnassignTag={(tag: ZetkinTag) => unAssignTag(tag.id, null)}
+            scores={scores}
             title={messages.configuration.configure.tags.empty()}
           />
         </>

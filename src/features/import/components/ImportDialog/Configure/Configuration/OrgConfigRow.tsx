@@ -14,6 +14,7 @@ import { FC, useState } from 'react';
 import messageIds from 'features/import/l10n/messageIds';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
+import { valueToHsl } from './TagConfigRow';
 
 interface OrgConfigRowProps {
   italic?: boolean;
@@ -23,6 +24,7 @@ interface OrgConfigRowProps {
   orgs: Pick<ZetkinOrganization, 'id' | 'title'>[];
   selectedOrgId: number | null;
   title: string;
+  scores?: Record<string, number>;
 }
 
 const OrgConfigRow: FC<OrgConfigRowProps> = ({
@@ -33,6 +35,7 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
   orgs,
   selectedOrgId,
   title,
+  scores,
 }) => {
   const messages = useMessages(messageIds);
   const [mapping, setMapping] = useState(false);
@@ -45,21 +48,16 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
         <Box
           alignItems="flex-start"
           display="flex"
+          flex={1}
           justifyContent="space-between"
           paddingTop={1}
-          width="50%"
         >
           <Box display="flex" sx={{ wordBreak: 'break-all' }} width="100%">
             <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
           </Box>
           <ArrowForward color="secondary" sx={{ marginRight: 1 }} />
         </Box>
-        <Box
-          alignItems="flex-start"
-          display="flex"
-          paddingRight={1}
-          width="50%"
-        >
+        <Box alignItems="flex-start" display="flex" flex={1} paddingRight={1}>
           {!showSelect && (
             <Button onClick={() => setMapping(true)}>
               <Msg
@@ -105,6 +103,21 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
             </>
           )}
         </Box>
+        {!!scores && (
+          <Box width={50}>
+            {scores[title] != undefined && (
+              <Box
+                sx={{
+                  backgroundColor: valueToHsl(scores[title]),
+                  borderRadius: 5,
+                  height: 20,
+                  margin: '10px 15px',
+                  width: 20,
+                }}
+              />
+            )}
+          </Box>
+        )}
       </Box>
       <Typography color="secondary">
         <Msg
