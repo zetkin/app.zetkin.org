@@ -33,7 +33,8 @@ export default function useAllocateCall(
       );
       dispatch(newCallAllocated(call));
     } catch (e) {
-      const queueError = e instanceof Error ? e : new Error('Empty queue error');
+      const queueError =
+        e instanceof Error ? e : new Error('Empty queue error');
       const serialized = {
         message: queueError.message,
         name: queueError.name,
