@@ -52,7 +52,7 @@ const ActivistPortalHeader: FC<Props> = ({
       ...(isOfficial
         ? [
             {
-              label: 'Organize',
+              label: messages.home.menu.organize(),
               onClick: () => router.push('/organize'),
             },
           ]

@@ -70,10 +70,9 @@ export default makeMessages('feat.organizations', {
       viewInMap: m('View in map'),
     },
     menu: {
-      allEvents: m('All events'),
       logout: m('Logout'),
-      myActivities: m('My activities'),
       myZetkin: m('My Zetkin'),
+      organize: m('Organize'),
       settings: m('Settings'),
     },
     tabs: {
