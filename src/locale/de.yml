@@ -2139,6 +2139,14 @@ feat:
     journeys:
       addButton: Beginne eine neue Anfrage
       title: Anfragen
+    notes:
+      note:
+        deleteWarningDescription: Bist du sicher, dass Du diese Notiz über {name}
+          löschen will? Das Löschen einer Notiz kann nicht rückgängig gemacht
+          werden.
+        deleteWarningTitle: Lösche Notiz
+      placeHolder: Schreibe eine Notiz
+      title: Notizen
     numberOfChangesMessage: Wir werden {number, plural, =1 {1 Feld} other {# Felder}} aktualisieren
     organizations:
       add: Füge neue Unterorganisation hinzu
@@ -2277,6 +2285,10 @@ feat:
           description: Finde Personen, die Anfragen bearbeiten oder diese abgeschlossen
             haben.
           title: Personen aus Anfragen
+        official:
+          description: Finde alle Personen, die Organizer- oder Admin-Rechte haben in
+            einer Organisation
+          title: Basierend auf deren Zugriffslevel
         person_data:
           description: Name, Adresse, E-Mail und mehr.
           title: Persönliche Informationen
@@ -2461,6 +2473,15 @@ feat:
           der Organisation {timeFrame}.'
         numPeople: '{numPeople, plural, one {Person} other {Personen}}'
         numPeopleSelect: '{numPeopleSelect}'
+      official:
+        examples:
+          one: Füge alle Personen hinzu, die Organizer- oder Admin-Rechte haben
+          two: Entferne alle Personen mit Admin-Rechten
+        inputString: '{addRemoveSelect} alle Personen, die Zugriff als {roleSelect} haben.'
+        roleSelect:
+          admin: Admins
+          any: entweder Organizer*in oder Administrator*in
+          organizer: Organizer*innen
       personData:
         ellipsis: ...
         examples:
@@ -2503,6 +2524,7 @@ feat:
           text: '{fieldName} ist "{searchTerm}"'
           url: '{fieldName} ist "{searchTerm}"'
       personTags:
+        addAllFromGroupButton: Alle hinzufügen
         condition:
           conditionSelect:
             all: alle
@@ -2524,6 +2546,7 @@ feat:
           two: "Entferne Personen mit allen der folgenden Stichwörter: 'Vorstandsmitglied'"
         inputString: '{addRemoveSelect} Personen mit {condition} der folgenden
           Schlagwörter: {tags}'
+        noGroup: Keine Gruppe
       personView:
         examples:
           one: Füge Personen hinzu, die in der Liste "Aktive Mitglieder 2022" stehen.
@@ -2843,6 +2866,7 @@ feat:
           Umfrage jetzt bearbeitest, kann das Probleme mit den Ergebnissen
           verursachen.
     insights:
+      error: Beim Laden ist ein unbekannter Fehler aufgetreten.
       export:
         errorUnknown: Ein unbekannter Fehler passierte beim Expotieren.
         toPdf: Als PDF exportieren
@@ -2934,6 +2958,14 @@ feat:
         E-Mail-Adresse. Aber die Antwort auf die Umfrage beinhaltet eine. Willst
         du diese Adresse der Person hinzufügen?
       title: E-Mail-Adresse hinzufügen
+    surveyDialogDifferentEmail:
+      description: Die Person, die Sie verknüpfen möchten, hat eine andere
+        E-Mail-Adresse als die in der Umfrageantwort angegebene. Möchten Sie die
+        E-Mail-Adresse aus der Umfrageantwort als neue E-Mail-Adresse für diese
+        Person festlegen?
+      keep: Nein, alte E-Mail behalten
+      title: E-Mail-Adresse aktualisieren
+      update: Ja, aktualisiere die E-Mail-Adresse
     surveyDuplicated:
       error: 'Fehler: Umfrage konnte nicht dupliziert werden'
       success: Deine Umfrage wurde dupliziert.
@@ -3434,6 +3466,8 @@ feat:
       warningText: Möchtest du diese Liste wirklich löschen? Alle Daten in der Liste
         wie Notizen und Checklisten werden gelöscht.
     deleteRowsDialog:
+      title: Lösche alle Einträge von {numPeople, plural, =1 {one person} other {#
+        persons}}
       warning: Wenn Sie diese Aktion bestätigen, werden alle Datensätze dieser
         Personen aus der gesamten Organisation gelöscht.
     editViewTitleAlert:
@@ -3512,6 +3546,7 @@ feat:
       bulk:
         createList: Liste aus Auswahl erstellen
         delete: Ausgewählte Personen aus der Organisation löschen
+        handleSelection: Auswählen
         removeFromList: Ausgewählte Personen aus der Liste entfernen
       createColumn: Neue Spalte
     viewLayout:
