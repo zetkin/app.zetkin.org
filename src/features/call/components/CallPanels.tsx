@@ -298,6 +298,11 @@ const CallPanels: FC<Props> = ({
           padding: 2,
           position: 'relative',
           transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
+          visibility:
+            !call &&
+            (lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT)
+              ? 'hidden'
+              : undefined,
           width: 1 / 3,
         }}
       >

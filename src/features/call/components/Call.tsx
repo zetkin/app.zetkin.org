@@ -2,6 +2,7 @@
 
 import { Alert, Box, Slide, Snackbar } from '@mui/material';
 import { FC, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { LaneStep } from '../types';
@@ -21,12 +22,13 @@ import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 
-const Call: FC = () => {
+const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
   const allUserAssignments = useMyAssignments();
+  const router = useRouter();
 
   const [callLogOpen, setCallLogOpen] = useState(false);
   const [assignmentSwitchedTo, setAssignmentSwitchedTo] = useState<
@@ -105,6 +107,32 @@ const Call: FC = () => {
           />
         </Box>
       </Box>
+      <ZUIModal
+        open={
+          !call && (lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT)
+        }
+        primaryButton={{
+          label: messages.unexpectedError.reloadButton(),
+          onClick: () => {
+            clearCallLanes();
+            router.push(`/call/${assignment.id}`);
+          },
+        }}
+        secondaryButton={{
+          label: messages.unexpectedError.backToMyZetkinButton(),
+          onClick: () => {
+            clearCallLanes();
+            router.push('/my');
+          },
+        }}
+        title={messages.unexpectedError.title()}
+      >
+        <Box sx={{ paddingTop: 2 }}>
+          <ZUIText>
+            <Msg id={messageIds.unexpectedError.description} />
+          </ZUIText>
+        </Box>
+      </ZUIModal>
       <CallSwitchModal
         assignment={assignment}
         onClose={() => setCallLogOpen(false)}

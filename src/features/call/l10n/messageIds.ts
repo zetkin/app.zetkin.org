@@ -360,4 +360,12 @@ export default makeMessages('feat.call', {
       'Switched assignments. You are now calling in {assignmentTitle}'
     ),
   },
+  unexpectedError: {
+    backToMyZetkinButton: m('Go back to My Zetkin'),
+    description: m(
+      'Something went wrong, sorry about that! You can choose to reload the assignment or go back to "My Zetkin".'
+    ),
+    reloadButton: m('Reload assignment'),
+    title: m('Oops! An unexpected error happened'),
+  },
 });

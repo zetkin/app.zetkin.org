@@ -20,7 +20,7 @@ export default function useCallInitialization() {
   const user = useUser();
   const userCallAssignments = useMyAssignments();
 
-  const [callLanes, setLanes] = useLocalStorage<{
+  const [callLanes, setLanes, clearCallLanes] = useLocalStorage<{
     activeLaneIndex: number;
     lanes: LaneState[];
     timestamp: number;
@@ -117,6 +117,7 @@ export default function useCallInitialization() {
 
   return {
     canInitialize,
+    clearCallLanes,
     clearStaleCallLanes,
     initialize,
   };
