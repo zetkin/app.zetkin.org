@@ -5,10 +5,11 @@ import {
   LaneState,
   SurveySubmissionData,
   Report,
-  ZetkinCallPatchResponse,
+  ZetkinUpdatedCall,
   ActivityFilters,
   FinishedCall,
   UnfinishedCall,
+  ReportSubmissionError,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
@@ -107,12 +108,11 @@ const CallSlice = createSlice({
           filters: emptyFilters,
           previousCall: null,
           report: emptyReport,
+          reportSubmissionError: null,
           respondedEventIds: [],
           selectedSurveyId: null,
           step: LaneStep.CALL,
           submissionDataBySurveyId: {},
-          surveySubmissionError: false,
-          updateCallError: false,
         };
 
         state.lanes.push(newLane);
@@ -221,12 +221,11 @@ const CallSlice = createSlice({
           filters: emptyFilters,
           previousCall: null,
           report: emptyReport,
+          reportSubmissionError: null,
           respondedEventIds: [],
           selectedSurveyId: null,
           step: LaneStep.START,
           submissionDataBySurveyId: {},
-          surveySubmissionError: false,
-          updateCallError: false,
         };
 
         state.lanes.push(newLane);
@@ -281,10 +280,6 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
-    previousCallAdd: (state, action: PayloadAction<UnfinishedCall>) => {
-      const call = action.payload;
-      state.lanes[state.activeLaneIndex].previousCall = call;
-    },
     previousCallClear: (state) => {
       state.lanes[state.activeLaneIndex].previousCall = null;
     },
@@ -304,15 +299,11 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
-
-    reportSubmitted: (
-      state,
-      action: PayloadAction<ZetkinCallPatchResponse>
-    ) => {
+    reportSubmitted: (state, action: PayloadAction<ZetkinUpdatedCall>) => {
       const lane = state.lanes[state.activeLaneIndex];
-      lane.surveySubmissionError = false;
-      lane.updateCallError = false;
+      lane.reportSubmissionError = null;
       const updatedCall = action.payload;
+      lane.previousCall = updatedCall;
 
       const callItem = state.unfinishedCalls.items.find(
         (item) => item.id == updatedCall.id
@@ -345,15 +336,12 @@ const CallSlice = createSlice({
       const lane = state.lanes[state.activeLaneIndex];
       lane.report = report;
     },
-    setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
+    setReportSubmissionError: (
+      state,
+      action: PayloadAction<ReportSubmissionError>
+    ) => {
       const lane = state.lanes[state.activeLaneIndex];
-      lane.surveySubmissionError = action.payload;
-      lane.updateCallError = false;
-    },
-    setUpdateCallError: (state, action: PayloadAction<boolean>) => {
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.updateCallError = action.payload;
-      lane.surveySubmissionError = false;
+      lane.reportSubmissionError = action.payload;
     },
     surveyDeselected: (state) => {
       const lane = state.lanes[state.activeLaneIndex];
@@ -418,12 +406,11 @@ const CallSlice = createSlice({
           filters: emptyFilters,
           previousCall: null,
           report: emptyReport,
+          reportSubmissionError: null,
           respondedEventIds: [],
           selectedSurveyId: null,
           step: LaneStep.CALL,
           submissionDataBySurveyId: {},
-          surveySubmissionError: false,
-          updateCallError: false,
         };
 
         state.lanes.push(newLane);
@@ -484,15 +471,13 @@ export const {
   allocatePreviousCall,
   allocateNewCall,
   newCallAllocated,
-  previousCallAdd,
   previousCallClear,
   quitCall,
   reportSubmitted,
   reportUpdated,
   surveyDeselected,
   surveySelected,
-  setSurveySubmissionError,
-  setUpdateCallError,
+  setReportSubmissionError,
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,

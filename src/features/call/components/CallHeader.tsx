@@ -9,7 +9,7 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIButton from 'zui/components/ZUIButton';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated, previousCallAdd, updateLaneStep } from '../store';
+import { filtersUpdated, updateLaneStep } from '../store';
 import useAllocateCall from '../hooks/useAllocateCall';
 import useSubmitReport from '../hooks/useSubmitReport';
 import useCallMutations from '../hooks/useCallMutations';
@@ -51,7 +51,7 @@ const CallHeader: FC<Props> = ({
     error: errorAllocatingCall,
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
-  const { submitReport } = useSubmitReport(assignment.organization.id);
+  const submitReport = useSubmitReport(assignment.organization.id);
 
   return (
     <Box
@@ -231,13 +231,8 @@ const CallHeader: FC<Props> = ({
                   };
                 });
 
-              const result = await submitReport(call.id, report, submissions);
+              await submitReport(call.id, report, submissions);
 
-              if (result.kind === 'success') {
-                dispatch(previousCallAdd(call));
-              } else {
-                setSubmittingReport(false);
-              }
               setSubmittingReport(false);
               dispatch(updateLaneStep(LaneStep.SUMMARY));
             } else {
