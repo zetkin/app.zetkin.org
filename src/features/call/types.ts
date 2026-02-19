@@ -164,6 +164,7 @@ export type LaneState = {
   callIsBeingAllocated: boolean;
   currentCallId: number | null;
   filters: ActivityFilters;
+  pendingOrgLog: string;
   previousCall: ZetkinUpdatedCall | null;
   report: Report;
   reportSubmissionError: ReportSubmissionError | null;

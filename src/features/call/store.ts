@@ -106,6 +106,7 @@ const CallSlice = createSlice({
           callIsBeingAllocated: false,
           currentCallId: newCall.id,
           filters: emptyFilters,
+          pendingOrgLog: '',
           previousCall: null,
           report: emptyReport,
           reportSubmissionError: null,
@@ -219,6 +220,7 @@ const CallSlice = createSlice({
           callIsBeingAllocated: false,
           currentCallId: null,
           filters: emptyFilters,
+          pendingOrgLog: '',
           previousCall: null,
           report: emptyReport,
           reportSubmissionError: null,
@@ -404,6 +406,7 @@ const CallSlice = createSlice({
           callIsBeingAllocated: false,
           currentCallId: unfinishedCallId,
           filters: emptyFilters,
+          pendingOrgLog: '',
           previousCall: null,
           report: emptyReport,
           reportSubmissionError: null,
@@ -448,6 +451,10 @@ const CallSlice = createSlice({
       const lane = state.lanes[state.activeLaneIndex];
       lane.step = step;
     },
+    updatePendingOrgLog: (state, action: PayloadAction<string>) => {
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.pendingOrgLog = action.payload;
+    },
   },
 });
 
@@ -485,4 +492,5 @@ export const {
   unfinishedCallsLoaded,
   unfinishedCallAbandoned,
   switchedToUnfinishedCall,
+  updatePendingOrgLog,
 } = CallSlice.actions;
