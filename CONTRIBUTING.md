@@ -7,8 +7,9 @@ information you need to have a smooth experience contributing.
 2. Code style and formatting
 3. Git conventions
 4. Handling text (and i18n)
-5. Submitting your contribution
-6. Summary (checklist)
+5. Design system
+6. Submitting your contribution
+7. Summary (checklist)
 
 ## 1. How and when to contribute
 You can contribute whenever and however you like (but it helps to follow the guidelines
@@ -121,7 +122,24 @@ not need to do this.
 More information about how our internationalization system works can be found in
 [the PR that introduced it](https://github.com/zetkin/app.zetkin.org/pull/1048).
 
-## 5. Submitting your contribution
+## 5. The design system
+
+Our design system consists of three parts:
+- Material UI (MUI): This is our base and widely used in the codebase. Use `sx` to style
+  your components.
+- The old utility designs (src/zui): Think of them as utility components we use to
+  reduce code
+- The new ZUI design system (src/zui/components): The future design system of Zetkin
+  that will replace the other two
+
+If you want to contribute to the design system, you can use [Storybook](https://app.dev.zetkin.org/storybook).
+To run it locally, you can do:
+
+```bash
+npm run storybook
+```
+
+## 6. Submitting your contribution
 Once you're ready to submit your contribution you will need to create a pull request
 that will then be reviewed by some other contributor, usually someone from the core
 team.
@@ -155,7 +173,7 @@ require some changes before they're merged, even the ones coming from the core t
 If at any point you find that you don't have time, just let us know, and someone
 else will finish the PR for you.
 
-## 6. Checklist
+## 7. Checklist
 Here's a list of all the steps to contribute, in summary:
 
 - [ ] Clone and run the project locally (see [README](./README.md) for details)
