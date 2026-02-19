@@ -88,11 +88,18 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
       </Box>
     );
   }
+
   return (
     <ZUISection
       borders={false}
       fullHeight
-      renderContent={() => <Instructions instructions={instructions} />}
+      renderContent={() => {
+        if (!call && step != LaneStep.START) {
+          return null;
+        }
+
+        return <Instructions instructions={instructions} />;
+      }}
       title={messages.instructions.title()}
     />
   );
