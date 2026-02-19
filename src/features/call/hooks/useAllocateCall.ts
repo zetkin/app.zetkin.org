@@ -19,7 +19,7 @@ export default function useAllocateCall(
 ): UseAllocateCallReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const error = useAppSelector((state) => state.call.queueHasError);
+  const queueError = useAppSelector((state) => state.call.queueError);
   const callIsBeingAllocated = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].callIsBeingAllocated
   );
@@ -33,19 +33,20 @@ export default function useAllocateCall(
       );
       dispatch(newCallAllocated(call));
     } catch (e) {
-      const error = e instanceof Error ? e : new Error('Empty queue error');
+      const queueError =
+        e instanceof Error ? e : new Error('Empty queue error');
       const serialized = {
-        message: error.message,
-        name: error.name,
+        message: queueError.message,
+        name: queueError.name,
       };
       dispatch(allocateCallError(serialized));
-      return error;
+      return queueError;
     }
   };
 
   return {
     allocateCall,
-    error,
+    error: queueError,
     isLoading: callIsBeingAllocated,
   };
 }
