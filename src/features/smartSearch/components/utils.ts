@@ -39,16 +39,22 @@ export const getTimeFrameWithConfig = (config: {
   } else if (before === 'now') {
     return { timeFrame: TIME_FRAME.BEFORE_TODAY };
   } else if (after && before) {
-    if (after === before) {
+    const afterDate = new Date(after);
+    const beforeDate = new Date(before);
+    const isNextDay =
+      !isNaN(afterDate.getTime()) &&
+      !isNaN(beforeDate.getTime()) &&
+      beforeDate.getTime() - afterDate.getTime() === 24 * 60 * 60 * 1000;
+    if (after === before || isNextDay) {
       return {
-        after: new Date(after),
-        before: new Date(before),
+        after: afterDate,
+        before: beforeDate,
         timeFrame: TIME_FRAME.ON_DATE,
       };
     }
     return {
-      after: new Date(after),
-      before: new Date(before),
+      after: afterDate,
+      before: beforeDate,
       timeFrame: TIME_FRAME.BETWEEN,
     };
   } else if (after && !before) {

@@ -53,7 +53,10 @@ const TimeFrame = ({
     }
     if (selected === TIME_FRAME.ON_DATE) {
       const date = after.toISOString().slice(0, 10);
-      onChange({ after: date, before: date });
+      const nextDay = new Date(after);
+      nextDay.setDate(nextDay.getDate() + 1);
+      const beforeDate = nextDay.toISOString().slice(0, 10);
+      onChange({ after: date, before: beforeDate });
     }
     if (selected === TIME_FRAME.BETWEEN) {
       onChange({
