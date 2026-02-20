@@ -294,7 +294,7 @@ const CallPanels: FC<Props> = ({
           flexDirection: 'column',
           height: '100%',
           justifyContent: 'space-evenly',
-          left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 4)' : '100%',
+          left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 4)' : '120%',
           position: 'relative',
           transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
           visibility:
