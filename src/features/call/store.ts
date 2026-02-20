@@ -423,18 +423,24 @@ const CallSlice = createSlice({
     },
     unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
       const abandonedCallId = action.payload;
+
       state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
         (item) => item.id != abandonedCallId
       );
 
-      const indexOfLaneWithAbandonedCall = state.lanes.findIndex(
+      const indexOfLaneWhereAbandonedCallIsCurrent = state.lanes.findIndex(
         (lane) => lane.currentCallId == abandonedCallId
       );
-      if (indexOfLaneWithAbandonedCall != -1) {
-        state.lanes.splice(indexOfLaneWithAbandonedCall, 1);
 
-        if (state.activeLaneIndex >= indexOfLaneWithAbandonedCall) {
-          state.activeLaneIndex = Math.max(0, state.activeLaneIndex - 1);
+      if (indexOfLaneWhereAbandonedCallIsCurrent != -1) {
+        state.lanes = state.lanes.filter(
+          (lane) => lane.currentCallId != abandonedCallId
+        );
+
+        if (state.activeLaneIndex >= indexOfLaneWhereAbandonedCallIsCurrent) {
+          const laneIndexAfterMove = state.activeLaneIndex - 1;
+          state.activeLaneIndex =
+            laneIndexAfterMove < 0 ? 0 : laneIndexAfterMove;
         }
       }
     },
