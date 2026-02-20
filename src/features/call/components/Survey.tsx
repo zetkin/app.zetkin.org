@@ -28,7 +28,6 @@ const Survey: FC<Props> = ({ survey }) => {
 
   return (
     <Box
-      id="surrrvey"
       sx={{
         height: '100%',
         position: 'relative',
