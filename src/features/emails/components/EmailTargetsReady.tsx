@@ -10,6 +10,7 @@ interface EmailTargetsReadyProps {
   lockedReadyTargets: number | null;
   missingEmail: number;
   readyTargets: number;
+  numSent: number;
   state: EmailState;
 }
 
@@ -17,10 +18,11 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
   lockedReadyTargets,
   missingEmail,
   readyTargets,
+  numSent,
   state,
 }) => {
   const theme = useTheme();
-
+  const sent = state === EmailState.SENT;
   return (
     <Card>
       <Box
@@ -36,9 +38,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
           <Typography color="secondary">
             <Msg
               id={
-                state === EmailState.SENT
-                  ? messageIds.ready.sentSubtitle
-                  : messageIds.ready.subtitle
+                sent ? messageIds.ready.sentSubtitle : messageIds.ready.subtitle
               }
             />
           </Typography>
@@ -46,19 +46,23 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
         <Box alignItems="center" display="flex" gap={2}>
           <ZUIAnimatedNumber
             value={
-              lockedReadyTargets === null ? readyTargets : lockedReadyTargets
+              sent
+                ? numSent
+                : lockedReadyTargets === null
+                ? readyTargets
+                : lockedReadyTargets
             }
           >
             {(animatedValue) => (
               <Box
                 sx={{
                   backgroundColor:
-                    parseInt(animatedValue) > 0
+                    parseInt(animatedValue) > 0 && !sent
                       ? theme.palette.statusColors.green
                       : theme.palette.statusColors.grey,
                   borderRadius: '1em',
                   color:
-                    parseInt(animatedValue) > 0
+                    parseInt(animatedValue) > 0 && !sent
                       ? 'white'
                       : theme.palette.text.secondary,
                   display: 'flex',
