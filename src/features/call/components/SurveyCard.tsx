@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { Assignment, GroupWorkOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
@@ -38,9 +38,8 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
     <>
       <MyActivityListItem
         actions={[
-          <>
+          <Fragment key={survey.id}>
             <ZUIButton
-              key={survey.id}
               label={hasMeaningfulContent ? 'Edit responses' : 'Fill out'}
               onClick={() => onSelectSurvey(survey.id)}
               variant="primary"
@@ -49,7 +48,6 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
               //TODO: Create ZUI Component for Survey in progress label
               <>
                 <ZUIButton
-                  key={survey.id}
                   label={'Clear responses'}
                   onClick={() => setClearModalOpen(true)}
                   variant="secondary"
@@ -73,7 +71,7 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
                 </Box>
               </>
             )}
-          </>,
+          </Fragment>,
         ]}
         iconTitle={Assignment}
         info={[
