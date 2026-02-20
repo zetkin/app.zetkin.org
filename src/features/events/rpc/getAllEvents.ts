@@ -4,12 +4,14 @@ import dayjs from 'dayjs';
 import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinEvent,
+  ZetkinCampaign,
   ZetkinMembership,
   ZetkinOrganization,
 } from 'utils/types/zetkin';
 import IApiClient from 'core/api/client/IApiClient';
 import getEventState from '../utils/getEventState';
 import { EventState } from '../hooks/useEventState';
+import { forEach } from 'lodash';
 
 const paramsSchema = z.object({});
 
@@ -95,15 +97,35 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   );
   const events = eventsByOrg.flat();
 
-  return events.filter((event) => {
-    let isPublished = false;
-    if (event.published) {
-      const publishDate = dayjs(event.published);
-      isPublished = publishDate.valueOf() < dayjs().valueOf();
-    }
-    const state = getEventState(event);
-    return (
-      (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
-    );
+  const filteredEvents = await Promise.all(
+    events.map(async (event) => {
+      let isEventPublished = false;
+      let isCampaignPublished = false;
+      if (event.published) {
+        const eventPublishDate = dayjs(event.published);
+        isEventPublished = eventPublishDate.valueOf() < dayjs().valueOf();
+      }
+      if (event.campaign) {
+        const campaign = await apiClient.get<ZetkinCampaign>(
+          `/api/orgs/${event.organization.id}/campaigns/${event.campaign.id}`
+        );
+        isCampaignPublished =
+          !campaign.archived &&
+          campaign.published &&
+          campaign.visibility == 'open';
+      }
+
+      const state = getEventState(event);
+      return (
+        (state == EventState.OPEN || state == EventState.SCHEDULED) &&
+        isEventPublished &&
+        isCampaignPublished
+      );
+    })
+  );
+
+  return events.filter((event, i) => {
+    console.debug(event.title + filteredEvents[i].valueOf().toString());
+    return filteredEvents[i];
   });
 }
