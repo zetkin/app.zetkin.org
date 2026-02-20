@@ -11,7 +11,6 @@ import {
 import IApiClient from 'core/api/client/IApiClient';
 import getEventState from '../utils/getEventState';
 import { EventState } from '../hooks/useEventState';
-import { forEach } from 'lodash';
 
 const paramsSchema = z.object({});
 
@@ -125,7 +124,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   );
 
   return events.filter((event, i) => {
-    console.debug(event.title + filteredEvents[i].valueOf().toString());
     return filteredEvents[i];
   });
 }
