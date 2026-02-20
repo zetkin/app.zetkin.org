@@ -1,7 +1,8 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Box, Typography, useTheme } from '@mui/material';
-import { useContext, useState } from 'react';
+import { Box, Button, Typography, useTheme } from '@mui/material';
+import { Edit } from '@mui/icons-material';
+import { useContext, useMemo, useState } from 'react';
 
 import { groupTags } from 'features/tags/components/TagManager/utils';
 import messageIds from 'features/tags/l10n/messageIds';
@@ -14,11 +15,14 @@ import useDeleteTag from 'features/tags/hooks/useDeleteTag';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useTagGroups from 'features/tags/hooks/useTagGroups';
+import useDeleteTagGroup from 'features/tags/hooks/useDeleteTagGroup';
 import useTagMutations from 'features/tags/hooks/useTagMutations';
 import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
+import TagGroupDialog from 'features/tags/components/TagManager/components/TagGroupDialog';
+import useTagGroupMutations from 'features/tags/hooks/useTagGroupMutations';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -40,12 +44,17 @@ const TagsPage: PageWithLayout = () => {
   const tagGroups = useTagGroups(orgId).data || [];
   const deleteTag = useDeleteTag(orgId);
   const { updateTag } = useTagMutations(orgId);
+  const deleteTagGroup = useDeleteTagGroup(orgId);
+  const { updateTagGroup } = useTagGroupMutations(orgId);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [tagToEdit, setTagToEdit] = useState<ZetkinTag | undefined>(undefined);
+  const [groupToEdit, setGroupToEdit] = useState<ZetkinTagGroup | undefined>(
+    undefined
+  );
 
-  const groupedTags = groupTags(
-    tags || [],
-    messages.tagsPage.ungroupedHeader()
+  const groupedTags = useMemo(
+    () => groupTags(tags || [], messages.tagsPage.ungroupedHeader()),
+    [tags, tagGroups]
   );
 
   if (onServer) {
@@ -89,6 +98,22 @@ const TagsPage: PageWithLayout = () => {
                 >
                   {group.tags.length}
                 </Typography>
+                {group.id !== 'ungrouped' && (
+                  <Button
+                    color="primary"
+                    data-testid="TagGroup-editButton"
+                    onClick={() =>
+                      setGroupToEdit(tagGroups.find((g) => g.id === group.id))
+                    }
+                    startIcon={<Edit />}
+                    sx={{
+                      marginLeft: 'auto',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    <Msg id={messageIds.groupDialog.editButton} />
+                  </Button>
+                )}
               </Box>
               <Box display="flex" flexWrap="wrap" style={{ gap: 4 }}>
                 {group.tags.map((tag) => (
@@ -121,6 +146,30 @@ const TagsPage: PageWithLayout = () => {
           open={!!tagToEdit}
           tag={tagToEdit}
         />
+        {groupToEdit && (
+          <TagGroupDialog
+            group={groupToEdit}
+            onClose={() => setGroupToEdit(undefined)}
+            onDelete={(groupId) => {
+              const groupName = groupToEdit.title;
+              showConfirmDialog({
+                onSubmit: () => {
+                  deleteTagGroup(groupId);
+                },
+                title: messages.groupDialog.deleteTitle({
+                  groupName,
+                }),
+                warningText: messages.groupDialog.deleteWarning(),
+              });
+            }}
+            onSubmit={(tagGroup) => {
+              if ('id' in tagGroup) {
+                updateTagGroup(tagGroup);
+              }
+            }}
+            open={!!groupToEdit}
+          />
+        )}
       </Box>
     </>
   );

@@ -12,7 +12,7 @@ export default function useCreateTag(
   const createTagGroup = useCreateTagGroup(orgId);
 
   const createTag = async (tag: NewTag): Promise<ZetkinTag> => {
-    if ('group' in tag) {
+    if ('group' in tag && !!tag.group) {
       const newGroup = await createTagGroup(tag.group);
       const tagWithNewGroup = {
         ...tag,
