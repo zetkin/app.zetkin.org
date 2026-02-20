@@ -82,12 +82,23 @@ test.describe('Tags manager', () => {
       401
     );
 
+    const tagToDelete = page.locator(
+      `data-testid=TagManager-groupedTags-ungrouped >> text="${PlaysGuitarTag.title}"`
+    );
+    const deleteButton = page.locator('[data-testid=TagChip-deleteButton]');
+    const errorSnackbar = page.locator('[data-testid=Snackbar-error]');
+
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    await tagToDelete.waitFor({ state: 'visible' });
 
-    await page.locator(`text="${PlaysGuitarTag.title}"`).hover();
-    await page.locator('[data-testid=TagChip-deleteButton]').click();
+    await tagToDelete.hover();
+    await deleteButton.waitFor({ state: 'visible' });
 
-    // Show error
-    await page.locator('data-testid=Snackbar-error').waitFor();
+    await Promise.all([
+      page.waitForRequest((req) => req.method() == 'DELETE'),
+      deleteButton.click() as Promise<void>,
+    ]);
+
+    await expect(errorSnackbar).toBeVisible();
   });
 });
