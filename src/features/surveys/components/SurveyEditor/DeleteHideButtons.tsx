@@ -1,5 +1,5 @@
 import { Box, IconButton } from '@mui/material';
-import { Delete, RemoveRedEye } from '@mui/icons-material';
+import { Delete, Visibility, VisibilityOff } from '@mui/icons-material';
 import { FC, useContext } from 'react';
 
 import messageIds from 'features/surveys/l10n/messageIds';
@@ -31,7 +31,7 @@ const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({
           ev.stopPropagation();
         }}
       >
-        <RemoveRedEye />
+        {element.hidden ? <VisibilityOff /> : <Visibility />}
       </IconButton>
       <IconButton
         onClick={(ev) => {

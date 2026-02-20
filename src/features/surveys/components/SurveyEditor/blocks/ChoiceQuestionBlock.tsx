@@ -29,6 +29,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 import { Msg, useMessages } from 'core/i18n';
+import RequiredCheckbox from '../elements/RequiredCheckbox';
 
 interface ChoiceQuestionBlockProps {
   editable: boolean;
@@ -167,6 +168,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           label={messages.blocks.choice.question()}
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.choice.emptyQuestion()}
+          required={element.question.required}
           value={title}
           variant="header"
         />
@@ -179,33 +181,42 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           variant="content"
         />
         {editable && (
-          <TextField
-            fullWidth
-            label={messages.blocks.choice.widget()}
-            margin="normal"
-            onChange={(ev) => {
-              setWidgetType(ev.target.value as WidgetTypeValue);
-            }}
-            select
-            SelectProps={{
-              MenuProps: { disablePortal: true },
-            }}
-            sx={{ alignItems: 'center', display: 'flex' }}
-            value={widgetType}
-          >
-            {Object.entries(widgetTypes).map(([value, type]) => (
-              <MenuItem key={value} value={value}>
-                <Box alignItems="center" display="flex">
-                  <ListItemIcon>{type.icon}</ListItemIcon>
-                  <Msg
-                    id={
-                      messageIds.blocks.choice.widgets[value as WidgetTypeValue]
-                    }
-                  />
-                </Box>
-              </MenuItem>
-            ))}
-          </TextField>
+          <>
+            <RequiredCheckbox
+              orgId={orgId}
+              surveyId={surveyId}
+              surveyQuestionElement={element}
+            />
+            <TextField
+              fullWidth
+              label={messages.blocks.choice.widget()}
+              margin="normal"
+              onChange={(ev) => {
+                setWidgetType(ev.target.value as WidgetTypeValue);
+              }}
+              select
+              SelectProps={{
+                MenuProps: { disablePortal: true },
+              }}
+              sx={{ alignItems: 'center', display: 'flex' }}
+              value={widgetType}
+            >
+              {Object.entries(widgetTypes).map(([value, type]) => (
+                <MenuItem key={value} value={value}>
+                  <Box alignItems="center" display="flex">
+                    <ListItemIcon>{type.icon}</ListItemIcon>
+                    <Msg
+                      id={
+                        messageIds.blocks.choice.widgets[
+                          value as WidgetTypeValue
+                        ]
+                      }
+                    />
+                  </Box>
+                </MenuItem>
+              ))}
+            </TextField>
+          </>
         )}
         <ZUIReorderable
           centerWidgets
