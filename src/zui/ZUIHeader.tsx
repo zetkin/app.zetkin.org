@@ -114,6 +114,7 @@ const Header: React.FC<HeaderProps> = ({
                   noWrap
                   sx={{
                     marginBottom: '8px',
+                    overflow: 'visible',
                     transition: 'margin 0.3s ease',
                   }}
                   variant="h3"
