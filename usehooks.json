@@ -1,0 +1,8 @@
+{
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "aliases": {
+    "hooks": "./src/zui/hooks/use-hooks-io"
+  }
+}
