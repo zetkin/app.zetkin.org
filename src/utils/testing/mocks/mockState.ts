@@ -181,6 +181,7 @@ export default function mockState(overrides?: RootState) {
       recentlyCreatedFolder: null,
       rowsByViewId: {},
       viewList: remoteList(),
+      viewsByOrgId: {},
     },
   };
 
