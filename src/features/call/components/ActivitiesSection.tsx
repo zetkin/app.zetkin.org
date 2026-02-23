@@ -19,7 +19,7 @@ import {
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 
 import EventCard from './EventCard';
-import { ZetkinCallTarget } from '../types';
+import { LaneStep, ZetkinCallTarget } from '../types';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import SurveyCard from './SurveyCard';
 import useFilteredActivities, {
@@ -170,11 +170,13 @@ const Activities: FC<ActivitiesProps> = ({
 
 type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
+  step: LaneStep;
   target: ZetkinCallTarget | null;
 };
 
 const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   assignment,
+  step,
   target,
 }) => {
   const messages = useMessages(messageIds);
@@ -302,7 +304,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const showAlreadyInFilter =
     filterState.alreadyIn || filterState.events || showAll;
   const showThisCallFilter =
-    respondedEventIds.length > 0 || respondedSurveyIds.length > 0;
+    respondedEventIds.length > 0 ||
+    respondedSurveyIds.length > 0 ||
+    step == LaneStep.REPORT;
 
   const baseFilters = [
     ...(showThisCallFilter
@@ -514,6 +518,21 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       );
     }
   }, [target?.id]);
+
+  useEffect(() => {
+    if (step == LaneStep.REPORT) {
+      dispatch(
+        filtersUpdated({
+          filterState: {
+            alreadyIn: false,
+            events: false,
+            surveys: false,
+            thisCall: true,
+          },
+        })
+      );
+    }
+  }, [step]);
 
   return (
     <>

@@ -237,6 +237,7 @@ const CallPanels: FC<Props> = ({
         >
           <ActivitiesSection
             assignment={assignment}
+            step={lane.step}
             target={call?.target ?? null}
           />
         </Suspense>
