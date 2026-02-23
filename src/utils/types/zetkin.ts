@@ -120,8 +120,9 @@ export interface ZetkinFile {
 }
 
 export interface ZetkinOrganizerAction {
-  assigment: {
+  assignment: {
     id: number;
+    organization_id: number;
     title: string;
   };
   caller: {
@@ -130,9 +131,9 @@ export interface ZetkinOrganizerAction {
     last_name: string;
   };
   id: number;
-  message_to_organizer: string;
+  message_to_organizer: string | null;
   organizer_action_needed: boolean;
-  organizer_action_taken: boolean;
+  organizer_action_taken: boolean | null;
   update_time: string;
 }
 

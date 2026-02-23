@@ -4,15 +4,15 @@ import { callUpdate, callUpdated } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 interface UseCallReturn {
-  setOrganizerActionNeeded: (callId: number) => void;
-  setOrganizerActionTaken: (callId: number) => void;
+  setOrganizerActionNeeded: (orgId: number, callId: number) => void;
+  setOrganizerActionTaken: (orgId: number, callId: number) => void;
 }
 
-export default function useCall(orgId: number): UseCallReturn {
+export default function useCall(): UseCallReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const updateCall = (callId: number, data: Partial<Call>) => {
+  const updateCall = (orgId: number, callId: number, data: Partial<Call>) => {
     const mutatingAttributes = Object.keys(data);
 
     dispatch(callUpdate([callId, mutatingAttributes]));
@@ -25,12 +25,12 @@ export default function useCall(orgId: number): UseCallReturn {
     return new PromiseFuture(promise);
   };
 
-  const setOrganizerActionNeeded = (callId: number) => {
-    updateCall(callId, { organizer_action_taken: false });
+  const setOrganizerActionNeeded = (orgId: number, callId: number) => {
+    updateCall(orgId, callId, { organizer_action_taken: false });
   };
 
-  const setOrganizerActionTaken = (callId: number) => {
-    updateCall(callId, { organizer_action_taken: true });
+  const setOrganizerActionTaken = (orgId: number, callId: number) => {
+    updateCall(orgId, callId, { organizer_action_taken: true });
   };
 
   return { setOrganizerActionNeeded, setOrganizerActionTaken };
