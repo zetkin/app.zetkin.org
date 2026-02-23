@@ -18,6 +18,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import CallSummary from './CallSummary';
+import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -221,25 +222,12 @@ const CallPanels: FC<Props> = ({
           zIndex: lane.step == LaneStep.START ? -1 : 0,
         })}
       >
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
+        <SuspenseWithCircularLoader >
           <ActivitiesSection
             assignment={assignment}
             target={call?.target ?? null}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
       </Box>
       <Box
         sx={(theme) => ({
