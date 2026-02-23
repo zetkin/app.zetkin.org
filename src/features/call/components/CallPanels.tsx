@@ -23,7 +23,7 @@ type Props = {
   assignment: ZetkinCallAssignment;
   call: UnfinishedCall | null;
   lane: LaneState;
-  onAbandonUnfinishedCall: (callId: number) => void;
+  onAbandonUnfinishedCall: (assignmentId: number, callId: number) => void;
   onOpenCallLog: () => void;
   onSwitchToUnfinishedCall: (callId: number, assignmentId: number) => void;
   report: Report;
@@ -308,8 +308,11 @@ const CallPanels: FC<Props> = ({
         <CallSummary
           assignmentId={assignment.id}
           name={call?.target.first_name || ''}
-          onAbandonUnfinishedCall={(unfinishedCallId) =>
-            onAbandonUnfinishedCall(unfinishedCallId)
+          onAbandonUnfinishedCall={(
+            unfinshedCallAssignmentId,
+            unfinishedCallId
+          ) =>
+            onAbandonUnfinishedCall(unfinshedCallAssignmentId, unfinishedCallId)
           }
           onSwitchToUnfinishedCall={(unfinishedCallId, assignmentId) =>
             onSwitchToUnfinishedCall(unfinishedCallId, assignmentId)

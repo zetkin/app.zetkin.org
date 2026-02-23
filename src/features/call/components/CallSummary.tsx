@@ -17,7 +17,10 @@ import ZUIIcon from 'zui/components/ZUIIcon';
 type Props = {
   assignmentId: number;
   name: string;
-  onAbandonUnfinishedCall: (unfinishedCallId: number) => void;
+  onAbandonUnfinishedCall: (
+    assignmentId: number,
+    unfinishedCallId: number
+  ) => void;
   onSwitchToUnfinishedCall: (
     unfinishedCallId: number,
     assignmentId: number
@@ -120,7 +123,12 @@ const CallSummary: FC<Props> = ({
           {unfinishedCalls.map((unfinishedCall, index) => (
             <Fragment key={unfinishedCall.id}>
               <UnfinishedCallListItem
-                onAbandonCall={() => onAbandonUnfinishedCall(unfinishedCall.id)}
+                onAbandonCall={() =>
+                  onAbandonUnfinishedCall(
+                    unfinishedCall.assignment_id,
+                    unfinishedCall.id
+                  )
+                }
                 onSwitchToCall={() => {
                   onSwitchToUnfinishedCall(
                     unfinishedCall.id,

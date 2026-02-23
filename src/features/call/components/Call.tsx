@@ -94,7 +94,9 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
             assignment={assignment}
             call={call}
             lane={lane}
-            onAbandonUnfinishedCall={(callId) => abandonUnfinishedCall(callId)}
+            onAbandonUnfinishedCall={(assignmentId, callId) =>
+              abandonUnfinishedCall(assignmentId, callId)
+            }
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
               switchToUnfinishedCall(callId, assignmentId);
