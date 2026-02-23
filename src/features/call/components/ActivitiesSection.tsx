@@ -220,7 +220,11 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   };
 
   const isFiltered =
-    filterState.alreadyIn || filterState.events || filterState.surveys;
+    filterState.alreadyIn ||
+    filterState.events ||
+    filterState.surveys ||
+    filterState.thisCall ||
+    projectIdsToFilterActivitiesBy.length > 0;
   const showAll =
     !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
@@ -560,6 +564,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                         thisCall: false,
                       },
                       orgIdsToFilterEventsBy: [],
+                      projectIdsToFilterActivitiesBy: [],
                     })
                   )
                 }
