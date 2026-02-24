@@ -15,26 +15,35 @@ const meta: Meta<typeof ZUIColumn> = {
 };
 export default meta;
 
-const columnStyle = {
-  alignItems: 'center',
-  backgroundColor: 'swatches.purple.100',
-  height: '200px',
-  justifyContent: 'center',
+const paragraphStyle = {
+  backgroundColor: 'rgb(240, 164, 145)',
+  margin: 0,
+  padding: '0.5rem',
 };
 
 type Story = StoryObj<typeof ZUIColumn>;
 
 export const Basic: Story = {
   args: {
-    children: 'Column content',
-    sx: columnStyle,
+    children: (
+      <>
+        <p style={paragraphStyle}>Paragraph 1</p>
+        <p style={paragraphStyle}>Paragraph 2</p>
+        <p style={paragraphStyle}>Paragraph 3</p>
+      </>
+    ),
   },
 };
 
 export const Sized: Story = {
   args: {
-    children: 'Size 8 Column content',
+    children: (
+      <>
+        <p style={paragraphStyle}>Size 8 column</p>
+        <p style={paragraphStyle}>Paragraph 2</p>
+        <p style={paragraphStyle}>Paragraph 3</p>
+      </>
+    ),
     size: 8,
-    sx: columnStyle,
   },
 };
