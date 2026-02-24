@@ -16,7 +16,6 @@ import ZUIIcon from 'zui/components/ZUIIcon';
 
 type Props = {
   assignmentId: number;
-  name: string;
   onAbandonUnfinishedCall: (
     assignmentId: number,
     unfinishedCallId: number
@@ -32,7 +31,6 @@ type Props = {
 
 const CallSummary: FC<Props> = ({
   assignmentId,
-  name,
   onAbandonUnfinishedCall,
   onSwitchToUnfinishedCall,
   orgId,
@@ -41,9 +39,8 @@ const CallSummary: FC<Props> = ({
 }) => {
   const reportState = calculateReportState(report);
   const stats = useSimpleCallAssignmentStats(orgId, assignmentId);
-  const reportSubmissionError = useAppSelector(
-    (state) =>
-      state.call.lanes[state.call.activeLaneIndex].reportSubmissionError
+  const { previousCall, reportSubmissionError } = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex]
   );
 
   const hasUnfinishedCalls = unfinishedCalls.length > 0;
@@ -102,7 +99,7 @@ const CallSummary: FC<Props> = ({
                       callStateToString[reportState]
                     ]
                   }
-                  values={{ name }}
+                  values={{ name: previousCall?.target.name || '' }}
                 />
               )}
             </ZUIText>
