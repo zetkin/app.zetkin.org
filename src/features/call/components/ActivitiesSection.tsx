@@ -527,12 +527,15 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     if (step == LaneStep.REPORT) {
       dispatch(
         filtersUpdated({
+          customDatesToFilterEventsBy: [null, null],
+          eventDateFilterState: null,
           filterState: {
             alreadyIn: false,
             events: false,
             surveys: false,
             thisCall: true,
           },
+          projectIdsToFilterActivitiesBy: [],
         })
       );
     }
