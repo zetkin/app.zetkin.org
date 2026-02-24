@@ -3,6 +3,7 @@
 import { FC, useEffect } from 'react';
 
 import { useApiClient } from 'core/hooks';
+import { ApiClientError } from 'core/api/errors';
 
 const oneMinute = 60_000;
 const HEARTBEAT_FREQUENCY = oneMinute;
@@ -12,7 +13,13 @@ const Heartbeat: FC = () => {
 
   useEffect(() => {
     const heartbeatTimer = setInterval(async () => {
-      await apiClient.get('/api/heartbeat');
+      try {
+        await apiClient.get('/api/heartbeat');
+      } catch (e) {
+        if (e instanceof ApiClientError && e.status == 401) {
+          location.href = '/login?redirect=/call';
+        }
+      }
     }, HEARTBEAT_FREQUENCY);
 
     return () => clearInterval(heartbeatTimer);
