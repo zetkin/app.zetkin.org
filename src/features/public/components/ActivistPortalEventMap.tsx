@@ -223,8 +223,8 @@ export const ActivistPortalEventMap: FC<{
             id="cluster-count"
             layout={{
               'text-field': ['get', 'totalCount'],
-              'text-font': ['Noto Sans Regular'],
-              'text-size': 12,
+              'text-font': ['Noto Sans Bold'],
+              'text-size': 14,
             }}
             paint={{
               'text-color': [
