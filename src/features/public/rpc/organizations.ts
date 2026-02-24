@@ -45,35 +45,40 @@ async function handle(params: Params, apiClient: IApiClient) {
     fetchSubOrgsByRootOrgs(rootOrgIds, apiClient),
   ]);
 
-  const orgs = rootOrgs.filter((org) => !!org);
-  const foundOrgIds = new Set(orgs.map((org) => org.id));
+  const rootOrgsList = rootOrgs.filter(
+    (org): org is ZetkinOrganization => !!org
+  );
+  const flattenedSubOrgs = flattenSubOrgsToOrgs(subOrgs.flat());
 
-  dfsAddOrgs(subOrgs.flat(), orgs, foundOrgIds);
+  const seen = new Set<number>();
+  const distinctFlattenedOrgs = [...rootOrgsList, ...flattenedSubOrgs].filter(
+    (org) => {
+      if (seen.has(org.id)) {
+        return false;
+      }
+      seen.add(org.id);
+      return true;
+    }
+  );
 
-  return orgs;
+  return distinctFlattenedOrgs;
 }
 
-const dfsAddOrgs = (
-  subOrgs: ZetkinSubOrganization[],
-  outputList: ZetkinOrganization[],
-  foundIdSet: Set<number>
-) => {
-  subOrgs.forEach((subOrg) => {
-    if (!subOrg.sub_orgs) {
-      return;
-    }
-    dfsAddOrgs(subOrg.sub_orgs, outputList, foundIdSet);
-  });
+function flattenSubOrgsToOrgs(
+  subOrgs: ZetkinSubOrganization[]
+): ZetkinOrganization[] {
+  const result: ZetkinOrganization[] = [];
+  const stack = [...subOrgs].reverse();
 
-  subOrgs.forEach((subOrg) => {
-    if (foundIdSet.has(subOrg.id)) {
-      return;
-    }
+  while (stack.length > 0) {
+    const subOrg = stack.pop()!;
+    const children = subOrg.sub_orgs ?? [];
+    stack.push(...[...children].reverse());
 
-    const org: ZetkinOrganization & Partial<ZetkinSubOrganization> = {
-      ...subOrg,
-    };
-    delete org.sub_orgs;
-    outputList.push(org);
-  });
-};
+    const { sub_orgs: _subOrgs, ...org } = subOrg;
+    void _subOrgs;
+    result.push(org);
+  }
+
+  return result;
+}
