@@ -17,28 +17,32 @@ export default makeRPCDef<Params, ZetkinOrganization[]>(
   getPublicOrganizationsDef.name
 );
 
+const fetchRootOrgs = (rootOrgIds: number[], apiClient: IApiClient) =>
+  Promise.all(
+    rootOrgIds.map((orgId) =>
+      apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`).catch(() => null)
+    )
+  );
+
+const fetchSubOrgsByRootOrgs = (rootOrgIds: number[], apiClient: IApiClient) =>
+  Promise.all(
+    rootOrgIds.map((orgId) =>
+      apiClient
+        .get<ZetkinSubOrganization[]>(
+          `/api/orgs/${orgId}/sub_organizations?recursive`
+        )
+        .catch(() => [] as ZetkinSubOrganization[])
+    )
+  );
+
 async function handle(params: Params, apiClient: IApiClient) {
   const rootOrgIds = (process.env.ZETKIN_ROOT_ORGANIZATION_IDS || '')
     .split(',')
     .map(parseInt);
 
   const [rootOrgs, subOrgs] = await Promise.all([
-    Promise.all(
-      rootOrgIds.map((orgId) =>
-        apiClient
-          .get<ZetkinOrganization>(`/api/orgs/${orgId}`)
-          .catch(() => null)
-      )
-    ),
-    Promise.all(
-      rootOrgIds.map((orgId) =>
-        apiClient
-          .get<ZetkinSubOrganization[]>(
-            `/api/orgs/${orgId}/sub_organizations?recursive`
-          )
-          .catch(() => [] as ZetkinSubOrganization[])
-      )
-    ),
+    fetchRootOrgs(rootOrgIds, apiClient),
+    fetchSubOrgsByRootOrgs(rootOrgIds, apiClient),
   ]);
 
   const orgs = rootOrgs.filter((org) => !!org);
