@@ -1,5 +1,5 @@
-import { FC, Suspense } from 'react';
-import { Box, CircularProgress, List, ListItem } from '@mui/material';
+import { FC } from 'react';
+import { Box, List, ListItem } from '@mui/material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
@@ -122,25 +122,13 @@ const CallPanels: FC<Props> = ({
           width: 1 / 3,
         })}
       >
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
+        <SuspenseWithCircularLoader
         >
           <AssignmentStats
             assignmentId={assignment.id}
             orgId={assignment.organization.id}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
       </Box>
       <Box
         sx={(theme) => ({

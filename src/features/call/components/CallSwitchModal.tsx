@@ -1,7 +1,6 @@
 import React, {
   FC,
   Fragment,
-  Suspense,
   useEffect,
   useMemo,
   useRef,
@@ -28,6 +27,7 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { colors } from './PreviousCallsInfo';
 import useFinishedCalls from '../hooks/useFinishedCalls';
 import { callStateToString } from '../types';
+import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
@@ -292,21 +292,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           startIcon={Search}
           value={searchString}
         />
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-                width: '100%',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
+        <SuspenseWithCircularLoader>
           <UnfinishedCallsList
             onCall={(assignmentId) => {
               onSwitch(assignmentId);
@@ -315,7 +301,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
             orgId={assignment.organization.id}
             searchString={searchString}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
         <FinishedCallsList
           onCall={(assignmentId) => {
             onSwitch(assignmentId);
