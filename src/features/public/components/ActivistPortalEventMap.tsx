@@ -19,6 +19,7 @@ export const ActivistPortalEventMap: FC<{
   setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
 }> = ({ events, locationFilter, setLocationFilter }) => {
   const [map, setMap] = useState<MapType | null>(null);
+  const defaultFitBoundOptions = { padding: 80 };
 
   const onMarkerClick = useCallback(
     (geojsonFeatures: GeoJSON.Feature[]) => {
@@ -40,7 +41,7 @@ export const ActivistPortalEventMap: FC<{
           animate: true,
           duration: 1200,
           maxZoom: 16,
-          padding: 20,
+          ...defaultFitBoundOptions,
         });
       }
 
@@ -123,7 +124,7 @@ export const ActivistPortalEventMap: FC<{
             map.fitBounds(bounds, {
               animate: true,
               duration: 800,
-              padding: 20,
+              ...defaultFitBoundOptions,
             });
           }
         }}
@@ -137,7 +138,7 @@ export const ActivistPortalEventMap: FC<{
         ref={(map) => setMap(map?.getMap() ?? null)}
         initialViewState={{
           bounds,
-          fitBoundsOptions: { padding: 150 },
+          fitBoundsOptions: defaultFitBoundOptions,
         }}
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
