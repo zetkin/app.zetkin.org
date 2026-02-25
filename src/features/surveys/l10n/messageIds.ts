@@ -18,6 +18,27 @@ export default makeMessages('feat.surveys', {
       'This survey is owned by {orgTitle} and you can not edit it.'
     ),
   },
+  autoLink: {
+    close: m('Close'),
+    columns: {
+      matchedEmail: m('Matched email'),
+      matchedFirstName: m('Matched first name'),
+      matchedLastName: m('Matched last name'),
+      submissionEmail: m('Email'),
+      submissionFirstName: m('First name'),
+      submissionLastName: m('Last name'),
+    },
+    error: m<{ err: string }>('Error while auto linking. ({msg})'),
+    linkSelected: m('Link selected'),
+    success: m<{ count: number }>(
+      'Auto linked {count, plural, =1 {one submission} other {# submissions}}!'
+    ),
+    title: m('Review auto linkable submissions'),
+    tooltips: {
+      notEnoughRowsSelected: m('You need to select at least one row to start'),
+      startAutoLinking: m('Start auto linking'),
+    },
+  },
   blocks: {
     choice: {
       addOption: m('Add option'),
@@ -310,6 +331,12 @@ export default makeMessages('feat.surveys', {
     ),
   },
   unlinkedWarningAlert: {
+    autoLink: {
+      canBeAutoLinkedText: m<{ countStr: string }>(
+        '{countStr, plural, =1 {1 submission} other {# submissions}} can be auto linked.'
+      ),
+      openDialogButton: m('Auto link submissions'),
+    },
     default: {
       description: m<{ numUnlink: number }>(
         "{numUnlink, plural, one {One survey submission has not been linked to a Zetkin profile, which means that it won't be included when searching.} other {There are survey submissions that have not been linked to Zetkin profiles, which means that they won't be included when searching.}}"

@@ -19,8 +19,13 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats';
+import { AutoLinkableSubmissions } from 'features/surveys/rpc/getAutoLinkableSubmissions';
 
 export interface SurveysStoreSlice {
+  autoLinkableSubmissionsBySurveyId: Record<
+    number,
+    RemoteItem<AutoLinkableSubmissions>
+  >;
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
   extendedSurveyBySurveyId: Record<number, RemoteItem<ZetkinSurveyExtended>>;
   responseStatsBySurveyId: Record<number, RemoteItem<SurveyResponseStats>>;
@@ -33,6 +38,7 @@ export interface SurveysStoreSlice {
 }
 
 const initialState: SurveysStoreSlice = {
+  autoLinkableSubmissionsBySurveyId: {},
   elementsBySurveyId: {},
   extendedSurveyBySurveyId: {},
   responseStatsBySurveyId: {},
@@ -75,6 +81,25 @@ const surveysSlice = createSlice({
   initialState,
   name: 'surveys',
   reducers: {
+    autoLinkableSubmissionsLoad: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+      if (!state.autoLinkableSubmissionsBySurveyId[surveyId]) {
+        state.autoLinkableSubmissionsBySurveyId[surveyId] =
+          remoteItem(surveyId);
+      }
+      state.autoLinkableSubmissionsBySurveyId[surveyId].isLoading = true;
+    },
+    autoLinkableSubmissionsLoaded: (
+      state,
+      action: PayloadAction<[number, AutoLinkableSubmissions]>
+    ) => {
+      const [surveyId, submissions] = action.payload;
+      state.autoLinkableSubmissionsBySurveyId[surveyId].data = submissions;
+      state.autoLinkableSubmissionsBySurveyId[surveyId].isLoading = false;
+      state.autoLinkableSubmissionsBySurveyId[surveyId].loaded =
+        new Date().toISOString();
+      state.autoLinkableSubmissionsBySurveyId[surveyId].isStale = false;
+    },
     campaignSurveyIdsLoad: (state, action: PayloadAction<number>) => {
       const campaignId = action.payload;
       if (!state.surveyIdsByCampaignId[campaignId]) {
@@ -401,6 +426,7 @@ const surveysSlice = createSlice({
         item.data = { ...item.data, ...submission };
         item.mutating = [];
         state.statsBySurveyId[submission.survey.id].isStale = true;
+        delete state.autoLinkableSubmissionsBySurveyId[submission.survey.id];
         delete state.responseStatsBySurveyId[submission.survey.id];
       }
       const submissions = state.submissionsBySurveyId[submission.survey.id];
@@ -508,6 +534,8 @@ function addSubmissionToState(
 
 export default surveysSlice;
 export const {
+  autoLinkableSubmissionsLoad,
+  autoLinkableSubmissionsLoaded,
   campaignSurveyIdsLoad,
   campaignSurveyIdsLoaded,
   elementAdded,

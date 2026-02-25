@@ -386,18 +386,20 @@ export type ZetkinSurveySignaturePayload =
       last_name: string;
     };
 
+export type ZetkinSurveySubmissionRespondent = {
+  email: string;
+  first_name: string;
+  id: number | null;
+  last_name: string;
+};
+
 export interface ZetkinSurveySubmission {
   id: number;
   organization: {
     id: number;
     title: string;
   };
-  respondent: {
-    email: string;
-    first_name: string;
-    id: number | null;
-    last_name: string;
-  } | null;
+  respondent: ZetkinSurveySubmissionRespondent | null;
   survey: {
     id: number;
     title: string;
