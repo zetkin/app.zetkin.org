@@ -157,12 +157,11 @@ const viewsSlice = createSlice({
       const [viewId, rowId, colId, newValue] = action.payload;
       const rowList = state.rowsByViewId[viewId];
       const rowItem = rowList.items.find((item) => item.id == rowId);
-      const columnList = state.columnsByViewId[viewId];
-      const colIndex = columnList.items.findIndex((item) => item.id == colId);
-      if (rowItem?.data?.content) {
-        rowItem.data.content = rowItem.data.content.map((oldValue, idx) =>
-          idx == colIndex ? newValue : oldValue
-        );
+      if (rowItem?.data?.cells) {
+        rowItem.data.cells = {
+          ...rowItem.data.cells,
+          [String(colId)]: newValue,
+        };
       }
     },
     columnAdded: (state, action: PayloadAction<[number, ZetkinViewColumn]>) => {
@@ -212,30 +211,7 @@ const viewsSlice = createSlice({
           })
           .filter(notEmpty);
 
-        // Re-arrange columns of data-rows
-        const rowList = state.rowsByViewId[viewId];
-        if (rowList) {
-          const newRowListItems = rowList.items.map((row) => {
-            if (row.data) {
-              return {
-                ...row,
-                data: {
-                  content: columnOrder.map((colId) => {
-                    const idx = colList.items.findIndex(
-                      (col) => col.id == colId
-                    )!;
-                    return row.data?.content[idx];
-                  }),
-                  id: row.data.id,
-                },
-              };
-            } else {
-              return row;
-            }
-          });
-          state.columnsByViewId[viewId].items = newColListItems;
-          state.rowsByViewId[viewId].items = newRowListItems;
-        }
+        state.columnsByViewId[viewId].items = newColListItems;
       }
     },
     columnUpdated: (
@@ -479,25 +455,23 @@ function setTagOnRelevantRows(
   tag: ZetkinTag | null
 ) {
   Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {
-    // Find indices of relevant columns
-    const relevantColumnIndices: number[] = [];
-    columnList.items.forEach((colItem, index) => {
+    const relevantColumnIds: (string | number)[] = [];
+    columnList.items.forEach((colItem) => {
       if (
         colItem.data?.type == COLUMN_TYPE.PERSON_TAG &&
         colItem.data.config.tag_id == tagId
       ) {
-        relevantColumnIndices.push(index);
+        relevantColumnIds.push(colItem.id);
       }
     });
 
-    // If there are relevant columns in this view
-    if (relevantColumnIndices.length) {
+    if (relevantColumnIds.length) {
       const rowItems = state.rowsByViewId[viewId]?.items;
       if (rowItems) {
         rowItems.forEach((item) => {
-          if (item.data?.id == personId) {
-            for (const colIndex of relevantColumnIndices) {
-              item.data.content[colIndex] = tag;
+          if (item.data?.id == personId && item.data.cells) {
+            for (const colId of relevantColumnIds) {
+              item.data.cells[String(colId)] = tag;
             }
           }
         });
@@ -514,28 +488,28 @@ function updateCallOnRelevantRows(
   Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {
     const personId = call.target.id;
 
-    // Find indices of relevant columns
-    const relevantColumnIndices: number[] = [];
-    columnList.items.forEach((colItem, index) => {
+    const relevantColumnIds: (string | number)[] = [];
+    columnList.items.forEach((colItem) => {
       if (colItem.data?.type == COLUMN_TYPE.ORGANIZER_ACTION) {
-        relevantColumnIndices.push(index);
+        relevantColumnIds.push(colItem.id);
       }
     });
 
-    // If there are relevant columns in this view
-    if (relevantColumnIndices.length) {
+    if (relevantColumnIds.length) {
       const rowItems = state.rowsByViewId[viewId]?.items;
       if (rowItems) {
         rowItems.forEach((item) => {
-          if (item.data?.id == personId) {
-            for (const colIndex of relevantColumnIndices) {
-              const calls = item.data.content[
-                colIndex
-              ] as ZetkinOrganizerAction[];
-              for (const c of calls) {
-                if (call.id == c.id) {
-                  if (mutations.includes('organizer_action_taken')) {
-                    c.organizer_action_taken = call.organizer_action_taken;
+          if (item.data?.id == personId && item.data.cells) {
+            for (const colId of relevantColumnIds) {
+              const calls = item.data.cells[String(colId)] as
+                | ZetkinOrganizerAction[]
+                | undefined;
+              if (calls) {
+                for (const c of calls) {
+                  if (call.id == c.id) {
+                    if (mutations.includes('organizer_action_taken')) {
+                      c.organizer_action_taken = call.organizer_action_taken;
+                    }
                   }
                 }
               }
