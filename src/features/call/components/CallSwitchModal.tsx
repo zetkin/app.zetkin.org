@@ -77,7 +77,12 @@ const UnfinishedCallsList: FC<{
       {filteredUnfinishedCalls.map((unfinishedCall) => (
         <Fragment key={unfinishedCall.id}>
           <UnfinishedCallListItem
-            onAbandonCall={() => abandonUnfinishedCall(unfinishedCall.id)}
+            onAbandonCall={() =>
+              abandonUnfinishedCall(
+                unfinishedCall.assignment_id,
+                unfinishedCall.id
+              )
+            }
             onSwitchToCall={() => {
               switchToUnfinishedCall(
                 unfinishedCall.id,

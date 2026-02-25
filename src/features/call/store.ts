@@ -5,10 +5,11 @@ import {
   LaneState,
   SurveySubmissionData,
   Report,
-  ZetkinCallPatchResponse,
+  ZetkinUpdatedCall,
   ActivityFilters,
   FinishedCall,
   UnfinishedCall,
+  ReportSubmissionError,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
@@ -105,14 +106,14 @@ const CallSlice = createSlice({
           callIsBeingAllocated: false,
           currentCallId: newCall.id,
           filters: emptyFilters,
+          pendingOrgLog: '',
           previousCall: null,
           report: emptyReport,
+          reportSubmissionError: null,
           respondedEventIds: [],
           selectedSurveyId: null,
           step: LaneStep.CALL,
           submissionDataBySurveyId: {},
-          surveySubmissionError: false,
-          updateCallError: false,
         };
 
         state.lanes.push(newLane);
@@ -219,14 +220,14 @@ const CallSlice = createSlice({
           callIsBeingAllocated: false,
           currentCallId: null,
           filters: emptyFilters,
+          pendingOrgLog: '',
           previousCall: null,
           report: emptyReport,
+          reportSubmissionError: null,
           respondedEventIds: [],
           selectedSurveyId: null,
           step: LaneStep.START,
           submissionDataBySurveyId: {},
-          surveySubmissionError: false,
-          updateCallError: false,
         };
 
         state.lanes.push(newLane);
@@ -281,10 +282,6 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
-    previousCallAdd: (state, action: PayloadAction<UnfinishedCall>) => {
-      const call = action.payload;
-      state.lanes[state.activeLaneIndex].previousCall = call;
-    },
     previousCallClear: (state) => {
       state.lanes[state.activeLaneIndex].previousCall = null;
     },
@@ -304,15 +301,11 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
-
-    reportSubmitted: (
-      state,
-      action: PayloadAction<ZetkinCallPatchResponse>
-    ) => {
+    reportSubmitted: (state, action: PayloadAction<ZetkinUpdatedCall>) => {
       const lane = state.lanes[state.activeLaneIndex];
-      lane.surveySubmissionError = false;
-      lane.updateCallError = false;
+      lane.reportSubmissionError = null;
       const updatedCall = action.payload;
+      lane.previousCall = updatedCall;
 
       const callItem = state.unfinishedCalls.items.find(
         (item) => item.id == updatedCall.id
@@ -345,15 +338,12 @@ const CallSlice = createSlice({
       const lane = state.lanes[state.activeLaneIndex];
       lane.report = report;
     },
-    setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
+    setReportSubmissionError: (
+      state,
+      action: PayloadAction<ReportSubmissionError>
+    ) => {
       const lane = state.lanes[state.activeLaneIndex];
-      lane.surveySubmissionError = action.payload;
-      lane.updateCallError = false;
-    },
-    setUpdateCallError: (state, action: PayloadAction<boolean>) => {
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.updateCallError = action.payload;
-      lane.surveySubmissionError = false;
+      lane.reportSubmissionError = action.payload;
     },
     surveyDeselected: (state) => {
       const lane = state.lanes[state.activeLaneIndex];
@@ -416,14 +406,14 @@ const CallSlice = createSlice({
           callIsBeingAllocated: false,
           currentCallId: unfinishedCallId,
           filters: emptyFilters,
+          pendingOrgLog: '',
           previousCall: null,
           report: emptyReport,
+          reportSubmissionError: null,
           respondedEventIds: [],
           selectedSurveyId: null,
           step: LaneStep.CALL,
           submissionDataBySurveyId: {},
-          surveySubmissionError: false,
-          updateCallError: false,
         };
 
         state.lanes.push(newLane);
@@ -433,18 +423,24 @@ const CallSlice = createSlice({
     },
     unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
       const abandonedCallId = action.payload;
+
       state.unfinishedCalls.items = state.unfinishedCalls.items.filter(
         (item) => item.id != abandonedCallId
       );
 
-      const indexOfLaneWithAbandonedCall = state.lanes.findIndex(
+      const indexOfLaneWhereAbandonedCallIsCurrent = state.lanes.findIndex(
         (lane) => lane.currentCallId == abandonedCallId
       );
-      if (indexOfLaneWithAbandonedCall != -1) {
-        state.lanes.splice(indexOfLaneWithAbandonedCall, 1);
 
-        if (state.activeLaneIndex >= indexOfLaneWithAbandonedCall) {
-          state.activeLaneIndex = Math.max(0, state.activeLaneIndex - 1);
+      if (indexOfLaneWhereAbandonedCallIsCurrent != -1) {
+        state.lanes = state.lanes.filter(
+          (lane) => lane.currentCallId != abandonedCallId
+        );
+
+        if (state.activeLaneIndex >= indexOfLaneWhereAbandonedCallIsCurrent) {
+          const laneIndexAfterMove = state.activeLaneIndex - 1;
+          state.activeLaneIndex =
+            laneIndexAfterMove < 0 ? 0 : laneIndexAfterMove;
         }
       }
     },
@@ -460,6 +456,10 @@ const CallSlice = createSlice({
 
       const lane = state.lanes[state.activeLaneIndex];
       lane.step = step;
+    },
+    updatePendingOrgLog: (state, action: PayloadAction<string>) => {
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.pendingOrgLog = action.payload;
     },
   },
 });
@@ -484,15 +484,13 @@ export const {
   allocatePreviousCall,
   allocateNewCall,
   newCallAllocated,
-  previousCallAdd,
   previousCallClear,
   quitCall,
   reportSubmitted,
   reportUpdated,
   surveyDeselected,
   surveySelected,
-  setSurveySubmissionError,
-  setUpdateCallError,
+  setReportSubmissionError,
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,
@@ -500,4 +498,5 @@ export const {
   unfinishedCallsLoaded,
   unfinishedCallAbandoned,
   switchedToUnfinishedCall,
+  updatePendingOrgLog,
 } = CallSlice.actions;

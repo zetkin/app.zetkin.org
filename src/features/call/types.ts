@@ -87,7 +87,7 @@ export type ZetkinCallTarget = ZetkinPerson & {
   tags: ZetkinTag[];
 };
 
-export type ZetkinCallPatchResponse = Omit<FinishedCall, 'target'> & {
+export type ZetkinUpdatedCall = Omit<FinishedCall, 'target'> & {
   target: {
     alt_phone: string | null;
     id: number;
@@ -164,12 +164,29 @@ export type LaneState = {
   callIsBeingAllocated: boolean;
   currentCallId: number | null;
   filters: ActivityFilters;
-  previousCall: UnfinishedCall | null;
+  pendingOrgLog: string;
+  previousCall: ZetkinUpdatedCall | null;
   report: Report;
+  reportSubmissionError: ReportSubmissionError | null;
   respondedEventIds: number[];
   selectedSurveyId: number | null;
   step: LaneStep;
   submissionDataBySurveyId: Record<number, SurveySubmissionData>;
-  surveySubmissionError: boolean;
-  updateCallError: boolean;
 };
+
+export type ReportSubmissionSuccess = {
+  kind: 'success';
+  updatedCall: ZetkinUpdatedCall;
+};
+
+export type SurveySubmissionError = {
+  details: { surveyId: number; targetId: number };
+  kind: 'submissionError';
+};
+type CallUpdateError = { kind: 'updateError' };
+
+export type ReportSubmissionError = SurveySubmissionError | CallUpdateError;
+
+export type ReportSubmissionResult =
+  | ReportSubmissionSuccess
+  | ReportSubmissionError;
