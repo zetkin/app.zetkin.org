@@ -69,7 +69,7 @@ export default function useViewGrid(
   const rowsFuture = loadListIfNecessary(views.rowsByViewId[viewId], dispatch, {
     actionOnLoad: () => rowsLoad(viewId),
     actionOnSuccess: (rows) => rowsLoaded([viewId, rows]),
-    loader: async () =>
+    loader: () =>
       fetchAllPaginated<ZetkinViewRow>((page) =>
         apiClient.get<ZetkinViewRow[]>(
           `/api2/orgs/${orgId}/lists/${viewId}/rows?size=10000&page=${page}`
