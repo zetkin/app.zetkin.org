@@ -1,9 +1,10 @@
 'use client';
 
-import { FC, Fragment, Suspense, useMemo, useState } from 'react';
+import { FC, Fragment, Suspense, useContext, useMemo, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   CalendarMonth,
+  CalendarToday,
   EmailOutlined,
   ExpandLess,
   ExpandMore,
@@ -42,6 +43,7 @@ import useUser from 'core/hooks/useUser';
 import { PublicEventSignup } from 'features/organizations/components/PublicEventSignup';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 type Props = {
   eventId: number;
@@ -252,6 +254,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                     participatingCount={event.num_participants_available}
                   />
                 )}
+                <ICSLink event={event} orgId={orgId} />
               </Box>
             </Box>
             <ZUIPublicFooter />
@@ -491,6 +494,36 @@ const ParticipatingInfo: FC<{
             }}
           />
         </ZUIText>
+      </Box>
+    </Box>
+  );
+};
+
+const ICSLink: FC<{
+  event: ZetkinEventWithStatus;
+  orgId: number;
+}> = ({ event, orgId }) => {
+  const isMobile = useIsMobile();
+  const messages = useMessages(messageIds);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+
+  function copyUrlToClipboard() {
+    const url = `${location.protocol}//${location.host}/o/${orgId}/events/${event.id}/cal.ics`;
+    navigator.clipboard.writeText(url);
+    showSnackbar(
+      'success',
+      <Msg id={messageIds.home.header.calendarLinkCopied} />
+    );
+  }
+
+  return (
+    <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
+      <Box alignItems="center" display="flex" gap={1}>
+        <ZUIIcon icon={CalendarToday} />
+        <ZUIButton
+          label={messages.home.header.copyIcsUrl()}
+          onClick={() => copyUrlToClipboard()}
+        />
       </Box>
     </Box>
   );
