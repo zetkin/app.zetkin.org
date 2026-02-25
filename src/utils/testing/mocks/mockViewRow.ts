@@ -2,10 +2,10 @@ import { mockObject } from '.';
 import { ZetkinViewRow } from 'features/views/components/types';
 
 const viewRow: ZetkinViewRow = {
-  id: 1,
-  cells: {},
-  added_by_user_id: null,
   added: null,
+  added_by_user_id: null,
+  cells: {},
+  id: 1,
 };
 
 const mockViewRow = (overrides?: Partial<ZetkinViewRow>): ZetkinViewRow => {

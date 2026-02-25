@@ -19,13 +19,13 @@ function mockSurveyResponseCell(text: string): SurveyResponseViewCell {
 describe('viewQuickSearch', () => {
   const columns = [
     mockViewCol({
-      id: 1,
       config: { field: 'first_name' },
+      id: 1,
       type: COLUMN_TYPE.PERSON_FIELD,
     }),
     mockViewCol({
-      id: 2,
       config: { field: 'last_name' },
+      id: 2,
       type: COLUMN_TYPE.PERSON_FIELD,
     }),
     mockViewCol({
@@ -36,20 +36,20 @@ describe('viewQuickSearch', () => {
 
   const rows = [
     mockViewRow({
-      id: 1,
       cells: {
         '1': 'Angela',
         '2': 'Davis',
         '3': mockSurveyResponseCell('Response text AA'),
       },
+      id: 1,
     }),
     mockViewRow({
-      id: 2,
       cells: {
         '1': 'Clara',
         '2': 'Zetkin',
         '3': mockSurveyResponseCell('Response text B'),
       },
+      id: 2,
     }),
   ];
 
