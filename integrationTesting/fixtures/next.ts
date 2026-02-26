@@ -36,7 +36,7 @@ export interface NextWorkerFixtures {
   fileServerUri: string;
   moxy: {
     port: number;
-    setZetkinApiMock: <G>(
+    setZetkinApi2Mock: <G>(
       path: string,
       method?: HTTPMethod,
       data?: G,
@@ -46,7 +46,7 @@ export interface NextWorkerFixtures {
       log: <T>() => LoggedRequest<T, { data: G }>[];
       removeMock: () => void;
     };
-    setZetkinApi2Mock: <G>(
+    setZetkinApiMock: <G>(
       path: string,
       method?: HTTPMethod,
       data?: G,
