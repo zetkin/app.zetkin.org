@@ -72,7 +72,7 @@ async function proxy(
   let zetkinResponse: Response = await makeZetkinApiRequest();
 
   if (zetkinResponse.status == 401) {
-    const errorPayload = await zetkinResponse.json();
+    const errorPayload = await zetkinResponse.clone().json();
     if (errorPayload.error?.includes('invalid_token')) {
       if (session.tokenData?.refresh_token) {
         const refreshData = new URLSearchParams({

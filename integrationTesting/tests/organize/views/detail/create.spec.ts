@@ -25,7 +25,7 @@ test.describe('View detail page', () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers, NewView]);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/columns',
       'get',
@@ -43,8 +43,8 @@ test.describe('View detail page', () => {
       id: 1,
     });
     moxy.setZetkinApiMock(`/orgs/1/people/views/${NewView.id}/rows/2`, 'put', {
-      content: ['Clara', 'Zetkin'],
-      id: 1,
+      content: ['Rosa', 'Luxemburg'],
+      id: 2,
     });
 
     await page.goto(appUri + '/organize/1/people/lists/1');

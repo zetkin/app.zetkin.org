@@ -13,7 +13,7 @@ test.describe('View detail page', () => {
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers, NewView]);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/columns',
       'get',
@@ -30,7 +30,7 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', []);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/queries/1', 'patch', {
       filter_spec: [
         {
@@ -51,7 +51,7 @@ test.describe('View detail page', () => {
     await page.click('data-testid=FilterForm-saveButton');
 
     await Promise.all([
-      page.waitForResponse('**/orgs/1/people/views/1/rows'),
+      page.waitForResponse('**/orgs/1/lists/1/rows**'),
       page.click('data-testid=QueryOverview-saveButton'),
     ]);
 
@@ -81,7 +81,7 @@ test.describe('View detail page', () => {
         .filter(
           (req) =>
             req.method === 'GET' &&
-            req.path === '/v1/orgs/1/people/views/1/rows'
+            req.path === '/v2/orgs/1/lists/1/rows'
         ).length
     ).toBeGreaterThan(1);
   });
