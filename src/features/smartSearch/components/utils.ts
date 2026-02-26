@@ -45,7 +45,7 @@ export const getTimeFrameWithConfig = (config: {
       !isNaN(afterDate.getTime()) &&
       !isNaN(beforeDate.getTime()) &&
       beforeDate.getTime() - afterDate.getTime() === 24 * 60 * 60 * 1000;
-    if (after === before || isNextDay) {
+    if (isNextDay) {
       return {
         after: afterDate,
         before: beforeDate,
