@@ -476,12 +476,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const output: Row = {
         id: input.id,
       };
-      input.content.forEach((cellValue, colIndex) => {
-        const col = columns[colIndex];
-        if (col) {
-          const fieldName = `col_${col.id}`;
-          output[fieldName] = cellValue;
-        }
+      columns.forEach((col) => {
+        const fieldName = `col_${col.id}`;
+        output[fieldName] = input.cells[String(col.id)] ?? null;
       });
 
       return output;
