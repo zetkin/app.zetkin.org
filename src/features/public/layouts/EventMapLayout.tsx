@@ -37,6 +37,7 @@ type Props = {
   header: JSX.Element;
   renderMap: () => JSX.Element;
   showMap: boolean;
+  showMobileFab?: boolean;
 };
 
 const EventMapLayout: FC<Props> = ({
@@ -44,13 +45,14 @@ const EventMapLayout: FC<Props> = ({
   header,
   renderMap,
   showMap,
+  showMobileFab = true,
 }) => {
   const [mobileMapVisible, setMobileMapVisible] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const showMapMobile = isMobile && showMap;
+  const showMapMobile = isMobile && showMap && showMobileFab;
   const showMapDesktop = !isMobile && showMap;
   const shouldMountMap = useDelayOnTrue(transitionDuration, showMapDesktop);
 
