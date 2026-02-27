@@ -63,6 +63,10 @@ export default makeMessages('feat.call', {
 
     title: m('Activities'),
   },
+  callAlert: {
+    description: m('No more calls left in queue'),
+    title: m('Empty Call queue'),
+  },
   callLog: {
     openCallLogButton: m('Call log'),
     previousCall: {
