@@ -20,7 +20,8 @@ const useGuessOrganization = (
     keys: ['title'],
   });
 
-  const guessOrgs = () => {
+  const guessOrgs = (): Record<string, number> => {
+    const scores: Partial<Record<string, number>> = {};
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
       (acc: OrgMap[], orgTitle: string | number) => {
@@ -33,6 +34,10 @@ const useGuessOrganization = (
           );
           // If there is a match, guess it
           if (goodResults.length > 0) {
+            const bestTag = goodResults.sort(
+              (a, b) => (a.score ?? 1) - (b.score ?? 1)
+            )[0];
+            scores[orgTitle] = bestTag.score;
             return [
               ...acc,
               {
@@ -48,6 +53,7 @@ const useGuessOrganization = (
     );
 
     selectOrgs(matchedRows);
+    return scores as Record<string, number>;
   };
 
   return guessOrgs;

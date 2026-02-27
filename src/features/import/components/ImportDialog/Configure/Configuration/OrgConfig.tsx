@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box, Button, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
@@ -24,6 +24,9 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   const { deselectOrg, getSelectedOrgId, selectOrg } = useOrgMapping(
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex
+  );
+  const [scores, setScores] = useState<Record<string, number> | undefined>(
+    undefined
   );
 
   if (!activeOrgs.length) {
@@ -55,7 +58,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
         </Typography>
         <Button
           onClick={() => {
-            guessOrgs();
+            setScores(guessOrgs());
           }}
         >
           {messages.configuration.configure.orgs.guess()}
@@ -63,18 +66,27 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
       </Box>
 
       <Box alignItems="center" display="flex" paddingY={2}>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {messages.configuration.configure.orgs.status().toLocaleUpperCase()}
           </Typography>
         </Box>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {messages.configuration.configure.orgs
               .organizations()
               .toLocaleUpperCase()}
           </Typography>
         </Box>
+        {!!scores && (
+          <Box width={50}>
+            <Typography variant="body2">
+              {messages.configuration.configure.orgs
+                .score()
+                .toLocaleUpperCase()}
+            </Typography>
+          </Box>
+        )}
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <Box key={index}>
@@ -84,6 +96,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             onDeselectOrg={() => deselectOrg(uniqueValue)}
             onSelectOrg={(orgId) => selectOrg(orgId, uniqueValue)}
             orgs={sortedActiveOrgs}
+            scores={scores}
             selectedOrgId={getSelectedOrgId(uniqueValue)}
             title={uniqueValue.toString()}
           />
@@ -98,6 +111,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
             onDeselectOrg={() => deselectOrg(null)}
             onSelectOrg={(orgId) => selectOrg(orgId, null)}
             orgs={activeOrgs}
+            scores={scores}
             selectedOrgId={getSelectedOrgId(null)}
             title={messages.configuration.configure.tags.empty()}
           />
