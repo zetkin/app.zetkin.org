@@ -14,7 +14,7 @@ that use their coding skills to help the international left? We try to make the
 process as easy and transparent as possible. Read all about it in the separate
 [CONTRIBUTING.md](./CONTRIBUTING.md) file.
 
-Also see [TESTING.md](./TESTING.md) for details about automated testing.
+Also see [TESTING.md](./TESTING.md) for details about automated testing, and our [code convention guidelines](./docs/code-conventions/CODE_CONVENTIONS.md) for code style agreements.
 
 ## Instructions
 
