@@ -8,7 +8,6 @@ import {
 
 import { IColumnType } from '.';
 import { useNumericRouteParams } from 'core/hooks';
-import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
   LocalBoolViewColumn,
@@ -24,12 +23,12 @@ export default class LocalBoolColumnType implements IColumnType {
     return String(!!cell);
   }
 
-  getColDef(column: LocalBoolViewColumn): Omit<GridColDef, 'field'> {
+  getColDef(column: LocalBoolViewColumn, accessLevel: ZetkinObjectAccess['level'] | null): Omit<GridColDef, 'field'> {
     return {
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<ZetkinViewRow, boolean>) => {
         return (
-          <Cell cell={params.value} column={column} personId={params.row.id} />
+          <Cell cell={params.value} column={column} isEditable={accessLevel !== 'readonly'} personId={params.row.id} />
         );
       },
       sortingOrder: ['desc', 'asc', null],
@@ -64,8 +63,9 @@ export default class LocalBoolColumnType implements IColumnType {
 const Cell: FC<{
   cell?: boolean | undefined;
   column: LocalBoolViewColumn;
+  isEditable: boolean;
   personId: number;
-}> = ({ cell, column, personId }) => {
+}> = ({ cell, column, isEditable, personId }) => {
   const theme = useTheme();
   const { orgId, viewId } = useNumericRouteParams();
   const { setCellValue } = useViewGrid(orgId, viewId);
@@ -77,7 +77,6 @@ const Cell: FC<{
   );
 
   const checked = !!cell;
-  const [isRestricted] = useAccessLevel();
 
   return (
     <Box
@@ -91,7 +90,7 @@ const Cell: FC<{
       <Checkbox
         checked={checked}
         color="success"
-        disabled={isRestricted}
+        disabled={!isEditable}
         onChange={onChange}
         tabIndex={-1}
       />
