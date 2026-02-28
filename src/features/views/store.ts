@@ -15,12 +15,7 @@ import {
   ZetkinViewFolder,
   ZetkinViewRow,
 } from './components/types';
-import {
-  RemoteItem,
-  remoteItem,
-  remoteList,
-  RemoteList,
-} from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { tagAssigned, tagUnassigned } from 'features/tags/store';
 import {
   ZetkinOfficial,
@@ -42,7 +37,7 @@ export interface ViewsStoreSlice {
   recentlyCreatedFolder: ZetkinViewFolder | null;
   rowsByViewId: Record<number | string, RemoteList<ZetkinViewRow>>;
   viewList: RemoteList<ZetkinView>;
-  viewsByOrgId: Record<number, RemoteItem<ZetkinView>>;
+  viewsByOrgId: Record<number, RemoteList<ZetkinView>>;
 }
 
 const initialState: ViewsStoreSlice = {
@@ -475,18 +470,16 @@ const viewsSlice = createSlice({
     viewsByOrgIdLoad: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
       if (!state.viewsByOrgId[orgId]) {
-        state.viewsByOrgId[orgId] = remoteItem<ZetkinView>(orgId);
+        state.viewsByOrgId[orgId] = remoteList();
       }
       state.viewsByOrgId[orgId].isLoading = true;
     },
     viewsByOrgIdLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinView]>
+      action: PayloadAction<[number, ZetkinView[]]>
     ) => {
       const [orgId, views] = action.payload;
-      state.viewsByOrgId[orgId] = remoteItem(orgId, {
-        data: { ...views, id: orgId },
-      });
+      state.viewsByOrgId[orgId] = remoteList(views);
       state.viewsByOrgId[orgId].loaded = new Date().toISOString();
       state.viewsByOrgId[orgId].isStale = false;
     },

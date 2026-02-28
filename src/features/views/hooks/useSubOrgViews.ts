@@ -3,6 +3,7 @@ import { ZetkinView } from 'features/views/components/types';
 import { viewsByOrgIdLoad, viewsByOrgIdLoaded } from '../store';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { RemoteItem } from 'utils/storeUtils';
 
 export default function useSubOrgViews(
   orgIds: number[]
@@ -22,7 +23,7 @@ export default function useSubOrgViews(
     missingOrgIds.forEach((orgId) => {
       dispatch(viewsByOrgIdLoad(orgId));
       apiClient
-        .get<ZetkinView>(`api/orgs/${orgId}/people/views`)
+        .get<ZetkinView[]>(`/api/orgs/${orgId}/people/views`)
         .then((items) => {
           dispatch(viewsByOrgIdLoaded([orgId, items]));
         });
@@ -32,10 +33,14 @@ export default function useSubOrgViews(
   if (loadingOrgIds.length > 0 || missingOrgIds.length > 0) {
     return new LoadingFuture();
   } else {
-    return new ResolvedFuture(
-      orgIds
-        .map((orgId) => views.viewsByOrgId[orgId]?.data)
-        .filter((view) => view != null)
-    );
+    const zetkinViews: ZetkinView[] = orgIds
+      .flatMap(
+        (orgId: number): RemoteItem<ZetkinView>[] =>
+          views.viewsByOrgId[orgId].items
+      )
+      .map((item: RemoteItem<ZetkinView>): ZetkinView | null => item.data)
+      .filter((data: ZetkinView | null): data is ZetkinView => !!data);
+
+    return new ResolvedFuture(zetkinViews);
   }
 }
