@@ -312,15 +312,7 @@ const AllEventsList: FC = () => {
           },
         ]
       : []),
-  ].sort((a, b) => {
-    if (a.active && !b.active) {
-      return -1;
-    } else if (!a.active && b.active) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+  ];
 
   return (
     <Box
