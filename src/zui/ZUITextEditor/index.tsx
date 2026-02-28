@@ -129,6 +129,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
       clearEditor();
       setActive(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clear]);
 
   return (

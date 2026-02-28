@@ -43,6 +43,7 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
         onChangeNewOption(newType);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [types.length]);
 
   const allTypes: EventTypeOption[] = [
