@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import dayjs from 'dayjs';
 
 import { makeRPCDef } from 'core/rpc/types';
 import {
@@ -98,27 +97,23 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   const filteredEvents = await Promise.all(
     events.map(async (event) => {
-      let isEventPublished = false;
-      let isCampaignPublished = false;
+      let isPublished = false;
       if (event.published) {
-        const eventPublishDate = dayjs(event.published);
-        isEventPublished = eventPublishDate.valueOf() < dayjs().valueOf();
+        isPublished = new Date(event.published) < new Date();
       }
-      if (event.campaign) {
+      if (event.campaign && isPublished) {
         const campaign = await apiClient.get<ZetkinCampaign>(
           `/api/orgs/${event.organization.id}/campaigns/${event.campaign.id}`
         );
-        isCampaignPublished =
+        isPublished =
           !campaign.archived &&
           campaign.published &&
           campaign.visibility == 'open';
       }
-
       const state = getEventState(event);
       return (
         (state == EventState.OPEN || state == EventState.SCHEDULED) &&
-        isEventPublished &&
-        isCampaignPublished
+        isPublished
       );
     })
   );
