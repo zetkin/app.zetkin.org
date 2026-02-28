@@ -56,6 +56,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [userLocation, setUserLocation] = useState<PointData | null>(null);
   const [userAccuracy, setUserAccuracy] = useState<number | null>(null);
   const [mapZoom, setMapZoom] = useState<number | null>(null);
+  //const [accuracyPx, setAccuracyPx] = useState<number>(18);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -259,7 +260,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             location.latitude,
           ]);
           const dx = screenPos.x - markerPos.markerX;
-          const dy = screenPos.y - markerPos.markerY;
+          const dy = screenPos.y - 10 - markerPos.markerY;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < nearestDistance) {
@@ -268,7 +269,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           }
         });
 
-        if (nearestDistance < 20) {
+        if (nearestDistance < 23) {
           if (nearestLocation != selectedLocation) {
             setSelectedLocationId(nearestLocation);
           }
