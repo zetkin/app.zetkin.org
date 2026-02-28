@@ -11,7 +11,7 @@ export default function useCreateEmail(orgId: number): UseCreateEmailReturn {
   const dispatch = useAppDispatch();
 
   const createEmail = async (body: ZetkinEmailPostBody) => {
-    dispatch(emailCreate);
+    dispatch(emailCreate());
     const email = await apiClient.post<ZetkinEmail, ZetkinEmailPostBody>(
       `/api/orgs/${orgId}/emails`,
       body

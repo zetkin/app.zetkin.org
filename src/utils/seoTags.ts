@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import { OpenGraph } from 'next/dist/lib/metadata/types/opengraph-types';
 
 import { ZetkinOrganization } from './types/zetkin';
@@ -69,7 +69,11 @@ export const getOrganizationOpenGraphTags = (
   let regionNames: Intl.DisplayNames;
   try {
     regionNames = new Intl.DisplayNames(
-      [headers().get('accept-language')?.split('-')[0] || 'en'],
+      [
+        (headers() as unknown as UnsafeUnwrappedHeaders)
+          .get('accept-language')
+          ?.split('-')[0] || 'en',
+      ],
       { type: 'region' }
     );
   } catch (_e) {

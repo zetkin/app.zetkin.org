@@ -14,22 +14,21 @@ module.exports = {
    */
   allowedDevOrigins: [],
 
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        canvas: 'util',
-      },
-    },
-    serverComponentsExternalPackages: ['mjml', 'mongoose'],
-  },
-  images: {
-    domains: [
-      `files.${process.env.ZETKIN_API_DOMAIN}`,
+  serverExternalPackages: ['mjml', 'mongoose'],
 
-      // localhost added for playwright testing
-      'localhost',
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: `files.${process.env.ZETKIN_API_DOMAIN}`,
+      },
+      {
+        // localhost added for playwright testing
+        hostname: 'localhost',
+      },
     ],
   },
+
   async redirects() {
     return [
       {
@@ -97,4 +96,10 @@ module.exports = {
       },
     ];
   },
+
+  turbopack: {
+    resolveAlias: {
+      canvas: 'util',
+    }
+  }
 };

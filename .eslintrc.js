@@ -105,6 +105,13 @@ module.exports = {
         'no-only-tests/no-only-tests': 'error',
       },
     },
+    // Disable react-hooks rules for Playwright test fixtures (not React code)
+    {
+      files: ['integrationTesting/**/*.ts'],
+      rules: {
+        'react-hooks/rules-of-hooks': 'off',
+      },
+    },
     // This configuration will apply only to YAML files
     {
       files: ['**/*.yml', '**/*.yaml'],

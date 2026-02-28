@@ -15,7 +15,13 @@ const Template: StoryFn<typeof ViewSurveySubmissionPreview> = (args) => {
     <AccessLevelProvider>
       <>
         <div>
-          <a ref={(elem) => setAnchorEl(elem)}>Cell content</a>
+          <a
+            ref={(elem) => {
+              setAnchorEl(elem);
+            }}
+          >
+            Cell content
+          </a>
         </div>
         <ViewSurveySubmissionPreview
           anchorEl={anchorEl}

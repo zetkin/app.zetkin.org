@@ -1,4 +1,5 @@
 import { MenuItem, TextField } from '@mui/material';
+import type { JSX } from 'react';
 
 import { DEMOGRAPHICS_FIELD } from 'features/tasks/components/types';
 import { Msg, useMessages } from 'core/i18n';

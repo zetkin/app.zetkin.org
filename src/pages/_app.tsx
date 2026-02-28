@@ -6,7 +6,7 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import Router from 'next/router';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type JSX } from 'react';
 
 import createStore, { Store } from 'core/store';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';

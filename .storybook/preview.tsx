@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
 import React, { FC, PropsWithChildren, useMemo } from 'react';
-import { Preview, StoryFn } from '@storybook/react';
+import { Decorator, Preview } from '@storybook/react';
 import { themes, ThemeVars } from '@storybook/theming';
 
 import newTheme from '../src/zui/theme';
@@ -68,8 +68,8 @@ class MockApiClient extends FetchApiClient {
   }
 }
 
-export const decorators: Preview['decorators'] = [
-  (Story: StoryFn) => {
+export const decorators: Decorator[] = [
+  (Story) => {
     const isDark = useStorybookDarkMode();
     const theme = useMemo(
       () =>
@@ -83,7 +83,7 @@ export const decorators: Preview['decorators'] = [
       </ThemeProvider>
     );
   },
-  (Story: StoryFn) => {
+  (Story) => {
     const store = createStore();
     const env = new Environment(new MockApiClient());
 
@@ -100,7 +100,7 @@ export const decorators: Preview['decorators'] = [
       </ReduxProvider>
     );
   },
-  (Story: StoryFn) => (
+  (Story) => (
     <I18nProvider>
       <Story />
     </I18nProvider>

@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import SvgIcon from '@mui/material/SvgIcon';
 import { Box, Typography } from '@mui/material';
 

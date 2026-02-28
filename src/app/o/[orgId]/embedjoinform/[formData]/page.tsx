@@ -5,16 +5,18 @@ import EmbeddedJoinForm from 'features/public/components/EmbeddedJoinForm';
 import { EmbeddedJoinFormData } from 'features/joinForms/types';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     formData: string;
     orgId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     stylesheet?: string;
-  };
+  }>;
 };
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { formData } = params;
 
   try {

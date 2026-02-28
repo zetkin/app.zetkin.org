@@ -1,4 +1,5 @@
 import { Fade } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';

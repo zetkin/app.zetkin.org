@@ -1,6 +1,6 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Tab } from '@mui/material';
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 
 import { ZUIBadgeProps } from '../ZUIBadge';
 import { TabBadge } from '../ZUITabbedNavBar';

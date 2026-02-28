@@ -10,19 +10,22 @@ import renderEmailHtml from 'features/emails/utils/rendering/renderEmailHtml';
 import { ZetkinEmail } from 'utils/types/zetkin';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     emailId: string;
     orgId: string;
-  };
+  }>;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const { emailId, orgId } = params;
 
-  const lang = getBrowserLanguage(headers().get('accept-language') || '');
+  const lang = getBrowserLanguage(
+    (await headers()).get('accept-language') || ''
+  );
   const messages = await getServerMessages(lang, messageIds);
 
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

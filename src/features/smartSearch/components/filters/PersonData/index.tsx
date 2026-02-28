@@ -1,5 +1,5 @@
 import { MenuItem } from '@mui/material';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, type JSX } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';

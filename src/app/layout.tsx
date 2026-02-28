@@ -1,4 +1,4 @@
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -11,7 +11,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
@@ -25,7 +25,8 @@ export default async function RootLayout({
   }
 
   const lang =
-    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
+    user?.lang ||
+    getBrowserLanguage((await headers()).get('accept-language') || '');
   const messages = await getMessages(lang);
 
   return (

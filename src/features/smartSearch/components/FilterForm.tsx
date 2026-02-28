@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
-import { FC, FormEvent } from 'react';
+import { FC, FormEvent, type JSX } from 'react';
 
 import { FilterConfigOrgOptions } from './types';
 import messageIds from '../l10n/messageIds';

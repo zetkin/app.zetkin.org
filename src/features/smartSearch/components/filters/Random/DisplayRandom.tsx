@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { getQuantityWithConfig } from 'features/smartSearch/components/utils';
 import {
   OPERATION,

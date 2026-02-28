@@ -1,4 +1,5 @@
 import { Box, useMediaQuery } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';

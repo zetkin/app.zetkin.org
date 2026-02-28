@@ -10,13 +10,14 @@ import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
 type Props = {
   children: ReactNode;
-  params: {
+  params: Promise<{
     orgId: number;
-  };
+  }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const headersList = headers();
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
@@ -36,9 +37,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
-const OrgLayout: FC<Props> = async ({ children, params }) => {
-  const headersList = headers();
+const OrgLayout: FC<Props> = async (props) => {
+  const params = await props.params;
+
+  const { children } = props;
+
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

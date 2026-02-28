@@ -11,6 +11,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type JSX,
 } from 'react';
 
 type IDType = number | string;
@@ -66,7 +67,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
   const [activeId, setActiveId] = useState<IDType | null>(null);
 
-  const activeItemRef = useRef<ReorderableItem>();
+  const activeItemRef = useRef<ReorderableItem>(undefined);
 
   useEffect(() => {
     setOrder(items.map((item) => item.id));
@@ -86,10 +87,10 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     }
   }, [activeId]);
 
-  const yOffsetRef = useRef<number>();
-  const containerRef = useRef<HTMLDivElement>();
-  const activeContentNodeRef = useRef<HTMLDivElement>();
-  const activeItemNodeRef = useRef<HTMLDivElement>();
+  const yOffsetRef = useRef<number>(undefined);
+  const containerRef = useRef<HTMLDivElement>(undefined);
+  const activeContentNodeRef = useRef<HTMLDivElement>(undefined);
+  const activeItemNodeRef = useRef<HTMLDivElement>(undefined);
   const nodeByIdRef = useRef<Record<IDType, HTMLDivElement>>({});
 
   const onMouseMove = (ev: MouseEvent) => {
@@ -285,8 +286,8 @@ const ZUIReorderableItem: FC<{
   widgetsProps,
 }) => {
   const [hovered, setHovered] = useState(false);
-  const itemRef = useRef<HTMLDivElement>();
-  const contentRef = useRef<HTMLDivElement>();
+  const itemRef = useRef<HTMLDivElement>(undefined);
+  const contentRef = useRef<HTMLDivElement>(undefined);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const menuOpen = Boolean(menuAnchor);
 

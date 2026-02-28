@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, type JSX } from 'react';
 import { useIntl } from 'react-intl';
 
 import { InterpolatedMessage, PlainMessage, ValueRecord } from './messages';

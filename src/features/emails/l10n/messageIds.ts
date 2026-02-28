@@ -29,8 +29,8 @@ export default makeMessages('feat.emails', {
     notLocked: m('Not locked, not scheduled'),
     notProcessed: m('Scheduled to be delivered ASAP'),
     notScheduled: m('Not scheduled'),
-    wasSent: m<{ datetime: ReactElement }>('Was sent at {datetime}'),
-    willSend: m<{ datetime: ReactElement }>('Will send at {datetime}'),
+    wasSent: m<{ datetime: ReactElement<unknown> }>('Was sent at {datetime}'),
+    willSend: m<{ datetime: ReactElement<unknown> }>('Will send at {datetime}'),
   },
   editor: {
     readOnlyModeInfo: m(

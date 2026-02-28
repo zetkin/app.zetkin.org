@@ -55,7 +55,7 @@ const AreaOverlay: FC<Props> = ({
     area.organization_id,
     area.id
   );
-  const tagsElement = useRef<HTMLElement>();
+  const tagsElement = useRef<HTMLElement>(undefined);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const enteredEditableMode = useRef(false);
 

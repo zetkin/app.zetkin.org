@@ -1,6 +1,6 @@
 import { Edit } from '@mui/icons-material';
 import { Button, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type JSX } from 'react';
 
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import ZUIAutoTextArea from 'zui/ZUIAutoTextArea';

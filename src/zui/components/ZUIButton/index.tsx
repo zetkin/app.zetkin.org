@@ -115,20 +115,20 @@ const getColor = (variant: ZUIButtonVariant) => {
   }
 };
 
-const getLoadingIndicatorPadding = (size: ZUISize = 'medium') => {
+const getLoadingIndicatorPadding = (size: ZUISize = 'medium'): string => {
   if (size == 'large') {
     return '0.719rem 1.375rem 0.719rem 1.375rem';
-  } else if (size == 'medium') {
-    return '0.656rem 1rem 0.656rem 1rem';
   } else if (size == 'small') {
     return '0.438rem 0.625rem 0.438rem 0.625rem';
   }
+  // medium
+  return '0.656rem 1rem 0.656rem 1rem';
 };
 
 const getTextPadding = (
   size: ZUISize = 'medium',
   variant: ZUIButtonVariant = 'secondary'
-) => {
+): string => {
   if (size === 'large') {
     if (variant === 'secondary') {
       return '0.467rem 1.375rem';
@@ -145,12 +145,11 @@ const getTextPadding = (
     }
   }
 
-  if (size === 'small') {
-    if (variant === 'secondary') {
-      return '0.275rem 0.625rem';
-    } else {
-      return '0.33rem 0.625rem';
-    }
+  // size === 'small'
+  if (variant === 'secondary') {
+    return '0.275rem 0.625rem';
+  } else {
+    return '0.33rem 0.625rem';
   }
 };
 

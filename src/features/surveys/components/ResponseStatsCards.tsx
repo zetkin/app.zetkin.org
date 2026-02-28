@@ -498,7 +498,7 @@ const OptionsStatsCard = ({
     [questionStats, messages.insights.optionsFields.subheader]
   );
 
-  const exportApi = useRef<UseChartProExportPublicApi>();
+  const exportApi = useRef<UseChartProExportPublicApi>(undefined);
 
   return (
     <ResponseStatsCard
@@ -581,8 +581,8 @@ const TextResponseWordCloud = ({
     [questionStats.topWordFrequencies]
   );
 
-  const containerRef = useRef<HTMLDivElement>();
-  const svgRef = useRef<SVGSVGElement>();
+  const containerRef = useRef<HTMLDivElement>(undefined);
+  const svgRef = useRef<SVGSVGElement>(undefined);
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -909,7 +909,7 @@ const TextStatsCard = ({
     [questionStats, messages.insights.textFields.subheader]
   );
 
-  const exportApi = useRef<UseChartProExportPublicApi>();
+  const exportApi = useRef<UseChartProExportPublicApi>(undefined);
 
   return (
     <ResponseStatsCard

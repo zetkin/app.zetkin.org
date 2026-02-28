@@ -189,7 +189,8 @@ export default function createStore(
   preloadedState?: ConfigureStoreOptions<RootState>['preloadedState']
 ) {
   return configureStore({
-    middleware: (getDefaultMiddleware) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    middleware: (getDefaultMiddleware: any) =>
       getDefaultMiddleware().prepend(listenerMiddleware.middleware),
     preloadedState: preloadedState,
     reducer: reducer,

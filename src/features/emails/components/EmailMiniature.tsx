@@ -27,7 +27,7 @@ const EmailMiniature: FC<Props> = ({
   selectedTag,
   width,
 }) => {
-  const containerRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement>(undefined);
   const [html, setHtml] = useState('');
   const [height, setHeight] = useState(0);
   const apiClient = useApiClient();
