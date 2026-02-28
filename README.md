@@ -73,6 +73,13 @@ Docker Compose setup.
   $ docker compose -f dev.yml --profile dev up
   ```
 
+- Standalone local MongoDB datastore (for use with features in beta behind feature flags).
+Does not need to be seeded. Port is set with .env variable `MONGODB_URL`.
+
+  ```
+  $ docker run --rm -ti -p27017:27017 mongo
+  ```
+
 - Linting: You can run lint commands from within a container, too:
 
   ```
@@ -88,7 +95,7 @@ Note: If you are running the backend locally and things like `dev.zetkin.org` re
 then this only works on Linux-based systems, due to the nature of `127.0.0.1` pointing to the host on Linux
 (but not on Windows/Mac, where it points to the container itself).
 
-### Running the code (Dev container)
+### Running the code (Dev container with vscode IDE integration)
 
 As **another alternative**, you can run the provided dev container.
 
