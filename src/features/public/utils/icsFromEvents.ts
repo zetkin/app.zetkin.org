@@ -1,8 +1,11 @@
-import dayjs, { Dayjs } from 'dayjs';
-
 import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
 
-const timeStamp = (t: Dayjs): string => t.format('YYYYMMDDTHHmmss');
+const utcTimeStamp = (datetime: string): string =>
+  new Date(datetime)
+    .toISOString()
+    .replaceAll('-', '')
+    .replaceAll(':', '')
+    .replace('.000', '');
 const formatString = (str: string): string =>
   str
     .replaceAll('\n', '\\n')
@@ -25,9 +28,9 @@ export default function icsFromEvents(
           org.email ?? 'noreply@zetkin.org'
         }`
       );
-      vLines.push(`DTSTAMP:${timeStamp(dayjs(event.published))}`);
-      vLines.push(`DTSTART:${timeStamp(dayjs(event.start_time))}`);
-      vLines.push(`DTEND:${timeStamp(dayjs(event.end_time))}`);
+      vLines.push(`DTSTAMP:${utcTimeStamp(event.published)}`);
+      vLines.push(`DTSTART:${utcTimeStamp(event.start_time)}`);
+      vLines.push(`DTEND:${utcTimeStamp(event.end_time)}`);
       if (event.title || event.activity?.title) {
         vLines.push(`SUMMARY:${event.title || event.activity?.title || ''}`);
       }
@@ -55,6 +58,7 @@ export default function icsFromEvents(
   const body = `BEGIN:VCALENDAR\r
 VERSION:2.0\r
 PRODID:-//Zetkin Foundation//Zetkin App//EN\r
+X-WR-TIMEZONE:UTC\r
 ${eventsStr}\r
 END:VCALENDAR`;
 
