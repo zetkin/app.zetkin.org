@@ -228,13 +228,13 @@ export default makeMessages('feat.surveys', {
     add: m('Add'),
     cancel: m("Don't add"),
     description: m(
-      'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
+      'The person you have just linked does not have an email address while the survey response does. Would you like to add it the person?'
     ),
     title: m('Add email address'),
   },
   surveyDialogDifferentEmail: {
     description: m(
-      'The person you are about to link has a different email to the one in the survey response. Would you like to set the survey response email to be the new email for this person?'
+      'The person you have just linked to has a different email to the one in the survey response. Would you like to set the survey response email to be the new email for this person?'
     ),
     keep: m('No, keep old email'),
     title: m('Update email address'),
