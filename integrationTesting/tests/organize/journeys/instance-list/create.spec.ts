@@ -57,7 +57,7 @@ test.describe('Creating a journey instance from journey instance page', () => {
     await page.locator('data-testid=AutoTextArea-textarea').type('Some info');
 
     await Promise.all([
-      page.waitForResponse((res) => res.url().includes('api')),
+      page.waitForResponse((res) => res.url().includes('createNew')),
       page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
     ]);
 

@@ -14,8 +14,8 @@ interface UseModelsFromQueryString {
   gridProps: Required<
     Pick<
       DataGridProProps,
-      'filterModel' | 'onFilterModelChange' | 'onSortModelChange' | 'sortModel'
-    >
+      'filterModel' | 'onFilterModelChange' | 'sortModel'
+    > & { onSortModelChange: (sortModel: GridSortModel) => void }
   >;
   setFilterModel: (model: GridFilterModel) => void;
   setSortModel: (model: GridSortModel) => void;

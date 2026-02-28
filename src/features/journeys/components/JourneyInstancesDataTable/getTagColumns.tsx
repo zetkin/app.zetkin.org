@@ -1,9 +1,7 @@
 import {
-  GridCellParams,
   GridColDef,
   GridFilterItem,
   GridRenderCellParams,
-  GridValueFormatterParams,
 } from '@mui/x-data-grid-pro';
 
 import FilterValueSelect from './FilterValueSelect';
@@ -18,18 +16,22 @@ import {
   makeJourneyTagColumn,
 } from 'features/journeys/utils/journeyInstanceUtils';
 import { Msg, UseMessagesMap } from 'core/i18n';
-import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
+import {
+  ZetkinAppliedTag,
+  ZetkinJourneyInstance,
+  ZetkinTag,
+} from 'utils/types/zetkin';
 
 const has = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (params: GridCellParams<ZetkinJourneyInstance>) => {
+  return (value: unknown, row: ZetkinJourneyInstance) => {
     if (!item.value) {
       return true;
     }
 
-    const tags = col.tagsGetter(params.row.tags);
+    const tags = col.tagsGetter(row.tags);
 
     return !!tags.find((tag) => {
       return tag.id.toString() === item.value;
@@ -41,11 +43,11 @@ const doesNotHave = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (params: GridCellParams<ZetkinJourneyInstance>) => {
+  return (value: unknown, row: ZetkinJourneyInstance) => {
     if (!item.value) {
       return true;
     }
-    const tags = col.tagsGetter(params.row.tags);
+    const tags = col.tagsGetter(row.tags);
 
     return !tags.some((tag) => {
       return tag.id.toString() === item.value;
@@ -54,8 +56,8 @@ const doesNotHave = (
 };
 
 const isEmpty = (col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn) => {
-  return (params: GridCellParams<ZetkinJourneyInstance>) => {
-    const tags = col.tagsGetter(params.row.tags);
+  return (value: unknown, row: ZetkinJourneyInstance) => {
+    const tags = col.tagsGetter(row.tags);
 
     return tags.length === 0;
   };
@@ -136,17 +138,9 @@ const getTagColumns = (
             ));
         },
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
-        valueFormatter: (
-          params: GridValueFormatterParams<ZetkinJourneyInstance['tags']>
-        ) =>
-          col
-            .tagsGetter(params.value)
-            .map((tag) => tag.title)
-            .join(', '),
-        valueGetter: (params) => {
-          const instance = params.row as ZetkinJourneyInstance;
-          return col.tagsGetter(instance.tags);
-        },
+        valueFormatter: (value: ZetkinAppliedTag[]) =>
+          value.map((tag) => tag.title).join(', '),
+        valueGetter: (value, row) => col.tagsGetter(row.tags),
       });
     } else if (col.type == JourneyTagColumnType.VALUE_TAG) {
       colDefs.push({
@@ -161,8 +155,7 @@ const getTagColumns = (
             return <ValueTagCell tag={tag} />;
           }
         },
-        valueGetter: (params) =>
-          col.valueGetter(params.row as ZetkinJourneyInstance),
+        valueGetter: (value, row) => col.valueGetter(row),
       });
     } else if (col.type == JourneyTagColumnType.UNSORTED) {
       const tagsById: Record<string, ZetkinTag> = {};
@@ -214,17 +207,12 @@ const getTagColumns = (
           </div>
         ),
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
-        valueFormatter: (
-          params: GridValueFormatterParams<ZetkinJourneyInstance['tags']>
-        ) =>
+        valueFormatter: (value: ZetkinAppliedTag[]) =>
           col
-            .tagsGetter(params.value)
+            .tagsGetter(value)
             .map((tag) => tag.title)
             .join(', '),
-        valueGetter: (params) => {
-          const instance = params.row as ZetkinJourneyInstance;
-          return col.tagsGetter(instance.tags);
-        },
+        valueGetter: (value, row) => col.tagsGetter(row.tags),
       });
     }
   });
