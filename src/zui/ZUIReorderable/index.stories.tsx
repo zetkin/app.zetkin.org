@@ -1,5 +1,5 @@
 import { Box, Paper } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 import { ReactNode, useState, type JSX } from 'react';
 
 import ZUIReorderable from '.';

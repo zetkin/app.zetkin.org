@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import Arbitrary from './Arbitrary';
 import mockEvent from 'utils/testing/mocks/mockEvent';

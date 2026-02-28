@@ -9,8 +9,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
 import React, { FC, PropsWithChildren, useMemo } from 'react';
-import { Decorator, Preview } from '@storybook/react';
-import { themes, ThemeVars } from '@storybook/theming';
+import { Decorator, Preview } from '@storybook/nextjs';
+import { themes, ThemeVars } from 'storybook/theming';
 
 import newTheme from '../src/zui/theme';
 import '../src/styles.css';
@@ -18,7 +18,7 @@ import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
 import { LicenseInfo } from '@mui/x-license';
 import CssBaseline from '@mui/material/CssBaseline';
-import { DocsContainer, DocsContainerProps } from '@storybook/blocks';
+import { DocsContainer, DocsContainerProps } from '@storybook/addon-docs/blocks';
 import { createTheme } from '@mui/material/styles';
 import { darkPalette } from 'zui/theme/palette';
 import { useStorybookDarkMode } from 'zui/hooks/useStorybookDarkMode';
@@ -119,7 +119,7 @@ const lightTheme = { ...themes.normal } as ThemeVars;
 
 export const parameters = {
   backgrounds: {
-    disable: true,
+    disabled: true,
   },
   darkMode: {
     dark: darkTheme,

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import mockOrganization from 'utils/testing/mocks/mockOrganization';
