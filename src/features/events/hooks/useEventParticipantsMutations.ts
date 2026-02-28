@@ -6,6 +6,7 @@ import {
   participantsRemind,
   participantsReminded,
   participantUpdated,
+  type RemindersResult
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
@@ -71,8 +72,8 @@ export default function useEventParticipantsMutations(
 
   const sendReminders = async (eventId: number) => {
     dispatch(participantsRemind(eventId));
-    await apiClient.post(`/api/orgs/${orgId}/actions/${eventId}/reminders`, {});
-    dispatch(participantsReminded(eventId));
+    const remindersResults = await apiClient.post<RemindersResult[]>(`/api/orgs/${orgId}/actions/${eventId}/reminders`, {});
+    dispatch(participantsReminded([eventId, remindersResults]));
   };
 
   const setReqParticipants = (reqParticipants: number) => {

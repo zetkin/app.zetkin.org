@@ -100,6 +100,17 @@ const initialState: EventsStoreSlice = {
   userEventList: remoteList(),
 };
 
+export type RemindersResult = {
+        action: {
+            id: number
+        },
+        person: {
+            id: number
+            name: string
+        },
+        sent: string,
+    }
+
 const eventsSlice = createSlice({
   initialState,
   name: 'events',
@@ -509,13 +520,15 @@ const eventsSlice = createSlice({
       const eventId = action.payload;
       state.remindingByEventId[eventId] = true;
     },
-    participantsReminded: (state, action: PayloadAction<number>) => {
-      const eventId = action.payload;
+    participantsReminded: (state, action: PayloadAction<[number, RemindersResult[]]>) => {
+      const [eventId, results] = action.payload;
       state.remindingByEventId[eventId] = false;
       state.participantsByEventId[eventId].items.map((item) => {
-        if (item.data && item.data.reminder_sent == null && !item.data.cancelled) {
-          item.data = { ...item.data, reminder_sent: new Date().toISOString() };
-        }
+        if (item.data) {
+            const result = results.find((x) => x.person.id == item.id)
+            if (result)
+                item.data.reminder_sent = result.sent
+          }
       });
     },
     resetSelection: (state) => {
