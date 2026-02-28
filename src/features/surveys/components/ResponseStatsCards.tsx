@@ -321,7 +321,10 @@ const QuestionStatsBarPlot = ({
     percentBase ? Math.round((count / percentBase) * 100) : 0;
   const percentFormatter = (value: number | null) =>
     value == null ? '' : `${value}%`;
+  const absoluteFormatter = (value: number | null) =>
+    value == null ? '' : value.toString();
   const showPercent = isOptions && displayMode === 'percent';
+  const valueFormatter = showPercent ? percentFormatter : absoluteFormatter;
 
   const data = useMemo(() => {
     const bars = isOptionsStats(questionStats)
@@ -340,7 +343,7 @@ const QuestionStatsBarPlot = ({
       sorted = sorted.slice(0, 10);
     }
     return sorted;
-  }, [questionStats]);
+  }, [questionStats, showPercent, percentBase]);
 
   return (
     <ChartWrapper>
@@ -358,7 +361,7 @@ const QuestionStatsBarPlot = ({
         series={[
           {
             data: data.map((option) => option.count),
-            valueFormatter: showPercent ? percentFormatter : undefined,
+            valueFormatter,
           },
         ]}
         slotProps={{
@@ -384,7 +387,7 @@ const QuestionStatsBarPlot = ({
           {
             disableLine: true,
             tickLabelStyle: { fill: theme.palette.grey['700'] },
-            valueFormatter: showPercent ? percentFormatter : undefined,
+            valueFormatter,
           },
         ]}
         yAxis={[
@@ -421,10 +424,20 @@ const QuestionStatsPie = ({
     : 0;
   const toPercent = (count: number) =>
     percentBase ? Math.round((count / percentBase) * 100) : 0;
-  const piePercentFormatter = (
+  const pieArcLabelFormatter = (
     item: { value: number } & Record<string, unknown>
   ) => `${item.value}%`;
   const showPercent = isOptions && displayMode === 'percent';
+  const pieValueFormatter = (
+    value: number | { value: number } | null
+  ): string => {
+    if (value == null) {
+      return '';
+    }
+
+    const numericValue = typeof value === 'number' ? value : value.value;
+    return showPercent ? `${numericValue}%` : numericValue.toString();
+  };
   const data = useMemo(() => {
     const items = isOptionsStats(questionStats)
       ? questionStats.options.map((o) => ({
@@ -445,7 +458,7 @@ const QuestionStatsPie = ({
         label,
         value,
       }));
-  }, [questionStats]);
+  }, [questionStats, showPercent, percentBase]);
   const messages = useMessages(messageIds);
   const [hasSeenPieInaccuracyWarning, setHasSeenPieInaccuracyWarning] =
     useState(false);
@@ -482,12 +495,12 @@ const QuestionStatsPie = ({
           height={CHART_HEIGHT}
           series={[
             {
-              arcLabel: showPercent ? piePercentFormatter : 'value',
+              arcLabel: showPercent ? pieArcLabelFormatter : 'value',
               cornerRadius: 5,
               data,
               innerRadius: 80,
               outerRadius: 180,
-              valueFormatter: showPercent ? piePercentFormatter : undefined,
+              valueFormatter: pieValueFormatter,
             },
           ]}
           slotProps={{
@@ -539,10 +552,10 @@ const OptionsStatsCard = ({
       value={displayMode}
     >
       <ToggleButton size={'small'} value={'absolute'}>
-        abs
+        Amount
       </ToggleButton>
       <ToggleButton size={'small'} value={'percent'}>
-        %
+        Percent
       </ToggleButton>
     </ToggleButtonGroup>
   );
