@@ -54,6 +54,38 @@ You should now be able to access the app on http://localhost:3000. It will
 communicate with the Zetkin API running on our public development server. See
 below for login credentials.
 
+#### Setting up MongoDB for local development
+
+Experimental features might require a running MongoDB.
+
+##### On MacOS
+
+```bash
+brew tap mongodb/brew
+brew update
+brew install mongodb-community
+```
+
+Do not forget to start MongoDB:
+
+```bash
+brew services start mongodb-community
+```
+
+##### On Debian
+
+```bash
+sudo apt-get install -y mongodb-org
+```
+
+Do not forget to start MongoDB:
+
+```bash
+sudo systemctl start mongod
+```
+
+You can now start the project normally with `npm run devserver`.
+
 ### Running the code (Docker)
 
 As **an alternative to the normal development setup**, you can also run the provided
