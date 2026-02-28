@@ -67,7 +67,7 @@ export default makeMessages('feat.organizations', {
     },
     map: {
       viewInList: m('View in list'),
-      viewInMap: m('View in map'),
+      viewOnMap: m('View on map'),
     },
     menu: {
       allEvents: m('All events'),
