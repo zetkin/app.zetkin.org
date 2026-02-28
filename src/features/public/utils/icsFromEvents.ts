@@ -22,6 +22,11 @@ export default function icsFromEvents(
   events
     .filter((event) => !event.cancelled && event.published)
     .forEach((event) => {
+      const published = event.published;
+      if (!published) {
+        return;
+      }
+
       vLines.push(`BEGIN:VEVENT`);
       vLines.push(`UID:${event.id}@${process.env.ZETKIN_APP_HOST}`);
       vLines.push(
@@ -29,7 +34,7 @@ export default function icsFromEvents(
           org.email ?? 'noreply@zetkin.org'
         }`
       );
-      vLines.push(`DTSTAMP:${utcTimeStamp(event.published)}`);
+      vLines.push(`DTSTAMP:${utcTimeStamp(published)}`);
       vLines.push(`DTSTART:${utcTimeStamp(event.start_time)}`);
       vLines.push(`DTEND:${utcTimeStamp(event.end_time)}`);
       if (event.title || event.activity?.title) {
