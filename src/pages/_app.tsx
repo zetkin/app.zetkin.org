@@ -3,7 +3,7 @@ import '../styles.css';
 import { AppProps } from 'next/app';
 import CssBaseline from '@mui/material/CssBaseline';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
-import { NoSsr } from '@mui/base';
+import { NoSsr } from '@mui/material';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import { useEffect, useRef, type JSX } from 'react';
