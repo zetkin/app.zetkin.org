@@ -131,8 +131,8 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
       ),
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) =>
-        `${params.row.first_name || ''} ${params.row.last_name || ''}`,
+      valueGetter: (value, row) =>
+        `${row.first_name || ''} ${row.last_name || ''}`,
     },
     {
       disableColumnMenu: true,
@@ -172,8 +172,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
         ),
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) =>
-        params.row.created ? new Date(params.row.created) : null,
+      valueGetter: (value, row) => (row.created ? new Date(row.created) : null),
     },
     {
       align: 'right',

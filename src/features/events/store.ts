@@ -15,7 +15,7 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import { ZetkinEventWithStatus } from 'features/public/types';
 import { EventSignupModelType } from './models';
 
 export enum ACTION_FILTER_OPTIONS {

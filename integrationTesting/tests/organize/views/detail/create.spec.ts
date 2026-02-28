@@ -4,6 +4,7 @@ import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
 import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMembers/rows';
+import AllCustomFields from '../../../../mockData/orgs/KPD/people/views/AllMembers/fields';
 import KPD from '../../../../mockData/orgs/KPD';
 import NewView from '../../../../mockData/orgs/KPD/people/views/NewView';
 import NewViewColumns from '../../../../mockData/orgs/KPD/people/views/NewView/columns';
@@ -31,8 +32,9 @@ test.describe('View detail page', () => {
       'get',
       AllMembersColumns
     );
+    moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
 
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 203);
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 201);
     moxy.setZetkinApiMock(
       `/orgs/1/people/views/${NewView.id}/columns`,
       'post',
@@ -49,8 +51,14 @@ test.describe('View detail page', () => {
 
     await page.goto(appUri + '/organize/1/people/lists/1');
 
-    await page.locator('[role=cell] >> input[type=checkbox]').nth(0).click();
-    await page.locator('[role=cell] >> input[type=checkbox]').nth(1).click();
+    await page
+      .locator('[data-colindex="1"] >> input[type=checkbox]')
+      .nth(0)
+      .click();
+    await page
+      .locator('[data-colindex="1"] >> input[type=checkbox]')
+      .nth(1)
+      .click();
     await page.locator('button:has-text("handle selection")').click();
 
     await Promise.all([

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { makeRPCDef } from 'core/rpc/types';
 import IApiClient from 'core/api/client/IApiClient';
-import { ZetkinCallPatchResponse } from '../types';
+import { ReportSubmissionResult, ZetkinUpdatedCall } from '../types';
 
 const questionResponseSchema = z.union([
   z.object({ question_id: z.number(), response: z.string() }),
@@ -46,24 +46,20 @@ export const paramsSchema = z.object({
 
 type Params = z.input<typeof paramsSchema>;
 
-type Success = { kind: 'success'; updatedCall: ZetkinCallPatchResponse };
-type SubmissionError = {
-  details: { surveyId: number; targetId: number };
-  kind: 'submissionError';
-};
-type UpdateError = { kind: 'updateError' };
-
-export type Result = Success | SubmissionError | UpdateError;
-
 export const submitSurveysDef = {
   handler: handle,
   name: 'submitSurveys',
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, Result>(submitSurveysDef.name);
+export default makeRPCDef<Params, ReportSubmissionResult>(
+  submitSurveysDef.name
+);
 
-async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
+async function handle(
+  params: Params,
+  apiClient: IApiClient
+): Promise<ReportSubmissionResult> {
   const { callId, orgId, reportData, submissions } = params;
 
   let failedSurveyId: number = 0;
@@ -90,7 +86,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   }
 
   try {
-    const updatedCall = await apiClient.patch<ZetkinCallPatchResponse>(
+    const updatedCall = await apiClient.patch<ZetkinUpdatedCall>(
       `/api/orgs/${orgId}/calls/${callId}`,
       reportData
     );
