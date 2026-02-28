@@ -11,11 +11,13 @@ export default function useView(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);
-  const item = views.viewList.items.find((item) => item.id == viewId);
+  const item = views.viewsByOrgId[orgId].items.find(
+    (item) => item.id == viewId
+  );
 
   return loadItemIfNecessary(item, dispatch, {
-    actionOnLoad: () => viewLoad(viewId),
-    actionOnSuccess: (view) => viewLoaded(view),
+    actionOnLoad: () => viewLoad([orgId, viewId]),
+    actionOnSuccess: (view) => viewLoaded([orgId, view]),
     loader: () => apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
   });
 }

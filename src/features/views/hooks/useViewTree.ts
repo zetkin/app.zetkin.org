@@ -14,24 +14,25 @@ export default function useViewTree(orgId: number): IFuture<ViewTreeData> {
   const views = useAppSelector((state) => state.views);
   const dispatch = useAppDispatch();
 
-  if (shouldLoad(views.folderList) || shouldLoad(views.viewList)) {
-    dispatch(allItemsLoad());
+  if (shouldLoad(views.folderList) || shouldLoad(views.viewsByOrgId[orgId])) {
+    dispatch(allItemsLoad(orgId));
     const promise = apiClient
       .get<ViewTreeData>(`/api/views/tree?orgId=${orgId}`)
       .then((items) => {
-        dispatch(allItemsLoaded(items));
+        dispatch(allItemsLoaded([orgId, items]));
         return items;
       });
     return new PromiseFuture(promise);
   } else if (
-    (views.viewList.isLoading && !views.viewList.loaded) ||
+    (views.viewsByOrgId[orgId].isLoading &&
+      !views.viewsByOrgId[orgId].loaded) ||
     (views.folderList.isLoading && !views.folderList.loaded)
   ) {
     return new LoadingFuture();
   } else {
     return new ResolvedFuture({
       folders: views.folderList.items.map((item) => item.data!),
-      views: views.viewList.items
+      views: views.viewsByOrgId[orgId].items
         .filter((item) => !item.deleted)
         .map((item) => item.data!),
     });

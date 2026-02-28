@@ -36,7 +36,6 @@ export interface ViewsStoreSlice {
   officialList: RemoteList<ZetkinOfficial>;
   recentlyCreatedFolder: ZetkinViewFolder | null;
   rowsByViewId: Record<number | string, RemoteList<ZetkinViewRow>>;
-  viewList: RemoteList<ZetkinView>;
   viewsByOrgId: Record<number, RemoteList<ZetkinView>>;
 }
 
@@ -47,7 +46,6 @@ const initialState: ViewsStoreSlice = {
   officialList: remoteList(),
   recentlyCreatedFolder: null,
   rowsByViewId: {},
-  viewList: remoteList(),
   viewsByOrgId: {},
 };
 
@@ -137,17 +135,21 @@ const viewsSlice = createSlice({
         list.items = list.items.filter((item) => item.id != personId);
       }
     },
-    allItemsLoad: (state) => {
+    allItemsLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
       state.folderList.isLoading = true;
-      state.viewList.isLoading = true;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      state.viewsByOrgId[orgId].isLoading = true;
     },
-    allItemsLoaded: (state, action: PayloadAction<ViewTreeData>) => {
-      const { folders, views } = action.payload;
+    allItemsLoaded: (state, action: PayloadAction<[number, ViewTreeData]>) => {
+      const [orgId, { folders, views }] = action.payload;
       const timestamp = new Date().toISOString();
       state.folderList = remoteList(folders);
       state.folderList.loaded = timestamp;
-      state.viewList = remoteList(views);
-      state.viewList.loaded = timestamp;
+      state.viewsByOrgId[orgId] = remoteList(views);
+      state.viewsByOrgId[orgId].loaded = timestamp;
     },
     cellUpdate: () => {
       // Todo: Do something to indicate loading status?
@@ -303,8 +305,11 @@ const viewsSlice = createSlice({
       state.folderList.items.push(remoteItem(folder.id, { data: folder }));
       state.recentlyCreatedFolder = folder;
     },
-    folderDeleted: (state, action: PayloadAction<DeleteFolderReport>) => {
-      const { foldersDeleted, viewsDeleted } = action.payload;
+    folderDeleted: (
+      state,
+      action: PayloadAction<[number, DeleteFolderReport]>
+    ) => {
+      const [orgId, { foldersDeleted, viewsDeleted }] = action.payload;
       const deletedFolderItems =
         state.folderList.items.filter((item) =>
           foldersDeleted.includes(item.id)
@@ -313,11 +318,15 @@ const viewsSlice = createSlice({
       state.folderList.isStale = true;
 
       const deletedViewItems =
-        state.viewList.items.filter((item) => viewsDeleted.includes(item.id)) ||
-        [];
+        state.viewsByOrgId[orgId]?.items.filter((item) =>
+          viewsDeleted.includes(item.id)
+        ) || [];
 
       deletedViewItems.forEach((item) => (item.deleted = true));
-      state.viewList.isStale = true;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      state.viewsByOrgId[orgId].isStale = true;
     },
     folderUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -383,47 +392,67 @@ const viewsSlice = createSlice({
       state.rowsByViewId[viewId].loaded = new Date().toISOString();
       state.rowsByViewId[viewId].isStale = false;
     },
-    viewCreate: (state) => {
-      state.viewList.isLoading = true;
+    viewCreate: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      state.viewsByOrgId[orgId].isLoading = true;
     },
-    viewCreated: (state, action: PayloadAction<ZetkinView>) => {
-      const view = action.payload;
-      state.viewList.isLoading = false;
-      state.viewList.items.push(
+    viewCreated: (state, action: PayloadAction<[number, ZetkinView]>) => {
+      const [orgId, view] = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      state.viewsByOrgId[orgId].isLoading = false;
+      state.viewsByOrgId[orgId].items.push(
         remoteItem(view.id, {
           data: view,
         })
       );
     },
-    viewDeleted: (state, action: PayloadAction<number>) => {
-      const viewId = action.payload;
-      const viewItem = state.viewList.items.find((item) => item.id === viewId);
+    viewDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [orgId, viewId] = action.payload;
+      const viewItem = state.viewsByOrgId[orgId]?.items.find(
+        (item) => item.id === viewId
+      );
 
       if (viewItem) {
         viewItem.deleted = true;
-        invalidateDependentViews(viewId, state);
+        invalidateDependentViews(orgId, viewId, state);
       }
     },
-    viewDuplicated: (state, action: PayloadAction<[ZetkinView]>) => {
-      const [view] = action.payload;
-      state.viewList.items.push(
+    viewDuplicated: (state, action: PayloadAction<[number, ZetkinView]>) => {
+      const [orgId, view] = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      state.viewsByOrgId[orgId].items.push(
         remoteItem(view.id, { data: view, loaded: new Date().toISOString() })
       );
     },
-    viewLoad: (state, action: PayloadAction<number>) => {
-      const viewId = action.payload;
-      const item = state.viewList.items.find((item) => item.id == viewId);
+    viewLoad: (state, action: PayloadAction<[number, number]>) => {
+      const [orgId, viewId] = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      const item = state.viewsByOrgId[orgId].items.find(
+        (item) => item.id == viewId
+      );
       if (item) {
         item.isLoading = true;
       } else {
-        state.viewList.items = state.viewList.items.concat([
-          remoteItem(viewId, { isLoading: true }),
-        ]);
+        state.viewsByOrgId[orgId].items = state.viewsByOrgId[
+          orgId
+        ].items.concat([remoteItem(viewId, { isLoading: true })]);
       }
     },
-    viewLoaded: (state, action: PayloadAction<ZetkinView>) => {
-      const view = action.payload;
-      state.viewList.items = state.viewList.items
+    viewLoaded: (state, action: PayloadAction<[number, ZetkinView]>) => {
+      const [orgId, view] = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      state.viewsByOrgId[orgId].items = state.viewsByOrgId[orgId].items
         .filter((item) => item.id != view.id)
         .concat([
           remoteItem(view.id, { data: view, loaded: new Date().toISOString() }),
@@ -431,10 +460,15 @@ const viewsSlice = createSlice({
     },
     viewQueryUpdated: (
       state,
-      action: PayloadAction<[number, ZetkinQuery | null]>
+      action: PayloadAction<[number, number, ZetkinQuery | null]>
     ) => {
-      const [viewId, query] = action.payload;
-      const item = state.viewList.items.find((item) => item.id == viewId);
+      const [orgId, viewId, query] = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      const item = state.viewsByOrgId[orgId].items.find(
+        (item) => item.id == viewId
+      );
       if (item) {
         if (item.data) {
           item.data.content_query = query;
@@ -445,19 +479,32 @@ const viewsSlice = createSlice({
         // Empty view to trigger reload
         rowList.items = [];
         rowList.isStale = true;
-        invalidateDependentViews(viewId, state);
+        invalidateDependentViews(orgId, viewId, state);
       }
     },
-    viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
-      const [id, mutating] = action.payload;
-      const item = state.viewList.items.find((item) => item.id == id);
+    viewUpdate: (state, action: PayloadAction<[number, number, string[]]>) => {
+      const [orgId, id, mutating] = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      const item = state.viewsByOrgId[orgId].items.find(
+        (item) => item.id == id
+      );
       if (item) {
         item.mutating = mutating;
       }
     },
-    viewUpdated: (state, action: PayloadAction<[ZetkinView, string[]]>) => {
-      const [view, mutating] = action.payload;
-      const item = state.viewList.items.find((item) => item.id == view.id);
+    viewUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinView, string[]]>
+    ) => {
+      const [orgId, view, mutating] = action.payload;
+      if (!state.viewsByOrgId[orgId]) {
+        state.viewsByOrgId[orgId] = remoteList();
+      }
+      const item = state.viewsByOrgId[orgId].items.find(
+        (item) => item.id == view.id
+      );
       if (item) {
         item.mutating = item.mutating.filter(
           (attr) => !mutating.includes(attr)
@@ -571,10 +618,11 @@ interface Dependency {
 }
 
 function invalidateDependentViews(
+  orgId: number,
   updatedViewId: number | undefined,
   state: ViewsStoreSlice
 ) {
-  const dependencies = getViewDependencies(state);
+  const dependencies = getViewDependencies(orgId, state);
   const viewsCheckedForDependencies = [];
   const viewsQueue = [];
 
@@ -608,10 +656,16 @@ function invalidateDependentViews(
   }
 }
 
-function getViewDependencies(state: ViewsStoreSlice): Dependency[] {
+function getViewDependencies(
+  orgId: number,
+  state: ViewsStoreSlice
+): Dependency[] {
   const dependencies: Dependency[] = [];
 
-  state.viewList.items.forEach((viewItem) => {
+  if (!state.viewsByOrgId[orgId]) {
+    state.viewsByOrgId[orgId] = remoteList();
+  }
+  state.viewsByOrgId[orgId].items.forEach((viewItem) => {
     const viewData = viewItem.data;
     const viewQuery = viewData?.content_query;
 
