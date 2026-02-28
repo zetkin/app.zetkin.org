@@ -1,11 +1,12 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
 import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
 
+dayjs.extend(utc);
+
 const utcTimeStamp = (datetime: string): string =>
-  new Date(datetime)
-    .toISOString()
-    .replaceAll('-', '')
-    .replaceAll(':', '')
-    .replace('.000', '');
+  dayjs.utc(datetime).format('YYYYMMDDTHHmmss[Z]');
 const formatString = (str: string): string =>
   str
     .replaceAll('\n', '\\n')
