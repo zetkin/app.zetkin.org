@@ -101,15 +101,15 @@ const initialState: EventsStoreSlice = {
 };
 
 export type RemindersResult = {
-        action: {
-            id: number
-        },
-        person: {
-            id: number
-            name: string
-        },
-        sent: string,
-    }
+  action: {
+    id: number
+  },
+  person: {
+    id: number
+    name: string
+  },
+  sent: string,
+}
 
 const eventsSlice = createSlice({
   initialState,
@@ -525,9 +525,9 @@ const eventsSlice = createSlice({
       state.remindingByEventId[eventId] = false;
       state.participantsByEventId[eventId].items.map((item) => {
         if (item.data) {
-            const result = results.find((x) => x.person.id == item.id)
-            if (result)
-                item.data.reminder_sent = result.sent
+          const result = results.find((x) => x.person.id == item.id)
+          if (result)
+            item.data.reminder_sent = result.sent;
           }
       });
     },
