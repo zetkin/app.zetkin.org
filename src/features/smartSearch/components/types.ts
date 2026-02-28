@@ -96,6 +96,7 @@ export enum TIME_FRAME {
   EVER = 'ever',
   FUTURE = 'future',
   BEFORE_TODAY = 'beforeToday',
+  ON_DATE = 'onDate',
   BEFORE_DATE = 'beforeDate',
   AFTER_DATE = 'afterDate',
   BETWEEN = 'between',
