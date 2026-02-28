@@ -42,7 +42,7 @@ export interface ViewsStoreSlice {
   recentlyCreatedFolder: ZetkinViewFolder | null;
   rowsByViewId: Record<number | string, RemoteList<ZetkinViewRow>>;
   viewList: RemoteList<ZetkinView>;
-  viewsByOrgId: Record<number, RemoteItem<ViewTreeData>>;
+  viewsByOrgId: Record<number, RemoteItem<ZetkinView>>;
 }
 
 const initialState: ViewsStoreSlice = {
@@ -475,15 +475,13 @@ const viewsSlice = createSlice({
     viewsByOrgIdLoad: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
       if (!state.viewsByOrgId[orgId]) {
-        state.viewsByOrgId[orgId] = remoteItem<ViewTreeData & { id: number }>(
-          orgId
-        );
+        state.viewsByOrgId[orgId] = remoteItem<ZetkinView>(orgId);
       }
       state.viewsByOrgId[orgId].isLoading = true;
     },
     viewsByOrgIdLoaded: (
       state,
-      action: PayloadAction<[number, ViewTreeData]>
+      action: PayloadAction<[number, ZetkinView]>
     ) => {
       const [orgId, views] = action.payload;
       state.viewsByOrgId[orgId] = remoteItem(orgId, {

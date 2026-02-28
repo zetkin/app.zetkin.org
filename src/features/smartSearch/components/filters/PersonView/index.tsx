@@ -17,7 +17,7 @@ import {
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import useOrgIdsFromOrgScope from 'features/smartSearch/hooks/useOrgIdsFromOrgScope';
-import useSubOrgsViewTrees from 'features/views/hooks/useSubOrgsViewTrees';
+import useSubOrgViews from 'features/views/hooks/useSubOrgViews';
 const localMessageIds = messageIds.filters.personView;
 
 interface PersonViewProps {
@@ -47,7 +47,7 @@ const PersonView = ({
     orgId,
     filter.config.organizations || [orgId]
   );
-  const viewTrees = useSubOrgsViewTrees(orgIds);
+  const viewTrees = useSubOrgViews(orgIds);
   const personViews = viewTrees.data?.flatMap((data) => data.views) || [];
   const personViewsSorted = personViews.sort((pv1, pv2) => {
     return pv1.title.localeCompare(pv2.title);
