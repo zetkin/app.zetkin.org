@@ -9,6 +9,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 import { getSeoTags } from 'utils/seoTags';
+import { ApiClientError } from 'core/api/errors';
 
 type Props = PropsWithChildren<{
   params: {
@@ -23,33 +24,40 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const event = await apiClient.get<ZetkinEvent>(
-    `/api/orgs/${params.orgId}/actions/${params.eventId}`
-  );
+  try {
+    const event = await apiClient.get<ZetkinEvent>(
+      `/api/orgs/${params.orgId}/actions/${params.eventId}`
+    );
 
-  const lang = getBrowserLanguage(headers().get('accept-language') || '');
-  const messages = await getMessages(lang);
+    const lang = getBrowserLanguage(headers().get('accept-language') || '');
+    const messages = await getMessages(lang);
 
-  const baseTitle =
-    event.title ||
-    event.activity?.title ||
-    messages['feat.events.common.noTitle'];
+    const baseTitle =
+      event.title ||
+      event.activity?.title ||
+      messages['feat.events.common.noTitle'];
 
-  const baseTags = getSeoTags(
-    `${baseTitle} | ${event.organization.title}`,
-    event.info_text,
-    `/o/${event.organization.id}/events/${event.id}`
-  );
-  return {
-    ...baseTags,
-    creator: event.organization.title,
-    openGraph: {
-      ...baseTags.openGraph,
-      images: event.cover_file ? [event.cover_file.url] : undefined,
-      locale: new Intl.Locale(lang).maximize().toString(),
-    },
-    publisher: event.organization.title,
-  };
+    const baseTags = getSeoTags(
+      `${baseTitle} | ${event.organization.title}`,
+      event.info_text,
+      `/o/${event.organization.id}/events/${event.id}`
+    );
+    return {
+      ...baseTags,
+      creator: event.organization.title,
+      openGraph: {
+        ...baseTags.openGraph,
+        images: event.cover_file ? [event.cover_file.url] : undefined,
+        locale: new Intl.Locale(lang).maximize().toString(),
+      },
+      publisher: event.organization.title,
+    };
+  } catch (e) {
+    if (e instanceof ApiClientError && e.status === 404) {
+      notFound();
+    }
+    throw e;
+  }
 }
 
 // @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
