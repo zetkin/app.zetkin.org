@@ -105,7 +105,7 @@ const CanvassMapOverlays: FC<Props> = ({
                   width: '100vw',
                 }}
               >
-                <CircularProgress size={20} />
+                <CircularProgress />
               </Box>
             }
           >
