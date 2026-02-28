@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
+import { headers } from 'next/headers';
 import { OpenGraph } from 'next/dist/lib/metadata/types/opengraph-types';
 
 import { ZetkinOrganization } from './types/zetkin';
@@ -63,17 +63,14 @@ export const getSeoTags = (
   };
 };
 
-export const getOrganizationOpenGraphTags = (
+export const getOrganizationOpenGraphTags = async (
   org: ZetkinOrganization
-): OpenGraph => {
+): Promise<OpenGraph> => {
+  const headerStore = await headers();
   let regionNames: Intl.DisplayNames;
   try {
     regionNames = new Intl.DisplayNames(
-      [
-        (headers() as unknown as UnsafeUnwrappedHeaders)
-          .get('accept-language')
-          ?.split('-')[0] || 'en',
-      ],
+      [headerStore.get('accept-language')?.split('-')[0] || 'en'],
       { type: 'region' }
     );
   } catch (_e) {
