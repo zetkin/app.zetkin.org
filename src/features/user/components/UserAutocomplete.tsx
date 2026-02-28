@@ -20,7 +20,6 @@ type Props = {
 
 const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
   const [searchValue, setSearchValue] = useState<string>('');
-  const [selectedUser, setSelectedUser] = useState<ZetkinOrgUser | null>(null);
   const users = useOrgUsers(orgId);
 
   const filterOptions = (
@@ -50,7 +49,6 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
       isOptionEqualToValue={(option, value) => option.id === value.id}
       onChange={(event, value) => {
         onSelect(value);
-        setSelectedUser(null);
         setSearchValue('');
       }}
       onInputChange={(_, value) => {
@@ -81,7 +79,7 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
           </ListItem>
         );
       }}
-      value={selectedUser}
+      value={null}
     />
   );
 };
