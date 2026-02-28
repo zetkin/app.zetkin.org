@@ -64,6 +64,12 @@ const MergeModal: FC<Props> = ({
     null
   );
 
+  const resetKey = Array.from(
+    new Set([...selectedIds, ...additionalPeople.map((person) => person.id)])
+  )
+    .sort((a, b) => a - b)
+    .join(',');
+
   useEffect(() => {
     setSelectedIds(persons.map((person) => person.id) ?? []);
   }, [open]);
@@ -126,6 +132,7 @@ const MergeModal: FC<Props> = ({
                     setOverrides({ ...overrides, [`${field}`]: value });
                   }
                 }}
+                resetKey={resetKey}
                 setOverrides={setOverrides}
               />
             )}

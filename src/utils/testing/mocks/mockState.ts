@@ -23,10 +23,11 @@ export default function mockState(overrides?: RootState) {
     },
     call: {
       activeLaneIndex: 0,
+      finishedCalls: remoteList(),
       lanes: [],
       myAssignmentsList: remoteList(),
-      outgoingCalls: remoteList(),
       queueHasError: null,
+      unfinishedCalls: remoteList(),
       upcomingEventsList: remoteList(),
     },
     callAssignments: {
@@ -169,7 +170,6 @@ export default function mockState(overrides?: RootState) {
       tasksList: remoteList(),
     },
     user: {
-      membershipList: remoteList(),
       orgUserList: remoteList(),
       userItem: remoteItem('me'),
     },

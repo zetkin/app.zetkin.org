@@ -38,12 +38,11 @@ test.describe('Journey instance list', () => {
     await page.locator('text=FILTERS').click();
 
     // Configure filters to only show instances with no tags
-    await page
-      .locator('label:text("Columns") + * select')
-      .selectOption({ label: 'Tags' });
-    await page
-      .locator('select:has-text("Has")')
-      .selectOption({ label: 'is empty' });
+    await page.locator('label:text("Columns") + * [role="combobox"]').click();
+    await page.locator('[role="option"]:has-text("Tags")').click();
+
+    await page.locator('label:text("Operator") + * [role="combobox"]').click();
+    await page.locator('[role="option"]:has-text("is empty")').click();
 
     // Click title header twice to sort descending
     await page.locator('[role=columnheader]:has-text("title")').click();
@@ -74,7 +73,5 @@ test.describe('Journey instance list', () => {
     expect(firstRowAfterRefresh).toContainText('Better');
     expect(secondRowAfterRefresh).toContainText('Another');
     expect(await rowsAfterRefresh.count()).toBe(3);
-
-    await page.waitForTimeout(5000);
   });
 });
