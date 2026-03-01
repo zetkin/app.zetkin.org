@@ -28,7 +28,9 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
   const globalMessages = useMessages(globalMessageIds);
 
   const [status, action] = useFormState<EmbeddedJoinFormStatus>(
-    submitJoinForm,
+    submitJoinForm as unknown as (
+      state: EmbeddedJoinFormStatus
+    ) => EmbeddedJoinFormStatus,
     'editing'
   );
 
