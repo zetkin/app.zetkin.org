@@ -220,7 +220,13 @@ const FieldSelect: FC<FieldSelectProps> = ({
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
-      sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
+      sx={{
+        '& .MuiListItemText-root': {
+          margin: 0,
+          padding: 0,
+        },
+        opacity: column.originalColumn.selected ? '' : '50%',
+      }}
       value={getValue()}
     >
       <ListSubheader>
