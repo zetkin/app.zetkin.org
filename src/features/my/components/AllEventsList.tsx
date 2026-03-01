@@ -8,7 +8,7 @@ import {
   ListItemAvatar,
   Switch,
 } from '@mui/material';
-import { CalendarMonthOutlined, Clear, Search } from '@mui/icons-material';
+import { CalendarMonthOutlined, Search } from '@mui/icons-material';
 import {
   DateRange,
   DateRangeCalendar,
@@ -138,13 +138,14 @@ const AllEventsList: FC = () => {
     const today = dayjs();
     if (!dateFilterState || dateFilterState == 'custom') {
       return customDatesToFilterBy;
-    } else if (dateFilterState == 'today') {
+    } else if (dateFilterState === 'today') {
       return [today, null];
-    } else if (dateFilterState == 'tomorrow') {
+    } else if (dateFilterState === 'tomorrow') {
       return [today.add(1, 'day'), null];
-    } else {
-      //dateFilterState is 'thisWeek'
+    } else if (dateFilterState === 'thisWeek') {
       return [today.startOf('week'), today.endOf('week')];
+    } else {
+      return [null, null];
     }
   };
 
@@ -244,6 +245,17 @@ const AllEventsList: FC = () => {
 
   const filters = [
     {
+      active: dateFilterState === null,
+      key: 'allTime',
+      label: messages.allEventsList.filterButtonLabels.allTime(),
+      onClick: () => {
+        setFilters({
+          date: null,
+          range: null,
+        });
+      },
+    },
+    {
       active: dateFilterState == 'today',
       key: 'today',
       label: messages.allEventsList.filterButtonLabels.today(),
@@ -331,21 +343,24 @@ const AllEventsList: FC = () => {
           padding={1}
           sx={{ overflowX: 'auto' }}
         >
-          {isFiltered && (
-            <ZUIFilterButton
-              active={true}
-              circular
-              label={Clear}
-              onClick={clearFilters}
-            />
-          )}
           {filters.map((filter) => (
-            <ZUIFilterButton
-              key={filter.key}
-              active={filter.active}
-              label={filter.label}
-              onClick={filter.onClick}
-            />
+            <>
+              <ZUIFilterButton
+                key={filter.key}
+                active={filter.active}
+                label={filter.label}
+                onClick={filter.onClick}
+              />
+              {filter.key === 'custom' && (
+                <Box
+                  sx={(theme) => ({
+                    backgroundColor: theme.palette.dividers.main,
+                    height: '31px',
+                    width: '0.063rem',
+                  })}
+                />
+              )}
+            </>
           ))}
         </Box>
       )}

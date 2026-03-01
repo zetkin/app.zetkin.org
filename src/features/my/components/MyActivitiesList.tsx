@@ -37,6 +37,11 @@ const MyActivitiesList: FC = () => {
     <Box display="flex" flexDirection="column" gap={1} m={1}>
       {kinds.length > 1 && (
         <Box display="flex" gap={1}>
+          <ZUIFilterButton
+            active={filteredKinds.length === 0}
+            label={messages.activityList.filters.allActivities()}
+            onClick={() => setFilteredKinds([])}
+          />
           {kinds.map((kind) => {
             const active = filteredKinds.includes(kind);
             return (
@@ -45,15 +50,7 @@ const MyActivitiesList: FC = () => {
                 active={active}
                 label={messages.activityList.filters[kind]()}
                 onClick={() => {
-                  const newValue = filteredKinds.filter(
-                    (prevKind) => prevKind != kind
-                  );
-
-                  if (!active) {
-                    newValue.push(kind);
-                  }
-
-                  setFilteredKinds(newValue);
+                  setFilteredKinds([kind]);
                 }}
               />
             );

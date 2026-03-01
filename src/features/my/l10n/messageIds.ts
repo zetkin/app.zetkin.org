@@ -31,6 +31,7 @@ export default makeMessages('feat.home', {
       removeFiltersButton: m('Clear filters'),
     },
     filterButtonLabels: {
+      allTime: m('All time'),
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
       ),
