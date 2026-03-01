@@ -852,7 +852,7 @@ feat:
           headline: Det er ingen kommende arrangementer
       map:
         viewInListButton: Vis i liste
-        viewOnMapButton: Vis i kart
+        viewInMapButton: Vis i kart
     shared:
       cta: Gå til prosjekt
       noActivities: Alle pågående aktiviteter som er delt med organisasjonen din vil
@@ -2189,7 +2189,7 @@ feat:
         unfollow: Slutt å følge
       map:
         viewInList: Vis i liste
-        viewOnMap: Vis i kart
+        viewInMap: Vis i kart
       menu:
         allEvents: Alle arrangementer
         logout: Logg ut

@@ -792,7 +792,7 @@ feat:
           headline: Es gibt keine anstehenden Veranstaltungen
       map:
         viewInListButton: In Liste anzeigen
-        viewOnMapButton: Auf Karte anzeigen
+        viewInMapButton: Auf Karte anzeigen
     shared:
       cta: Gehe zum Projekt
       noActivities: Aktuelle Aktivitäten, die mit deiner Organisation geteilt wurden,
@@ -2075,7 +2075,7 @@ feat:
         unfollow: Entfolgen
       map:
         viewInList: In Liste anzeigen
-        viewOnMap: Auf Karte anzeigen
+        viewInMap: Auf Karte anzeigen
       menu:
         allEvents: Alle Events
         logout: Ausloggen
