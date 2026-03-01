@@ -205,7 +205,7 @@ export default makeMessages('feat.campaigns', {
     },
     map: {
       viewInListButton: m('View in list'),
-      viewInMapButton: m('View in map'),
+      viewOnMapButton: m('View on map'),
     },
   },
   shared: {
