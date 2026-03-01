@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { range } from 'lodash';
 import { FC, useEffect, useState } from 'react';
+
 import { getRandom } from 'utils/randomUtils';
 
 type Props = {
