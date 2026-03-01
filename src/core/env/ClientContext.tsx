@@ -1,6 +1,7 @@
 'use client';
 
 import CssBaseline from '@mui/material/CssBaseline';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';
@@ -77,18 +78,20 @@ const ClientContext: FC<ClientContextProps> = ({
                     locale={lang}
                     messages={messages}
                   >
-                    <ZUISnackbarProvider>
-                      <IntlProvider
-                        defaultLocale="en"
-                        locale={lang}
-                        messages={messages}
-                      >
-                        <ZUIConfirmDialogProvider>
-                          <CssBaseline />
-                          <Suspense>{children}</Suspense>
-                        </ZUIConfirmDialogProvider>
-                      </IntlProvider>
-                    </ZUISnackbarProvider>
+                    <AppRouterCacheProvider>
+                      <ZUISnackbarProvider>
+                        <IntlProvider
+                          defaultLocale="en"
+                          locale={lang}
+                          messages={messages}
+                        >
+                          <ZUIConfirmDialogProvider>
+                            <CssBaseline />
+                            <Suspense>{children}</Suspense>
+                          </ZUIConfirmDialogProvider>
+                        </IntlProvider>
+                      </ZUISnackbarProvider>
+                    </AppRouterCacheProvider>
                   </IntlProvider>
                 </LocalizationProvider>
               </UserProvider>

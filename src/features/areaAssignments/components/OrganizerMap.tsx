@@ -30,7 +30,6 @@ import {
   ZetkinLocation,
 } from '../types';
 import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
-import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import OrganizerMapFilters from './OrganizerMapFilters';
 import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
 import AreaSelect from './AreaSelect';
@@ -84,7 +83,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | number[]>(null);
   const [selectedId, setSelectedId] = useState(0);
   const [filterText, setFilterText] = useState('');
-  const { onAssigneesFilterChange } = useContext(assigneesFilterContext);
   const { setActiveGroupIds, setActiveTagIdsByGroup } =
     useContext(areaFilterContext);
   const router = useRouter();
@@ -134,8 +132,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     startTransition(() => {
       setSettingsOpen(null);
       setSelectedId(0);
-      onAssigneesFilterChange(null);
-      setFilteredAreaIds(null);
       setActiveGroupIds([]);
       setActiveTagIdsByGroup({});
       setFilterText('');

@@ -10,8 +10,9 @@ import {
 } from 'utils/types/zetkin';
 import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ZUIFuture from 'zui/ZUIFuture';
+import useSurveys from 'features/surveys/hooks/useSurveys';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 
 interface SurveyResponsePluralConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -21,9 +22,10 @@ const SurveyResponsesConfig = ({
   onOutputConfigured,
 }: SurveyResponsePluralConfigProps) => {
   const { orgId } = useNumericRouteParams();
-  const surveysWithElementsFuture = useSurveysWithElements(orgId);
+  const surveys = useSurveys(orgId);
   const messages = useMessages(messageIds);
   const [surveyId, setSurveyId] = useState<number | null>();
+  const selectedSurvey = useSurveyElements(orgId, surveyId ?? null);
   const [selectedQuestions, setSelectedQuestions] = useState<
     ZetkinSurveyQuestionElement[]
   >([]);
@@ -45,14 +47,8 @@ const SurveyResponsesConfig = ({
   };
 
   return (
-    <ZUIFuture future={surveysWithElementsFuture}>
+    <ZUIFuture future={surveys}>
       {(data) => {
-        const selectedSurvey = data.find((survey) => survey.id == surveyId);
-        const questionFromSurvey: ZetkinSurveyQuestionElement[] =
-          selectedSurvey?.elements.filter(
-            (elem) => elem.type == ELEMENT_TYPE.QUESTION
-          ) as ZetkinSurveyQuestionElement[];
-
         return (
           <FormControl sx={{ width: 300 }}>
             <TextField
@@ -71,31 +67,42 @@ const SurveyResponsesConfig = ({
               ))}
             </TextField>
             {surveyId ? (
-              <Autocomplete
-                disabled={!surveyId}
-                fullWidth
-                getOptionLabel={(option) => option.question.question}
-                multiple
-                onChange={(evt, value) => {
-                  setSelectedQuestions(value);
-                  const columns = makeColumns(value);
-                  onOutputConfigured(columns);
+              <ZUIFuture future={selectedSurvey}>
+                {(data) => {
+                  const questionFromSurvey: ZetkinSurveyQuestionElement[] =
+                    data.filter(
+                      (elem) => elem.type == ELEMENT_TYPE.QUESTION
+                    ) as ZetkinSurveyQuestionElement[];
+
+                  return (
+                    <Autocomplete
+                      disabled={!surveyId}
+                      fullWidth
+                      getOptionLabel={(option) => option.question.question}
+                      multiple
+                      onChange={(evt, value) => {
+                        setSelectedQuestions(value);
+                        const columns = makeColumns(value);
+                        onOutputConfigured(columns);
+                      }}
+                      options={questionFromSurvey || []}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={messages.columnDialog.choices.surveyResponses.questionField()}
+                          slotProps={{
+                            htmlInput: {
+                              ...params.inputProps,
+                            },
+                          }}
+                          variant="standard"
+                        />
+                      )}
+                      value={selectedQuestions}
+                    />
+                  );
                 }}
-                options={questionFromSurvey || []}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={messages.columnDialog.choices.surveyResponses.questionField()}
-                    slotProps={{
-                      htmlInput: {
-                        ...params.inputProps,
-                      },
-                    }}
-                    variant="standard"
-                  />
-                )}
-                value={selectedQuestions}
-              />
+              </ZUIFuture>
             ) : (
               ''
             )}

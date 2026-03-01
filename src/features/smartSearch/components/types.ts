@@ -35,6 +35,7 @@ export enum FILTER_TYPE {
   TASK = 'task',
   USER = 'user',
   AREA = 'area',
+  OFFICIAL = 'official',
 }
 
 export enum CONDITION_OPERATOR {
@@ -95,6 +96,7 @@ export enum TIME_FRAME {
   EVER = 'ever',
   FUTURE = 'future',
   BEFORE_TODAY = 'beforeToday',
+  ON_DATE = 'onDate',
   BEFORE_DATE = 'beforeDate',
   AFTER_DATE = 'afterDate',
   BETWEEN = 'between',
@@ -269,6 +271,11 @@ export interface UserFilterConfig {
   organizations?: FilterConfigOrgOptions;
 }
 
+export interface OfficialFilterConfig {
+  role?: 'organizer' | 'admin' | 'any';
+  organizations?: FilterConfigOrgOptions;
+}
+
 export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
 
 export type AllInSuborgFilterConfig = {
@@ -371,7 +378,8 @@ export type AnyFilterConfig =
   | SurveySubmissionFilterConfig
   | JourneyFilterConfig
   | TaskFilterConfig
-  | UserFilterConfig; // Add all filter objects here
+  | UserFilterConfig
+  | OfficialFilterConfig; // Add all filter objects here
 
 /** Filters */
 export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {

@@ -5,13 +5,13 @@ This file contains information and instructions about our automated testing.
 Integration tests are run with [Playwright](https://playwright.dev/docs/intro). To run tests:
 
 ```
-yarn e2e
+npm run e2e
 ```
 
 This will also build the next.js application. You can save time and not rebuild the application (if only working on tests, for example), using:
 
 ```
-yarn e2e:skipbuild
+npm run e2e:skipbuild
 ```
 
 ## Unit tests
@@ -19,11 +19,11 @@ yarn e2e:skipbuild
 Unit tests are run on functions and on components when we don't need to test component integrations. We use [Jest](https://jestjs.io/docs/getting-started) with [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/). To run unit tests:
 
 ```
-yarn test // To run tests once.
+npm run test // To run tests once.
 
-yarn test --verbose // Include this flag to always include console.log output.
+npm run test --verbose // Include this flag to always include console.log output.
 
-yarn test --watchAll // To run tests in interactive watch mode.
+npm run test --watchAll // To run tests in interactive watch mode.
 ```
 
 We override the default `render()` function from `@testing-library/react` in the file `src/test-utils/index.ts` in order to automatically apply context providers. All `@testing-library/react` functions are exposed from the custom `test-utils` module, so import from there instead of `@testing-library/react`.

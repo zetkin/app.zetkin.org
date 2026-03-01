@@ -32,12 +32,14 @@ export interface ZUIEllipsisMenuProps {
   items: MenuItem[];
   anchorOrigin?: { horizontal: horizontalType; vertical: verticalType };
   transformOrigin?: { horizontal: horizontalType; vertical: verticalType };
+  keepMounted?: boolean;
 }
 
 const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
   items,
   anchorOrigin,
   transformOrigin,
+  keepMounted = true,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -66,7 +68,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
         anchorOrigin={
           anchorOrigin ?? { horizontal: 'left', vertical: 'bottom' }
         }
-        keepMounted
+        keepMounted={keepMounted}
         onClose={() => setMenuActivator(null)}
         open={Boolean(menuActivator)}
         sx={{

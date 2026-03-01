@@ -9,9 +9,27 @@ export default makeMessages('feat.call', {
     participation: m<{
       events: JSX.Element;
       name: string;
-      titleAndTime: JSX.Element;
-    }>('{name} participated in {events}, the most recent being {titleAndTime}'),
+      time: JSX.Element;
+      title: JSX.Element;
+    }>('{name} participated in {events}, the most recent being {title} {time}'),
     previousActivityHeader: m('Previous activity'),
+    previousCalls: {
+      callBackAfter: m<{ name: string; time: JSX.Element }>(
+        'Call {name} back after {time}'
+      ),
+      hasNoPreviousCalls: m('Never been called'),
+      note: m<{ note: string }>('Note: {note}'),
+      status: {
+        callBack: m('Call back later'),
+        leftMessage: m('Left voice mail'),
+        lineBusy: m('Line busy'),
+        noPickup: m('Did not reach them'),
+        notAvailable: m('Not available to talk'),
+        success: m('Successful'),
+        wrongNumber: m('Wrong number'),
+      },
+      title: m('Previous calls'),
+    },
     tagsHeader: m('Tags'),
     title: m<{ name: string }>('About {name}'),
   },
@@ -100,16 +118,16 @@ export default makeMessages('feat.call', {
   },
   header: {
     primaryButton: {
-      [0]: m('Call'),
-      [1]: m('Finish & report'),
-      [2]: m('Send report'),
-      [3]: m('Next call'),
+      call: m('Finish & report'),
+      report: m('Send report'),
+      start: m('Call'),
+      summary: m('Next call'),
     },
     secondaryButton: {
-      [0]: m('Quit'),
-      [1]: m('Skip'),
-      [2]: m('Skip'),
-      [3]: m('Take a break'),
+      call: m('Skip'),
+      report: m('Skip'),
+      start: m('Quit'),
+      summary: m('Take a break'),
     },
   },
   instructions: {
@@ -315,7 +333,32 @@ export default makeMessages('feat.call', {
     title: m('Assignment stats'),
   },
   summary: {
-    title: m('Woop woop!'),
+    callSummary: {
+      callBack: m<{ name: string }>(
+        'You reached {name}, but we have to call them back.'
+      ),
+      leftMessage: m<{ name: string }>(
+        '{name} did not pick up, you left a message on their answering machine.'
+      ),
+      lineBusy: m<{ name: string }>(
+        'The line was busy so you did not reach {name}'
+      ),
+      noPickup: m<{ name: string }>(
+        '{name} did not pick up, you did not leave a message.'
+      ),
+      notAvailable: m<{ name: string }>('We will call {name} back.'),
+      success: m<{ name: string }>('You talked to {name}'),
+      wrongNumber: m<{ name: string }>('We had the wrong number for ${name}'),
+    },
+    error: {
+      description: m(
+        'The call is now among your unfinished calls and you can go back and try submitting the report again.'
+      ),
+      title: m('Something went wrong when the report was being submitted.'),
+    },
+    title: {
+      success: m('Woop woop!'),
+    },
     unfinishedCallsMessage: m(
       'But, before you move on: you have unfinished calls, deal with them!'
     ),
@@ -324,5 +367,13 @@ export default makeMessages('feat.call', {
     message: m<{ assignmentTitle: string }>(
       'Switched assignments. You are now calling in {assignmentTitle}'
     ),
+  },
+  unexpectedError: {
+    backToMyZetkinButton: m('Go back to My Zetkin'),
+    description: m(
+      'Something went wrong, sorry about that! You can choose to reload the assignment or go back to "My Zetkin".'
+    ),
+    reloadButton: m('Reload assignment'),
+    title: m('Oops! An unexpected error happened'),
   },
 });

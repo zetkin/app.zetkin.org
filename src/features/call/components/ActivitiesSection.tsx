@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -19,7 +19,7 @@ import {
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 
 import EventCard from './EventCard';
-import { ZetkinCallTarget } from '../types';
+import { LaneStep, ZetkinCallTarget } from '../types';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import SurveyCard from './SurveyCard';
 import useFilteredActivities, {
@@ -140,11 +140,11 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Hotel} size="large" />
-          <ZUIText color="secondary">{`${target.first_name} is not booked or signed up for any events.`}</ZUIText>
+          <ZUIText color="secondary">{`${target?.first_name} is not booked or signed up for any events.`}</ZUIText>
         </Box>
       )}
       {activities.map((activity) => {
-        if (activity.kind == ACTIVITIES.EVENT) {
+        if (target && activity.kind == ACTIVITIES.EVENT) {
           return (
             <EventCard
               key={activity.data.id}
@@ -168,13 +168,15 @@ const Activities: FC<ActivitiesProps> = ({
   );
 };
 
-type ActivitiesSectionContentProps = {
+type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
-  target: ZetkinCallTarget;
+  step: LaneStep;
+  target: ZetkinCallTarget | null;
 };
 
-const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
+const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   assignment,
+  step,
   target,
 }) => {
   const messages = useMessages(messageIds);
@@ -218,7 +220,11 @@ const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
   };
 
   const isFiltered =
-    filterState.alreadyIn || filterState.events || filterState.surveys;
+    filterState.alreadyIn ||
+    filterState.events ||
+    filterState.surveys ||
+    filterState.thisCall ||
+    projectIdsToFilterActivitiesBy.length > 0;
   const showAll =
     !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
@@ -302,7 +308,9 @@ const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
   const showAlreadyInFilter =
     filterState.alreadyIn || filterState.events || showAll;
   const showThisCallFilter =
-    respondedEventIds.length > 0 || respondedSurveyIds.length > 0;
+    respondedEventIds.length > 0 ||
+    respondedSurveyIds.length > 0 ||
+    step == LaneStep.REPORT;
 
   const baseFilters = [
     ...(showThisCallFilter
@@ -501,6 +509,38 @@ const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
       : []),
   ];
 
+  useEffect(() => {
+    const campaign = assignment.campaign;
+    const campaignHasActivities =
+      !!campaign && projectIdsWithActivities.includes(campaign.id);
+
+    if (campaignHasActivities) {
+      dispatch(
+        filtersUpdated({
+          projectIdsToFilterActivitiesBy: [campaign.id],
+        })
+      );
+    }
+  }, [target?.id]);
+
+  useEffect(() => {
+    if (step == LaneStep.REPORT) {
+      dispatch(
+        filtersUpdated({
+          customDatesToFilterEventsBy: [null, null],
+          eventDateFilterState: null,
+          filterState: {
+            alreadyIn: false,
+            events: false,
+            surveys: false,
+            thisCall: true,
+          },
+          projectIdsToFilterActivitiesBy: [],
+        })
+      );
+    }
+  }, [step]);
+
   return (
     <>
       <Box sx={{ height: '100%', width: '100%' }}>
@@ -527,6 +567,7 @@ const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
                         thisCall: false,
                       },
                       orgIdsToFilterEventsBy: [],
+                      projectIdsToFilterActivitiesBy: [],
                     })
                   )
                 }
@@ -542,9 +583,13 @@ const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
                 target={target}
               />
             )}
-            subtitle={messages.activities.description({
-              name: target.first_name || '',
-            })}
+            subtitle={
+              target
+                ? messages.activities.description({
+                    name: target.first_name,
+                  })
+                : ''
+            }
             title={messages.activities.title()}
           />
         )}
@@ -700,27 +745,6 @@ const ActivitiesSectionContent: FC<ActivitiesSectionContentProps> = ({
       </ZUIDrawerModal>
     </>
   );
-};
-
-type ActivitiesSectionProps = {
-  assignment: ZetkinCallAssignment;
-  target: ZetkinCallTarget | null;
-};
-
-const ActivitiesSection: FC<ActivitiesSectionProps> = ({
-  assignment,
-  target,
-}) => {
-  if (!target) {
-    return (
-      <Box
-        id="accctivitiesSecitonOuter"
-        sx={{ height: '100%', width: '100%' }}
-      />
-    );
-  }
-
-  return <ActivitiesSectionContent assignment={assignment} target={target} />;
 };
 
 export default ActivitiesSection;
