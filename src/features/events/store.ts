@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ParticipantOp } from './types';
+import { ParticipantOp, ZetkinEventReminder } from './types';
 import {
   RemoteItem,
   remoteItem,
@@ -509,12 +509,20 @@ const eventsSlice = createSlice({
       const eventId = action.payload;
       state.remindingByEventId[eventId] = true;
     },
-    participantsReminded: (state, action: PayloadAction<number>) => {
-      const eventId = action.payload;
+    participantsReminded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventReminder[]]>
+    ) => {
+      const [eventId, reminders] = action.payload;
       state.remindingByEventId[eventId] = false;
-      state.participantsByEventId[eventId].items.map((item) => {
-        if (item.data && item.data?.reminder_sent == null) {
-          item.data = { ...item.data, reminder_sent: new Date().toISOString() };
+      state.participantsByEventId[eventId].items.map((participant) => {
+        if (participant.data) {
+          const reminder = reminders.find(
+            (rem) => rem.person.id == participant.id
+          );
+          if (reminder) {
+            participant.data.reminder_sent = reminder.sent;
+          }
         }
       });
     },
