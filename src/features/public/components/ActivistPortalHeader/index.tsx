@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, type JSX } from 'react';
 import { useRouter } from 'next/navigation';
 import { Logout } from '@mui/icons-material';
 

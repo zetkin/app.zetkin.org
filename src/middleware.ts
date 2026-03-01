@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
     return path.startsWith(route);
   });
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const session = await getIronSession<AppSession>(cookieStore, {
     cookieName: 'zsid',

@@ -1,6 +1,6 @@
 import { SvgIconTypeMap } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 
 import ZUIItemCard from 'zui/components/ZUIItemCard';
 import ZUIIconLabel from 'zui/components/ZUIIconLabel';

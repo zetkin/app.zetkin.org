@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, type JSX } from 'react';
 
 import { ZetkinMembership } from 'utils/types/zetkin';
 import ZUIButton from 'zui/components/ZUIButton';

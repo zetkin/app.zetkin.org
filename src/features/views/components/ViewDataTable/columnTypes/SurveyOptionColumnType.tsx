@@ -2,7 +2,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 import { Check, History } from '@mui/icons-material';
-import { FC, useState } from 'react';
+import { FC, useState, type JSX } from 'react';
 
 import { IColumnType } from '.';
 import { Msg } from 'core/i18n';

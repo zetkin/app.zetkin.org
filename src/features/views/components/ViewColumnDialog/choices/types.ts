@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { UseMessagesMap } from 'core/i18n';
 import {
   PendingZetkinViewColumn,

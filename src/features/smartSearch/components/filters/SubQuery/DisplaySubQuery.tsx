@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   OPERATION,

@@ -270,44 +270,48 @@ export default makeMessages('feat.import', {
   },
   impactSummary: {
     future: {
-      created: m<{ numPeople: number; number: ReactElement }>(
+      created: m<{ numPeople: number; number: ReactElement<unknown> }>(
         '{number} new {numPeople, plural, =1 {person} other {people}} will be created'
       ),
-      defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
-        '{numPeople} will receive changes to their {field}'
-      ),
+      defaultDesc: m<{
+        field: ReactElement<unknown>;
+        numPeople: ReactElement<unknown>;
+      }>('{numPeople} will receive changes to their {field}'),
       organization: m('Organization'),
-      orgs: m<{ numPeople: ReactElement; org: ReactElement }>(
+      orgs: m<{ numPeople: ReactElement<unknown>; org: ReactElement<unknown> }>(
         '{numPeople} will be added to an {org}'
       ),
       tags: m('Tags'),
-      tagsDesc: m<{ numPeople: ReactElement; tags: ReactElement }>(
-        '{numPeople} will have {tags} added'
-      ),
-      updated: m<{ numPeople: number; number: ReactElement }>(
+      tagsDesc: m<{
+        numPeople: ReactElement<unknown>;
+        tags: ReactElement<unknown>;
+      }>('{numPeople} will have {tags} added'),
+      updated: m<{ numPeople: number; number: ReactElement<unknown> }>(
         '{number} {numPeople, plural, =1 {person} other {people}} will be updated'
       ),
     },
     past: {
-      created: m<{ numPeople: number; number: ReactElement }>(
+      created: m<{ numPeople: number; number: ReactElement<unknown> }>(
         '{number} new {numPeople, plural, =1 {person} other {people}} were created'
       ),
-      defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
-        '{numPeople} received changes to their {field}'
-      ),
+      defaultDesc: m<{
+        field: ReactElement<unknown>;
+        numPeople: ReactElement<unknown>;
+      }>('{numPeople} received changes to their {field}'),
       organization: m('Organization'),
-      orgs: m<{ numPeople: ReactElement; org: ReactElement }>(
+      orgs: m<{ numPeople: ReactElement<unknown>; org: ReactElement<unknown> }>(
         '{numPeople} were added to an {org}'
       ),
       tags: m('Tags'),
-      tagsDesc: m<{ numPeople: ReactElement; tags: ReactElement }>(
-        '{numPeople} had {tags} added'
-      ),
-      updated: m<{ numPeople: number; number: ReactElement }>(
+      tagsDesc: m<{
+        numPeople: ReactElement<unknown>;
+        tags: ReactElement<unknown>;
+      }>('{numPeople} had {tags} added'),
+      updated: m<{ numPeople: number; number: ReactElement<unknown> }>(
         '{number} {numPeople, plural, =1 {person} other {people}} were updated'
       ),
     },
-    people: m<{ numPeople: number; number: ReactElement }>(
+    people: m<{ numPeople: number; number: ReactElement<unknown> }>(
       '{number} {numPeople, plural, =1 {person} other {people}}'
     ),
     peopleToSubOrg: m<{ num: number; orgName: string }>('{orgName} ({num})'),
@@ -433,7 +437,7 @@ export default makeMessages('feat.import', {
       configure: m('Configure'),
       restart: m('Restart'),
     },
-    instructions: m<{ link: ReactElement }>('{link} or drag and drop'),
+    instructions: m<{ link: ReactElement<unknown> }>('{link} or drag and drop'),
     loading: m('Loading file...'),
     release: m('Release the file here'),
     selectClick: m('Click to upload'),

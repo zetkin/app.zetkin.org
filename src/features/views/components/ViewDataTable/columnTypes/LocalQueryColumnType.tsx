@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { Check } from '@mui/icons-material';
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';

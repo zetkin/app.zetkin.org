@@ -1,6 +1,6 @@
 import { useDrop } from 'react-dnd';
 import { Box, useTheme } from '@mui/material';
-import { createContext, FC } from 'react';
+import React, { createContext, FC } from 'react';
 import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 
 import { useNumericRouteParams } from 'core/hooks';
@@ -56,7 +56,7 @@ const BrowserRow: FC<BrowserRowProps> = ({ item, rowProps }) => {
     // If it's not a view, wrap it in a drop target
     content = (
       <Box
-        ref={dropRef}
+        ref={dropRef as unknown as React.Ref<HTMLDivElement>}
         style={{
           backgroundColor: dropProps.active
             ? theme.palette.background.paper

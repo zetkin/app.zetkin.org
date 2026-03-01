@@ -4,7 +4,7 @@ import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
 const StyledDatePicker: React.FC<DatePickerProps<dayjs.Dayjs>> = (
   props
-): React.ReactElement => {
+): React.ReactElement<unknown> => {
   const theme = useTheme();
   return (
     <DatePicker

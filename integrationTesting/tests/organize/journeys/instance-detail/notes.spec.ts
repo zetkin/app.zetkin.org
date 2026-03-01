@@ -109,19 +109,13 @@ test.describe('Journey instance notes', () => {
       `[data-testid=ZUIEllipsisMenu-item-edit-note-${NoteUpdate.details.note.id}]`
     );
 
-    // Click input
-    await page.click('[data-slate-editor=true]:below(:text("added a note"))');
-    // Delete existing text
-    for (let i = 0; i < NoteUpdate.details.note.text.length; i++) {
-      // Delete forwards and backwards in case caret
-      // was put somewhere in the middle
-      await page.keyboard.press('Delete');
-      await page.keyboard.press('Backspace');
-    }
-    await page.type(
-      '[data-slate-editor=true]:below(:text("added a note"))',
-      newNote.text
+    // Triple-click to select all text in the editor, then delete and retype
+    const noteEditor = page.locator(
+      '[data-slate-editor=true]:below(:text("added a note"))'
     );
+    await noteEditor.click({ clickCount: 3 });
+    await page.keyboard.press('Backspace');
+    await noteEditor.type(newNote.text);
 
     await Promise.all([
       page.waitForResponse(

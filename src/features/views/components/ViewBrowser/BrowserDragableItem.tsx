@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useDrag } from 'react-dnd';
-import { FC, ReactNode, useEffect } from 'react';
+import React, { FC, ReactNode, useEffect } from 'react';
 
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 
@@ -22,7 +22,11 @@ const BrowserDraggableItem: FC<BrowserDragItemProps> = ({ children, item }) => {
     preview(getEmptyImage(), { captureDraggingState: true });
   }, []);
   return (
-    <Box ref={dragRef} display="flex" gap={1}>
+    <Box
+      ref={dragRef as unknown as React.Ref<HTMLDivElement>}
+      display="flex"
+      gap={1}
+    >
       {children}
     </Box>
   );

@@ -1,5 +1,5 @@
 import { Box, Button, MenuItem, Typography } from '@mui/material';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, type JSX } from 'react';
 import Fuse from 'fuse.js';
 
 import FilterForm from '../../FilterForm';

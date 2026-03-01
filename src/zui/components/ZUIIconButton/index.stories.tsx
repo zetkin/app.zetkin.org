@@ -1,5 +1,5 @@
 import { Close } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIIconButton from './index';
 

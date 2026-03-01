@@ -1,5 +1,5 @@
 import { MenuItem } from '@mui/material';
-import { FormEvent, useEffect } from 'react';
+import { FormEvent, useEffect, type JSX } from 'react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import FilterForm from '../../FilterForm';

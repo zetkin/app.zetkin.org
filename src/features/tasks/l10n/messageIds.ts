@@ -10,8 +10,8 @@ export default makeMessages('feat.tasks', {
   },
   assignees: {
     completedStates: {
-      completed: m<{ time: ReactElement }>('Completed {time}'),
-      ignored: m<{ time: ReactElement }>('Ignored {time}'),
+      completed: m<{ time: ReactElement<unknown> }>('Completed {time}'),
+      ignored: m<{ time: ReactElement<unknown> }>('Ignored {time}'),
       notCompleted: m('Not yet completed'),
     },
     links: {
@@ -195,12 +195,12 @@ export default makeMessages('feat.tasks', {
   },
   taskListItem: {
     relativeTimes: {
-      active: m<{ time: ReactElement }>('Deadline {time}'),
-      closed: m<{ time: ReactElement }>('Closed {time}'),
-      expired: m<{ time: ReactElement }>('Expired {time}'),
-      expires: m<{ time: ReactElement }>('Expires {time}'),
-      indefinite: m<{ time: ReactElement }>('Published {time}'),
-      scheduled: m<{ time: ReactElement }>('Will be published {time}'),
+      active: m<{ time: ReactElement<unknown> }>('Deadline {time}'),
+      closed: m<{ time: ReactElement<unknown> }>('Closed {time}'),
+      expired: m<{ time: ReactElement<unknown> }>('Expired {time}'),
+      expires: m<{ time: ReactElement<unknown> }>('Expires {time}'),
+      indefinite: m<{ time: ReactElement<unknown> }>('Published {time}'),
+      scheduled: m<{ time: ReactElement<unknown> }>('Will be published {time}'),
     },
   },
   taskPreview: {

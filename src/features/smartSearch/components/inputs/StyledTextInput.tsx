@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { StandardTextFieldProps, TextField } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type JSX } from 'react';
 
 import oldTheme from 'theme';
 

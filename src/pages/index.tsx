@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import { getIronSession } from 'iron-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';

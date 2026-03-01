@@ -3,7 +3,7 @@ import { Add } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useState, type JSX } from 'react';
 
 import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
@@ -26,7 +26,9 @@ const AddFilterButton: FC<Props> = ({ items, open, onToggle }) => {
   return (
     <div>
       <Button
-        ref={(elem) => setAnchorEl(elem)}
+        ref={(elem) => {
+          setAnchorEl(elem);
+        }}
         onClick={() => onToggle(!open)}
         startIcon={<Add />}
         variant="text"

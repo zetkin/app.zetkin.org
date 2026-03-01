@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';

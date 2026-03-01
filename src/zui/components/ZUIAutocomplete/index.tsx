@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { FC, RefObject } from 'react';
+import { FC, RefObject, type JSX } from 'react';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
@@ -71,7 +71,7 @@ type AutocompleteBaseProps = {
   /**
    * Passa ref to the input element.
    */
-  inputRef?: RefObject<HTMLInputElement>;
+  inputRef?: RefObject<HTMLInputElement | null>;
 
   /**
    * The label of the autocomplete.

@@ -68,7 +68,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
 
   const searchResults = useMemo(() => search(), [searchString]);
 
-  const choiceContainerRef = useRef<HTMLDivElement>();
+  const choiceContainerRef = useRef<HTMLDivElement>(undefined);
   const filteredCategories = categories.filter(
     (category) =>
       !!filterChoicesByMode(isRestrictedMode, category.choices).length

@@ -1,6 +1,6 @@
 'use client';
 
-import { NoSsr } from '@mui/base';
+import { NoSsr } from '@mui/material';
 import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';

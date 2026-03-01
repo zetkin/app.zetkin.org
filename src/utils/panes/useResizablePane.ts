@@ -3,14 +3,14 @@ import { RefObject, useContext, useEffect, useRef } from 'react';
 import { PageContainerContext } from './PageContainerContext';
 
 type ResizablePane = {
-  paneContainerRef: RefObject<HTMLDivElement | undefined>;
-  slideRef: RefObject<HTMLDivElement | undefined>;
+  paneContainerRef: RefObject<HTMLDivElement | undefined | null>;
+  slideRef: RefObject<HTMLDivElement | undefined | null>;
   updatePaneHeight: () => void;
 };
 
 export default function useResizablePane(fixedHeight: boolean): ResizablePane {
-  const paneContainerRef = useRef<HTMLDivElement>();
-  const slideRef = useRef<HTMLDivElement>();
+  const paneContainerRef = useRef<HTMLDivElement>(undefined);
+  const slideRef = useRef<HTMLDivElement>(undefined);
   const { container } = useContext(PageContainerContext);
 
   const updatePaneHeight = () => {

@@ -1,5 +1,5 @@
 import { ExpandMore, Mail } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIButton from './index';
 

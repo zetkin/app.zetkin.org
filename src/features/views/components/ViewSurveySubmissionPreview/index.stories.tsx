@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import ViewSurveySubmissionPreview from '.';
@@ -15,7 +15,13 @@ const Template: StoryFn<typeof ViewSurveySubmissionPreview> = (args) => {
     <AccessLevelProvider>
       <>
         <div>
-          <a ref={(elem) => setAnchorEl(elem)}>Cell content</a>
+          <a
+            ref={(elem) => {
+              setAnchorEl(elem);
+            }}
+          >
+            Cell content
+          </a>
         </div>
         <ViewSurveySubmissionPreview
           anchorEl={anchorEl}
