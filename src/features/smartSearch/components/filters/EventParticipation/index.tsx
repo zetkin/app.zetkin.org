@@ -13,9 +13,10 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import useEventsByOrgs from 'features/smartSearch/hooks/useEventsByOrgs';
+import eventsMessageIds from 'features/events/l10n/messageIds';
 
 const localMessageIds = messageIds.filters.eventParticipation;
 
@@ -38,6 +39,7 @@ const EventParticipation = ({
   onCancel,
   filter: initialFilter,
 }: EventParticipationProps): JSX.Element => {
+  const eventsMessages = useMessages(eventsMessageIds);
   const { orgId } = useNumericRouteParams();
 
   const { filter, setConfig, setOp } =
@@ -171,7 +173,11 @@ const EventParticipation = ({
                       placement="right-start"
                       title={a.title && a.title.length >= 40 ? a.title : ''}
                     >
-                      <Box>{a.title ?? `Untitled Event #${a.id}`}</Box>
+                      <Box>
+                        {a.title ||
+                          a.activity?.title ||
+                          eventsMessages.common.noTitle()}
+                      </Box>
                     </Tooltip>
                   </MenuItem>
                 ))}

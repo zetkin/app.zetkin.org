@@ -1,4 +1,4 @@
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import {
   EventParticipationConfig,
   OPERATION,
@@ -9,6 +9,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import { useNumericRouteParams } from 'core/hooks';
 import useEvent from 'features/events/hooks/useEvent';
 import UnderlinedText from '../../UnderlinedText';
+import eventsMessageIds from 'features/events/l10n/messageIds';
 
 const localMessageIds = messageIds.filters.eventParticipation;
 
@@ -19,6 +20,7 @@ interface DisplayEventParticipationProps {
 const DisplayEventParticipation = ({
   filter,
 }: DisplayEventParticipationProps): JSX.Element => {
+  const eventsMessages = useMessages(eventsMessageIds);
   const { orgId } = useNumericRouteParams();
   const { config } = filter;
   const { state, status, action } = config;
@@ -38,7 +40,9 @@ const DisplayEventParticipation = ({
           <UnderlinedText
             text={
               event?.data
-                ? event.data.title ?? `Untitled Event #${event.data.id}`
+                ? event.data.title ||
+                  event.data.activity?.title ||
+                  eventsMessages.common.noTitle()
                 : ''
             }
           />
