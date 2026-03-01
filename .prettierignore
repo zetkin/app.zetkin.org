@@ -3,6 +3,9 @@
 # auto-generated localizations
 src/locale/**/*.yml
 
+# downloaded and checked-in hooks from useHooks.io
+src/zui/hooks/use-hooks-io
+
 # dependencies
 /node_modules
 /.pnp

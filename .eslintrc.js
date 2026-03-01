@@ -12,6 +12,7 @@ module.exports = {
     '.out/*',
     '!.prettierrc.js',
     'src/locale/*',
+    'src/zui/hooks/use-hooks-io/*',
   ],
   extends: ['eslint:recommended', 'next', 'prettier'],
   settings: { react: { version: 'detect' } },
