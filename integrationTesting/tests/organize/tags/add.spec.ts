@@ -42,8 +42,8 @@ test.describe('Tag manager', () => {
     const addTagButton = page.locator('text=Add tag');
     const playsGuitar = page.locator('text=Plays Guitar');
 
-    page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
-    addTagButton.waitFor({ state: 'visible' });
+    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    await addTagButton.waitFor({ state: 'visible' });
 
     await page.locator('text=Add tag').click();
 
