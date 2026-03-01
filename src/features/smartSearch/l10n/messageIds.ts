@@ -1002,6 +1002,10 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}'
       ),
+      onDate: m<{
+        onDateSelect: ReactElement;
+        onTimeFrameSelect: ReactElement;
+      }>('{onTimeFrameSelect} {onDateSelect}'),
     },
     preview: {
       afterDate: m<{ afterDate: string }>('after {afterDate}'),
@@ -1015,6 +1019,7 @@ export default makeMessages('feat.smartSearch', {
       lastFew: m<{ days: number }>(
         'during the last {days} {days, plural, one {day} other {days}}'
       ),
+      onDate: m<{ onDate: string }>('on {onDate}'),
     },
     timeFrameSelectLabel: {
       afterDate: m('after'),
@@ -1024,6 +1029,7 @@ export default makeMessages('feat.smartSearch', {
       ever: m('at any point in time'),
       future: m('in the future'),
       lastFew: m('during the last'),
+      onDate: m('on'),
     },
     timeFrameSelectOptions: {
       afterDate: m('after a certain date'),
@@ -1033,6 +1039,7 @@ export default makeMessages('feat.smartSearch', {
       ever: m('at any point in time'),
       future: m('in the future'),
       lastFew: m('recently'),
+      onDate: m('on a certain date'),
     },
   },
 });

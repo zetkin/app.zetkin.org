@@ -255,6 +255,14 @@ export default makeMessages('feat.emails', {
       'You have been unsubscribed from mass email from {org}.'
     ),
   },
+  urlCard: {
+    nowAccepting: m('Everyone can view the email at this link'),
+    open: m('Public view'),
+    preview: m('Future direct link'),
+    previewPortal: m('Preview email'),
+    visitPortal: m('Visit email'),
+    willAccept: m('Everyone will be able to view the email at this link'),
+  },
   varDefaults: {
     target: m('reader'),
   },

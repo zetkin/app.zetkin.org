@@ -576,6 +576,7 @@ export interface ZetkinEmail {
   content: string | null;
   title: string | null;
   target: ZetkinQuery;
+  uuid: string;
 }
 
 export interface ZetkinLink {
