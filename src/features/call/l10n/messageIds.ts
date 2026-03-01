@@ -350,7 +350,15 @@ export default makeMessages('feat.call', {
       success: m<{ name: string }>('You talked to {name}'),
       wrongNumber: m<{ name: string }>('We had the wrong number for ${name}'),
     },
-    title: m('Woop woop!'),
+    error: {
+      description: m(
+        'The call is now among your unfinished calls and you can go back and try submitting the report again.'
+      ),
+      title: m('Something went wrong when the report was being submitted.'),
+    },
+    title: {
+      success: m('Woop woop!'),
+    },
     unfinishedCallsMessage: m(
       'But, before you move on: you have unfinished calls, deal with them!'
     ),
@@ -359,5 +367,13 @@ export default makeMessages('feat.call', {
     message: m<{ assignmentTitle: string }>(
       'Switched assignments. You are now calling in {assignmentTitle}'
     ),
+  },
+  unexpectedError: {
+    backToMyZetkinButton: m('Go back to My Zetkin'),
+    description: m(
+      'Something went wrong, sorry about that! You can choose to reload the assignment or go back to "My Zetkin".'
+    ),
+    reloadButton: m('Reload assignment'),
+    title: m('Oops! An unexpected error happened'),
   },
 });

@@ -13,6 +13,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
   config: timeFrameConfig,
 }) => {
   const { after, before, numDays, timeFrame } = timeFrameConfig;
+  const dateOnMessageId = messageIds.timeFrame.preview.onDate;
 
   const withAfter = {
     afterDate: after?.toISOString().slice(0, 10) ?? '',
@@ -27,6 +28,15 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
         id={messageIds.timeFrame.preview.afterDate}
         values={{
           ...withAfter,
+        }}
+      />
+    );
+  } else if (timeFrame == TIME_FRAME.ON_DATE) {
+    return (
+      <UnderlinedMsg
+        id={dateOnMessageId}
+        values={{
+          onDate: withAfter.afterDate,
         }}
       />
     );
