@@ -74,7 +74,7 @@ export default function useEventParticipantsMutations(
     dispatch(participantsRemind(eventId));
     const remindersResults = await apiClient.post<RemindersResult[], null>(
       `/api/orgs/${orgId}/actions/${eventId}/reminders`,
-          null
+      null
     );
     dispatch(participantsReminded([eventId, remindersResults]));
   };
