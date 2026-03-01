@@ -79,8 +79,11 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
         </PublicEventLayout>
       </HomeThemeProvider>
     );
-  } catch {
-    return notFound();
+  } catch (e) {
+    if (e instanceof ApiClientError && e.status === 404) {
+      notFound();
+    }
+    throw e;
   }
 };
 
