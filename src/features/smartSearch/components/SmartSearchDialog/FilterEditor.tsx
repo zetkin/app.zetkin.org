@@ -28,6 +28,7 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+import EventParticipation from '../filters/EventParticipation';
 
 interface FilterEditorProps {
   onCancelSubmitFilter: () => void;
@@ -102,6 +103,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.MOST_ACTIVE && (
         <MostActive
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.EVENT_PARTICIPATION && (
+        <EventParticipation
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
