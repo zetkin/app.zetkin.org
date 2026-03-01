@@ -144,6 +144,7 @@ export default function mockState(overrides?: RootState) {
       officialMembershipsList: remoteList(),
     },
     smartSearch: {
+      eventsByOrgId: {},
       queryList: remoteList(),
       statsByFilterSpec: {},
     },
