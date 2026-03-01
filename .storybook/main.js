@@ -9,9 +9,8 @@ module.exports = {
   ],
   addons: [
     '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    'storybook-dark-mode',
+    '@vueless/storybook-dark-mode',
+    '@storybook/addon-docs',
   ],
 
   framework: '@storybook/nextjs',
@@ -29,10 +28,4 @@ module.exports = {
   typescript: {
     reactDocgen: 'react-docgen-typescript',
   },
-
-  previewHead: (head) => `${head}<style>
-    html, body, .sbdocs.sbdocs-wrapper, .sbdocs.sbdocs-content, .sb-wrapper, #storybook-docs {
-      background-color: transparent !important;
-    }
-</style>`,
 };
