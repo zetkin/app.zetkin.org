@@ -20,6 +20,7 @@ export default makeMessages('feat.home', {
       signedUp: m('You have signed up'),
     },
     filters: {
+      allActivities: m('All activities'),
       call: m('Call'),
       canvass: m('Areas'),
       event: m('Events'),
