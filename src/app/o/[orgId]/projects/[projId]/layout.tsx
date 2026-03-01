@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ApiClientError } from 'core/api/errors';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import PublicProjectLayout from 'features/public/layouts/PublicProjectLayout';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
@@ -61,8 +62,11 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
         </PublicProjectLayout>
       </HomeThemeProvider>
     );
-  } catch (err) {
-    return notFound();
+  } catch (e) {
+    if (e instanceof ApiClientError && e.status === 404) {
+      notFound();
+    }
+    throw e;
   }
 };
 

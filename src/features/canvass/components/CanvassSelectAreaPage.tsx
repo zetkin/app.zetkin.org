@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ArrowLeftIcon } from '@mui/x-date-pickers';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
@@ -145,7 +145,7 @@ const CanvassSelectAreaPage: FC<CanvassSelectAreaPageProps> = ({
   );
 
   if (!assignment) {
-    return null;
+    notFound();
   }
 
   return <Page assignment={assignment} />;
