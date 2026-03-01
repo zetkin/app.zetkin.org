@@ -1,9 +1,11 @@
 import { Box } from '@mui/material';
 import { range } from 'lodash';
 import { FC, useEffect, useState } from 'react';
+import { getRandom } from 'utils/randomUtils';
 
 type Props = {
   height: number | string;
+  seed?: number;
   width: number | string;
 };
 
@@ -56,19 +58,19 @@ type LayerData = {
   imageWidth: number;
 };
 
-const ZUIModalBackground: FC<Props> = ({ height, width }) => {
+const ZUIModalBackground: FC<Props> = ({ height, width, seed }) => {
   const [layers, setLayers] = useState<LayerData[]>([]);
-
+  const random = getRandom(seed);
   useEffect(() => {
     const newLayers = range(0, 4).map(() => {
-      const patternIndex = Math.floor(Math.random() * PATTERNS.length);
+      const patternIndex = Math.floor(random() * PATTERNS.length);
       const pattern = PATTERNS[patternIndex];
       const imageHeight = pattern.length;
       const imageWidth = pattern[0].length;
-      const randomColors = COLORS.concat().sort(() => Math.random() - 0.5);
+      const randomColors = COLORS.concat().sort(() => random() - 0.5);
 
-      const duration = 23 + Math.random() * 19;
-      const delay = Math.random() * 7;
+      const duration = 23 + random() * 19;
+      const delay = (new Date().getTime() / 1000) % duration;
 
       const imageData = new ImageData(imageWidth, imageHeight);
 
@@ -139,7 +141,7 @@ const ZUIModalBackground: FC<Props> = ({ height, width }) => {
           <Box
             key={index}
             sx={{
-              animationDelay: delay + 's',
+              animationDelay: -delay + 's',
               animationDirection: 'alternate',
               animationDuration: duration + 's',
               animationFillMode: 'both',
@@ -149,7 +151,7 @@ const ZUIModalBackground: FC<Props> = ({ height, width }) => {
               left: 0,
               position: 'absolute',
               right: 0,
-              rotate: Math.random() < 0.5 ? '0deg' : '180deg',
+              rotate: random() < 0.5 ? '0deg' : '180deg',
               top: 0,
               [`@keyframes ${animName}`]: {
                 '000%': {
