@@ -56,35 +56,11 @@ below for login credentials.
 
 #### Setting up MongoDB for local development
 
-Experimental features might require a running MongoDB.
-
-##### On MacOS
+Experimental features might require a running MongoDB. It does not need to be seeded and port is set with .env variable `MONGODB_URL`.
 
 ```bash
-brew tap mongodb/brew
-brew update
-brew install mongodb-community
+docker run --rm -ti -p27017:27017 mongo
 ```
-
-Do not forget to start MongoDB:
-
-```bash
-brew services start mongodb-community
-```
-
-##### On Debian
-
-```bash
-sudo apt-get install -y mongodb-org
-```
-
-Do not forget to start MongoDB:
-
-```bash
-sudo systemctl start mongod
-```
-
-You can now start the project normally with `npm run devserver`.
 
 ### Running the code (Docker)
 
