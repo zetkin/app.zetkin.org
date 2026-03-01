@@ -2,11 +2,15 @@ import { Box } from '@mui/material';
 import { range } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 
+import { getRandom } from 'utils/randomUtils';
+
 type Props = {
   /**
    * The height of the background
    */
   height: number | string;
+
+  seed?: number;
 
   /**
    * The width of the background
@@ -63,19 +67,20 @@ type LayerData = {
   imageWidth: number;
 };
 
-const ModalBackground: FC<Props> = ({ height, width }) => {
+const ModalBackground: FC<Props> = ({ height, seed, width }) => {
   const [layers, setLayers] = useState<LayerData[]>([]);
+  const random = getRandom(seed);
 
   useEffect(() => {
     const newLayers = range(0, 4).map(() => {
-      const patternIndex = Math.floor(Math.random() * PATTERNS.length);
+      const patternIndex = Math.floor(random() * PATTERNS.length);
       const pattern = PATTERNS[patternIndex];
       const imageHeight = pattern.length;
       const imageWidth = pattern[0].length;
-      const randomColors = COLORS.concat().sort(() => Math.random() - 0.5);
+      const randomColors = COLORS.concat().sort(() => random() - 0.5);
 
-      const duration = 23 + Math.random() * 19;
-      const delay = Math.random() * 7;
+      const duration = 23 + random() * 19;
+      const delay = (new Date().getTime() / 1000) % duration;
 
       const imageData = new ImageData(imageWidth, imageHeight);
 
@@ -146,7 +151,7 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
           <Box
             key={index}
             sx={{
-              animationDelay: delay + 's',
+              animationDelay: -delay + 's',
               animationDirection: 'alternate',
               animationDuration: duration + 's',
               animationFillMode: 'both',
@@ -156,12 +161,12 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
               left: 0,
               position: 'absolute',
               right: 0,
-              rotate: Math.random() < 0.5 ? '0deg' : '180deg',
+              rotate: random() < 0.5 ? '0deg' : '180deg',
               top: 0,
               [`@keyframes ${animName}`]: {
                 '000%': {
                   filter: 'blur(20px) hue-rotate(0)',
-                  opacity: 0,
+                  opacity: 0.0,
                 },
                 '033%': {
                   filter: 'blur(30px) hue-rotate(30deg)',
@@ -169,7 +174,7 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
                 },
                 '066%': {
                   filter: 'blur(30px) hue-rotate(120deg)',
-                  opacity: 0.0,
+                  opacity: 0,
                 },
                 '100%': {
                   filter: 'blur(10px) hue-rotate(180deg)',
