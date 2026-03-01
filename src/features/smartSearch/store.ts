@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ZetkinQuery } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinQuery } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from './types';
 import {
   RemoteItem,
@@ -18,11 +18,13 @@ export type EphemeralQueryStats = {
 };
 
 export interface smartSearchStoreSlice {
+  eventsByOrgId: Record<string, RemoteList<ZetkinEvent>>;
   queryList: RemoteList<ZetkinQuery>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
 }
 
 const initialState: smartSearchStoreSlice = {
+  eventsByOrgId: {},
   queryList: remoteList(),
   statsByFilterSpec: {},
 };
@@ -31,6 +33,21 @@ const smartSearchSlice = createSlice({
   initialState: initialState,
   name: 'smartSearch',
   reducers: {
+    eventsByOrgLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      if (!state.eventsByOrgId[orgId]) {
+        state.eventsByOrgId[orgId] = remoteList();
+      }
+      state.eventsByOrgId[orgId].isLoading = true;
+    },
+    eventsByOrgLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEvent[]]>
+    ) => {
+      const [orgId, events] = action.payload;
+      state.eventsByOrgId[orgId] = remoteList(events);
+      state.eventsByOrgId[orgId].loaded = new Date().toISOString();
+    },
     queriesLoad: (state) => {
       state.queryList.isLoading = true;
     },
@@ -61,5 +78,11 @@ const smartSearchSlice = createSlice({
 });
 
 export default smartSearchSlice;
-export const { queriesLoad, queriesLoaded, statsLoad, statsLoaded } =
-  smartSearchSlice.actions;
+export const {
+  eventsByOrgLoad,
+  eventsByOrgLoaded,
+  queriesLoad,
+  queriesLoaded,
+  statsLoad,
+  statsLoaded,
+} = smartSearchSlice.actions;

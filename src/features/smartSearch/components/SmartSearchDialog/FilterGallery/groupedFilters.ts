@@ -37,7 +37,10 @@ export const GROUPED_FILTERS: {
       pale: filterCategoryColors.green.pale,
       strong: filterCategoryColors.green.strong,
     },
-    filters: [FILTER_TYPE.CAMPAIGN_PARTICIPATION],
+    filters: [
+      FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+      FILTER_TYPE.EVENT_PARTICIPATION,
+    ],
   },
   [FILTER_CATEGORY.JOURNEY]: {
     colors: {
