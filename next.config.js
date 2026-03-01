@@ -25,6 +25,7 @@ module.exports = {
   images: {
     domains: [
       `files.${process.env.ZETKIN_API_DOMAIN}`,
+      `avatars.${process.env.ZETKIN_API_DOMAIN}`,
 
       // localhost added for playwright testing
       'localhost',
