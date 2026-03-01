@@ -6,7 +6,7 @@ import {
   participantsRemind,
   participantsReminded,
   participantUpdated,
-  type RemindersResult,
+  type ZetkinEventReminder,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
@@ -72,7 +72,7 @@ export default function useEventParticipantsMutations(
 
   const sendReminders = async (eventId: number) => {
     dispatch(participantsRemind(eventId));
-    const remindersResults = await apiClient.post<RemindersResult[], null>(
+    const remindersResults = await apiClient.post<ZetkinEventReminder[], null>(
       `/api/orgs/${orgId}/actions/${eventId}/reminders`,
       null
     );
