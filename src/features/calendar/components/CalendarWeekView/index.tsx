@@ -175,9 +175,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
           return (
             <Box
               key={date.toISOString()}
-              ref={(elm: HTMLDivElement) =>
-                (laneHeight = elm?.clientHeight ?? 0)
-              }
+              ref={(elm: HTMLDivElement | null) => {
+                laneHeight = elm?.clientHeight ?? 0;
+              }}
               flexGrow={1}
               height={`${HOUR_HEIGHT * 24}px`}
               sx={{

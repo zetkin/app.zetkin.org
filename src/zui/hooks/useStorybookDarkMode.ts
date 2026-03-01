@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
-import { addons } from '@storybook/preview-api';
+import { DARK_MODE_EVENT_NAME } from '@vueless/storybook-dark-mode';
+import { addons } from 'storybook/preview-api';
 
 const channel = addons.getChannel();
 

@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { ImportantDevices, Surfing, Visibility } from '@mui/icons-material';
 
 import ZUITextField from './index';
