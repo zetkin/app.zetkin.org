@@ -56,7 +56,6 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [userLocation, setUserLocation] = useState<PointData | null>(null);
   const [userAccuracy, setUserAccuracy] = useState<number | null>(null);
   const [mapZoom, setMapZoom] = useState<number | null>(null);
-  //const [accuracyPx, setAccuracyPx] = useState<number>(18);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -411,7 +410,9 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           updateSelection();
           setMapZoom(ev.target.getZoom());
         }}
-        onMoveEnd={() => saveBounds()}
+        onMoveEnd={() => {
+          saveBounds();
+        }}
         RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         style={{ height: '100%', width: '100%' }}
       >
