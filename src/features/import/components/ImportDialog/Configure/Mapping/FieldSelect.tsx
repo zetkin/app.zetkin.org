@@ -152,7 +152,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
                       messages.configuration.configure.ids.field[importID](),
                     newImportID:
                       messages.configuration.configure.ids.field['id'](),
-                  },
+                  }
                 ),
             });
           } else {
