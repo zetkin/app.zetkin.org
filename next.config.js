@@ -19,7 +19,6 @@ module.exports = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
         hostname: `files.${process.env.ZETKIN_API_DOMAIN}`,
       },
       {
