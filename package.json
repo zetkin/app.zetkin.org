@@ -52,7 +52,7 @@
     "@nivo/line": "^0.99.0",
     "@nivo/pie": "^0.99.0",
     "@nivo/radial-bar": "^0.99.0",
-    "@reduxjs/toolkit": "^1.8.6",
+    "@reduxjs/toolkit": "^2.6.1",
     "@testing-library/dom": "^10.4.1",
     "@turf/area": "^7.2.0",
     "@turf/distance": "^7.2.0",
@@ -93,7 +93,7 @@
     "react-error-boundary": "^6.0.0",
     "react-intl": "^7.1.14",
     "react-leaflet": "^4.2.1",
-    "react-redux": "^8.0.4",
+    "react-redux": "^9.2.0",
     "react-window": "^2.2.3",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
@@ -165,5 +165,8 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "overrides": {
+    "redux": "^5.0.0"
   }
 }
