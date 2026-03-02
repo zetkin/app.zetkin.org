@@ -19,9 +19,19 @@ export default function useDebounce<
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
 
+  const delayRef = useRef(delay);
   const debouncedFn = useRef(
     debounce((...args: Args) => callbackRef.current(...args), delay)
   );
+
+  if (delay !== delayRef.current) {
+    delayRef.current = delay;
+    debouncedFn.current.cancel();
+    debouncedFn.current = debounce(
+      (...args: Args) => callbackRef.current(...args),
+      delay
+    );
+  }
 
   return debouncedFn.current;
 }

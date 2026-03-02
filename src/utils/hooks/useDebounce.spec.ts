@@ -86,4 +86,32 @@ describe('useDebounce()', () => {
     expect(saveFn).toHaveBeenCalledWith('email-2', 'new subject');
     expect(saveFn).not.toHaveBeenCalledWith('email-1', 'new subject');
   });
+
+  it('uses the new delay after re-render', () => {
+    const callback = jest.fn().mockResolvedValue(undefined);
+
+    const { result, rerender } = renderHook(
+      ({ delay }) => useDebounce(callback, delay),
+      { initialProps: { delay: 400 } }
+    );
+
+    // Change delay to 800ms
+    rerender({ delay: 800 });
+
+    act(() => {
+      result.current('hello');
+    });
+
+    // Old delay (400ms) should not trigger the callback
+    act(() => {
+      jest.advanceTimersByTime(400);
+    });
+    expect(callback).not.toHaveBeenCalled();
+
+    // New delay (800ms) should trigger
+    act(() => {
+      jest.advanceTimersByTime(400);
+    });
+    expect(callback).toHaveBeenCalledWith('hello');
+  });
 });
