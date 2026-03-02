@@ -102,6 +102,7 @@ export interface UseChartProExportPublicApi {
 
 const ResponseStatsCard = ({
   children,
+  controls,
   exportApi,
   exportDisabled,
   onTabChange,
@@ -111,6 +112,7 @@ const ResponseStatsCard = ({
   tabValue,
 }: {
   children: ReactNode;
+  controls?: ReactNode;
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   exportDisabled: boolean;
   onTabChange: (tab: string) => void;
@@ -235,6 +237,7 @@ const ResponseStatsCard = ({
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
+          {controls}
           <Box>
             <Button
               disabled={exportDisabled}
@@ -299,19 +302,35 @@ const ChartWrapper = (props: BoxOwnProps) => {
   );
 };
 
+type DisplayMode = 'absolute' | 'percent';
+
 const QuestionStatsBarPlot = ({
+  displayMode,
   exportApi,
   questionStats,
 }: {
+  displayMode: DisplayMode;
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
   const theme = useTheme();
+  const isOptions = isOptionsStats(questionStats);
+  const percentBase = isOptions
+    ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
+    : 0;
+  const toPercent = (count: number) =>
+    percentBase ? Math.round((count / percentBase) * 100) : 0;
+  const percentFormatter = (value: number | null) =>
+    value == null ? '' : `${value}%`;
+  const absoluteFormatter = (value: number | null) =>
+    value == null ? '' : value.toString();
+  const showPercent = isOptions && displayMode === 'percent';
+  const valueFormatter = showPercent ? percentFormatter : absoluteFormatter;
 
   const data = useMemo(() => {
     const bars = isOptionsStats(questionStats)
       ? questionStats.options.map((o) => ({
-          count: o.count,
+          count: showPercent ? toPercent(o.count) : o.count,
           option: o.option.text,
         }))
       : Object.entries(questionStats.topWordFrequencies).map(
@@ -325,7 +344,7 @@ const QuestionStatsBarPlot = ({
       sorted = sorted.slice(0, 10);
     }
     return sorted;
-  }, [questionStats]);
+  }, [questionStats, showPercent, percentBase]);
 
   return (
     <ChartWrapper>
@@ -343,6 +362,7 @@ const QuestionStatsBarPlot = ({
         series={[
           {
             data: data.map((option) => option.count),
+            valueFormatter,
           },
         ]}
         slotProps={{
@@ -368,6 +388,7 @@ const QuestionStatsBarPlot = ({
           {
             disableLine: true,
             tickLabelStyle: { fill: theme.palette.grey['700'] },
+            valueFormatter,
           },
         ]}
         yAxis={[
@@ -390,17 +411,39 @@ const QuestionStatsBarPlot = ({
 };
 
 const QuestionStatsPie = ({
+  displayMode,
   exportApi,
   questionStats,
 }: {
+  displayMode: DisplayMode;
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
+  const isOptions = isOptionsStats(questionStats);
+  const percentBase = isOptions
+    ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
+    : 0;
+  const toPercent = (count: number) =>
+    percentBase ? Math.round((count / percentBase) * 100) : 0;
+  const pieArcLabelFormatter = (
+    item: { value: number } & Record<string, unknown>
+  ) => `${item.value}%`;
+  const showPercent = isOptions && displayMode === 'percent';
+  const pieValueFormatter = (
+    value: number | { value: number } | null
+  ): string => {
+    if (value == null) {
+      return '';
+    }
+
+    const numericValue = typeof value === 'number' ? value : value.value;
+    return showPercent ? `${numericValue}%` : numericValue.toString();
+  };
   const data = useMemo(() => {
     const items = isOptionsStats(questionStats)
       ? questionStats.options.map((o) => ({
           label: getEllipsedString(o.option.text, 60),
-          value: o.count,
+          value: showPercent ? toPercent(o.count) : o.count,
         }))
       : Object.entries(questionStats.topWordFrequencies).map(
           ([word, count]) => ({
@@ -416,7 +459,7 @@ const QuestionStatsPie = ({
         label,
         value,
       }));
-  }, [questionStats]);
+  }, [questionStats, showPercent, percentBase]);
   const messages = useMessages(messageIds);
   const [hasSeenPieInaccuracyWarning, setHasSeenPieInaccuracyWarning] =
     useState(false);
@@ -453,11 +496,12 @@ const QuestionStatsPie = ({
           height={CHART_HEIGHT}
           series={[
             {
-              arcLabel: 'value',
+              arcLabel: showPercent ? pieArcLabelFormatter : 'value',
               cornerRadius: 5,
               data,
               innerRadius: 80,
               outerRadius: 180,
+              valueFormatter: pieValueFormatter,
             },
           ]}
           slotProps={{
@@ -487,6 +531,7 @@ const OptionsStatsCard = ({
   questionStats: OptionsQuestionStats;
 }) => {
   const [tab, setTab] = useState('bar-plot');
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('percent');
   const messages = useMessages(messageIds);
 
   const subheader = useMemo(
@@ -499,9 +544,26 @@ const OptionsStatsCard = ({
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
+  const displayToggle = (
+    <ToggleButtonGroup
+      exclusive
+      onChange={(_, newValue) => newValue && setDisplayMode(newValue)}
+      orientation={'horizontal'}
+      size={'small'}
+      value={displayMode}
+    >
+      <ToggleButton size={'small'} value={'absolute'}>
+        Amount
+      </ToggleButton>
+      <ToggleButton size={'small'} value={'percent'}>
+        Percent
+      </ToggleButton>
+    </ToggleButtonGroup>
+  );
 
   return (
     <ResponseStatsCard
+      controls={displayToggle}
       exportApi={exportApi}
       exportDisabled={false}
       onTabChange={(selected) => setTab(selected)}
@@ -521,12 +583,17 @@ const OptionsStatsCard = ({
     >
       {tab === 'bar-plot' && (
         <QuestionStatsBarPlot
+          displayMode={displayMode}
           exportApi={exportApi}
           questionStats={questionStats}
         />
       )}
       {tab === 'pie-chart' && (
-        <QuestionStatsPie exportApi={exportApi} questionStats={questionStats} />
+        <QuestionStatsPie
+          displayMode={displayMode}
+          exportApi={exportApi}
+          questionStats={questionStats}
+        />
       )}
     </ResponseStatsCard>
   );
@@ -943,6 +1010,7 @@ const TextStatsCard = ({
         )}
         {tab === 'word-frequency-bars' && (
           <QuestionStatsBarPlot
+            displayMode="absolute"
             exportApi={exportApi}
             questionStats={questionStats}
           />
