@@ -130,7 +130,7 @@
     "@types/nprogress": "^0.2.0",
     "@types/papaparse": "^5.3.10",
     "@types/random-seed": "^0.3.3",
-    "@types/react": "^18.0.18",
+    "@types/react": "^18.2.25",
     "@types/react-dom": "^18.0.6",
     "@types/validator": "^13.6.3",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
