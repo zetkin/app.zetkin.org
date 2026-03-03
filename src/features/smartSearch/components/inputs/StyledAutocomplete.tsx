@@ -262,8 +262,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
     }
   };
 
-  const [editMode, setEditMode] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(valueItem?.label);
 
   const onChange = useCallback(
     (
@@ -284,7 +283,6 @@ const StyledAutocomplete: FC<Props> = (props) => {
         reason,
         details
       );
-      setInputValue('');
     },
     [props.onChange, setInputValue]
   );
@@ -317,43 +315,13 @@ const StyledAutocomplete: FC<Props> = (props) => {
             position: 'relative',
           }}
         >
-          <TextField
-            {...params}
-            onBlur={() => setEditMode(false)}
-            onFocus={() => {
-              setEditMode(true);
-              setInputValue('');
-            }}
-            placeholder={valueItem?.label}
-            sx={
-              editMode
-                ? {}
-                : {
-                    '& .MuiOutlinedInput-root input': {
-                      opacity: 0,
-                    },
-                  }
-            }
-          />
+          <TextField {...params} />
           <Typography
             sx={{
               fontSize: '34px',
               height: 0,
               opacity: 0,
               paddingRight: '39px',
-            }}
-          >
-            {valueItem?.label}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '34px',
-              left: 0,
-              paddingRight: '39px',
-              pointerEvents: 'none',
-              position: 'absolute',
-              top: 0,
-              ...(editMode ? { opacity: 0 } : {}),
             }}
           >
             {valueItem?.label}
@@ -386,6 +354,9 @@ const StyledAutocomplete: FC<Props> = (props) => {
         popper: StyledPopper,
       }}
       sx={(theme) => ({
+        '& .MuiFormControl-root': {
+          verticalAlign: 'baseline',
+        },
         '& .MuiOutlinedInput-notchedOutline': {
           border: 'none',
           padding: 0,
