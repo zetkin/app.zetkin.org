@@ -22,6 +22,10 @@ export default makeMessages('feat.events', {
     move: m('Move'),
     publish: m('Publish'),
     restore: m('Restore'),
+    sendEmailToParticipants: {
+      buttonTitle: m('Send email to participants'),
+      emailSubject: m<{ eventTitle: string }>('Re: {eventTitle}'),
+    },
     unpublish: m('Unpublish'),
     warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
     warningCancel: m<{ eventTitle: string }>(

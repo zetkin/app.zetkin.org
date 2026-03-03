@@ -46,6 +46,11 @@ const emailsSlice = createSlice({
       state.emailList.isLoading = false;
       state.emailList.items.push(remoteItem(email.id, { data: email }));
     },
+    emailCreatedNoRedirect: (state, action: PayloadAction<ZetkinEmail>) => {
+      const email = action.payload;
+      state.emailList.isLoading = false;
+      state.emailList.items.push(remoteItem(email.id, { data: email }));
+    },
     emailDeleted: (state, action: PayloadAction<number>) => {
       const emailId = action.payload;
       const item = state.emailList.items.find((item) => item.id === emailId);
@@ -197,6 +202,7 @@ export const {
   configsLoaded,
   emailCreate,
   emailCreated,
+  emailCreatedNoRedirect,
   emailDeleted,
   emailLinksLoad,
   emailLinksLoaded,
