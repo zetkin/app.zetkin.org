@@ -53,10 +53,10 @@ const CurrentTimeCircleMarker = ({
         backgroundColor: theme.palette.primary.main,
         border: '2px solid white',
         borderRadius: '100%',
-        height: '14px',
+        height: '10px',
         position: 'absolute',
-        translate: '-30% -50%',
-        width: '14px',
+        translate: '-25% -50%',
+        width: '10px',
         zIndex: 1000,
       }}
     />
@@ -91,41 +91,6 @@ const CurrentTimeLineMarker = ({
   );
 };
 
-const CurrentTimeMarker = ({ currentTime }: { currentTime: dayjs.Dayjs }) => {
-  const theme = useTheme();
-  const topOffset =
-    (currentTime.hour() +
-      currentTime.minute() / 60 +
-      currentTime.second() / 60 / 60) *
-    HOUR_HEIGHT;
-  return (
-    <Box
-      style={{
-        top: `${topOffset}px`,
-      }}
-      sx={{
-        backgroundColor: theme.palette.primary.main,
-        display: 'flex',
-        height: '2px',
-        position: 'absolute',
-        translate: '0 -50%',
-        width: '100%',
-        zIndex: 1000,
-      }}
-    >
-      <Box
-        sx={{
-          alignSelf: 'center',
-          backgroundColor: theme.palette.primary.main,
-          borderRadius: '100%',
-          height: '6px',
-          translate: '-50%',
-          width: '6px',
-        }}
-      />
-    </Box>
-  );
-};
 export interface CalendarWeekViewProps {
   focusDate: Date;
   onClickDay: (date: Date) => void;
@@ -288,9 +253,12 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 position: 'relative',
               }}
             >
+              {index === 0 && (
+                <CurrentTimeLineMarker currentTime={currentTime} />
+              )}
               {currentTime.toISOString().substring(0, 10) ===
                 date.toISOString().substring(0, 10) && (
-                <CurrentTimeMarker currentTime={currentTime} />
+                <CurrentTimeCircleMarker currentTime={currentTime} />
               )}
               <Box
                 ref={(elm: HTMLDivElement) => {
