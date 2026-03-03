@@ -18,12 +18,14 @@ export type EphemeralQueryStats = {
 };
 
 export interface smartSearchStoreSlice {
+  eventsByEventId: Record<string, RemoteItem<ZetkinEvent>>;
   eventsByOrgId: Record<string, RemoteList<ZetkinEvent>>;
   queryList: RemoteList<ZetkinQuery>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
 }
 
 const initialState: smartSearchStoreSlice = {
+  eventsByEventId: {},
   eventsByOrgId: {},
   queryList: remoteList(),
   statsByFilterSpec: {},
@@ -33,6 +35,22 @@ const smartSearchSlice = createSlice({
   initialState: initialState,
   name: 'smartSearch',
   reducers: {
+    eventsByEventIdLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      if (!state.eventsByEventId[eventId]) {
+        state.eventsByEventId[eventId] = remoteItem(eventId);
+      }
+      state.eventsByEventId[eventId].isLoading = true;
+    },
+    eventsByEventIdLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEvent | null]>
+    ) => {
+      const [eventId, event] = action.payload;
+      state.eventsByEventId[eventId] = remoteItem(eventId);
+      state.eventsByEventId[eventId].data = event;
+      state.eventsByEventId[eventId].loaded = new Date().toISOString();
+    },
     eventsByOrgLoad: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
       if (!state.eventsByOrgId[orgId]) {
@@ -79,6 +97,8 @@ const smartSearchSlice = createSlice({
 
 export default smartSearchSlice;
 export const {
+  eventsByEventIdLoad,
+  eventsByEventIdLoaded,
   eventsByOrgLoad,
   eventsByOrgLoaded,
   queriesLoad,
