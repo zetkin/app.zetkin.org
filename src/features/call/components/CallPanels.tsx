@@ -48,14 +48,14 @@ const CallPanels: FC<Props> = ({
 
   return (
     <>
-      {queueError ? (
+      {queueError && (
         <ZUIAlert
           appear
           description={messages.callAlert.description()}
           severity="warning"
           title={messages.callAlert.title()}
         />
-      ) : null}
+      )}
 
       <Box
         sx={(theme) => ({
