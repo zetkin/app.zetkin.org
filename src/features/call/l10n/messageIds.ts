@@ -65,7 +65,7 @@ export default makeMessages('feat.call', {
   },
   callAlert: {
     description: m('No more calls left in queue'),
-    title: m('Empty Call queue'),
+    title: m('Empty call queue'),
   },
   callLog: {
     openCallLogButton: m('Call log'),
