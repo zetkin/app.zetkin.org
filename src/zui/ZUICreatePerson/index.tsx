@@ -32,6 +32,11 @@ interface ZUICreatePersonProps {
   submitLabel?: string;
 }
 
+type BasicTagProps = {
+  tagId: number;
+  tagValue: string | number | null;
+};
+
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   initialValues,
   open,
@@ -47,7 +52,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const createPerson = useCreatePerson(orgId);
   const organization = useOrganization(orgId).data;
   const countryCode = organization?.country as CountryCode;
-  const [tags, setTags] = useState<number[]>([]);
+  const [tags, setTags] = useState<BasicTagProps[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({
     ...initialValues,
@@ -87,10 +92,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 setPersonalInfo(copied);
               } else {
                 if (field === 'tags' && value) {
+                  const tag = value as BasicTagProps;
                   setTags((prev) =>
-                    tags.includes(value as number)
-                      ? tags.filter((item) => item !== value)
-                      : [...prev, value as number]
+                    tags.find((item) => item.tagId === tag.tagId)
+                      ? tags.filter((item) => item.tagId !== tag.tagId)
+                      : [...prev, tag]
                   );
                 } else {
                   setPersonalInfo((prev) => {

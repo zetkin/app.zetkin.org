@@ -35,11 +35,15 @@ dayjs.extend(utc);
 
 type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
+type BasicTagProps = {
+  tagId: number;
+  tagValue: string | number | null;
+};
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null | number) => void;
+  onChange: (field: string, value: string | null | BasicTagProps) => void;
   personalInfo: ZetkinCreatePerson;
-  tags: number[];
+  tags: BasicTagProps[];
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
@@ -59,9 +63,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
     tags.reduce((acc: ZetkinAppliedTag[], item) => {
-      const tag = allTags.find((t) => t.id === item);
+      const tag = allTags.find((t) => t.id === item.tagId);
       if (tag) {
-        return acc.concat({ ...tag, value: null });
+        return acc.concat({ ...tag, value: item.tagValue });
       }
       return acc;
     }, []) ?? [];
@@ -300,13 +304,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       </Box>
       <TagManagerSection
         assignedTags={selectedTags}
-        disableEditTags
-        disableValueTags
         onAssignTag={(tag) => {
-          onChange('tags', tag.id);
+          onChange('tags', { tagId: tag.id, tagValue: tag.value });
         }}
         onUnassignTag={(tag) => {
-          onChange('tags', tag.id);
+          onChange('tags', { tagId: tag.id, tagValue: tag.value });
         }}
         submitCreateTagLabel={messages.createPerson.tagCreateAndApplyLabel()}
       />
