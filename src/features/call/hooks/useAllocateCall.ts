@@ -9,8 +9,8 @@ export type SerializedError = {
 
 type UseAllocateCallReturn = {
   allocateCall: () => Promise<void | SerializedError>;
-  error: SerializedError | null;
   isLoading: boolean;
+  queueError: SerializedError | null;
 };
 
 export default function useAllocateCall(
@@ -46,7 +46,7 @@ export default function useAllocateCall(
 
   return {
     allocateCall,
-    error: queueError,
     isLoading: callIsBeingAllocated,
+    queueError: queueError,
   };
 }

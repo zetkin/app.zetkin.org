@@ -48,7 +48,7 @@ const CallHeader: FC<Props> = ({
   const { quitCurrentCall } = useCallMutations(assignment.organization.id);
   const {
     allocateCall,
-    error: errorAllocatingCall,
+    queueError: errorAllocatingCall,
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
   const { submitReport } = useSubmitReport(assignment.organization.id);
