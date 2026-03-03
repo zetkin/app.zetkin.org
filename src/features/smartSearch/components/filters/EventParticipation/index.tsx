@@ -42,8 +42,11 @@ const EventParticipation = ({
   const eventsMessages = useMessages(eventsMessageIds);
   const { orgId } = useNumericRouteParams();
 
-  const { filter, setConfig, setOp } =
-    useSmartSearchFilter<Partial<EventParticipationConfig>>(initialFilter);
+  const { filter, setConfig, setOp } = useSmartSearchFilter<
+    Partial<EventParticipationConfig>
+  >(initialFilter, {
+    state: 'booked',
+  });
 
   const orgIds = useOrgIdsFromOrgScope(
     orgId,
