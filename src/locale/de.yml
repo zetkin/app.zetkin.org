@@ -399,9 +399,9 @@ feat:
       title: Ein unerwarteter Fehler ist aufgetreten.
     header:
       primaryButton:
-        undefined: Nächster Anruf
+        summary: Nächster Anruf
       secondaryButton:
-        undefined: Beenden
+        start: Beenden
     instructions:
       noInstructions: Diese Aufgabe enthält keine Anweisungen.
       title: Anweisungen
