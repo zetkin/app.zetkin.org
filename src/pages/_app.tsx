@@ -6,19 +6,13 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import Router from 'next/router';
-import { Theme } from '@mui/material/styles';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { store } from 'core/store';
+import createStore, { Store } from 'core/store';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
 import { PageWithLayout } from '../utils/types';
 import Providers from 'core/Providers';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface DefaultTheme extends Theme {}
-}
 
 // Progress bar
 NProgress.configure({ showSpinner: false });
@@ -46,6 +40,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const c = Component as PageWithLayout;
   const getLayout = c.getLayout || ((page) => page);
 
+  const storeRef = useRef<Store | null>(null);
+
+  if (!storeRef.current) {
+    storeRef.current = createStore();
+  }
+
   if (typeof window !== 'undefined') {
     window.__reactRendered = true;
   }
@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       env={env}
       lang={lang}
       messages={messages}
-      store={store}
+      store={storeRef.current}
       user={pageProps.user}
     >
       <CssBaseline />

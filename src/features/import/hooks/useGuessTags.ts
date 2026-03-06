@@ -3,7 +3,7 @@ import Fuse from 'fuse.js';
 import { UIDataColumn } from './useUIDataColumn';
 import useTagConfig from './useTagConfig';
 import useTags from 'features/tags/hooks/useTags';
-import { CellData, TagColumn } from '../utils/types';
+import { CellData, TagColumn } from '../types';
 
 const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const tags = useTags(orgId);

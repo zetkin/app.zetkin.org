@@ -80,8 +80,18 @@ const ZUICheckbox: FC<ZUICheckboxProps> = ({
         '& .MuiTypography-root': {
           '-ms-user-select': 'none',
           '-webkit-user-select': 'none',
+          marginTop: (theme) =>
+            labelPlacement == 'start' || labelPlacement == 'end'
+              ? `calc(${parseFloat(sizes[size]) / 2}rem + (9px - ${
+                  theme.typography.labelXlMedium.lineHeight
+                } / 2))`
+              : 0,
           userSelect: 'none',
         },
+        alignItems:
+          labelPlacement == 'start' || labelPlacement == 'end'
+            ? 'flex-start'
+            : 'center',
         marginBottom:
           labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
         marginLeft: labelPlacement != 'end' ? 0 : '',

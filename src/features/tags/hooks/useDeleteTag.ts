@@ -8,5 +8,7 @@ export default function useDeleteTag(orgId: number) {
   return async (tagId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/people/tags/${tagId}`);
     dispatch(tagDeleted(tagId));
+
+    // TODO when the deleted tag was the last of its group, delete the group as well to avoid orphaned groups
   };
 }

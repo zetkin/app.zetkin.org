@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -19,7 +19,7 @@ import {
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 
 import EventCard from './EventCard';
-import { ZetkinCallTarget } from '../types';
+import { LaneStep, ZetkinCallTarget } from '../types';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import SurveyCard from './SurveyCard';
 import useFilteredActivities, {
@@ -140,11 +140,11 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Hotel} size="large" />
-          <ZUIText color="secondary">{`${target.first_name} is not booked or signed up for any events.`}</ZUIText>
+          <ZUIText color="secondary">{`${target?.first_name} is not booked or signed up for any events.`}</ZUIText>
         </Box>
       )}
       {activities.map((activity) => {
-        if (activity.kind == ACTIVITIES.EVENT) {
+        if (target && activity.kind == ACTIVITIES.EVENT) {
           return (
             <EventCard
               key={activity.data.id}
@@ -170,11 +170,13 @@ const Activities: FC<ActivitiesProps> = ({
 
 type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
+  step: LaneStep;
   target: ZetkinCallTarget | null;
 };
 
 const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   assignment,
+  step,
   target,
 }) => {
   const messages = useMessages(messageIds);
@@ -218,7 +220,11 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   };
 
   const isFiltered =
-    filterState.alreadyIn || filterState.events || filterState.surveys;
+    filterState.alreadyIn ||
+    filterState.events ||
+    filterState.surveys ||
+    filterState.thisCall ||
+    projectIdsToFilterActivitiesBy.length > 0;
   const showAll =
     !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
@@ -302,7 +308,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const showAlreadyInFilter =
     filterState.alreadyIn || filterState.events || showAll;
   const showThisCallFilter =
-    respondedEventIds.length > 0 || respondedSurveyIds.length > 0;
+    respondedEventIds.length > 0 ||
+    respondedSurveyIds.length > 0 ||
+    step == LaneStep.REPORT;
 
   const baseFilters = [
     ...(showThisCallFilter
@@ -501,9 +509,41 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       : []),
   ];
 
+  useEffect(() => {
+    const campaign = assignment.campaign;
+    const campaignHasActivities =
+      !!campaign && projectIdsWithActivities.includes(campaign.id);
+
+    if (campaignHasActivities) {
+      dispatch(
+        filtersUpdated({
+          projectIdsToFilterActivitiesBy: [campaign.id],
+        })
+      );
+    }
+  }, [target?.id]);
+
+  useEffect(() => {
+    if (step == LaneStep.REPORT) {
+      dispatch(
+        filtersUpdated({
+          customDatesToFilterEventsBy: [null, null],
+          eventDateFilterState: null,
+          filterState: {
+            alreadyIn: false,
+            events: false,
+            surveys: false,
+            thisCall: true,
+          },
+          projectIdsToFilterActivitiesBy: [],
+        })
+      );
+    }
+  }, [step]);
+
   return (
     <>
-      <Box id="accctivitiesSecitonOuter" sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ height: '100%', width: '100%' }}>
         {selectedSurvey && <Survey survey={selectedSurvey} />}
         {!selectedSurvey && (
           <ZUISection
@@ -527,6 +567,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                         thisCall: false,
                       },
                       orgIdsToFilterEventsBy: [],
+                      projectIdsToFilterActivitiesBy: [],
                     })
                   )
                 }
@@ -542,9 +583,13 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 target={target}
               />
             )}
-            subtitle={messages.activities.description({
-              name: target?.first_name || '',
-            })}
+            subtitle={
+              target
+                ? messages.activities.description({
+                    name: target.first_name,
+                  })
+                : ''
+            }
             title={messages.activities.title()}
           />
         )}

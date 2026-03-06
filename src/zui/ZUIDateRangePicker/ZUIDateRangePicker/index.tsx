@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import {
   Box,
   ClickAwayListener,
@@ -8,7 +7,6 @@ import {
   Paper,
   Popper,
   TextField,
-  Theme,
   Typography,
 } from '@mui/material';
 import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
@@ -116,19 +114,6 @@ interface ZUIDateRangePickerProps {
   onChange?: (startDate: string | null, endDate: string | null) => void;
   startDate: string | null;
 }
-interface StyleProps {
-  readonly: boolean | undefined;
-}
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  label: {
-    '&:hover': {
-      borderBottomColor: lighten(oldTheme.palette.primary.main, 0.65),
-      borderBottomStyle: 'dotted',
-      borderBottomWidth: ({ readonly }) => (!readonly ? 2 : 0),
-    },
-    cursor: ({ readonly }) => (!readonly ? 'pointer' : ''),
-  },
-}));
 
 const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   endDate,
@@ -139,7 +124,6 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
   const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
 
-  const classes = useStyles({ readonly });
   const messages = useMessages(messageIds);
   const intl = useIntl();
 
@@ -160,7 +144,18 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
 
   return (
     <>
-      <Box alignItems="center" className={classes.label} display="flex">
+      <Box
+        alignItems="center"
+        sx={{
+          '&:hover': {
+            borderBottomColor: lighten(oldTheme.palette.primary.main, 0.65),
+            borderBottomStyle: 'dotted',
+            borderBottomWidth: !readonly ? '2px' : 0,
+          },
+          cursor: !readonly ? 'pointer' : '',
+          display: 'flex',
+        }}
+      >
         <Box
           component="span"
           display="flex"

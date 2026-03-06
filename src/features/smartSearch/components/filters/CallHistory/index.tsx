@@ -192,13 +192,13 @@ const CallHistory = ({
                     input: (
                       <StyledNumberInput
                         defaultValue={filter.config.minTimes || 1}
-                        inputProps={{ min: '1' }}
                         onChange={(e) => {
                           setConfig({
                             ...filter.config,
                             minTimes: +e.target.value,
                           });
                         }}
+                        slotProps={{ htmlInput: { min: '1' } }}
                       />
                     ),
                     minTimes: filter.config.minTimes || 1,
@@ -215,6 +215,7 @@ const CallHistory = ({
                 options={[
                   TIME_FRAME.EVER,
                   TIME_FRAME.AFTER_DATE,
+                  TIME_FRAME.ON_DATE,
                   TIME_FRAME.BEFORE_DATE,
                   TIME_FRAME.BETWEEN,
                   TIME_FRAME.LAST_FEW_DAYS,

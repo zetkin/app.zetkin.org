@@ -174,6 +174,7 @@ const Journey: FC<JourneyProps> = ({
                   options={[
                     TIME_FRAME.EVER,
                     TIME_FRAME.AFTER_DATE,
+                    TIME_FRAME.ON_DATE,
                     TIME_FRAME.BEFORE_DATE,
                     TIME_FRAME.BETWEEN,
                     TIME_FRAME.LAST_FEW_DAYS,
@@ -186,10 +187,6 @@ const Journey: FC<JourneyProps> = ({
                 {conditionSelect}
                 {selected === JOURNEY_CONDITION_OP.SOME && (
                   <StyledNumberInput
-                    inputProps={{
-                      max: filter.config.tags!.ids.length,
-                      min: '1',
-                    }}
                     onChange={(e) =>
                       setConfig({
                         ...filter.config,
@@ -200,6 +197,12 @@ const Journey: FC<JourneyProps> = ({
                         },
                       })
                     }
+                    slotProps={{
+                      htmlInput: {
+                        max: filter.config.tags!.ids.length,
+                        min: '1',
+                      },
+                    }}
                     sx={{ ml: '0.5rem' }}
                     value={filter.config.tags?.min_matching}
                   />
@@ -242,6 +245,7 @@ const Journey: FC<JourneyProps> = ({
                 options={[
                   TIME_FRAME.EVER,
                   TIME_FRAME.AFTER_DATE,
+                  TIME_FRAME.ON_DATE,
                   TIME_FRAME.BEFORE_DATE,
                   TIME_FRAME.BETWEEN,
                   TIME_FRAME.LAST_FEW_DAYS,

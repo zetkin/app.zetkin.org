@@ -3,7 +3,7 @@ import notEmpty from 'utils/notEmpty';
 import { useAppDispatch } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
-import { CellData, Column, ColumnKind, TagColumn } from '../utils/types';
+import { CellData, Column, ColumnKind, TagColumn } from '../types';
 
 export default function useTagConfig(
   orgId: number,

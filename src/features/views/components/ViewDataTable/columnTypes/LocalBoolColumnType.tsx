@@ -32,6 +32,7 @@ export default class LocalBoolColumnType implements IColumnType {
           <Cell cell={params.value} column={column} personId={params.row.id} />
         );
       },
+      sortingOrder: ['desc', 'asc', null],
       type: 'boolean',
     };
   }

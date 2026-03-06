@@ -107,6 +107,7 @@ export default makeMessages('feat.surveys', {
     },
   },
   insights: {
+    error: m('Unknown error occurred while loading.'),
     export: {
       errorUnknown: m('Unknown error occurred while exporting.'),
       toPdf: m('Export to pdf'),
@@ -230,6 +231,14 @@ export default makeMessages('feat.surveys', {
       'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
     ),
     title: m('Add email address'),
+  },
+  surveyDialogDifferentEmail: {
+    description: m(
+      'The person you are about to link has a different email to the one in the survey response. Would you like to set the survey response email to be the new email for this person?'
+    ),
+    keep: m('No, keep old email'),
+    title: m('Update email address'),
+    update: m('Yes, update email'),
   },
   surveyDuplicated: {
     error: m('Error: Could not duplicate survey'),

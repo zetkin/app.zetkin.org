@@ -18,34 +18,91 @@ export default function useRemoteItem<
     cacheKey?: string;
     isNecessary?: () => boolean;
     loader: () => Promise<DataType>;
+    staleWhileRevalidate?: boolean;
   }
 ): DataType {
   const dispatch = useAppDispatch();
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteItem);
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache } = usePromiseCache(promiseKey);
+  const { cache, getExistingPromise } = usePromiseCache(promiseKey);
+  const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
+
+  if (!remoteItem) {
+    const existing = getExistingPromise();
+    if (!existing) {
+      const promise = Promise.resolve()
+        .then(() => {
+          dispatch(hooks.actionOnLoad());
+        })
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
+        })
+        .catch((err) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+          } else {
+            throw err;
+          }
+        });
+      cache(promise);
+    }
+    throw getExistingPromise()!;
+  }
+
+  if (remoteItem.isLoading && !remoteItem.data) {
+    const existing = getExistingPromise();
+    if (!existing) {
+      const promise = Promise.resolve()
+        // No need to dispatch actionOnLoad: already loading
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
+        })
+        .catch((err) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+          } else {
+            throw err;
+          }
+        });
+      cache(promise);
+    }
+    throw getExistingPromise()!;
+  }
 
   if (loadIsNecessary) {
-    dispatch(hooks.actionOnLoad());
+    const existing = getExistingPromise();
+    if (!existing) {
+      const promise = Promise.resolve()
+        .then(() => {
+          dispatch(hooks.actionOnLoad());
+        })
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
+        })
+        .catch((err) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+          }
+        });
 
-    const promise = hooks
-      .loader()
-      .then((data) => {
-        dispatch(hooks.actionOnSuccess(data));
-      })
-      .catch((err) => {
-        if (hooks.actionOnError) {
-          dispatch(hooks.actionOnError(err));
-        }
-      });
+      cache(promise);
+    }
 
-    cache(promise);
-
-    if (remoteItem?.data) {
-      return remoteItem.data;
-    } else {
-      throw promise;
+    // Suspend if no data exists, or if staleWhileRevalidate is disabled
+    const hasData = !!remoteItem?.data;
+    const shouldSuspend = !hasData || !staleWhileRevalidate;
+    if (shouldSuspend) {
+      const toThrow = getExistingPromise();
+      if (toThrow) {
+        throw toThrow;
+      }
     }
   }
 

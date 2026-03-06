@@ -18,10 +18,10 @@ type ZUITextProps = {
   component?: 'div' | 'p' | 'span';
   gutterBottom?: boolean;
   noWrap?: boolean;
+  renderLineBreaks?: boolean;
   variant?: TextVariant;
 } & Omit<
   BoxProps,
-  | 'sx'
   | 'color'
   | 'typography'
   | 'fontFamily'
@@ -40,6 +40,7 @@ const ZUIText: FC<ZUITextProps> = ({
   component = 'p',
   gutterBottom,
   noWrap,
+  renderLineBreaks,
   variant = 'bodyMdRegular',
   ...boxProps
 }) => (
@@ -50,6 +51,7 @@ const ZUIText: FC<ZUITextProps> = ({
     gutterBottom={gutterBottom}
     noWrap={noWrap}
     variant={variant}
+    whiteSpace={renderLineBreaks ? 'pre-line' : undefined}
   >
     {children}
   </Typography>

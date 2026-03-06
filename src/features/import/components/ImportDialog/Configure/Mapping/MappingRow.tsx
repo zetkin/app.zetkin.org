@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ArrowForward, ChevronRight } from '@mui/icons-material';
+import { ArrowForward, BadgeOutlined, ChevronRight } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -16,11 +16,8 @@ import { Msg } from 'core/i18n';
 import { Option } from 'features/import/hooks/useColumn';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import useUIDataColumn from 'features/import/hooks/useUIDataColumn';
-import {
-  Column,
-  ColumnKind,
-  ConfigurableColumn,
-} from 'features/import/utils/types';
+import { Column, ColumnKind, ConfigurableColumn } from 'features/import/types';
+import useImportID from 'features/import/hooks/useImportID';
 
 const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
   return [
@@ -54,21 +51,23 @@ const MappingRow: FC<MappingRowProps> = ({
 }) => {
   const theme = useTheme();
   const column = useUIDataColumn(columnIndex);
+  const { importID } = useImportID();
 
-  const columnValuesMessage = useColumnValuesMessage(
-    column.numberOfEmptyRows,
-    column.uniqueValues
-  );
+  const makeColumnValuesMessage = useColumnValuesMessage();
 
   const getMappingRowButtonMessageId = () => {
     if (column.originalColumn.kind == ColumnKind.DATE) {
       return messageIds.configuration.mapping.configButton;
     } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
-      return messageIds.configuration.mapping.infoButton;
+      return messageIds.configuration.mapping.configButton;
     } else {
       return messageIds.configuration.mapping.mapValuesButton;
     }
   };
+
+  const columnIsSelectedAsImportID =
+    column.originalColumn.kind == ColumnKind.ID_FIELD &&
+    column.originalColumn.idField == importID;
 
   return (
     <Box
@@ -94,7 +93,7 @@ const MappingRow: FC<MappingRowProps> = ({
                 });
               } else {
                 onChange({
-                  ...column.originalColumn,
+                  ...column,
                   kind: ColumnKind.UNKNOWN,
                   selected: isChecked,
                 });
@@ -103,11 +102,17 @@ const MappingRow: FC<MappingRowProps> = ({
             }}
           />
           <Box
-            bgcolor={theme.palette.transparentGrey.light}
-            borderRadius={2}
-            padding={1}
+            sx={(theme) => ({
+              alignItems: 'center',
+              backgroundColor: theme.palette.transparentGrey.light,
+              borderRadius: 2,
+              display: 'flex',
+              gap: 1,
+              padding: 1,
+            })}
           >
             <Typography>{column.title}</Typography>
+            {columnIsSelectedAsImportID && <BadgeOutlined color="secondary" />}
           </Box>
         </Box>
         <Box alignItems="center" display="flex" width="50%">
@@ -145,7 +150,10 @@ const MappingRow: FC<MappingRowProps> = ({
         {!isConfigurableColumn(column.originalColumn) && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
             <Typography color="secondary" variant="body2">
-              {columnValuesMessage}
+              {makeColumnValuesMessage(
+                column.numberOfEmptyRows,
+                column.uniqueValues
+              )}
             </Typography>
           </Box>
         )}

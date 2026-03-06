@@ -1,5 +1,4 @@
 import { Close, PersonAdd } from '@mui/icons-material';
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -12,7 +11,6 @@ import {
   ListSubheader,
   Paper,
   Popper,
-  Theme,
   Typography,
   useAutocomplete,
 } from '@mui/material';
@@ -44,7 +42,6 @@ const ZUIPersonGridEditCell: FC<{
   const messages = useMessages(messageIds);
 
   const query = useRouter().query;
-  const styles = useStyles({ isRestrictedMode });
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searching, setSearching] = useState(false);
 
@@ -169,11 +166,16 @@ const ZUIPersonGridEditCell: FC<{
           }}
         >
           <Paper
-            className={styles.popper}
             elevation={2}
             onClick={(ev) => {
               ev.stopPropagation();
               anchorEl?.focus();
+            }}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: isRestrictedMode ? 'auto' : '400px',
+              width: '300px',
             }}
           >
             {isRestrictedMode && (
@@ -234,10 +236,15 @@ const ZUIPersonGridEditCell: FC<{
                   )}
                   <List
                     ref={scrollableRef}
-                    className={styles.searchingList}
                     sx={{
                       display:
                         showSuggestedPeople || searching ? 'block' : 'none',
+                      height: 'calc(100% - 40px)',
+                      minWidth: '250px',
+                      overflowY: 'scroll',
+                      paddingLeft: '20px',
+                      position: 'absolute',
+                      width: '100%',
                     }}
                   >
                     {showSuggestedPeople && filteredSuggestedPeople.length > 0 && (
@@ -376,22 +383,5 @@ const SelectedPerson: FC<{ orgId: number; person: ZetkinPerson }> = ({
     </>
   );
 };
-
-const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
-  popper: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: (props) => (props.isRestrictedMode ? 'auto' : 400),
-    width: 300,
-  },
-  searchingList: {
-    height: 'calc(100% - 40px)',
-    minWidth: '250px',
-    overflowY: 'scroll',
-    paddingLeft: '20px',
-    position: 'absolute',
-    width: '100%',
-  },
-});
 
 export default ZUIPersonGridEditCell;

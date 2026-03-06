@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import PublicOrgPage from 'features/organizations/pages/PublicOrgPage';
+import PublicOrgPage from 'features/public/pages/PublicOrgPage';
 
 type Props = {
   params: {

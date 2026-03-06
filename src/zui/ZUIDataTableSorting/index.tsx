@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import { Add, Delete, ImportExport } from '@mui/icons-material';
 import {
@@ -14,35 +13,20 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  DataGridProProps,
   GridColDef,
   GridSortDirection,
   GridSortModel,
 } from '@mui/x-data-grid-pro';
+import { GridCallbackDetails } from '@mui/x-data-grid/models/api';
 
 import { Msg } from 'core/i18n';
 import ShiftKeyIcon from '../../features/views/components/ViewDataTable/ShiftKeyIcon';
 import messageIds from 'zui/l10n/messageIds';
 
-const useStyles = makeStyles({
-  deleteButton: {
-    padding: 6,
-  },
-  popover: {
-    borderRadius: 0,
-    minWidth: 450,
-    padding: 24,
-  },
-  shiftIcon: {
-    margin: '0 5px -17px 5px',
-  },
-  sortModelItem: {
-    padding: '0 0 8px 0',
-  },
-});
-
 interface ZUIDataTableSortingProps {
   gridColumns: GridColDef[];
-  onSortModelChange: (model: GridSortModel | []) => void;
+  onSortModelChange: DataGridProProps['onSortModelChange'];
   sortModel: GridSortModel | [];
 }
 
@@ -50,9 +34,11 @@ const ZUIDataTableSorting: React.FunctionComponent<
   ZUIDataTableSortingProps
 > = ({ gridColumns, onSortModelChange, sortModel }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const classes = useStyles();
   const open = Boolean(anchorEl);
   const id = open ? 'sort-options' : undefined;
+
+  const innerOnSortModelChange = (model: GridSortModel) =>
+    onSortModelChange?.(model, {} as GridCallbackDetails);
 
   const handleSortButtonClick = (
     event: React.SyntheticEvent<HTMLButtonElement>
@@ -73,11 +59,11 @@ const ZUIDataTableSorting: React.FunctionComponent<
         : item;
     });
 
-    onSortModelChange(newSortModel);
+    innerOnSortModelChange(newSortModel);
   };
 
   const handleDelete = (field: string) => {
-    onSortModelChange(sortModel.filter((item) => item.field !== field));
+    innerOnSortModelChange(sortModel.filter((item) => item.field !== field));
   };
 
   const handleAdd = () => {
@@ -88,7 +74,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
     );
     const newSortModel = sortModel?.length ? sortModel.map((item) => item) : [];
     newSortModel.push({ field: availableColumns[0].field, sort: 'asc' });
-    onSortModelChange(newSortModel);
+    innerOnSortModelChange(newSortModel);
   };
 
   return (
@@ -113,11 +99,17 @@ const ZUIDataTableSorting: React.FunctionComponent<
           horizontal: 'left',
           vertical: 'bottom',
         }}
-        classes={{ paper: classes.popover }}
         elevation={1}
         id={id}
         onClose={handlePopoverClose}
         open={open}
+        sx={{
+          '.MuiPopover-paper': {
+            borderRadius: 0,
+            minWidth: '450px',
+            padding: '24px',
+          },
+        }}
         transformOrigin={{
           horizontal: 'center',
           vertical: 'top',
@@ -169,16 +161,22 @@ const ZUIDataTableSorting: React.FunctionComponent<
                       value={item.sort}
                       variant="standard"
                     >
-                      <MenuItem value="asc">Ascending</MenuItem>
-                      <MenuItem value="desc">Descending</MenuItem>
+                      <MenuItem value="asc">
+                        <Msg id={messageIds.dataTableSorting.ascending} />
+                      </MenuItem>
+                      <MenuItem value="desc">
+                        <Msg id={messageIds.dataTableSorting.descending} />
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
                 <IconButton
-                  className={classes.deleteButton}
                   data-testid="deleteSortModelItem"
                   onClick={() => handleDelete(item.field)}
                   size="large"
+                  sx={{
+                    padding: '6px',
+                  }}
                 >
                   <Delete />
                 </IconButton>
@@ -205,7 +203,9 @@ const ZUIDataTableSorting: React.FunctionComponent<
                   <ShiftKeyIcon
                     size={40}
                     svgProps={{
-                      className: classes.shiftIcon,
+                      sx: {
+                        margin: '0 5px -17px 5px',
+                      },
                     }}
                   />
                 ),

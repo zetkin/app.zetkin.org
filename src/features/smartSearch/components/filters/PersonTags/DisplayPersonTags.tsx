@@ -1,4 +1,4 @@
-import { Box, Chip, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
@@ -12,6 +12,7 @@ import {
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
+import TagChip from 'features/tags/components/TagManager/components/TagChip';
 
 const localMessageIds = messageIds.filters.personTags;
 
@@ -55,18 +56,16 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
           ),
         tags: (
           <Box
-            alignItems="start"
-            display="inline-flex"
-            sx={{ marginTop: isDesktop ? '10px' : null }}
+            sx={{
+              alignItems: 'start',
+              display: 'inline-flex',
+              flexWrap: 'wrap',
+              gap: 1,
+              marginTop: isDesktop ? '10px' : null,
+            }}
           >
             {selectedTags.map((t) => (
-              <Chip
-                key={t.id}
-                label={t.title}
-                size="small"
-                sx={{ borderColor: t.color, margin: '2px' }}
-                variant="outlined"
-              />
+              <TagChip key={t.id} size="small" tag={t} />
             ))}
           </Box>
         ),

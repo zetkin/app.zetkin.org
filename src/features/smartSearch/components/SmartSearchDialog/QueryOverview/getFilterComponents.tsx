@@ -44,6 +44,7 @@ import DisplaySurveyResponse from '../../filters/SurveyResponse/DisplaySurveyRes
 import DisplaySurveySubmission from '../../filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayTask from '../../filters/Task/DisplayTask';
 import DisplayUser from '../../filters/User/DisplayUser';
+import DisplayOfficial from '../../filters/Official/DisplayOfficial';
 import {
   AllInSuborgFilterConfig,
   AnyFilterConfig,
@@ -58,6 +59,7 @@ import {
   JoinFormFilterConfig,
   JourneyFilterConfig,
   MostActiveFilterConfig,
+  OfficialFilterConfig,
   OPERATION,
   PersonDataFilterConfig,
   PersonFieldFilterConfig,
@@ -223,6 +225,15 @@ export default function getFilterComponents(
     displayFilter = (
       <DisplayUser
         filter={filter as SmartSearchFilterWithId<UserFilterConfig>}
+      />
+    );
+    filterTypeIcon = (
+      <AccountCircleOutlined color="secondary" fontSize="small" />
+    );
+  } else if (filter.type === FILTER_TYPE.OFFICIAL) {
+    displayFilter = (
+      <DisplayOfficial
+        filter={filter as SmartSearchFilterWithId<OfficialFilterConfig>}
       />
     );
     filterTypeIcon = (

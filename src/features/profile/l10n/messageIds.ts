@@ -2,11 +2,11 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.profile', {
   delete: {
-    button: m('Remove person'),
+    button: m('Delete person'),
     confirm: m<{ name: string; org: string }>(
       'Are you sure you want to delete {name} from {org}, and all related organizations? This is a permanent action.'
     ),
-    title: m('Delete account'),
+    title: m('Delete person'),
     warning: m('This cannot be undone!'),
   },
   details: {

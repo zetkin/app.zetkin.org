@@ -1,6 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
 import { FC, ReactNode } from 'react';
+import NextLink from 'next/link';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';
 import { Msg } from 'core/i18n';
@@ -69,7 +70,18 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                   }}
                 />
               }
-              title={sub.survey.title}
+              title={
+                <Link
+                  color={'inherit'}
+                  component={NextLink}
+                  href={`/organize/${sub.organization.id}/projects/${
+                    sub.campaign ? sub.campaign.id : 'standalone'
+                  }/surveys/${sub.survey.id}`}
+                  underline={'hover'}
+                >
+                  {sub.survey.title}
+                </Link>
+              }
             />
             {sub.elements.map((elem) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {

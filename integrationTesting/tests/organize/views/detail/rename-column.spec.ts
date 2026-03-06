@@ -4,6 +4,7 @@ import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
 import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMembers/rows';
+import AllCustomFields from '../../../../mockData/orgs/KPD/people/views/AllMembers/fields';
 import KPD from '../../../../mockData/orgs/KPD';
 
 test.describe('View detail page', () => {
@@ -17,6 +18,7 @@ test.describe('View detail page', () => {
       'get',
       AllMembersColumns
     );
+    moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
   });
 
   test.afterEach(({ moxy }) => {
@@ -44,14 +46,20 @@ test.describe('View detail page', () => {
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`
     );
 
     await page.fill('#rename-column-title-field', newTitle);
-    await page.click('button:text("Save")');
+
+    await Promise.all([
+      page.waitForResponse((res) =>
+        res.url().includes(`/views/1/columns/${AllMembersColumns[0].id}`)
+      ),
+      page.click('button:text("Save")'),
+    ]);
 
     // Check body of request
     const columnPatchRequest = moxy
@@ -82,7 +90,7 @@ test.describe('View detail page', () => {
     // Rename first column
     await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`

@@ -23,10 +23,11 @@ export default function mockState(overrides?: RootState) {
     },
     call: {
       activeLaneIndex: 0,
+      finishedCalls: remoteList(),
       lanes: [],
       myAssignmentsList: remoteList(),
-      outgoingCalls: remoteList(),
       queueHasError: null,
+      unfinishedCalls: remoteList(),
       upcomingEventsList: remoteList(),
     },
     callAssignments: {
@@ -86,12 +87,14 @@ export default function mockState(overrides?: RootState) {
       selectedEventIds: [],
       statsByEventId: {},
       typeList: remoteList(),
+      unverifiedParticipantsByEventId: {},
       userEventList: remoteList(),
     },
     files: {
       fileList: remoteList(),
     },
     import: {
+      importID: null,
       importResult: null,
       pendingFile: {
         selectedSheetIndex: 0,
@@ -121,7 +124,7 @@ export default function mockState(overrides?: RootState) {
         geojsonToFilterBy: [],
         orgIdsToFilterBy: [],
       },
-      orgData: remoteItem(0),
+      orgList: remoteList(),
       statsBySuborgId: {},
       subOrgsByOrgId: {},
       suborgsWithStats: remoteList(),
@@ -146,6 +149,7 @@ export default function mockState(overrides?: RootState) {
     },
     surveys: {
       elementsBySurveyId: {},
+      extendedSurveyBySurveyId: {},
       responseStatsBySurveyId: {},
       statsBySurveyId: {},
       submissionList: remoteList(),
@@ -166,7 +170,6 @@ export default function mockState(overrides?: RootState) {
       tasksList: remoteList(),
     },
     user: {
-      membershipList: remoteList(),
       orgUserList: remoteList(),
       userItem: remoteItem('me'),
     },

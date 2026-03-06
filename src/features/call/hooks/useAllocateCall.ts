@@ -1,6 +1,6 @@
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { allocateCallError, allocateNewCall, newCallAllocated } from '../store';
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 
 export type SerializedError = {
   message: string;
@@ -27,7 +27,7 @@ export default function useAllocateCall(
   const allocateCall = async (): Promise<void | SerializedError> => {
     dispatch(allocateNewCall());
     try {
-      const call = await apiClient.post<ZetkinCall>(
+      const call = await apiClient.post<UnfinishedCall>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
         {}
       );

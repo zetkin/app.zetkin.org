@@ -1,16 +1,13 @@
 'use client';
 
 import CssBaseline from '@mui/material/CssBaseline';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, Suspense, useRef } from 'react';
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { EmotionCache } from '@emotion/utils';
@@ -26,11 +23,6 @@ import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface DefaultTheme extends Theme {}
-}
 
 type ClientContextProps = {
   children: ReactNode;
@@ -86,18 +78,20 @@ const ClientContext: FC<ClientContextProps> = ({
                     locale={lang}
                     messages={messages}
                   >
-                    <ZUISnackbarProvider>
-                      <IntlProvider
-                        defaultLocale="en"
-                        locale={lang}
-                        messages={messages}
-                      >
-                        <ZUIConfirmDialogProvider>
-                          <CssBaseline />
-                          <Suspense>{children}</Suspense>
-                        </ZUIConfirmDialogProvider>
-                      </IntlProvider>
-                    </ZUISnackbarProvider>
+                    <AppRouterCacheProvider>
+                      <ZUISnackbarProvider>
+                        <IntlProvider
+                          defaultLocale="en"
+                          locale={lang}
+                          messages={messages}
+                        >
+                          <ZUIConfirmDialogProvider>
+                            <CssBaseline />
+                            <Suspense>{children}</Suspense>
+                          </ZUIConfirmDialogProvider>
+                        </IntlProvider>
+                      </ZUISnackbarProvider>
+                    </AppRouterCacheProvider>
                   </IntlProvider>
                 </LocalizationProvider>
               </UserProvider>

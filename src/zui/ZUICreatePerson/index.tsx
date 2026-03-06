@@ -71,6 +71,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
             {title ?? messages.createPerson.title.default()}
           </Typography>
         </Box>
+
         {!customFields ? (
           <Box
             sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
