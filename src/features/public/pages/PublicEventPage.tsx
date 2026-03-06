@@ -4,7 +4,6 @@ import { FC, Fragment, Suspense, useContext, useMemo, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   CalendarMonth,
-  CalendarToday,
   EmailOutlined,
   ExpandLess,
   ExpandMore,
@@ -519,10 +518,12 @@ const ICSLink: FC<{
   return (
     <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
       <Box alignItems="center" display="flex" gap={1}>
-        <ZUIIcon icon={CalendarToday} />
         <ZUIButton
+          fullWidth
           label={messages.home.header.copyIcsUrl()}
           onClick={() => copyUrlToClipboard()}
+          size="large"
+          variant="secondary"
         />
       </Box>
     </Box>
