@@ -2,14 +2,14 @@ import { SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
-import { LaneState, LaneStep, Report, ZetkinCall } from '../types';
+import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIButton from 'zui/components/ZUIButton';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated, previousCallAdd, updateLaneStep } from '../store';
+import { filtersUpdated, updateLaneStep } from '../store';
 import useAllocateCall from '../hooks/useAllocateCall';
 import useSubmitReport from '../hooks/useSubmitReport';
 import useCallMutations from '../hooks/useCallMutations';
@@ -20,7 +20,7 @@ import messageIds from '../l10n/messageIds';
 
 type Props = {
   assignment: ZetkinCallAssignment;
-  call: ZetkinCall | null;
+  call: UnfinishedCall | null;
   hasUnfinishedCalls: boolean;
   lane: LaneState;
   onSkipCall: () => void;
@@ -51,7 +51,7 @@ const CallHeader: FC<Props> = ({
     error: errorAllocatingCall,
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
-  const { submitReport } = useSubmitReport(assignment.organization.id);
+  const submitReport = useSubmitReport(assignment.organization.id);
 
   return (
     <Box
@@ -124,11 +124,11 @@ const CallHeader: FC<Props> = ({
               lastName={call.target.last_name}
             />
             <ZUIText variant="headingLg">{call.target.name}</ZUIText>
-            <ZUIText color="secondary" variant="headingLg">{`${
-              call.target.phone
-            }${
-              call.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
-            }`}</ZUIText>
+            <ZUIText color="secondary" variant="headingLg">
+              {[call.target.phone, call.target.alt_phone]
+                .filter((number) => !!number)
+                .join('/')}
+            </ZUIText>
           </>
         )}
       </Box>
@@ -231,13 +231,8 @@ const CallHeader: FC<Props> = ({
                   };
                 });
 
-              const result = await submitReport(call.id, report, submissions);
+              await submitReport(call.id, report, submissions);
 
-              if (result.kind === 'success') {
-                dispatch(previousCallAdd(call));
-              } else {
-                setSubmittingReport(false);
-              }
               setSubmittingReport(false);
               dispatch(updateLaneStep(LaneStep.SUMMARY));
             } else {

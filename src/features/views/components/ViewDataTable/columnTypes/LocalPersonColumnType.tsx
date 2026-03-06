@@ -56,11 +56,11 @@ export default class LocalPersonColumnType
         }
         return makeName(v1).localeCompare(makeName(v2));
       },
-      valueGetter: (params) => {
+      valueGetter: (value: ZetkinViewRow) => {
         // we add a `toString`-method, which will be used when filtering for LocalPersons
-        return params.value
+        return value
           ? {
-              ...params.value,
+              ...value,
               toString() {
                 return makeName(this);
               },

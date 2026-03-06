@@ -11,7 +11,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Link, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Link, Skeleton, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
 
@@ -87,6 +87,11 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     await addParticipants(signedParticipants.map((p) => p.person.id));
     setBooking(false);
   };
+  const isLoading =
+    participantsFuture.isLoading ||
+    respondentsFuture.isLoading ||
+    state == EventState.UNKNOWN;
+  const showSignups = signedParticipants.length > 0 || isLoading;
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
@@ -215,7 +220,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         </Typography>
       </Box>
       <Box display="flex" flexDirection="column" gap={1} sx={{ mb: 2 }}>
-        {signedParticipants.length > 0 && (
+        {showSignups && (
           <>
             <Box
               alignItems="center"
@@ -247,6 +252,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                   {isBooking && <CircularProgress />}
                   {!isBooking && messages.eventPopper.bookAll().toLocaleUpperCase()}
                 </Button>
+              </Box>
+              {isLoading ? (
+                <Skeleton width={20} />
+              ) : (
                 <Typography
                   color={
                     (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
@@ -254,12 +263,18 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                 >
                   {signedParticipants.length ?? 0}
                 </Typography>
-              </Box>
+              )}
             </Box>
-            <ParticipantAvatars
-              orgId={orgId}
-              participants={signedParticipants}
-            />
+            {isLoading ? (
+              <Skeleton height={20} variant="rectangular" width="100%" />
+            ) : (
+              signedParticipants.length > 0 && (
+                <ParticipantAvatars
+                  orgId={orgId}
+                  participants={signedParticipants}
+                />
+              )
+            )}
           </>
         )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -276,11 +291,15 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             numerator={event.num_participants_available}
           />
         </Box>
-        {availableParticipants.length > 0 && (
-          <ParticipantAvatars
-            orgId={orgId}
-            participants={availableParticipants}
-          />
+        {isLoading ? (
+          <Skeleton height={20} variant="rectangular" width="100%" />
+        ) : (
+          availableParticipants.length > 0 && (
+            <ParticipantAvatars
+              orgId={orgId}
+              participants={availableParticipants}
+            />
+          )
         )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Box alignItems="center" display="flex">

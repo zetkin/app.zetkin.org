@@ -3,9 +3,10 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 
 import CallPage from 'features/call/pages/CallPage';
-import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
+import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
+import Heartbeat from 'features/call/components/Heartbeat';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -33,6 +34,7 @@ export default async function Page() {
           </Box>
         }
       >
+        <Heartbeat />
         <CallPage />
       </Suspense>
     </HomeThemeProvider>

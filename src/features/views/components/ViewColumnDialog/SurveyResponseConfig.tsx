@@ -18,8 +18,9 @@ import {
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
-import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ZUIFuture from 'zui/ZUIFuture';
+import useSurveys from 'features/surveys/hooks/useSurveys';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 
 interface SurveyResponseConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -34,10 +35,11 @@ const SurveyResponseConfig = ({
   onOutputConfigured,
 }: SurveyResponseConfigProps) => {
   const { orgId } = useNumericRouteParams();
-  const surveysWithElementsFuture = useSurveysWithElements(orgId);
+  const surveys = useSurveys(orgId);
   const messages = useMessages(messageIds);
 
   const [surveyId, setSurveyId] = useState<number | null>();
+  const selectedSurvey = useSurveyElements(orgId, surveyId ?? null);
   const [selectedQuestion, setSelectedQuestion] =
     useState<ZetkinSurveyQuestionElement | null>(null);
   const [selectedColumnOption, setSelectedColumnOption] = useState<string>(
@@ -63,16 +65,8 @@ const SurveyResponseConfig = ({
   };
 
   return (
-    <ZUIFuture future={surveysWithElementsFuture}>
+    <ZUIFuture future={surveys}>
       {(data) => {
-        const selectedSurvey = data.find((survey) => survey.id == surveyId);
-        const questionsFromSurvey: ZetkinSurveyQuestionElement[] =
-          (selectedSurvey?.elements.filter(
-            (elem) =>
-              elem.type == ELEMENT_TYPE.QUESTION &&
-              (elem.question.response_type == RESPONSE_TYPE.TEXT ||
-                elem.question.options?.length)
-          ) as ZetkinSurveyQuestionElement[]) ?? [];
         return (
           <FormControl sx={{ width: 300 }}>
             <TextField
@@ -84,57 +78,73 @@ const SurveyResponseConfig = ({
               value={surveyId || ''}
               variant="standard"
             >
-              {surveysWithElementsFuture.data?.map((survey) => (
+              {data.map((survey) => (
                 <MenuItem key={survey.id} value={survey.id}>
                   {survey.title}
                 </MenuItem>
               ))}
             </TextField>
             {!!surveyId && (
-              <Autocomplete
-                disabled={!surveyId}
-                fullWidth
-                getOptionLabel={(option) => option.question.question}
-                onChange={(evt, value) => {
-                  if (value !== null) {
-                    setSelectedQuestion(value);
-                    if (value.question.response_type === RESPONSE_TYPE.TEXT) {
-                      const columns = makeTextColumn(
-                        value as ZetkinSurveyTextQuestionElement
-                      );
-                      onOutputConfigured(columns);
-                    } else if (
-                      value.question.response_type === RESPONSE_TYPE.OPTIONS
-                    ) {
-                      setSelectedColumnOption(
-                        SURVEY_QUESTION_OPTIONS.ALL_OPTIONS
-                      );
-                      const columns = makeOptionColumns(
-                        value,
-                        SURVEY_QUESTION_OPTIONS.ALL_OPTIONS,
-                        surveyId
-                      );
-                      if (columns !== undefined) {
-                        onOutputConfigured(columns);
-                      }
-                    }
-                  }
+              <ZUIFuture future={selectedSurvey}>
+                {(data) => {
+                  const questionsFromSurvey: ZetkinSurveyQuestionElement[] =
+                    (data.filter(
+                      (elem) =>
+                        elem.type == ELEMENT_TYPE.QUESTION &&
+                        (elem.question.response_type == RESPONSE_TYPE.TEXT ||
+                          elem.question.options?.length)
+                    ) as ZetkinSurveyQuestionElement[]) ?? [];
+                  return (
+                    <Autocomplete
+                      disabled={!surveyId}
+                      fullWidth
+                      getOptionLabel={(option) => option.question.question}
+                      onChange={(evt, value) => {
+                        if (value !== null) {
+                          setSelectedQuestion(value);
+                          if (
+                            value.question.response_type === RESPONSE_TYPE.TEXT
+                          ) {
+                            const columns = makeTextColumn(
+                              value as ZetkinSurveyTextQuestionElement
+                            );
+                            onOutputConfigured(columns);
+                          } else if (
+                            value.question.response_type ===
+                            RESPONSE_TYPE.OPTIONS
+                          ) {
+                            setSelectedColumnOption(
+                              SURVEY_QUESTION_OPTIONS.ALL_OPTIONS
+                            );
+                            const columns = makeOptionColumns(
+                              value,
+                              SURVEY_QUESTION_OPTIONS.ALL_OPTIONS,
+                              surveyId
+                            );
+                            if (columns !== undefined) {
+                              onOutputConfigured(columns);
+                            }
+                          }
+                        }
+                      }}
+                      options={questionsFromSurvey || []}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={messages.columnDialog.choices.surveyResponse.questionField()}
+                          slotProps={{
+                            htmlInput: {
+                              ...params.inputProps,
+                            },
+                          }}
+                          variant="standard"
+                        />
+                      )}
+                      value={selectedQuestion}
+                    />
+                  );
                 }}
-                options={questionsFromSurvey || []}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={messages.columnDialog.choices.surveyResponse.questionField()}
-                    slotProps={{
-                      htmlInput: {
-                        ...params.inputProps,
-                      },
-                    }}
-                    variant="standard"
-                  />
-                )}
-                value={selectedQuestion}
-              />
+              </ZUIFuture>
             )}
             {selectedQuestion?.question.response_type ===
               RESPONSE_TYPE.TEXT && (

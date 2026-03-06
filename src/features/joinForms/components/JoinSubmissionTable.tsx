@@ -44,28 +44,28 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
                 </Box>
               );
             },
-            valueGetter: (params) => params.row.state,
+            valueGetter: (value, row) => row.state,
           },
           {
             disableColumnMenu: true,
             field: 'first_name',
             flex: 2,
             headerName: messages.submissionList.firstName(),
-            valueGetter: (params) => params.row.person_data.first_name,
+            valueGetter: (value, row) => row.person_data.first_name,
           },
           {
             disableColumnMenu: true,
             field: 'last_name',
             flex: 2,
             headerName: messages.submissionList.lastName(),
-            valueGetter: (params) => params.row.person_data.last_name,
+            valueGetter: (value, row) => row.person_data.last_name,
           },
           {
             disableColumnMenu: true,
             field: 'form',
             flex: 2,
             headerName: messages.submissionList.form(),
-            valueGetter: (params) => params.row.form.title,
+            valueGetter: (value, row) => row.form.title,
           },
           {
             disableColumnMenu: true,
@@ -73,7 +73,7 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             flex: 2,
             headerName: messages.submissionList.timestamp(),
             type: 'dateTime',
-            valueGetter: (params) => new Date(params.row.submitted),
+            valueGetter: (value, row) => new Date(row.submitted),
           },
           {
             align: 'right',

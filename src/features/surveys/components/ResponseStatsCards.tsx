@@ -48,8 +48,8 @@ import { ChartPluginOptions } from '@mui/x-charts/internals';
 import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
-import { BoxOwnProps } from '@mui/system/Box/Box';
 import { scaleLog } from 'd3-scale';
+import { BoxOwnProps } from '@mui/system';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -75,6 +75,7 @@ import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
+import ZUIText from 'zui/components/ZUIText';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -987,9 +988,14 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
   surveyId,
 }) => {
   const responseStatsFuture = useSurveyResponseStats(orgId, surveyId);
+  const messages = useMessages(messageIds);
+
+  if (responseStatsFuture.error) {
+    return <ZUIText variant="headingMd">{messages.insights.error()}</ZUIText>;
+  }
 
   return (
-    <ZUIFuture
+    <ZUIFuture<SurveyResponseStats | null>
       future={responseStatsFuture}
       skeleton={
         <>
@@ -999,7 +1005,11 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
         </>
       }
     >
-      {(data: SurveyResponseStats) => {
+      {(data: SurveyResponseStats | null) => {
+        if (!data) {
+          return null;
+        }
+
         return (
           <>
             {data.questions.map((questionStats, index) =>
