@@ -5,13 +5,18 @@ import {
 } from 'utils/types/zetkin';
 
 export type NewTagGroup = { title: string };
-export type TagWithNewGroup<Tag> = Tag & { group: NewTagGroup };
+export type TagWithNewGroup<Tag> = Tag & { group?: NewTagGroup };
 
 export type NewTag = ZetkinTagPostBody | TagWithNewGroup<ZetkinTagPostBody>;
 export type EditTag = ZetkinTagPatchBody | TagWithNewGroup<ZetkinTagPatchBody>;
 
 export interface ZetkinTagGroupPostBody
   extends Partial<Omit<ZetkinTagGroup, 'id'>> {
+  title: string;
+}
+export interface ZetkinTagGroupPatchBody
+  extends Partial<Omit<ZetkinTagGroup, 'organization'>> {
+  id: number;
   title: string;
 }
 
