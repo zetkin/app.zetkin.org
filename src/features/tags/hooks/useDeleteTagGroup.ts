@@ -2,7 +2,7 @@ import { tagGroupDeleted } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import useTagMutations from 'features/tags/hooks/useTagMutations';
 
-export default function useDeleteTag(orgId: number) {
+export default function useDeleteTagGroup(orgId: number) {
   const tagList = useAppSelector((state) => state.tags.tagList);
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

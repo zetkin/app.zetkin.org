@@ -108,7 +108,6 @@ const TagsPage: PageWithLayout = () => {
                     startIcon={<Edit />}
                     sx={{
                       marginLeft: 'auto',
-                      textTransform: 'uppercase',
                     }}
                   >
                     <Msg id={messageIds.groupDialog.editButton} />
@@ -143,33 +142,35 @@ const TagsPage: PageWithLayout = () => {
               updateTag(tag);
             }
           }}
-          open={!!tagToEdit}
+          open={!!tagToEdit && !groupToEdit}
           tag={tagToEdit}
         />
-        {groupToEdit && (
-          <TagGroupDialog
-            group={groupToEdit}
-            onClose={() => setGroupToEdit(undefined)}
-            onDelete={(groupId) => {
-              const groupName = groupToEdit.title;
-              showConfirmDialog({
-                onSubmit: () => {
-                  deleteTagGroup(groupId);
-                },
-                title: messages.groupDialog.deleteTitle({
-                  groupName,
-                }),
-                warningText: messages.groupDialog.deleteWarning(),
-              });
-            }}
-            onSubmit={(tagGroup) => {
-              if ('id' in tagGroup) {
-                updateTagGroup(tagGroup);
-              }
-            }}
-            open={!!groupToEdit}
-          />
-        )}
+        <TagGroupDialog
+          group={groupToEdit}
+          onClose={() => setGroupToEdit(undefined)}
+          onDelete={(groupId) => {
+            if (!groupToEdit) {
+              return;
+            }
+
+            const groupName = groupToEdit.title;
+            showConfirmDialog({
+              onSubmit: () => {
+                deleteTagGroup(groupId);
+              },
+              title: messages.groupDialog.deleteTitle({
+                groupName,
+              }),
+              warningText: messages.groupDialog.deleteWarning(),
+            });
+          }}
+          onSubmit={(tagGroup) => {
+            if ('id' in tagGroup) {
+              updateTagGroup(tagGroup);
+            }
+          }}
+          open={!!groupToEdit && !tagToEdit}
+        />
       </Box>
     </>
   );

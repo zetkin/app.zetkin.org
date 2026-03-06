@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import messageIds from '../../../../l10n/messageIds';
 import ZUIDialog from 'zui/ZUIDialog';
@@ -9,7 +9,7 @@ import { ZetkinTagGroup } from 'utils/types/zetkin';
 import { ZetkinTagGroupPatchBody } from 'features/tags/components/TagManager/types';
 
 interface TagGroupProps {
-  group: ZetkinTagGroup;
+  group?: ZetkinTagGroup;
   open: boolean;
   onClose: () => void;
   onDelete: (groupId: number) => void;
@@ -27,16 +27,11 @@ const TagGroupDialog: React.FunctionComponent<TagGroupProps> = ({
 }) => {
   const messages = useMessages(messageIds);
 
-  const [title, setTitle] = useState('');
-  const [titleEdited, setTitleEdited] = useState(false);
-
-  useEffect(() => {
-    setTitle(group.title);
-  }, [group]);
+  const [title, setTitle] = useState(group?.title ?? '');
+  const titleEdited = title != group?.title;
 
   const closeAndClear = () => {
     setTitle('');
-    setTitleEdited(false);
     onClose();
   };
 
@@ -50,8 +45,12 @@ const TagGroupDialog: React.FunctionComponent<TagGroupProps> = ({
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
+          if (!group) {
+            return;
+          }
+
           const tagGroupBody: ZetkinTagGroupPatchBody = {
-            id: group?.id,
+            id: group.id,
             title,
           };
           onSubmit(tagGroupBody);
@@ -66,9 +65,6 @@ const TagGroupDialog: React.FunctionComponent<TagGroupProps> = ({
           margin="normal"
           onChange={(e) => {
             setTitle(e.target.value);
-            if (!titleEdited) {
-              setTitleEdited(true);
-            }
           }}
           onClick={(e) => (e.target as HTMLInputElement).focus()}
           required
@@ -87,6 +83,9 @@ const TagGroupDialog: React.FunctionComponent<TagGroupProps> = ({
         >
           <Button
             onClick={() => {
+              if (!group) {
+                return;
+              }
               onDelete(group.id);
               closeAndClear();
             }}
