@@ -110,7 +110,7 @@ const EventMapLayout: FC<Props> = ({
                     sx={{ background: 'white' }}
                     variant="outlined"
                   >
-                    <Msg id={messageIds.home.map.viewInMap} />
+                    <Msg id={messageIds.home.map.viewOnMap} />
                   </Button>
                 </Box>
               )}
