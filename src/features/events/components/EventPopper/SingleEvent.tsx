@@ -11,7 +11,14 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Link, Skeleton, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Link,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
 
@@ -240,30 +247,42 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                   size="xs"
                 />
               </Box>
-              <Box alignItems="center" display="flex">
-                <Button
-                  color="primary"
-                  disableElevation
-                  onClick={() => bookSignedParticipants()}
-                  variant='outlined'
-                  size='small'
-                  sx={{mr:2}}
-                >
-                  {isBooking && <CircularProgress />}
-                  {!isBooking && messages.eventPopper.bookAll().toLocaleUpperCase()}
-                </Button>
-              </Box>
-              {isLoading ? (
-                <Skeleton width={20} />
-              ) : (
-                <Typography
-                  color={
-                    (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
-                  }
-                >
-                  {signedParticipants.length ?? 0}
-                </Typography>
-              )}
+              <Typography
+                color={
+                  (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
+                }
+              >
+                {isLoading ? (
+                  <Skeleton width={20} />
+                ) : (
+                  <Box alignItems="center" display="flex">
+                    <Button
+                      color="primary"
+                      disableElevation
+                      onClick={() => bookSignedParticipants()}
+                      size="small"
+                      sx={{ mr: 2 }}
+                      variant="outlined"
+                    >
+                      {isBooking && (
+                        <CircularProgress
+                          size="1em"
+                          style={{
+                            left: 'calc(-0.5em + 50%)',
+                            position: 'relative',
+                          }}
+                        />
+                      )}
+                      <span
+                        style={{ color: isBooking ? 'transparent' : 'inherit' }}
+                      >
+                        {messages.eventPopper.bookAll().toLocaleUpperCase()}
+                      </span>
+                    </Button>
+                    {signedParticipants.length ?? 0}
+                  </Box>
+                )}
+              </Typography>
             </Box>
             {isLoading ? (
               <Skeleton height={20} variant="rectangular" width="100%" />
