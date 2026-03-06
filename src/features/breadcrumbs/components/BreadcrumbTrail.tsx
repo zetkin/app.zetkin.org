@@ -7,6 +7,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Breadcrumb } from 'utils/types';
 import { Msg } from 'core/i18n';

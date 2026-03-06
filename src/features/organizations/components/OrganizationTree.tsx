@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { Box, Link, Typography, useTheme } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { SimpleTreeView, TreeItem } from '@mui/x-tree-view';

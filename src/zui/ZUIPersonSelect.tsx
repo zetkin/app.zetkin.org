@@ -12,6 +12,7 @@ import React, {
   ReactElement,
   useEffect,
   useState,
+  type JSX,
 } from 'react';
 import { GroupAdd, PersonAdd } from '@mui/icons-material';
 
@@ -59,7 +60,7 @@ interface UsePersonSelectReturn {
     renderOption: (
       props: HTMLAttributes<HTMLLIElement>,
       person: ZetkinPerson
-    ) => ReactElement;
+    ) => ReactElement<unknown>;
     shiftHeld: boolean;
     value: ZetkinPerson | null;
   };

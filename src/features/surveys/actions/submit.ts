@@ -14,7 +14,7 @@ export async function submit(
   prevState: ZetkinSurveyFormStatus,
   formData: FormData
 ): Promise<ZetkinSurveyFormStatus> {
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

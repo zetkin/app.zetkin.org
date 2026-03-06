@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import DisplayCallAssignmentTitle from './DisplayCallAssignmentTitle';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';

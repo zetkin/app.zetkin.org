@@ -69,10 +69,10 @@ type CustomRenderResult = RenderResult & {
  * specific to our application.
  */
 const customRender = (
-  ui: ReactElement | FC<unknown>,
+  ui: ReactElement<unknown> | FC<unknown>,
   options?: Omit<RenderOptions, 'wrapper'>
 ): CustomRenderResult => {
-  const result = render(ui as ReactElement, {
+  const result = render(ui as ReactElement<unknown>, {
     wrapper: ZetkinAppProviders,
     ...options,
   });

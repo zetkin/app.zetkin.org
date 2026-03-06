@@ -20,7 +20,7 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
 
-  const selectInputRef = useRef<HTMLInputElement>();
+  const selectInputRef = useRef<HTMLInputElement>(undefined);
 
   const { orgId, viewId } = useNumericRouteParams();
   const { rowsFuture } = useViewGrid(orgId, viewId);

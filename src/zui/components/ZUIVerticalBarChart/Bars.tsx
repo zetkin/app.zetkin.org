@@ -161,7 +161,9 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
       {barIndex >= 0 && (
         <>
           <Typography
-            ref={(elem: HTMLDivElement) => setLabelElem(elem)}
+            ref={(elem: HTMLDivElement) => {
+              setLabelElem(elem);
+            }}
             aria-live="polite"
             className="hoverElem"
             component="div"
@@ -175,7 +177,9 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
             {data[barIndex].label}
           </Typography>
           <Typography
-            ref={(elem: HTMLDivElement) => setValueElem(elem)}
+            ref={(elem: HTMLDivElement) => {
+              setValueElem(elem);
+            }}
             aria-live="polite"
             className="hoverElem"
             component="div"

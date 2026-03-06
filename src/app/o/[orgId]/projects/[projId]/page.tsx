@@ -11,7 +11,8 @@ type Props = {
   };
 };
 
-const Page: FC<Props> = ({ params }) => {
+const Page: FC<Props> = async (props) => {
+  const params = await props.params;
   return <PublicProjPage campId={params.projId} orgId={params.orgId} />;
 };
 

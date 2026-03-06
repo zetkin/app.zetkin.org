@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 
 import oldTheme from 'theme';
 

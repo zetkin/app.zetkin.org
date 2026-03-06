@@ -1,4 +1,5 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';

@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';

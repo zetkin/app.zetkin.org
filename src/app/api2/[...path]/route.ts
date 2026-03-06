@@ -7,9 +7,9 @@ import { stringToBool } from 'utils/stringUtils';
 import { AppSession } from 'utils/types';
 
 type Context = {
-  params: {
+  params: Promise<{
     path: string[];
-  };
+  }>;
 };
 
 export const GET = proxy;
@@ -28,14 +28,14 @@ async function proxy(
   const port = process.env.ZETKIN_API_PORT;
   const ssl = stringToBool(process.env.ZETKIN_USE_TLS);
 
-  const path = context.params.path;
+  const { path } = await context.params;
   const pathStr = path.join('/');
 
   const protocol = ssl ? 'https' : 'http';
   const hostAndPort = host + (port ? `:${port}` : '');
   const apiBase = `${protocol}://${hostAndPort}/v2/`;
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const session = await getIronSession<AppSession>(cookieStore, {
     cookieName: 'zsid',

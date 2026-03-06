@@ -1,7 +1,7 @@
 'use client';
 
 import CssBaseline from '@mui/material/CssBaseline';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';

@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 interface ShiftKeyIconProps {

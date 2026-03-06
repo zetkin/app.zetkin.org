@@ -1,5 +1,6 @@
 import { TextField, TextFieldProps } from '@mui/material';
 import { merge } from 'lodash';
+import type { JSX } from 'react';
 
 import oldTheme from 'theme';
 

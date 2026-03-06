@@ -1,4 +1,5 @@
 import { Box, ListItem, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 

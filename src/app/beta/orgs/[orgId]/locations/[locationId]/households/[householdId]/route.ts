@@ -12,14 +12,15 @@ import { HouseholdColorModel } from 'features/areaAssignments/models';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 
 type RouteMeta = {
-  params: {
+  params: Promise<{
     householdId: string;
     locationId: string;
     orgId: string;
-  };
+  }>;
 };
 
-export async function GET(request: NextRequest, { params }: RouteMeta) {
+export async function GET(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   await mongoose.connect(process.env.MONGODB_URL || '');
   const headers: IncomingHttpHeaders = {};
   request.headers.forEach((value, key) => (headers[key] = value));
@@ -41,7 +42,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
   return NextResponse.json({ data: householdWithColor });
 }
 
-export async function PATCH(request: NextRequest, { params }: RouteMeta) {
+export async function PATCH(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   await mongoose.connect(process.env.MONGODB_URL || '');
 
   const payload = await request.json();

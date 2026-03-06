@@ -28,7 +28,7 @@ export default makeMessages('feat.tags', {
   manager: {
     addTag: m('Add tag'),
     addValue: m<{ tag: string }>('Add value for "{tag}"'),
-    createNamedTag: m<{ name: ReactElement }>('Create tag: {name}'),
+    createNamedTag: m<{ name: ReactElement<unknown> }>('Create tag: {name}'),
     createTag: m('New Tag'),
     groupTags: m('Group tags'),
     title: m('Tags'),

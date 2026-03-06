@@ -39,7 +39,9 @@ export default makeMessages('feat.organizations', {
     loading: m('Loading...'),
     noDescription: m('This event has no description'),
     noLocation: m('No physical location'),
-    partOfProject: m<{ projectLink: ReactElement }>('Part of {projectLink}'),
+    partOfProject: m<{ projectLink: ReactElement<unknown> }>(
+      'Part of {projectLink}'
+    ),
     participatingInfo: m<{ participatingCount: number }>(
       '{participatingCount, plural, =1 {# person is} other {# persons are}} participating'
     ),
@@ -122,10 +124,10 @@ export default makeMessages('feat.organizations', {
   },
   subOrgEventBlurb: {
     description: m<{
-      eventsElem: ReactElement;
+      eventsElem: ReactElement<unknown>;
       numEvents: number;
       numOrgs: number;
-      orgsElem: ReactElement;
+      orgsElem: ReactElement<unknown>;
     }>(
       'There are {eventsElem} {numEvents, plural, =1 {additional event} other {additional events}} in {orgsElem} {numOrgs, plural, =1 {suborganization} other {suborganizations}}.'
     ),

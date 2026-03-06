@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 import { Skeleton } from '@mui/material';
 
 import { IFuture } from 'core/caching/futures';

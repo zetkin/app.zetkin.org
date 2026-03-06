@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 import oldTheme from '../theme';

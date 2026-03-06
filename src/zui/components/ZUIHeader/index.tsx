@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ExpandMore, MoreVert } from '@mui/icons-material';
-import { FC, useState } from 'react';
+import { FC, useState, type JSX } from 'react';
 
 import { ZUIButtonProps } from 'zui/components/ZUIButton';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';

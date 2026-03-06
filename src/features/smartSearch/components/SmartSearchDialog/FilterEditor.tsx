@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import AllInSuborg from '../filters/AllInSubOrg';
 import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';

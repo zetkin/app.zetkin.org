@@ -172,12 +172,14 @@ const ZUIModalBackground: FC<Props> = ({ height, width }) => {
             }}
           >
             <canvas
-              ref={async (canvas) => {
-                const ctx = canvas?.getContext('2d');
-                if (ctx) {
-                  const bitmap = await createImageBitmap(imageData);
-                  ctx.drawImage(bitmap, 0, 0);
-                }
+              ref={(canvas) => {
+                void (async () => {
+                  const ctx = canvas?.getContext('2d');
+                  if (ctx) {
+                    const bitmap = await createImageBitmap(imageData);
+                    ctx.drawImage(bitmap, 0, 0);
+                  }
+                })();
               }}
               height={imageHeight}
               style={{

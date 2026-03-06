@@ -11,10 +11,10 @@ import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 type RouteMeta = {
-  params: {
+  params: Promise<{
     eventId: string;
     orgId: string;
-  };
+  }>;
 };
 
 type BookRequestBody = {
@@ -122,7 +122,8 @@ function fuzzyNameMatch(a?: string | null, b?: string | null): boolean {
   return distance(normalizedA, normalizedB) <= 1;
 }
 
-export async function POST(request: NextRequest, { params }: RouteMeta) {
+export async function POST(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   return asOrgAuthorized(
     {
       orgId: params.orgId,

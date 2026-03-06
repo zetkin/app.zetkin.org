@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useRef } from 'react';
+import { useRef, type JSX } from 'react';
 
 import FilterGalleryCard from './FilterGalleryCard';
 import { GROUPED_FILTERS } from './groupedFilters';
@@ -37,7 +37,7 @@ const FilterGallery = ({
   const { orgId } = useNumericRouteParams();
   const customFields = useCustomFields(orgId);
 
-  const choiceContainerRef = useRef<HTMLDivElement>();
+  const choiceContainerRef = useRef<HTMLDivElement>(undefined);
 
   const showFilter = (filter: FILTER_TYPE) => {
     if (filter == FILTER_TYPE.AREA) {

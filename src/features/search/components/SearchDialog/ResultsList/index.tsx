@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, type JSX } from 'react';
 import { List, ListItem, ListItemText } from '@mui/material';
 
 import CallAssignmentListItem from './CallAssignmentListItem';

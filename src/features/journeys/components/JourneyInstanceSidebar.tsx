@@ -1,5 +1,5 @@
 import { Add } from '@mui/icons-material';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Button, ClickAwayListener, Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
 

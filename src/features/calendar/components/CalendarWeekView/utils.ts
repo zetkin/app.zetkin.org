@@ -1,6 +1,6 @@
 import type { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 export function scrollToEarliestEvent(
-  weekElement: HTMLDivElement | undefined,
+  weekElement: HTMLDivElement | null | undefined,
   laneHeight: number,
   eventsByDate: AnyClusteredEvent[][][]
 ) {

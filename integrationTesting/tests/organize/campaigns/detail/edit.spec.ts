@@ -43,12 +43,17 @@ test.describe('Campaign detail page', async () => {
     // Edit title
     await page.fill('#title', newTitle);
 
-    // Submit the form
-    await page.click('button:text("Submit")');
+    // Update GET mock so revalidation returns new title
+    moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', {
+      ...ReferendumSignatures,
+      title: newTitle,
+    });
 
-    // Check that title changes on page
-    const campaignTitle = page.locator('data-testid=page-title');
-    await expect(campaignTitle).toContainText(newTitle);
+    // Submit the form and wait for PATCH response
+    await Promise.all([
+      page.waitForResponse('**/orgs/1/campaigns/1'),
+      page.click('button:text("Submit")'),
+    ]);
 
     // Check that patch was made correctly
     const log = moxy.log();
@@ -59,5 +64,9 @@ test.describe('Campaign detail page', async () => {
     expect(patchRequest?.data).toMatchObject({
       title: newTitle,
     });
+
+    // Check that title changes on page
+    const campaignTitle = page.locator('data-testid=page-title');
+    await expect(campaignTitle).toContainText(newTitle, { timeout: 10_000 });
   });
 });

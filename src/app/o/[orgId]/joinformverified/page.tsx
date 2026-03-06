@@ -6,13 +6,14 @@ import { ZetkinOrganization } from 'utils/types/zetkin';
 import JoinFormVerifiedPage from 'features/public/components/JoinFormVerifiedPage';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     orgId: string;
-  };
+  }>;
 };
 
-export default async function Page({ params }: PageProps) {
-  const headersList = headers();
+export default async function Page(props: PageProps) {
+  const params = await props.params;
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

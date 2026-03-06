@@ -8,7 +8,8 @@ const config: PlaywrightTestConfig = {
     ['html', { open: 'never' }]
   ],
   testDir: './integrationTesting',
-  workers: parseInt(process.env.PLAYWRIGHT_WORKERS as string) || 4,
+  timeout: process.env.CI ? 60_000 : 30_000,
+  workers: process.env.CI ? 2 : parseInt(process.env.PLAYWRIGHT_WORKERS as string) || 4,
 };
 
 export default config;

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { Box, MenuItem } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';
 import { getTimeFrameWithConfig } from '../utils';

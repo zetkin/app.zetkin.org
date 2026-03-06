@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';

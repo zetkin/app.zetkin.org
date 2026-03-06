@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';

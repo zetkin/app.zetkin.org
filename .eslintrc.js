@@ -13,7 +13,10 @@ module.exports = {
     '!.prettierrc.js',
     'src/locale/*',
   ],
-  extends: ['eslint:recommended', 'next', 'prettier'],
+  extends: ['eslint:recommended', 'next', 'prettier', 'plugin:storybook/recommended'],
+  rules: {
+    'storybook/prefer-pascal-case': 'off',
+  },
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files
@@ -103,6 +106,13 @@ module.exports = {
         'sort-keys': 'error',
         'sort-vars': 'error',
         'no-only-tests/no-only-tests': 'error',
+      },
+    },
+    // Disable react-hooks rules for Playwright test fixtures (not React code)
+    {
+      files: ['integrationTesting/**/*.ts'],
+      rules: {
+        'react-hooks/rules-of-hooks': 'off',
       },
     },
     // This configuration will apply only to YAML files

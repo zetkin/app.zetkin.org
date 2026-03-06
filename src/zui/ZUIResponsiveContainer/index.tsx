@@ -1,7 +1,7 @@
 import { FC, ReactElement, useEffect, useRef, useState } from 'react';
 
 interface ZUIResponsiveContainerProps {
-  children: (width: number) => ReactElement | null;
+  children: (width: number) => ReactElement<unknown> | null;
   onWidthChange?: (width: number, container: HTMLDivElement) => void;
   ssrWidth: number;
 }

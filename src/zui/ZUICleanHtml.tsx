@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 import DOMPurify from 'isomorphic-dompurify';
 import { Box, BoxProps } from '@mui/material';
-import { useMemo } from 'react';
+import { useMemo, type JSX } from 'react';
 
 interface ZUICleanHtmlProps {
   dirtyHtml: string;

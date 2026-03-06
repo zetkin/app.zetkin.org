@@ -1,5 +1,5 @@
 import { MenuItem, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 
 import { getMatchingWithConfig } from '../utils';
 import { MATCHING } from 'features/smartSearch/components/types';

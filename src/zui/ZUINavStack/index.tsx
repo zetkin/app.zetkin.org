@@ -3,7 +3,7 @@ import { FC, ReactElement, Suspense } from 'react';
 
 type Props = {
   bgcolor?: string;
-  children: ReactElement[];
+  children: ReactElement<unknown>[];
   currentPage: string;
 };
 

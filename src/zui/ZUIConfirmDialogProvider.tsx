@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, type JSX } from 'react';
 
 import ZUIConfirmDialog, { ZUIConfirmDialogProps } from 'zui/ZUIConfirmDialog';
 

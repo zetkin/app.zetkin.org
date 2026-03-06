@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { Msg } from 'core/i18n';
 import {
   CallBlockedFilterConfig,

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { Ref, useEffect, useRef } from 'react';
+import { Ref, useEffect, useRef, type JSX } from 'react';
 
 export enum ZUIPreviewableMode {
   EDITABLE = 'editable',

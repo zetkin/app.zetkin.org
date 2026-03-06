@@ -24,6 +24,7 @@ import {
   SpeakerNotesOutlined,
   ViewListOutlined,
 } from '@mui/icons-material';
+import type { JSX } from 'react';
 
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';

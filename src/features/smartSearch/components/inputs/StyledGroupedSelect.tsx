@@ -20,7 +20,7 @@ type Props = TextFieldProps & {
 const StyledGroupedSelect: FC<Props> = (props) => {
   const groups = new Set(props.items.map((item) => item.group));
 
-  const options: ReactElement[] = [];
+  const options: ReactElement<unknown>[] = [];
   Array.from(groups)
     .sort((group0, group1) => (group0 || '').localeCompare(group1 || ''))
     .map((groupTitle) => {
