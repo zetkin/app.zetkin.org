@@ -53,10 +53,10 @@ const CurrentTimeCircleMarker = ({
         backgroundColor: theme.palette.primary.main,
         border: '2px solid white',
         borderRadius: '100%',
-        height: '10px',
+        height: '14px',
         position: 'absolute',
-        translate: '-25% -50%',
-        width: '10px',
+        translate: '-30% -50%',
+        width: '14px',
         zIndex: 1000,
       }}
     />
