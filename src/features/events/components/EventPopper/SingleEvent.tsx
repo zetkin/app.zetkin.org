@@ -236,17 +236,17 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                 />
               </Box>
               <Box alignItems="center" display="flex">
-                {isBooking && <CircularProgress />}
-                {!isBooking && (
-                  <Button
-                    color="primary"
-                    data-testid="ZUIEllipsisMenu-menuActivator"
-                    disableElevation
-                    onClick={() => bookSignedParticipants()}
-                  >
-                    {messages.eventPopper.bookAll().toLocaleUpperCase()}
-                  </Button>
-                )}
+                <Button
+                  color="primary"
+                  disableElevation
+                  onClick={() => bookSignedParticipants()}
+                  variant='outlined'
+                  size='small'
+                  sx={{mr:2}}
+                >
+                  {isBooking && <CircularProgress />}
+                  {!isBooking && messages.eventPopper.bookAll().toLocaleUpperCase()}
+                </Button>
                 <Typography
                   color={
                     (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
