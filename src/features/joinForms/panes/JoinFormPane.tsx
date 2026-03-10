@@ -36,6 +36,13 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       field !== NATIVE_PERSON_FIELDS.EXT_ID && field !== NATIVE_PERSON_FIELDS.ID
   );
 
+  // Only include custom fields that either belong to this org or are
+  // shared from parent org with org_write='suborgs'
+  const writableCustomFields =
+    customFields.data?.filter(
+      (field) => field.organization.id == orgId || field.org_write == 'suborgs'
+    ) ?? [];
+
   if (!joinForm) {
     return null;
   }
@@ -45,7 +52,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       (nativeSlug) => nativeSlug == slug
     );
     if (isNativeField) {
-      const typedSlug = slug as typeof nativePersonFields[number];
+      const typedSlug = slug as (typeof nativePersonFields)[number];
       return globalMessages.personFields[typedSlug]();
     } else {
       const field = customFields.data?.find((field) => field.slug == slug);
@@ -98,7 +105,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
           }}
           options={[
             ...nativePersonFields,
-            ...(customFields.data?.map((field) => field.slug) ?? []),
+            ...writableCustomFields.map((field) => field.slug),
           ]}
           renderInput={(params) => (
             <TextField
