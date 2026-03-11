@@ -980,9 +980,6 @@ const TextResponseList = ({
       rowCount={rows.length}
       rowHeight={TEXT_RESPONSE_CARD_HEIGHT}
       rowProps={rowProps}
-      style={{
-        height: TEXT_RESPONSE_CARD_HEIGHT * rows.length,
-      }}
     />
   );
 };
