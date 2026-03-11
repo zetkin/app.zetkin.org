@@ -22,10 +22,10 @@ import {
   asLongitude,
 } from 'features/areas/utils/asLongitudeLatitude';
 import ZUIMapControls from 'zui/ZUIMapControls';
-import { markerImage } from 'features/organizations/utils/markerImage';
-import useMapMarkerClick from 'features/organizations/hooks/useMapMarkerClick';
 import { Latitude, Longitude } from 'features/areas/types';
 import useMapMarkerDrag from 'features/events/hooks/useMapMarkerDrag';
+import useMapMarkerClick from 'features/public/hooks/useMapMarkerClick';
+import { markerImage } from 'features/public/utils/markerImage';
 
 interface MapProps {
   inMoveState: boolean;
