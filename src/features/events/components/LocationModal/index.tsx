@@ -52,8 +52,6 @@ const LocationModal: FC<LocationModalProps> = ({
     | null
   >(null);
   const [inMoveState, setInMoveState] = useState(false);
-  const [newLatLng, setNewLatLng] =
-    useState<Pick<ZetkinLocation, 'lat' | 'lng'>>();
   const map = useRef<MapType>(null);
 
   const selectedLocation = locations.find(
@@ -85,7 +83,7 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
         <LocationModalMap
-          inMoveState={inMoveState}
+          inMoveState={inMoveState || !!pendingLocation}
           locations={locations}
           mapRef={map}
           onMapClick={(latlng: PendingLocation) => {
@@ -94,10 +92,15 @@ const LocationModal: FC<LocationModalProps> = ({
           }}
           onMarkerClick={onMarkerClick}
           onMarkerDragEnd={(lat: number, lng: number) =>
-            setNewLatLng({ lat, lng })
+            setPendingLocation((loc) => ({ ...loc, lat: lat, lng: lng }))
           }
           pendingLocation={pendingLocation}
-          selectedLocation={selectedLocation}
+          selectedLocation={
+            selectedLocation ||
+            (pendingLocation
+              ? { ...pendingLocation, id: -1, info_text: '', title: '' }
+              : undefined)
+          }
           setPendingLocation={setPendingLocation}
           setSelectedLocationId={setSelectedLocationId}
         />
@@ -211,7 +214,7 @@ const LocationModal: FC<LocationModalProps> = ({
               pendingLocation={pendingLocation}
             />
           )}
-          {inMoveState && selectedLocation && !pendingLocation && (
+          {inMoveState && selectedLocation && (
             <MoveLocationCard
               location={selectedLocation}
               onCancel={() => {
@@ -222,11 +225,11 @@ const LocationModal: FC<LocationModalProps> = ({
                 setSelectedLocationId(null);
               }}
               onSaveLocation={() => {
-                if (newLatLng) {
+                if (pendingLocation) {
                   setLocationLatLng(
                     selectedLocation.id,
-                    newLatLng.lat,
-                    newLatLng.lng
+                    pendingLocation.lat,
+                    pendingLocation.lng
                   );
                 }
                 setInMoveState(false);

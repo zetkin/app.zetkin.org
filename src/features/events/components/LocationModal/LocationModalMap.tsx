@@ -162,18 +162,22 @@ const LocationModalMap: FC<MapProps> = ({
       }) ?? [];
 
     if (pendingLocation) {
+      const loc =
+        selectedLocation?.id === -1 && dragPosition
+          ? dragPosition
+          : pendingLocation;
       features.push({
         geometry: {
-          coordinates: [pendingLocation.lng, pendingLocation.lat],
+          coordinates: [loc.lng, loc.lat],
           type: 'Point' as const,
         },
         properties: {
           icon: 'marker-highlight',
           location: {
-            id: 0,
+            id: -1,
             info_text: '',
             title: '',
-            ...pendingLocation,
+            ...loc,
           },
         },
         type: 'Feature' as const,
