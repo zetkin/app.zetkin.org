@@ -13,7 +13,6 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
     uiDataColumn.columnIndex
   );
   const fuse = new Fuse(tags.data || [], {
-    ignoreFieldNorm: true,
     includeScore: true,
     keys: ['title'],
     threshold: 0.25,
@@ -23,7 +22,7 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
       (acc: TagColumn['mapping'], cellValue: CellData) => {
-        if (typeof cellValue === 'string') {
+        if (typeof cellValue === 'string' && cellValue.length > 2) {
           // Find tags with most similar name
           const results = fuse.search(cellValue);
 
