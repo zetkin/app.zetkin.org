@@ -1,4 +1,8 @@
-import { ZetkinSurveyQuestionResponse } from 'utils/types/zetkin';
+import {
+  ZetkinOptionsQuestion,
+  ZetkinSurveyQuestionResponse,
+  ZetkinTextQuestion,
+} from 'utils/types/zetkin';
 
 export type Zetkin2OptionsQuestionStats = {
   answer_count: number;
@@ -35,7 +39,7 @@ export const isOptionsStats = (questionStats: Zetkin2QuestionStats) =>
   'options' in questionStats;
 
 export const isTextStats = (questionStats: Zetkin2QuestionStats) =>
-  'options' in questionStats;
+  'top_word_frequencies' in questionStats;
 
 export const isTextResponse = (response: ZetkinSurveyQuestionResponse) => {
   return 'response' in response;
@@ -43,4 +47,16 @@ export const isTextResponse = (response: ZetkinSurveyQuestionResponse) => {
 
 export const isOptionsResponse = (response: ZetkinSurveyQuestionResponse) => {
   return 'options' in response;
+};
+
+export const isOptionsQuestion = (
+  question: ZetkinOptionsQuestion | ZetkinTextQuestion
+): question is ZetkinOptionsQuestion => {
+  return 'options' in question;
+};
+
+export const isTextQuestion = (
+  question: ZetkinOptionsQuestion | ZetkinTextQuestion
+): question is ZetkinTextQuestion => {
+  return !('options' in question);
 };

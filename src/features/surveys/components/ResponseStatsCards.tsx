@@ -72,6 +72,7 @@ import useResizeObserver from 'zui/hooks/useResizeObserver';
 import ZUIText from 'zui/components/ZUIText';
 import { makeDeterministicRNG } from 'utils/randomUtils';
 import {
+  isOptionsQuestion,
   isOptionsStats,
   isTextResponse,
   isTextStats,
@@ -353,7 +354,10 @@ const QuestionStatsBarPlot = ({
 
   const data = useMemo(() => {
     const bars = isOptionsStats(questionStats)
-      ? questionStats.options.map((o) => {
+      ? (isOptionsQuestion(question.question)
+          ? question.question.options || []
+          : []
+      ).options.map((o) => {
           let count = o.count;
 
           if (showPercent) {
@@ -477,7 +481,10 @@ const QuestionStatsPie = ({
   };
   const data = useMemo(() => {
     const items = isOptionsStats(questionStats)
-      ? questionStats.options.map((o) => {
+      ? (isOptionsQuestion(question.question)
+          ? question.question.options || []
+          : []
+      ).map((o) => {
           let value = o.count;
 
           if (showPercent) {
