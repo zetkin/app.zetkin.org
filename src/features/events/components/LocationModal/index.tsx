@@ -134,7 +134,7 @@ const LocationModal: FC<LocationModalProps> = ({
               if (value.id === -1) {
                 setSelectedLocationId(null);
                 setPendingLocation({
-                  info_text: value.info_text,
+                  info_text: '',
                   lat: value.lat,
                   lng: value.lng,
                   title: value.title,
