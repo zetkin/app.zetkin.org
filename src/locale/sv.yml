@@ -2840,8 +2840,6 @@ feat:
     surveyDialog:
       add: Lägg till
       cancel: Lägg inte till
-      description: Personen som du ska länka enkäten till har ingen epost men enkäten
-        innehåller en epostadress. Vill du lägga till den till personen?
       title: Lägg till epostadress
     surveyDialogDifferentEmail:
       keep: Nej, behåll tidigare e-postadress
