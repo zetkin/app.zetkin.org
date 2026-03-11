@@ -1,29 +1,30 @@
 import { IFuture } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import getSurveyResponseStats, {
-  SurveyResponseStats,
-} from 'features/surveys/rpc/getSurveyResponseStats';
 import {
   responseStatsError,
   responseStatsLoad,
   responseStatsLoaded,
 } from 'features/surveys/store';
+import { Zetkin2SurveyInsights } from 'features/surveys/types';
 
 export default function useSurveyResponseStats(
   orgId: number,
   surveyId: number
-): IFuture<SurveyResponseStats | null> {
+): IFuture<Zetkin2SurveyInsights> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const statsItem = useAppSelector(
-    (state) => state.surveys.responseStatsBySurveyId[surveyId]
+    (state) => state.surveys.surveyInsightsBySurveyId[surveyId]
   );
 
   return loadItemIfNecessary(statsItem, dispatch, {
     actionOnError: (err) => responseStatsError([surveyId, err]),
     actionOnLoad: () => responseStatsLoad(surveyId),
     actionOnSuccess: (stats) => responseStatsLoaded([surveyId, stats]),
-    loader: () => apiClient.rpc(getSurveyResponseStats, { orgId, surveyId }),
+    loader: () =>
+      apiClient.get<Zetkin2SurveyInsights>(
+        `/api2/orgs/${orgId}/surveys/${surveyId}/insights`
+      ),
   });
 }
