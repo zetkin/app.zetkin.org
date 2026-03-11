@@ -203,8 +203,11 @@ const LocationSearch: FC<LocationSearchProps> = ({
         return (
           <li {...props} key={option.id}>
             <Box
-              onClick={() => {
+              onClick={(e) => {
                 lastGeocodeQueryString.current = option.label;
+                e.stopPropagation();
+                e.preventDefault();
+                setInputValue('');
                 onChange(option.location);
               }}
               sx={{
