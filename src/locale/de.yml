@@ -2954,15 +2954,8 @@ feat:
     surveyDialog:
       add: hinzufügen
       cancel: Nicht hinzufügen
-      description: Die Person, die du gerade hinzufügen willst, hat keine
-        E-Mail-Adresse. Aber die Antwort auf die Umfrage beinhaltet eine. Willst
-        du diese Adresse der Person hinzufügen?
       title: E-Mail-Adresse hinzufügen
     surveyDialogDifferentEmail:
-      description: Die Person, die Sie verknüpfen möchten, hat eine andere
-        E-Mail-Adresse als die in der Umfrageantwort angegebene. Möchten Sie die
-        E-Mail-Adresse aus der Umfrageantwort als neue E-Mail-Adresse für diese
-        Person festlegen?
       keep: Nein, alte E-Mail behalten
       title: E-Mail-Adresse aktualisieren
       update: Ja, aktualisiere die E-Mail-Adresse
