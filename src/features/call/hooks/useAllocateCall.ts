@@ -47,6 +47,6 @@ export default function useAllocateCall(
   return {
     allocateCall,
     isLoading: callIsBeingAllocated,
-    queueError: queueError,
+    queueError,
   };
 }
