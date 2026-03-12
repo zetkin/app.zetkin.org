@@ -1,4 +1,9 @@
-import { IFuture } from 'core/caching/futures';
+import {
+  ErrorFuture,
+  IFuture,
+  LoadingFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
@@ -18,9 +23,13 @@ export default function useOfficialMemberships(): IFuture<ZetkinMembership[]> {
       apiClient.get<ZetkinMembership[]>(`/api/users/me/memberships`),
   });
 
-  if (future.data) {
-    future.data = future.data.filter((m) => m.role != null);
+  if (future.error) {
+    return new ErrorFuture(future.error);
   }
 
-  return future;
+  if (future.isLoading) {
+    return new LoadingFuture();
+  }
+
+  return new ResolvedFuture((future.data || []).filter((m) => m.role != null));
 }

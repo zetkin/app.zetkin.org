@@ -10,6 +10,11 @@ import useUser from 'core/hooks/useUser';
 import { RootState } from 'core/store';
 import useMyAssignments from './useMyAssignments';
 
+const minute = 60 * 1000;
+const LANES_TTL = 60 * minute;
+
+const CURRENT_CALL_LANES_VERSION = 1;
+
 export default function useCallInitialization() {
   const dispatch = useAppDispatch();
   const queryParams = useSearchParams();
@@ -17,11 +22,12 @@ export default function useCallInitialization() {
   const user = useUser();
   const userCallAssignments = useMyAssignments();
 
-  const [callLanes, setLanes] = useLocalStorage<{
+  const [callLanes, setLanes, clearCallLanes] = useLocalStorage<{
     activeLaneIndex: number;
     lanes: LaneState[];
     timestamp: number;
     userId: number;
+    version: number;
   } | null>('callLanes', null);
 
   useEffect(() => {
@@ -33,6 +39,7 @@ export default function useCallInitialization() {
           lanes: state.call.lanes,
           timestamp: new Date().getTime(),
           userId: user.id,
+          version: CURRENT_CALL_LANES_VERSION,
         });
       }
     });
@@ -42,11 +49,13 @@ export default function useCallInitialization() {
   const assignmentIdFromQuery = queryParams?.get('assignment');
 
   const lanesAssignedToUser =
-    callLanes?.lanes.filter((lane) =>
-      userCallAssignments.some(
-        (assignment) => assignment.id == lane.assignmentId
-      )
-    ) || [];
+    callLanes && callLanes.version == CURRENT_CALL_LANES_VERSION
+      ? callLanes.lanes.filter((lane) =>
+          userCallAssignments.some(
+            (assignment) => assignment.id == lane.assignmentId
+          )
+        )
+      : [];
 
   const activeLanes = lanesAssignedToUser.filter((lane) => {
     const assignment = userCallAssignments.find(
@@ -69,21 +78,40 @@ export default function useCallInitialization() {
   let canInitialize = false;
   if (assignmentIdFromQuery) {
     canInitialize = true;
-  } else if (callLanes) {
+  } else if (callLanes && callLanes.version == CURRENT_CALL_LANES_VERSION) {
     const thisUserHasSavedLanes =
-      !!activeLanes &&
-      activeLanes.length > 0 &&
-      !!user &&
-      callLanes.userId == user.id;
+      activeLanes.length > 0 && !!user && callLanes.userId == user.id;
+
     const savedLanesAreFresh =
-      callLanes.timestamp > new Date().getTime() - 3_600_000;
+      callLanes.timestamp > new Date().getTime() - LANES_TTL;
+
     canInitialize = thisUserHasSavedLanes && savedLanesAreFresh;
   }
 
+  const clearStaleCallLanes = () => {
+    const callLanesAreStale =
+      callLanes && callLanes.timestamp < new Date().getTime() - LANES_TTL;
+
+    if (callLanesAreStale) {
+      setLanes(null);
+    }
+  };
+
   const initialize = () => {
     if (assignmentIdFromQuery) {
+      const thisUserHasSavedLanes =
+        activeLanes.length > 0 && !!user && callLanes?.userId == user.id;
+
+      const savedLanesAreFresh =
+        callLanes && callLanes.timestamp > new Date().getTime() - LANES_TTL;
+
+      const canUseSavedLanes = thisUserHasSavedLanes && savedLanesAreFresh;
+
       dispatch(
-        initiateAssignment([parseInt(assignmentIdFromQuery), activeLanes])
+        initiateAssignment([
+          parseInt(assignmentIdFromQuery),
+          canUseSavedLanes ? activeLanes : [],
+        ])
       );
       history.replaceState(null, '', '/call');
     } else if (callLanes) {
@@ -95,6 +123,8 @@ export default function useCallInitialization() {
 
   return {
     canInitialize,
+    clearCallLanes,
+    clearStaleCallLanes,
     initialize,
   };
 }

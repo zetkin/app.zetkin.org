@@ -1,18 +1,248 @@
-import React, { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import React, {
+  FC,
+  Fragment,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Box, CircularProgress } from '@mui/material';
+import { Search } from '@mui/icons-material';
+import Fuse from 'fuse.js';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import PreviousCallsSection from './PreviousCallsSection';
 import ZUIModal from 'zui/components/ZUIModal';
-import PreviousCallsSearch from './PreviousCallsSearch';
 import messageIds from '../l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
+import ZUITextField from 'zui/components/ZUITextField';
+import UnfinishedCallListItem from './UnfinishedCall';
+import ZUIDivider from 'zui/components/ZUIDivider';
+import useCallMutations from '../hooks/useCallMutations';
+import useUnfinishedCalls from '../hooks/useUnfinishedCalls';
+import useCurrentCall from '../hooks/useCurrentCall';
+import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
+import ZUIText from 'zui/components/ZUIText';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { colors } from './PreviousCallsInfo';
+import useFinishedCalls from '../hooks/useFinishedCalls';
+import { callStateToString } from '../types';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
   onClose: () => void;
   onSwitch: (assignmentId: number) => void;
   open: boolean;
+};
+
+const UnfinishedCallsList: FC<{
+  onCall: (assignmentId: number) => void;
+  orgId: number;
+  searchString: string;
+}> = ({ onCall, orgId, searchString }) => {
+  const { abandonUnfinishedCall, switchToUnfinishedCall } =
+    useCallMutations(orgId);
+
+  const currentCall = useCurrentCall();
+  const unfinishedCalls = useUnfinishedCalls();
+
+  const unfinishedExceptCurrentCall = unfinishedCalls.filter((call) =>
+    currentCall ? currentCall.id != call.id : true
+  );
+
+  const fuse = useMemo(() => {
+    return new Fuse(unfinishedCalls, {
+      keys: [
+        'target.first_name',
+        'target.last_name',
+        'target.name',
+        'target.phone',
+        'target.alt_phone',
+      ],
+      threshold: 0.4,
+    });
+  }, [unfinishedCalls]);
+
+  const filteredUnfinishedCalls = useMemo(
+    () =>
+      searchString
+        ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
+        : unfinishedExceptCurrentCall,
+    [unfinishedExceptCurrentCall, searchString]
+  );
+
+  return (
+    <>
+      {filteredUnfinishedCalls.map((unfinishedCall) => (
+        <Fragment key={unfinishedCall.id}>
+          <UnfinishedCallListItem
+            onAbandonCall={() =>
+              abandonUnfinishedCall(
+                unfinishedCall.assignment_id,
+                unfinishedCall.id
+              )
+            }
+            onSwitchToCall={() => {
+              switchToUnfinishedCall(
+                unfinishedCall.id,
+                unfinishedCall.assignment_id
+              );
+              onCall(unfinishedCall.assignment_id);
+            }}
+            unfinishedCall={unfinishedCall}
+          />
+          <ZUIDivider />
+        </Fragment>
+      ))}
+    </>
+  );
+};
+
+const FinishedCallsList: FC<{
+  onCall: (assignmentId: number) => void;
+  orgId: number;
+  searchString: string;
+}> = ({ onCall, orgId, searchString }) => {
+  const messages = useMessages(messageIds);
+  const { switchToPreviousCall } = useCallMutations(orgId);
+  const { loading, finishedCalls } = useFinishedCalls();
+
+  const fuse = useMemo(() => {
+    return new Fuse(finishedCalls, {
+      keys: [
+        'target.first_name',
+        'target.last_name',
+        'target.name',
+        'target.phone',
+        'target.alt_phone',
+      ],
+      threshold: 0.4,
+    });
+  }, [finishedCalls]);
+
+  const filteredFinishedCalls = useMemo(() => {
+    const calls = searchString
+      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
+      : finishedCalls;
+
+    return calls.toSorted((call1, call2) => {
+      const call1AllocationTime = new Date(call1.allocation_time);
+      const call2AllocationTime = new Date(call2.allocation_time);
+
+      return call2AllocationTime.getTime() - call1AllocationTime.getTime();
+    });
+  }, [finishedCalls, searchString]);
+
+  return (
+    <>
+      {filteredFinishedCalls.map((finishedCall) => (
+        <Fragment key={finishedCall.id}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0.5,
+              paddingY: 1,
+            }}
+          >
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flex: 1,
+                  gap: 1,
+                  minWidth: 0,
+                }}
+              >
+                <ZUIPersonAvatar
+                  firstName={finishedCall.target.first_name}
+                  id={finishedCall.target.id}
+                  lastName={finishedCall.target.last_name}
+                  size="medium"
+                />
+                <ZUIText noWrap variant="bodyMdSemiBold">
+                  {finishedCall.target.name}
+                </ZUIText>
+              </Box>
+              <ZUIButton
+                label={messages.callLog.previousCall.logNew()}
+                onClick={() => {
+                  switchToPreviousCall(
+                    finishedCall.assignment_id,
+                    finishedCall.target.id
+                  );
+                  onCall(finishedCall.assignment_id);
+                }}
+                size="small"
+                variant="secondary"
+              />
+            </Box>
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
+                paddingLeft: 5,
+              }}
+            >
+              <ZUIText variant="bodyMdRegular">
+                {finishedCall.target.phone}
+              </ZUIText>
+              <Box
+                alignItems="center"
+                display="flex"
+                gap={1}
+                sx={(theme) => {
+                  const color = colors[finishedCall.state];
+                  return {
+                    color:
+                      color === 'warning'
+                        ? theme.palette.warning.dark
+                        : theme.palette[color].main,
+                    minWidth: 0,
+                  };
+                }}
+              >
+                <ZUIText color="inherit" noWrap>
+                  <Msg
+                    id={
+                      messageIds.about.previousCalls.status[
+                        callStateToString[finishedCall.state]
+                      ]
+                    }
+                  />
+                </ZUIText>
+                <ZUIText color="secondary" noWrap>
+                  <ZUIRelativeTime datetime={finishedCall.update_time} />
+                </ZUIText>
+              </Box>
+            </Box>
+          </Box>
+          <ZUIDivider />
+        </Fragment>
+      ))}
+      {loading && (
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            height: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+    </>
+  );
 };
 
 const CallSwitchModal: FC<CallSwitchModalProps> = ({
@@ -22,12 +252,23 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
   open,
 }) => {
   const messages = useMessages(messageIds);
-  const [debouncedInput, setDebouncedInput] = useState<string>('');
+  const [searchString, setSearchString] = useState('');
+
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (modalRef.current) {
+      const addListener = (ev: KeyboardEvent) => ev.stopPropagation();
+      modalRef.current.addEventListener('keydown', addListener);
+
+      return () =>
+        modalRef.current?.removeEventListener('keydown', addListener);
+    }
+  }, [modalRef.current]);
 
   return (
     <ZUIModal
       onClose={() => {
-        setDebouncedInput('');
+        setSearchString('');
         onClose();
       }}
       open={open}
@@ -35,28 +276,58 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
       title={messages.callLog.title()}
     >
       <Box
+        ref={modalRef}
         sx={{
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
+          minHeight: 400,
           overflowX: 'hidden',
           paddingRight: 1,
           paddingTop: 2,
           width: '100%',
         }}
       >
-        <PreviousCallsSearch
-          onDebouncedChange={(value) => {
-            setDebouncedInput(value);
+        <ZUITextField
+          fullWidth
+          label={messages.callLog.searchLabel()}
+          onChange={(newValue) => {
+            setSearchString(newValue);
           }}
+          startIcon={Search}
+          value={searchString}
         />
-        <PreviousCallsSection
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: '100%',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <UnfinishedCallsList
+            onCall={(assignmentId) => {
+              onSwitch(assignmentId);
+              onClose();
+            }}
+            orgId={assignment.organization.id}
+            searchString={searchString}
+          />
+        </Suspense>
+        <FinishedCallsList
           onCall={(assignmentId) => {
             onSwitch(assignmentId);
             onClose();
           }}
           orgId={assignment.organization.id}
-          searchTerm={debouncedInput}
+          searchString={searchString}
         />
       </Box>
     </ZUIModal>

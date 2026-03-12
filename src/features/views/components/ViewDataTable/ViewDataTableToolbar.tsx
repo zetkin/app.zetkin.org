@@ -119,7 +119,9 @@ const ViewDataTableToolbar: React.FunctionComponent<
                     onClick: onClickDelete,
                   },
                 ]}
-                label={messages.toolbar.bulk.handleSelection()}
+                label={messages.toolbar.bulk.handleSelection({
+                  numSelected: selection.length,
+                })}
                 loading={isLoading}
                 variant="outlined"
               />
@@ -134,15 +136,13 @@ const ViewDataTableToolbar: React.FunctionComponent<
           }}
         >
           <GridToolbarFilterButton
-            componentsProps={{
+            slotProps={{
               button: { color: 'secondary', size: 'medium' },
             }}
           />
           <ZUIDataTableSorting
             gridColumns={gridColumns}
-            onSortModelChange={(model) =>
-              onSortModelChange && onSortModelChange(model, {})
-            }
+            onSortModelChange={onSortModelChange}
             sortModel={sortModel}
           />
           {!disableConfigure && (

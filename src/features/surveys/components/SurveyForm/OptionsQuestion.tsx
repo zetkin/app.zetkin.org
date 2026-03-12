@@ -43,7 +43,9 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
   const handleDropdownChange = useCallback((ev: SelectChangeEvent) => {
     setDropdownValue(ev.target.value);
   }, []);
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>(
+    Array.isArray(initialValue) ? initialValue : []
+  );
 
   const question = element.question;
   const widgetType = question.response_config.widget_type;

@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import { FC, Suspense, useEffect, useState } from 'react';
 
 import {
@@ -59,12 +59,17 @@ const CanvassMapOverlays: FC<Props> = ({
             gap: 8,
             justifyContent: 'center',
             padding: 8,
+            pointerEvents: 'none',
             position: 'absolute',
             width: '100%',
             zIndex: 1000,
           }}
         >
-          <Button onClick={() => onToggleCreating(true)} variant="contained">
+          <Button
+            onClick={() => onToggleCreating(true)}
+            sx={{ pointerEvents: 'all' }}
+            variant="contained"
+          >
             <Msg id={messageIds.map.addLocation.add} />
           </Button>
         </Box>
@@ -93,7 +98,22 @@ const CanvassMapOverlays: FC<Props> = ({
           </Box>
         )}
         {selectedLocation && expanded && (
-          <Suspense>
+          <Suspense
+            fallback={
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100dvh',
+                  justifyContent: 'center',
+                  width: '100vw',
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            }
+          >
             <LocationDialog
               assignment={assignment}
               location={selectedLocation}
