@@ -26,7 +26,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
   const theme = useTheme();
   const initialContent = email.content
     ? JSON.parse(email.content)
-    : [{ blocks: [] }];
+    : { blocks: [] };
   const messages = useMessages(messageIds);
   const [content, setContent] = useState<EmailContentBlock[]>(
     initialContent.blocks
