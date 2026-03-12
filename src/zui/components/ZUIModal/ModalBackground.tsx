@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { range } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 
-import { getRandom } from 'utils/randomUtils';
+import { makeDeterministicRNG } from 'utils/randomUtils';
 
 type Props = {
   /**
@@ -10,7 +10,11 @@ type Props = {
    */
   height: number | string;
 
-  seed?: number;
+  /**
+   * The seed to be used when generating random numbers for the background
+   * This is to enable generating the same image between rerenders.
+   */
+  seed: number;
 
   /**
    * The width of the background
@@ -67,9 +71,9 @@ type LayerData = {
   imageWidth: number;
 };
 
-const ModalBackground: FC<Props> = ({ height, seed, width }) => {
+const ModalBackground: FC<Props> = ({ height, seed = 1, width }) => {
   const [layers, setLayers] = useState<LayerData[]>([]);
-  const random = getRandom(seed);
+  const random = makeDeterministicRNG(seed);
 
   useEffect(() => {
     const newLayers = range(0, 4).map(() => {
@@ -79,6 +83,7 @@ const ModalBackground: FC<Props> = ({ height, seed, width }) => {
       const imageWidth = pattern[0].length;
       const randomColors = COLORS.concat().sort(() => random() - 0.5);
 
+      // animation should be between 23 and 42 seconds long.
       const duration = 23 + random() * 19;
       const delay = (new Date().getTime() / 1000) % duration;
 
@@ -104,6 +109,7 @@ const ModalBackground: FC<Props> = ({ height, seed, width }) => {
     });
 
     setLayers(newLayers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

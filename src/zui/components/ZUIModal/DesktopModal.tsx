@@ -1,11 +1,10 @@
 import { Box, Fade, Modal, Paper } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import { ZUISize } from '../types';
 import ModalBackground from './ModalBackground';
 import { ZUIModalProps } from '.';
 import ModalContent from './ModalContent';
-import { toHash } from 'utils/randomUtils';
 
 const widths: Record<ZUISize | 'auto' | 'full', string> = {
   auto: 'auto',
@@ -24,6 +23,10 @@ const DesktopModal: FC<ZUIModalProps> = ({
   size = 'auto',
   title,
 }) => {
+  const seed = useRef(0);
+  useEffect(() => {
+    seed.current = Math.random();
+  }, [open]);
   return (
     <Modal
       disableRestoreFocus
@@ -59,17 +62,19 @@ const DesktopModal: FC<ZUIModalProps> = ({
             </ModalContent>
           </Paper>
         </Fade>
-        <Box
-          onClick={onClose}
-          sx={{
-            backgroundColor: 'rgba(255,255,255,0.5)',
-            height: '100%',
-            width: '100%',
-            zIndex: 0,
-          }}
-        >
-          <ModalBackground height="100%" seed={toHash(title)} width="100%" />
-        </Box>
+        <Fade in={open} timeout={300}>
+          <Box
+            onClick={onClose}
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              height: '100%',
+              width: '100%',
+              zIndex: 0,
+            }}
+          >
+            <ModalBackground height="100%" seed={seed.current} width="100%" />
+          </Box>
+        </Fade>
       </>
     </Modal>
   );

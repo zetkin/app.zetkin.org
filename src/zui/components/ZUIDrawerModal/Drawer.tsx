@@ -1,5 +1,5 @@
-import { Box, Modal, Slide } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { Box, Fade, Modal, Slide } from '@mui/material';
+import { FC, ReactNode, useEffect, useRef } from 'react';
 
 import ModalBackground from '../ZUIModal/ModalBackground';
 
@@ -10,6 +10,10 @@ type Props = {
 };
 
 const Drawer: FC<Props> = ({ children, onClose, open }) => {
+  const seed = useRef(0);
+  useEffect(() => {
+    seed.current = Math.random();
+  }, [open]);
   return (
     <Modal
       disableRestoreFocus
@@ -49,17 +53,19 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
             </Box>
           </Box>
         </Slide>
-        <Box
-          onClick={onClose}
-          sx={{
-            backgroundColor: 'rgba(255,255,255,0.5)',
-            height: '100%',
-            width: '100%',
-            zIndex: 0,
-          }}
-        >
-          <ModalBackground height="100%" width="100%" />
-        </Box>
+        <Fade in={open} timeout={300}>
+          <Box
+            onClick={onClose}
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              height: '100%',
+              width: '100%',
+              zIndex: 0,
+            }}
+          >
+            <ModalBackground height="100%" seed={seed.current} width="100%" />
+          </Box>
+        </Fade>
       </>
     </Modal>
   );

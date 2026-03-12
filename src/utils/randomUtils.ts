@@ -1,9 +1,3 @@
-export function toHash(str: string): number {
-  return str.split('').reduce((hash, char) => {
-    return char.charCodeAt(0) + (hash << 6) + (hash << 16) - hash;
-  }, 0);
-}
-
 /**
  * Deterministically generate random numbers using a Linear Congruential Generator (LCG). NOT SAFE for cryptography.
  * @param seed the initial seed
