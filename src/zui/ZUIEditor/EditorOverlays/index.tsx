@@ -222,7 +222,27 @@ const EditorOverlays: FC<Props> = ({
     findSelectedNode();
   }, [state.selection, findSelectedNode]);
 
+  const [layoutReady, setLayoutReady] = useState(false);
+
+  useEffect(() => {
+    const run = async () => {
+      if (document.fonts) {
+        await document.fonts.ready;
+      }
+
+      requestAnimationFrame(() => {
+        setLayoutReady(true);
+      });
+    };
+
+    run();
+  }, []);
+
   const blockDividers = useMemo(() => {
+    if (!view.dom.offsetHeight) {
+      return [];
+    }
+
     let pos = 0;
     const blockDividers: BlockDividerData[] = [
       {
@@ -251,8 +271,10 @@ const EditorOverlays: FC<Props> = ({
       }
     });
 
+    console.log(blockDividers);
+
     return blockDividers;
-  }, [state.doc.children, view]);
+  }, [state.doc.children, view, layoutReady]);
 
   const isEmptyParagraph =
     currentBlock?.type == 'paragraph' && currentBlock?.node.textContent == '';
