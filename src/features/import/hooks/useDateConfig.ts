@@ -24,6 +24,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
 
   useEffect(() => {
     setDateFormat(column.dateFormat || null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnIndex]);
 
   const noCustomFormat = dateFormat == '';

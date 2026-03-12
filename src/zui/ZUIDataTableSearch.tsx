@@ -56,6 +56,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
     if (!isTyping) {
       onChange(isActive ? searchString : '');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, isTyping]);
 
   useEffect(() => {

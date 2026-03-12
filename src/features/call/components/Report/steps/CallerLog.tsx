@@ -62,6 +62,7 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
       window.removeEventListener('keydown', onKeyDown);
       window.addEventListener('keyup', onKeyUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message]);
 
   return (

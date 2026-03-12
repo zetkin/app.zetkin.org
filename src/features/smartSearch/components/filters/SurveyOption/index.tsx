@@ -84,6 +84,7 @@ const SurveyOption = ({
         survey: filter.config.survey || surveys[0].id,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveys.length]);
 
   // check if there are questions with response type of 'text'

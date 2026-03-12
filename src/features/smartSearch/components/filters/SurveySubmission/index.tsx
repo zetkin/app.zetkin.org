@@ -58,6 +58,7 @@ const SurveySubmission = ({
       });
       setSubmittable(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveys.length]);
 
   const handleSubmit = (e: FormEvent) => {
