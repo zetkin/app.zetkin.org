@@ -8,7 +8,7 @@ import {
 } from 'features/surveys/store';
 import { Zetkin2SurveyInsights } from 'features/surveys/types';
 
-export default function useSurveyResponseStats(
+export default function useSurveyInsights(
   orgId: number,
   surveyId: number
 ): IFuture<Zetkin2SurveyInsights> {

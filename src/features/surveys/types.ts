@@ -62,3 +62,5 @@ export const isTextQuestion = (
 ): question is ZetkinTextQuestion => {
   return !('options' in question);
 };
+
+export type InsightsPlotDisplayMode = 'absolute' | 'percent';
