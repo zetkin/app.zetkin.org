@@ -13,6 +13,7 @@ type Props = {
   /**
    * The seed to be used when generating random numbers for the background
    * This is to enable generating the same image between rerenders.
+   * The default value is 1, which means it will always have the same animation
    */
   seed: number;
 
