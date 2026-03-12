@@ -239,7 +239,7 @@ const EditorOverlays: FC<Props> = ({
   }, []);
 
   const blockDividers = useMemo(() => {
-    if (!view.dom.offsetHeight) {
+    if (!view.dom.offsetHeight || !layoutReady) {
       return [];
     }
 
