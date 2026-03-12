@@ -3,7 +3,7 @@ import {
   useExtensionEvent,
   useMenuNavigation,
 } from '@remirror/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import BlockMenuExtension from '../extensions/BlockMenuExtension';
 
