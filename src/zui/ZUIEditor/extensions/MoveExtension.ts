@@ -14,66 +14,70 @@ class MoveExtension extends PlainExtension {
   @command()
   moveBlockDown(): CommandFunction {
     return (props) => {
-      const { dispatch, state, tr } = props;
+      try {
+        const { dispatch, state, tr } = props;
 
-      const selection = state.selection;
+        const selection = state.selection;
 
-      if (isNodeSelection(selection)) {
-        const node = selection.node;
+        if (isNodeSelection(selection)) {
+          const node = selection.node;
 
-        if (node == tr.doc.lastChild) {
-          return false;
-        }
+          if (node == tr.doc.lastChild) {
+            return false;
+          }
 
-        const posBeforeSelected = selection.$anchor.before(1);
-        const posAfterSelected = selection.$head.after(1);
+          const posBeforeSelected = selection.$anchor.before(1);
+          const posAfterSelected = selection.$head.after(1);
 
-        const resolvedNextNode = tr.doc.resolve(posAfterSelected + 1);
-        const posAfterNextNode = resolvedNextNode.after(1);
+          const resolvedNextNode = tr.doc.resolve(posAfterSelected + 1);
+          const posAfterNextNode = resolvedNextNode.after(1);
 
-        tr.insert(posAfterNextNode, node);
-        tr.delete(posBeforeSelected, posAfterSelected);
+          tr.insert(posAfterNextNode, node);
+          tr.delete(posBeforeSelected, posAfterSelected);
 
-        dispatch?.(tr);
+          dispatch?.(tr);
 
-        return true;
-      } else {
-        const pos = selection.$head.pos;
-        const resolved = tr.doc.resolve(pos);
-        const node = resolved.node(1);
-
-        if (node == tr.doc.lastChild) {
-          return false;
-        }
-
-        const posBeforeSelected = resolved.before(1);
-        const posAfterSelected = resolved.after(1);
-
-        const resolvedNextNode = tr.doc.resolve(posAfterSelected + 1);
-        const posAfterNextNode = resolvedNextNode.after(1);
-
-        tr.insert(posAfterNextNode, node);
-        tr.delete(posBeforeSelected, posAfterSelected);
-
-        const nextNode = resolvedNextNode.node();
-
-        let nextNodeSize = 0;
-        if (nextNode?.type.name == 'doc') {
-          nextNodeSize = 2;
+          return true;
         } else {
-          nextNodeSize = nextNode?.nodeSize;
+          const pos = selection.$head.pos;
+          const resolved = tr.doc.resolve(pos);
+          const node = resolved.node(1);
+
+          if (node == tr.doc.lastChild) {
+            return false;
+          }
+
+          const posBeforeSelected = resolved.before(1);
+          const posAfterSelected = resolved.after(1);
+
+          const resolvedNextNode = tr.doc.resolve(posAfterSelected + 1);
+          const posAfterNextNode = resolvedNextNode.after(1);
+
+          tr.insert(posAfterNextNode, node);
+          tr.delete(posBeforeSelected, posAfterSelected);
+
+          const nextNode = resolvedNextNode.node();
+
+          let nextNodeSize = 0;
+          if (nextNode?.type.name == 'doc') {
+            nextNodeSize = 2;
+          } else {
+            nextNodeSize = nextNode?.nodeSize;
+          }
+
+          const textSelection = TextSelection.create(
+            tr.doc,
+            resolved.before(1) + nextNodeSize + resolved.parentOffset
+          );
+          tr.setSelection(textSelection);
+          tr.scrollIntoView();
+
+          dispatch?.(tr);
+
+          return true;
         }
-
-        const textSelection = TextSelection.create(
-          tr.doc,
-          resolved.before(1) + nextNodeSize + resolved.parentOffset
-        );
-        tr.setSelection(textSelection);
-        tr.scrollIntoView();
-
-        dispatch?.(tr);
-
-        return true;
+      } catch (e) {
+        return false;
       }
     };
   }
@@ -83,56 +87,64 @@ class MoveExtension extends PlainExtension {
   @command()
   moveBlockUp(): CommandFunction {
     return (props) => {
-      const { dispatch, state, tr } = props;
+      try {
+        const { dispatch, state, tr } = props;
 
-      const selection = state.selection;
-      if (isNodeSelection(selection)) {
-        const node = selection.node;
+        const selection = state.selection;
+        if (isNodeSelection(selection)) {
+          const node = selection.node;
 
-        if (node == tr.doc.firstChild) {
-          return false;
+          if (node == tr.doc.firstChild) {
+            return false;
+          }
+
+          const posBeforeSelected = selection.$anchor.before(1);
+          const posAfterSelected = selection.$head.after(1);
+
+          const resolvedEndOfPreviousNode = tr.doc.resolve(
+            posBeforeSelected - 1
+          );
+          const posBeforeNodeBefore = resolvedEndOfPreviousNode.before(1);
+
+          tr.delete(posBeforeSelected, posAfterSelected);
+          tr.insert(posBeforeNodeBefore, node);
+
+          dispatch?.(tr);
+
+          return true;
+        } else {
+          const pos = selection.$head.pos;
+          const resolved = tr.doc.resolve(pos);
+          const node = resolved.node(1);
+
+          if (node == tr.doc.firstChild) {
+            return false;
+          }
+
+          const posBeforeSelected = resolved.before(1);
+          const posAfterSelected = resolved.after(1);
+
+          const resolvedEndOfPreviousNode = tr.doc.resolve(
+            posBeforeSelected - 1
+          );
+          const posBeforeNodeBefore = resolvedEndOfPreviousNode.before(1);
+
+          tr.delete(posBeforeSelected, posAfterSelected);
+          tr.insert(posBeforeNodeBefore, node);
+
+          const textSelection = TextSelection.create(
+            tr.doc,
+            posBeforeNodeBefore + resolved.parentOffset
+          );
+          tr.setSelection(textSelection);
+
+          dispatch?.(tr);
+          tr.scrollIntoView();
+
+          return true;
         }
-
-        const posBeforeSelected = selection.$anchor.before(1);
-        const posAfterSelected = selection.$head.after(1);
-
-        const resolvedEndOfPreviousNode = tr.doc.resolve(posBeforeSelected - 1);
-        const posBeforeNodeBefore = resolvedEndOfPreviousNode.before(1);
-
-        tr.delete(posBeforeSelected, posAfterSelected);
-        tr.insert(posBeforeNodeBefore, node);
-
-        dispatch?.(tr);
-
-        return true;
-      } else {
-        const pos = selection.$head.pos;
-        const resolved = tr.doc.resolve(pos);
-        const node = resolved.node(1);
-
-        if (node == tr.doc.firstChild) {
-          return false;
-        }
-
-        const posBeforeSelected = resolved.before(1);
-        const posAfterSelected = resolved.after(1);
-
-        const resolvedEndOfPreviousNode = tr.doc.resolve(posBeforeSelected - 1);
-        const posBeforeNodeBefore = resolvedEndOfPreviousNode.before(1);
-
-        tr.delete(posBeforeSelected, posAfterSelected);
-        tr.insert(posBeforeNodeBefore, node);
-
-        const textSelection = TextSelection.create(
-          tr.doc,
-          posBeforeNodeBefore + resolved.parentOffset
-        );
-        tr.setSelection(textSelection);
-
-        dispatch?.(tr);
-        tr.scrollIntoView();
-
-        return true;
+      } catch (e) {
+        return false;
       }
     };
   }
