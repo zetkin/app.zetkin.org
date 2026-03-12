@@ -110,7 +110,9 @@ const EditorOverlays: FC<Props> = ({
     {}
   );
 
-  useEffect(() => {
+  const calculateAllBlockRects = useCallback(() => {
+    const rects: Record<string, DOMRect> = {};
+
     state.doc.descendants((node, pos, parent, index) => {
       const elem = view.nodeDOM(pos);
       if (elem instanceof HTMLElement) {
@@ -118,19 +120,26 @@ const EditorOverlays: FC<Props> = ({
         const x = nodeRect.x - editorRect.x;
         const y = nodeRect.y - editorRect.y;
 
-        const rect = {
+        rects[index] = {
           ...nodeRect.toJSON(),
           left: x,
           top: y,
           x: x,
           y: y,
         };
-        setAllBlockRects((rects) => ({ ...rects, [index]: rect }));
       }
     });
+
+    return rects;
   }, [editorRect.x, editorRect.y, state.doc, view]);
 
+  useEffect(() => {
+    setAllBlockRects(calculateAllBlockRects());
+  }, [calculateAllBlockRects]);
+
   const findSelectedNode = useCallback(() => {
+    const allBlockRects = calculateAllBlockRects();
+
     if (isNodeSelection(state.selection)) {
       const selection = state.selection;
       const index = selection.$anchor.index(0);
@@ -174,7 +183,7 @@ const EditorOverlays: FC<Props> = ({
         }
       }
     }
-  }, [view, state.selection, allBlockRects, onSelectBlock, state.doc]);
+  }, [calculateAllBlockRects, state.selection, state.doc, onSelectBlock, view]);
 
   useEffect(() => {
     const observer = new ResizeObserver(findSelectedNode);
@@ -315,14 +324,14 @@ const EditorOverlays: FC<Props> = ({
           <Box
             border={`1px solid ${theme.palette.grey[500]}`}
             borderRadius={1}
-            height={currentBlock?.rect.height + 16}
-            left={currentBlock?.rect.left - 8}
+            height={currentBlock.rect.height + 16}
+            left={currentBlock.rect.left - 8}
             position="absolute"
             sx={{
               pointerEvents: 'none',
             }}
-            top={currentBlock?.rect.top - 8}
-            width={currentBlock?.rect.width + 16}
+            top={currentBlock.rect.top - 8}
+            width={currentBlock.rect.width + 16}
             zIndex={-2}
           />
         </Box>
