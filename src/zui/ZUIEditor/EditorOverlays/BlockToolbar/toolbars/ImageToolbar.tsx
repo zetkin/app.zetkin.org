@@ -9,13 +9,13 @@ import messageIds from 'zui/l10n/messageIds';
 
 type ImageToolbarProps = {
   range: FromToProps;
-  src: string;
+  src: string | null;
 };
 
 const ImageToolbar: FC<ImageToolbarProps> = ({ src, range }) => {
   const messages = useMessages(messageIds);
-  const splitSrc = src.split('/');
-  const fileName = splitSrc[splitSrc.length - 1];
+  const splitSrc = src?.split('/');
+  const fileName = splitSrc ? splitSrc[splitSrc.length - 1] : '';
   return (
     <BlockToolbarBase
       icon={<ImageIcon />}
