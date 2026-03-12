@@ -230,6 +230,10 @@ const ZUIEditor: FC<Props> = ({
         '.zimage-image': {
           maxWidth: '100%',
         },
+        'img.zimage-image[src=""], img.zimage-image:not([src])': {
+          width: '400px',
+          height: '200px',
+        },
         '.zvariable': {
           '&.ProseMirror-selectednode': {
             outlineColor: theme.palette.grey[600],
