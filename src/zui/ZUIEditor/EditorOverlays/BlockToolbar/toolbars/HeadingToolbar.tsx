@@ -45,6 +45,9 @@ const HeadingToolbar: FC<HeadingToolbarProps> = ({
             <Select
               label="Level"
               labelId="level-select-label"
+              MenuProps={{
+                disablePortal: true,
+              }}
               onChange={(ev) => {
                 const value = ev.target.value as number;
                 toggleHeading({ level: value });
