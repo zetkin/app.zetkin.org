@@ -18,6 +18,8 @@ export type Zetkin2OptionsQuestionStats = {
 export type Zetkin2TextQuestionStats = {
   answer_count: number;
   question_id: number;
+  top_entity_frequencies: Record<string, number>;
+  top_verb_frequencies: Record<string, number>;
   top_word_frequencies: Record<string, number>;
   total_unique_word_count: number;
   total_word_count: number;
