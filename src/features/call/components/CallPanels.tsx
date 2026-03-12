@@ -134,8 +134,7 @@ const CallPanels: FC<Props> = ({
           width: 1 / 3,
         })}
       >
-        <SuspenseWithCircularLoader
-        >
+        <SuspenseWithCircularLoader>
           <AssignmentStats
             assignmentId={assignment.id}
             orgId={assignment.organization.id}
@@ -222,7 +221,7 @@ const CallPanels: FC<Props> = ({
           zIndex: lane.step == LaneStep.START ? -1 : 0,
         })}
       >
-        <SuspenseWithCircularLoader >
+        <SuspenseWithCircularLoader>
           <ActivitiesSection
             assignment={assignment}
             step={lane.step}
