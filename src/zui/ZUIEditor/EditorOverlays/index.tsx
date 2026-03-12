@@ -305,6 +305,9 @@ const EditorOverlays: FC<Props> = ({
           return null;
         }
         const rect = allBlockRects[index];
+        if (!rect) {
+          return null;
+        }
         return (
           <Box key={index} position="relative">
             <Box
