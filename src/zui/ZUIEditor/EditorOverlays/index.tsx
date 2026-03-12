@@ -4,7 +4,7 @@ import {
   useEditorView,
   usePositioner,
 } from '@remirror/react';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box, lighten, Typography, useTheme } from '@mui/material';
 import { FromToProps, isNodeSelection } from 'remirror';
@@ -84,16 +84,16 @@ const EditorOverlays: FC<Props> = ({
 
   const editorRect = view.dom.getBoundingClientRect();
 
-  let zetkinIndex = 0;
-  const problems: (BlockProblem[] | null)[] = [];
-  state.doc.children.forEach((node) => {
-    if (
-      node.type.name == RemirrorBlockType.PARAGRAPH &&
-      node.content.size == 0
-    ) {
-      problems.push(null);
-    } else {
-      if (zetkinIndex < zetkinContent.length) {
+  const problems = useMemo(() => {
+    let zetkinIndex = 0;
+    const problems: (BlockProblem[] | null)[] = [];
+    state.doc.children.forEach((node) => {
+      if (
+        node.type.name == RemirrorBlockType.PARAGRAPH &&
+        node.content.size == 0
+      ) {
+        problems.push(null);
+      } else if (zetkinIndex < zetkinContent.length) {
         const zetkinBlock = zetkinContent[zetkinIndex];
         const blockProblems = editorBlockProblems(
           zetkinBlock,
@@ -102,47 +102,33 @@ const EditorOverlays: FC<Props> = ({
         problems.push(blockProblems.length > 0 ? blockProblems : null);
         zetkinIndex++;
       }
-    }
-  });
+    });
+    return problems;
+  }, [messages.editor.extensions.button, state.doc.children, zetkinContent]);
 
   const [allBlockRects, setAllBlockRects] = useState<Record<string, DOMRect>>(
     {}
   );
-  state.doc.descendants((node, pos, parent, index) => {
-    const elem = view.nodeDOM(pos);
-    if (elem instanceof HTMLElement) {
-      const nodeRect = elem.getBoundingClientRect();
-      const x = nodeRect.x - editorRect.x;
-      const y = nodeRect.y - editorRect.y;
 
-      const rect = {
-        ...nodeRect.toJSON(),
-        left: x,
-        top: y,
-        x: x,
-        y: y,
-      };
-      setAllBlockRects((rects) => ({ ...rects, [index]: rect }));
-    }
-  });
+  useEffect(() => {
+    state.doc.descendants((node, pos, parent, index) => {
+      const elem = view.nodeDOM(pos);
+      if (elem instanceof HTMLElement) {
+        const nodeRect = elem.getBoundingClientRect();
+        const x = nodeRect.x - editorRect.x;
+        const y = nodeRect.y - editorRect.y;
 
-  state.doc.descendants((node, pos, parent, index) => {
-    const elem = view.nodeDOM(pos);
-    if (elem instanceof HTMLElement) {
-      const nodeRect = elem.getBoundingClientRect();
-      const x = nodeRect.x - editorRect.x;
-      const y = nodeRect.y - editorRect.y;
-
-      const rect = {
-        ...nodeRect.toJSON(),
-        left: x,
-        top: y,
-        x: x,
-        y: y,
-      };
-      setAllBlockRects((rects) => ({ ...rects, [index]: rect }));
-    }
-  });
+        const rect = {
+          ...nodeRect.toJSON(),
+          left: x,
+          top: y,
+          x: x,
+          y: y,
+        };
+        setAllBlockRects((rects) => ({ ...rects, [index]: rect }));
+      }
+    });
+  }, [editorRect.x, editorRect.y, state.doc, view]);
 
   const findSelectedNode = useCallback(() => {
     if (isNodeSelection(state.selection)) {
@@ -227,33 +213,37 @@ const EditorOverlays: FC<Props> = ({
     findSelectedNode();
   }, [state.selection, findSelectedNode]);
 
-  let pos = 0;
-  const blockDividers: BlockDividerData[] = [
-    {
-      pos: 0,
-      y: 8,
-    },
-  ];
+  const blockDividers = useMemo(() => {
+    let pos = 0;
+    const blockDividers: BlockDividerData[] = [
+      {
+        pos: 0,
+        y: 8,
+      },
+    ];
 
-  const containerRect = view.dom.getBoundingClientRect();
-  state.doc.children.forEach((blockNode) => {
-    const elem = view.nodeDOM(pos);
+    const containerRect = view.dom.getBoundingClientRect();
+    state.doc.children.forEach((blockNode) => {
+      const elem = view.nodeDOM(pos);
 
-    pos += blockNode.nodeSize;
+      pos += blockNode.nodeSize;
 
-    if (elem instanceof HTMLElement) {
-      if (elem.nodeName == 'P' && elem.textContent?.trim().length == 0) {
-        return;
+      if (elem instanceof HTMLElement) {
+        if (elem.nodeName == 'P' && elem.textContent?.trim().length == 0) {
+          return;
+        }
+
+        const rect = elem.getBoundingClientRect();
+
+        blockDividers.push({
+          pos,
+          y: rect.bottom - containerRect.top,
+        });
       }
+    });
 
-      const rect = elem.getBoundingClientRect();
-
-      blockDividers.push({
-        pos,
-        y: rect.bottom - containerRect.top,
-      });
-    }
-  });
+    return blockDividers;
+  }, [state.doc.children, view]);
 
   const isEmptyParagraph =
     currentBlock?.type == 'paragraph' && currentBlock?.node.textContent == '';
