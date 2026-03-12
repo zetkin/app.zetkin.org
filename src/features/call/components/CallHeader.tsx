@@ -11,7 +11,6 @@ import ZUIButton from 'zui/components/ZUIButton';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import {
   filtersUpdated,
-  previousCallAdd,
   surveyDeselected,
   surveySubmissionDeleted,
   updateLaneStep,
