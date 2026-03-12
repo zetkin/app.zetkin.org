@@ -70,6 +70,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   const naiveEnd = `${endDate}T${endTime}`;
   const naiveStart = `${startDate}T${startTime}`;
 
+  const [lastSavedEventDuration, setEventDuration] = useState(
+    dayjs(naiveEnd).diff(naiveStart, 'minutes')
+  );
+
   const [wantsToShowEndDate, setWantsToShowEndDate] = useState(false);
   const mustShowEndDate = dayjs(endDate).isAfter(dayjs(startDate), 'day');
 
@@ -84,8 +88,27 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
         setWantsToShowEndDate(false);
       },
       save: () => {
+        const timeDiff = dayjs(naiveEnd).diff(dayjs(naiveStart), 'minutes');
+        let endTimeChanged = false;
+        const newEndTime = makeNaiveTimeString(
+          dayjs(naiveStart)
+            .add(Math.abs(lastSavedEventDuration) || 1, 'minutes')
+            .utc()
+            .toDate()
+        );
+        if (timeDiff <= 0) {
+          setEndTime(newEndTime);
+          endTimeChanged = true;
+        }
+        setEventDuration(
+          dayjs(naiveEnd).hour() * 60 +
+            dayjs(naiveEnd).minute() -
+            (dayjs(naiveStart).hour() * 60 + dayjs(naiveStart).minute())
+        );
         updateEvent({
-          end_time: `${naiveEnd}:00`,
+          end_time: endTimeChanged
+            ? `${endDate}T${newEndTime}:00`
+            : `${naiveEnd}:00`,
           info_text: infoText,
           location_id: locationId,
           start_time: `${naiveStart}:00`,
