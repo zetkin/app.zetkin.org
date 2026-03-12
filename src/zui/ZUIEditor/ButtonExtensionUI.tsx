@@ -36,7 +36,7 @@ const ButtonExtensionUI: FC = () => {
     } else {
       setVisible(false);
     }
-  }, [state.selection]);
+  }, [state.selection, state.doc]);
 
   return (
     <TextAndHrefOverlay

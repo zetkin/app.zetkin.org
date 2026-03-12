@@ -118,64 +118,66 @@ const ZUIEditor: FC<Props> = ({
         document.removeEventListener('click', detectClickOnEditor);
       };
     }
-  }, [document]);
+  }, []);
 
-  const boldExtension = new BoldExtension({});
-  const btnExtension = new ButtonExtension();
-  const imgExtension = new ImageExtension({});
-  const italicExtension = new ItalicExtension();
-  const linkExtension = new LinkExtension();
-  const olExtension = new OrderedListExtension();
-  const ulExtension = new BulletListExtension({});
-  const headingExtension = new HeadingExtension({});
-  const varExtension = new VariableExtension({
-    first_name: messages.variables.firstName(),
-    full_name: messages.variables.fullName(),
-    last_name: messages.variables.lastName(),
-  });
+  const boldExtension = useRef(new BoldExtension({}));
+  const btnExtension = useRef(new ButtonExtension());
+  const imgExtension = useRef(new ImageExtension({}));
+  const italicExtension = useRef(new ItalicExtension());
+  const linkExtension = useRef(new LinkExtension());
+  const olExtension = useRef(new OrderedListExtension());
+  const ulExtension = useRef(new BulletListExtension({}));
+  const headingExtension = useRef(new HeadingExtension({}));
+  const varExtension = useRef(
+    new VariableExtension({
+      first_name: messages.variables.firstName(),
+      full_name: messages.variables.fullName(),
+      last_name: messages.variables.lastName(),
+    })
+  );
 
   const blockExtensions = useMemo(() => {
     const extensions: BlockExtension[] = [];
     if (enableButton) {
-      extensions.push(btnExtension);
+      extensions.push(btnExtension.current);
     }
 
     if (enableImage) {
-      extensions.push(imgExtension);
+      extensions.push(imgExtension.current);
     }
 
     if (enableHeading) {
-      extensions.push(headingExtension);
+      extensions.push(headingExtension.current);
     }
 
     if (enableLists) {
-      extensions.push(olExtension);
-      extensions.push(ulExtension);
+      extensions.push(olExtension.current);
+      extensions.push(ulExtension.current);
     }
     return extensions;
-  }, []);
+  }, [enableButton, enableHeading, enableImage, enableLists]);
 
   const otherExtensions = useMemo(() => {
     const extensions: AnyExtension[] = [];
 
     if (enableBold) {
-      extensions.push(boldExtension);
+      extensions.push(boldExtension.current);
     }
 
     if (enableItalic) {
-      extensions.push(italicExtension);
+      extensions.push(italicExtension.current);
     }
 
     if (enableLink) {
-      extensions.push(linkExtension);
+      extensions.push(linkExtension.current);
     }
 
     if (enableVariable) {
-      extensions.push(varExtension);
+      extensions.push(varExtension.current);
     }
 
     return extensions;
-  }, []);
+  }, [enableBold, enableItalic, enableLink, enableVariable]);
 
   const { orgId } = useNumericRouteParams();
 
@@ -191,14 +193,15 @@ const ZUIEditor: FC<Props> = ({
       new HardBreakExtension(),
       new BlockMenuExtension({
         blockFactories: {
-          bulletList: (props) => ulExtension.toggleBulletList()(props),
-          heading: (props) => headingExtension.toggleHeading()(props),
-          orderedList: (props) => olExtension.toggleOrderedList()(props),
+          bulletList: (props) => ulExtension.current.toggleBulletList()(props),
+          heading: (props) => headingExtension.current.toggleHeading()(props),
+          orderedList: (props) =>
+            olExtension.current.toggleOrderedList()(props),
           zbutton: (props) =>
-            btnExtension.insertButton(messages.extensions.button.defaultText())(
-              props
-            ),
-          zimage: (props) => imgExtension.createAndPick()(props),
+            btnExtension.current.insertButton(
+              messages.extensions.button.defaultText()
+            )(props),
+          zimage: (props) => imgExtension.current.createAndPick()(props),
         },
       }),
       new MoveExtension(),
