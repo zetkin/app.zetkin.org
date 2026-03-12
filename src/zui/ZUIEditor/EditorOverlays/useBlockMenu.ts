@@ -3,7 +3,7 @@ import {
   useExtensionEvent,
   useMenuNavigation,
 } from '@remirror/react';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import BlockMenuExtension from '../extensions/BlockMenuExtension';
 
@@ -27,12 +27,16 @@ export default function useBlockMenu(
 
   const isOpen = blocks.length > 0 && query !== null && !ignore;
 
-  const filteredBlocks = blocks.filter(
-    (block) =>
-      !query ||
-      query == '' ||
-      block.id.toLowerCase().startsWith(query.toLowerCase()) ||
-      block.label.toLowerCase().startsWith(query.toLowerCase())
+  const filteredBlocks = useMemo(
+    () =>
+      blocks.filter(
+        (block) =>
+          !query ||
+          query === '' ||
+          block.id.toLowerCase().startsWith(query.toLowerCase()) ||
+          block.label.toLowerCase().startsWith(query.toLowerCase())
+      ),
+    [blocks, query]
   );
 
   const menu = useMenuNavigation({

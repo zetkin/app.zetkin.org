@@ -1,20 +1,18 @@
 import { Box, MenuItem, Paper } from '@mui/material';
 import { FC } from 'react';
-
-import useBlockMenu from './useBlockMenu';
+import { UseMenuNavigationReturn } from '@remirror/react-hooks';
 
 type Props = {
-  blocks: {
+  filteredBlocks: {
     id: string;
     label: string;
   }[];
+  menu: UseMenuNavigationReturn;
 };
 
-const BlockMenu: FC<Props> = ({ blocks }) => {
-  const { filteredBlocks, menu } = useBlockMenu(blocks);
-
+const BlockMenu: FC<Props> = ({ filteredBlocks, menu }) => {
   return (
-    <Box {...menu.getMenuProps()}>
+    <Box {...menu.getMenuProps()} tabIndex={0}>
       <Paper>
         {filteredBlocks.map((item, index) => {
           const props = menu.getItemProps({ index, item });
@@ -22,7 +20,7 @@ const BlockMenu: FC<Props> = ({ blocks }) => {
             <MenuItem
               key={item.id}
               component="a"
-              selected={!!props['aria-current']}
+              selected={menu.index === index}
               {...props}
             >
               {item.label}
