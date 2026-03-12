@@ -243,8 +243,8 @@ const CallHeader: FC<Props> = ({
             isAllocatingCall || submittingReport
               ? 'loading'
               : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
-              ? 'secondary'
-              : 'primary'
+                ? 'secondary'
+                : 'primary'
           }
         />
       </Box>
