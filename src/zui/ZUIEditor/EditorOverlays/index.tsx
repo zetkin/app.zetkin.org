@@ -271,8 +271,6 @@ const EditorOverlays: FC<Props> = ({
       }
     });
 
-    console.log(blockDividers);
-
     return blockDividers;
   }, [state.doc.children, view, layoutReady]);
 
