@@ -74,9 +74,9 @@ type LayerData = {
 
 const ModalBackground: FC<Props> = ({ height, seed = 1, width }) => {
   const [layers, setLayers] = useState<LayerData[]>([]);
-  const random = makeDeterministicRNG(seed);
 
   useEffect(() => {
+    const random = makeDeterministicRNG(seed);
     const newLayers = range(0, 4).map(() => {
       const patternIndex = Math.floor(random() * PATTERNS.length);
       const pattern = PATTERNS[patternIndex];
@@ -110,9 +110,9 @@ const ModalBackground: FC<Props> = ({ height, seed = 1, width }) => {
     });
 
     setLayers(newLayers);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [seed]);
 
+  const random = makeDeterministicRNG(seed);
   return (
     <Box
       sx={{
