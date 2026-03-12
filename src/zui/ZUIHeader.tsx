@@ -113,6 +113,7 @@ const Header: React.FC<HeaderProps> = ({
                   data-testid="page-title"
                   noWrap
                   sx={{
+                    lineHeight: '1.5',
                     marginBottom: '8px',
                     transition: 'margin 0.3s ease',
                   }}

@@ -64,10 +64,10 @@ const CallHeader: FC<Props> = ({
   const { quitCurrentCall } = useCallMutations(assignment.organization.id);
   const {
     allocateCall,
-    error: errorAllocatingCall,
+    queueError,
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
-  const { submitReport } = useSubmitReport(assignment.organization.id);
+  const submitReport = useSubmitReport(assignment.organization.id);
 
   return (
     <Box
@@ -187,8 +187,7 @@ const CallHeader: FC<Props> = ({
         />
         <ZUIButton
           disabled={
-            !!errorAllocatingCall ||
-            (lane.step == LaneStep.REPORT && !report.completed)
+            !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
           }
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
@@ -267,13 +266,8 @@ const CallHeader: FC<Props> = ({
                   };
                 });
 
-              const result = await submitReport(call.id, report, submissions);
+              await submitReport(call.id, report, submissions);
 
-              if (result.kind === 'success') {
-                dispatch(previousCallAdd(call));
-              } else {
-                setSubmittingReport(false);
-              }
               setSubmittingReport(false);
               dispatch(updateLaneStep(LaneStep.SUMMARY));
             } else {

@@ -69,6 +69,7 @@ const UnfinishedCallsList: FC<{
       searchString
         ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
         : unfinishedExceptCurrentCall,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [unfinishedExceptCurrentCall, searchString]
   );
 
@@ -77,7 +78,12 @@ const UnfinishedCallsList: FC<{
       {filteredUnfinishedCalls.map((unfinishedCall) => (
         <Fragment key={unfinishedCall.id}>
           <UnfinishedCallListItem
-            onAbandonCall={() => abandonUnfinishedCall(unfinishedCall.id)}
+            onAbandonCall={() =>
+              abandonUnfinishedCall(
+                unfinishedCall.assignment_id,
+                unfinishedCall.id
+              )
+            }
             onSwitchToCall={() => {
               switchToUnfinishedCall(
                 unfinishedCall.id,
@@ -127,6 +133,7 @@ const FinishedCallsList: FC<{
 
       return call2AllocationTime.getTime() - call1AllocationTime.getTime();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finishedCalls, searchString]);
 
   return (
@@ -256,8 +263,10 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
       modalRef.current.addEventListener('keydown', addListener);
 
       return () =>
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         modalRef.current?.removeEventListener('keydown', addListener);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalRef.current]);
 
   return (

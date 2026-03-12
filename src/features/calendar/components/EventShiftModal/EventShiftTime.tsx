@@ -137,6 +137,7 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
         ]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatedShift]);
 
   useEffect(() => {
@@ -153,6 +154,7 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
     } else {
       onInvalidEndTimeChange(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventStartTime, eventEndTime]);
 
   return (

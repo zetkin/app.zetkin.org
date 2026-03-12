@@ -18,6 +18,10 @@ export async function GET(request: NextRequest) {
     method: 'GET',
   });
 
+  if (serverResponse.status == 401) {
+    return NextResponse.json({ data: null }, { status: 401 });
+  }
+
   if (!serverResponse.ok) {
     throw await ApiClientError.fromResponse(serverResponse);
   }

@@ -58,6 +58,7 @@ const SurveySubmission = ({
       });
       setSubmittable(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveys.length]);
 
   const handleSubmit = (e: FormEvent) => {
@@ -171,6 +172,7 @@ const SurveySubmission = ({
                 options={[
                   TIME_FRAME.EVER,
                   TIME_FRAME.AFTER_DATE,
+                  TIME_FRAME.ON_DATE,
                   TIME_FRAME.BEFORE_DATE,
                   TIME_FRAME.BETWEEN,
                   TIME_FRAME.BEFORE_TODAY,

@@ -424,6 +424,7 @@ export default function mockEmail(
       title: '',
     },
     title: '',
+    uuid: '',
     ...overrides,
   };
 }

@@ -12,8 +12,9 @@ import InstructionsSection from './InstructionsSection';
 import AboutSection from './AboutSection';
 import ActivitiesSection from './ActivitiesSection';
 import ReportForm from './Report';
-import { useAppDispatch } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { reportUpdated } from '../store';
+import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
@@ -24,7 +25,7 @@ type Props = {
   assignment: ZetkinCallAssignment;
   call: UnfinishedCall | null;
   lane: LaneState;
-  onAbandonUnfinishedCall: (callId: number) => void;
+  onAbandonUnfinishedCall: (assignmentId: number, callId: number) => void;
   onOpenCallLog: () => void;
   onSwitchToUnfinishedCall: (callId: number, assignmentId: number) => void;
   report: Report;
@@ -44,8 +45,19 @@ const CallPanels: FC<Props> = ({
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
 
+  const queueError = useAppSelector((state) => state.call.queueError);
+
   return (
     <>
+      {queueError && (
+        <ZUIAlert
+          appear
+          description={messages.callAlert.description()}
+          severity="warning"
+          title={messages.callAlert.title()}
+        />
+      )}
+
       <Box
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
@@ -213,6 +225,7 @@ const CallPanels: FC<Props> = ({
         <SuspenseWithCircularLoader >
           <ActivitiesSection
             assignment={assignment}
+            step={lane.step}
             target={call?.target ?? null}
           />
         </SuspenseWithCircularLoader>
@@ -270,18 +283,24 @@ const CallPanels: FC<Props> = ({
           flexDirection: 'column',
           height: '100%',
           justifyContent: 'space-evenly',
-          left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 3)' : '100%',
-          padding: 2,
+          left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 4)' : '120%',
           position: 'relative',
           transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
-          width: 1 / 3,
+          visibility:
+            !call &&
+            (lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT)
+              ? 'hidden'
+              : undefined,
+          width: lane.step == LaneStep.SUMMARY ? 1 / 2 : 1 / 3,
         }}
       >
         <CallSummary
           assignmentId={assignment.id}
-          name={call?.target.first_name || ''}
-          onAbandonUnfinishedCall={(unfinishedCallId) =>
-            onAbandonUnfinishedCall(unfinishedCallId)
+          onAbandonUnfinishedCall={(
+            unfinshedCallAssignmentId,
+            unfinishedCallId
+          ) =>
+            onAbandonUnfinishedCall(unfinshedCallAssignmentId, unfinishedCallId)
           }
           onSwitchToUnfinishedCall={(unfinishedCallId, assignmentId) =>
             onSwitchToUnfinishedCall(unfinishedCallId, assignmentId)

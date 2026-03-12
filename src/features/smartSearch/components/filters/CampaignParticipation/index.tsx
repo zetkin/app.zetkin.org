@@ -2,7 +2,6 @@ import { FormEvent } from 'react';
 import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
-import StyledGroupedSelect from '../../inputs/StyledGroupedSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import { truncateOnMiddle } from 'utils/stringUtils';
@@ -21,6 +20,7 @@ import {
 } from 'features/smartSearch/components/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
 const localMessageIds = messageIds.filters.campaignParticipation;
 
@@ -250,10 +250,10 @@ const CampaignParticipation = ({
               </StyledSelect>
             ),
             campaignSelect: (
-              <StyledGroupedSelect
+              <StyledAutocomplete
                 items={[
                   {
-                    group: null,
+                    group: 'pinned',
                     id: DEFAULT_VALUE,
                     label: messages.campaignSelect.any(),
                   },
@@ -288,36 +288,21 @@ const CampaignParticipation = ({
               </StyledSelect>
             ),
             locationSelect: (
-              <StyledSelect
-                onChange={(e) => handleLocationSelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.locationSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.locationSelect.location}
-                        values={{
-                          location: truncateOnMiddle(
-                            locations.find((l) => l.id === value)?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.locationSelect.any(),
                   },
-                }}
+                  ...locationsSorted.map((loc) => ({
+                    id: loc.id,
+                    label: loc.title,
+                  })),
+                ]}
+                onChange={(e) => handleLocationSelectChange(e.target.value)}
                 value={filter.config.location || DEFAULT_VALUE}
-              >
-                <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id={localMessageIds.locationSelect.any} />
-                </MenuItem>
-                {locationsSorted.map((l) => (
-                  <MenuItem key={l.id} value={l.id}>
-                    {l.title}
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             statusSelect: (
               <StyledSelect

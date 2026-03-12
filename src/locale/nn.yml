@@ -3034,12 +3034,8 @@ feat:
     surveyDialog:
       add: Legg til
       cancel: Ikke legg til
-      description: Personen du skal koble til har ikke e-postadresse, men de har
-        oppgitt en i undersøkelsen, vil du legge adressen til personen i Zetkin?
       title: Legg til e-postadresse
     surveyDialogDifferentEmail:
-      description: Personen du skal koble har en annen e-post i systemet enn den som
-        er oppgitt i svaret. Vil erstatte den med adressen fra skjemaet?
       keep: Nei, behold gammel e-post
       title: Oppdater e-postadresse
       update: Ja, oppdater e-post
@@ -3605,7 +3601,6 @@ feat:
       bulk:
         createList: Lag liste av valgte
         delete: Slett valgte folk fra organisasjonen
-        handleSelection: Behandle utvalg
         removeFromList: Fjern valgte folk fra lista
       createColumn: Ny kolonne
     viewLayout:

@@ -55,6 +55,7 @@ const LocationVisitPage: FC<Props> = ({
     if (max > numHouseholds) {
       setNumHouseholds(max);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valuesByMetricId]);
 
   useEffect(() => {

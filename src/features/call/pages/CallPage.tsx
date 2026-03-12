@@ -15,7 +15,7 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 const CallPage: FC = () => {
-  const { clearStaleCallLanes, initialize, canInitialize } =
+  const { clearCallLanes, clearStaleCallLanes, initialize, canInitialize } =
     useCallInitialization();
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const CallPage: FC = () => {
       clearStaleCallLanes();
       return redirect('/my');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onServer = useServerSide();
@@ -68,7 +69,7 @@ const CallPage: FC = () => {
           </Box>
         }
       >
-        {canInitialize && <Call />}
+        {canInitialize && <Call clearCallLanes={() => clearCallLanes()} />}
       </ErrorBoundary>
     </main>
   );
