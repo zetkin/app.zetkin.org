@@ -19,9 +19,11 @@ const EmptyBlockPlaceholder: FC = () => {
             },
             left: positioner.x,
             opacity: 0.5,
+            pointerEvents: 'none',
             position: 'absolute',
             top: positioner.y,
             transition: 'opacity 0.5s',
+            userSelect: 'none',
           }}
         >
           <Msg
@@ -32,6 +34,7 @@ const EmptyBlockPlaceholder: FC = () => {
                   onClick={() => insertSlash()}
                   sx={{
                     cursor: 'pointer',
+                    pointerEvents: 'auto',
                   }}
                 >
                   <Msg id={messageIds.editor.placeholder.link} />
