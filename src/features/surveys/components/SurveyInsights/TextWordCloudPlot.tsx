@@ -24,10 +24,7 @@ import {
   COLORS,
   UseChartProExportPublicApi,
 } from './InsightsCard';
-import {
-  NLPAnalysisType,
-  useFrequencyData,
-} from 'features/surveys/hooks/useSurveyFrequencyData';
+import { useSurveyAnalysisTypeSelection } from 'features/surveys/hooks/useSurveyAnalysisTypeSelection';
 import { makeDeterministicRNG } from 'utils/randomUtils';
 
 interface WordData {
@@ -47,17 +44,14 @@ export const TextWordCloudPlot = ({
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: Zetkin2TextQuestionStats;
 }) => {
-  const [analysisType, setAnalysisType] =
-    useState<NLPAnalysisType>('word-frequency');
-
-  const srcData = useFrequencyData(questionStats, analysisType);
+  const typeSelection = useSurveyAnalysisTypeSelection(questionStats);
 
   const words: WordData[] = useMemo(() => {
-    return Object.entries(srcData).map(([word, frequency]) => ({
+    return Object.entries(typeSelection.freqData).map(([word, frequency]) => ({
       text: word,
       value: frequency,
     }));
-  }, [srcData]);
+  }, [typeSelection.freqData]);
 
   const containerRef = useRef<HTMLDivElement>();
   const svgRef = useRef<SVGSVGElement>();
@@ -131,9 +125,8 @@ export const TextWordCloudPlot = ({
     >
       <Box ref={containerRef} sx={{ height: '100%', width: '100%' }}>
         <ChartWrapper
-          analysisType={analysisType}
-          setAnalysisType={setAnalysisType}
           sx={{ height: '100%', width: '100%' }}
+          typeSelection={typeSelection}
         >
           <Box
             ref={resizeObserverRef}
@@ -159,7 +152,9 @@ export const TextWordCloudPlot = ({
                 cloudWords.map((w, i) => (
                   <Tooltip
                     key={w.text}
-                    title={w.text && `${w.text}: ${srcData[w.text]}`}
+                    title={
+                      w.text && `${w.text}: ${typeSelection.freqData[w.text]}`
+                    }
                   >
                     <text
                       fill={COLORS[i % COLORS.length]}

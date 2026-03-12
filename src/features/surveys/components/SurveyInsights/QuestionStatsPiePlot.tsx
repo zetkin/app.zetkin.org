@@ -19,10 +19,7 @@ import {
   COLORS,
   UseChartProExportPublicApi,
 } from './InsightsCard';
-import {
-  NLPAnalysisType,
-  useFrequencyData,
-} from 'features/surveys/hooks/useSurveyFrequencyData';
+import { useSurveyAnalysisTypeSelection } from 'features/surveys/hooks/useSurveyAnalysisTypeSelection';
 
 export const QuestionStatsPiePlot = ({
   displayMode,
@@ -53,10 +50,8 @@ export const QuestionStatsPiePlot = ({
     const numericValue = typeof value === 'number' ? value : value.value;
     return showPercent ? `${numericValue}%` : numericValue.toString();
   };
-  const [analysisType, setAnalysisType] =
-    useState<NLPAnalysisType>('word-frequency');
 
-  const freqData = useFrequencyData(questionStats, analysisType);
+  const typeSelection = useSurveyAnalysisTypeSelection(questionStats);
 
   const data = useMemo(() => {
     const items = isOptionsStats(questionStats)
@@ -80,7 +75,7 @@ export const QuestionStatsPiePlot = ({
             value,
           };
         })
-      : Object.entries(freqData).map(([word, count]) => ({
+      : Object.entries(typeSelection.freqData).map(([word, count]) => ({
           label: getEllipsedString(word, 60),
           value: count,
         }));
@@ -92,7 +87,13 @@ export const QuestionStatsPiePlot = ({
         label,
         value,
       }));
-  }, [questionStats, question, freqData, showPercent, percentBase]);
+  }, [
+    questionStats,
+    question.question,
+    typeSelection.freqData,
+    showPercent,
+    percentBase,
+  ]);
   const messages = useMessages(messageIds);
   const [hasSeenPieInaccuracyWarning, setHasSeenPieInaccuracyWarning] =
     useState(false);
@@ -122,10 +123,7 @@ export const QuestionStatsPiePlot = ({
             </Alert>
           </Collapse>
         )}
-      <ChartWrapper
-        analysisType={analysisType}
-        setAnalysisType={setAnalysisType}
-      >
+      <ChartWrapper typeSelection={typeSelection}>
         <PieChartPro
           apiRef={
             exportApi as unknown as MutableRefObject<UseChartProExportPublicApi>

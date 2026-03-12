@@ -30,7 +30,10 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import ZUICard from 'zui/ZUICard';
 import { ZetkinSurveyQuestionElement } from 'utils/types/zetkin';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import { NLPAnalysisType } from 'features/surveys/hooks/useSurveyFrequencyData';
+import {
+  NLPAnalysisType,
+  useSurveyAnalysisTypeSelection,
+} from 'features/surveys/hooks/useSurveyAnalysisTypeSelection';
 import { sanitizeFileName } from 'utils/stringUtils';
 
 export const TEXT_RESPONSE_CARD_HEIGHT = 150;
@@ -246,36 +249,39 @@ export const InsightsCard = ({
 
 export const ChartWrapper = (
   props: BoxOwnProps & {
-    analysisType: NLPAnalysisType;
-    setAnalysisType: (typ: NLPAnalysisType) => void;
+    typeSelection: ReturnType<typeof useSurveyAnalysisTypeSelection>;
   }
 ) => {
-  const { analysisType, setAnalysisType, children, ...other } = props;
+  const { typeSelection, children, ...other } = props;
   return (
     <Box
       sx={{
         position: 'relative',
       }}
     >
-      <Box
-        sx={{
-          left: 0,
-          position: 'absolute',
-          top: 0,
-          zIndex: 10,
-        }}
-      >
-        <Select
-          onChange={(e) => setAnalysisType(e.target.value as NLPAnalysisType)}
-          size={'small'}
-          value={analysisType}
-          variant={'standard'}
+      {typeSelection.hasFreqData && (
+        <Box
+          sx={{
+            left: 0,
+            position: 'absolute',
+            top: 0,
+            zIndex: 10,
+          }}
         >
-          <MenuItem value={'word-frequency'}>Words</MenuItem>
-          <MenuItem value={'verb-frequency'}>Verbs</MenuItem>
-          <MenuItem value={'entity-frequency'}>Entities</MenuItem>
-        </Select>
-      </Box>
+          <Select
+            onChange={(e) =>
+              typeSelection.setAnalysisType(e.target.value as NLPAnalysisType)
+            }
+            size={'small'}
+            value={typeSelection.analysisType}
+            variant={'standard'}
+          >
+            <MenuItem value={'word-frequency'}>Words</MenuItem>
+            <MenuItem value={'verb-frequency'}>Verbs</MenuItem>
+            <MenuItem value={'entity-frequency'}>Entities</MenuItem>
+          </Select>
+        </Box>
+      )}
       <Box className={'zetkin-chart-content'} {...other}>
         {children}
       </Box>
