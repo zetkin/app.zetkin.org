@@ -230,10 +230,6 @@ const ZUIEditor: FC<Props> = ({
         '.zimage-image': {
           maxWidth: '100%',
         },
-        'img.zimage-image[src=""], img.zimage-image:not([src])': {
-          width: '400px',
-          height: '200px',
-        },
         '.zvariable': {
           '&.ProseMirror-selectednode': {
             outlineColor: theme.palette.grey[600],
@@ -252,6 +248,10 @@ const ZUIEditor: FC<Props> = ({
         },
         ['[contenteditable="true"] > *']: {
           my: 2,
+        },
+        'img.zimage-image[src=""], img.zimage-image:not([src])': {
+          height: '200px',
+          width: '400px',
         },
       }}
     >
