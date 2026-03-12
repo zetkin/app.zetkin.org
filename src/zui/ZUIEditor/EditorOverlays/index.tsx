@@ -73,7 +73,7 @@ const EditorOverlays: FC<Props> = ({
   const view = useEditorView();
   const state = useEditorState();
   const positioner = usePositioner('cursor');
-  const { isOpen: showBlockMenu } = useBlockMenu(blocks);
+  const { isOpen: showBlockMenu, filteredBlocks, menu } = useBlockMenu(blocks);
 
   const [typing, setTyping] = useState(false);
   const [mousePosition, setMousePosition] = useState({
@@ -380,7 +380,9 @@ const EditorOverlays: FC<Props> = ({
             top: positioner.y,
           }}
         >
-          {showBlockMenu && <BlockMenu blocks={blocks} />}
+          {showBlockMenu && (
+            <BlockMenu filteredBlocks={filteredBlocks} menu={menu} />
+          )}
         </Box>
       </Box>
     </>
