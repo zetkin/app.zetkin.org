@@ -27,7 +27,7 @@ const LinkToolButton: FC = () => {
       }
     );
     setSelectedNodes(linkNodes);
-  }, [state.selection]);
+  }, [state.selection, state.doc]);
 
   const isLink = active.zlink();
   const isVariable = active.zvariable();

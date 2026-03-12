@@ -105,7 +105,9 @@ const EditorOverlays: FC<Props> = ({
     }
   });
 
-  const allBlockRects: Record<string, DOMRect> = {};
+  const [allBlockRects, setAllBlockRects] = useState<Record<string, DOMRect>>(
+    {}
+  );
   state.doc.descendants((node, pos, parent, index) => {
     const elem = view.nodeDOM(pos);
     if (elem instanceof HTMLElement) {
@@ -120,7 +122,7 @@ const EditorOverlays: FC<Props> = ({
         x: x,
         y: y,
       };
-      allBlockRects[index] = rect;
+      setAllBlockRects((rects) => ({ ...rects, [index]: rect }));
     }
   });
 
@@ -138,7 +140,7 @@ const EditorOverlays: FC<Props> = ({
         x: x,
         y: y,
       };
-      allBlockRects[index] = rect;
+      setAllBlockRects((rects) => ({ ...rects, [index]: rect }));
     }
   });
 
@@ -186,7 +188,7 @@ const EditorOverlays: FC<Props> = ({
         }
       }
     }
-  }, [view, state.selection]);
+  }, [view, state.selection, allBlockRects, onSelectBlock, state.doc]);
 
   useEffect(() => {
     const observer = new ResizeObserver(findSelectedNode);
@@ -219,11 +221,11 @@ const EditorOverlays: FC<Props> = ({
     return () => {
       view.root.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [view.root]);
+  }, [view.root, view.dom]);
 
   useEffect(() => {
     findSelectedNode();
-  }, [state.selection]);
+  }, [state.selection, findSelectedNode]);
 
   let pos = 0;
   const blockDividers: BlockDividerData[] = [

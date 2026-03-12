@@ -43,8 +43,9 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
 
   const debouncedUpdateEmail = useDebounce(
     async (email: Partial<ZetkinEmailPostBody>) => {
-      updateEmail({
+      await updateEmail({
         ...email,
+        campaign_id: email.campaign_id || undefined,
         locked: undefined,
       });
     },

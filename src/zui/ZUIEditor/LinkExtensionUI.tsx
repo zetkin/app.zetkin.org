@@ -39,7 +39,7 @@ const LinkExtensionUI: FC = () => {
     if (!showLinkMaker) {
       removeUnfinishedLinks();
     }
-  }, [showLinkMaker]);
+  }, [showLinkMaker, removeUnfinishedLinks]);
 
   useEffect(() => {
     const selectedNode = selectedNodes[0]?.node;
@@ -55,7 +55,7 @@ const LinkExtensionUI: FC = () => {
       const mark = selectedNode.marks.find((mark) => mark.type.name == 'zlink');
       setLinkHref(mark?.attrs.href || '');
     }
-  }, [selectedNodes[0]]);
+  }, [selectedNodes]);
 
   useEffect(() => {
     const linkNodes: NodeWithPosition[] = [];
@@ -75,7 +75,7 @@ const LinkExtensionUI: FC = () => {
     );
     setSelectedNodes(linkNodes);
     setSelectionHasOtherNodes(hasOtherNodes);
-  }, [state.selection]);
+  }, [state.selection, state.doc]);
 
   const formattedHref = formatUrl(linkHref);
 
