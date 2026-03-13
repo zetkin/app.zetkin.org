@@ -170,6 +170,7 @@ const ResponseStatsCard = ({
         document.body.style.overflow = docOverflow;
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       showSnackbar,
       containerRef,
@@ -189,6 +190,7 @@ const ResponseStatsCard = ({
         onSelect: () => exportChart('pdf'),
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [exportChart]
   );
 
@@ -495,6 +497,7 @@ const OptionsStatsCard = ({
         answerCount: questionStats.answerCount,
         totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [questionStats, messages.insights.optionsFields.subheader]
   );
 
@@ -610,6 +613,7 @@ const TextResponseWordCloud = ({
   const { publicAPI } = useChartProExport(exportOptions);
   useEffect(() => {
     exportApi.current = publicAPI as UseChartProExportPublicApi;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicAPI]);
 
   const [width, setWidth] = useState(600);
@@ -624,6 +628,7 @@ const TextResponseWordCloud = ({
   const getRotationDegree = useMemo(() => {
     const rng = makeDeterministicRNG(42);
     return () => (rng() > 0.5 ? 0 : 90);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words, width]);
 
   const fontScale = useMemo(() => {
@@ -906,6 +911,7 @@ const TextStatsCard = ({
         totalUniqueWordCount: questionStats.totalUniqueWordCount,
         totalWordCount: questionStats.totalWordCount,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [questionStats, messages.insights.textFields.subheader]
   );
 

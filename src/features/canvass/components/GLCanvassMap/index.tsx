@@ -105,6 +105,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         bounds: boundsForSelectedArea,
         fitBoundsOptions: { padding: BOUNDS_PADDING },
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [boundsForSelectedArea]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
@@ -168,6 +169,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         }) ?? [],
       type: 'FeatureCollection',
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations.data]);
 
   const selectedLocation = useMemo(() => {
@@ -176,6 +178,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
 
     return locations.data?.find((loc) => loc.id == selectedLocationId) || null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations]);
 
   const locationTitles = useMemo(() => {
@@ -276,12 +279,14 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     } catch {
       // Do nothing for now
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, selectedLocationId, locations]);
 
   useEffect(() => {
     if (created) {
       updateSelection();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [created, locations]);
 
   if (!locations.data) {

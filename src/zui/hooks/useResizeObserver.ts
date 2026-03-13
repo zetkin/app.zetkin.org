@@ -18,6 +18,7 @@ export default function useResizeObserver<
     }
 
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elemRef.current, onResize]);
 
   return elemRef;

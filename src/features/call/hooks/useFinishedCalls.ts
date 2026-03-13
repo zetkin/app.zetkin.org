@@ -33,10 +33,12 @@ export default function useFinishedCalls() {
 
   useEffect(() => {
     loadFinishedCalls();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
   useEffect(() => {
     setPageNumber(pageNumber + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finishedCalls.length]);
 
   return {
