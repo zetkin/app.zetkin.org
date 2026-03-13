@@ -4,7 +4,7 @@ import {
   Remirror,
   useRemirror,
 } from '@remirror/react';
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
   BoldExtension,
   BulletListExtension,
@@ -40,6 +40,7 @@ import IndentDedentExtension from './extensions/IndentDedentExtension';
 import { EmailContentBlock } from 'features/emails/types';
 import zetkinToRemirror from './utils/zetkinToRemirror';
 import remirrorToZetkin from './utils/remirrorToZetkin';
+import { EmptyParagraphInsert } from './EmptyParagraphInsert';
 
 type BlockExtension =
   | ButtonExtension
@@ -98,6 +99,7 @@ const ZUIEditor: FC<Props> = ({
   const editorContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [focused, setFocused] = useState(false);
+  const [, forceRender] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
     const editorContainer = editorContainerRef.current;
@@ -275,6 +277,12 @@ const ZUIEditor: FC<Props> = ({
             zetkinContent={content}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
+          {enableBlockMenu && (
+            <EmptyParagraphInsert
+              content={content}
+              forceRerender={forceRender}
+            />
+          )}
           {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
           {enableBlockMenu && enableButton && <ButtonExtensionUI />}
           {enableLink && <LinkExtensionUI />}
