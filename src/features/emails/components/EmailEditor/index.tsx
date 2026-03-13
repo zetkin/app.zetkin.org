@@ -6,7 +6,7 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
@@ -24,9 +24,15 @@ type EmailEditorProps = {
 
 const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
   const theme = useTheme();
-  const initialContent = email.content
-    ? JSON.parse(email.content)
-    : { blocks: [] };
+  const initialContent: { blocks: EmailContentBlock[] } = useMemo(
+    () =>
+      email.content
+        ? JSON.parse(email.content)
+        : {
+            blocks: [],
+          },
+    [email.content]
+  );
   const messages = useMessages(messageIds);
   const [content, setContent] = useState<EmailContentBlock[]>(
     initialContent.blocks
