@@ -515,11 +515,15 @@ const eventsSlice = createSlice({
     ) => {
       const [eventId, reminders] = action.payload;
       state.remindingByEventId[eventId] = false;
-      state.participantsByEventId[eventId].items.map((participant) => {
+
+      const participants = state.participantsByEventId[eventId].items;
+
+      participants.forEach((participant) => {
         if (participant.data) {
           const reminder = reminders.find(
             (rem) => rem.person.id == participant.id
           );
+
           if (reminder) {
             participant.data.reminder_sent = reminder.sent;
           }
