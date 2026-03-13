@@ -24,6 +24,12 @@ To view the report from the latest CI run for your branch (requires [GitHub CLI]
 npm run e2e:ci:report
 ```
 
+If your local branch name doesn't match the remote (e.g. when checking out from a fork), specify the branch explicitly:
+
+```
+npm run e2e:ci:report -- feat/my-branch
+```
+
 ## Unit tests
 
 Unit tests are run on functions and on components when we don't need to test component integrations. We use [Jest](https://jestjs.io/docs/getting-started) with [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/). To run unit tests:
