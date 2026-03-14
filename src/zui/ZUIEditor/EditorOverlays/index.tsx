@@ -20,6 +20,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 import { RemirrorBlockType } from '../types';
 import editorBlockProblems from '../utils/editorBlockProblems';
+import { remirrorToZetkinWithIndexRemap } from 'zui/ZUIEditor/utils/remirrorToZetkin';
 
 export type BlockDividerData = {
   pos: number;
@@ -139,13 +140,24 @@ const EditorOverlays: FC<Props> = ({
     setAllBlockRects(calculateAllBlockRects());
   }, [calculateAllBlockRects]);
 
+  const onSelectRemirrorBlock = useCallback(
+    (blockIndex: number) => {
+      const [, remap] = remirrorToZetkinWithIndexRemap(
+        state.doc.content.toJSON()
+      );
+      const zetkinBlockIndex = remap[blockIndex];
+      onSelectBlock(zetkinBlockIndex);
+    },
+    [onSelectBlock, state.doc.content]
+  );
+
   const findSelectedNode = useCallback(() => {
     const allBlockRects = calculateAllBlockRects();
 
     if (isNodeSelection(state.selection)) {
       const selection = state.selection;
       const index = selection.$anchor.index(0);
-      onSelectBlock(index);
+      onSelectRemirrorBlock(index);
       const posBefore = selection.$anchor.before(1);
       const posAfter = selection.$head.after(1);
       const elem = view.nodeDOM(posBefore);
@@ -171,7 +183,7 @@ const EditorOverlays: FC<Props> = ({
         const elem = view.nodeDOM(posBeforeTextContent);
         if (elem instanceof HTMLElement) {
           const index = resolved.index(0);
-          onSelectBlock(index);
+          onSelectRemirrorBlock(index);
           setCurrentBlock({
             attributes: node.attrs,
             node,
@@ -185,7 +197,13 @@ const EditorOverlays: FC<Props> = ({
         }
       }
     }
-  }, [calculateAllBlockRects, state.selection, state.doc, onSelectBlock, view]);
+  }, [
+    calculateAllBlockRects,
+    state.selection,
+    state.doc,
+    onSelectRemirrorBlock,
+    view,
+  ]);
 
   useEffect(() => {
     const observer = new ResizeObserver(findSelectedNode);
