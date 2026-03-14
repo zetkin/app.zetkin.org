@@ -263,36 +263,23 @@ const EditorOverlays: FC<Props> = ({
       return [];
     }
 
-    let pos = 0;
-    const blockDividers: BlockDividerData[] = [
-      {
-        pos: 0,
-        y: 8,
-      },
-    ];
-
     const containerRect = view.dom.getBoundingClientRect();
-    state.doc.children.forEach((blockNode) => {
+    const dividers: BlockDividerData[] = [{ pos: 0, y: 8 }];
+
+    state.doc.descendants((node, pos) => {
       const elem = view.nodeDOM(pos);
-
-      pos += blockNode.nodeSize;
-
-      if (elem instanceof HTMLElement) {
-        if (elem.nodeName == 'P' && elem.textContent?.trim().length == 0) {
-          return;
-        }
-
+      if (
+        elem instanceof HTMLElement &&
+        !(node.type.name === 'paragraph' && node.content.size === 0)
+      ) {
         const rect = elem.getBoundingClientRect();
-
-        blockDividers.push({
-          pos,
-          y: rect.bottom - containerRect.top,
-        });
+        dividers.push({ pos, y: rect.bottom - containerRect.top });
       }
+      return false;
     });
 
-    return blockDividers;
-  }, [state.doc.children, view, layoutReady]);
+    return dividers;
+  }, [state.doc, view, layoutReady]);
 
   const isEmptyParagraph =
     currentBlock?.type == 'paragraph' && currentBlock?.node.textContent == '';
