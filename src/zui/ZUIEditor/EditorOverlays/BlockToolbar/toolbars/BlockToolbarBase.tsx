@@ -35,7 +35,12 @@ const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   return (
-    <Paper elevation={1}>
+    <Paper
+      elevation={1}
+      onMouseDown={(e) => {
+        e.preventDefault();
+      }}
+    >
       <Box alignItems="center" display="flex" justifyContent="space-between">
         <Box alignItems="center" display="flex" paddingRight={2}>
           <Box display="flex" flexDirection="column">
