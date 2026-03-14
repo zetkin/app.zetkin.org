@@ -56,6 +56,11 @@ const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
             anchorEl={anchorEl}
             onClose={() => setAnchorEl(null)}
             open={!!anchorEl}
+            slotProps={{
+              root: {
+                disablePortal: true,
+              },
+            }}
           >
             <MenuItem key="delete" onClick={() => deleteRange(range)}>
               <Msg id={messageIds.editor.toolbar.delete} />

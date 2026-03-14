@@ -32,6 +32,11 @@ const VariableToolButton: FC = () => {
         anchorEl={anchorEl}
         onClose={() => setAnchorEl(null)}
         open={!!anchorEl}
+        slotProps={{
+          root: {
+            disablePortal: true,
+          },
+        }}
         sx={{ zIndex: 99999 }}
       >
         <MenuItem onClick={() => handleSelect('first_name')}>
