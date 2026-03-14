@@ -128,6 +128,8 @@ const EditorOverlays: FC<Props> = ({
           y: y,
         };
       }
+
+      return false;
     });
 
     return rects;
