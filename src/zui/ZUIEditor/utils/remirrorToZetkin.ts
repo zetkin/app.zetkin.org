@@ -7,13 +7,22 @@ import { RemirrorBlockType } from '../types';
 export default function remirrorToZetkin(
   remirrorBlocks: RemirrorJSON[]
 ): EmailContentBlock[] {
-  const zetkinBlocks: EmailContentBlock[] = [];
+  const [blocks] = remirrorToZetkinWithIndexRemap(remirrorBlocks);
+  return blocks;
+}
 
-  remirrorBlocks.forEach((remirrorBlock) => {
+export function remirrorToZetkinWithIndexRemap(
+  remirrorBlocks: RemirrorJSON[]
+): [EmailContentBlock[], Record<number, number>] {
+  const zetkinBlocks: EmailContentBlock[] = [];
+  const indexRemap: Record<number, number> = {};
+
+  remirrorBlocks.forEach((remirrorBlock, index) => {
     if (remirrorBlock.type == RemirrorBlockType.IMAGE) {
       const attributes = remirrorBlock.attrs;
 
       if (attributes) {
+        indexRemap[index] = zetkinBlocks.length;
         zetkinBlocks.push({
           data: {
             alt: attributes.alt as string,
@@ -39,6 +48,7 @@ export default function remirrorToZetkin(
         const href = attributes.href;
 
         if (buttonText) {
+          indexRemap[index] = zetkinBlocks.length;
           zetkinBlocks.push({
             data: {
               href: href ? href.toString() : '',
@@ -57,6 +67,7 @@ export default function remirrorToZetkin(
 
       if (hasData) {
         const inlineNodes = remirrorToInlineNodes(blockContent);
+        indexRemap[index] = zetkinBlocks.length;
         zetkinBlocks.push({
           data: {
             content: inlineNodes,
@@ -70,6 +81,7 @@ export default function remirrorToZetkin(
 
       if (blockContent && blockContent.length > 0) {
         const inlineNodes = remirrorToInlineNodes(blockContent);
+        indexRemap[index] = zetkinBlocks.length;
         zetkinBlocks.push({
           data: {
             content: inlineNodes,
@@ -80,5 +92,5 @@ export default function remirrorToZetkin(
     }
   });
 
-  return zetkinBlocks;
+  return [zetkinBlocks, indexRemap] as const;
 }
