@@ -33,6 +33,7 @@ const BlockInsert: FC<BlockInsertProps> = ({ blockDividers, mouseY }) => {
               top: Math.round(y + offset),
               transition: 'opacity 0.5s',
               width: '100%',
+              zIndex: 1,
             }}
           >
             <Box
