@@ -11,14 +11,20 @@ type BlockInsertProps = {
   mouseY: number;
 };
 
+const size = 40;
+const topOffset = 16;
+const visibilityPadding = 8;
+
 const BlockInsert: FC<BlockInsertProps> = ({ blockDividers, mouseY }) => {
   const { insertEmptyParagraph, focus } = useCommands();
 
   return (
     <Box position="relative">
       {blockDividers.map(({ pos, y }, index) => {
-        const visible = Math.abs(mouseY - y) < 20;
         const offset = 8;
+        const visible =
+          mouseY <= y + offset + size - topOffset + visibilityPadding &&
+          mouseY >= y + offset - topOffset - visibilityPadding;
 
         return (
           <Box
@@ -38,9 +44,11 @@ const BlockInsert: FC<BlockInsertProps> = ({ blockDividers, mouseY }) => {
           >
             <Box
               sx={{
+                height: `${size}px`,
                 pointerEvents: visible ? 'auto' : 'none',
                 position: 'relative',
-                top: -16,
+                top: -topOffset,
+                width: `${size}px`,
               }}
             >
               <Paper>
