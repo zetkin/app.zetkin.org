@@ -1,5 +1,5 @@
 import { Crop75, Image as ImageIcon, Notes, Title } from '@mui/icons-material';
-import { FC } from 'react';
+import { FC, MouseEventHandler } from 'react';
 
 import {
   BlockKind,
@@ -16,9 +16,14 @@ import editorMessageIds from 'zui/l10n/messageIds';
 interface BlockListItemProps {
   block: EmailContentBlock;
   selected: boolean;
+  onSelect?: MouseEventHandler<HTMLDivElement>;
 }
 
-const BlockListItem: FC<BlockListItemProps> = ({ block, selected }) => {
+const BlockListItem: FC<BlockListItemProps> = ({
+  block,
+  selected,
+  onSelect,
+}) => {
   const emailMessages = useMessages(emailMessageIds);
   const editorMessages = useMessages(editorMessageIds.editor);
 
@@ -43,6 +48,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ block, selected }) => {
       <BlockListItemBase
         hasErrors={hasErrors.length > 0}
         icon={Notes}
+        onSelect={onSelect}
         selected={selected}
         title={title}
       />
@@ -53,6 +59,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ block, selected }) => {
       <BlockListItemBase
         hasErrors={false}
         icon={Title}
+        onSelect={onSelect}
         selected={selected}
         title={title}
       />
@@ -66,6 +73,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ block, selected }) => {
       <BlockListItemBase
         hasErrors={hasErrors.length > 0}
         icon={Crop75}
+        onSelect={onSelect}
         selected={selected}
         title={block.data.text}
       />
@@ -76,6 +84,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ block, selected }) => {
       <BlockListItemBase
         hasErrors={false}
         icon={ImageIcon}
+        onSelect={onSelect}
         selected={selected}
         title={block.data.alt}
       />

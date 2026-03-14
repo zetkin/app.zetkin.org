@@ -6,14 +6,14 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useRef, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 import messageIds from 'features/emails/l10n/messageIds';
 import { EmailContentBlock } from 'features/emails/types';
 import { ZetkinEmail, ZetkinEmailPostBody } from 'utils/types/zetkin';
-import ZUIEditor from 'zui/ZUIEditor';
+import ZUIEditor, { ZUIEditorApi } from 'zui/ZUIEditor';
 import EmailSettings from './EmailSettings';
 
 type EmailEditorProps = {
@@ -42,6 +42,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
   const configs = useEmailConfigs(email.organization.id).data || [
     email?.config,
   ];
+  const editorApiRef = useRef<ZUIEditorApi>(null);
 
   return (
     <Box display="flex" height="100%" width="100%">
@@ -94,6 +95,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
         <ZUIEditor
           content={content}
           editable={true}
+          editorApiRef={editorApiRef}
           enableBold
           enableButton
           enableHeading
@@ -126,6 +128,9 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
           blocks={content}
           readOnly={readOnly}
           selectedBlockIndex={selectedBlockIndex}
+          setSelectedBlockIndex={(index) =>
+            editorApiRef.current?.setSelectedBlockIndex(index)
+          }
         />
       </Box>
     </Box>

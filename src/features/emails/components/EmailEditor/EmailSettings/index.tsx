@@ -12,12 +12,14 @@ interface EmailSettingsProps {
   blocks: EmailContentBlock[];
   readOnly: boolean;
   selectedBlockIndex: number;
+  setSelectedBlockIndex: (index: number) => void;
 }
 
 const EmailSettings: FC<EmailSettingsProps> = ({
   blocks,
   readOnly,
   selectedBlockIndex,
+  setSelectedBlockIndex,
 }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<'outline' | 'preview'>('outline');
@@ -63,6 +65,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
               <BlockListItem
                 key={`${block.kind}-${index}`}
                 block={block}
+                onSelect={() => setSelectedBlockIndex(index)}
                 selected={!readOnly && index == selectedBlockIndex}
               />
             ))}

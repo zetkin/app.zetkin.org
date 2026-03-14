@@ -4,7 +4,15 @@ import {
   Remirror,
   useRemirror,
 } from '@remirror/react';
-import { FC, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import {
+  FC,
+  MutableRefObject,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {
   BoldExtension,
   BulletListExtension,
@@ -41,6 +49,7 @@ import { EmailContentBlock } from 'features/emails/types';
 import zetkinToRemirror from './utils/zetkinToRemirror';
 import remirrorToZetkin from './utils/remirrorToZetkin';
 import { EmptyParagraphInsert } from './EmptyParagraphInsert';
+import { EditorApi, ZUIEditorApi } from 'zui/ZUIEditor/EditorApi';
 
 type BlockExtension =
   | ButtonExtension
@@ -65,9 +74,12 @@ export type BlockData = {
   type: BlockType;
 };
 
+export type { ZUIEditorApi } from './EditorApi';
+
 type Props = {
   content: EmailContentBlock[];
   editable: boolean;
+  editorApiRef?: MutableRefObject<ZUIEditorApi | null>;
   enableBold?: boolean;
   enableButton?: boolean;
   enableHeading?: boolean;
@@ -83,6 +95,7 @@ type Props = {
 const ZUIEditor: FC<Props> = ({
   content,
   editable,
+  editorApiRef,
   enableBold,
   enableButton,
   enableHeading,
@@ -285,6 +298,7 @@ const ZUIEditor: FC<Props> = ({
           )}
           {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
           {enableBlockMenu && enableButton && <ButtonExtensionUI />}
+          {editorApiRef && <EditorApi editorApiRef={editorApiRef} />}
           {enableLink && <LinkExtensionUI />}
           <EditorComponent />
           <OnChangeJSON
