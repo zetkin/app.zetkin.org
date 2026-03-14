@@ -31,6 +31,13 @@ export type Zetkin2QuestionStats =
 
 export type Zetkin2TextAnswerListPerQuestion = Record<string, number[]>;
 
+export type Zetkin2QuestionResponse = {
+  id: number;
+  question_id: number;
+  response: string | null;
+  submission_id: number;
+};
+
 export type Zetkin2SurveyInsights = {
   id: number;
   questions: Zetkin2QuestionStats[];

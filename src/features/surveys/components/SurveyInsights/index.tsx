@@ -82,7 +82,7 @@ const SurveyInsights: FC<ResponseStatsChartCardProps> = ({
                 key={index}
                 question={question}
                 questionStats={questionStats}
-                responseStats={insights.response_stats}
+                surveyId={surveyId}
               />
             );
           })}

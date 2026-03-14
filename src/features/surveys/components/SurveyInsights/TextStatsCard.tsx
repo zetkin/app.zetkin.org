@@ -4,10 +4,7 @@ import { Box } from '@mui/material';
 import { ZetkinSurveyQuestionElement } from 'utils/types/zetkin';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
-import {
-  Zetkin2TextAnswerListPerQuestion,
-  Zetkin2TextQuestionStats,
-} from 'features/surveys/types';
+import { Zetkin2TextQuestionStats } from 'features/surveys/types';
 import {
   CHART_HEIGHT,
   InsightsCard,
@@ -20,11 +17,11 @@ import { TextResponseList } from 'features/surveys/components/SurveyInsights/Tex
 export const TextStatsCard = ({
   question,
   questionStats,
-  responseStats,
+  surveyId,
 }: {
   question: ZetkinSurveyQuestionElement;
   questionStats: Zetkin2TextQuestionStats;
-  responseStats: Zetkin2TextAnswerListPerQuestion;
+  surveyId: number;
 }) => {
   const [tab, setTab] = useState('word-cloud');
   const messages = useMessages(messageIds);
@@ -81,10 +78,7 @@ export const TextStatsCard = ({
           />
         )}
         {tab === 'responses' && (
-          <TextResponseList
-            questionStats={questionStats}
-            responseStats={responseStats}
-          />
+          <TextResponseList questionStats={questionStats} surveyId={surveyId} />
         )}
       </Box>
     </InsightsCard>

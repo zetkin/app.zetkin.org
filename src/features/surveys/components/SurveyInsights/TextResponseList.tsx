@@ -1,4 +1,4 @@
-import React, { CSSProperties, useMemo } from 'react';
+import React, { CSSProperties, FC, useEffect, useMemo } from 'react';
 import {
   Box,
   Card,
@@ -11,117 +11,105 @@ import {
 } from '@mui/material';
 import { List } from 'react-window';
 
-import ZUIFuture from 'zui/ZUIFuture';
-import { ZetkinSurveySubmission } from 'utils/types/zetkin';
-import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import { useNumericRouteParams } from 'core/hooks';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import {
-  isTextResponse,
-  Zetkin2TextAnswerListPerQuestion,
+  Zetkin2QuestionResponse,
   Zetkin2TextQuestionStats,
 } from 'features/surveys/types';
 import { TEXT_RESPONSE_CARD_HEIGHT } from './InsightsCard';
+import usePaginatedList, { PaginatedList } from 'core/hooks/usePaginatedList';
 
 const TextResponseCard = ({
-  questionId,
-  submissionId,
+  pageIndex,
+  response,
+  responses,
 }: {
-  questionId: number;
-  submissionId: number;
+  pageIndex: number;
+  response: Zetkin2QuestionResponse | null;
+  responses: PaginatedList<Zetkin2QuestionResponse> & { status: 'loaded' };
 }) => {
   const { orgId } = useNumericRouteParams();
-  const extendedSubmissionFuture = useSurveySubmission(orgId, submissionId);
   const { openPane } = usePanes();
 
+  const hasLoaded = !!response;
+
+  useEffect(() => {
+    if (hasLoaded) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    responses.loadPage(pageIndex, controller.signal);
+
+    return () => controller.abort();
+  }, [hasLoaded, responses.loadPage, pageIndex]);
+
+  if (!response) {
+    return <Skeleton height={'100%'} variant={'rounded'} width={'100%'} />;
+  }
+
   return (
-    <ZUIFuture
-      future={extendedSubmissionFuture}
-      skeleton={<Skeleton height={'100%'} variant={'rounded'} width={'100%'} />}
+    <Link
+      onClick={() => {
+        openPane({
+          render() {
+            return (
+              <SurveySubmissionPane id={response.submission_id} orgId={orgId} />
+            );
+          },
+          width: 400,
+        });
+      }}
+      style={{
+        cursor: 'pointer',
+        display: 'flex',
+        height: '100%',
+        textDecoration: 'none',
+        width: '100%',
+      }}
     >
-      {(extendedSubmission: ZetkinSurveySubmission) => {
-        if (!extendedSubmission.responses) {
-          return null;
-        }
-
-        const submission = extendedSubmission.responses.find(
-          (response) => response.question_id === questionId
-        );
-
-        if (!submission || !isTextResponse(submission)) {
-          return null;
-        }
-
-        return (
-          <Link
-            onClick={() => {
-              openPane({
-                render() {
-                  return (
-                    <SurveySubmissionPane
-                      id={extendedSubmission.id}
-                      orgId={orgId}
-                    />
-                  );
-                },
-                width: 400,
-              });
-            }}
-            style={{
-              cursor: 'pointer',
-              display: 'flex',
-              height: '100%',
-              textDecoration: 'none',
-              width: '100%',
+      <Card
+        sx={{
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <CardContent>
+          <Typography
+            sx={{
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: '4',
+              display: '-webkit-box',
+              overflow: 'hidden',
+              wordBreak: 'break-word',
             }}
           >
-            <Card
-              sx={{
-                display: 'flex',
-                height: '100%',
-                width: '100%',
-              }}
-            >
-              <CardContent>
-                <Typography
-                  sx={{
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: '4',
-                    display: '-webkit-box',
-                    overflow: 'hidden',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {submission.response}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Link>
-        );
-      }}
-    </ZUIFuture>
+            {response.response}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 
 type TextResponseListRowProps = {
   columnCount: number;
-  questionId: number;
-  rows: number[][];
+  responses: PaginatedList<Zetkin2QuestionResponse> & { status: 'loaded' };
 };
 
 const TextResponseListRow = ({
   columnCount,
   index: rowIndex,
-  questionId,
   style,
-  rows,
+  responses,
 }: TextResponseListRowProps & {
   index: number;
   style: CSSProperties;
 }) => {
-  const row = rows[rowIndex];
-
   return (
     <Box
       style={style}
@@ -132,7 +120,13 @@ const TextResponseListRow = ({
         width: '100%',
       }}
     >
-      {row.map((submissionId, colIndex) => {
+      {new Array(columnCount).fill(0).map((_, colIndex) => {
+        const index = rowIndex * columnCount + colIndex;
+        const pageIndex = Math.floor(index / responses.pageSize);
+        const indexOnPage = index % responses.pageSize;
+        const page = responses.pages[pageIndex];
+        const response = page ? page[indexOnPage] : null;
+
         return (
           <Box
             key={colIndex}
@@ -144,8 +138,9 @@ const TextResponseListRow = ({
             }}
           >
             <TextResponseCard
-              questionId={questionId}
-              submissionId={submissionId}
+              pageIndex={pageIndex}
+              response={response}
+              responses={responses}
             />
           </Box>
         );
@@ -154,51 +149,89 @@ const TextResponseListRow = ({
   );
 };
 
-function chunk<T>(xs: T[], size: number): T[][] {
-  const res: T[][] = [];
-  for (let i = 0; i < xs.length; i += size) {
-    res.push(xs.slice(i, i + size));
-  }
-  return res;
-}
+const LoadedTextResponseList: FC<{
+  columnCount: number;
+  questionStats: Zetkin2TextQuestionStats;
+  responses: PaginatedList<Zetkin2QuestionResponse> & { status: 'loaded' };
+}> = ({ columnCount, questionStats, responses }) => {
+  const rowProps = useMemo(
+    () => ({
+      columnCount,
+      questionId: questionStats.question_id,
+      responses,
+    }),
+    [columnCount, questionStats.question_id, responses]
+  );
+
+  return (
+    <List<TextResponseListRowProps>
+      rowComponent={TextResponseListRow}
+      rowCount={Math.ceil(responses.totalCount / columnCount)}
+      rowHeight={TEXT_RESPONSE_CARD_HEIGHT}
+      rowProps={rowProps}
+    />
+  );
+};
 
 export const TextResponseList = ({
   questionStats,
-  responseStats,
+  surveyId,
 }: {
   questionStats: Zetkin2TextQuestionStats;
-  responseStats: Zetkin2TextAnswerListPerQuestion;
+  surveyId: number;
 }) => {
+  const { orgId } = useNumericRouteParams();
+
   const theme = useTheme();
   const singleColumnLayout = useMediaQuery(theme.breakpoints.down('lg'));
 
   const columnCount = singleColumnLayout ? 1 : 2;
 
-  const rows = useMemo(
-    () =>
-      chunk(responseStats[questionStats.question_id.toString()], columnCount),
-    [responseStats, columnCount, questionStats.question_id]
+  const responses = usePaginatedList<Zetkin2QuestionResponse>(
+    `/api2/orgs/${orgId}/surveys/${surveyId}/questions/${questionStats.question_id}/responses`
   );
 
-  const rowProps = useMemo(
-    () => ({
-      columnCount,
-      questionId: questionStats.question_id,
-      rows,
-    }),
-    [columnCount, questionStats.question_id, rows]
-  );
+  if (responses.status === 'error') {
+    return <Typography>{(responses.error || '').toString()}</Typography>;
+  }
 
-  if (!rows) {
-    return null;
+  if (responses.status === 'loading') {
+    return (
+      <Box>
+        {new Array(5).fill(0).map((_, rowIndex) => (
+          <Box
+            key={rowIndex}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              height: TEXT_RESPONSE_CARD_HEIGHT,
+              width: '100%',
+            }}
+          >
+            {new Array(columnCount).fill(0).map((_, colIndex) => (
+              <Box
+                key={colIndex}
+                sx={{
+                  display: 'flex',
+                  height: TEXT_RESPONSE_CARD_HEIGHT,
+                  padding: '10px',
+                  width: `${100.0 / columnCount}%`,
+                }}
+              >
+                <Skeleton height={'100%'} variant="rounded" width={'100%'} />
+              </Box>
+            ))}
+          </Box>
+        ))}
+      </Box>
+    );
   }
 
   return (
-    <List<TextResponseListRowProps>
-      rowComponent={TextResponseListRow}
-      rowCount={rows.length}
-      rowHeight={TEXT_RESPONSE_CARD_HEIGHT}
-      rowProps={rowProps}
+    <LoadedTextResponseList
+      columnCount={columnCount}
+      questionStats={questionStats}
+      responses={responses}
     />
   );
 };
