@@ -4,15 +4,7 @@ import {
   Remirror,
   useRemirror,
 } from '@remirror/react';
-import {
-  FC,
-  MutableRefObject,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import { FC, MutableRefObject, useMemo, useReducer, useRef } from 'react';
 import {
   BoldExtension,
   BulletListExtension,
@@ -50,6 +42,7 @@ import zetkinToRemirror from './utils/zetkinToRemirror';
 import remirrorToZetkin from './utils/remirrorToZetkin';
 import { EmptyParagraphInsert } from './EmptyParagraphInsert';
 import { EditorApi, ZUIEditorApi } from 'zui/ZUIEditor/EditorApi';
+import useIsFocused from 'zui/hooks/useIsFocused';
 
 type BlockExtension =
   | ButtonExtension
@@ -111,29 +104,9 @@ const ZUIEditor: FC<Props> = ({
   const theme = useTheme();
   const editorContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const [focused, setFocused] = useState(false);
   const [, forceRender] = useReducer((x) => x + 1, 0);
 
-  useEffect(() => {
-    const editorContainer = editorContainerRef.current;
-
-    if (editorContainer) {
-      const detectClickOnEditor = (ev: Event) => {
-        const clickedInside = ev.composedPath().includes(editorContainer);
-        if (clickedInside) {
-          setFocused(true);
-        } else {
-          setFocused(false);
-        }
-      };
-
-      document.addEventListener('click', detectClickOnEditor);
-
-      return () => {
-        document.removeEventListener('click', detectClickOnEditor);
-      };
-    }
-  }, []);
+  const focused = useIsFocused(editorContainerRef);
 
   const boldExtension = useRef(new BoldExtension({}));
   const btnExtension = useRef(new ButtonExtension());
