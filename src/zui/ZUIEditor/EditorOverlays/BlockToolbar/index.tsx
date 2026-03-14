@@ -45,7 +45,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
           position: 'absolute',
           top: curBlockY - 60,
           transition: 'opacity 0.5s',
-          zIndex: 1,
+          zIndex: 2,
         }}
       >
         {blockType == 'paragraph' && (
