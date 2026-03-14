@@ -122,6 +122,11 @@ const TextResponseListRow = ({
     >
       {new Array(columnCount).fill(0).map((_, colIndex) => {
         const index = rowIndex * columnCount + colIndex;
+
+        if (index >= responses.totalCount) {
+          return null;
+        }
+
         const pageIndex = Math.floor(index / responses.pageSize);
         const indexOnPage = index % responses.pageSize;
         const page = responses.pages[pageIndex];
