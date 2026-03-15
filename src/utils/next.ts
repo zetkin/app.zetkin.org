@@ -280,11 +280,16 @@ export const scaffold =
     // Each page declares localeScope in its scaffold options (e.g. ['feat.campaigns']).
     // We always include core, glob, and zui as shared base.
     const allMessages = loadCompiledMessages(lang);
-    const scopes = (options?.localeScope ?? []).concat(['core', 'glob', 'zui']);
-    const messages = filterByScope(
-      allMessages as Record<string, unknown>,
-      scopes
-    );
+    const localeScopes = options?.localeScope ?? [];
+    const hasScopes = localeScopes.length > 0;
+    const messages = hasScopes
+      ? filterByScope(allMessages as Record<string, unknown>, [
+          ...localeScopes,
+          'core',
+          'glob',
+          'zui',
+        ])
+      : allMessages;
 
     if (hasProps(result)) {
       result.props = {
