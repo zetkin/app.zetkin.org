@@ -42,6 +42,39 @@ function loadCompiledMessages(locale: string): Record<string, unknown> {
   return compiledMessageCache[locale];
 }
 
+/**
+ * Filter a nested messages object to only include keys matching the given
+ * scope prefixes. E.g. scopes ['feat.campaigns', 'zui'] returns only
+ * { feat: { campaigns: {...} }, zui: {...} }.
+ */
+function filterByScope(
+  messages: Record<string, unknown>,
+  scopes: string[]
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const scope of scopes) {
+    const parts = scope.split('.');
+    let src: Record<string, unknown> = messages;
+    let dest: Record<string, unknown> = result;
+
+    for (let i = 0; i < parts.length; i++) {
+      if (!src || typeof src !== 'object' || !(parts[i] in src)) {
+        break;
+      }
+      if (i === parts.length - 1) {
+        dest[parts[i]] = src[parts[i]];
+      } else {
+        if (!dest[parts[i]] || typeof dest[parts[i]] !== 'object') {
+          dest[parts[i]] = {};
+        }
+        dest = dest[parts[i]] as Record<string, unknown>;
+        src = src[parts[i]] as Record<string, unknown>;
+      }
+    }
+  }
+  return result;
+}
+
 type RegularProps = {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   [key: string]: any;
@@ -243,8 +276,15 @@ export const scaffold =
       ? detectedLang
       : DEFAULT_LOCALE;
 
-    // Load messages from compiled JSON (cached in memory after first read)
-    const messages = loadCompiledMessages(lang);
+    // Load messages from compiled JSON, scoped to only what this page needs.
+    // Each page declares localeScope in its scaffold options (e.g. ['feat.campaigns']).
+    // We always include core, glob, and zui as shared base.
+    const allMessages = loadCompiledMessages(lang);
+    const scopes = (options?.localeScope ?? []).concat(['core', 'glob', 'zui']);
+    const messages = filterByScope(
+      allMessages as Record<string, unknown>,
+      scopes
+    );
 
     if (hasProps(result)) {
       result.props = {
