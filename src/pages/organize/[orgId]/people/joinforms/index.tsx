@@ -8,15 +8,20 @@ import { scaffold } from 'utils/next';
 import useJoinForms from 'features/joinForms/hooks/useJoinForms';
 import { usePanes } from 'utils/panes';
 
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId } = ctx.params!;
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async (ctx) => {
+    const { orgId } = ctx.params!;
 
-  return {
-    props: {
-      orgId,
-    },
-  };
-});
+    return {
+      props: {
+        orgId,
+      },
+    };
+  },
+  {
+    localeScope: ['feat.joinForms', 'feat.breadcrumbs'],
+  }
+);
 
 type PageProps = {
   orgId: string;

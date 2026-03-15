@@ -7,11 +7,16 @@ import PersonDeleteCard from 'features/profile/components/PersonDeleteCard';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import usePerson from 'features/profile/hooks/usePerson';
-import { getPersonScaffoldProps, scaffoldOptions } from '../index';
+import { getPersonScaffoldProps } from '../index';
+
+const manageScaffoldOptions = {
+  authLevelRequired: 2,
+  localeScope: ['feat.profile', 'feat.breadcrumbs'],
+};
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   getPersonScaffoldProps,
-  scaffoldOptions
+  manageScaffoldOptions
 );
 
 interface PersonManagePageProps {

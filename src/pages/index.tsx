@@ -16,7 +16,7 @@ import { ZetkinUser } from '../utils/types/zetkin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 const scaffoldOptions = {
-  localeScope: ['pages.my'],
+  localeScope: [],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(

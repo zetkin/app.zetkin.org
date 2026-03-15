@@ -15,14 +15,7 @@ import { ZetkinCampaign } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: [
-    'layout.organize',
-    'misc.breadcrumbs',
-    'misc.calendar',
-    'misc.formDialog',
-    'misc.tasks',
-    'pages.organizeCampaigns',
-  ],
+  localeScope: ['feat.campaigns', 'feat.calendar', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

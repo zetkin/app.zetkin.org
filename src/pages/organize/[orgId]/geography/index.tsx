@@ -15,7 +15,7 @@ import GLGeographyMap from 'features/geography/components/GLGeographyMap';
 const scaffoldOptions = {
   authLevelRequired: 2,
   featuresRequired: [AREAS],
-  localeScope: [],
+  localeScope: ['feat.areas', 'feat.geography', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {

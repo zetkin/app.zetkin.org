@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
+    localeScope: ['feat.surveys', 'feat.campaigns', 'feat.breadcrumbs'],
   }
 );
 

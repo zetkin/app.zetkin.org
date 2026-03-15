@@ -44,12 +44,7 @@ import { IFuture } from 'core/caching/futures';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: [
-    'layout.organize',
-    'misc.breadcrumbs',
-    'pages.organizeAllCampaigns',
-    'misc.formDialog',
-  ],
+  localeScope: ['feat.campaigns', 'feat.surveys', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

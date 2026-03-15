@@ -24,12 +24,17 @@ import { usePanes } from 'utils/panes';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId } = ctx.params!;
-  return {
-    props: { orgId },
-  };
-});
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async (ctx) => {
+    const { orgId } = ctx.params!;
+    return {
+      props: { orgId },
+    };
+  },
+  {
+    localeScope: ['feat.import', 'feat.breadcrumbs'],
+  }
+);
 
 type Props = {
   orgId: string;
