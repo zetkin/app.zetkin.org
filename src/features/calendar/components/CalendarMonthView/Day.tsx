@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
 
@@ -25,6 +25,7 @@ const Day = ({
   itemHeight,
   onClick,
 }: DayProps) => {
+  const format = useFormatter();
   const isToday = dayjs(date).isSame(new Date(), 'day');
   const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
 
@@ -58,7 +59,7 @@ const Day = ({
           }}
           variant="body2"
         >
-          <FormattedDate day="numeric" value={date} />
+          {format.dateTime(date, { day: 'numeric' })}
         </Typography>
       </Box>
       {dstChange !== undefined && (

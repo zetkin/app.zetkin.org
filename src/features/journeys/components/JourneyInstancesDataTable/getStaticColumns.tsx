@@ -6,7 +6,6 @@ import {
   GridFilterItem,
   GridFilterOperator,
 } from '@mui/x-data-grid-pro';
-import { FormattedDate } from 'react-intl';
 
 import FilterValueSelect from './FilterValueSelect';
 import JourneyInstanceTitle from 'features/journeys/components/JourneyInstanceTitle';
@@ -134,9 +133,13 @@ const fullName = (person: ZetkinPersonType) =>
 const getPeopleString = (people: ZetkinPersonType[]) =>
   people.map((person) => fullName(person)).join(', ');
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Formatter = { dateTime: (...args: any[]) => string };
+
 export const getStaticColumns = (
   messages: UseMessagesMap<typeof messageIds>,
-  journeyInstances: ZetkinJourneyInstance[]
+  journeyInstances: ZetkinJourneyInstance[],
+  formatter: Formatter
 ): GridColDef[] => {
   const uniqueSubjects = getUniqueById(
     journeyInstances.flatMap((instance) => instance.subjects)
@@ -289,14 +292,13 @@ export const getStaticColumns = (
     {
       field: 'nextMilestoneDeadline',
       renderCell: (params) =>
-        params.value ? (
-          <FormattedDate
-            day="numeric"
-            month="long"
-            value={params.value as string}
-            year="numeric"
-          />
-        ) : null,
+        params.value
+          ? formatter.dateTime(new Date(params.value as string), {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })
+          : null,
       type: 'date',
       valueFormatter: (value) => new Date(value),
       valueGetter: (value, row: ZetkinJourneyInstance) =>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { IntlShape, useIntl } from 'react-intl';
+import { useTranslations } from 'next-intl';
 
 import { Message, MessageMap } from './messages';
 
@@ -18,14 +18,19 @@ import { Message, MessageMap } from './messages';
 export default function useMessages<MapType extends MessageMap>(
   messages: MapType
 ): UseMessagesMap<MapType> {
-  const intl = useIntl();
+  const t = useTranslations();
 
-  return injectIntl(messages, intl);
+  return injectTranslator(messages, t as unknown as TranslatorFunc);
 }
 
-export function injectIntl<MapType extends MessageMap>(
+type TranslatorFunc = {
+  (key: string): string;
+  (key: string, values: Record<string, unknown>): string;
+};
+
+export function injectTranslator<MapType extends MessageMap>(
   map: MapType,
-  intl: IntlShape
+  t: TranslatorFunc
 ): UseMessagesMap<MapType> {
   const output: Record<
     string,
@@ -35,16 +40,13 @@ export function injectIntl<MapType extends MessageMap>(
   Object.entries(map).forEach(([key, val]) => {
     if (isMessage(val)) {
       output[key] = (values?: Record<string, string>) => {
-        return intl.formatMessage(
-          {
-            defaultMessage: val._defaultMessage,
-            id: val._id,
-          },
-          values
-        );
+        return values ? t(val._id, values) : t(val._id);
       };
     } else {
-      output[key] = injectIntl(val, intl) as UseMessagesMap<typeof val>;
+      output[key] = injectTranslator(
+        val,
+        t
+      ) as UseMessagesMap<typeof val>;
     }
   });
 

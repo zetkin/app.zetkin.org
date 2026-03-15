@@ -1,12 +1,15 @@
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 
 interface ZUIDateProps {
   datetime: string; // iso datetime string
 }
 
 const ZUIDate: React.FunctionComponent<ZUIDateProps> = ({ datetime }) => {
+  const format = useFormatter();
   return (
-    <FormattedDate day="numeric" month="long" value={datetime} year="numeric" />
+    <>
+      {format.dateTime(new Date(datetime), { day: 'numeric', month: 'long', year: 'numeric' })}
+    </>
   );
 };
 

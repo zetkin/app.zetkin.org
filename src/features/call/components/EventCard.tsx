@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useIntl } from 'react-intl';
+import { useTranslations, useFormatter } from 'next-intl';
 import {
   Event,
   GroupWorkOutlined,
@@ -24,7 +24,8 @@ type EventCardProps = {
 };
 
 const EventCard: FC<EventCardProps> = ({ event, target }) => {
-  const intl = useIntl();
+  const t = useTranslations();
+  const format = useFormatter();
   const { signUp, undoSignup } = useEventCallActions(
     event.organization.id,
     event.id,
@@ -82,7 +83,9 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
             timeSpanToString(
               new Date(removeOffset(event.start_time)),
               new Date(removeOffset(event.end_time)),
-              intl
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              t as any,
+              format
             ),
           ],
         },

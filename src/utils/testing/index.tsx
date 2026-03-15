@@ -1,6 +1,6 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { CssBaseline } from '@mui/material';
-import { IntlProvider } from 'react-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactElement, ReactNode } from 'react';
@@ -32,15 +32,14 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={oldTheme}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <IntlProvider
-              defaultLocale="en"
+            <NextIntlClientProvider
               locale="en"
               messages={{}}
-              onError={(err) => {
-                if (err.code === 'MISSING_TRANSLATION') {
+              onError={(error) => {
+                if (error.code === 'MISSING_MESSAGE') {
                   return;
                 }
-                throw err;
+                throw error;
               }}
             >
               <EnvProvider env={env}>
@@ -48,7 +47,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
 
                 {children}
               </EnvProvider>
-            </IntlProvider>
+            </NextIntlClientProvider>
           </LocalizationProvider>
         </ThemeProvider>
       </StyledEngineProvider>

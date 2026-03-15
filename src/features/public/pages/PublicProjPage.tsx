@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Box, Fade, List, ListItem, Switch } from '@mui/material';
 import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
-import { useIntl } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 
@@ -36,7 +36,7 @@ type Props = {
 };
 
 const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
-  const intl = useIntl();
+  const format = useFormatter();
   const router = useRouter();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
@@ -67,12 +67,12 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
-      return intl.formatDate(start.toDate(), {
+      return format.dateTime(start.toDate(), {
         day: 'numeric',
         month: 'short',
       });
     } else {
-      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+      return format.dateTimeRange(start.toDate(), end.toDate(), {
         day: 'numeric',
         month: 'short',
       });

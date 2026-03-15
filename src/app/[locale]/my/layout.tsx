@@ -7,7 +7,7 @@ import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';
 import messageIds from 'features/my/l10n/messageIds';
-import { getSeoTags } from '../../utils/seoTags';
+import { getSeoTags } from '../../../utils/seoTags';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = getBrowserLanguage(headers().get('accept-language') || '');

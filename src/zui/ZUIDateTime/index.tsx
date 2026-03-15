@@ -1,4 +1,4 @@
-import { FormattedDate, FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 
 import convertDateTimeToLocal from './utils/convertDateTimeToLocal';
 
@@ -11,12 +11,14 @@ const ZUIDateTime: React.FunctionComponent<ZUIDateTimeProps> = ({
   convertToLocal,
   datetime,
 }) => {
+  const format = useFormatter();
   const value = convertToLocal ? convertDateTimeToLocal(datetime) : datetime;
+  const dateValue = new Date(value);
 
   return (
     <>
-      <FormattedDate day="numeric" month="long" value={value} year="numeric" />{' '}
-      <FormattedTime value={value} />
+      {format.dateTime(dateValue, { day: 'numeric', month: 'long', year: 'numeric' })}{' '}
+      {format.dateTime(dateValue, { hour: 'numeric', minute: 'numeric' })}
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Box, Divider, Paper, Typography } from '@mui/material';
 
 import { Msg } from 'core/i18n';
@@ -28,6 +28,7 @@ const EmailDiagramHoverCard: FC<Props> = ({
   secondaryInsights,
   secondaryStats,
 }) => {
+  const format = useFormatter();
   const { mainPoint, secondaryPoint } = getRelevantDataPoints(
     { id: pointId },
     {
@@ -69,7 +70,7 @@ const EmailDiagramHoverCard: FC<Props> = ({
         >
           <Box>
             <Typography variant="body2">
-              <FormattedTime day="numeric" month="short" value={date} />
+              {format.dateTime(date, { day: 'numeric', month: 'short' })}
             </Typography>
             <Typography variant="body2">
               <Msg
@@ -97,11 +98,7 @@ const EmailDiagramHoverCard: FC<Props> = ({
             >
               <Box>
                 <Typography variant="body2">
-                  <FormattedTime
-                    day="numeric"
-                    month="short"
-                    value={secondaryPoint.date}
-                  />
+                  {format.dateTime(new Date(secondaryPoint.date), { day: 'numeric', month: 'short' })}
                 </Typography>
                 <Typography variant="body2">
                   <Msg

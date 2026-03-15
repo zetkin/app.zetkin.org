@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
 import dayjs, { Dayjs } from 'dayjs';
-import { IntlShape, useIntl } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';
@@ -20,8 +20,11 @@ import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 import oldTheme from 'theme';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Formatter = { dateTime: (...args: any[]) => string };
+
 const iconAndMessage = (
-  intl: IntlShape,
+  format: Formatter,
   messages: UseMessagesMap<typeof messageIds.dateRange>,
   date: Dayjs | null
 ): { icon: JSX.Element; message: string } => {
@@ -36,7 +39,7 @@ const iconAndMessage = (
       return {
         icon: <Schedule color="secondary" />,
         message: messages.indefinite({
-          start: intl.formatDate(date.toDate(), {
+          start: format.dateTime(date.toDate(), {
             day: 'numeric',
             month: 'long',
             ...(startYear !== thisYear && { year: 'numeric' }),
@@ -48,7 +51,7 @@ const iconAndMessage = (
       //Visible onwards
       icon: <VisibilityOutlined color="secondary" />,
       message: messages.indefinite({
-        start: intl.formatDate(date.toDate(), {
+        start: format.dateTime(date.toDate(), {
           day: 'numeric',
           month: 'long',
           ...(startYear !== thisYear && { year: 'numeric' }),
@@ -74,13 +77,13 @@ const ZUIDatePicker: FC<ZUIDatePickerProps> = ({ onChange, date }) => {
   const [value, setValue] = useState<Dayjs | null>(null);
 
   const messages = useMessages(messageIds);
-  const intl = useIntl();
+  const format = useFormatter();
 
   useEffect(() => {
     setValue(date ? dayjs(date) : null);
   }, [date]);
 
-  const { icon, message } = iconAndMessage(intl, messages.dateRange, value);
+  const { icon, message } = iconAndMessage(format, messages.dateRange, value);
 
   return (
     <>
@@ -158,12 +161,12 @@ interface DateTextFieldProps {
 
 const DateTextField: FC<DateTextFieldProps> = ({ label, onChange, value }) => {
   const [rawValue, setRawValue] = useState('');
-  const intl = useIntl();
+  const format = useFormatter();
 
   const resetValue = () => {
     setRawValue(
       value
-        ? intl.formatDate(value.toDate(), {
+        ? format.dateTime(value.toDate(), {
             day: 'numeric',
             month: 'numeric',
             year: 'numeric',

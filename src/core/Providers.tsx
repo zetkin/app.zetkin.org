@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { IntlProvider } from 'react-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, Suspense, useRef } from 'react';
@@ -73,8 +73,7 @@ const Providers: FC<ProvidersProps> = ({
             <CacheProvider value={cache.current}>
               <ThemeProvider theme={oldThemeWithLocale(lang)}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <IntlProvider
-                    defaultLocale="en"
+                  <NextIntlClientProvider
                     locale={lang}
                     messages={messages}
                   >
@@ -87,7 +86,7 @@ const Providers: FC<ProvidersProps> = ({
                         </EventPopperProvider>
                       </ZUIConfirmDialogProvider>
                     </ZUISnackbarProvider>
-                  </IntlProvider>
+                  </NextIntlClientProvider>
                 </LocalizationProvider>
               </ThemeProvider>
             </CacheProvider>

@@ -1,4 +1,4 @@
-import { IntlProvider } from 'react-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { renderHook } from '@testing-library/react';
 import { createElement, PropsWithChildren } from 'react';
 
@@ -10,11 +10,8 @@ describe('useCommaPlural()', () => {
   const opts = {
     wrapper: ({ children }: PropsWithChildren) =>
       createElement(
-        IntlProvider,
-        {
-          locale: 'en',
-          messages: {},
-        },
+        NextIntlClientProvider,
+        { locale: 'en', messages: {} },
         children
       ),
   };

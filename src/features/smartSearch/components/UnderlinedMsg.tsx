@@ -1,4 +1,4 @@
-import { useIntl } from 'react-intl';
+import { useTranslations } from 'next-intl';
 
 import UnderlinedText from './UnderlinedText';
 import {
@@ -31,16 +31,12 @@ function UnderlinedMsg<Values extends ValueRecord>({
   id,
   values,
 }: UnderlinedMsgProps<Values>): JSX.Element {
-  const intl = useIntl();
-
-  const descriptor = {
-    defaultMessage: id._defaultMessage,
-    id: id._id,
-  };
+  const t = useTranslations();
 
   const str = values
-    ? intl.formatMessage(descriptor, values)
-    : intl.formatMessage(descriptor);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? t(id._id, values as any)
+    : t(id._id);
 
   return <UnderlinedText text={str} />;
 }

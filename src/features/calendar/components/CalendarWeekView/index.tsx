@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
-import { FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import {
@@ -39,6 +39,7 @@ export interface CalendarWeekViewProps {
   onClickDay: (date: Date) => void;
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
+  const format = useFormatter();
   const theme = useTheme();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
@@ -151,7 +152,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 justifyContent="flex-end"
               >
                 <Typography color={theme.palette.grey[500]} variant="caption">
-                  <FormattedTime hour="numeric" minute="numeric" value={time} />
+                  {format.dateTime(new Date(time), { hour: 'numeric', minute: 'numeric' })}
                 </Typography>
               </Box>
             );

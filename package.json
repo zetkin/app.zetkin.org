@@ -5,6 +5,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "analyze": "ANALYZE=true next build",
+    "prebuild": "npx tsx scripts/generate-locale-json.ts",
     "build": "next build",
     "start": "next start -p 80",
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000 --turbo",
@@ -79,6 +80,7 @@
     "mui-tel-input": "^9.0.1",
     "negotiator": "^0.6.2",
     "next": "14.2.35",
+    "next-intl": "^4.8.3",
     "node-xlsx": "^0.21.0",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",

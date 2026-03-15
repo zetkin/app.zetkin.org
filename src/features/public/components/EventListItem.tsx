@@ -1,4 +1,4 @@
-import { useIntl } from 'react-intl';
+import { useTranslations, useFormatter } from 'next-intl';
 import { FC, MouseEvent } from 'react';
 import {
   GroupWorkOutlined,
@@ -21,7 +21,8 @@ type Props = {
 };
 
 const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
-  const intl = useIntl();
+  const t = useTranslations();
+  const format = useFormatter();
   const messages = useMessages(messageIds);
 
   const actions = [
@@ -57,7 +58,9 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
             timeSpanToString(
               new Date(removeOffset(event.start_time)),
               new Date(removeOffset(event.end_time)),
-              intl
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              t as any,
+              format
             ),
           ],
         },

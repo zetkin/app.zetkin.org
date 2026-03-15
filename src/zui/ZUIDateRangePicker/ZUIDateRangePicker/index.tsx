@@ -12,7 +12,7 @@ import {
 import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
 import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
-import { IntlShape, useIntl } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';
@@ -20,8 +20,11 @@ import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 import oldTheme from 'theme';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Formatter = { dateTime: (...args: any[]) => string };
+
 const iconAndMessage = (
-  intl: IntlShape,
+  format: Formatter,
   messages: UseMessagesMap<typeof messageIds.dateRange>,
   values: DateRange<Dayjs>
 ): { icon: JSX.Element; message: string } => {
@@ -45,12 +48,12 @@ const iconAndMessage = (
       return {
         icon: <Schedule color="secondary" />,
         message: messages.finite({
-          end: intl.formatDate(end.toDate(), {
+          end: format.dateTime(end.toDate(), {
             day: 'numeric',
             month: 'long',
             ...(endYear !== thisYear && { year: 'numeric' }),
           }),
-          start: intl.formatDate(start.toDate(), {
+          start: format.dateTime(start.toDate(), {
             day: 'numeric',
             month: 'long',
             ...(startYear !== thisYear && { year: 'numeric' }),
@@ -62,12 +65,12 @@ const iconAndMessage = (
     return {
       icon: <VisibilityOutlined color="secondary" />,
       message: messages.finite({
-        end: intl.formatDate(end.toDate(), {
+        end: format.dateTime(end.toDate(), {
           day: 'numeric',
           month: 'long',
           ...(endYear !== thisYear && { year: 'numeric' }),
         }),
-        start: intl.formatDate(start.toDate(), {
+        start: format.dateTime(start.toDate(), {
           day: 'numeric',
           month: 'long',
           ...(startYear !== thisYear && { year: 'numeric' }),
@@ -80,7 +83,7 @@ const iconAndMessage = (
       return {
         icon: <Schedule color="secondary" />,
         message: messages.indefinite({
-          start: intl.formatDate(start.toDate(), {
+          start: format.dateTime(start.toDate(), {
             day: 'numeric',
             month: 'long',
             ...(startYear !== thisYear && { year: 'numeric' }),
@@ -92,7 +95,7 @@ const iconAndMessage = (
       //Visible onwards
       icon: <VisibilityOutlined color="secondary" />,
       message: messages.indefinite({
-        start: intl.formatDate(start.toDate(), {
+        start: format.dateTime(start.toDate(), {
           day: 'numeric',
           month: 'long',
           ...(startYear !== thisYear && { year: 'numeric' }),
@@ -125,7 +128,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
 
   const messages = useMessages(messageIds);
-  const intl = useIntl();
+  const format = useFormatter();
 
   useEffect(() => {
     setValue([
@@ -140,7 +143,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   const [start, end] = value;
   const duration = start && end ? end.diff(start, 'day') : 1;
 
-  const { icon, message } = iconAndMessage(intl, messages.dateRange, value);
+  const { icon, message } = iconAndMessage(format, messages.dateRange, value);
 
   return (
     <>
@@ -243,12 +246,12 @@ interface DateTextFieldProps {
 
 const DateTextField: FC<DateTextFieldProps> = ({ label, onChange, value }) => {
   const [rawValue, setRawValue] = useState('');
-  const intl = useIntl();
+  const format = useFormatter();
 
   const resetValue = () => {
     setRawValue(
       value
-        ? intl.formatDate(value.toDate(), {
+        ? format.dateTime(value.toDate(), {
             day: 'numeric',
             month: 'numeric',
             year: 'numeric',

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedDate, FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 
 import { isAllDay } from 'features/calendar/components/utils';
 import messageIds from '../l10n/messageIds';
@@ -11,15 +11,18 @@ type ZUITimeSpanProps = {
 };
 
 const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
+  const format = useFormatter();
   const isToday = start.toDateString() === new Date().toDateString();
   const endsOnSameDay = start.toDateString() === end.toDateString();
   const endsOnToday = end.toDateString() === new Date().toDateString();
 
-  const startTime = <FormattedTime value={start} />;
-  const endTime = <FormattedTime value={end} />;
+  const timeOpts = { hour: 'numeric' as const, minute: 'numeric' as const };
 
-  const startDate = <FormattedDate dateStyle="medium" value={start} />;
-  const endDate = <FormattedDate dateStyle="medium" value={end} />;
+  const startTime = format.dateTime(start, timeOpts);
+  const endTime = format.dateTime(end, timeOpts);
+
+  const startDate = format.dateTime(start, { dateStyle: 'medium' as const });
+  const endDate = format.dateTime(end, { dateStyle: 'medium' as const });
 
   if (isToday && isAllDay(start.toISOString(), end.toDateString())) {
     return <Msg id={messageIds.timeSpan.singleDayAllDay} />;
