@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "analyze": "ANALYZE=true next build",
-    "prebuild": "npx tsx scripts/generate-locale-json.ts",
+    "prebuild": "ts-node src/tools/make-yaml.ts && npx tsx scripts/generate-locale-json.ts",
     "build": "next build",
     "start": "next start -p 80",
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000 --turbo",
