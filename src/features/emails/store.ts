@@ -178,6 +178,14 @@ const emailsSlice = createSlice({
         }
       );
     },
+    themeCreate: (state) => {
+      state.themeList.isLoading = true;
+    },
+    themeCreated: (state, action: PayloadAction<EmailTheme>) => {
+      const theme = action.payload;
+      state.themeList.isLoading = false;
+      state.themeList.items.push(remoteItem(theme.id, { data: theme }));
+    },
     themesLoad: (state) => {
       state.themeList.isLoading = true;
     },
@@ -208,6 +216,8 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
+  themeCreate,
+  themeCreated,
   themesLoad,
   themesLoaded,
   statsLoad,
