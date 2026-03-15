@@ -143,6 +143,19 @@ async function runTests() {
   const svHtml = await fetchPage('/lost-password', 'sv');
   assert(!svHtml.includes('"/sv/'), 'No /sv/ links in Swedish page');
 
+  // Test: Response size is reasonable
+  console.log('\nTest: Response size');
+  const enPage = await fetchPage('/lost-password', 'en');
+  const pageSize = Buffer.byteLength(enPage);
+  // Log the size for monitoring. Currently ~148KB because the root layout
+  // passes all messages to NextIntlClientProvider. A future optimization
+  // would filter messages per page/section.
+  console.log(`  ℹ Response size: ${(pageSize / 1024).toFixed(1)}KB`);
+  assert(
+    pageSize < 300 * 1024,
+    `Response < 300KB (got ${(pageSize / 1024).toFixed(1)}KB)`
+  );
+
   // Summary
   console.log(`\n${passed} passed, ${failed} failed`);
 
