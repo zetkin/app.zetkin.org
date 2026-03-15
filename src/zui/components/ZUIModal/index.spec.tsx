@@ -1,7 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { act, render } from 'utils/testing';
+import { act, render } from 'utils/testing/zui';
 import ZUIModal, { ZUIModalProps } from '.';
 
 const defaultProps: ZUIModalProps = {
