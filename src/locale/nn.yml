@@ -2954,11 +2954,15 @@ feat:
         toPdf: Eksporter som PDF
         toPng: Eksporter som PNG
       optionsFields:
-        subheader: >+
+        subheaderMultipleChoice: >+
           Det er totalt {answerCount, plural, =1 {1 svar} other {# svar}} og
           {totalSelectedOptionsCount, plural, =1 {1 valt alternativ} other {#
           valde alternativ}} fordelte over {optionsCount, plural, =1 {1
           alternativ} other {# alternativ}}.
+
+        subheaderSingleChoice: >+
+          Det er totalt {answerCount, plural, =1 {1 svar} other {# svar}} fordelte
+          over {optionsCount, plural, =1 {1 alternativ} other {# alternativ}}.
 
         tabs:
           barPlot: Søyler

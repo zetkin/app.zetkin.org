@@ -114,12 +114,18 @@ export default makeMessages('feat.surveys', {
       toPng: m('Export to png'),
     },
     optionsFields: {
-      subheader: m<{
+      subheaderMultipleChoice: m<{
         answerCount: number;
         optionsCount: number;
         totalSelectedOptionsCount: number;
       }>(
         'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}} and {totalSelectedOptionsCount, plural, =1 {1 option selection} other {# option selections}} across {optionsCount, plural, =1 {1 option} other {# options}}.'
+      ),
+      subheaderSingleChoice: m<{
+        answerCount: number;
+        optionsCount: number;
+      }>(
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}} across {optionsCount, plural, =1 {1 option} other {# options}}.'
       ),
       tabs: {
         barPlot: m('Bar'),
