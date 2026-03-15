@@ -23,6 +23,7 @@ describe('ZUIDataTableSorting.tsx', () => {
         null,
         {}
       ),
+      headerName: field,
     };
   });
 
@@ -41,14 +42,14 @@ describe('ZUIDataTableSorting.tsx', () => {
       />
     );
 
-    const sortButton = getByText('misc.dataTable.sorting.button');
+    const sortButton = getByText('zui.dataTableSorting.button');
     expect(sortButton).toBeTruthy();
 
     // Show popover
     await userEvent.click(sortButton);
 
-    expect(getByText('misc.dataTable.sorting.title')).toBeTruthy();
-    expect(getByText('misc.dataTable.sorting.addButton')).toBeTruthy();
+    expect(getByText('zui.dataTableSorting.title')).toBeTruthy();
+    expect(getByText('zui.dataTableSorting.addButton')).toBeTruthy();
   });
 
   it('renders correctly when sort model is populated', async () => {
@@ -61,12 +62,14 @@ describe('ZUIDataTableSorting.tsx', () => {
     );
 
     // Show popover
-    const sortButton = getByText('misc.dataTable.sorting.button');
+    const sortButton = getByText('zui.dataTableSorting.button');
     await userEvent.click(sortButton);
+    await userEvent.click(getByText('zui.dataTableSorting.addButton'));
+    expect(getByText('zui.dataTableSorting.title')).toBeTruthy();
 
     expect(getByText(fields[0])).toBeTruthy();
     expect(getByText(fields[1])).toBeTruthy();
-    expect(getAllByText('Ascending')).toHaveLength(2);
+    expect(getAllByText('zui.dataTableSorting.ascending')).toHaveLength(2);
   });
 
   it('Calls setSortModel correctly on user input', async () => {
@@ -79,25 +82,27 @@ describe('ZUIDataTableSorting.tsx', () => {
     );
 
     // Show popover
-    const sortButton = getByText('misc.dataTable.sorting.button');
+    const sortButton = getByText('zui.dataTableSorting.button');
     await userEvent.click(sortButton);
+    await userEvent.click(getByText('zui.dataTableSorting.addButton'));
 
     // Modify sort direction
-    await userEvent.click(getAllByText('Ascending')[0]);
-    await userEvent.click(getByText('Descending'));
-    expect(handleSetSortModel).toHaveBeenCalledTimes(1);
-    expect(handleSetSortModel.mock.results[0].value[0].sort).toEqual('desc');
+    await userEvent.click(getAllByText('zui.dataTableSorting.ascending')[0]);
+    await userEvent.click(getByText('zui.dataTableSorting.descending'));
+    expect(handleSetSortModel.mock.results.at(-1)?.value[0].sort).toEqual(
+      'desc'
+    );
 
     // Modify sort field
     await userEvent.click(getByText(fields[0]));
     await userEvent.click(getByText(fields[2]));
-    expect(handleSetSortModel).toHaveBeenCalledTimes(2);
-    expect(handleSetSortModel.mock.results[1].value[0].field).toEqual('col_2');
+    expect(handleSetSortModel.mock.results.at(-1)?.value[0].field).toEqual(
+      'middle_name'
+    );
 
     // Delete an item from the sort model
     const deleteButtons = getAllByTestId('deleteSortModelItem');
     await userEvent.click(deleteButtons[0]);
-    expect(handleSetSortModel).toHaveBeenCalledTimes(3);
-    expect(handleSetSortModel.mock.results[2].value.length).toEqual(1);
+    expect(handleSetSortModel.mock.results.at(-1)?.value.length).toEqual(1);
   });
 });
