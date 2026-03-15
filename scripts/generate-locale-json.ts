@@ -17,6 +17,23 @@ const LOCALE_OUT = path.resolve(__dirname, '../src/locale/compiled');
 
 type MessageList = Record<string, string>;
 type MessageDB = Record<string, MessageList>;
+type NestedMessages = { [key: string]: string | NestedMessages };
+
+function unflattenObject(flat: Record<string, string>): NestedMessages {
+  const nested: NestedMessages = {};
+  Object.entries(flat).forEach(([key, val]) => {
+    const parts = key.split('.');
+    let current: NestedMessages = nested;
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!(parts[i] in current) || typeof current[parts[i]] === 'string') {
+        current[parts[i]] = {};
+      }
+      current = current[parts[i]] as NestedMessages;
+    }
+    current[parts[parts.length - 1]] = val;
+  });
+  return nested;
+}
 
 function flattenObject(
   obj: Record<string, unknown>,
@@ -77,13 +94,15 @@ async function main() {
     }
   });
 
-  // Write JSON files
+  // Write JSON files (nested format for next-intl)
   await fs.mkdir(LOCALE_OUT, { recursive: true });
 
   for (const [lang, msgs] of Object.entries(messages)) {
+    const nested = unflattenObject(msgs);
     const outPath = path.join(LOCALE_OUT, `${lang}.json`);
-    await fs.writeFile(outPath, JSON.stringify(msgs));
-    const sizeKB = (Buffer.byteLength(JSON.stringify(msgs)) / 1024).toFixed(1);
+    const json = JSON.stringify(nested);
+    await fs.writeFile(outPath, json);
+    const sizeKB = (Buffer.byteLength(json) / 1024).toFixed(1);
     console.log(`  ${lang}.json (${sizeKB} KB)`);
   }
 

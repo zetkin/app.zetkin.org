@@ -33,7 +33,7 @@ type RegularProps = {
 export type ScaffoldedProps = RegularProps & {
   envVars: EnvVars;
   lang: string;
-  messages: Record<string, string>;
+  messages: Record<string, unknown>;
   user: ZetkinUser | null;
 };
 
@@ -235,7 +235,7 @@ export const scaffold =
       `${lang}.json`
     );
     const fileContents = await fs.readFile(filePath, 'utf8');
-    const messages = JSON.parse(fileContents) as Record<string, string>;
+    const messages = JSON.parse(fileContents);
 
     if (hasProps(result)) {
       result.props = {

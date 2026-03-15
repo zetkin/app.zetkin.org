@@ -5,11 +5,26 @@ import path from 'path';
 import { HookedMessageFunc, UseMessagesMap } from './useMessages';
 import { Message, MessageMap } from './messages';
 
+function getNestedValue(
+  obj: Record<string, unknown>,
+  dotPath: string
+): string | undefined {
+  const parts = dotPath.split('.');
+  let current: unknown = obj;
+  for (const part of parts) {
+    if (current == null || typeof current !== 'object') {
+      return undefined;
+    }
+    current = (current as Record<string, unknown>)[part];
+  }
+  return typeof current === 'string' ? current : undefined;
+}
+
 export default async function getServerMessages<MapType extends MessageMap>(
   lang: string,
   messageIds: MapType
 ): Promise<UseMessagesMap<MapType>> {
-  // Load messages from compiled JSON
+  // Load messages from compiled JSON (nested format)
   const filePath = path.join(
     process.cwd(),
     'src',
@@ -18,7 +33,7 @@ export default async function getServerMessages<MapType extends MessageMap>(
     `${lang}.json`
   );
 
-  let localMessages: Record<string, string> = {};
+  let localMessages: Record<string, unknown> = {};
   try {
     const fileContents = await fs.readFile(filePath, 'utf8');
     localMessages = JSON.parse(fileContents);
@@ -37,7 +52,7 @@ export default async function getServerMessages<MapType extends MessageMap>(
     Object.entries(map).forEach(([key, val]) => {
       if (isMessage(val)) {
         output[key] = (() => {
-          return localMessages[val._id] || val._defaultMessage;
+          return getNestedValue(localMessages, val._id) || val._defaultMessage;
         }) as HookedMessageFunc<typeof val>;
       } else {
         output[key] = makeFunctions(val) as UseMessagesMap<typeof val>;
