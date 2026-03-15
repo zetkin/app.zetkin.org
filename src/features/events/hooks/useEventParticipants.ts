@@ -18,7 +18,6 @@ import { EventSignupModelType } from '../models';
 type useEventParticipantsReturn = {
   bookedParticipants: ZetkinEventParticipant[] | [];
   cancelledParticipants: ZetkinEventParticipant[] | [];
-  numAllSignedParticipants: number;
   numAvailParticipants: number;
   numCancelledParticipants: number;
   numConfirmedParticipants: number;
@@ -27,7 +26,7 @@ type useEventParticipantsReturn = {
   numSignedParticipants: number;
   numUnverifiedParticipants: number;
   participantsFuture: IFuture<ZetkinEventParticipant[]>;
-  pendingSignUps: ZetkinEventResponse[] | [];
+  pendingVerifiedSignUps: ZetkinEventResponse[] | [];
   respondentsFuture: IFuture<ZetkinEventResponse[]>;
   unverifiedParticipants: EventSignupModelType[];
   unverifiedParticipantsFuture: IFuture<EventSignupModelType[]>;
@@ -93,7 +92,9 @@ export default function useEventParticipants(
     ? participantsFuture.data.filter((p) => p.cancelled == null).length
     : 0;
 
-  const pendingSignUps =
+  const unverifiedParticipants = unverifiedParticipantsFuture.data ?? [];
+
+  const pendingVerifiedSignUps =
     respondentsFuture.data?.filter(
       (r) => !participantsFuture.data?.some((p) => p.id === r.id)
     ) || [];
@@ -120,22 +121,14 @@ export default function useEventParticipants(
       (p) => p.reminder_sent != null && p.cancelled == null
     ).length ?? 0;
 
-  const numAllSignedParticipants =
+  const numSignedParticipants =
     (respondentsFuture.data?.filter(
       (r) => !participantsFuture.data?.some((p) => p.id === r.id)
     ).length ?? 0) + numUnverifiedParticipants;
 
-  const numSignedParticipants =
-    respondentsFuture.data?.filter(
-      (r) => !participantsFuture.data?.some((p) => p.id === r.id)
-    ).length ?? 0;
-
-  const unverifiedParticipants = unverifiedParticipantsFuture.data ?? [];
-
   return {
     bookedParticipants,
     cancelledParticipants,
-    numAllSignedParticipants,
     numAvailParticipants,
     numCancelledParticipants,
     numConfirmedParticipants,
@@ -144,7 +137,7 @@ export default function useEventParticipants(
     numSignedParticipants,
     numUnverifiedParticipants,
     participantsFuture,
-    pendingSignUps,
+    pendingVerifiedSignUps,
     respondentsFuture,
     unverifiedParticipants,
     unverifiedParticipantsFuture,

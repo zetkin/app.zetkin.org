@@ -35,7 +35,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   orgId,
 }) => {
   const event = useEvent(orgId, eventId)?.data;
-  const { pendingSignUps, participantsFuture } = useEventParticipants(
+  const { numSignedParticipants, participantsFuture } = useEventParticipants(
     orgId,
     eventId
   );
@@ -154,7 +154,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.pending()}
             </Typography>
-            <Typography>{pendingSignUps.length}</Typography>
+            <Typography>{numSignedParticipants}</Typography>
           </Box>
           <Box
             alignItems="center"

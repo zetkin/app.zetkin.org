@@ -23,12 +23,10 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
   orgId,
 }) => {
   const event = useEvent(orgId, eventId)?.data;
-  const { participantsFuture, pendingSignUps } = useEventParticipants(
+  const { participantsFuture, numSignedParticipants } = useEventParticipants(
     orgId,
     eventId
   );
-
-  const numSignups = pendingSignUps.length;
 
   if (!event) {
     return null;
@@ -42,7 +40,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
       numRemindersSent={
         participantsFuture.data?.filter((p) => !!p.reminder_sent).length ?? 0
       }
-      numSignups={numSignups}
+      numSignups={numSignedParticipants}
       participantsLoading={!participantsFuture.data}
     />
   );

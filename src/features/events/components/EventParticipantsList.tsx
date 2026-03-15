@@ -30,7 +30,7 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
     numCancelledParticipants,
     numSignedParticipants,
     numUnverifiedParticipants,
-    pendingSignUps,
+    pendingVerifiedSignUps,
     respondentsFuture,
     unverifiedParticipants,
   } = useEventParticipants(orgId, data.id);
@@ -77,7 +77,7 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
             </Button>
           }
           orgId={orgId}
-          rows={pendingSignUps ?? []}
+          rows={pendingVerifiedSignUps ?? []}
           title={messages.eventParticipantsList.signUps()}
           type="signups"
         />
