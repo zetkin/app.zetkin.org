@@ -23,6 +23,7 @@ import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 const scaffoldOptions = {
   authLevelRequired: 2,
   featuresRequired: [AREAS],
+  localeScope: [],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

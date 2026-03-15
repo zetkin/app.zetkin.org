@@ -22,6 +22,7 @@ import {
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  localeScope: [],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

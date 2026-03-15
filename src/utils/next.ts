@@ -107,7 +107,7 @@ interface ScaffoldOptions {
   allowNonOfficials?: boolean;
   allowUnverified?: boolean;
   featuresRequired?: string[];
-  localeScope?: string[];
+  localeScope: string[];
 }
 
 const hasProps = (result: any): result is ResultWithProps => {
@@ -280,16 +280,18 @@ export const scaffold =
     // Each page declares localeScope in its scaffold options (e.g. ['feat.campaigns']).
     // We always include core, glob, and zui as shared base.
     const allMessages = loadCompiledMessages(lang);
-    const localeScopes = options?.localeScope ?? [];
-    const hasScopes = localeScopes.length > 0;
-    const messages = hasScopes
-      ? filterByScope(allMessages as Record<string, unknown>, [
-          ...localeScopes,
-          'core',
-          'glob',
-          'zui',
-        ])
-      : allMessages;
+    if (!options?.localeScope) {
+      throw new Error(
+        'localeScope is required in scaffold options. ' +
+          'Declare the message namespaces this page needs, e.g. [\'feat.campaigns\'].'
+      );
+    }
+    const messages = filterByScope(allMessages as Record<string, unknown>, [
+      ...options.localeScope,
+      'core',
+      'glob',
+      'zui',
+    ]);
 
     if (hasProps(result)) {
       result.props = {

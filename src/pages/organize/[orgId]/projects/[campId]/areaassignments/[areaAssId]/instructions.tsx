@@ -17,6 +17,7 @@ import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment'
 const scaffoldOptions = {
   authLevelRequired: 2,
   featuresRequired: [AREAS],
+  localeScope: [],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
