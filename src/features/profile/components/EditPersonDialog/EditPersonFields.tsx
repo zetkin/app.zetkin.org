@@ -1,5 +1,3 @@
-import { DatePicker } from '@mui/x-date-pickers-pro';
-import { FC } from 'react';
 import UndoIcon from '@mui/icons-material/Undo';
 import {
   Box,
@@ -9,21 +7,25 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
+import { FC } from 'react';
 
-import EditPersonField from './EditPersonField';
-import formatUrl from 'utils/formatUrl';
+import { Msg, useMessages } from 'core/i18n';
 import globalMessageIds from 'core/i18n/messageIds';
-import { makeNaiveDateString } from 'utils/dateUtils';
-import messageIds from 'zui/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import useCustomFields from '../../hooks/useCustomFields';
+import { makeNaiveDateString } from 'utils/dateUtils';
+import formatUrl from 'utils/formatUrl';
 import {
   CUSTOM_FIELD_TYPE,
   ZetkinCreatePerson,
+  ZetkinCustomFieldValue,
   ZetkinPerson,
 } from 'utils/types/zetkin';
-import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
+import PersonLngLatFieldInput from 'zui/ZUICreatePerson/PersonLngLatFieldInput';
+import useCustomFields from '../../hooks/useCustomFields';
+import EditPersonField from './EditPersonField';
 
 enum GENDERS {
   FEMALE = 'f',
@@ -174,8 +176,11 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         value={fieldValues.ext_id ? fieldValues.ext_id : ''}
       />
       {customFields.map((field) => {
-        const fieldWritable =
+        const isFieldWritable =
           field.organization.id == orgId || field.org_write == 'suborgs';
+
+        const fieldValue = fieldValues[field.slug];
+
         if (field.type === CUSTOM_FIELD_TYPE.JSON) {
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
@@ -183,7 +188,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
             <Box display="flex">
               <DatePicker
                 key={field.slug}
-                disabled={!fieldWritable}
+                disabled={!isFieldWritable}
                 format="DD-MM-YYYY"
                 label={field.title}
                 onChange={(date: Dayjs | null) => {
@@ -193,11 +198,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                   }
                 }}
                 sx={{ width: '100%' }}
-                value={
-                  fieldValues[field.slug]
-                    ? dayjs(fieldValues[field.slug]?.toString())
-                    : null
-                }
+                value={fieldValue ? dayjs(fieldValue.toString()) : null}
               />
               {field.slug in fieldsToUpdate && (
                 <IconButton onClick={() => onReset(field.slug)}>
@@ -210,7 +211,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           return (
             <EditPersonField
               key={field.slug}
-              disabled={!fieldWritable}
+              disabled={!isFieldWritable}
               error={invalidFields.includes(field.slug)}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
@@ -221,7 +222,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                 onChange(field, formattedUrl ?? newValue);
               }}
               onReset={() => onReset(field.slug)}
-              value={fieldValues[field.slug]?.toString() ?? ''}
+              value={fieldValue?.toString() ?? ''}
             />
           );
         } else if (
@@ -234,7 +235,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                 <InputLabel>{field.title}</InputLabel>
                 <Select
                   key={field.slug}
-                  disabled={!fieldWritable}
+                  disabled={!isFieldWritable}
                   fullWidth
                   label={field.title}
                   onChange={(ev) => {
@@ -244,7 +245,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                     }
                     onChange(field.slug, value);
                   }}
-                  value={fieldValues[field.slug]?.toString() ?? ''}
+                  value={fieldValue?.toString() ?? ''}
                 >
                   <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
                     <Msg id={messageIds.createPerson.enumFields.noneOption} />
@@ -258,17 +259,31 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               </FormControl>
             </Box>
           );
+        } else if (field.type === CUSTOM_FIELD_TYPE.LNGLAT) {
+          return (
+            <PersonLngLatFieldInput
+              key={field.slug}
+              error={invalidFields.includes(field.slug)}
+              field={field.slug}
+              hasChanges={field.slug in fieldsToUpdate}
+              label={field.title}
+              onChange={onChange}
+              onReset={() => onReset(field.slug)}
+              required={false}
+              value={fieldValue as ZetkinCustomFieldValue}
+            />
+          );
         } else {
           return (
             <EditPersonField
               key={field.slug}
-              disabled={!fieldWritable}
+              disabled={!isFieldWritable}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
               label={field.title}
               onChange={(field, newValue) => onChange(field, newValue)}
               onReset={() => onReset(field.slug)}
-              value={fieldValues[field.slug]?.toString() ?? ''}
+              value={fieldValue?.toString() ?? ''}
             />
           );
         }
