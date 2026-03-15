@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useTranslations } from 'next-intl';
 
-import { Message, MessageMap } from './messages';
+import { AnyMessage, MessageMap } from './messages';
+
+type TranslatorFunc = ReturnType<typeof useTranslations>;
 
 /**
  * The useMessages() takes messages defined by the messages() function, and
@@ -20,13 +20,8 @@ export default function useMessages<MapType extends MessageMap>(
 ): UseMessagesMap<MapType> {
   const t = useTranslations();
 
-  return injectTranslator(messages, t as unknown as TranslatorFunc);
+  return injectTranslator(messages, t);
 }
-
-type TranslatorFunc = {
-  (key: string): string;
-  (key: string, values: Record<string, unknown>): string;
-};
 
 export function injectTranslator<MapType extends MessageMap>(
   map: MapType,
@@ -34,7 +29,7 @@ export function injectTranslator<MapType extends MessageMap>(
 ): UseMessagesMap<MapType> {
   const output: Record<
     string,
-    HookedMessageFunc<Message<any>> | UseMessagesMap<any>
+    HookedMessageFunc<AnyMessage> | UseMessagesMap<MessageMap>
   > = {};
 
   Object.entries(map).forEach(([key, val]) => {
@@ -53,16 +48,16 @@ export function injectTranslator<MapType extends MessageMap>(
   return output as UseMessagesMap<MapType>;
 }
 
-export type HookedMessageFunc<MapEntry extends Message<any>> = (
+export type HookedMessageFunc<MapEntry extends AnyMessage> = (
   values: ReturnType<MapEntry['_typeFunc']>
 ) => string;
 
 export type UseMessagesMap<MapType> = {
-  [K in keyof MapType]: MapType[K] extends Message<any>
+  [K in keyof MapType]: MapType[K] extends AnyMessage
     ? HookedMessageFunc<MapType[K]>
     : UseMessagesMap<MapType[K]>;
 };
 
-function isMessage(val: MessageMap | Message<any>): val is Message<any> {
+function isMessage(val: MessageMap | AnyMessage): val is AnyMessage {
   return '_typeFunc' in val;
 }

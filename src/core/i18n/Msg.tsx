@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, RichTranslationValues } from 'next-intl';
 
 import { InterpolatedMessage, PlainMessage, ValueRecord } from './messages';
 
@@ -24,8 +24,7 @@ function Msg<Values extends ValueRecord>({
   const t = useTranslations();
 
   if (values) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return t.rich(id._id, values as any);
+    return t.rich(id._id, values as RichTranslationValues);
   }
 
   return t(id._id);

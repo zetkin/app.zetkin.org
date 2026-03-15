@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl';
+import { useTranslations, TranslationValues } from 'next-intl';
 
 import UnderlinedText from './UnderlinedText';
 import {
@@ -34,8 +34,7 @@ function UnderlinedMsg<Values extends ValueRecord>({
   const t = useTranslations();
 
   const str = values
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ? t(id._id, values as any)
+    ? t(id._id, values as TranslationValues)
     : t(id._id);
 
   return <UnderlinedText text={str} />;

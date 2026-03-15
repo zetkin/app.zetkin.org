@@ -1,4 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
+import { useFormatter } from 'next-intl';
 
 import { getStaticColumns } from './getStaticColumns';
 import getTagColumns from './getTagColumns';
@@ -7,8 +8,7 @@ import { UseMessagesMap } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import messageIds from 'features/journeys/l10n/messageIds';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Formatter = { dateTime: (...args: any[]) => string };
+type Formatter = ReturnType<typeof useFormatter>;
 
 const getColumns = (
   messages: UseMessagesMap<typeof messageIds>,

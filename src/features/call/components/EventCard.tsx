@@ -83,8 +83,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
             timeSpanToString(
               new Date(removeOffset(event.start_time)),
               new Date(removeOffset(event.end_time)),
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              t as any,
+              t,
               format
             ),
           ],

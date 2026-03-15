@@ -14,8 +14,7 @@ import { availableHeightByEvent, fieldsToPresent } from './utils';
 import Event, { Field, FIELD_PRESENTATION } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type FormatterType = { dateTime: (...args: any[]) => string };
+type FormatterType = ReturnType<typeof useFormatter>;
 
 function createMultiShiftFieldGroups({
   events,

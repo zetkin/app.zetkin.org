@@ -20,8 +20,7 @@ import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 import oldTheme from 'theme';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Formatter = { dateTime: (...args: any[]) => string };
+type Formatter = ReturnType<typeof useFormatter>;
 
 const iconAndMessage = (
   format: Formatter,

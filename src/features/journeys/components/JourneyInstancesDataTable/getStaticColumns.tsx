@@ -1,5 +1,6 @@
 import { Link } from '@mui/material';
 import NextLink from 'next/link';
+import { useFormatter } from 'next-intl';
 import {
   GridCellParams,
   GridColDef,
@@ -133,8 +134,7 @@ const fullName = (person: ZetkinPersonType) =>
 const getPeopleString = (people: ZetkinPersonType[]) =>
   people.map((person) => fullName(person)).join(', ');
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Formatter = { dateTime: (...args: any[]) => string };
+type Formatter = ReturnType<typeof useFormatter>;
 
 export const getStaticColumns = (
   messages: UseMessagesMap<typeof messageIds>,

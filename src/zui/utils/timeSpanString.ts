@@ -1,15 +1,11 @@
+import { useFormatter, useTranslations } from 'next-intl';
+
 import messageIds from 'zui/l10n/messageIds';
 import { isAllDay } from 'features/calendar/components/utils';
 import { injectTranslator } from 'core/i18n/useMessages';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Formatter = { dateTime: (...args: any[]) => string };
-
-type TranslatorFunc = {
-  (key: string): string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (key: string, values: any): string;
-};
+type Formatter = ReturnType<typeof useFormatter>;
+type TranslatorFunc = ReturnType<typeof useTranslations>;
 
 export function timeSpanToString(
   start: Date,

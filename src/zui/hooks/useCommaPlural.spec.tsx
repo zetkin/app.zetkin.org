@@ -1,23 +1,21 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { renderHook } from '@testing-library/react';
-import { createElement, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
 import { m } from 'core/i18n';
-import { Message } from 'core/i18n/messages';
+import { AnyMessage } from 'core/i18n/messages';
 import useCommaPlural from './useCommaPlural';
 
 describe('useCommaPlural()', () => {
-  const opts = {
-    wrapper: ({ children }: PropsWithChildren) =>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      createElement(NextIntlClientProvider as any, {
-        locale: 'en',
-        messages: {},
-      }, children),
-  };
+  const TestWrapper: FC<PropsWithChildren> = ({ children }) => (
+    <NextIntlClientProvider locale="en" messages={{}}>
+      {children}
+    </NextIntlClientProvider>
+  );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function mockMessages<MapType extends Record<string, Message<any>>>(
+  const opts = { wrapper: TestWrapper };
+
+  function mockMessages<MapType extends Record<string, AnyMessage>>(
     messages: MapType
   ): MapType {
     Object.keys(messages).forEach((key) => (messages[key]._id = 'x'));
