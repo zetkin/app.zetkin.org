@@ -496,6 +496,7 @@ const OptionsStatsCard = ({
     () =>
       messages.insights.optionsFields.subheader({
         answerCount: questionStats.answerCount,
+        optionsCount: questionStats.options.length,
         totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

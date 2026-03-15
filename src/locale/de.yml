@@ -2873,8 +2873,9 @@ feat:
         toPng: Als PNG exportieren
       optionsFields:
         subheader: Insgesamt gab es {answerCount, plural, =1 {1 Antwort} other {#
-          Antworten}} und {totalSelectedOptionsCount, plural, =1 {1 ausgewählte
-          Option} other {# ausgewählte Optionen}}.
+          Antworten}} und {totalSelectedOptionsCount, plural, =1 {1 Auswahl} other
+          {# Auswahlen}} über {optionsCount, plural, =1 {1 Option} other {#
+          Optionen}}.
         tabs:
           barPlot: Balkendiagramm
           piePlot: Kreisdiagramm

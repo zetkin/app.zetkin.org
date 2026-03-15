@@ -116,9 +116,10 @@ export default makeMessages('feat.surveys', {
     optionsFields: {
       subheader: m<{
         answerCount: number;
+        optionsCount: number;
         totalSelectedOptionsCount: number;
       }>(
-        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}} and {totalSelectedOptionsCount, plural, =1 {1 selected option} other {# selected options}}.'
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}} and {totalSelectedOptionsCount, plural, =1 {1 option selection} other {# option selections}} across {optionsCount, plural, =1 {1 option} other {# options}}.'
       ),
       tabs: {
         barPlot: m('Bar'),
