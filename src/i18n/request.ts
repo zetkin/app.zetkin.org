@@ -34,5 +34,16 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: loadMessages(locale),
+    onError(error) {
+      if (error.code === 'MISSING_MESSAGE') {
+        throw new Error(
+          `Missing translation: ${error.originalMessage}. ` +
+            'Either add it to the YAML locale files or add the correct ' +
+            'namespace to localeScope in the scaffold options.'
+        );
+      }
+      // Re-throw all other errors
+      throw error;
+    },
   };
 });

@@ -76,6 +76,18 @@ const Providers: FC<ProvidersProps> = ({
                   <NextIntlClientProvider
                     locale={lang}
                     messages={messages}
+                    onError={(error) => {
+                      // Only throw if messages were provided (scoped).
+                      // During static prerendering, messages may be empty.
+                      const hasMessages =
+                        messages && Object.keys(messages).length > 0;
+                      if (hasMessages && error.code === 'MISSING_MESSAGE') {
+                        throw new Error(
+                          `Missing translation: ${error.originalMessage}. ` +
+                            'Add the correct namespace to localeScope.'
+                        );
+                      }
+                    }}
                   >
                     <ZUISnackbarProvider>
                       <ZUIConfirmDialogProvider>
