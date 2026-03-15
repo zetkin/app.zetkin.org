@@ -72,7 +72,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
         {
           Icon: GroupWorkOutlined,
           labels: [
-            event.campaign?.title ?? 'Untitled project',
+            event.project?.title ?? 'Untitled project',
             event.organization.title,
           ],
         },

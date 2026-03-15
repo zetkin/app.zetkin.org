@@ -2,7 +2,7 @@ import AllInSuborg from '../filters/AllInSubOrg';
 import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
-import CampaignParticipation from '../filters/CampaignParticipation';
+import ProjectParticipation from '../filters/ProjectParticipation';
 import EmailBlacklist from '../filters/EmailBlacklist';
 import EmailClick from '../filters/EmailClick';
 import EmailHistory from '../filters/EmailHistory';
@@ -72,8 +72,8 @@ const FilterEditor = ({
           onSubmit={onSubmitFilter}
         />
       )}
-      {filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && (
-        <CampaignParticipation
+      {filter.type === FILTER_TYPE.PROJECT_PARTICIPATION && (
+        <ProjectParticipation
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

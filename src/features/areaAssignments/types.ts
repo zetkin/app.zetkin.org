@@ -30,7 +30,7 @@ export type ZetkinAreaAssignment = {
 };
 
 export type ZetkinAreaAssignmentPostBody = Partial<
-  Omit<ZetkinAreaAssignment, 'id' | 'campaign' | 'organization'>
+  Omit<ZetkinAreaAssignment, 'id' | 'project' | 'organization'>
 >;
 
 export type ZetkinAreaAssignmentPatchbody = Partial<

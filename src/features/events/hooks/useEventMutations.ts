@@ -5,16 +5,16 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 export type ZetkinEventPatchBody = Partial<
   Omit<
     ZetkinEvent,
-    'id' | 'activity' | 'campaign' | 'cover_file' | 'location' | 'organization'
+    'id' | 'activity' | 'project' | 'cover_file' | 'location' | 'organization'
   >
 > & {
   activity_id?: number | null;
-  campaign_id?: number;
   cancelled?: string | null;
   contact_id?: number | null;
   cover_file_id?: number | null;
   location_id?: number | null;
   organization_id?: number;
+  project_id?: number;
   published?: string | null;
 };
 

@@ -8,7 +8,6 @@ import {
 const KPDMembershipSurvey: ZetkinSurveyExtended = {
   access: 'open',
   callers_only: false,
-  campaign: null,
   elements: [
     {
       hidden: false,
@@ -81,6 +80,7 @@ const KPDMembershipSurvey: ZetkinSurveyExtended = {
     id: KPD.id,
     title: KPD.title,
   },
+  project: null,
   published: '1857-05-07T13:37:00.000Z',
   signature: 'allow_anonymous',
   title: 'Membership survey',

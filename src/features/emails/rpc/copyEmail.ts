@@ -33,8 +33,8 @@ async function handle(params: Params, apiClient: IApiClient) {
   const createdEmail = await apiClient.post<ZetkinEmail, ZetkinEmailPostBody>(
     `/api/orgs/${orgId}/emails`,
     {
-      campaign_id: email.campaign?.id || null,
       content: email.content,
+      project_id: email.project?.id || null,
       subject: email.subject,
       theme_id: email.theme?.id || null,
       title: email.title,

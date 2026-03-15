@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import {
-  ZetkinCampaign,
+  ZetkinProject,
   ZetkinEvent,
   ZetkinOrganization,
 } from 'utils/types/zetkin';
@@ -37,11 +37,11 @@ export async function GET(
   );
 
   const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
-  const campaign = await apiClient.get<ZetkinCampaign>(
+  const project = await apiClient.get<ZetkinProject>(
     `/api/orgs/${orgId}/campaigns/${projId}`
   );
 
-  return new Response(icsFromEvents(campaign.title, events, org), {
+  return new Response(icsFromEvents(project.title, events, org), {
     headers: { 'Content-Type': 'text/calendar' },
   });
 }

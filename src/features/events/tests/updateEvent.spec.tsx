@@ -31,11 +31,11 @@ describe('Updating an event', () => {
       events: {
         ...emptyState.events,
         eventList: eventItemsList,
-        eventsByCampaignId: {
-          1: eventItemsList,
-        },
         eventsByDate: {
           [now.toISOString().slice(0, 10)]: eventItemsList,
+        },
+        eventsByProjectId: {
+          1: eventItemsList,
         },
       },
     });
@@ -76,11 +76,11 @@ describe('Updating an event', () => {
       events: {
         ...emptyState.events,
         eventList: eventItemsList,
-        eventsByCampaignId: {
-          1: eventItemsList,
-        },
         eventsByDate: {
           [event.start_time.slice(0, 10)]: eventItemsList,
+        },
+        eventsByProjectId: {
+          1: eventItemsList,
         },
       },
     });

@@ -1,17 +1,13 @@
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import clusterEventsForWeekCalender from './clusterEventsForWeekCalender';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
+import { ACTIVITIES, EventActivity } from 'features/projects/types';
 import { asLatitude, asLongitude } from '../../areas/utils/asLongitudeLatitude';
 
 const mockEventData: ZetkinEvent = {
   activity: {
     id: 1,
     title: 'Flyering',
-  },
-  campaign: {
-    id: 1,
-    title: 'My campaign',
   },
   cancelled: null,
   contact: null,
@@ -30,6 +26,10 @@ const mockEventData: ZetkinEvent = {
   organization: {
     id: 1,
     title: 'KPD',
+  },
+  project: {
+    id: 1,
+    title: 'My project',
   },
   published: null,
   start_time: '1857-07-05T13:37:00.000Z',

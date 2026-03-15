@@ -7,7 +7,7 @@ import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import { truncateOnMiddle } from 'utils/stringUtils';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -52,7 +52,7 @@ const EmailHistory = ({
   const emailsSorted = emails.sort((e1, e2) => {
     return e1.title!.localeCompare(e2.title!);
   });
-  const projects = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
   const projectsSorted = projects.sort((p1, p2) => {
     return p1.title.localeCompare(p2.title);
   });
@@ -63,7 +63,7 @@ const EmailHistory = ({
     });
   const [emailSelectScope, setEmailSelectScope] =
     useState<EmailSelectScopeType>(
-      filter.config.campaign ? 'project' : filter.config.email ? 'email' : 'any'
+      filter.config.project ? 'project' : filter.config.email ? 'email' : 'any'
     );
 
   const setValueToKey = (
@@ -101,7 +101,7 @@ const EmailHistory = ({
   return (
     <FilterForm
       disableSubmit={
-        (emailSelectScope === 'project' && !filter.config.campaign) ||
+        (emailSelectScope === 'project' && !filter.config.project) ||
         (emailSelectScope === 'email' && !filter.config.email)
       }
       enableOrgSelect
@@ -132,7 +132,7 @@ const EmailHistory = ({
             emailScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  removeKey(['email', 'campaign']);
+                  removeKey(['email', 'project']);
                   setEmailSelectScope(e.target.value as EmailSelectScopeType);
                 }}
                 value={emailSelectScope}
@@ -200,12 +200,12 @@ const EmailHistory = ({
                 <StyledSelect
                   minWidth="10rem"
                   onChange={(e) =>
-                    setValueToKey('campaign', parseInt(e.target.value))
+                    setValueToKey('project', parseInt(e.target.value))
                   }
-                  value={filter.config.campaign || ''}
+                  value={filter.config.project || ''}
                 >
                   {projectsSorted.map((project) => (
-                    <MenuItem key={`proejct-${project.id}`} value={project.id}>
+                    <MenuItem key={`project-${project.id}`} value={project.id}>
                       {`"${project.title}"`}
                     </MenuItem>
                   ))}

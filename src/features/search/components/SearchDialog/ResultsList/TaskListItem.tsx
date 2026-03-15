@@ -22,13 +22,13 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
 
   const elements = [
     messages.results.project(),
-    task.campaign.title,
+    task.project.title,
     messages.results.task(),
   ];
 
   return (
     <Link
-      href={`/organize/${orgId}/projects/${task.campaign.id}/tasks/${task.id}`}
+      href={`/organize/${orgId}/projects/${task.project.id}/tasks/${task.id}`}
     >
       <ListItem data-testid="SearchDialog-resultsListItem">
         <ListItemButton>

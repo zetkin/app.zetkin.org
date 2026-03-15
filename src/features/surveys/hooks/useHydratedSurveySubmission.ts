@@ -51,7 +51,7 @@ type HydratedElement =
 
 export interface HydratedSurveySubmission {
   id: number;
-  campaign: ZetkinSurveyExtended['campaign'];
+  project: ZetkinSurveyExtended['project'];
   respondent: ZetkinSurveySubmission['respondent'];
   organization: ZetkinSurveySubmission['organization'];
   elements: HydratedElement[];
@@ -158,10 +158,10 @@ export default function useHydratedSurveySubmission(
   });
 
   return new ResolvedFuture({
-    campaign: surveyElementsFuture.data.campaign,
     elements,
     id: submission.id,
     organization: submission.organization,
+    project: surveyElementsFuture.data.project,
     respondent: submission.respondent,
     submitted: submission.submitted,
     survey: submission.survey,

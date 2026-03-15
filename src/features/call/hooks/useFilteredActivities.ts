@@ -154,15 +154,15 @@ export default function useFilteredActivities(orgId: number) {
       }
 
       if (
-        !activity.data.campaign &&
+        !activity.data.project &&
         projectIdsToFilterActivitiesBy.includes('noProject')
       ) {
         return true;
       }
 
       return (
-        activity.data.campaign &&
-        projectIdsToFilterActivitiesBy.includes(activity.data.campaign.id)
+        activity.data.project &&
+        projectIdsToFilterActivitiesBy.includes(activity.data.project.id)
       );
     })
     .filter((activity) => {

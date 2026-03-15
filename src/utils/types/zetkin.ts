@@ -14,7 +14,7 @@ import {
 } from '../../features/views/components/types';
 import { Latitude, Longitude } from 'features/areas/types';
 
-export interface ZetkinCampaign {
+export interface ZetkinProject {
   archived: boolean;
   color: string;
   info_text: string;
@@ -29,8 +29,8 @@ export interface ZetkinCampaign {
   published: boolean;
 }
 
-export interface ZetkinCampaignPostBody
-  extends Partial<Omit<ZetkinCampaign, 'organization' | 'manager'>> {
+export interface ZetkinProjectPostBody
+  extends Partial<Omit<ZetkinProject, 'organization' | 'manager'>> {
   title: string;
   manager_id?: number;
 }
@@ -72,7 +72,7 @@ export interface ZetkinEvent {
     id: number;
     title: string;
   } | null;
-  campaign: {
+  project: {
     id: number;
     title: string;
   } | null;
@@ -222,7 +222,7 @@ export interface ZetkinSession {
 }
 
 export interface ZetkinCallAssignment {
-  campaign: {
+  project: {
     id: number;
     title: string;
   } | null;
@@ -265,7 +265,7 @@ export interface ZetkinSurvey {
   callers_only: boolean;
   published: string | null;
   expires: string | null;
-  campaign: { id: number; title: string } | null;
+  project: { id: number; title: string } | null;
   org_access: 'sameorg' | 'suborgs';
   signature: 'require_signature' | 'allow_anonymous' | 'force_anonymous';
 }
@@ -564,7 +564,7 @@ export type ZetkinEmailConfig = {
 };
 
 export interface ZetkinEmail {
-  campaign: { id: number; title: string } | null;
+  project: { id: number; title: string } | null;
   config: ZetkinEmailConfig;
   theme: EmailTheme | null;
   id: number;
@@ -589,8 +589,8 @@ export interface ZetkinLink {
 export type ZetkinEmailPostBody = Partial<
   Omit<ZetkinEmail, 'id' | 'theme' | 'published' | 'organization' | 'target'>
 > & {
-  campaign_id: number | null;
   config_id: number | null;
+  project_id: number | null;
   theme_id: number | null;
 };
 

@@ -1,0 +1,43 @@
+import { FC, useCallback } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+
+import { ActivistPortalEventMap } from 'features/public/components/ActivistPortalEventMap';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { filtersUpdated } from '../store';
+import useFilteredProjectEvents from 'features/projects/hooks/useFilteredProjectEvents';
+
+type Props = {
+  orgId: number;
+  projectId: number;
+};
+
+const ActivistPortalProjectEventsMap: FC<Props> = ({ projectId, orgId }) => {
+  const { allEvents } = useFilteredProjectEvents(orgId, projectId);
+  const dispatch = useAppDispatch();
+  const filters = useAppSelector((state) => state.organizations.filters);
+  const path = usePathname();
+  const router = useRouter();
+  const lastSegment = path?.split('/')[3] ?? 'home';
+
+  const onLocationFilterChange = useCallback(
+    (geojsonToFilterBy: GeoJSON.Feature[]) => {
+      dispatch(
+        filtersUpdated({
+          geojsonToFilterBy,
+        })
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lastSegment, router.push, orgId]
+  );
+
+  return (
+    <ActivistPortalEventMap
+      events={allEvents}
+      locationFilter={filters.geojsonToFilterBy}
+      setLocationFilter={onLocationFilterChange}
+    />
+  );
+};
+
+export default ActivistPortalProjectEventsMap;

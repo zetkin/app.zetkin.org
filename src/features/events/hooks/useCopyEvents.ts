@@ -11,7 +11,6 @@ import {
 const makeZetkinEventPatchBody = (e: ZetkinEvent) => {
   return {
     activity_id: e.activity?.id,
-    campaign_id: e.campaign?.id,
     cancelled: e.cancelled,
     contact_id: e.contact?.id,
     cover_file_id: e.cover_file?.id,
@@ -21,6 +20,7 @@ const makeZetkinEventPatchBody = (e: ZetkinEvent) => {
     num_participants_available: e.num_participants_available,
     num_participants_required: e.num_participants_required,
     organization_id: e.organization.id,
+    project_id: e.project?.id,
     start_time: e.start_time,
     title: e.title,
     url: e.url,

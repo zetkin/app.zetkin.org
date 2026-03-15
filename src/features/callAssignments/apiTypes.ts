@@ -13,7 +13,7 @@ export type CallAssignmentData = ZetkinCallAssignment;
 
 export type CallAssignmentPatchBody = Partial<
   CallAssignmentData & {
-    campaign_id?: number;
+    project_id?: number;
   }
 >;
 

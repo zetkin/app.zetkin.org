@@ -59,7 +59,7 @@ export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
   reassign_limit: number | null;
   target: ZetkinQuery;
   cover_file: ZetkinFile | null;
-  campaign: {
+  project: {
     id: number;
     title: string;
   };
@@ -85,10 +85,10 @@ export interface ZetkinTaskRequestBody<
     Omit<
       // Remove these fields
       ZetkinTask<Config>,
-      'campaign' | 'cover_file' | 'organization' | 'target'
+      'project' | 'cover_file' | 'organization' | 'target'
     >
   > {
-  campaign_id?: number;
+  project_id?: number;
   cover_file_id?: number | null;
   organization_id?: number;
   target_filters?: ZetkinSmartSearchFilter[];
@@ -96,7 +96,7 @@ export interface ZetkinTaskRequestBody<
 
 // Required fields for creating a task, all others are optional
 export interface ZetkinTaskPostBody extends ZetkinTaskRequestBody {
-  campaign_id: number;
+  project_id: number;
   instructions: string;
   title: string;
   type: TASK_TYPE;

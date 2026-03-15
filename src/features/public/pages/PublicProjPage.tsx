@@ -21,28 +21,28 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
+import useFilteredProjectEvents from 'features/projects/hooks/useFilteredProjectEvents';
 import NoEventsBlurb from 'features/public/components/NoEventsBlurb';
-import { filtersUpdated } from 'features/campaigns/store';
-import messageIds from 'features/campaigns/l10n/messageIds';
-import useCampaign from 'features/campaigns/hooks/useCampaign';
+import { filtersUpdated } from 'features/projects/store';
+import messageIds from 'features/projects/l10n/messageIds';
+import useProject from 'features/projects/hooks/useProject';
 import SignupChoiceModal from 'features/organizations/components/SignupChoiceModal';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
 
 type Props = {
-  campId: number;
   orgId: number;
+  projectId: number;
 };
 
-const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
+const PublicProjectPage: FC<Props> = ({ projectId, orgId }) => {
   const intl = useIntl();
   const router = useRouter();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
   const user = useUser();
   const dispatch = useAppDispatch();
-  const campaign = useCampaign(orgId, campId).campaignFuture.data;
+  const project = useProject(orgId, projectId).projectFuture.data;
   const hasUnauthSignup = useFeatureWithOrg(UNAUTH_EVENT_SIGNUP, orgId);
 
   const {
@@ -51,9 +51,9 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
     filteredEvents,
     getDateRange,
     locationEvents,
-  } = useFilteredCampaignEvents(orgId, campId);
+  } = useFilteredProjectEvents(orgId, projectId);
   const { customDatesToFilterBy, dateFilterState, geojsonToFilterBy } =
-    useAppSelector((state) => state.campaigns.filters);
+    useAppSelector((state) => state.projects.filters);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [drawerContent, setDrawerContent] = useState<
@@ -221,9 +221,9 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         <Box key="empty">
           <NoEventsBlurb
             description={
-              campaign
+              project
                 ? messages.publicProjectPage.eventList.noEventsBlurb.description(
-                    { project: campaign.title }
+                    { project: project.title }
                   )
                 : undefined
             }
