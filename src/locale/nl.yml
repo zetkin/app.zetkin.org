@@ -2093,6 +2093,25 @@ feat:
       previewPortal: Preview de vragenlijst in activistenportaal
       visitPortal: Bezoek de vragenlijst in activistenportaal
       willAccept: Inzendingen zijn nu mogelijk via deze link
+    insights:
+      error: Er is een onbekende fout opgetreden tijdens het laden.
+      export:
+        errorUnknown: Er is een onbekende fout opgetreden tijdens het exporteren.
+        toPdf: Exporteren als PDF
+        toPng: Exporteren als PNG
+      optionsFields:
+        subheaderMultiple: '{answerCount, plural, =1 {1 antwoord} other {# antwoorden}}, {totalSelectedOptionsCount, plural, =1 {1 optie} other {# opties}} in totaal geselecteerd.'
+        subheaderSingle: '{answerCount, plural, =1 {1 antwoord} other {# antwoorden}}.'
+        tabs:
+          barPlot: Staaf
+          piePlot: Taart
+        warningMultipleSelectedOptionsPie: Let op dat deze vraag respondenten toelaat meer dan één optie te kiezen, en {respondentCount, plural, =1 {1 respondent} other {# respondenten}} deed dat. Dit kan het taartdiagram misleidend maken.
+      textFields:
+        subheader: In totaal waren er {answerCount, plural, =1 {1 antwoord} other {# antwoorden}}, {totalWordCount, plural, =1 {1 woord} other {# woorden}} en {totalUniqueWordCount, plural, =1 {1 uniek woord} other {# unieke woorden}}.
+        tabs:
+          responses: Antwoord
+          wordCloud: Wolk
+          wordFrequencies: Staaf
   tags:
     dialog:
       colorErrorText: Gebruik een geldige hex code

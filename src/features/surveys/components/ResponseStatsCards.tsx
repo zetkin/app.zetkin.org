@@ -493,13 +493,21 @@ const OptionsStatsCard = ({
   const messages = useMessages(messageIds);
 
   const subheader = useMemo(
-    () =>
-      messages.insights.optionsFields.subheader({
-        answerCount: questionStats.answerCount,
-        totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
-      }),
+    () => {
+      const isMultiple = questionStats.question.question.response_config.widget_type === 'checkbox';
+      if (isMultiple) {
+        return messages.insights.optionsFields.subheaderMultiple({
+          answerCount: questionStats.answerCount,
+          totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
+        });
+      } else {
+        return messages.insights.optionsFields.subheaderSingle({
+          answerCount: questionStats.answerCount,
+        });
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questionStats, messages.insights.optionsFields.subheader]
+    [questionStats, messages.insights.optionsFields.subheaderMultiple, messages.insights.optionsFields.subheaderSingle]
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
