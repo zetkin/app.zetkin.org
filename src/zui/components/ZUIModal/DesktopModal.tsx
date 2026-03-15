@@ -1,5 +1,5 @@
 import { Box, Fade, Modal, Paper } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import { ZUISize } from '../types';
 import ModalBackground from './ModalBackground';
@@ -25,11 +25,17 @@ const DesktopModal: FC<ZUIModalProps> = ({
   size = 'auto',
   title,
 }) => {
+  const seed = useRef(0);
+  useEffect(() => {
+    seed.current = Math.random();
+  }, [open]);
+
   const paperRef = usePreventKeyboardPropagation(open, allowPropagation);
 
   return (
     <Modal
       disableRestoreFocus
+      hideBackdrop={true}
       onClose={onClose}
       open={open}
       slots={{
@@ -43,7 +49,7 @@ const DesktopModal: FC<ZUIModalProps> = ({
                 width: '100%',
               }}
             >
-              <ModalBackground height="100%" width="100%" />
+              <ModalBackground height="100%" seed={seed.current} width="100%" />
             </Box>
           </Fade>
         ),
@@ -63,6 +69,7 @@ const DesktopModal: FC<ZUIModalProps> = ({
             top: '50%',
             transform: 'translate(-50%, -50%)',
             width: widths[size],
+            zIndex: 10,
           })}
         >
           <ModalContent

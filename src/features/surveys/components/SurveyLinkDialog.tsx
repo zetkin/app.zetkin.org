@@ -1,4 +1,4 @@
-import { ArrowForward } from '@mui/icons-material';
+import { ArrowDownward } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -54,21 +54,26 @@ const SurveyLinkDialog = ({
             </Typography>
           </Box>
 
-          <Box alignItems="center" display="flex" mb={2}>
+          <Box
+            mb={2}
+            sx={{
+              alignItems: 'start',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
             {email}
-            <Box alignItems="center" display="flex" ml={2} mr={2}>
-              <ArrowForward
-                color="secondary"
-                sx={{
-                  opacity: '50%',
-                }}
-              />
-            </Box>
+            <ArrowDownward
+              color="secondary"
+              sx={{
+                opacity: '50%',
+              }}
+            />
             {person.email}
           </Box>
           {messages.surveyDialogDifferentEmail.description()}
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ padding: '20px 24px' }}>
           <Button onClick={onClose}>
             {messages.surveyDialogDifferentEmail.keep()}
           </Button>
@@ -91,24 +96,40 @@ const SurveyLinkDialog = ({
       <DialogTitle>{messages.surveyDialog.title()}</DialogTitle>
       <Divider />
       <DialogContent>
-        <Box alignItems="center" display="flex" mb={2}>
+        <Box
+          mb={2}
+          sx={{
+            alignItems: 'start',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           {email}
-          <Box alignItems="center" display="flex" ml={2} mr={2}>
-            <ArrowForward
-              color="secondary"
-              sx={{
-                opacity: '50%',
-              }}
+          <ArrowDownward
+            color="secondary"
+            sx={{
+              opacity: '50%',
+            }}
+          />
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <ZUIPersonAvatar
+              orgId={orgId}
+              personId={person?.id ?? 0}
+              size="sm"
             />
+            <Typography ml={2} variant="h6">
+              {person?.first_name} {person?.last_name}
+            </Typography>
           </Box>
-          <ZUIPersonAvatar orgId={orgId} personId={person?.id ?? 0} size="sm" />
-          <Typography ml={2} variant="h6">
-            {person?.first_name} {person?.last_name}
-          </Typography>
         </Box>
         {messages.surveyDialog.description()}
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ padding: '20px 24px' }}>
         <Button onClick={onClose} variant="outlined">
           {messages.surveyDialog.cancel()}
         </Button>

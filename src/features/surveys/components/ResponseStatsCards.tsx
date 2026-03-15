@@ -76,6 +76,7 @@ import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import ZUIText from 'zui/components/ZUIText';
+import { makeDeterministicRNG } from 'utils/randomUtils';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -170,6 +171,7 @@ const ResponseStatsCard = ({
         document.body.style.overflow = docOverflow;
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       showSnackbar,
       containerRef,
@@ -189,6 +191,7 @@ const ResponseStatsCard = ({
         onSelect: () => exportChart('pdf'),
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [exportChart]
   );
 
@@ -495,6 +498,7 @@ const OptionsStatsCard = ({
         answerCount: questionStats.answerCount,
         totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [questionStats, messages.insights.optionsFields.subheader]
   );
 
@@ -537,28 +541,6 @@ interface WordData {
   value: number;
 }
 const WordCloudFixedValueGenerator = () => 0.5;
-
-/**
- * Deterministically generate random numbers using a Linear Congruential Generator (LCG). NOT SAFE for cryptography.
- * @param seed the initial seed
- * @returns A pseudo-random number in the interval [0, 1]
- */
-export function makeDeterministicRNG(seed: number) {
-  let state = seed;
-
-  // Linear Congruential Generator (LCG), Numerical Recipes parameters: https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
-  const LCG_MULTIPLIER = 1664525;
-  const LCG_INCREMENT = 1013904223;
-  const UINT32_MAX = 0xffffffff;
-
-  return function nextUniform01() {
-    // advance RNG state (32-bit wraparound)
-    state = (state * LCG_MULTIPLIER + LCG_INCREMENT) >>> 0;
-
-    return state / UINT32_MAX;
-  };
-}
-
 const wordCloudTextStyle: CSSProperties = {
   transition: 'transform 200ms ease',
 };
@@ -610,6 +592,7 @@ const TextResponseWordCloud = ({
   const { publicAPI } = useChartProExport(exportOptions);
   useEffect(() => {
     exportApi.current = publicAPI as UseChartProExportPublicApi;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicAPI]);
 
   const [width, setWidth] = useState(600);
@@ -624,6 +607,7 @@ const TextResponseWordCloud = ({
   const getRotationDegree = useMemo(() => {
     const rng = makeDeterministicRNG(42);
     return () => (rng() > 0.5 ? 0 : 90);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words, width]);
 
   const fontScale = useMemo(() => {
@@ -906,6 +890,7 @@ const TextStatsCard = ({
         totalUniqueWordCount: questionStats.totalUniqueWordCount,
         totalWordCount: questionStats.totalWordCount,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [questionStats, messages.insights.textFields.subheader]
   );
 

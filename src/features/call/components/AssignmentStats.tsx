@@ -7,12 +7,16 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 
 type Props = {
-  stats: ZetkinCallAssignmentStats;
+  assignmentId: number;
+  orgId: number;
 };
 
-export const DesktopStats: FC<Props> = ({ stats }) => {
+export const DesktopStats: FC<{ stats: ZetkinCallAssignmentStats }> = ({
+  stats,
+}) => {
   return (
     <Box
       display="flex"
@@ -51,9 +55,10 @@ export const DesktopStats: FC<Props> = ({ stats }) => {
   );
 };
 
-const AssignmentStats: FC<Props> = ({ stats }) => {
+const AssignmentStats: FC<Props> = ({ orgId, assignmentId }) => {
   const messages = useMessages(messageIds);
   const isMobile = useIsMobile();
+  const stats = useSimpleCallAssignmentStats(orgId, assignmentId);
   return (
     <ZUISection
       borders={false}

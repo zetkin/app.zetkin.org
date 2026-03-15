@@ -1,11 +1,10 @@
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { Assignment, GroupWorkOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
 import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import ZUIButton from 'zui/components/ZUIButton';
 import { ZetkinSurvey } from 'utils/types/zetkin';
-import ZUILabel from 'zui/components/ZUILabel';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import ZUIModal from 'zui/components/ZUIModal';
@@ -39,9 +38,8 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
     <>
       <MyActivityListItem
         actions={[
-          <>
+          <Fragment key={survey.id}>
             <ZUIButton
-              key={survey.id}
               label={hasMeaningfulContent ? 'Edit responses' : 'Fill out'}
               onClick={() => onSelectSurvey(survey.id)}
               variant="primary"
@@ -50,7 +48,6 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
               //TODO: Create ZUI Component for Survey in progress label
               <>
                 <ZUIButton
-                  key={survey.id}
                   label={'Clear responses'}
                   onClick={() => setClearModalOpen(true)}
                   variant="secondary"
@@ -68,15 +65,13 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
                     textAlign: 'center',
                   })}
                 >
-                  <ZUILabel color="inherit">
-                    <ZUIText color="inherit" variant="bodySmRegular">
-                      {'Survey in progress'}
-                    </ZUIText>
-                  </ZUILabel>
+                  <ZUIText color="inherit" variant="bodySmRegular">
+                    {'Survey in progress'}
+                  </ZUIText>
                 </Box>
               </>
             )}
-          </>,
+          </Fragment>,
         ]}
         iconTitle={Assignment}
         info={[

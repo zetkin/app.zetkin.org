@@ -14,9 +14,9 @@ export default function useTagMutations(orgId: number): UseTagMutationsReturn {
   const createTagGroup = useCreateTagGroup(orgId);
 
   const updateTag = async (tag: EditTag) => {
-    if ('group' in tag) {
-      // If creating a new group, has group object
-      const newGroup = await createTagGroup(tag.group);
+    const hasTagGroup = 'group' in tag && !!tag.group;
+    if (hasTagGroup) {
+      const newGroup = await createTagGroup(tag.group!);
       const tagWithNewGroup = {
         ...tag,
         group: undefined,

@@ -1,30 +1,28 @@
-import { Report, ZetkinCall } from 'features/call/types';
+import { CallState, FinishedCall, Report } from 'features/call/types';
 
 export default function calculateReportState(
   report: Report
-): ZetkinCall['state'] {
+): FinishedCall['state'] {
   const wasReached = report.success;
   const couldTalk = report.targetCouldTalk;
 
   if (wasReached && couldTalk) {
-    return 1;
+    return CallState.SUCCESSFUL;
   } else if (wasReached && !couldTalk && report.callBackAfter) {
-    return 13;
+    return CallState.CALL_BACK;
   } else {
-    //!wasReached
     if (report.failureReason == 'lineBusy') {
-      return 12;
+      return CallState.LINE_BUSY;
     } else if (report.failureReason == 'noPickup') {
       if (report.leftMessage) {
-        return 15;
+        return CallState.LEFT_MESSAGE;
       } else {
-        return 11;
+        return CallState.NO_PICKUP;
       }
     } else if (report.failureReason == 'notAvailable' && report.callBackAfter) {
-      return 14;
+      return CallState.NOT_AVAILABLE;
     } else {
-      //report.wrongNumber
-      return 21;
+      return CallState.WRONG_NUMBER;
     }
   }
 }

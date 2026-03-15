@@ -29,6 +29,7 @@ const ImportMessageList: FC<Props> = ({
     ).length;
 
     onAllChecked(numChecked == warningCount);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numChecked]);
 
   return (

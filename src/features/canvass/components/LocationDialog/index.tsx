@@ -34,7 +34,6 @@ import sortMetrics from 'features/canvass/utils/sortMetrics';
 import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
 import BulkEditHouseholdsPage from './pages/BulkEditHouseholdsPage';
 import useEditHouseholds from 'features/canvass/hooks/useEditHouseholds';
-import HouseholdsPage2 from './pages/HouseholdsPage2';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -48,7 +47,6 @@ type LocationDialogStep =
   | 'edit'
   | 'createHouseholds'
   | 'households'
-  | 'households2'
   | 'household'
   | 'editHousehold'
   | 'locationVisit'
@@ -112,6 +110,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         window.removeEventListener('popstate', handlePopState);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -119,6 +118,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
       pushedRef.current = true;
       goto('location');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
@@ -140,7 +140,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           location={location}
           onClose={onClose}
           onEdit={() => goto('edit')}
-          onHouseholds={(useNew) => goto(useNew ? 'households2' : 'households')}
+          onHouseholds={() => goto('households')}
           onVisit={() => goto('locationVisit')}
         />
         <EditLocationPage
@@ -153,8 +153,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
             back();
           }}
         />
-        <HouseholdsPage2
-          key="households2"
+        <HouseholdsPage
+          key="households"
           assignment={assignment}
           location={location}
           onBack={() => back()}
@@ -182,34 +182,6 @@ const LocationDialog: FC<LocationDialogProps> = ({
             setSelectedHouseholdIds(householdIds)
           }
           selectedHouseholdIds={selectedHouseholdIds}
-        />
-        <HouseholdsPage
-          key="households"
-          assignment={assignment}
-          location={location}
-          onBack={() => back()}
-          onBulkCreate={() => goto('createHouseholds')}
-          onBulkEdit={(householdIds) => {
-            setSelectedHouseholdIds(householdIds);
-            goto('bulkEditHouseholds');
-          }}
-          onBulkVisit={(households) => {
-            setSelectedHouseholdIds(households);
-            goto('bulkHouseholdVisits');
-          }}
-          onClose={onClose}
-          onCreateHousehold={(household) => {
-            setSelectedHouseholdId(household.id);
-            goto('household');
-          }}
-          onSelectHousehold={(householdId: number) => {
-            setSelectedHouseholdId(householdId);
-            goto('household');
-          }}
-          onSelectHouseholds={(householdIds: number[]) =>
-            setSelectedHouseholdIds(householdIds)
-          }
-          selectedHouseholdIds={selectedHouseholdIds || []}
         />
         <Box key="household" height="100%">
           {selectedHouseholdId && (

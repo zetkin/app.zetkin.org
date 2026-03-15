@@ -20,6 +20,7 @@ const ValueTagForm: React.FC<{
     } else {
       onChange(inputValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
 
   return (
@@ -46,7 +47,10 @@ const ValueTagForm: React.FC<{
           <TagChip tag={{ ...tag, value: inputValue }} />
         </Box>
       </Box>
-      <ZUISubmitCancelButtons onCancel={onCancel} />
+      <ZUISubmitCancelButtons
+        onCancel={onCancel}
+        submitDisabled={inputValue.trim().length == 0}
+      />
     </form>
   );
 };

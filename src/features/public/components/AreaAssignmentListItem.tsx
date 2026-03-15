@@ -37,9 +37,15 @@ const AreaAssignmentListItem: FC<Props> = ({ assignment, href }) => {
         {
           Icon: GroupWorkOutlined,
           labels: [
-            campaign.campaignFuture.data?.title,
-            organization.data?.title,
-          ].filter((label) => !!label) as string[],
+            campaign.campaignFuture.data && {
+              href: `/o/${campaign.campaignFuture.data.organization.id}/projects/${campaign.campaignFuture.data.id}`,
+              text: campaign.campaignFuture.data.title,
+            },
+            organization.data && {
+              href: `/o/${organization.data.id}`,
+              text: organization.data.title,
+            },
+          ].filter((label) => !!label),
         },
       ]}
       title={assignment.title || messages.defaultTitles.areaAssignment()}

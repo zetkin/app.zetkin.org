@@ -27,6 +27,7 @@ const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId }) => {
         })
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [lastSegment, router.push, orgId]
   );
 
