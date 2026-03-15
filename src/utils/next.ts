@@ -1,5 +1,7 @@
+import { promises as fs } from 'fs';
 import { getIronSession } from 'iron-session';
 import { ParsedUrlQuery } from 'querystring';
+import path from 'path';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -7,7 +9,8 @@ import {
 } from 'next';
 
 import { AppSession } from './types';
-import { getBrowserLanguage, getMessages } from './locale';
+import { getBrowserLanguage } from './locale';
+import { LOCALES, DEFAULT_LOCALE } from 'i18n/config';
 import getUserMemberships from './getUserMemberships';
 import requiredEnvVar from './requiredEnvVar';
 import { stringToBool } from './stringUtils';
@@ -213,13 +216,26 @@ export const scaffold =
 
     const result = (await wrapped(ctx)) || {};
 
-    // Figure out browser's preferred language
-    const lang = ctx.user?.lang || getBrowserLanguage(contextFromNext.req);
+    // Determine locale: NEXT_LOCALE cookie (set by middleware) > user.lang > Accept-Language
+    const cookieLocale = contextFromNext.req.cookies?.NEXT_LOCALE;
+    const detectedLang =
+      cookieLocale ||
+      ctx.user?.lang ||
+      getBrowserLanguage(contextFromNext.req);
+    const lang = LOCALES.includes(detectedLang as typeof LOCALES[number])
+      ? detectedLang
+      : DEFAULT_LOCALE;
 
-    // TODO: Respect scope from options again
-    //const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
-    const localeScope: string[] = [];
-    const messages = await getMessages(lang, localeScope);
+    // Load messages from compiled JSON
+    const filePath = path.join(
+      process.cwd(),
+      'src',
+      'locale',
+      'compiled',
+      `${lang}.json`
+    );
+    const fileContents = await fs.readFile(filePath, 'utf8');
+    const messages = JSON.parse(fileContents) as Record<string, string>;
 
     if (hasProps(result)) {
       result.props = {

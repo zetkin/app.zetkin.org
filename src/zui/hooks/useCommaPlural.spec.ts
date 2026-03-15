@@ -9,11 +9,11 @@ import useCommaPlural from './useCommaPlural';
 describe('useCommaPlural()', () => {
   const opts = {
     wrapper: ({ children }: PropsWithChildren) =>
-      createElement(
-        NextIntlClientProvider,
-        { locale: 'en', messages: {} },
-        children
-      ),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      createElement(NextIntlClientProvider as any, {
+        locale: 'en',
+        messages: {},
+      }, children),
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

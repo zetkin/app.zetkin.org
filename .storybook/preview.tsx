@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import Environment from 'core/env/Environment';
 import FetchApiClient from 'core/api/client/FetchApiClient';
 import { EnvProvider } from 'core/env/EnvContext';
-import { IntlProvider } from 'react-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -27,11 +27,11 @@ dayjs.extend(isoWeek);
 
 const I18nProvider: FC<PropsWithChildren> = (props) => {
   return (
-    <IntlProvider defaultLocale="en" locale="en" messages={{}}>
+    <NextIntlClientProvider locale="en" messages={{}}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         {props.children}
       </LocalizationProvider>
-    </IntlProvider>
+    </NextIntlClientProvider>
   );
 };
 

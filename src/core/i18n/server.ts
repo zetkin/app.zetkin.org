@@ -1,15 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import IntlMessageFormat from 'intl-messageformat';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-import { getMessages } from 'utils/locale';
 import { HookedMessageFunc, UseMessagesMap } from './useMessages';
-import { Message, MessageMap, MessageValue } from './messages';
+import { Message, MessageMap } from './messages';
 
 export default async function getServerMessages<MapType extends MessageMap>(
   lang: string,
   messageIds: MapType
 ): Promise<UseMessagesMap<MapType>> {
-  const localMessages = await getMessages(lang);
+  // Load messages from compiled JSON
+  const filePath = path.join(
+    process.cwd(),
+    'src',
+    'locale',
+    'compiled',
+    `${lang}.json`
+  );
+
+  let localMessages: Record<string, string> = {};
+  try {
+    const fileContents = await fs.readFile(filePath, 'utf8');
+    localMessages = JSON.parse(fileContents);
+  } catch {
+    // Fall back to empty messages (will use defaultMessage)
+  }
 
   function makeFunctions<MapType extends MessageMap>(
     map: MapType
@@ -21,11 +36,8 @@ export default async function getServerMessages<MapType extends MessageMap>(
 
     Object.entries(map).forEach(([key, val]) => {
       if (isMessage(val)) {
-        output[key] = ((values?: Record<string, MessageValue>) => {
-          // TODO: Cache this compilation?
-          const msg = localMessages[val._id] || val._defaultMessage;
-          const fmt = new IntlMessageFormat(msg, [lang, 'en']);
-          return fmt.format(values);
+        output[key] = (() => {
+          return localMessages[val._id] || val._defaultMessage;
         }) as HookedMessageFunc<typeof val>;
       } else {
         output[key] = makeFunctions(val) as UseMessagesMap<typeof val>;

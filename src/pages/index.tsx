@@ -56,6 +56,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(
             }
           }
 
+          // Set NEXT_LOCALE cookie from user's language preference
+          if (context.user?.lang) {
+            res.setHeader(
+              'Set-Cookie',
+              `NEXT_LOCALE=${context.user.lang};Path=/;Max-Age=31536000`
+            );
+          }
+
           if (session.redirAfterLogin) {
             // User logged in after trying to access some URL, and
             // should be redirected to that URL once authenticated.
