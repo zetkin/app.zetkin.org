@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
 
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -9,6 +10,7 @@ import { ApiClientError } from 'core/api/errors';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import PublicProjectLayout from 'features/public/layouts/PublicProjectLayout';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
+import { getFilteredMessages } from 'i18n/pickMessages';
 
 type Props = {
   children: ReactNode;
@@ -48,6 +50,11 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
+  const messages = await getFilteredMessages(
+    'feat.campaigns',
+    'feat.organizations',
+    'feat.events'
+  );
 
   try {
     const campaign = await apiClient.get<ZetkinCampaign>(
@@ -55,11 +62,13 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
     );
 
     return (
-      <HomeThemeProvider>
-        <PublicProjectLayout campaign={campaign}>
-          {children}
-        </PublicProjectLayout>
-      </HomeThemeProvider>
+      <NextIntlClientProvider messages={messages}>
+        <HomeThemeProvider>
+          <PublicProjectLayout campaign={campaign}>
+            {children}
+          </PublicProjectLayout>
+        </HomeThemeProvider>
+      </NextIntlClientProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {

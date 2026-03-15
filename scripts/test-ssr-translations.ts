@@ -152,8 +152,8 @@ async function runTests() {
   // would filter messages per page/section.
   console.log(`  ℹ Response size: ${(pageSize / 1024).toFixed(1)}KB`);
   assert(
-    pageSize < 300 * 1024,
-    `Response < 300KB (got ${(pageSize / 1024).toFixed(1)}KB)`
+    pageSize < 80 * 1024,
+    `Response < 80KB (got ${(pageSize / 1024).toFixed(1)}KB)`
   );
 
   // Summary

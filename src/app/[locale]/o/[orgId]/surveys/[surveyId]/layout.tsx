@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { Metadata } from 'next';
 import { FC, ReactElement, ReactNode } from 'react';
 import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
@@ -11,6 +12,7 @@ import PublicSurveyLayout from 'features/public/layouts/PublicSurveyLayout';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';
 import { getSeoTags } from 'utils/seoTags';
+import { getFilteredMessages } from 'i18n/pickMessages';
 
 type Props = {
   children: ReactNode;
@@ -52,6 +54,10 @@ const SurveyLayout: FC<Props> = async ({
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
+  const messages = await getFilteredMessages(
+    'feat.surveys',
+    'feat.organizations'
+  );
 
   const { orgId, surveyId } = params;
 
@@ -69,9 +75,11 @@ const SurveyLayout: FC<Props> = async ({
   }
 
   return (
-    <HomeThemeProvider>
-      <PublicSurveyLayout survey={survey}>{children}</PublicSurveyLayout>
-    </HomeThemeProvider>
+    <NextIntlClientProvider messages={messages}>
+      <HomeThemeProvider>
+        <PublicSurveyLayout survey={survey}>{children}</PublicSurveyLayout>
+      </HomeThemeProvider>
+    </NextIntlClientProvider>
   );
 };
 

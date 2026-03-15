@@ -1,12 +1,14 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
+import { NextIntlClientProvider } from 'next-intl';
 
 import HomeLayout from 'features/my/layouts/HomeLayout';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';
 import messageIds from 'features/my/l10n/messageIds';
+import { getFilteredMessages } from 'i18n/pickMessages';
 import { getSeoTags } from '../../../utils/seoTags';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -44,14 +46,19 @@ type Props = {
   children: ReactNode;
 };
 
-const MyHomeLayout: FC<Props> = ({ children }) => {
+export default async function MyHomeLayout({ children }: Props) {
   const homeTitle = process.env.HOME_TITLE;
+  const messages = await getFilteredMessages(
+    'feat.my',
+    'feat.public',
+    'feat.home'
+  );
 
   return (
-    <HomeThemeProvider>
-      <HomeLayout title={homeTitle}>{children}</HomeLayout>
-    </HomeThemeProvider>
+    <NextIntlClientProvider messages={messages}>
+      <HomeThemeProvider>
+        <HomeLayout title={homeTitle}>{children}</HomeLayout>
+      </HomeThemeProvider>
+    </NextIntlClientProvider>
   );
-};
-
-export default MyHomeLayout;
+}

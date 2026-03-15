@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
 
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import PublicEventLayout from 'features/public/layouts/PublicEventLayout';
@@ -10,6 +11,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { getSeoTags } from 'utils/seoTags';
 import { ApiClientError } from 'core/api/errors';
+import { getFilteredMessages } from 'i18n/pickMessages';
 
 type Props = PropsWithChildren<{
   params: {
@@ -65,6 +67,11 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
+  const messages = await getFilteredMessages(
+    'feat.events',
+    'feat.organizations',
+    'feat.campaigns'
+  );
 
   try {
     const event = await apiClient.get<ZetkinEvent>(
@@ -72,11 +79,13 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
     );
 
     return (
-      <HomeThemeProvider>
-        <PublicEventLayout eventId={event.id} orgId={event.organization.id}>
-          {children}
-        </PublicEventLayout>
-      </HomeThemeProvider>
+      <NextIntlClientProvider messages={messages}>
+        <HomeThemeProvider>
+          <PublicEventLayout eventId={event.id} orgId={event.organization.id}>
+            {children}
+          </PublicEventLayout>
+        </HomeThemeProvider>
+      </NextIntlClientProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {

@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
 
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import PublicOrgLayout from 'features/public/layouts/PublicOrgLayout';
@@ -9,6 +10,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 import { ApiClientError } from 'core/api/errors';
+import { getFilteredMessages } from 'i18n/pickMessages';
 
 type Props = {
   children: ReactNode;
@@ -50,6 +52,11 @@ const OrgLayout: FC<Props> = async ({ children, params }) => {
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
+  const messages = await getFilteredMessages(
+    'feat.organizations',
+    'feat.home',
+    'feat.joinForms'
+  );
 
   try {
     const org = await apiClient.get<ZetkinOrganization>(
@@ -57,9 +64,11 @@ const OrgLayout: FC<Props> = async ({ children, params }) => {
     );
 
     return (
-      <HomeThemeProvider>
-        <PublicOrgLayout org={org}>{children}</PublicOrgLayout>
-      </HomeThemeProvider>
+      <NextIntlClientProvider messages={messages}>
+        <HomeThemeProvider>
+          <PublicOrgLayout org={org}>{children}</PublicOrgLayout>
+        </HomeThemeProvider>
+      </NextIntlClientProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {

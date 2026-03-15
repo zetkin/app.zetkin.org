@@ -1,9 +1,9 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
 import { headers } from 'next/headers';
 import { setRequestLocale } from 'next-intl/server';
 
+import { getFilteredMessages } from 'i18n/pickMessages';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
 import { LOCALES } from 'i18n/config';
@@ -35,7 +35,9 @@ export default async function LocaleLayout({ children, params }: Props) {
     user = null;
   }
 
-  const messages = await getMessages();
+  // Only pass shared base messages at root level.
+  // Section layouts add their own scoped messages via nested providers.
+  const messages = await getFilteredMessages();
 
   return (
     <AppRouterCacheProvider>
