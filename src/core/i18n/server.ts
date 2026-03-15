@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { promises as fs } from 'fs';
+import { readFileSync } from 'fs';
 import path from 'path';
 
 import { HookedMessageFunc, UseMessagesMap } from './useMessages';
 import { Message, MessageMap } from './messages';
+
+// Cache compiled messages in memory
+const serverMessageCache: Record<string, Record<string, unknown>> = {};
 
 function getNestedValue(
   obj: Record<string, unknown>,
@@ -24,19 +27,19 @@ export default async function getServerMessages<MapType extends MessageMap>(
   lang: string,
   messageIds: MapType
 ): Promise<UseMessagesMap<MapType>> {
-  // Load messages from compiled JSON (nested format)
-  const filePath = path.join(
-    process.cwd(),
-    'src',
-    'locale',
-    'compiled',
-    `${lang}.json`
-  );
-
   let localMessages: Record<string, unknown> = {};
   try {
-    const fileContents = await fs.readFile(filePath, 'utf8');
-    localMessages = JSON.parse(fileContents);
+    if (!serverMessageCache[lang]) {
+      const filePath = path.join(
+        process.cwd(),
+        'src',
+        'locale',
+        'compiled',
+        `${lang}.json`
+      );
+      serverMessageCache[lang] = JSON.parse(readFileSync(filePath, 'utf8'));
+    }
+    localMessages = serverMessageCache[lang];
   } catch {
     // Fall back to empty messages (will use defaultMessage)
   }

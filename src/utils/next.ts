@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { readFileSync } from 'fs';
 import { getIronSession } from 'iron-session';
 import { ParsedUrlQuery } from 'querystring';
 import path from 'path';
@@ -24,6 +24,23 @@ import { omitUndefined } from './omitUndefined';
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const Z = require('zetkin');
+
+// Cache compiled messages in memory — loaded once per locale per process
+const compiledMessageCache: Record<string, Record<string, unknown>> = {};
+
+function loadCompiledMessages(locale: string): Record<string, unknown> {
+  if (!compiledMessageCache[locale]) {
+    const filePath = path.join(
+      process.cwd(),
+      'src',
+      'locale',
+      'compiled',
+      `${locale}.json`
+    );
+    compiledMessageCache[locale] = JSON.parse(readFileSync(filePath, 'utf8'));
+  }
+  return compiledMessageCache[locale];
+}
 
 type RegularProps = {
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -226,16 +243,8 @@ export const scaffold =
       ? detectedLang
       : DEFAULT_LOCALE;
 
-    // Load messages from compiled JSON
-    const filePath = path.join(
-      process.cwd(),
-      'src',
-      'locale',
-      'compiled',
-      `${lang}.json`
-    );
-    const fileContents = await fs.readFile(filePath, 'utf8');
-    const messages = JSON.parse(fileContents);
+    // Load messages from compiled JSON (cached in memory after first read)
+    const messages = loadCompiledMessages(lang);
 
     if (hasProps(result)) {
       result.props = {
