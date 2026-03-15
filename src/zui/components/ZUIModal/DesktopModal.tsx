@@ -38,51 +38,50 @@ const DesktopModal: FC<ZUIModalProps> = ({
       hideBackdrop={true}
       onClose={onClose}
       open={open}
-      slots={{
-        backdrop: () => (
-          <Fade in={open} timeout={300}>
-            <Box
-              onClick={onClose}
-              sx={{
-                backgroundColor: 'rgba(255,255,255,0.5)',
-                height: '100%',
-                width: '100%',
-              }}
-            >
-              <ModalBackground height="100%" seed={seed.current} width="100%" />
-            </Box>
-          </Fade>
-        ),
-      }}
     >
-      <Fade in={open} timeout={300}>
-        <Paper
-          ref={paperRef}
-          sx={(theme) => ({
-            border: `0.063rem solid ${theme.palette.dividers.main}`,
-            boxShadow: theme.elevation.bottom.big.medium,
-            height: size == 'full' ? 'calc(100dvh - 3.75rem)' : 'auto',
-            left: '50%',
-            maxWidth: 'calc(100dvw - 2.5rem)',
-            minWidth: '25rem',
-            position: 'absolute',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: widths[size],
-            zIndex: 10,
-          })}
-        >
-          <ModalContent
-            isMobile={false}
-            onClose={onClose}
-            primaryButton={primaryButton}
-            secondaryButton={secondaryButton}
-            title={title}
+      <>
+        <Fade in={open} timeout={300}>
+          <Paper
+            ref={paperRef}
+            sx={(theme) => ({
+              border: `0.063rem solid ${theme.palette.dividers.main}`,
+              boxShadow: theme.elevation.bottom.big.medium,
+              height: size == 'full' ? 'calc(100dvh - 3.75rem)' : 'auto',
+              left: '50%',
+              maxWidth: 'calc(100dvw - 2.5rem)',
+              minWidth: '25rem',
+              position: 'absolute',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: widths[size],
+              zIndex: 10,
+            })}
           >
-            {children}
-          </ModalContent>
-        </Paper>
-      </Fade>
+            <ModalContent
+              isMobile={false}
+              onClose={onClose}
+              primaryButton={primaryButton}
+              secondaryButton={secondaryButton}
+              title={title}
+            >
+              {children}
+            </ModalContent>
+          </Paper>
+        </Fade>
+        <Fade in={open} timeout={300}>
+          <Box
+            onClick={onClose}
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              height: '100%',
+              width: '100%',
+              zIndex: 0,
+            }}
+          >
+            <ModalBackground height="100%" seed={seed.current} width="100%" />
+          </Box>
+        </Fade>
+      </>
     </Modal>
   );
 };
