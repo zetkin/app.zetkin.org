@@ -38,6 +38,7 @@ import {
   makeNaiveDateString,
   makeNaiveTimeString,
   removeOffset,
+  getDayTimeInMinutes,
 } from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinFile, ZetkinLocation } from 'utils/types/zetkin';
 
@@ -70,8 +71,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   const naiveEnd = `${endDate}T${endTime}`;
   const naiveStart = `${startDate}T${startTime}`;
 
-  const [lastSavedEventDuration, setEventDuration] = useState(
-    dayjs(naiveEnd).diff(naiveStart, 'minutes')
+  const [singleDayEventsTimeSpan, setTimeSpan] = useState(
+    getDayTimeInMinutes(naiveEnd) - getDayTimeInMinutes(naiveStart)
   );
 
   const [wantsToShowEndDate, setWantsToShowEndDate] = useState(false);
@@ -88,27 +89,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
         setWantsToShowEndDate(false);
       },
       save: () => {
-        const timeDiff = dayjs(naiveEnd).diff(dayjs(naiveStart), 'minutes');
-        let endTimeChanged = false;
-        const newEndTime = makeNaiveTimeString(
-          dayjs(naiveStart)
-            .add(Math.abs(lastSavedEventDuration) || 1, 'minutes')
-            .utc()
-            .toDate()
-        );
-        if (timeDiff <= 0) {
-          setEndTime(newEndTime);
-          endTimeChanged = true;
-        }
-        setEventDuration(
-          dayjs(naiveEnd).hour() * 60 +
-            dayjs(naiveEnd).minute() -
-            (dayjs(naiveStart).hour() * 60 + dayjs(naiveStart).minute())
-        );
         updateEvent({
-          end_time: endTimeChanged
-            ? `${endDate}T${newEndTime}:00`
-            : `${naiveEnd}:00`,
+          end_time: `${naiveEnd}:00`,
           info_text: infoText,
           location_id: locationId,
           start_time: `${naiveStart}:00`,
@@ -135,6 +117,24 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   const events = useParallelEvents(orgId, data.start_time, data.end_time);
 
   const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
+
+  const adjustEndTime = () => {
+    let newEndTime = dayjs(naiveStart).add(
+      Math.abs(singleDayEventsTimeSpan) || 1,
+      'minutes'
+    );
+
+    const endTimeInMinutes = getDayTimeInMinutes(newEndTime);
+    const startTimeInMinutes = getDayTimeInMinutes(naiveStart);
+    setTimeSpan(endTimeInMinutes - startTimeInMinutes);
+
+    if (endTimeInMinutes < startTimeInMinutes) {
+      newEndTime = dayjs().set('hour', 23).set('minute', 59);
+    }
+
+    const endTimeString = makeNaiveTimeString(newEndTime.utc().toDate());
+    setEndTime(endTimeString);
+  };
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -173,8 +173,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                               newStartDate.utc().toDate()
                             );
                             setStartDate(startDateString);
-                            if (newStartDate > dayjs(endDate) || !showEndDate) {
+                            if (
+                              newStartDate >= dayjs(endDate) ||
+                              !showEndDate
+                            ) {
                               setEndDate(startDateString);
+                              adjustEndTime();
                             }
                           }
                         }}
@@ -211,6 +215,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                               newStartTime.utc().toDate()
                             );
                             setStartTime(startTimeString);
+                          }
+                        }}
+                        onSelectedSectionsChange={(newField) => {
+                          if (
+                            newField === null &&
+                            dayjs(naiveStart).diff(naiveEnd, 'day') === 0
+                          ) {
+                            adjustEndTime();
                           }
                         }}
                         slotProps={{
@@ -272,6 +284,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                                   )
                                 ) {
                                   setWantsToShowEndDate(false);
+                                  adjustEndTime();
                                 }
                               }
                             }}
@@ -298,19 +311,30 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     return (
                       <TimeField
                         ampm={false}
-                        disableIgnoringDatePartForTimeValidation={true}
                         format="HH:mm"
                         fullWidth
                         inputRef={params.ref}
                         label={messages.eventOverviewCard.endTime()}
-                        minTime={dayjs(naiveStart).add(1, 'min')}
                         onChange={(newEndTime) => {
                           if (newEndTime) {
-                            if (newEndTime >= dayjs(naiveStart).add(1, 'min')) {
-                              const endTimeString = makeNaiveTimeString(
-                                newEndTime.utc().toDate()
+                            const endTimeString = makeNaiveTimeString(
+                              newEndTime.utc().toDate()
+                            );
+                            setEndTime(endTimeString);
+                          }
+                        }}
+                        onSelectedSectionsChange={(newField) => {
+                          if (
+                            newField === null &&
+                            dayjs(naiveStart).diff(naiveEnd, 'day') === 0
+                          ) {
+                            if (dayjs(naiveEnd) <= dayjs(naiveStart)) {
+                              adjustEndTime();
+                            } else {
+                              setTimeSpan(
+                                getDayTimeInMinutes(naiveEnd) -
+                                  getDayTimeInMinutes(naiveStart)
                               );
-                              setEndTime(endTimeString);
                             }
                           }
                         }}
