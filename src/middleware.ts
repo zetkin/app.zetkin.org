@@ -9,11 +9,15 @@ import { AppSession } from 'utils/types';
 
 const protectedRoutes = ['/my', '/call'];
 
+// Pages Router routes — skip next-intl rewriting for these
+const pagesRouterPrefixes = ['/organize', '/login', '/logout', '/legacy'];
+
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // Auth check for protected routes
   const path = request.nextUrl.pathname;
+
+  // Auth check for protected routes
   const isProtectedRoute = !!protectedRoutes.find((route) => {
     return path.startsWith(route);
   });
@@ -34,11 +38,20 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // Run next-intl middleware (handles locale detection and internal rewriting)
-  const response = intlMiddleware(request);
+  // Skip next-intl rewriting for Pages Router routes
+  const isPagesRoute = pagesRouterPrefixes.some((prefix) =>
+    path.startsWith(prefix)
+  );
 
-  // Set requested path header for layout metadata
-  response.headers.set('x-requested-path', request.nextUrl.pathname);
+  if (isPagesRoute) {
+    const headers = new Headers(request.headers);
+    headers.set('x-requested-path', path);
+    return NextResponse.next({ request: { headers } });
+  }
+
+  // Run next-intl middleware for App Router routes
+  const response = intlMiddleware(request);
+  response.headers.set('x-requested-path', path);
 
   return response;
 }
