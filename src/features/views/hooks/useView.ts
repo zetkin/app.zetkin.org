@@ -11,7 +11,7 @@ export default function useView(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);
-  const item = views.viewsByOrgId[orgId].items.find(
+  const item = views.viewsByOrgId[orgId]?.items.find(
     (item) => item.id == viewId
   );
 
