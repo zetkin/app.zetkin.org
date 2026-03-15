@@ -1,18 +1,18 @@
-import { FC, useState } from 'react';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
 import { Box, BoxProps } from '@mui/material';
 import Map, { Marker } from '@vis.gl/react-maplibre';
 import { LngLatBounds, Map as MapType } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { FC, useState } from 'react';
 
+import { useEnv } from 'core/hooks';
+import MarkerIcon from 'features/canvass/components/MarkerIcon';
+import { isLngLatValue } from 'utils/mapUtils';
 import {
   CUSTOM_FIELD_TYPE,
   ZetkinCustomField,
-  ZetkinCustomFieldValue,
-  ZetkinLngLatFieldValue,
   ZetkinPerson,
 } from 'utils/types/zetkin';
-import { useEnv } from 'core/hooks';
-import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import ZUIMapControls from 'zui/ZUIMapControls';
 
 type Props = {
@@ -21,17 +21,6 @@ type Props = {
   person: ZetkinPerson;
   width?: BoxProps['width'];
 };
-
-function isLngLatValue(
-  value: ZetkinCustomFieldValue
-): value is ZetkinLngLatFieldValue {
-  return (
-    value != null &&
-    typeof value == 'object' &&
-    typeof value['lng'] == 'number' &&
-    typeof value['lat'] == 'number'
-  );
-}
 
 const PersonLngLatMap: FC<Props> = ({
   customFields,
