@@ -62,7 +62,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   // ref to remember if the user is editing
   const isEditingRef = useRef(false);
 
-  // restore data if user is not editing
+  // restore data if the user is not editing
   useEffect(() => {
     if (!isEditingRef.current) {
       setTitle(elemQuestion.question);
