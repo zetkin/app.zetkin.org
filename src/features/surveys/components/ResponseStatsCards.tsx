@@ -494,28 +494,20 @@ const OptionsStatsCard = ({
   const isMultipleChoice =
     questionStats.question.question.response_config.widget_type === 'checkbox';
 
-  const subheader = useMemo(
-    () => {
-      if (isMultipleChoice) {
-        return messages.insights.optionsFields.subheaderMultipleChoice({
-          answerCount: questionStats.answerCount,
-          optionsCount: questionStats.options.length,
-          totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
-        });
-      }
-
-      return messages.insights.optionsFields.subheaderSingleChoice({
+  const subheader = useMemo(() => {
+    if (isMultipleChoice) {
+      return messages.insights.optionsFields.subheaderMultipleChoice({
         answerCount: questionStats.answerCount,
         optionsCount: questionStats.options.length,
+        totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       });
-    },
-    [
-      isMultipleChoice,
-      questionStats,
-      messages.insights.optionsFields.subheaderMultipleChoice,
-      messages.insights.optionsFields.subheaderSingleChoice,
-    ]
-  );
+    }
+
+    return messages.insights.optionsFields.subheaderSingleChoice({
+      answerCount: questionStats.answerCount,
+      optionsCount: questionStats.options.length,
+    });
+  }, [isMultipleChoice, questionStats, messages.insights.optionsFields]);
 
   const exportApi = useRef<UseChartProExportPublicApi>();
 
