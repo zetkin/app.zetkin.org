@@ -1,19 +1,28 @@
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
-import { useCommands } from '@remirror/react';
+import { useCommands, useRemirrorContext } from '@remirror/react';
 import { FC } from 'react';
 
+import {
+  recordSelectionState,
+  recoverSelection,
+} from 'zui/ZUIEditor/utils/recoverSelection';
+
 const MoveDownButton: FC = () => {
-  const { focus, moveBlockDown } = useCommands();
+  const { moveBlockDown } = useCommands();
+  const { view } = useRemirrorContext();
 
   return (
     <IconButton
       disabled={!moveBlockDown.enabled()}
       onClick={() => {
-        if (moveBlockDown.enabled()) {
-          moveBlockDown();
-          focus();
+        if (!moveBlockDown.enabled()) {
+          return;
         }
+
+        const selState = recordSelectionState(view);
+        moveBlockDown();
+        recoverSelection(selState);
       }}
       size="small"
     >
