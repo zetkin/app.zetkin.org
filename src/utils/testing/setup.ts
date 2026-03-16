@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+
 jest.mock('next/font/google', () => ({
   Figtree: () => ({
     style: {

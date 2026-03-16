@@ -1,3 +1,5 @@
+import { describe, expect, it, jest } from '@jest/globals';
+
 import JourneyInstancesDataTable from './index';
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import { render } from 'utils/testing';
