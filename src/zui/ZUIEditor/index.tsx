@@ -37,6 +37,7 @@ import VariableExtension from './extensions/VariableExtension';
 import ButtonExtensionUI from './ButtonExtensionUI';
 import MoveExtension from './extensions/MoveExtension';
 import IndentDedentExtension from './extensions/IndentDedentExtension';
+import TransformPasteExtension from './extensions/TransformPasteExtension';
 import { EmailContentBlock } from 'features/emails/types';
 import zetkinToRemirror from './utils/zetkinToRemirror';
 import remirrorToZetkin from './utils/remirrorToZetkin';
@@ -194,6 +195,7 @@ const ZUIEditor: FC<Props> = ({
       }),
       new MoveExtension(),
       new IndentDedentExtension(),
+      new TransformPasteExtension(),
     ],
     selection: 'start',
   });
