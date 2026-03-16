@@ -273,7 +273,10 @@ const EditorOverlays: FC<Props> = ({
         !(node.type.name === 'paragraph' && node.content.size === 0)
       ) {
         const rect = elem.getBoundingClientRect();
-        dividers.push({ pos, y: rect.bottom - containerRect.top });
+        dividers.push({
+          pos: pos + node.nodeSize,
+          y: rect.bottom - containerRect.top,
+        });
       }
       return false;
     });
