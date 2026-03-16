@@ -1044,6 +1044,25 @@ feat:
       previewPortal: Se forhåndsvisning af spørgeskemaet i aktivistportalen
       visitPortal: Se spørgeskema i aktivistportalen
       willAccept: Vil acceptere besvarelser gennem dette link
+    insights:
+      error: Der opstod en ukendt fejl under indlæsning.
+      export:
+        errorUnknown: Der opstod en ukendt fejl under eksport.
+        toPdf: Eksporter som PDF
+        toPng: Eksporter som PNG
+      optionsFields:
+        subheaderMultiple: '{answerCount, plural, =1 {1 svar} other {# svar}}, {totalSelectedOptionsCount, plural, =1 {1 mulighed} other {# muligheder}} valgt i alt.'
+        subheaderSingle: '{answerCount, plural, =1 {1 svar} other {# svar}}.'
+        tabs:
+          barPlot: Søjle
+          piePlot: Lagkage
+        warningMultipleSelectedOptionsPie: Bemærk, at dette spørgsmål tillader respondenter at vælge mere end én mulighed, og {respondentCount, plural, =1 {1 respondent} other {# respondenter}} gjorde det. Dette kan gøre lagkagediagrammet misvisende.
+      textFields:
+        subheader: I alt var der {answerCount, plural, =1 {1 svar} other {# svar}}, {totalWordCount, plural, =1 {1 ord} other {# ord}} og {totalUniqueWordCount, plural, =1 {1 unikt ord} other {# unikke ord}}.
+        tabs:
+          responses: Svar
+          wordCloud: Sky
+          wordFrequencies: Søjle
   tags:
     dialog:
       colorErrorText: Indtast venligst en gyldig hex-kode
