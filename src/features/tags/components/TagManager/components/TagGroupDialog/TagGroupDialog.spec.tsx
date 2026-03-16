@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 
 import messageIds from 'features/tags/l10n/messageIds';
@@ -8,10 +9,7 @@ import mockOrganization from 'utils/testing/mocks/mockOrganization';
 import { ZetkinTagGroupPatchBody } from 'features/tags/components/TagManager/types';
 
 describe('<TagGroupDialog />', () => {
-  let onSubmit: jest.Mock<
-    ZetkinTagGroupPatchBody,
-    [group: ZetkinTagGroupPatchBody]
-  >;
+  const onSubmit = jest.fn((body: ZetkinTagGroupPatchBody) => body);
   const onClose = jest.fn();
   const deleteGroupCallback = jest.fn((groupId: number) => groupId);
 
@@ -22,7 +20,6 @@ describe('<TagGroupDialog />', () => {
   };
 
   beforeEach(() => {
-    onSubmit = jest.fn((body: ZetkinTagGroupPatchBody) => body);
     onClose.mockClear();
     deleteGroupCallback.mockClear();
   });
