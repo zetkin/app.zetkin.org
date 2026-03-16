@@ -164,7 +164,6 @@
     "prettier": "^2.5.1",
     "storybook": "^8.1.10",
     "storybook-dark-mode": "^4.0.2",
-    "ts-jest": "^29.4.5",
     "ts-loader": "^9.2.6",
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
