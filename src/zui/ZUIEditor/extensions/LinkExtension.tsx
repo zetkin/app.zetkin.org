@@ -58,6 +58,7 @@ class LinkExtension extends MarkExtension<LinkOptions> {
           'a',
           {
             ...extra.dom(node),
+            class: 'zlink',
             href: node.attrs.href,
           },
           0,
