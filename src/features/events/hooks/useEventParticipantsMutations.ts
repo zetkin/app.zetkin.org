@@ -8,6 +8,7 @@ import {
   participantUpdated,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
+import { ZetkinEventReminder } from '../types';
 
 export enum participantStatus {
   ATTENDED = 'attended',
@@ -71,8 +72,11 @@ export default function useEventParticipantsMutations(
 
   const sendReminders = async (eventId: number) => {
     dispatch(participantsRemind(eventId));
-    await apiClient.post(`/api/orgs/${orgId}/actions/${eventId}/reminders`, {});
-    dispatch(participantsReminded(eventId));
+    const reminders = await apiClient.post<ZetkinEventReminder[], null>(
+      `/api/orgs/${orgId}/actions/${eventId}/reminders`,
+      null
+    );
+    dispatch(participantsReminded([eventId, reminders]));
   };
 
   const setReqParticipants = (reqParticipants: number) => {

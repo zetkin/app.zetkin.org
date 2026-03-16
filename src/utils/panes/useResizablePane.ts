@@ -42,10 +42,12 @@ export default function useResizablePane(fixedHeight: boolean): ResizablePane {
         container.removeEventListener('scroll', updatePaneHeight);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [container]);
 
   useEffect(() => {
     updatePaneHeight();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { paneContainerRef, slideRef, updatePaneHeight };

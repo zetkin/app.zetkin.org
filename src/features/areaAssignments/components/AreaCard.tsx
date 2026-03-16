@@ -216,12 +216,12 @@ const AreaCard: FC<AreaCardProps> = ({
                                   sx={{
                                     backgroundColor: (() => {
                                       if (areaData?.area_id) {
-                                        return dataPoint.serieId ===
+                                        return dataPoint.seriesId ===
                                           'householdsVisited'
                                           ? oldTheme.palette.primary.light
                                           : oldTheme.palette.primary.dark;
                                       } else {
-                                        return dataPoint.serieId ===
+                                        return dataPoint.seriesId ===
                                           'householdsVisited'
                                           ? oldTheme.palette.grey[400]
                                           : oldTheme.palette.grey[900];
@@ -235,7 +235,7 @@ const AreaCard: FC<AreaCardProps> = ({
                                     width: '8px',
                                   }}
                                 />
-                                {dataPoint.serieId}
+                                {dataPoint.seriesId}
                                 {':'} {dataPoint.data.yFormatted}
                               </Box>
                             ))}

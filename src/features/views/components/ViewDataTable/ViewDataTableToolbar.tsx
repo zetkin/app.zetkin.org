@@ -119,7 +119,9 @@ const ViewDataTableToolbar: React.FunctionComponent<
                     onClick: onClickDelete,
                   },
                 ]}
-                label={messages.toolbar.bulk.handleSelection()}
+                label={messages.toolbar.bulk.handleSelection({
+                  numSelected: selection.length,
+                })}
                 loading={isLoading}
                 variant="outlined"
               />

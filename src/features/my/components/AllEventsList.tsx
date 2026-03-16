@@ -118,6 +118,7 @@ const AllEventsList: FC = () => {
 
       router.push(pathname + '?' + params.toString());
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pathname, router, searchParams, dateFilterState]
   );
 

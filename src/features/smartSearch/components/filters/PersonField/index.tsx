@@ -63,6 +63,7 @@ const PersonField = ({
         field: filter.config.field || filteredFields[0]?.slug,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fields.length]);
 
   // submit if there is a field selected and if the search field is not blank if type is text / url
