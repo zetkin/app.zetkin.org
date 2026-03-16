@@ -24,3 +24,12 @@ jest.mock('react-dnd', () => ({
     },
   ],
 }));
+
+/**
+ * Polyfill for URL.createObjectURL. See https://github.com/jsdom/jsdom/issues/1721.
+ *
+ * Required when importing `maplibre-gl` in tests.
+ */
+if (typeof window.URL.createObjectURL === 'undefined') {
+  window.URL.createObjectURL = jest.fn();
+}
