@@ -1,8 +1,8 @@
 {
-  "dummyData": {
+  "data": {
     "num_locations": 10,
     "num_households": 100,
-    "num_successfull_visits": 200, 
+    "num_successfull_visits": 200,
     "num_locations_visited": 9,
     "num_households_visited": 99,
     "num_households_successfully_visited": 98
