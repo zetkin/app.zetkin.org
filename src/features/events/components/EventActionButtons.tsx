@@ -19,7 +19,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIDatePicker from 'zui/ZUIDatePicker';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
 
 interface EventActionButtonsProps {
   event: ZetkinEvent;
@@ -62,7 +62,7 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
 
   const handleDelete = () => {
     deleteEvent();
-    router.push(`/organize/${orgId}/projects/${event.campaign?.id || ''} `);
+    router.push(`/organize/${orgId}/projects/${event.project?.id || ''} `);
   };
 
   const handleDuplicate = () => {
@@ -81,19 +81,19 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
     setIsMoveDialogOpen(true);
   };
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedEvent = await updateEvent({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedEvent = await updateEvent({ project_id: projectId });
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
+      `/organize/${orgId}/projects/${projectId}/events/${event.id}`
     );
     showSnackbar(
       'success',
-      messages.eventChangeCampaignDialog.success({
-        campaignTitle: updatedEvent.campaign?.title || '',
+      messages.eventChangeProjectDialog.success({
         eventTitle:
           updatedEvent.title ||
           updatedEvent.activity?.title ||
           messages.common.noTitle(),
+        projectTitle: updatedEvent.project?.title || '',
       })
     );
   };
@@ -176,12 +176,12 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
       <Box>
         <ZUIDatePicker date={event.published} onChange={handleChangeDate} />
       </Box>
-      <ChangeCampaignDialog
-        errorMessage={messages.eventChangeCampaignDialog.error()}
-        onCampaignSelected={handleOnCampaignSelected}
+      <ChangeProjectDialog
+        errorMessage={messages.eventChangeProjectDialog.error()}
         onClose={() => setIsMoveDialogOpen(false)}
+        onProjectSelected={handleOnProjectSelected}
         open={isMoveDialogOpen}
-        title={messages.eventChangeCampaignDialog.title()}
+        title={messages.eventChangeProjectDialog.title()}
       />
     </Box>
   );

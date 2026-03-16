@@ -46,7 +46,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
   );
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
   const focusWeekStartDay =
     dayjs(focusDate).isoWeekday() == 7
@@ -64,9 +64,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   );
 
   const eventsByDate = useWeekCalendarEvents({
-    campaignId: campId,
     dates: dayDates,
     orgId,
+    projectId: projectId,
   });
 
   let laneHeight = 0;
@@ -287,9 +287,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                             setGhostAnchorEl(null);
                             await createEvent({
                               activity_id: null,
-                              campaign_id: campId,
                               end_time: pendingEvent[1].toISOString(),
                               location_id: null,
+                              project_id: projectId,
                               start_time: pendingEvent[0].toISOString(),
                               title: null,
                             });

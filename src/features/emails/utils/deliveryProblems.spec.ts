@@ -30,7 +30,6 @@ const mockEmailContent = JSON.stringify({
 
 const mockEmail = (emailOverrides?: Partial<ZetkinEmail>): ZetkinEmail => {
   return {
-    campaign: { id: 1, title: 'First project' },
     config: {
       config: {},
       id: 1,
@@ -47,6 +46,7 @@ const mockEmail = (emailOverrides?: Partial<ZetkinEmail>): ZetkinEmail => {
     locked: '2024-02-26T12:27:32.237413',
     organization: { id: 1, title: 'My Organization' },
     processed: null,
+    project: { id: 1, title: 'First project' },
     published: null,
     subject: 'Hello new member!',
     target: {

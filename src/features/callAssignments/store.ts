@@ -16,7 +16,7 @@ import {
 
 export interface CallAssignmentSlice {
   assignmentList: RemoteList<CallAssignmentData>;
-  callAssignmentIdsByCampaignId: Record<
+  callAssignmentIdsByProjectId: Record<
     number,
     RemoteList<{ id: string | number }>
   >;
@@ -32,7 +32,7 @@ export interface CallAssignmentSlice {
 
 const initialState: CallAssignmentSlice = {
   assignmentList: remoteList(),
-  callAssignmentIdsByCampaignId: {},
+  callAssignmentIdsByProjectId: {},
   callList: remoteList(),
   callersById: {},
   simpleStatsById: {},
@@ -56,10 +56,10 @@ const callAssignmentsSlice = createSlice({
       state.assignmentList.items.push(
         remoteItem(callAssignment.id, { data: callAssignment })
       );
-      if (callAssignment.campaign) {
-        state.callAssignmentIdsByCampaignId[callAssignment.campaign.id] =
+      if (callAssignment.project) {
+        state.callAssignmentIdsByProjectId[callAssignment.project.id] =
           remoteList([
-            ...state.callAssignmentIdsByCampaignId[callAssignment.campaign.id]
+            ...state.callAssignmentIdsByProjectId[callAssignment.project.id]
               .items,
             { id: callAssignment.id },
           ]);
@@ -245,23 +245,23 @@ const callAssignmentsSlice = createSlice({
       state.callersById[assignmentId] = remoteList(callers);
       state.callersById[assignmentId].loaded = timestamp;
     },
-    campaignCallAssignmentsLoad: (state, action: PayloadAction<number>) => {
-      const campaignId = action.payload;
-      if (!state.callAssignmentIdsByCampaignId[campaignId]) {
-        state.callAssignmentIdsByCampaignId[campaignId] = remoteList();
+    projectCallAssignmentsLoad: (state, action: PayloadAction<number>) => {
+      const projectId = action.payload;
+      if (!state.callAssignmentIdsByProjectId[projectId]) {
+        state.callAssignmentIdsByProjectId[projectId] = remoteList();
       }
-      state.callAssignmentIdsByCampaignId[campaignId].isLoading = true;
+      state.callAssignmentIdsByProjectId[projectId].isLoading = true;
     },
-    campaignCallAssignmentsLoaded: (
+    projectCallAssignmentsLoaded: (
       state,
       action: PayloadAction<[number, { id: string | number }[]]>
     ) => {
-      const [campaignId, callAssignmentIds] = action.payload;
+      const [projectId, callAssignmentIds] = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.callAssignmentIdsByCampaignId[campaignId] =
+      state.callAssignmentIdsByProjectId[projectId] =
         remoteList(callAssignmentIds);
-      state.callAssignmentIdsByCampaignId[campaignId].loaded = timestamp;
+      state.callAssignmentIdsByProjectId[projectId].loaded = timestamp;
     },
     simpleStatsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -347,8 +347,8 @@ export const {
   callerRemoved,
   callersLoad,
   callersLoaded,
-  campaignCallAssignmentsLoad,
-  campaignCallAssignmentsLoaded,
+  projectCallAssignmentsLoad,
+  projectCallAssignmentsLoaded,
   simpleStatsLoad,
   simpleStatsLoaded,
   statsLoad,

@@ -67,7 +67,7 @@ export const booked = createQueryChoice(CHOICES.QUERY_BOOKED, Event, [
       status: undefined,
     },
     op: OPERATION.ADD,
-    type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+    type: FILTER_TYPE.PROJECT_PARTICIPATION,
   },
   {
     config: {
@@ -77,7 +77,7 @@ export const booked = createQueryChoice(CHOICES.QUERY_BOOKED, Event, [
       status: undefined,
     },
     op: OPERATION.ADD,
-    type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+    type: FILTER_TYPE.PROJECT_PARTICIPATION,
   },
 ]);
 
@@ -103,7 +103,7 @@ export const participated = createQueryChoice(
         status: 'attended',
       },
       op: OPERATION.ADD,
-      type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+      type: FILTER_TYPE.PROJECT_PARTICIPATION,
     },
   ]
 );

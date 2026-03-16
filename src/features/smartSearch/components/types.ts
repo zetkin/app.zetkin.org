@@ -16,7 +16,7 @@ export enum FILTER_TYPE {
   ALL = 'all',
   CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
-  CAMPAIGN_PARTICIPATION = 'campaign_participation',
+  PROJECT_PARTICIPATION = 'project_participation',
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
@@ -161,7 +161,7 @@ export interface EmailBlacklistFilterConfig {
 export interface EmailClickFilterConfig {
   after?: string;
   before?: string;
-  campaign?: number;
+  project?: number;
   email?: number;
   operator: 'clicked' | 'not_clicked';
   organizations?: FilterConfigOrgOptions;
@@ -171,7 +171,7 @@ export interface EmailHistoryFilterConfig {
   organizations?: FilterConfigOrgOptions;
   after?: string;
   before?: string;
-  campaign?: number;
+  project?: number;
   email?: number;
   operator: 'sent' | 'not_sent' | 'opened' | 'not_opened';
 }
@@ -288,12 +288,12 @@ export type AreaFilterConfig = {
   operator: AREA_OPERATOR;
 };
 
-export interface CampaignParticipationConfig {
+export interface ProjectParticipationConfig {
   state: 'booked' | 'signed_up';
   status?: 'attended' | 'cancelled' | 'noshow';
   operator: 'in' | 'notin';
   organizations?: FilterConfigOrgOptions;
-  campaign?: number;
+  project?: number;
   activity?: number;
   location?: number;
   after?: string;
@@ -342,7 +342,7 @@ export type TaskTimeFrame =
   | TaskTimeFrameBetween;
 
 export interface TaskFilterConfig {
-  campaign?: number;
+  project?: number;
   task?: number;
   type?: TASK_TYPE;
   assigned?: TaskTimeFrame;
@@ -362,7 +362,7 @@ export interface TaskFilterConfig {
 export type AnyFilterConfig =
   | CallBlockedFilterConfig
   | CallHistoryFilterConfig
-  | CampaignParticipationConfig
+  | ProjectParticipationConfig
   | DefaultFilterConfig
   | EmailBlacklistFilterConfig
   | JoinFormFilterConfig

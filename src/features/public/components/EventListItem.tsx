@@ -41,9 +41,9 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
         {
           Icon: GroupWorkOutlined,
           labels: [
-            event.campaign && {
-              href: `/o/${event.organization.id}/projects/${event.campaign.id}`,
-              text: event.campaign.title,
+            event.project && {
+              href: `/o/${event.organization.id}/projects/${event.project.id}`,
+              text: event.project.title,
             },
             {
               href: `/o/${event.organization.id}`,

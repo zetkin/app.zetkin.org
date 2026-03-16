@@ -78,7 +78,7 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
           {
             Icon: GroupWorkOutlined,
             labels: [
-              survey.campaign?.title ?? 'Untitled project',
+              survey.project?.title ?? 'Untitled project',
               survey.organization.title,
             ],
           },

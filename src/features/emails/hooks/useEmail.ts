@@ -13,8 +13,8 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 
 type ZetkinEmailPatchBody = Partial<Omit<ZetkinEmail, 'locked'>> & {
-  campaign_id?: number;
   locked?: boolean;
+  project_id?: number;
 };
 
 interface UseEmailReturn {
@@ -47,9 +47,9 @@ export default function useEmail(
 
   const deleteEmail = async () => {
     await apiClient.delete(`/api/orgs/${orgId}/emails/${emailId}`).then(() => {
-      if (email?.campaign) {
+      if (email?.project) {
         Router.push(
-          `/organize/${orgId}/projects/${email.campaign.id}/activities`
+          `/organize/${orgId}/projects/${email.project.id}/activities`
         );
       } else {
         Router.push(`/organize/${orgId}/projects`);

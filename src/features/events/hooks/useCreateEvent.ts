@@ -15,7 +15,7 @@ export default function useCreateEvent(orgId: number) {
     dispatch(eventCreate());
     const event = await apiClient.post<ZetkinEvent, ZetkinEventPostBody>(
       `/api/orgs/${orgId}/${
-        eventBody.campaign_id ? `campaigns/${eventBody.campaign_id}/` : ''
+        eventBody.project_id ? `campaigns/${eventBody.project_id}/` : ''
       }actions`,
       eventBody
     );

@@ -396,7 +396,7 @@ export default function mockEmail(
 ): ZetkinEmail {
   return {
     id: 1,
-    campaign: null,
+    project: null,
     config: {
       config: {},
       id: 1,

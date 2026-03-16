@@ -19,8 +19,8 @@ export default function useDuplicateEvent(orgId: number, eventId: number) {
       title: event?.title,
       url: event?.url,
     };
-    if (event?.campaign) {
-      duplicateEventPostBody.campaign_id = event?.campaign.id;
+    if (event?.project) {
+      duplicateEventPostBody.project_id = event?.project.id;
     }
     return createEvent(duplicateEventPostBody);
   };

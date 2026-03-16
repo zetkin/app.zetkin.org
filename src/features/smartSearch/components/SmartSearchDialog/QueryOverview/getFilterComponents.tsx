@@ -27,7 +27,7 @@ import {
 
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
-import DisplayCampaignParticipation from '../../filters/CampaignParticipation/DisplayCampaignParticipation';
+import DisplayProjectParticipation from '../../filters/ProjectParticipation/DisplayProjectParticipation';
 import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
 import DisplayEmailClick from '../../filters/EmailClick/DisplayEmailClick';
 import DisplayEmailHistory from '../../filters/EmailHistory/DisplayEmailHistory';
@@ -51,7 +51,7 @@ import {
   AreaFilterConfig,
   CallBlockedFilterConfig,
   CallHistoryFilterConfig,
-  CampaignParticipationConfig,
+  ProjectParticipationConfig,
   EmailBlacklistFilterConfig,
   EmailClickFilterConfig,
   EmailHistoryFilterConfig,
@@ -129,10 +129,10 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <DraftsOutlined color="secondary" fontSize="small" />;
-  } else if (filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION) {
+  } else if (filter.type === FILTER_TYPE.PROJECT_PARTICIPATION) {
     displayFilter = (
-      <DisplayCampaignParticipation
-        filter={filter as SmartSearchFilterWithId<CampaignParticipationConfig>}
+      <DisplayProjectParticipation
+        filter={filter as SmartSearchFilterWithId<ProjectParticipationConfig>}
       />
     );
     filterTypeIcon = <Event color="secondary" fontSize="small" />;

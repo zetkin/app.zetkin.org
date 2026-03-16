@@ -410,15 +410,15 @@ const DateAndLocation: FC<{
 
   return (
     <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
-      {event.campaign && (
+      {event.project && (
         <ZUIText>
           <Msg
             id={messageIds.eventPage.partOfProject}
             values={{
               projectLink: (
                 <ZUILink
-                  href={`/o/${event.organization.id}/projects/${event.campaign.id}`}
-                  text={event.campaign.title}
+                  href={`/o/${event.organization.id}/projects/${event.project.id}`}
+                  text={event.project.title}
                 />
               ),
             }}

@@ -39,7 +39,7 @@ import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
-import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../../projects/components/ChangeProjectDialog';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -89,18 +89,18 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     setIsMoveDialogOpen(true);
   };
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedEvent = await updateEvent({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedEvent = await updateEvent({ project_id: projectId });
     onClickAway();
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
+      `/organize/${orgId}/projects/${projectId}/events/${event.id}`
     );
 
     showSnackbar(
       'success',
-      messages.eventChangeCampaignDialog.success({
-        campaignTitle: updatedEvent.campaign!.title,
+      messages.eventChangeProjectDialog.success({
         eventTitle: event.title!,
+        projectTitle: updatedEvent.project!.title,
       })
     );
   };
@@ -394,12 +394,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </NextLink>
 
           <ZUIEllipsisMenu items={ellipsisMenuItems} />
-          <ChangeCampaignDialog
-            errorMessage={messages.eventChangeCampaignDialog.error()}
-            onCampaignSelected={handleOnCampaignSelected}
+          <ChangeProjectDialog
+            errorMessage={messages.eventChangeProjectDialog.error()}
             onClose={() => setIsMoveDialogOpen(false)}
+            onProjectSelected={handleOnProjectSelected}
             open={isMoveDialogOpen}
-            title={messages.eventChangeCampaignDialog.title()}
+            title={messages.eventChangeProjectDialog.title()}
           />
         </Box>
       )}

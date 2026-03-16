@@ -3,7 +3,7 @@ import { EventState } from './useEventState';
 import getEventStats from 'features/events/rpc/getEventStats';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import messageIds from '../l10n/messageIds';
-import { STATUS_COLORS } from 'features/campaigns/components/ActivityList/items/ActivityListItem';
+import { STATUS_COLORS } from 'features/projects/components/ActivityList/items/ActivityListItem';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { statsLoad, statsLoaded } from 'features/events/store';
@@ -85,7 +85,7 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
   }
 
   const firstEvent = cluster.events[0];
-  const campaignId = firstEvent.campaign?.id ?? 'standalone';
+  const projectId = firstEvent.project?.id ?? 'standalone';
   const location = firstEvent.location;
   const orgId = firstEvent.organization.id;
   const eventId = firstEvent.id;
@@ -96,7 +96,6 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
 
   return {
     allHaveContacts,
-    campaignId,
     color,
     endTime,
     eventId,
@@ -107,6 +106,7 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
     numPending,
     numReminded,
     orgId,
+    projectId,
     startTime,
     statsLoading,
     title,

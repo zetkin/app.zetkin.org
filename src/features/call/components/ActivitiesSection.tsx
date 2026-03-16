@@ -32,7 +32,7 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
-import { ACTIVITIES } from 'features/campaigns/types';
+import { ACTIVITIES } from 'features/projects/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
@@ -234,30 +234,27 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const surveysWithCampaign = surveys.filter((survey) => !!survey.campaign);
-  const eventsWithCampaign = events.filter((event) => !!event.campaign);
+  const surveysWithProject = surveys.filter((survey) => !!survey.project);
+  const eventsWithProject = events.filter((event) => !!event.project);
 
-  const activitiesWithCampaign = [
-    ...surveysWithCampaign,
-    ...eventsWithCampaign,
-  ];
+  const activitiesWithProject = [...surveysWithProject, ...eventsWithProject];
 
   const projects: { id: 'noProject' | number; title: string }[] = [
     ...new Map(
-      eventsWithCampaign
-        .map((event) => event.campaign)
+      eventsWithProject
+        .map((event) => event.project)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
     ...new Map(
-      surveysWithCampaign
-        .map((survey) => survey.campaign)
+      surveysWithProject
+        .map((survey) => survey.project)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  if (activitiesWithCampaign.length != surveys.length + events.length) {
+  if (activitiesWithProject.length != surveys.length + events.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
 
@@ -270,9 +267,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   const projectIdsWithSurveys = surveys.reduce<(number | 'noProject')[]>(
     (projectIds, survey) => {
-      if (survey.campaign && !projectIds.includes(survey.campaign.id)) {
-        projectIds = [...projectIds, survey.campaign.id];
-      } else if (!survey.campaign && !projectIds.includes('noProject')) {
+      if (survey.project && !projectIds.includes(survey.project.id)) {
+        projectIds = [...projectIds, survey.project.id];
+      } else if (!survey.project && !projectIds.includes('noProject')) {
         projectIds = [...projectIds, 'noProject'];
       }
       return projectIds;
@@ -282,9 +279,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   const projectIdsWithEvents = events.reduce<(number | 'noProject')[]>(
     (projectIds, event) => {
-      if (event.campaign && !projectIds.includes(event.campaign.id)) {
-        projectIds = [...projectIds, event.campaign.id];
-      } else if (!event.campaign && !projectIds.includes('noProject')) {
+      if (event.project && !projectIds.includes(event.project.id)) {
+        projectIds = [...projectIds, event.project.id];
+      } else if (!event.project && !projectIds.includes('noProject')) {
         projectIds = [...projectIds, 'noProject'];
       }
       return projectIds;
@@ -510,14 +507,14 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   ];
 
   useEffect(() => {
-    const campaign = assignment.campaign;
-    const campaignHasActivities =
-      !!campaign && projectIdsWithActivities.includes(campaign.id);
+    const project = assignment.project;
+    const projectHasActivities =
+      !!project && projectIdsWithActivities.includes(project.id);
 
-    if (campaignHasActivities) {
+    if (projectHasActivities) {
       dispatch(
         filtersUpdated({
-          projectIdsToFilterActivitiesBy: [campaign.id],
+          projectIdsToFilterActivitiesBy: [project.id],
         })
       );
     }

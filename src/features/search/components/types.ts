@@ -1,6 +1,6 @@
 import {
   ZetkinCallAssignment,
-  ZetkinCampaign,
+  ZetkinProject,
   ZetkinJourneyInstance,
   ZetkinPerson,
   ZetkinSurvey,
@@ -10,7 +10,7 @@ import {
 
 export enum SEARCH_DATA_TYPE {
   PERSON = 'person',
-  CAMPAIGN = 'campaign',
+  PROJECT = 'project',
   TASK = 'task',
   VIEW = 'view',
   CALL_ASSIGNMENT = 'callassignment',
@@ -22,9 +22,9 @@ export interface PersonSearchResult {
   type: SEARCH_DATA_TYPE.PERSON;
   match: ZetkinPerson;
 }
-export interface CampaignSearchResult {
-  type: SEARCH_DATA_TYPE.CAMPAIGN;
-  match: ZetkinCampaign;
+export interface ProjectSearchResult {
+  type: SEARCH_DATA_TYPE.PROJECT;
+  match: ZetkinProject;
 }
 export interface TaskSearchResult {
   type: SEARCH_DATA_TYPE.TASK;
@@ -49,7 +49,7 @@ export interface JourneyInstanceSearchResult {
 
 export type SearchResult =
   | PersonSearchResult
-  | CampaignSearchResult
+  | ProjectSearchResult
   | TaskSearchResult
   | ViewSearchResult
   | CallAssignmentSearchResult

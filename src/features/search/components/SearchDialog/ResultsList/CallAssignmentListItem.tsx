@@ -21,7 +21,7 @@ const CallassigmentListItem: React.FunctionComponent<{
   return (
     <Link
       href={`/organize/${orgId}/projects/${
-        callAssignment.campaign?.id ?? 'standalone'
+        callAssignment.project?.id ?? 'standalone'
       }/callassignments/${callAssignment.id}`}
     >
       <ListItem data-testid="SearchDialog-resultsListItem">

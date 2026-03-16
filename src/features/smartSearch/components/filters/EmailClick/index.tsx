@@ -8,7 +8,7 @@ import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import { truncateOnMiddle } from 'utils/stringUtils';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -56,7 +56,7 @@ const EmailClick = ({
   const emailsSorted = emails.sort((e1, e2) => {
     return e1.title!.localeCompare(e2.title!);
   });
-  const projects = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
   const projectsSorted = projects.sort((pf1, pf2) => {
     return pf1.title.localeCompare(pf2.title);
   });
@@ -71,7 +71,7 @@ const EmailClick = ({
   });
 
   const [linkSelectScope, setLinkSelectScope] = useState<LINK_SELECT_SCOPE>(
-    filter.config.campaign
+    filter.config.project
       ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
       : filter.config.email && !filter.config.links
       ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
@@ -118,7 +118,7 @@ const EmailClick = ({
     <FilterForm
       disableSubmit={
         (linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT &&
-          !filter.config.campaign) ||
+          !filter.config.project) ||
         (linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL &&
           !filter.config.email) ||
         (linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS &&
@@ -181,7 +181,7 @@ const EmailClick = ({
             linkScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  removeKey(['campaign', 'email', 'links']);
+                  removeKey(['project', 'email', 'links']);
                   setLinkSelectScope(e.target.value as LINK_SELECT_SCOPE);
                 }}
                 value={linkSelectScope}
@@ -281,9 +281,9 @@ const EmailClick = ({
                 <StyledSelect
                   minWidth="10rem"
                   onChange={(e) =>
-                    setValueToKey('campaign', parseInt(e.target.value))
+                    setValueToKey('project', parseInt(e.target.value))
                   }
-                  value={filter.config.campaign || ''}
+                  value={filter.config.project || ''}
                 >
                   {projectsSorted.map((project) => (
                     <MenuItem key={`project-${project.id}`} value={project.id}>

@@ -75,7 +75,7 @@ type ZetkinSurveyTextElementPatchBody = {
 };
 
 type ZetkinSurveyPatchBody = Partial<Omit<ZetkinSurvey, 'id'>> & {
-  campaign_id?: number;
+  project_id?: number;
 };
 
 type UseSurveyEditingReturn = {

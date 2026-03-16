@@ -3,18 +3,18 @@ import { expect } from '@playwright/test';
 import test from '../../fixtures/next';
 import ClarasOnboarding from '../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 import KPD from '../../mockData/orgs/KPD';
-import ReferendumSignatures from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import ReferendumSignatures from '../../mockData/orgs/KPD/projects/ReferendumSignatures';
 import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
-import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Search', async () => {
   test.beforeEach(async ({ login, moxy }) => {
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
-    moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
-    moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
-    moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', []);
-    moxy.setZetkinApiMock('/orgs/1/campaigns/1/call_assignments', 'get', []);
-    moxy.setZetkinApiMock('/orgs/1/campaigns/1/surveys', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/projects/1', 'get', ReferendumSignatures);
+    moxy.setZetkinApiMock('/orgs/1/projects/1/actions', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/projects/1/tasks', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/projects/1/call_assignments', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/projects/1/surveys', 'get', []);
     moxy.setZetkinApiMock(`/orgs/1/actions`, 'get', []);
     moxy.setZetkinApiMock('/orgs/1/tasks', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/search/view', 'post', []);
@@ -30,7 +30,7 @@ test.describe('Search', async () => {
     appUri,
   }) => {
     moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [RosaLuxemburg]);
-    moxy.setZetkinApiMock('/orgs/1/search/campaign', 'post', [
+    moxy.setZetkinApiMock('/orgs/1/search/project', 'post', [
       ReferendumSignatures,
     ]);
     moxy.setZetkinApiMock('/orgs/1/search/task', 'post', [
@@ -56,7 +56,7 @@ test.describe('Search', async () => {
     appUri,
   }) => {
     moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [], 400);
-    moxy.setZetkinApiMock('/orgs/1/search/campaign', 'post', [
+    moxy.setZetkinApiMock('/orgs/1/search/project', 'post', [
       ReferendumSignatures,
     ]);
     moxy.setZetkinApiMock('/orgs/1/search/task', 'post', [
@@ -90,8 +90,8 @@ test.describe('Search', async () => {
       'post',
       [RosaLuxemburg]
     );
-    const campaignSearchReq = moxy.setZetkinApiMock(
-      '/orgs/1/search/campaign',
+    const projectSearchReq = moxy.setZetkinApiMock(
+      '/orgs/1/search/project',
       'post',
       [ReferendumSignatures]
     );
@@ -117,7 +117,7 @@ test.describe('Search', async () => {
 
     // Check that requests were made
     expect(personSearchReq.log()[0].mocked).toEqual(true);
-    expect(campaignSearchReq.log()[0].mocked).toEqual(true);
+    expect(projectSearchReq.log()[0].mocked).toEqual(true);
     expect(taskSearchReq.log()[0].mocked).toEqual(true);
     expect(journeyInstanceSearchReq.log()[0].mocked).toEqual(true);
 

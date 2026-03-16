@@ -96,9 +96,9 @@ const MyActivitiesList: FC = () => {
                 {
                   Icon: GroupWorkOutlined,
                   labels: [
-                    activity.data.campaign && {
-                      href: `/o/${activity.data.organization.id}/projects/${activity.data.campaign.id}`,
-                      text: activity.data.campaign.title,
+                    activity.data.project && {
+                      href: `/o/${activity.data.organization.id}/projects/${activity.data.project.id}`,
+                      text: activity.data.project.title,
                     },
                     activity.data.organization && {
                       href: `/o/${activity.data.organization.id}`,

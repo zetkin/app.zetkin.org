@@ -7,8 +7,8 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 
 const paramsSchema = z.object({
   beforeDate: z.string(),
-  campaignId: z.optional(z.number()),
   orgId: z.number(),
+  projectId: z.optional(z.number()),
 });
 
 type Params = z.input<typeof paramsSchema>;
@@ -26,7 +26,7 @@ export const getPrevEventDayDef = {
 export default makeRPCDef<Params, Result>(getPrevEventDayDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
-  const { beforeDate: beforeDateStr, campaignId, orgId } = params;
+  const { beforeDate: beforeDateStr, projectId: projectId, orgId } = params;
 
   const beforeDate = new Date(beforeDateStr);
 
@@ -49,7 +49,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     );
 
     const filtered = events.filter(
-      (event) => !campaignId || event.campaign?.id == campaignId
+      (event) => !projectId || event.project?.id == projectId
     );
 
     const sorted = filtered.sort(

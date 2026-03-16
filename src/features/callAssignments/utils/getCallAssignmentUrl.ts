@@ -5,7 +5,7 @@ export default function getCallAssignmentUrl(
 ) {
   if (callAssignment) {
     return `/organize/${callAssignment.organization.id}/projects/${
-      callAssignment.campaign ? `${callAssignment.campaign.id}` : 'standalone'
+      callAssignment.project ? `${callAssignment.project.id}` : 'standalone'
     }/callassignments/${callAssignment.id}`;
   } else {
     return '';

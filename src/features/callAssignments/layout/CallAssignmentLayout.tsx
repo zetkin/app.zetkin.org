@@ -20,7 +20,7 @@ import useCallAssignmentState, {
   CallAssignmentState,
 } from '../hooks/useCallAssignmentState';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -49,7 +49,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   const handleDelete = () => {
     deleteAssignment();
     router.push(
-      `/organize/${orgId}/projects/${callAssignment?.campaign?.id || ''} `
+      `/organize/${orgId}/projects/${callAssignment?.project?.id || ''} `
     );
   };
 
@@ -61,20 +61,20 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     return null;
   }
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
+  const handleOnProjectSelected = async (projectId: number) => {
     const updatedCallAssignment = await updateCallAssignment({
-      campaign_id: campaignId,
+      project_id: projectId,
     });
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/callassignments/${
+      `/organize/${orgId}/projects/${projectId}/callassignments/${
         callAssignment!.id
       }`
     );
     showSnackbar(
       'success',
-      messages.callAssignmentChangeCampaignDialog.success({
+      messages.callAssignmentChangeProjectDialog.success({
         assignmentTitle: updatedCallAssignment.title,
-        campaignTitle: updatedCallAssignment.campaign!.title,
+        projectTitle: updatedCallAssignment.project!.title,
       })
     );
   };
@@ -170,12 +170,12 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
               )}
             </ZUIFuture>
           </Box>
-          <ChangeCampaignDialog
-            errorMessage={messages.callAssignmentChangeCampaignDialog.error()}
-            onCampaignSelected={handleOnCampaignSelected}
+          <ChangeProjectDialog
+            errorMessage={messages.callAssignmentChangeProjectDialog.error()}
             onClose={() => setIsMoveDialogOpen(false)}
+            onProjectSelected={handleOnProjectSelected}
             open={isMoveDialogOpen}
-            title={messages.callAssignmentChangeCampaignDialog.title()}
+            title={messages.callAssignmentChangeProjectDialog.title()}
           />
         </Box>
       }

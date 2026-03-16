@@ -217,10 +217,10 @@ export default makeMessages('feat.surveys', {
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
-  surveyChangeCampaignDialog: {
+  surveyChangeProjectDialog: {
     error: m('Error: Could not move the survey to the selected project'),
-    success: m<{ campaignTitle: string; surveyTitle: string }>(
-      'Survey "{surveyTitle}" moved to "{campaignTitle}"'
+    success: m<{ projectTitle: string; surveyTitle: string }>(
+      'Survey "{surveyTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move survey'),
   },
