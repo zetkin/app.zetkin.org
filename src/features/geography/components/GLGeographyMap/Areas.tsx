@@ -1,5 +1,6 @@
-import { Layer, Source } from '@vis.gl/react-maplibre';
+import { Layer, Marker, Source } from '@vis.gl/react-maplibre';
 import { FC, useMemo } from 'react';
+import { centerOfMass } from '@turf/center-of-mass';
 
 import { Zetkin2Area } from 'features/areas/types';
 import oldTheme from 'theme';
@@ -9,7 +10,10 @@ type Props = {
 };
 
 const Areas: FC<Props> = ({ areas }) => {
-  const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
+  const areasGeoJson: GeoJSON.FeatureCollection<
+    Zetkin2Area['boundary'],
+    { id: number }
+  > = useMemo(() => {
     return {
       features: areas.map((area) => ({
         geometry: area.boundary,
@@ -21,24 +25,36 @@ const Areas: FC<Props> = ({ areas }) => {
   }, [areas]);
 
   return (
-    <Source data={areasGeoJson} id="areas" type="geojson">
-      <Layer
-        id="outlines"
-        paint={{
-          'line-color': oldTheme.palette.secondary.main,
-          'line-width': 2,
-        }}
-        type="line"
-      />
-      <Layer
-        id="areas"
-        paint={{
-          'fill-color': oldTheme.palette.secondary.main,
-          'fill-opacity': 0.4,
-        }}
-        type="fill"
-      />
-    </Source>
+    <>
+      {areasGeoJson.features.map((area) => {
+        const center = centerOfMass(area);
+        return (
+          <Marker
+            key={area.properties.id}
+            latitude={center.geometry.coordinates[1]}
+            longitude={center.geometry.coordinates[0]}
+          />
+        );
+      })}
+      <Source data={areasGeoJson} id="areas" type="geojson">
+        <Layer
+          id="outlines"
+          paint={{
+            'line-color': oldTheme.palette.secondary.main,
+            'line-width': 2,
+          }}
+          type="line"
+        />
+        <Layer
+          id="areas"
+          paint={{
+            'fill-color': oldTheme.palette.secondary.main,
+            'fill-opacity': 0.4,
+          }}
+          type="fill"
+        />
+      </Source>
+    </>
   );
 };
 
