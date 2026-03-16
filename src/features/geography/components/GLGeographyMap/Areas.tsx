@@ -4,6 +4,7 @@ import { centerOfMass } from '@turf/center-of-mass';
 
 import { Zetkin2Area } from 'features/areas/types';
 import oldTheme from 'theme';
+import HouseholdOverlayMarker from 'features/areas/components/markers/HouseholdOverlayMarker';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -31,9 +32,15 @@ const Areas: FC<Props> = ({ areas }) => {
         return (
           <Marker
             key={area.properties.id}
+            anchor="top-left"
             latitude={center.geometry.coordinates[1]}
             longitude={center.geometry.coordinates[0]}
-          />
+          >
+            <HouseholdOverlayMarker
+              numberOfHouseholds={15000}
+              numberOfLocations={1000}
+            />
+          </Marker>
         );
       })}
       <Source data={areasGeoJson} id="areas" type="geojson">
