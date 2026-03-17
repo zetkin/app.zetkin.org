@@ -318,8 +318,11 @@ const QuestionStatsBarPlot = ({
   const percentBase = isOptions
     ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
     : 0;
-  const toPercent = (count: number) =>
-    percentBase ? Math.round((count / percentBase) * 100) : 0;
+  const toPercent = useCallback(
+    (count: number) =>
+      percentBase ? Math.round((count / percentBase) * 100) : 0,
+    [percentBase]
+  );
   const percentFormatter = (value: number | null) =>
     value == null ? '' : `${value}%`;
   const absoluteFormatter = (value: number | null) =>
@@ -344,7 +347,7 @@ const QuestionStatsBarPlot = ({
       sorted = sorted.slice(0, 10);
     }
     return sorted;
-  }, [questionStats, showPercent, percentBase]);
+  }, [questionStats, showPercent, toPercent]);
 
   return (
     <ChartWrapper>
@@ -459,7 +462,7 @@ const QuestionStatsPie = ({
         label,
         value,
       }));
-  }, [questionStats, showPercent, percentBase]);
+  }, [questionStats, showPercent, toPercent]);
   const messages = useMessages(messageIds);
   const [hasSeenPieInaccuracyWarning, setHasSeenPieInaccuracyWarning] =
     useState(false);
