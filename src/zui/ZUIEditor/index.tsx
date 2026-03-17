@@ -59,14 +59,6 @@ export type BlockType =
   | 'zimage'
   | 'zbutton';
 
-export type BlockData = {
-  attributes: Attrs;
-  node: ProsemirrorNode;
-  range: FromToProps;
-  rect: DOMRect;
-  type: BlockType;
-};
-
 export type { ZUIEditorApi } from './EditorApi';
 
 /**
