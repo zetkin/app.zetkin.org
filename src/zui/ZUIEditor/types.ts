@@ -1,5 +1,6 @@
 export enum RemirrorBlockType {
   BULLET_LIST = 'bulletList',
+  LIST_ITEM = 'listItem',
   BUTTON = 'zbutton',
   HEADING = 'heading',
   IMAGE = 'zimage',
