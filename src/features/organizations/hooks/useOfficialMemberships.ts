@@ -17,8 +17,8 @@ export default function useOfficialMemberships(): IFuture<ZetkinMembership[]> {
   );
 
   const future = loadListIfNecessary(membershipList, dispatch, {
-    actionOnLoad: () => dispatch(userMembershipsLoad()),
-    actionOnSuccess: (data) => dispatch(userMembershipsLoaded(data)),
+    actionOnLoad: () => userMembershipsLoad(),
+    actionOnSuccess: (data) => userMembershipsLoaded(data),
     loader: () =>
       apiClient.get<ZetkinMembership[]>(`/api/users/me/memberships`),
   });
