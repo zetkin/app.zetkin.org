@@ -1,6 +1,6 @@
 import { Box, IconButton } from '@mui/material';
 import { RemirrorJSON } from 'remirror';
-import React, { MutableRefObject, useCallback, useMemo } from 'react';
+import React, { MutableRefObject, useCallback, useMemo, useRef } from 'react';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import { FileUpload } from 'features/files/hooks/useFileUploads';
@@ -29,7 +29,7 @@ export interface ZUITextEditorProps {
 
 const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   clear,
-  editorApiRef,
+  editorApiRef: propEditorApiRef,
   fileUploads,
   initialValue,
   onChange,
@@ -39,6 +39,9 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
 }) => {
   void clear;
   void placeholder;
+
+  const localEditorApiRef = useRef<ZUIEditorApi | null>(null);
+  const editorApiRef = propEditorApiRef || localEditorApiRef;
 
   const content = useMemo(() => {
     if (!initialValue) {
@@ -57,6 +60,9 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
 
   return (
     <Box
+      onClick={() => {
+        editorApiRef.current?.focus();
+      }}
       sx={{
         '&:hover': {
           borderColor: oldTheme.palette.onSurface.medium,
