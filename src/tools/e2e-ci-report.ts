@@ -62,16 +62,11 @@ function main() {
   console.log(`Looking for CI runs on branch: ${branch}`);
 
   // Find latest workflow run for the branch
-  let runId: string;
-  try {
-    const json = run(
-      `gh run list --branch "${branch}" --workflow ${WORKFLOW_FILE} --limit 1 --json databaseId`
-    );
-    const runs = JSON.parse(json);
-    runId = runs[0]?.databaseId?.toString();
-  } catch {
-    // fall through
-  }
+  const json = run(
+    `gh run list --branch "${branch}" --workflow ${WORKFLOW_FILE} --limit 1 --json databaseId`
+  );
+  const runs = JSON.parse(json);
+  const runId = runs[0]?.databaseId;
 
   if (!runId!) {
     console.error(
