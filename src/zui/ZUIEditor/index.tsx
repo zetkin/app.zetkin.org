@@ -211,6 +211,18 @@ const ZUIEditor: FC<Props> = ({
       new IndentDedentExtension(),
       new TransformPasteExtension(),
     ],
+    onError: (props) => {
+      const { error, transformers, json, invalidContent } = props;
+
+      if (
+        error.name === 'RangeError' &&
+        error.message.startsWith('Unknown node type')
+      ) {
+        return transformers.remove(json, invalidContent);
+      }
+
+      throw error;
+    },
     selection: 'start',
   });
 
