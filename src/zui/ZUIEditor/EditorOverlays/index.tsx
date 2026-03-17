@@ -154,48 +154,47 @@ const EditorOverlays: FC<Props> = ({
   const findSelectedNode = useCallback(() => {
     const allBlockRects = calculateAllBlockRects();
 
-    if (isNodeSelection(state.selection)) {
-      const selection = state.selection;
-      const index = selection.$anchor.index(0);
-      onSelectRemirrorBlock(index);
-      const posBefore = selection.$anchor.before(1);
-      const posAfter = selection.$head.after(1);
-      const elem = view.nodeDOM(posBefore);
-      if (elem instanceof HTMLElement) {
-        setCurrentBlock({
-          attributes: selection.node.attrs,
-          node: selection.node,
-          range: {
-            from: posBefore,
-            to: posAfter,
-          },
-          rect: allBlockRects[index],
-          type: selection.node.type.name as BlockType,
-        });
-      }
+    const selection = state.selection;
+    const resolved = state.doc.resolve(selection.$head.pos);
+    let node = resolved.node(1);
+
+    let posBefore: number;
+    let posAfter: number;
+    let index: number;
+
+    if (node) {
+      posBefore = resolved.before(1);
+      posAfter = resolved.after(1);
+      index = resolved.index(0);
     } else {
-      const pos = state.selection.$head.pos;
-      const resolved = state.doc.resolve(pos);
-      const node = resolved.node(1);
-      if (node) {
-        const posBeforeTextContent = resolved.before(1);
-        const posAfterTextContent = resolved.after(1);
-        const elem = view.nodeDOM(posBeforeTextContent);
-        if (elem instanceof HTMLElement) {
-          const index = resolved.index(0);
-          onSelectRemirrorBlock(index);
-          setCurrentBlock({
-            attributes: node.attrs,
-            node,
-            range: {
-              from: posBeforeTextContent,
-              to: posAfterTextContent,
-            },
-            rect: allBlockRects[index],
-            type: node.type.name as BlockType,
-          });
-        }
+      index = selection.$anchor.index(0);
+      posBefore = selection.$anchor.before(1);
+      posAfter = selection.$head.after(1);
+
+      if (isNodeSelection(selection)) {
+        node = selection.node;
+      } else {
+        node = state.doc.child(index);
       }
+    }
+
+    if (!node) {
+      return;
+    }
+
+    const elem = view.nodeDOM(posBefore);
+    if (elem instanceof HTMLElement) {
+      onSelectRemirrorBlock(index);
+      setCurrentBlock({
+        attributes: node.attrs,
+        node: node,
+        range: {
+          from: posBefore,
+          to: posAfter,
+        },
+        rect: allBlockRects[index],
+        type: node.type.name as BlockType,
+      });
     }
   }, [
     calculateAllBlockRects,
