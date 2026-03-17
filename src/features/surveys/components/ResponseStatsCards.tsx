@@ -318,11 +318,6 @@ const QuestionStatsBarPlot = ({
   const percentBase = isOptions
     ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
     : 0;
-  const toPercent = useCallback(
-    (count: number) =>
-      percentBase ? Math.round((count / percentBase) * 100) : 0,
-    [percentBase]
-  );
   const percentFormatter = (value: number | null) =>
     value == null ? '' : `${value}%`;
   const absoluteFormatter = (value: number | null) =>
@@ -333,7 +328,11 @@ const QuestionStatsBarPlot = ({
   const data = useMemo(() => {
     const bars = isOptionsStats(questionStats)
       ? questionStats.options.map((o) => ({
-          count: showPercent ? toPercent(o.count) : o.count,
+          count: showPercent
+            ? percentBase
+              ? Math.round((o.count / percentBase) * 100)
+              : 0
+            : o.count,
           option: o.option.text,
         }))
       : Object.entries(questionStats.topWordFrequencies).map(
@@ -347,7 +346,7 @@ const QuestionStatsBarPlot = ({
       sorted = sorted.slice(0, 10);
     }
     return sorted;
-  }, [questionStats, showPercent, toPercent]);
+  }, [questionStats, showPercent, percentBase]);
 
   return (
     <ChartWrapper>
@@ -426,8 +425,6 @@ const QuestionStatsPie = ({
   const percentBase = isOptions
     ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
     : 0;
-  const toPercent = (count: number) =>
-    percentBase ? Math.round((count / percentBase) * 100) : 0;
   const pieArcLabelFormatter = (
     item: { value: number } & Record<string, unknown>
   ) => `${item.value}%`;
@@ -446,7 +443,11 @@ const QuestionStatsPie = ({
     const items = isOptionsStats(questionStats)
       ? questionStats.options.map((o) => ({
           label: getEllipsedString(o.option.text, 60),
-          value: showPercent ? toPercent(o.count) : o.count,
+          value: showPercent
+            ? percentBase
+              ? Math.round((o.count / percentBase) * 100)
+              : 0
+            : o.count,
         }))
       : Object.entries(questionStats.topWordFrequencies).map(
           ([word, count]) => ({
@@ -462,7 +463,7 @@ const QuestionStatsPie = ({
         label,
         value,
       }));
-  }, [questionStats, showPercent, toPercent]);
+  }, [questionStats, showPercent, percentBase]);
   const messages = useMessages(messageIds);
   const [hasSeenPieInaccuracyWarning, setHasSeenPieInaccuracyWarning] =
     useState(false);
