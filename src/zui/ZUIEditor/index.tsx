@@ -279,7 +279,11 @@ const ZUIEditor: FC<Props> = ({
     >
       <div
         ref={editorContainerRef}
-        style={{ minHeight: '200px', width: fullSize ? '100%' : '600px' }}
+        style={{
+          maxWidth: fullSize ? undefined : '600px',
+          minHeight: '200px',
+          width: '100%',
+        }}
       >
         <Remirror editable={editable} initialContent={state} manager={manager}>
           <EditorOverlays
