@@ -82,6 +82,7 @@ type Props = {
   enableLists?: boolean;
   enableStrikethrough?: boolean;
   enableVariable?: boolean;
+  fullSize?: boolean;
   onChange: (newContent: RemirrorJSON[]) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
 };
@@ -99,6 +100,7 @@ const ZUIEditor: FC<Props> = ({
   enableLists,
   enableStrikethrough,
   enableVariable,
+  fullSize,
   onChange,
   onSelectBlock,
 }) => {
@@ -218,7 +220,7 @@ const ZUIEditor: FC<Props> = ({
     <Box
       display="flex"
       justifyContent="center"
-      paddingTop={5}
+      paddingTop={fullSize ? 0 : 5}
       sx={{
         '.zbutton-button': {
           bgcolor: 'black',
@@ -262,7 +264,7 @@ const ZUIEditor: FC<Props> = ({
     >
       <div
         ref={editorContainerRef}
-        style={{ minHeight: '200px', width: '600px' }}
+        style={{ minHeight: '200px', width: fullSize ? '100%' : '600px' }}
       >
         <Remirror editable={editable} initialContent={state} manager={manager}>
           <EditorOverlays
