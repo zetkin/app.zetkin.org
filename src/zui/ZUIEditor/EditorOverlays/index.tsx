@@ -4,7 +4,7 @@ import {
   useEditorView,
   usePositioner,
 } from '@remirror/react';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box, lighten, Typography, useTheme } from '@mui/material';
 import { FromToProps, isNodeSelection, RemirrorJSON } from 'remirror';
@@ -22,6 +22,7 @@ import editorBlockProblems, {
   BlockProblem,
 } from '../utils/editorBlockProblems';
 import { remirrorToZetkinWithIndexRemap } from 'features/emails/utils/conversion/remirrorToZetkin';
+import { areDOMRectRecordsEqual } from 'zui/ZUIEditor/utils/domRects';
 
 export type BlockDividerData = {
   pos: number;
@@ -108,11 +109,9 @@ const EditorOverlays: FC<Props> = ({
     return problems;
   }, [messages.editor.extensions.button, state.doc.children, content]);
 
-  const [allBlockRects, setAllBlockRects] = useState<Record<string, DOMRect>>(
-    {}
-  );
+  const previousAllBlockRects = useRef<Record<string, DOMRect> | null>(null);
 
-  const calculateAllBlockRects = useCallback(() => {
+  const allBlockRects = useMemo(() => {
     const rects: Record<string, DOMRect> = {};
 
     state.doc.descendants((node, pos, parent, index) => {
@@ -134,12 +133,12 @@ const EditorOverlays: FC<Props> = ({
       return false;
     });
 
+    if (areDOMRectRecordsEqual(rects, previousAllBlockRects.current)) {
+      return previousAllBlockRects.current;
+    }
+
     return rects;
   }, [editorRect.x, editorRect.y, state.doc, view]);
-
-  useEffect(() => {
-    setAllBlockRects(calculateAllBlockRects());
-  }, [calculateAllBlockRects]);
 
   const onSelectRemirrorBlock = useCallback(
     (blockIndex: number) => {
@@ -153,8 +152,6 @@ const EditorOverlays: FC<Props> = ({
   );
 
   const findSelectedNode = useCallback(() => {
-    const allBlockRects = calculateAllBlockRects();
-
     const selection = state.selection;
     const resolved = state.doc.resolve(selection.$head.pos);
     let node = resolved.node(1);
@@ -184,7 +181,7 @@ const EditorOverlays: FC<Props> = ({
     }
 
     const elem = view.nodeDOM(posBefore);
-    if (elem instanceof HTMLElement) {
+    if (elem instanceof HTMLElement && allBlockRects?.[index]) {
       onSelectRemirrorBlock(index);
       setCurrentBlock({
         attributes: node.attrs,
@@ -193,17 +190,11 @@ const EditorOverlays: FC<Props> = ({
           from: posBefore,
           to: posAfter,
         },
-        rect: allBlockRects[index],
+        rect: allBlockRects?.[index],
         type: node.type.name as BlockType,
       });
     }
-  }, [
-    calculateAllBlockRects,
-    state.selection,
-    state.doc,
-    onSelectRemirrorBlock,
-    view,
-  ]);
+  }, [state.selection, state.doc, view, onSelectRemirrorBlock, allBlockRects]);
 
   useEffect(() => {
     const observer = new ResizeObserver(findSelectedNode);
@@ -314,7 +305,7 @@ const EditorOverlays: FC<Props> = ({
         if (!blockProblems) {
           return null;
         }
-        const rect = allBlockRects[index];
+        const rect = allBlockRects?.[index];
         if (!rect) {
           return null;
         }
