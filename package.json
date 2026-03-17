@@ -14,6 +14,7 @@
     "lint:translations": "ts-node src/tools/lint-translations.ts",
     "lint": "run-p lint:*",
     "check-types": "tsc --noEmit",
+    "prepare": "husky",
     "test": "jest",
     "suite:0-checks": "run-p lint:* check-types",
     "suite:1-test": "npm run test",
@@ -26,8 +27,6 @@
     "make-yaml": "ts-node src/tools/make-yaml.ts"
   },
   "dependencies": {
-    "@date-io/date-fns": "1.x",
-    "@date-io/dayjs": "1.x",
     "@editorjs/editorjs": "^2.28.2",
     "@editorjs/header": "^2.8.1",
     "@editorjs/paragraph": "^2.11.3",
@@ -36,7 +35,6 @@
     "@emotion/styled": "^11.11.0",
     "@hapi/iron": "^7.0.1",
     "@messageformat/parser": "^5.1.0",
-    "@mui/base": "^5.0.0-alpha.99",
     "@mui/icons-material": "^7.0.1",
     "@mui/lab": "^7.0.0-beta.10",
     "@mui/material": "^7.0.1",
@@ -48,11 +46,11 @@
     "@mui/x-date-pickers-pro": "7.29.4",
     "@mui/x-license": "^7.26.0",
     "@mui/x-tree-view": "^7.28.1",
-    "@nivo/bar": "^0.80.0",
-    "@nivo/core": "^0.80.0",
-    "@nivo/line": "^0.80.0",
-    "@nivo/pie": "^0.80.0",
-    "@nivo/radial-bar": "^0.80.0",
+    "@nivo/bar": "^0.99.0",
+    "@nivo/core": "^0.99.0",
+    "@nivo/line": "^0.99.0",
+    "@nivo/pie": "^0.99.0",
+    "@nivo/radial-bar": "^0.99.0",
     "@reduxjs/toolkit": "^1.8.6",
     "@storybook/addon-docs": "^8.2.9",
     "@testing-library/dom": "^10.4.1",
@@ -63,7 +61,6 @@
     "@vis.gl/react-maplibre": "^8.0.4",
     "@visx/wordcloud": "^3.12.0",
     "copy-to-clipboard": "^3.3.1",
-    "date-fns": "^2.22.1",
     "dayjs": "^1.10.6",
     "fuse.js": "^6.5.3",
     "intl-messageformat": "^10.3.1",
@@ -121,10 +118,10 @@
     "@storybook/addon-essentials": "^8.1.10",
     "@storybook/addon-interactions": "^8.1.10",
     "@storybook/addon-links": "^8.1.10",
+    "@storybook/manager-api": "8.1.10",
     "@storybook/nextjs": "^8.1.10",
     "@storybook/react": "^8.1.10",
     "@storybook/test": "^8.1.10",
-    "@storybook/manager-api": "8.1.10",
     "@storybook/theming": "8.1.10",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.4.3",
@@ -154,17 +151,16 @@
     "eslint-plugin-no-switch-statements": "^1.0.0",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-yml": "^0.13.0",
+    "husky": "^9.1.7",
     "jest": "^29.0.0",
     "jest-environment-jsdom": "^30.2.0",
+    "lint-staged": "^16.3.3",
     "moxy": "^0.1.2",
-    "next-compose-plugins": "^2.2.0",
     "next-router-mock": "^0.7.4",
-    "next-transpile-modules": "^4.1.0",
     "npm-run-all2": "^6.0.4",
     "prettier": "^2.5.1",
     "storybook": "^8.1.10",
     "storybook-dark-mode": "^4.0.2",
-    "ts-jest": "^29.4.5",
     "ts-loader": "^9.2.6",
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
@@ -174,5 +170,14 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "lint-staged": {
+    "*.ts[x]": [
+      "prettier --check",
+      "eslint"
+    ],
+    "src/locale/*.yml": [
+      "yarn lint:translations"
+    ]
   }
 }
