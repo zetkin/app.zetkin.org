@@ -558,7 +558,9 @@ const OptionsStatsCard = ({
         />
       </ToggleButton>
       <ToggleButton size={'small'} value={'percent'}>
-        <Msg id={messageIds.insights.optionsFields.displayInsights.percentCount} />
+        <Msg
+          id={messageIds.insights.optionsFields.displayInsights.percentCount}
+        />
       </ToggleButton>
     </ToggleButtonGroup>
   );
