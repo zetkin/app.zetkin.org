@@ -234,6 +234,9 @@ const ZUIEditor: FC<Props> = ({
       justifyContent="center"
       paddingTop={fullSize ? 0 : 5}
       sx={{
+        '.remirror-editor > *': {
+          wordWrap: 'break-word',
+        },
         '.zbutton-button': {
           bgcolor: 'black',
           color: 'white',
