@@ -7,8 +7,8 @@ import {
   ItalicNode,
   LinkNode,
 } from 'features/emails/types';
-import { MarkType, TextBlockContentType } from '../types';
-import { inlineVarsToRemirrorVars } from './variables';
+import { MarkType, TextBlockContentType } from 'zui/ZUIEditor/types';
+import { inlineVarsToRemirrorVars } from 'zui/ZUIEditor/utils/variables';
 
 type InlineNodeWithContent = ItalicNode | BoldNode | LinkNode;
 

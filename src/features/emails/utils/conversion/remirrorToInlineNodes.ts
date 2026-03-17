@@ -6,10 +6,11 @@ import {
   InlineNodeKind,
   ItalicNode,
   LinkNode,
+  MarkNode,
 } from 'features/emails/types';
-import { MarkNode, MarkType, TextBlockContentType } from '../types';
-import { remirrorVarsToInlineVars } from './variables';
-import { VariableName } from '../extensions/VariableExtension';
+import { MarkType, TextBlockContentType } from 'zui/ZUIEditor/types';
+import { remirrorVarsToInlineVars } from 'zui/ZUIEditor/utils/variables';
+import { VariableName } from 'zui/ZUIEditor/extensions/VariableExtension';
 import isObjectMark from './isObjectMark';
 
 export default function remirrorToInlineNodes(blockContent: RemirrorJSON[]) {

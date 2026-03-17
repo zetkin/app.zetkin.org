@@ -2,8 +2,6 @@ import { FC, MutableRefObject, useEffect } from 'react';
 import { useCommands, useEditorState } from '@remirror/react';
 import { EditorState } from '@remirror/pm';
 
-import { remirrorToZetkinWithIndexRemap } from 'zui/ZUIEditor/utils/remirrorToZetkin';
-
 export type ZUIEditorApi = {
   moveBlock: (fromZetkinIndex: number, toZetkinIndex: number) => void;
   setSelectedBlockIndex: (selectedBlockIndex: number) => void;
@@ -33,21 +31,7 @@ export const EditorApi: FC<{
       return;
     }
     editorApiRef.current = {
-      moveBlock: (fromZetkinIndex, toZetkinIndex) => {
-        const [, remapped] = remirrorToZetkinWithIndexRemap(
-          state.doc.content.toJSON()
-        );
-        const reversedRemap = Object.fromEntries(
-          Object.entries(remapped).map(([k, v]) => [v, Number(k)])
-        );
-
-        const fromRemirrorIndex = reversedRemap[fromZetkinIndex];
-        const toRemirrorIndex = reversedRemap[toZetkinIndex];
-
-        if (fromRemirrorIndex === undefined || toRemirrorIndex === undefined) {
-          return;
-        }
-
+      moveBlock: (fromRemirrorIndex, toRemirrorIndex) => {
         const diff = toRemirrorIndex - fromRemirrorIndex;
 
         if (diff === 0) {
@@ -70,14 +54,7 @@ export const EditorApi: FC<{
           }
         }
       },
-      setSelectedBlockIndex: (zetkinBlockIndex) => {
-        const [, remapped] = remirrorToZetkinWithIndexRemap(
-          state.doc.content.toJSON()
-        );
-        const reversedRemap = Object.fromEntries(
-          Object.entries(remapped).map(([k, v]) => [v, Number(k)])
-        );
-        const remirrorIndex = reversedRemap[zetkinBlockIndex];
+      setSelectedBlockIndex: (remirrorIndex) => {
         const pos = getBlockPos(state, remirrorIndex);
         if (pos === null) {
           return;

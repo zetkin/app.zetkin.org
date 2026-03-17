@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 
 import { m, makeMessages } from 'core/i18n/messages';
-import { BlockProblem } from 'features/emails/types';
+import { BlockProblem } from 'zui/ZUIEditor/utils/editorBlockProblems';
 
 export default makeMessages('zui', {
   accessList: {

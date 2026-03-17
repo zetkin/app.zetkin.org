@@ -1,10 +1,3 @@
-import {
-  BoldNode,
-  ItalicNode,
-  LinkNode,
-  StringNode,
-} from 'features/emails/types';
-
 export enum RemirrorBlockType {
   BUTTON = 'zbutton',
   HEADING = 'heading',
@@ -23,8 +16,6 @@ export enum MarkType {
   ITALIC = 'italic',
   LINK = 'zlink',
 }
-
-export type MarkNode = StringNode | BoldNode | ItalicNode | LinkNode;
 
 export enum EmailVariable {
   FIRST_NAME = 'target.first_name',

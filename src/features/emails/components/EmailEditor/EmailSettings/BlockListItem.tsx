@@ -12,6 +12,7 @@ import editorBlockProblems from 'zui/ZUIEditor/utils/editorBlockProblems';
 import { useMessages } from 'core/i18n';
 import emailMessageIds from 'features/emails/l10n/messageIds';
 import editorMessageIds from 'zui/l10n/messageIds';
+import zetkinToRemirror from 'features/emails/utils/conversion/zetkinToRemirror';
 
 interface BlockListItemProps {
   block: EmailContentBlock;
@@ -49,7 +50,10 @@ const BlockListItem: FC<BlockListItemProps> = ({
 
   if (block.kind === BlockKind.PARAGRAPH) {
     const title = makeTitle(block.data.content);
-    const hasErrors = editorBlockProblems(block);
+    const remirrorBlocks = zetkinToRemirror([block]);
+    const hasErrors = remirrorBlocks.flatMap((block) =>
+      editorBlockProblems(block)
+    );
     return (
       <BlockListItemBase
         dropRef={dropRef}
@@ -77,9 +81,9 @@ const BlockListItem: FC<BlockListItemProps> = ({
       />
     );
   } else if (block.kind === BlockKind.BUTTON) {
-    const hasErrors = editorBlockProblems(
-      block,
-      editorMessages.extensions.button.defaultText()
+    const remirrorBlocks = zetkinToRemirror([block]);
+    const hasErrors = remirrorBlocks.flatMap((block) =>
+      editorBlockProblems(block, editorMessages.extensions.button.defaultText())
     );
     return (
       <BlockListItemBase
