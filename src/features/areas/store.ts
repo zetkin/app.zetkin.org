@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
+  remoteItem,
+  RemoteItem,
   remoteItemDeleted,
   remoteItemLoad,
   remoteItemUpdated,
@@ -9,16 +11,18 @@ import {
   remoteListLoad,
   remoteListLoaded,
 } from 'utils/storeUtils';
-import { Zetkin2Area } from './types';
+import { Zetkin2Area, ZetkinAreaStats } from './types';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<Zetkin2Area>;
+  assignmentStatsByAreaId: Record<number, RemoteItem<ZetkinAreaStats>>;
   tagsByAreaId: Record<string, RemoteList<ZetkinAppliedTag>>;
 }
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  assignmentStatsByAreaId: {},
   tagsByAreaId: {},
 };
 
@@ -53,6 +57,27 @@ const areasSlice = createSlice({
       const areas = action.payload;
       state.areaList = remoteListLoaded(areas);
     },
+    assignmentStatsLoad: (state, action: PayloadAction<number>) => {
+      const areaId = action.payload;
+
+      if (!state.assignmentStatsByAreaId[areaId]) {
+        state.assignmentStatsByAreaId[areaId] = remoteItem(areaId);
+      }
+
+      state.assignmentStatsByAreaId[areaId].isLoading = true;
+    },
+    assignmentStatsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinAreaStats | null]>
+    ) => {
+      const [areaId, assignmentStats] = action.payload;
+
+      state.assignmentStatsByAreaId[areaId] = remoteItem(areaId, {
+        data: assignmentStats,
+        isLoading: false,
+        loaded: new Date().toISOString(),
+      });
+    },
   },
 });
 
@@ -65,4 +90,6 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
+  assignmentStatsLoad,
+  assignmentStatsLoaded,
 } = areasSlice.actions;

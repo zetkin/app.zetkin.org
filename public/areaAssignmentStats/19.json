@@ -1,0 +1,9 @@
+{
+  "area_id": 19,
+  "num_locations": 160,
+  "num_households": 1020,
+  "num_successfull_visits": 75,
+  "num_locations_visited": 12,
+  "num_households_visited": 60,
+  "num_households_successfully_visited": 30
+}
