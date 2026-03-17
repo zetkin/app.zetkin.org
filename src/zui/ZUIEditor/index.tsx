@@ -11,6 +11,7 @@ import {
   HardBreakExtension,
   HeadingExtension,
   ItalicExtension,
+  StrikeExtension,
   OrderedListExtension,
 } from 'remirror/extensions';
 import {
@@ -79,6 +80,7 @@ type Props = {
   enableItalic?: boolean;
   enableLink?: boolean;
   enableLists?: boolean;
+  enableStrikethrough?: boolean;
   enableVariable?: boolean;
   onChange: (newContent: RemirrorJSON[]) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
@@ -95,6 +97,7 @@ const ZUIEditor: FC<Props> = ({
   enableItalic,
   enableLink,
   enableLists,
+  enableStrikethrough,
   enableVariable,
   onChange,
   onSelectBlock,
@@ -111,6 +114,7 @@ const ZUIEditor: FC<Props> = ({
   const btnExtension = useRef(new ButtonExtension());
   const imgExtension = useRef(new ImageExtension({}));
   const italicExtension = useRef(new ItalicExtension());
+  const strikethroughExtension = useRef(new StrikeExtension());
   const linkExtension = useRef(new LinkExtension());
   const olExtension = useRef(new OrderedListExtension());
   const ulExtension = useRef(new BulletListExtension({}));
@@ -155,6 +159,10 @@ const ZUIEditor: FC<Props> = ({
       extensions.push(italicExtension.current);
     }
 
+    if (enableStrikethrough) {
+      extensions.push(strikethroughExtension.current);
+    }
+
     if (enableLink) {
       extensions.push(linkExtension.current);
     }
@@ -164,7 +172,13 @@ const ZUIEditor: FC<Props> = ({
     }
 
     return extensions;
-  }, [enableBold, enableItalic, enableLink, enableVariable]);
+  }, [
+    enableBold,
+    enableItalic,
+    enableStrikethrough,
+    enableLink,
+    enableVariable,
+  ]);
 
   const { orgId } = useNumericRouteParams();
 
@@ -261,6 +275,7 @@ const ZUIEditor: FC<Props> = ({
             enableBold={!!enableBold}
             enableItalic={!!enableItalic}
             enableLink={!!enableLink}
+            enableStrikethrough={!!enableStrikethrough}
             enableVariable={!!enableVariable}
             focused={focused}
             onSelectBlock={(selectedBlock) => onSelectBlock(selectedBlock)}
