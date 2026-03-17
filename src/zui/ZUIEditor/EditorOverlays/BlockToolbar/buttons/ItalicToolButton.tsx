@@ -8,7 +8,7 @@ const ItalicToolButton: FC = () => {
   const { focus, toggleItalic } = useCommands();
 
   const isItalic = active.italic();
-  const isVariable = active.zvariable();
+  const isVariable = active.zvariable?.() || false;
 
   return (
     <Button
