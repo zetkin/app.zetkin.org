@@ -3,6 +3,7 @@ import { useCommands, useEditorState } from '@remirror/react';
 import { EditorState } from '@remirror/pm';
 
 export type ZUIEditorApi = {
+  clear: () => void;
   moveBlock: (fromZetkinIndex: number, toZetkinIndex: number) => void;
   setSelectedBlockIndex: (selectedBlockIndex: number) => void;
 };
@@ -23,7 +24,7 @@ const getBlockPos = (state: EditorState, blockIndex: number): number | null => {
 export const EditorApi: FC<{
   editorApiRef: MutableRefObject<ZUIEditorApi | null>;
 }> = ({ editorApiRef }) => {
-  const { focus, moveBlockDown, moveBlockUp } = useCommands();
+  const { focus, moveBlockDown, moveBlockUp, setContent } = useCommands();
   const state = useEditorState();
 
   useEffect(() => {
@@ -31,6 +32,12 @@ export const EditorApi: FC<{
       return;
     }
     editorApiRef.current = {
+      clear: () => {
+        setContent({
+          content: [],
+          type: 'doc',
+        });
+      },
       moveBlock: (fromRemirrorIndex, toRemirrorIndex) => {
         const diff = toRemirrorIndex - fromRemirrorIndex;
 
@@ -62,7 +69,7 @@ export const EditorApi: FC<{
         focus(pos);
       },
     };
-  }, [editorApiRef, focus, moveBlockDown, moveBlockUp, state]);
+  }, [editorApiRef, focus, moveBlockDown, moveBlockUp, setContent, state]);
 
   return null;
 };

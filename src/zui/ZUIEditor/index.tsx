@@ -84,7 +84,7 @@ type Props = {
   enableVariable?: boolean;
   fullSize?: boolean;
   onChange: (newContent: RemirrorJSON[]) => void;
-  onSelectBlock: (selectedBlockIndex: number) => void;
+  onSelectBlock?: (selectedBlockIndex: number) => void;
 };
 
 const ZUIEditor: FC<Props> = ({
@@ -292,7 +292,7 @@ const ZUIEditor: FC<Props> = ({
             enableStrikethrough={!!enableStrikethrough}
             enableVariable={!!enableVariable}
             focused={focused}
-            onSelectBlock={(selectedBlock) => onSelectBlock(selectedBlock)}
+            onSelectBlock={onSelectBlock}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
           {enableBlockMenu && (

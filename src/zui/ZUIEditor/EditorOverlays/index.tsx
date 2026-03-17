@@ -57,7 +57,7 @@ type Props = {
   enableStrikethrough: boolean;
   enableVariable: boolean;
   focused: boolean;
-  onSelectBlock: (selectedBlockIndex: number) => void;
+  onSelectBlock?: (selectedBlockIndex: number) => void;
 };
 
 const EditorOverlays: FC<Props> = ({
@@ -147,7 +147,7 @@ const EditorOverlays: FC<Props> = ({
         state.doc.content.toJSON()
       );
       const zetkinBlockIndex = remap[blockIndex];
-      onSelectBlock(zetkinBlockIndex);
+      onSelectBlock?.(zetkinBlockIndex);
     },
     [onSelectBlock, state.doc.content]
   );
