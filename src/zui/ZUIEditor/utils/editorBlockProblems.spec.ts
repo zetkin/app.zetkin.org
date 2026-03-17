@@ -16,11 +16,15 @@ describe('editorBlockProblems()', () => {
     ): RemirrorJSON {
       return {
         attrs: {
-          href: overrides?.href || 'http://www.zetkin.org/',
+          href:
+            overrides && 'href' in overrides
+              ? overrides.href
+              : 'http://www.zetkin.org/',
         },
         content: [
           {
-            text: overrides?.text || 'Click me!',
+            text:
+              overrides && 'text' in overrides ? overrides.text : 'Click me!',
             type: TextBlockContentType.TEXT,
           },
         ],
