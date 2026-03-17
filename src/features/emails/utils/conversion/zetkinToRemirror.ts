@@ -1,7 +1,7 @@
 import { RemirrorJSON } from 'remirror';
 
 import { BlockKind, EmailContentBlock } from 'features/emails/types';
-import { RemirrorBlockType, TextBlockContentType } from '../types';
+import { RemirrorBlockType, TextBlockContentType } from 'zui/ZUIEditor/types';
 import inlineNodesToRemirror from './inlineNodesToRemirror';
 
 export default function zetkinToRemirror(zetkinBlocks: EmailContentBlock[]) {

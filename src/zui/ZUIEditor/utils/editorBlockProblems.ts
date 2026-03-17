@@ -1,29 +1,32 @@
 import isURL from 'validator/lib/isURL';
+import { RemirrorJSON } from 'remirror';
 
-import {
-  BlockKind,
-  BlockProblem,
-  EmailContentBlock,
-  EmailContentInlineNode,
-  InlineNodeKind,
-  LinkNode,
-} from 'features/emails/types';
+import { MarkType, RemirrorBlockType } from 'zui/ZUIEditor/types';
+
+export enum BlockProblem {
+  INVALID_BUTTON_URL = 'invalidButtonURL',
+  DEFAULT_BUTTON_TEXT = 'defaultButtonText',
+  BUTTON_TEXT_MISSING = 'buttonTextMissing',
+  INVALID_LINK_URL = 'invalidLinkURL',
+}
 
 export default function editorBlockProblems(
-  block: EmailContentBlock,
+  block: RemirrorJSON,
   defaultButtonText?: string
 ) {
   const blockProblems: BlockProblem[] = [];
 
-  if (block.kind == BlockKind.BUTTON) {
+  if (block.type === RemirrorBlockType.BUTTON) {
     if (
-      !block.data.href ||
-      !isURL(block.data.href, { require_protocol: true })
+      !block.attrs?.href ||
+      !isURL(block.attrs?.href?.toString(), { require_protocol: true })
     ) {
       blockProblems.push(BlockProblem.INVALID_BUTTON_URL);
     }
 
-    const buttonText = block.data.text;
+    const textContent =
+      block.content && block.content?.length > 0 ? block.content[0] : undefined;
+    const buttonText = textContent?.text;
 
     const noButtonText =
       !buttonText || !buttonText.replaceAll('&nbsp;', '').trim().length;
@@ -35,23 +38,26 @@ export default function editorBlockProblems(
     } else if (noButtonText) {
       blockProblems.push(BlockProblem.BUTTON_TEXT_MISSING);
     }
-  } else if (block.kind == BlockKind.PARAGRAPH) {
-    const linksInBlock: LinkNode[] = [];
+  } else if (block.type === RemirrorBlockType.PARAGRAPH) {
+    const linksInBlock: RemirrorJSON[] = [];
 
-    const findLinkNodes = (node: EmailContentInlineNode) => {
-      if (node.kind == InlineNodeKind.LINK) {
+    const findLinkNodes = (node: RemirrorJSON) => {
+      if (node.type === MarkType.LINK) {
         linksInBlock.push(node);
-      } else if ('content' in node) {
+      } else if (node.content) {
         node.content.forEach((node) => findLinkNodes(node));
       }
     };
 
-    block.data.content.forEach((contentNode) => {
+    block.content?.forEach((contentNode) => {
       findLinkNodes(contentNode);
     });
 
     if (
-      linksInBlock.some((link) => !isURL(link.href, { require_protocol: true }))
+      linksInBlock.some(
+        (link) =>
+          !isURL(link.attrs?.href?.toString() || '', { require_protocol: true })
+      )
     ) {
       blockProblems.push(BlockProblem.INVALID_LINK_URL);
     }

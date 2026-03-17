@@ -7,7 +7,7 @@ import {
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box, lighten, Typography, useTheme } from '@mui/material';
-import { FromToProps, isNodeSelection } from 'remirror';
+import { FromToProps, isNodeSelection, RemirrorJSON } from 'remirror';
 import { ErrorOutline } from '@mui/icons-material';
 import { Attrs } from '@remirror/pm/model';
 
@@ -15,12 +15,13 @@ import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
 import useBlockMenu from './useBlockMenu';
-import { BlockProblem, EmailContentBlock } from 'features/emails/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 import { RemirrorBlockType } from '../types';
-import editorBlockProblems from '../utils/editorBlockProblems';
-import { remirrorToZetkinWithIndexRemap } from 'zui/ZUIEditor/utils/remirrorToZetkin';
+import editorBlockProblems, {
+  BlockProblem,
+} from '../utils/editorBlockProblems';
+import { remirrorToZetkinWithIndexRemap } from 'features/emails/utils/conversion/remirrorToZetkin';
 
 export type BlockDividerData = {
   pos: number;
@@ -48,6 +49,7 @@ type Props = {
     id: string;
     label: string;
   }[];
+  content: RemirrorJSON[];
   editable: boolean;
   enableBold: boolean;
   enableItalic: boolean;
@@ -55,7 +57,6 @@ type Props = {
   enableVariable: boolean;
   focused: boolean;
   onSelectBlock: (selectedBlockIndex: number) => void;
-  zetkinContent: EmailContentBlock[];
 };
 
 const EditorOverlays: FC<Props> = ({
@@ -67,7 +68,7 @@ const EditorOverlays: FC<Props> = ({
   enableVariable,
   focused,
   onSelectBlock,
-  zetkinContent,
+  content,
 }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
@@ -86,26 +87,24 @@ const EditorOverlays: FC<Props> = ({
   const editorRect = view.dom.getBoundingClientRect();
 
   const problems = useMemo(() => {
-    let zetkinIndex = 0;
     const problems: (BlockProblem[] | null)[] = [];
-    state.doc.children.forEach((node) => {
+    state.doc.children.forEach((node, index) => {
       if (
         node.type.name == RemirrorBlockType.PARAGRAPH &&
         node.content.size == 0
       ) {
         problems.push(null);
-      } else if (zetkinIndex < zetkinContent.length) {
-        const zetkinBlock = zetkinContent[zetkinIndex];
+      } else if (index < content.length) {
+        const block = content[index];
         const blockProblems = editorBlockProblems(
-          zetkinBlock,
+          block,
           messages.editor.extensions.button.defaultText()
         );
         problems.push(blockProblems.length > 0 ? blockProblems : null);
-        zetkinIndex++;
       }
     });
     return problems;
-  }, [messages.editor.extensions.button, state.doc.children, zetkinContent]);
+  }, [messages.editor.extensions.button, state.doc.children, content]);
 
   const [allBlockRects, setAllBlockRects] = useState<Record<string, DOMRect>>(
     {}
