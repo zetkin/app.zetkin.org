@@ -1,7 +1,9 @@
 export enum RemirrorBlockType {
+  BULLET_LIST = 'bulletList',
   BUTTON = 'zbutton',
   HEADING = 'heading',
   IMAGE = 'zimage',
+  ORDERED_LIST = 'orderedList',
   PARAGRAPH = 'paragraph',
 }
 
@@ -15,6 +17,7 @@ export enum MarkType {
   BOLD = 'bold',
   ITALIC = 'italic',
   LINK = 'zlink',
+  STRIKE = 'strike',
 }
 
 export enum EmailVariable {

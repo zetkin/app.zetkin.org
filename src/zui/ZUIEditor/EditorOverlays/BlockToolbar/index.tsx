@@ -21,6 +21,7 @@ type BlockToolbarProps = {
   enableBold: boolean;
   enableItalic: boolean;
   enableLink: boolean;
+  enableStrikethrough: boolean;
   enableVariable: boolean;
   range: FromToProps;
 };
@@ -30,6 +31,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   blockType,
   curBlockY,
   enableLink,
+  enableStrikethrough,
   enableVariable,
   enableItalic,
   enableBold,
@@ -53,6 +55,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
             enableBold={enableBold}
             enableItalic={enableItalic}
             enableLink={enableLink}
+            enableStrikethrough={enableStrikethrough}
             enableVariable={enableVariable}
             range={range}
           />
