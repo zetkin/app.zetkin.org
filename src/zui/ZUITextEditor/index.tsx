@@ -26,7 +26,7 @@ export interface ZUITextEditorProps {
   /**
    * @deprecated Will be ignored
    */
-  placeholder: string;
+  placeholder?: string;
 }
 
 const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
