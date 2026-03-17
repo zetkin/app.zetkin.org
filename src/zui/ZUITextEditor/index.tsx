@@ -58,10 +58,6 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   return (
     <Box
       sx={{
-        '& a': {
-          color: oldTheme.palette.primary.main,
-          fontWeight: 600,
-        },
         '&:hover': {
           borderColor: oldTheme.palette.onSurface.medium,
         },
