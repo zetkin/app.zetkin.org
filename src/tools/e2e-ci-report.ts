@@ -68,7 +68,7 @@ function main() {
   const runs = JSON.parse(json);
   const runId = runs[0]?.databaseId;
 
-  if (!runId!) {
+  if (!runId) {
     console.error(
       `No CI runs found for branch "${branch}". Is the branch pushed?`
     );
@@ -86,7 +86,7 @@ function main() {
   } catch {
     console.error(
       `Could not download artifact "${ARTIFACT_NAME}" from run ${runId}. ` +
-        'The run may not have produced a report (no test failures?).'
+        'The run may not have produced a report.'
     );
     process.exit(1);
   }
