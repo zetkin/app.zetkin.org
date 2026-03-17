@@ -8,7 +8,7 @@ const BoldToolButton: FC = () => {
   const { focus, toggleBold } = useCommands();
 
   const isBold = active.bold();
-  const isVariable = active.zvariable();
+  const isVariable = active.zvariable?.() || false;
 
   return (
     <Button
