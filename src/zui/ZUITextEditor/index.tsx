@@ -1,23 +1,5 @@
-/* eslint-disable jsx-a11y/no-autofocus */
-import { isEqual } from 'lodash';
-import { withHistory } from 'slate-history';
-import { Box, ClickAwayListener, Collapse } from '@mui/material';
-import {
-  createEditor,
-  deleteBackward,
-  Descendant,
-  Editor,
-  Node,
-  Transforms,
-} from 'slate';
-import {
-  Editable,
-  ReactEditor,
-  RenderElementProps,
-  RenderLeafProps,
-  Slate,
-  withReact,
-} from 'slate-react';
+import { Box, IconButton } from '@mui/material';
+import { RemirrorJSON } from 'remirror';
 import React, {
   useCallback,
   useEffect,
@@ -25,27 +7,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import AttachmentIcon from '@mui/icons-material/Attachment';
 
-import { markdownToSlate } from './utils/markdownToSlate';
-import './types';
 import { FileUpload } from 'features/files/hooks/useFileUploads';
-import TextElement from './TextElement';
 import oldTheme from 'theme';
-import Toolbar from './Toolbar';
 import { ZetkinFileUploadChip } from 'zui/ZUIFileChip';
-import {
-  keyDownHandler,
-  shouldBeRemoved,
-  slateToMarkdown,
-  withInlines,
-} from './helpers';
-
-const emptySlate = [
-  {
-    children: [{ text: '' }],
-    type: 'paragraph',
-  },
-] as Descendant[];
+import ZUIEditor from 'zui/ZUIEditor';
+import { markdownToRemirror } from './utils/markdownToRemirror';
+import { remirrorToMarkdown } from './utils/remirrorToMarkdown';
 
 export interface ZUITextEditorProps {
   clear?: number;
@@ -54,6 +23,9 @@ export interface ZUITextEditorProps {
   onChange: (value: string) => void;
   onCancelFile?: (file: FileUpload) => void;
   onClickAttach?: () => void;
+  /**
+   * @deprecated Will be ignored
+   */
   placeholder: string;
 }
 
@@ -66,183 +38,100 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   onClickAttach,
   placeholder,
 }) => {
+  void placeholder;
   const [active, setActive] = useState<boolean>(false);
-  const renderElement = useCallback(
-    (props: RenderElementProps) => <TextElement {...props} />,
-    []
-  );
-  const renderLeaf = useCallback(
-    (props: RenderLeafProps) => <Leaf {...props} />,
-    []
-  );
-  const editor = useMemo(
-    () => withInlines(withHistory(withReact(createEditor()))),
-    []
-  );
+  const editorApiRef = useRef<null>(null);
+  const [, setSelectedBlockIndex] = useState(0);
 
-  //fixes deleting the missing bullet point in empty list in root
-  editor.deleteBackward = (...args) => {
-    deleteBackward(editor, ...args);
-
-    const bulletListNode = Editor.above(editor, {
-      match: (n: Node) =>
-        'type' in n &&
-        n.type === 'list-item' &&
-        Object.prototype.hasOwnProperty.call(n, 'children'),
-    });
-
-    if (bulletListNode) {
-      if (shouldBeRemoved(bulletListNode)) {
-        Transforms.setNodes(
-          editor,
-          { type: 'paragraph' },
-          {
-            at: bulletListNode[1],
-            match: (n) => 'type' in n && n.type === 'list-item',
-          }
-        );
-      }
+  const content = useMemo(() => {
+    if (!initialValue) {
+      return [];
     }
-    return editor;
-  };
-
-  const markdownValue = useRef('');
-  const [initialValueSlate, setInitialValueSlate] = useState<
-    Descendant[] | null
-  >(null);
-
-  useEffect(() => {
-    (async () => {
-      if (initialValue) {
-        if (initialValue !== markdownValue.current) {
-          const slate = await markdownToSlate(initialValue);
-          setInitialValueSlate(slate as Descendant[]);
-        }
-      } else {
-        setInitialValueSlate(emptySlate);
-      }
-    })();
+    return markdownToRemirror(initialValue);
   }, [initialValue]);
 
   useEffect(() => {
     if (clear && clear > 0) {
-      clearEditor();
       setActive(false);
+      onChange('');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clear]);
+  }, [clear, onChange]);
 
-  return (
-    <ClickAwayListener onClickAway={onClickAway}>
-      <Box
-        onClick={() => ReactEditor.focus(editor)}
-        sx={{
-          '& a': {
-            color: oldTheme.palette.primary.main,
-            fontWeight: 600,
-          },
-          '&:hover': {
-            borderColor: oldTheme.palette.onSurface.medium,
-          },
-          background: active ? 'white' : 'transparent',
-          border: '1.5px solid',
-          borderColor: active
-            ? oldTheme.palette.onSurface.medium
-            : oldTheme.palette.outline.main,
-          borderRadius: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          fontFamily: 'system-ui',
-          minHeight: 0,
-          padding: '16px',
-          transition: 'all 0.3s ease',
-        }}
-      >
-        {/* Only render when slate has been generated */}
-        {initialValueSlate && (
-          <Slate
-            editor={editor}
-            initialValue={initialValueSlate}
-            onChange={(slateArray) => {
-              markdownValue.current = slateToMarkdown(slateArray);
-              onChange(markdownValue.current);
-            }}
-          >
-            <Editable
-              autoFocus
-              onFocus={() => setActive(true)}
-              onKeyDown={onKeyDown}
-              placeholder={placeholder}
-              renderElement={renderElement}
-              renderLeaf={renderLeaf}
-              spellCheck
-              style={{
-                outline: 'none',
-                overflowY: 'scroll',
-              }}
-            />
-            <Collapse in={active} sx={{ flexShrink: 0 }}>
-              <Toolbar onClickAttach={onClickAttach} />
-            </Collapse>
-          </Slate>
-        )}
-        {fileUploads &&
-          fileUploads.map((fileUpload) => {
-            return (
-              <ZetkinFileUploadChip
-                key={fileUpload.key}
-                fileUpload={fileUpload}
-                onDelete={() => {
-                  if (onCancelFile) {
-                    onCancelFile(fileUpload);
-                  }
-                }}
-              />
-            );
-          })}
-      </Box>
-    </ClickAwayListener>
+  const handleChange = useCallback(
+    (newContent: RemirrorJSON[]) => {
+      const markdown = remirrorToMarkdown(newContent);
+      onChange(markdown);
+    },
+    [onChange]
   );
 
-  function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    keyDownHandler(editor, event);
-  }
-
-  function onClickAway() {
-    if (isEqual(editor.children, emptySlate)) {
-      setActive(false);
-      clearEditor();
-    }
-  }
-
-  function clearEditor() {
-    Transforms.select(editor, {
-      anchor: Editor.start(editor, []),
-      focus: Editor.end(editor, []),
-    });
-    Transforms.removeNodes(editor);
-    Transforms.insertNodes(editor, emptySlate);
-  }
-};
-
-export const Leaf: React.FunctionComponent<RenderLeafProps> = ({
-  attributes,
-  children,
-  leaf,
-}) => {
-  if (leaf.bold) {
-    children = <strong>{children}</strong>;
-  }
-
-  if (leaf.italic) {
-    children = <em>{children}</em>;
-  }
-
-  if (leaf.strikeThrough) {
-    children = <s>{children}</s>;
-  }
-
-  return <span {...attributes}>{children}</span>;
+  return (
+    <Box
+      sx={{
+        '& a': {
+          color: oldTheme.palette.primary.main,
+          fontWeight: 600,
+        },
+        '&:hover': {
+          borderColor: oldTheme.palette.onSurface.medium,
+        },
+        background: active ? 'white' : 'transparent',
+        border: '1.5px solid',
+        borderColor: active
+          ? oldTheme.palette.onSurface.medium
+          : oldTheme.palette.outline.main,
+        borderRadius: '8px',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: 'system-ui',
+        minHeight: 0,
+        position: 'relative',
+        transition: 'all 0.3s ease',
+      }}
+    >
+      <ZUIEditor
+        content={content}
+        editable={true}
+        editorApiRef={editorApiRef}
+        enableBold
+        enableHeading
+        enableItalic
+        enableLink
+        enableLists
+        enableStrikethrough
+        fullSize
+        onChange={handleChange}
+        onSelectBlock={(index) => setSelectedBlockIndex(index)}
+      />
+      {!!onClickAttach && (
+        <Box
+          sx={{
+            bottom: 0,
+            position: 'absolute',
+            right: 0,
+          }}
+        >
+          <IconButton onClick={onClickAttach} size="large">
+            <AttachmentIcon />
+          </IconButton>
+        </Box>
+      )}
+      {fileUploads &&
+        fileUploads.map((fileUpload) => {
+          return (
+            <ZetkinFileUploadChip
+              key={fileUpload.key}
+              fileUpload={fileUpload}
+              onDelete={() => {
+                if (onCancelFile) {
+                  onCancelFile(fileUpload);
+                }
+              }}
+            />
+          );
+        })}
+    </Box>
+  );
 };
 
 export default ZUITextEditor;
