@@ -3,9 +3,13 @@ import { useCommands, useEditorState } from '@remirror/react';
 import { EditorState } from '@remirror/pm';
 
 export type ZUIEditorApi = {
+  /** Clear the editor */
   clear: () => void;
+  /** Focus the editor */
   focus: () => void;
-  moveBlock: (fromZetkinIndex: number, toZetkinIndex: number) => void;
+  /** Move a block to another position */
+  moveBlock: (fromIndex: number, toIndex: number) => void;
+  /** Select a block by index */
   setSelectedBlockIndex: (selectedBlockIndex: number) => void;
 };
 

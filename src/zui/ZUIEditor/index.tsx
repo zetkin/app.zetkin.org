@@ -69,25 +69,53 @@ export type BlockData = {
 
 export type { ZUIEditorApi } from './EditorApi';
 
-type Props = {
+/**
+ * Zetkin's block editor, built on top of ProseMirror and Remirror.
+ *
+ * ## Content Format
+ *
+ * The editor uses Remirror JSON format. Example:
+ * ```json
+ * [
+ *   { "type": "paragraph", "content": [{ "type": "text", "text": "Hello" }] },
+ *   { "type": "heading", "attrs": { "level": 1 }, "content": [{ "type": "text", "text": "Title" }] }
+ * ]
+ * ```
+ *
+ * @see BlockType
+ */
+const ZUIEditor: FC<{
+  /** The editor content in Remirror JSON format */
   content: RemirrorJSON[];
+  /** Whether the editor is editable */
   editable: boolean;
+  /** Optional ref to get update the editor */
   editorApiRef?: MutableRefObject<ZUIEditorApi | null>;
+  /** Enable bold text formatting */
   enableBold?: boolean;
+  /** Enable button blocks */
   enableButton?: boolean;
+  /** Enable heading blocks */
   enableHeading?: boolean;
+  /** Enable image blocks */
   enableImage?: boolean;
+  /** Enable italic text formatting */
   enableItalic?: boolean;
+  /** Enable link insertion */
   enableLink?: boolean;
+  /** Enable ordered and bullet lists */
   enableLists?: boolean;
+  /** Enable strikethrough text formatting */
   enableStrikethrough?: boolean;
+  /** Enable variable placeholders (first_name, last_name, full_name) */
   enableVariable?: boolean;
+  /** Use full width/height instead of default 600px width */
   fullSize?: boolean;
+  /** Called when content changes, passes RemirrorJSON array */
   onChange: (newContent: RemirrorJSON[]) => void;
+  /** Called when a block is selected */
   onSelectBlock?: (selectedBlockIndex: number) => void;
-};
-
-const ZUIEditor: FC<Props> = ({
+}> = ({
   content,
   editable,
   editorApiRef,

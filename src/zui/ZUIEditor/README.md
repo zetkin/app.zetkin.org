@@ -131,20 +131,19 @@ document, etc.
 
 ## Interface
 
-The `ZUIEditor` component exposes these properties:
-
-- `enableX` (where X is a feature) configures the editor to include
-  functionality, e.g. `enableImage` to enable the image block
-- `onChange` is called whenever content changes and passes the content in the
-  Zetkin block format
-- `initialContent` is the initial content defined using the Zetkin block format
+See the JSDoc comments in `index.tsx` for the complete interface documentation.
 
 ## Extended functionality
 
-These are the custom extensions that are added by `ZUIEditor`. They should be
-documented more properly as we get further.
+These are the custom extensions that are added by `ZUIEditor`:
 
-- Button block
-- Image block
-- Placeholder
-- Block menu
+- **Button block** - Insertable buttons with href
+- **Image block** - Insertable images from file library
+- **Variable extension** - Placeholders for personalization (first_name,
+  last_name, full_name)
+- **Block menu** - Menu to insert different block types
+- **Placeholder** - Visual placeholder when editor is empty
+- **Move extension** - Drag-and-drop to reorder blocks
+- **Indent/Dedent extension** - Indent or dedent list items
+- **Transform paste extension** - Transform pasted content into appropriate
+  blocks
