@@ -1,81 +1,78 @@
-import { TextSelection } from '@remirror/pm/state';
+import { NodeSelection, TextSelection } from '@remirror/pm/state';
 import {
   CommandFunction,
+  CommandFunctionProps,
   extension,
+  isNodeSelection,
   legacyCommand as command,
   PlainExtension,
-  isNodeSelection,
+  ProsemirrorNode,
 } from 'remirror';
 
 @extension({ customHandlerKeys: [], defaultOptions: {}, staticKeys: [] })
 class MoveExtension extends PlainExtension {
+  move(props: CommandFunctionProps, down?: boolean) {
+    const { dispatch, state, tr } = props;
+    const { selection, doc } = state;
+
+    let node: ProsemirrorNode | null = null;
+    let from: number;
+    let to: number;
+
+    if (isNodeSelection(selection)) {
+      node = selection.node;
+      from = selection.$anchor.before(1);
+      to = selection.$head.after(1);
+    } else {
+      const $pos = tr.doc.resolve(selection.$head.pos);
+      node = $pos.node(1);
+      from = $pos.before(1);
+      to = $pos.after(1);
+    }
+
+    if ((down && to >= doc.content.size) || (!down && from <= 0)) {
+      return false;
+    }
+
+    let relativeAnchor: number | null = null;
+    let relativeHead: number | null = null;
+    let isTextSelection = false;
+
+    if (!isNodeSelection(selection)) {
+      isTextSelection = true;
+
+      relativeAnchor = selection.anchor - from;
+      relativeHead = selection.head - from;
+    }
+
+    tr.delete(from, to);
+
+    const $target = doc.resolve(down ? to + 1 : from - 1);
+    const targetPos = down ? $target.after(1) : $target.before(1);
+    const insertPos = tr.mapping.map(targetPos);
+
+    tr.insert(insertPos, node);
+
+    if (isTextSelection && relativeAnchor !== null && relativeHead !== null) {
+      const anchor = insertPos + relativeAnchor;
+      const head = insertPos + relativeHead;
+
+      tr.setSelection(TextSelection.create(tr.doc, anchor, head));
+    } else {
+      tr.setSelection(NodeSelection.create(tr.doc, insertPos));
+    }
+
+    dispatch?.(tr);
+    return true;
+  }
+
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
   moveBlockDown(): CommandFunction {
     return (props) => {
       try {
-        const { dispatch, state, tr } = props;
-
-        const selection = state.selection;
-
-        if (isNodeSelection(selection)) {
-          const node = selection.node;
-
-          if (node == tr.doc.lastChild) {
-            return false;
-          }
-
-          const posBeforeSelected = selection.$anchor.before(1);
-          const posAfterSelected = selection.$head.after(1);
-
-          const resolvedNextNode = tr.doc.resolve(posAfterSelected + 1);
-          const posAfterNextNode = resolvedNextNode.after(1);
-
-          tr.insert(posAfterNextNode, node);
-          tr.delete(posBeforeSelected, posAfterSelected);
-
-          dispatch?.(tr);
-
-          return true;
-        } else {
-          const pos = selection.$head.pos;
-          const resolved = tr.doc.resolve(pos);
-          const node = resolved.node(1);
-
-          if (node == tr.doc.lastChild) {
-            return false;
-          }
-
-          const posBeforeSelected = resolved.before(1);
-          const posAfterSelected = resolved.after(1);
-
-          const resolvedNextNode = tr.doc.resolve(posAfterSelected + 1);
-          const posAfterNextNode = resolvedNextNode.after(1);
-
-          tr.insert(posAfterNextNode, node);
-          tr.delete(posBeforeSelected, posAfterSelected);
-
-          const nextNode = resolvedNextNode.node();
-
-          let nextNodeSize = 0;
-          if (nextNode?.type.name == 'doc') {
-            nextNodeSize = 2;
-          } else {
-            nextNodeSize = nextNode?.nodeSize;
-          }
-
-          const textSelection = TextSelection.create(
-            tr.doc,
-            resolved.before(1) + nextNodeSize + resolved.parentOffset
-          );
-          tr.setSelection(textSelection);
-          tr.scrollIntoView();
-
-          dispatch?.(tr);
-
-          return true;
-        }
+        return this.move(props, true);
       } catch (e) {
         return false;
       }
@@ -88,61 +85,7 @@ class MoveExtension extends PlainExtension {
   moveBlockUp(): CommandFunction {
     return (props) => {
       try {
-        const { dispatch, state, tr } = props;
-
-        const selection = state.selection;
-        if (isNodeSelection(selection)) {
-          const node = selection.node;
-
-          if (node == tr.doc.firstChild) {
-            return false;
-          }
-
-          const posBeforeSelected = selection.$anchor.before(1);
-          const posAfterSelected = selection.$head.after(1);
-
-          const resolvedEndOfPreviousNode = tr.doc.resolve(
-            posBeforeSelected - 1
-          );
-          const posBeforeNodeBefore = resolvedEndOfPreviousNode.before(1);
-
-          tr.delete(posBeforeSelected, posAfterSelected);
-          tr.insert(posBeforeNodeBefore, node);
-
-          dispatch?.(tr);
-
-          return true;
-        } else {
-          const pos = selection.$head.pos;
-          const resolved = tr.doc.resolve(pos);
-          const node = resolved.node(1);
-
-          if (node == tr.doc.firstChild) {
-            return false;
-          }
-
-          const posBeforeSelected = resolved.before(1);
-          const posAfterSelected = resolved.after(1);
-
-          const resolvedEndOfPreviousNode = tr.doc.resolve(
-            posBeforeSelected - 1
-          );
-          const posBeforeNodeBefore = resolvedEndOfPreviousNode.before(1);
-
-          tr.delete(posBeforeSelected, posAfterSelected);
-          tr.insert(posBeforeNodeBefore, node);
-
-          const textSelection = TextSelection.create(
-            tr.doc,
-            posBeforeNodeBefore + resolved.parentOffset
-          );
-          tr.setSelection(textSelection);
-
-          dispatch?.(tr);
-          tr.scrollIntoView();
-
-          return true;
-        }
+        return this.move(props, false);
       } catch (e) {
         return false;
       }
