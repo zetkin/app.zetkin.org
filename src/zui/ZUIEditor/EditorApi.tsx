@@ -4,6 +4,7 @@ import { EditorState } from '@remirror/pm';
 
 export type ZUIEditorApi = {
   clear: () => void;
+  focus: () => void;
   moveBlock: (fromZetkinIndex: number, toZetkinIndex: number) => void;
   setSelectedBlockIndex: (selectedBlockIndex: number) => void;
 };
@@ -37,6 +38,9 @@ export const EditorApi: FC<{
           content: [],
           type: 'doc',
         });
+      },
+      focus: () => {
+        focus();
       },
       moveBlock: (fromRemirrorIndex, toRemirrorIndex) => {
         const diff = toRemirrorIndex - fromRemirrorIndex;
