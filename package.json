@@ -51,7 +51,7 @@
     "@nivo/line": "^0.99.0",
     "@nivo/pie": "^0.99.0",
     "@nivo/radial-bar": "^0.99.0",
-    "@reduxjs/toolkit": "^1.8.6",
+    "@reduxjs/toolkit": "^2.6.1",
     "@testing-library/dom": "^10.4.1",
     "@turf/area": "^7.2.0",
     "@turf/distance": "^7.2.0",
@@ -91,7 +91,7 @@
     "react-error-boundary": "^6.0.0",
     "react-intl": "^7.1.14",
     "react-leaflet": "^4.2.1",
-    "react-redux": "^8.0.4",
+    "react-redux": "^9.2.0",
     "react-window": "^2.2.3",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
@@ -128,7 +128,7 @@
     "@types/nprogress": "^0.2.0",
     "@types/papaparse": "^5.3.10",
     "@types/random-seed": "^0.3.3",
-    "@types/react": "^18.0.18",
+    "@types/react": "^18.2.25",
     "@types/react-dom": "^18.0.6",
     "@types/validator": "^13.6.3",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
@@ -173,5 +173,8 @@
     "src/locale/*.yml": [
       "yarn lint:translations"
     ]
+  },
+  "overrides": {
+    "redux": "^5.0.0"
   }
 }
