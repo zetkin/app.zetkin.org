@@ -15,32 +15,43 @@ const HouseholdOverlayMarker: FC<Props> = (props: {
 }) => {
   return (
     <Box
-      alignItems="center"
       bgcolor="white"
       borderRadius={1}
-      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
+      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.15)"
       display="inline-flex"
       flexDirection="column"
-      gap="2px"
-      padding="2px 6px"
       sx={{ translate: '-50% -50%' }}
     >
-      <Typography alignItems="center" display="flex" fontSize="14px">
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          gap: '2px',
+          padding: '2px 4px 2px 2px',
+        }}
+      >
         <DoorFront
           fontSize="small"
           sx={{ color: oldTheme.palette.grey[400] }}
         />
-        {props.numberOfHouseholds}
-      </Typography>
-      <Divider
+        <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
+          {props.numberOfHouseholds}
+        </Typography>
+      </Box>
+      <Divider />
+      <Box
         sx={{
-          width: '100%',
+          alignItems: 'center',
+          display: 'flex',
+          gap: '2px',
+          padding: '2px 4px 2px 2px',
         }}
-      />
-      <Typography alignItems="center" display="flex" fontSize="14px">
+      >
         <Place fontSize="small" sx={{ color: oldTheme.palette.grey[400] }} />
-        {props.numberOfLocations}
-      </Typography>
+        <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
+          {props.numberOfLocations}
+        </Typography>
+      </Box>
     </Box>
   );
 };
