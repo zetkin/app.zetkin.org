@@ -114,6 +114,10 @@ export default makeMessages('feat.surveys', {
       toPng: m('Export to png'),
     },
     optionsFields: {
+      displayInsights: {
+        absoluteCount: m('Amount'),
+        percentCount: m('Percent'),
+      },
       subheader: m<{
         answerCount: number;
         totalSelectedOptionsCount: number;

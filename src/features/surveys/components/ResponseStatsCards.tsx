@@ -66,7 +66,7 @@ import {
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
 import range from 'utils/range';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -553,10 +553,12 @@ const OptionsStatsCard = ({
       value={displayMode}
     >
       <ToggleButton size={'small'} value={'absolute'}>
-        Amount
+        <Msg
+          id={messageIds.insights.optionsFields.displayInsights.absoluteCount}
+        />
       </ToggleButton>
       <ToggleButton size={'small'} value={'percent'}>
-        Percent
+        <Msg id={messageIds.insights.optionsFields.displayInsights.percentCount} />
       </ToggleButton>
     </ToggleButtonGroup>
   );
