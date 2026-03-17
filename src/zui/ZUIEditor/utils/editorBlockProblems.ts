@@ -1,7 +1,11 @@
 import isURL from 'validator/lib/isURL';
-import { RemirrorJSON } from 'remirror';
+import { ObjectMark, RemirrorJSON } from 'remirror';
 
-import { MarkType, RemirrorBlockType } from 'zui/ZUIEditor/types';
+import {
+  MarkType,
+  RemirrorBlockType,
+  TextBlockContentType,
+} from 'zui/ZUIEditor/types';
 
 export enum BlockProblem {
   INVALID_BUTTON_URL = 'invalidButtonURL',
@@ -39,11 +43,16 @@ export default function editorBlockProblems(
       blockProblems.push(BlockProblem.BUTTON_TEXT_MISSING);
     }
   } else if (block.type === RemirrorBlockType.PARAGRAPH) {
-    const linksInBlock: RemirrorJSON[] = [];
+    const linksInBlock: ObjectMark[] = [];
 
     const findLinkNodes = (node: RemirrorJSON) => {
-      if (node.type === MarkType.LINK) {
-        linksInBlock.push(node);
+      if (node.type === TextBlockContentType.TEXT) {
+        const linkMark = node.marks?.find(
+          (mark) => typeof mark === 'object' && mark.type === MarkType.LINK
+        );
+        if (linkMark && typeof linkMark === 'object') {
+          linksInBlock.push(linkMark);
+        }
       } else if (node.content) {
         node.content.forEach((node) => findLinkNodes(node));
       }
