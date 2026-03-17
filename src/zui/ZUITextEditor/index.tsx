@@ -1,23 +1,21 @@
 import { Box, IconButton } from '@mui/material';
 import { RemirrorJSON } from 'remirror';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { MutableRefObject, useCallback, useMemo } from 'react';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import { FileUpload } from 'features/files/hooks/useFileUploads';
 import oldTheme from 'theme';
 import { ZetkinFileUploadChip } from 'zui/ZUIFileChip';
-import ZUIEditor from 'zui/ZUIEditor';
+import ZUIEditor, { ZUIEditorApi } from 'zui/ZUIEditor';
 import { markdownToRemirror } from './utils/markdownToRemirror';
 import { remirrorToMarkdown } from './utils/remirrorToMarkdown';
 
 export interface ZUITextEditorProps {
+  /**
+   * @deprecated Will be ignored. Use editorApiRef instead
+   */
   clear?: number;
+  editorApiRef?: MutableRefObject<ZUIEditorApi | null>;
   fileUploads?: FileUpload[];
   initialValue?: string;
   onChange: (value: string) => void;
@@ -31,6 +29,7 @@ export interface ZUITextEditorProps {
 
 const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   clear,
+  editorApiRef,
   fileUploads,
   initialValue,
   onChange,
@@ -38,10 +37,8 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   onClickAttach,
   placeholder,
 }) => {
+  void clear;
   void placeholder;
-  const [active, setActive] = useState<boolean>(false);
-  const editorApiRef = useRef<null>(null);
-  const [, setSelectedBlockIndex] = useState(0);
 
   const content = useMemo(() => {
     if (!initialValue) {
@@ -49,13 +46,6 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
     }
     return markdownToRemirror(initialValue);
   }, [initialValue]);
-
-  useEffect(() => {
-    if (clear && clear > 0) {
-      setActive(false);
-      onChange('');
-    }
-  }, [clear, onChange]);
 
   const handleChange = useCallback(
     (newContent: RemirrorJSON[]) => {
@@ -75,11 +65,8 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
         '&:hover': {
           borderColor: oldTheme.palette.onSurface.medium,
         },
-        background: active ? 'white' : 'transparent',
         border: '1.5px solid',
-        borderColor: active
-          ? oldTheme.palette.onSurface.medium
-          : oldTheme.palette.outline.main,
+        borderColor: oldTheme.palette.outline.main,
         borderRadius: '8px',
         display: 'flex',
         flexDirection: 'column',
@@ -101,7 +88,6 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
         enableStrikethrough
         fullSize
         onChange={handleChange}
-        onSelectBlock={(index) => setSelectedBlockIndex(index)}
       />
       {!!onClickAttach && (
         <Box

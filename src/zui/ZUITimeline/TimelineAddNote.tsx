@@ -1,5 +1,12 @@
 import { Box, Collapse, Typography } from '@mui/material';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import oldTheme from 'theme';
 import { useMessages } from 'core/i18n';
@@ -11,6 +18,7 @@ import useFileUploads, {
 } from 'features/files/hooks/useFileUploads';
 import messageIds from './l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
+import { ZUIEditorApi } from 'zui/ZUIEditor/EditorApi';
 
 interface AddNoteProps {
   showPostRequestError?: boolean;
@@ -25,7 +33,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const [clear, setClear] = useState<number>(0);
+  const editorApiRef = useRef<ZUIEditorApi | null>(null);
   const [note, setNote] = useState<ZetkinNoteBody | null>(null);
   const {
     cancelFileUpload,
@@ -43,28 +51,51 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   }, [disabled]);
 
   // Markdown string is truthy even if the visible text box is empty
-  const visibleText = note?.text
-    .replace(/(<([^>]+)>)/gi, '')
-    .replace(/\r?\n|\r/g, '');
-
-  const someLoading = fileUploads.some(
-    (fileUpload) => fileUpload.state == FileUploadState.UPLOADING
+  const visibleText = useMemo(
+    () => note?.text.replace(/(<([^>]+)>)/gi, '').replace(/\r?\n|\r/g, ''),
+    [note]
   );
 
-  async function onSubmitHandler(evt: FormEvent<HTMLFormElement>) {
-    evt.preventDefault();
-    if (note?.text) {
-      onSubmit({
-        ...note,
-        file_ids: fileUploads.map((fileUpload) => fileUpload.apiData!.id),
-      });
+  const someLoading = useMemo(
+    () =>
+      fileUploads.some(
+        (fileUpload) => fileUpload.state == FileUploadState.UPLOADING
+      ),
+    [fileUploads]
+  );
+
+  const onSubmitHandler = useCallback(
+    async (evt: FormEvent<HTMLFormElement>) => {
+      evt.preventDefault();
+      if (note?.text) {
+        onSubmit({
+          ...note,
+          file_ids: fileUploads.map((fileUpload) => fileUpload.apiData!.id),
+        });
+      }
+    },
+    [fileUploads, note, onSubmit]
+  );
+
+  const onChange = useCallback((markdown: string) => {
+    if (markdown === '') {
+      setNote(null);
+    } else {
+      setNote((note) => ({ ...note, text: markdown }));
     }
-  }
+  }, []);
+
+  const onCancel = useCallback(() => {
+    resetFileUploads();
+    editorApiRef.current?.clear();
+    setNote(null);
+  }, [resetFileUploads]);
+
   return (
     <form onSubmit={onSubmitHandler}>
       <Box {...getDropZoneProps()}>
         <ZUITextEditor
-          clear={clear}
+          editorApiRef={editorApiRef}
           fileUploads={fileUploads}
           onCancelFile={cancelFileUpload}
           onChange={onChange}
@@ -88,20 +119,6 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
       </Collapse>
     </form>
   );
-
-  function onChange(markdown: string) {
-    if (markdown === '') {
-      setNote(null);
-    } else {
-      setNote({ ...note, text: markdown });
-    }
-  }
-
-  function onCancel() {
-    resetFileUploads();
-    setClear(clear + 1);
-    setNote(null);
-  }
 };
 
 export default TimelineAddNote;
