@@ -11,11 +11,13 @@ import BoldToolButton from '../buttons/BoldToolButton';
 import ItalicToolButton from '../buttons/ItalicToolButton';
 import LinkToolButton from '../buttons/LinkToolButton';
 import VariableToolButton from '../buttons/VariableToolButton';
+import StrikethroughToolButton from 'zui/ZUIEditor/EditorOverlays/BlockToolbar/buttons/StrikethroughToolButton';
 
 type ParagraphToolbarProps = {
   enableBold: boolean;
   enableItalic: boolean;
   enableLink: boolean;
+  enableStrikethrough: boolean;
   enableVariable: boolean;
   range: FromToProps;
 };
@@ -24,6 +26,7 @@ const ParagraphToolbar: FC<ParagraphToolbarProps> = ({
   enableBold,
   enableItalic,
   enableLink,
+  enableStrikethrough,
   enableVariable,
   range,
 }) => {
@@ -46,6 +49,7 @@ const ParagraphToolbar: FC<ParagraphToolbarProps> = ({
           <ButtonGroup size="small">
             {enableBold && <BoldToolButton />}
             {enableItalic && <ItalicToolButton />}
+            {enableStrikethrough && <StrikethroughToolButton />}
           </ButtonGroup>
           <ButtonGroup size="small">
             {enableLink && <LinkToolButton />}

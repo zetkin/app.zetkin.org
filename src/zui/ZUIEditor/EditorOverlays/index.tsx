@@ -54,6 +54,7 @@ type Props = {
   enableBold: boolean;
   enableItalic: boolean;
   enableLink: boolean;
+  enableStrikethrough: boolean;
   enableVariable: boolean;
   focused: boolean;
   onSelectBlock: (selectedBlockIndex: number) => void;
@@ -65,6 +66,7 @@ const EditorOverlays: FC<Props> = ({
   enableBold,
   enableItalic,
   enableLink,
+  enableStrikethrough,
   enableVariable,
   focused,
   onSelectBlock,
@@ -375,6 +377,7 @@ const EditorOverlays: FC<Props> = ({
           enableBold={enableBold}
           enableItalic={enableItalic}
           enableLink={enableLink}
+          enableStrikethrough={enableStrikethrough}
           enableVariable={enableVariable}
           range={currentBlock.range}
         />
