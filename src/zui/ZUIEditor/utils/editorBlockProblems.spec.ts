@@ -1,26 +1,30 @@
 import { describe, expect, it } from '@jest/globals';
+import { RemirrorJSON } from 'remirror';
 
-import editorBlockProblems from './editorBlockProblems';
+import editorBlockProblems, { BlockProblem } from './editorBlockProblems';
+import { ButtonBlock } from 'features/emails/types';
 import {
-  BlockKind,
-  BlockProblem,
-  ButtonBlock,
-  InlineNodeKind,
-} from 'features/emails/types';
+  MarkType,
+  RemirrorBlockType,
+  TextBlockContentType,
+} from 'zui/ZUIEditor/types';
 
 describe('editorBlockProblems()', () => {
   describe('checks if a button block has errors', () => {
     function mockButtonBlock(
       overrides?: Partial<ButtonBlock['data']>
-    ): ButtonBlock {
+    ): RemirrorJSON {
       return {
-        data: {
-          href: 'http://www.zetkin.org/',
-          tag: '1234abcd',
-          text: 'Click me!',
-          ...overrides,
+        attrs: {
+          href: overrides?.href || 'http://www.zetkin.org/',
         },
-        kind: BlockKind.BUTTON,
+        content: [
+          {
+            text: overrides?.text || 'Click me!',
+            type: TextBlockContentType.TEXT,
+          },
+        ],
+        type: RemirrorBlockType.BUTTON,
       };
     }
 
@@ -66,15 +70,13 @@ describe('editorBlockProblems()', () => {
   describe('checks if a paragraph block has errors', () => {
     it('returns an empty array if content does not contain any links', () => {
       const errors = editorBlockProblems({
-        data: {
-          content: [
-            {
-              kind: InlineNodeKind.STRING,
-              value: 'This is our whole email. It is very short.',
-            },
-          ],
-        },
-        kind: BlockKind.PARAGRAPH,
+        content: [
+          {
+            text: 'This is our whole email. It is very short.',
+            type: TextBlockContentType.TEXT,
+          },
+        ],
+        type: RemirrorBlockType.PARAGRAPH,
       });
 
       expect(errors.length).toEqual(0);
@@ -82,27 +84,17 @@ describe('editorBlockProblems()', () => {
 
     it('returns an empty array if text contains a link with a correct href', () => {
       const errors = editorBlockProblems({
-        data: {
-          content: [
-            {
-              content: [
-                {
-                  content: [
-                    {
-                      kind: InlineNodeKind.STRING,
-                      value: 'Click here!',
-                    },
-                  ],
-                  href: 'http://www.zetkin.org',
-                  kind: InlineNodeKind.LINK,
-                  tag: 'abcdefgh',
-                },
-              ],
-              kind: InlineNodeKind.BOLD,
-            },
-          ],
-        },
-        kind: BlockKind.PARAGRAPH,
+        content: [
+          {
+            marks: [
+              { type: MarkType.BOLD },
+              { attrs: { href: 'http://www.zetkin.org' }, type: MarkType.LINK },
+            ],
+            text: 'Click here!',
+            type: TextBlockContentType.TEXT,
+          },
+        ],
+        type: RemirrorBlockType.PARAGRAPH,
       });
 
       expect(errors.length).toEqual(0);
@@ -110,22 +102,21 @@ describe('editorBlockProblems()', () => {
 
     it('returns an array with an INVALID_LINK_URL if the href does not have http://', () => {
       const errors = editorBlockProblems({
-        data: {
-          content: [
-            {
-              content: [
-                {
-                  kind: InlineNodeKind.STRING,
-                  value: 'Click here!',
+        content: [
+          {
+            marks: [
+              {
+                attrs: {
+                  href: 'zetkin.org',
                 },
-              ],
-              href: 'zetkin.org',
-              kind: InlineNodeKind.LINK,
-              tag: 'abcdefgh',
-            },
-          ],
-        },
-        kind: BlockKind.PARAGRAPH,
+                type: MarkType.LINK,
+              },
+            ],
+            text: 'Click here!',
+            type: TextBlockContentType.TEXT,
+          },
+        ],
+        type: RemirrorBlockType.PARAGRAPH,
       });
 
       expect(errors.length).toEqual(1);

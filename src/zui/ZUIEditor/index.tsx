@@ -18,6 +18,7 @@ import {
   FromToProps,
   PasteRulesExtension,
   ProsemirrorNode,
+  RemirrorJSON,
 } from 'remirror';
 import { Box, useTheme } from '@mui/material';
 import { Attrs } from '@remirror/pm/model';
@@ -38,9 +39,6 @@ import ButtonExtensionUI from './ButtonExtensionUI';
 import MoveExtension from './extensions/MoveExtension';
 import IndentDedentExtension from './extensions/IndentDedentExtension';
 import TransformPasteExtension from './extensions/TransformPasteExtension';
-import { EmailContentBlock } from 'features/emails/types';
-import zetkinToRemirror from './utils/zetkinToRemirror';
-import remirrorToZetkin from './utils/remirrorToZetkin';
 import { EmptyParagraphInsert } from './EmptyParagraphInsert';
 import { EditorApi, ZUIEditorApi } from 'zui/ZUIEditor/EditorApi';
 import useIsFocused from 'zui/hooks/useIsFocused';
@@ -71,7 +69,7 @@ export type BlockData = {
 export type { ZUIEditorApi } from './EditorApi';
 
 type Props = {
-  content: EmailContentBlock[];
+  content: RemirrorJSON[];
   editable: boolean;
   editorApiRef?: MutableRefObject<ZUIEditorApi | null>;
   enableBold?: boolean;
@@ -82,7 +80,7 @@ type Props = {
   enableLink?: boolean;
   enableLists?: boolean;
   enableVariable?: boolean;
-  onChange: (newContent: EmailContentBlock[]) => void;
+  onChange: (newContent: RemirrorJSON[]) => void;
   onSelectBlock: (selectedBlockIndex: number) => void;
 };
 
@@ -172,7 +170,7 @@ const ZUIEditor: FC<Props> = ({
 
   const { manager, state } = useRemirror({
     content: {
-      content: zetkinToRemirror(content),
+      content: content,
       type: 'doc',
     },
     extensions: () => [
@@ -258,6 +256,7 @@ const ZUIEditor: FC<Props> = ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
             }))}
+            content={content}
             editable={editable}
             enableBold={!!enableBold}
             enableItalic={!!enableItalic}
@@ -265,7 +264,6 @@ const ZUIEditor: FC<Props> = ({
             enableVariable={!!enableVariable}
             focused={focused}
             onSelectBlock={(selectedBlock) => onSelectBlock(selectedBlock)}
-            zetkinContent={content}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
           {enableBlockMenu && (
@@ -282,8 +280,7 @@ const ZUIEditor: FC<Props> = ({
           <OnChangeJSON
             onChange={(updatedContent) => {
               if (updatedContent.content) {
-                const zetkinContent = remirrorToZetkin(updatedContent.content);
-                onChange(zetkinContent);
+                onChange(updatedContent.content);
               }
             }}
           />

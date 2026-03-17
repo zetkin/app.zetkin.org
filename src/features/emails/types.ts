@@ -107,13 +107,6 @@ export type EmailContent = {
   blocks: EmailContentBlock[];
 };
 
-export enum BlockProblem {
-  INVALID_BUTTON_URL = 'invalidButtonURL',
-  DEFAULT_BUTTON_TEXT = 'defaultButtonText',
-  BUTTON_TEXT_MISSING = 'buttonTextMissing',
-  INVALID_LINK_URL = 'invalidLinkURL',
-}
-
 export enum DeliveryProblem {
   EMPTY = 'empty',
   CONTENT_ERROR = 'contentError',
@@ -233,3 +226,5 @@ export type ZetkinEmailStats = {
   num_sent: number;
   num_target_matches: number;
 };
+
+export type MarkNode = StringNode | BoldNode | ItalicNode | LinkNode;

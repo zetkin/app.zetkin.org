@@ -7,7 +7,7 @@ import {
   EmailVariable,
   MarkType,
   TextBlockContentType,
-} from '../types';
+} from 'zui/ZUIEditor/types';
 
 describe('remirrorToZetkin', () => {
   it('does nothing when passed an empty array', () => {

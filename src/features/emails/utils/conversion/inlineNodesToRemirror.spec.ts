@@ -2,7 +2,11 @@ import { describe, expect, it } from '@jest/globals';
 
 import { InlineNodeKind } from 'features/emails/types';
 import inlineNodesToRemirror from './inlineNodesToRemirror';
-import { EmailVariable, MarkType, TextBlockContentType } from '../types';
+import {
+  EmailVariable,
+  MarkType,
+  TextBlockContentType,
+} from 'zui/ZUIEditor/types';
 
 describe('inlineNodesToRemirror()', () => {
   it('does nothing when passed an empty array', () => {

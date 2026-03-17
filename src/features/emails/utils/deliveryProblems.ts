@@ -1,6 +1,7 @@
 import { DeliveryProblem, EmailContent } from '../types';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import editorBlockProblems from 'zui/ZUIEditor/utils/editorBlockProblems';
+import zetkinToRemirror from 'features/emails/utils/conversion/zetkinToRemirror';
 
 export default function deliveryProblems(
   email: ZetkinEmail
@@ -16,7 +17,8 @@ export default function deliveryProblems(
       problems.push(DeliveryProblem.EMPTY);
     }
 
-    const hasProblems = parsedContent.blocks.some(
+    const remirrorBlocks = zetkinToRemirror(parsedContent.blocks);
+    const hasProblems = remirrorBlocks.some(
       (block) => !!editorBlockProblems(block).length
     );
 

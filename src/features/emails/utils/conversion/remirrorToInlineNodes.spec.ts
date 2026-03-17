@@ -9,7 +9,11 @@ import {
   VariableNode,
 } from 'features/emails/types';
 import remirrorToInlineNodes from './remirrorToInlineNodes';
-import { EmailVariable, TextBlockContentType, MarkType } from '../types';
+import {
+  EmailVariable,
+  MarkType,
+  TextBlockContentType,
+} from 'zui/ZUIEditor/types';
 
 describe('remirrorToInlineNodes()', () => {
   it('returns an empty array when passed an empty array', () => {

@@ -7,6 +7,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { FC, useMemo, useRef, useState } from 'react';
+import { RemirrorJSON } from 'remirror';
 
 import { useMessages } from 'core/i18n';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
@@ -15,6 +16,8 @@ import { EmailContentBlock } from 'features/emails/types';
 import { ZetkinEmail, ZetkinEmailPostBody } from 'utils/types/zetkin';
 import ZUIEditor, { ZUIEditorApi } from 'zui/ZUIEditor';
 import EmailSettings from './EmailSettings';
+import { remirrorToZetkinWithIndexRemap } from 'features/emails/utils/conversion/remirrorToZetkin';
+import zetkinToRemirror from 'features/emails/utils/conversion/zetkinToRemirror';
 
 type EmailEditorProps = {
   email: ZetkinEmail;
@@ -34,8 +37,8 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
     [email.content]
   );
   const messages = useMessages(messageIds);
-  const [content, setContent] = useState<EmailContentBlock[]>(
-    initialContent.blocks
+  const [content, setContent] = useState<RemirrorJSON[]>(
+    zetkinToRemirror(initialContent.blocks)
   );
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
   const [subject, setSubject] = useState(email.subject || '');
@@ -43,6 +46,10 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
     email?.config,
   ];
   const editorApiRef = useRef<ZUIEditorApi>(null);
+  const [emailBlocks, emailBlockIndexRemap] = useMemo(
+    () => remirrorToZetkinWithIndexRemap(content),
+    [content]
+  );
 
   return (
     <Box display="flex" height="100%" width="100%">
@@ -125,15 +132,44 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
         width="30%"
       >
         <EmailSettings
-          blocks={content}
-          moveBlock={(fromIndex, toIndex) =>
-            editorApiRef.current?.moveBlock(fromIndex, toIndex)
-          }
+          blocks={emailBlocks}
+          moveBlock={(fromIndex, toIndex) => {
+            const reversedRemap = Object.fromEntries(
+              Object.entries(emailBlockIndexRemap).map(([k, v]) => [
+                v,
+                Number(k),
+              ])
+            );
+
+            const fromRemirrorIndex = reversedRemap[fromIndex];
+            const toRemirrorIndex = reversedRemap[toIndex];
+
+            if (
+              fromRemirrorIndex === undefined ||
+              toRemirrorIndex === undefined
+            ) {
+              return;
+            }
+
+            editorApiRef.current?.moveBlock(fromRemirrorIndex, toRemirrorIndex);
+          }}
           readOnly={readOnly}
           selectedBlockIndex={selectedBlockIndex}
-          setSelectedBlockIndex={(index) =>
-            editorApiRef.current?.setSelectedBlockIndex(index)
-          }
+          setSelectedBlockIndex={(index) => {
+            const reversedRemap = Object.fromEntries(
+              Object.entries(emailBlockIndexRemap).map(([k, v]) => [
+                v,
+                Number(k),
+              ])
+            );
+
+            const remirrorIndex = reversedRemap[index];
+
+            if (remirrorIndex === undefined) {
+              return;
+            }
+            editorApiRef.current?.setSelectedBlockIndex(remirrorIndex);
+          }}
         />
       </Box>
     </Box>

@@ -1,10 +1,9 @@
 import { useCommands, useRemirrorContext } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
-
-import { EmailContentBlock } from 'features/emails/types';
+import { RemirrorJSON } from 'remirror';
 
 export const EmptyParagraphInsert: FC<{
-  content: EmailContentBlock[];
+  content: RemirrorJSON[];
   forceRerender: () => void;
 }> = ({ content, forceRerender }) => {
   const { insertEmptyParagraph, focus } = useCommands();

@@ -7,7 +7,7 @@ import {
   MarkType,
   RemirrorBlockType,
   TextBlockContentType,
-} from '../types';
+} from 'zui/ZUIEditor/types';
 
 describe('zetkinToRemirror()', () => {
   it('returns an empty array when it recieves an empty array', () => {
