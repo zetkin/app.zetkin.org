@@ -4,6 +4,8 @@
  * current branch. Works on macOS, Linux, and Windows (uses Node APIs instead
  * of shell-specific syntax for cross-platform compatibility).
  *
+ * Requires the GitHub CLI (`gh`): https://cli.github.com/
+ *
  * Usage:
  *   npm run e2e:ci:report
  *   npm run e2e:ci:report -- feat/my-branch
@@ -43,6 +45,16 @@ function main() {
   if (!branch) {
     console.error(
       'Could not determine branch. Pass it explicitly: npm run e2e:ci:report -- <branch>'
+    );
+    process.exit(1);
+  }
+
+  // Verify gh is available before proceeding
+  try {
+    run('gh --version');
+  } catch {
+    console.error(
+      'GitHub CLI (`gh`) not found. Install it from https://cli.github.com/'
     );
     process.exit(1);
   }
