@@ -1,6 +1,7 @@
 import { Box, Divider, Stack, Tab } from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { useDrag, useDrop } from 'react-dnd';
 
 import messageIds from 'features/emails/l10n/messageIds';
 import PreviewTab from './PreviewTab';
@@ -10,13 +11,20 @@ import { EmailContentBlock } from 'features/emails/types';
 
 interface EmailSettingsProps {
   blocks: EmailContentBlock[];
+  moveBlock: (fromIndex: number, toIndex: number) => void;
   readOnly: boolean;
   selectedBlockIndex: number;
   setSelectedBlockIndex: (index: number) => void;
 }
 
+interface DragItem {
+  index: number;
+  type: string;
+}
+
 const EmailSettings: FC<EmailSettingsProps> = ({
   blocks,
+  moveBlock,
   readOnly,
   selectedBlockIndex,
   setSelectedBlockIndex,
@@ -62,11 +70,14 @@ const EmailSettings: FC<EmailSettingsProps> = ({
         >
           <Stack ref={boxRef} divider={<Divider />} sx={{ paddingTop: 1 }}>
             {blocks.map((block, index) => (
-              <BlockListItem
+              <DraggableBlockListItem
                 key={`${block.kind}-${index}`}
                 block={block}
-                onSelect={() => setSelectedBlockIndex(index)}
-                selected={!readOnly && index == selectedBlockIndex}
+                index={index}
+                moveBlock={moveBlock}
+                readOnly={readOnly}
+                selectedBlockIndex={selectedBlockIndex}
+                setSelectedBlockIndex={setSelectedBlockIndex}
               />
             ))}
           </Stack>
@@ -76,6 +87,75 @@ const EmailSettings: FC<EmailSettingsProps> = ({
         </TabPanel>
       </TabContext>
     </Box>
+  );
+};
+
+interface DraggableBlockListItemProps {
+  block: EmailContentBlock;
+  index: number;
+  moveBlock: (fromIndex: number, toIndex: number) => void;
+  readOnly: boolean;
+  selectedBlockIndex: number;
+  setSelectedBlockIndex: (index: number) => void;
+}
+
+const DraggableBlockListItem: FC<DraggableBlockListItemProps> = ({
+  block,
+  index,
+  moveBlock,
+  readOnly,
+  selectedBlockIndex,
+  setSelectedBlockIndex,
+}) => {
+  const dropRef = useRef<HTMLDivElement>(null);
+
+  const [{ isDragging }, drag] = useDrag({
+    canDrag: !readOnly,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    item: { index, type: 'BLOCK' },
+    type: 'BLOCK',
+  });
+
+  const [{ isOver }, drop] = useDrop<DragItem, void, { isOver: boolean }>({
+    accept: 'BLOCK',
+    canDrop: () => !readOnly,
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+    drop: (item: DragItem) => {
+      if (item.index === index) {
+        return;
+      }
+      const draggedIndex = item.index;
+      const targetIndex = index;
+      let newIndex: number;
+
+      if (draggedIndex < targetIndex) {
+        newIndex = targetIndex - 1;
+      } else {
+        newIndex = targetIndex;
+      }
+
+      if (draggedIndex !== newIndex) {
+        moveBlock(draggedIndex, newIndex);
+      }
+    },
+  });
+
+  drag(dropRef);
+  drop(dropRef);
+
+  return (
+    <BlockListItem
+      block={block}
+      dropRef={dropRef}
+      isDragging={isDragging}
+      isOver={isOver}
+      onSelect={() => setSelectedBlockIndex(index)}
+      selected={!readOnly && index === selectedBlockIndex}
+    />
   );
 };
 

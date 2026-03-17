@@ -126,6 +126,9 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
       >
         <EmailSettings
           blocks={content}
+          moveBlock={(fromIndex, toIndex) =>
+            editorApiRef.current?.moveBlock(fromIndex, toIndex)
+          }
           readOnly={readOnly}
           selectedBlockIndex={selectedBlockIndex}
           setSelectedBlockIndex={(index) =>

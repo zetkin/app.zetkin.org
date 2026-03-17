@@ -1,5 +1,5 @@
 import { Crop75, Image as ImageIcon, Notes, Title } from '@mui/icons-material';
-import { FC, MouseEventHandler } from 'react';
+import { FC, MouseEventHandler, RefObject } from 'react';
 
 import {
   BlockKind,
@@ -15,14 +15,20 @@ import editorMessageIds from 'zui/l10n/messageIds';
 
 interface BlockListItemProps {
   block: EmailContentBlock;
-  selected: boolean;
+  dropRef?: RefObject<HTMLDivElement | null>;
+  isDragging?: boolean;
+  isOver?: boolean;
   onSelect?: MouseEventHandler<HTMLDivElement>;
+  selected: boolean;
 }
 
 const BlockListItem: FC<BlockListItemProps> = ({
   block,
-  selected,
+  dropRef,
+  isDragging,
+  isOver,
   onSelect,
+  selected,
 }) => {
   const emailMessages = useMessages(emailMessageIds);
   const editorMessages = useMessages(editorMessageIds.editor);
@@ -46,8 +52,11 @@ const BlockListItem: FC<BlockListItemProps> = ({
     const hasErrors = editorBlockProblems(block);
     return (
       <BlockListItemBase
+        dropRef={dropRef}
         hasErrors={hasErrors.length > 0}
         icon={Notes}
+        isDragging={isDragging}
+        isOver={isOver}
         onSelect={onSelect}
         selected={selected}
         title={title}
@@ -57,8 +66,11 @@ const BlockListItem: FC<BlockListItemProps> = ({
     const title = makeTitle(block.data.content);
     return (
       <BlockListItemBase
+        dropRef={dropRef}
         hasErrors={false}
         icon={Title}
+        isDragging={isDragging}
+        isOver={isOver}
         onSelect={onSelect}
         selected={selected}
         title={title}
@@ -71,8 +83,11 @@ const BlockListItem: FC<BlockListItemProps> = ({
     );
     return (
       <BlockListItemBase
+        dropRef={dropRef}
         hasErrors={hasErrors.length > 0}
         icon={Crop75}
+        isDragging={isDragging}
+        isOver={isOver}
         onSelect={onSelect}
         selected={selected}
         title={block.data.text}
@@ -82,8 +97,11 @@ const BlockListItem: FC<BlockListItemProps> = ({
     //Is image block
     return (
       <BlockListItemBase
+        dropRef={dropRef}
         hasErrors={false}
         icon={ImageIcon}
+        isDragging={isDragging}
+        isOver={isOver}
         onSelect={onSelect}
         selected={selected}
         title={block.data.alt}
