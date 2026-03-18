@@ -100,8 +100,7 @@ export default class PersonTagColumnType implements IColumnType {
     ev: MuiEvent<KeyboardEvent<HTMLElement>>,
     accessLevel: ZetkinObjectAccess['level']
   ): void {
-    if (accessLevel) {
-      // Any non-null value means we're in restricted mode
+    if (accessLevel === 'readonly') {
       return;
     }
 
@@ -229,12 +228,12 @@ const BasicTagCell: FC<{
   const { tagFuture } = useTag(orgId, tagId);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
 
-  const [isRestricted] = useAccessLevel();
+  const [isRestricted, accessLevel] = useAccessLevel();
 
   if (cell) {
     return (
       <ZUITagChip
-        disabled={isRestricted}
+        disabled={accessLevel === 'readonly'}
         onDelete={() => {
           removeFromPerson(personId, tagId);
         }}
