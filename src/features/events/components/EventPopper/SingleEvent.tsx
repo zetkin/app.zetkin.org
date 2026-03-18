@@ -51,17 +51,17 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const messages = useMessages(messageIds);
   const orgId = event.organization.id;
   const {
-    participantsFuture,
+    verifiedParticipantsFuture,
     respondentsFuture,
-    numSignedParticipants,
-    pendingVerifiedSignUps,
+    numSignedUpParticipants,
+    verifiedSignedUpParticipants,
   } = useEventParticipants(event.organization.id, event.id);
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
     useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
 
   const dispatch = useAppDispatch();
-  const participants = participantsFuture.data || [];
+  const participants = verifiedParticipantsFuture.data || [];
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -78,10 +78,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const availableParticipants = participants.filter((p) => !p.cancelled);
 
   const isLoading =
-    participantsFuture.isLoading ||
+    verifiedParticipantsFuture.isLoading ||
     respondentsFuture.isLoading ||
     state == EventState.UNKNOWN;
-  const showSignups = numSignedParticipants > 0 || isLoading;
+  const showSignups = numSignedUpParticipants > 0 || isLoading;
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
@@ -234,19 +234,19 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                 <Skeleton width={20} />
               ) : (
                 <Typography
-                  color={numSignedParticipants > 0 ? 'red' : 'secondary'}
+                  color={numSignedUpParticipants > 0 ? 'red' : 'secondary'}
                 >
-                  {numSignedParticipants}
+                  {numSignedUpParticipants}
                 </Typography>
               )}
             </Box>
             {isLoading ? (
               <Skeleton height={20} variant="rectangular" width="100%" />
             ) : (
-              numSignedParticipants > 0 && (
+              numSignedUpParticipants > 0 && (
                 <ParticipantAvatars
                   orgId={orgId}
-                  participants={pendingVerifiedSignUps}
+                  participants={verifiedSignedUpParticipants}
                 />
               )
             )}

@@ -12,7 +12,7 @@ export default function useEventContact(
   eventId: number
 ): useEventContacReturn {
   const { updateEvent } = useEventMutations(orgId, eventId);
-  const { participantsFuture } = useEventParticipants(orgId, eventId);
+  const { verifiedParticipantsFuture } = useEventParticipants(orgId, eventId);
   const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
 
   const removeContact = () => {
@@ -22,7 +22,7 @@ export default function useEventContact(
   };
 
   const setContact = async (contactId: number) => {
-    const eventParticipantsList = participantsFuture.data;
+    const eventParticipantsList = verifiedParticipantsFuture.data;
     if (!eventParticipantsList?.find((item) => item.id == contactId)) {
       await addParticipant(contactId);
     }
