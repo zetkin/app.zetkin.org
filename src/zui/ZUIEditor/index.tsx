@@ -11,18 +11,11 @@ import {
   HardBreakExtension,
   HeadingExtension,
   ItalicExtension,
-  StrikeExtension,
   OrderedListExtension,
+  StrikeExtension,
 } from 'remirror/extensions';
-import {
-  AnyExtension,
-  FromToProps,
-  PasteRulesExtension,
-  ProsemirrorNode,
-  RemirrorJSON,
-} from 'remirror';
+import { AnyExtension, PasteRulesExtension, RemirrorJSON } from 'remirror';
 import { Box, useTheme } from '@mui/material';
-import { Attrs } from '@remirror/pm/model';
 
 import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
@@ -51,14 +44,6 @@ type BlockExtension =
   | OrderedListExtension
   | BulletListExtension;
 
-export type BlockType =
-  | 'paragraph'
-  | 'heading'
-  | 'orderedList'
-  | 'bulletList'
-  | 'zimage'
-  | 'zbutton';
-
 export type { ZUIEditorApi } from './EditorApi';
 
 /**
@@ -74,7 +59,7 @@ export type { ZUIEditorApi } from './EditorApi';
  * ]
  * ```
  *
- * @see BlockType
+ * @see RemirrorBlockType
  */
 const ZUIEditor: FC<{
   /** The editor content in Remirror JSON format */
