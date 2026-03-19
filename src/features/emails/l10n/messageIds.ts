@@ -241,6 +241,12 @@ export default makeMessages('feat.emails', {
     unlockButton: m('Unlock'),
     viewButton: m('View target group'),
   },
+  themes: {
+    themeCard: {
+      delete: m('Delete'),
+      edit: m('Edit'),
+    },
+  },
   unsubscribePage: {
     consent: m('I understand'),
     h: m<{ org: string }>('Unsubscribe from {org}'),

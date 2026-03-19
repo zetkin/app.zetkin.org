@@ -186,6 +186,14 @@ const emailsSlice = createSlice({
       state.themeList.isLoading = false;
       state.themeList.items.push(remoteItem(theme.id, { data: theme }));
     },
+    themeDeleted: (state, action: PayloadAction<number>) => {
+      const themeId = action.payload;
+      const item = state.themeList.items.find((item) => item.id === themeId);
+      if (item) {
+        item.deleted = true;
+        state.themeList.isStale = true;
+      }
+    },
     themesLoad: (state) => {
       state.themeList.isLoading = true;
     },
@@ -218,6 +226,7 @@ export const {
   insightsLoaded,
   themeCreate,
   themeCreated,
+  themeDeleted,
   themesLoad,
   themesLoaded,
   statsLoad,
