@@ -78,7 +78,7 @@ export default function useAreaDrawing({
     };
 
     map?.on('click', handleClick);
-    map?.on('mousemove', handleMove);
+    //map?.on('mousemove', handleMove);
 
     return () => {
       map?.off('click', handleClick);
