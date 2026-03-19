@@ -94,7 +94,7 @@ export default function usePaginatedList<T>(path: string): PaginatedList<T> {
         };
       });
     },
-    [state.pageSize, apiClient]
+    [state.pageSize, path, apiClient]
   );
 
   const loadPageWrapper = useCallback(

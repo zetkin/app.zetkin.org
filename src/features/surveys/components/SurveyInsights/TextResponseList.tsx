@@ -45,7 +45,7 @@ const TextResponseCard = ({
     responses.loadPage(pageIndex, controller.signal);
 
     return () => controller.abort();
-  }, [hasLoaded, responses.loadPage, pageIndex]);
+  }, [hasLoaded, pageIndex, responses]);
 
   if (!response) {
     return <Skeleton height={'100%'} variant={'rounded'} width={'100%'} />;

@@ -129,8 +129,12 @@ export const InsightsCard = ({
         document.body.style.overflow = docOverflow;
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [showSnackbar, containerRef, exportApi, question.question.question]
+    [
+      exportApi,
+      question.question.question,
+      showSnackbar,
+      messages.insights.export,
+    ]
   );
 
   const exportMenuItems = useMemo(
@@ -144,8 +148,7 @@ export const InsightsCard = ({
         onSelect: () => exportChart('pdf'),
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [exportChart]
+    [exportChart, messages.insights.export]
   );
 
   const [exportMenuAnchorEl, setExportMenuAnchorEl] =

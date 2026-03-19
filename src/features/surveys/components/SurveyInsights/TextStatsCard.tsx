@@ -33,8 +33,12 @@ export const TextStatsCard = ({
         totalUniqueWordCount: questionStats.total_unique_word_count,
         totalWordCount: questionStats.total_word_count,
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questionStats, messages.insights.textFields.subheader]
+    [
+      messages.insights.textFields,
+      questionStats.answer_count,
+      questionStats.total_unique_word_count,
+      questionStats.total_word_count,
+    ]
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();

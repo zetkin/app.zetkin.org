@@ -82,8 +82,7 @@ export const TextWordCloudPlot = ({
   const { publicAPI } = useChartProExport(exportOptions);
   useEffect(() => {
     exportApi.current = publicAPI as UseChartProExportPublicApi;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publicAPI]);
+  }, [exportApi, publicAPI]);
 
   const [width, setWidth] = useState(600);
 
@@ -106,7 +105,6 @@ export const TextWordCloudPlot = ({
     return scaleLog()
       .domain([Math.min(...values), Math.max(...values)])
       .range([20 * fontScaleFac, 70 * fontScaleFac]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words, width]);
   const fontSizeSetter = useCallback(
     (datum: WordData) => fontScale(datum.value),
