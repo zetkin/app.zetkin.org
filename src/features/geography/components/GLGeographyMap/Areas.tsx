@@ -1,6 +1,7 @@
 import { Layer, Marker, Source } from '@vis.gl/react-maplibre';
-import { FC, useMemo } from 'react';
-import { centerOfMass } from '@turf/center-of-mass';
+import { LngLatBounds } from 'maplibre-gl';
+import { FC, useMemo, useState } from 'react';
+import { booleanIntersects, centerOfMass, polygon } from '@turf/turf';
 
 import { Zetkin2Area } from 'features/areas/types';
 import oldTheme from 'theme';
@@ -9,6 +10,7 @@ import useAreaStats from 'features/areas/hooks/useAreaStats';
 
 type Props = {
   areas: Zetkin2Area[];
+  bounds?: LngLatBounds;
 };
 
 const AreaMarker: FC<{ id: number; lat: number; lng: number }> = ({
@@ -28,7 +30,8 @@ const AreaMarker: FC<{ id: number; lat: number; lng: number }> = ({
   );
 };
 
-const Areas: FC<Props> = ({ areas }) => {
+const Areas: FC<Props> = ({ areas, bounds }) => {
+  const [, setAreasInView] = useState<Zetkin2Area[]>([]);
   const areasGeoJson: GeoJSON.FeatureCollection<
     Zetkin2Area['boundary'],
     { id: number }
@@ -44,6 +47,23 @@ const Areas: FC<Props> = ({ areas }) => {
       type: 'FeatureCollection',
     };
   }, [areas]);
+
+  // TODO: debounce
+  if (bounds) {
+    const boundingPolygon = polygon([
+      [
+        [bounds._ne.lng, bounds._ne.lat],
+        [bounds._ne.lng, bounds._sw.lat],
+        [bounds._sw.lng, bounds._sw.lat],
+        [bounds._sw.lng, bounds._ne.lat],
+        [bounds._ne.lng, bounds._ne.lat],
+      ],
+    ]);
+    const areasWithinBounds = areas.filter((area) =>
+      booleanIntersects(boundingPolygon, area.boundary)
+    );
+    setAreasInView(areasWithinBounds);
+  }
 
   return (
     <>

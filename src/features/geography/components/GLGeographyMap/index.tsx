@@ -344,7 +344,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
           mapStyle={env.vars.MAPLIBRE_STYLE}
           RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         >
-          <Areas areas={visibleAreas} />
+          <Areas areas={visibleAreas} bounds={map?.getBounds()} />
           {!!drawingPoints && <DrawingArea drawingPoints={drawingPoints} />}
 
           {!!selectedArea && (
