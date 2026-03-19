@@ -30,6 +30,7 @@ import messageIds from 'features/areas/l10n/messageIds';
 import useAreaDrawing from 'features/geography/hooks/useAreaDrawing';
 import DrawingArea from './DrawingArea';
 import AreaSelectPanel from './AreaSelectPanel';
+import useAreasInView from 'features/geography/hooks/useAreasInView';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -49,6 +50,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
   const [areaSearchQuery, setAreaSearchQuery] = useState('');
   const [map, setMap] = useState<MapType | null>(null);
   const bounds = useMapBounds({ areas, map });
+  const areasInView = useAreasInView(areas, map);
   const { selectedArea, setSelectedId } = useAreaSelection({
     areas,
     isDrawing: () => drawing,
@@ -344,7 +346,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
           mapStyle={env.vars.MAPLIBRE_STYLE}
           RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         >
-          <Areas areas={visibleAreas} bounds={map?.getBounds()} />
+          <Areas areas={visibleAreas} areasInView={areasInView} />
           {!!drawingPoints && <DrawingArea drawingPoints={drawingPoints} />}
 
           {!!selectedArea && (

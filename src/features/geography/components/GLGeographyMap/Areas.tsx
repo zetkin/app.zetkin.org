@@ -1,16 +1,21 @@
 import { Layer, Marker, Source } from '@vis.gl/react-maplibre';
-import { LngLatBounds } from 'maplibre-gl';
-import { FC, useMemo, useState } from 'react';
-import { booleanIntersects, centerOfMass, polygon } from '@turf/turf';
+import { FC, useMemo } from 'react';
+import { centerOfMass } from '@turf/turf';
 
-import { Zetkin2Area } from 'features/areas/types';
+import { Zetkin2Area, ZetkinAreaStats } from 'features/areas/types';
 import oldTheme from 'theme';
 import HouseholdOverlayMarker from 'features/areas/components/markers/HouseholdOverlayMarker';
 import useAreaStats from 'features/areas/hooks/useAreaStats';
+import { useApiClient, useAppSelector } from 'core/hooks';
+import { statsLoad } from 'features/areaAssignments/store';
+import {
+  assignmentStatsLoad,
+  assignmentStatsLoaded,
+} from 'features/areas/store';
 
 type Props = {
   areas: Zetkin2Area[];
-  bounds?: LngLatBounds;
+  areasInView: Zetkin2Area[];
 };
 
 const AreaMarker: FC<{ id: number; lat: number; lng: number }> = ({
@@ -30,9 +35,29 @@ const AreaMarker: FC<{ id: number; lat: number; lng: number }> = ({
   );
 };
 
-const Areas: FC<Props> = ({ areas, bounds }) => {
-  const [, setAreasInView] = useState<Zetkin2Area[]>([]);
-  const areasGeoJson: GeoJSON.FeatureCollection<
+const useAreasWithStats = (areas: Zetkin2Area[], visibleAreaIds: number[]) => {
+  Promise.all(
+    visibleAreaIds.map(async (areaId) => {
+      try {
+        if ([15, 16, 19, 28].includes(areaId)) {
+          assignmentStatsLoad(areaId);
+          const res = await fetch(`/areaAssignmentStats/${areaId}.json`);
+          const stats = await res.json();
+          assignmentStatsLoaded([areaId, stats]);
+        }
+      } catch {
+        return;
+      }
+    })
+  );
+
+  const statsForAreas = useAppSelector(
+    (state) => state.areas.assignmentStatsByAreaId
+  );
+
+  console.log({ statsForAreas });
+
+  const areasWithStatsGeojson: GeoJSON.FeatureCollection<
     Zetkin2Area['boundary'],
     { id: number }
   > = useMemo(() => {
@@ -40,7 +65,7 @@ const Areas: FC<Props> = ({ areas, bounds }) => {
       features: areas.map((area) => {
         return {
           geometry: area.boundary,
-          properties: { id: area.id },
+          properties: { id: area.id, stats: {} },
           type: 'Feature',
         };
       }),
@@ -48,41 +73,30 @@ const Areas: FC<Props> = ({ areas, bounds }) => {
     };
   }, [areas]);
 
-  // TODO: debounce
-  if (bounds) {
-    const boundingPolygon = polygon([
-      [
-        [bounds._ne.lng, bounds._ne.lat],
-        [bounds._ne.lng, bounds._sw.lat],
-        [bounds._sw.lng, bounds._sw.lat],
-        [bounds._sw.lng, bounds._ne.lat],
-        [bounds._ne.lng, bounds._ne.lat],
-      ],
-    ]);
-    const areasWithinBounds = areas.filter((area) =>
-      booleanIntersects(boundingPolygon, area.boundary)
-    );
-    setAreasInView(areasWithinBounds);
-  }
+  return areasWithStatsGeojson;
+};
+
+const Areas: FC<Props> = ({ areas, areasInView }) => {
+  const areasWithStatsGeojson = useAreasWithStats(
+    areas,
+    areasInView.map((area) => area.id)
+  );
 
   return (
     <>
-      {areasGeoJson.features.map((area) => {
+      {areasWithStatsGeojson.features.map((area) => {
         const center = centerOfMass(area);
 
-        //TODO: Remove if-statement
-        if ([15, 16, 19, 28].includes(area.properties.id)) {
-          return (
-            <AreaMarker
-              key={area.properties.id}
-              id={area.properties.id}
-              lat={center.geometry.coordinates[1]}
-              lng={center.geometry.coordinates[0]}
-            />
-          );
-        }
+        return (
+          <AreaMarker
+            key={area.properties.id}
+            id={area.properties.id}
+            lat={center.geometry.coordinates[1]}
+            lng={center.geometry.coordinates[0]}
+          />
+        );
       })}
-      <Source data={areasGeoJson} id="areas" type="geojson">
+      <Source data={areasWithStatsGeojson} id="areas" type="geojson">
         <Layer
           id="outlines"
           paint={{
