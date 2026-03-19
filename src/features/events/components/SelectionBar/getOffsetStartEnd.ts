@@ -1,5 +1,5 @@
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { dateIsBefore, isSameDate } from 'utils/dateUtils';
+import { dateIsAfter, isSameDate } from 'utils/dateUtils';
 
 export default function getOffsetStartEnd(
   events: ZetkinEvent[],
@@ -8,7 +8,7 @@ export default function getOffsetStartEnd(
   const sortedEvents = events.sort((firstEvent, secondEvent) => {
     const firstEventStartDate = new Date(firstEvent.start_time);
     const secondEventStartDate = new Date(secondEvent.start_time);
-    if (dateIsBefore(firstEventStartDate, secondEventStartDate)) {
+    if (dateIsAfter(firstEventStartDate, secondEventStartDate)) {
       return 1;
     } else if (isSameDate(firstEventStartDate, secondEventStartDate)) {
       return 0;
