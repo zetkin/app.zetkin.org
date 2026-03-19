@@ -28,19 +28,24 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
   // No one wants to click a "show less" button. This way they don't have to:
   // Also roughly centers the content they've just asked to read
   useEffect(() => {
+    let timerId: ReturnType<typeof setTimeout>;
     if (expandSummary && !!textRef) {
       const offset = textRef?.current?.offsetTop as number;
       window.scrollTo({
         behavior: 'smooth',
         top: offset - 100,
       });
-      setTimeout(() => {
+      timerId = setTimeout(() => {
         setCurrentScroll(offset - 100);
         window.addEventListener('scroll', closeOnScroll);
       }, 1000);
     } else {
       window.removeEventListener('scroll', closeOnScroll);
     }
+    return () => {
+      clearTimeout(timerId);
+      window.removeEventListener('scroll', closeOnScroll);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandSummary]);
 
