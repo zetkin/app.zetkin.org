@@ -5,74 +5,77 @@ import { centerOfMass } from '@turf/turf';
 import { Zetkin2Area, ZetkinAreaStats } from 'features/areas/types';
 import oldTheme from 'theme';
 import HouseholdOverlayMarker from 'features/areas/components/markers/HouseholdOverlayMarker';
-import useAreaStats from 'features/areas/hooks/useAreaStats';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { statsLoad } from 'features/areaAssignments/store';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import {
   assignmentStatsLoad,
   assignmentStatsLoaded,
 } from 'features/areas/store';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 
 type Props = {
   areas: Zetkin2Area[];
   areasInView: Zetkin2Area[];
 };
 
-const AreaMarker: FC<{ id: number; lat: number; lng: number }> = ({
-  id,
-  lat,
-  lng,
-}) => {
-  //const assignmentStats = useAreaStats(id);
-
+const AreaMarker: FC<{
+  lat: number;
+  lng: number;
+  stats: ZetkinAreaStats | null;
+}> = ({ lat, lng, stats }) => {
   return (
     <Marker anchor="top-left" latitude={lat} longitude={lng}>
-      {/*  <HouseholdOverlayMarker
-        numberOfHouseholds={assignmentStats?.num_households || 0}
-        numberOfLocations={assignmentStats?.num_locations || 0}
-      /> */}
+      <HouseholdOverlayMarker
+        numberOfHouseholds={stats?.num_households || 0}
+        numberOfLocations={stats?.num_locations || 0}
+      />
     </Marker>
   );
 };
 
 const useAreasWithStats = (areas: Zetkin2Area[], visibleAreaIds: number[]) => {
   const dispatch = useAppDispatch();
+  const statsByAreaId = useAppSelector(
+    (state) => state.areas.assignmentStatsByAreaId
+  );
 
   useEffect(() => {
     if (visibleAreaIds.length > 0) {
       Promise.all(
         visibleAreaIds.map(async (areaId) => {
           if ([15, 16, 19, 28].includes(areaId)) {
-            dispatch(assignmentStatsLoad(areaId));
-            console.log({ areaId });
-            const res = await fetch(`/areaAssignmentStats/${areaId}.json`);
-            const stats = await res.json();
-            //dispatch(assignmentStatsLoaded([areaId, stats]));
+            const statsItem = statsByAreaId[areaId];
+
+            loadItemIfNecessary(statsItem, dispatch, {
+              actionOnLoad: () => dispatch(assignmentStatsLoad(areaId)),
+              actionOnSuccess: (data) =>
+                dispatch(assignmentStatsLoaded([areaId, data])),
+              loader: async () => {
+                const res = await fetch(`/areaAssignmentStats/${areaId}.json`);
+                const stats: ZetkinAreaStats = await res.json();
+                return stats;
+              },
+            });
           }
         })
       );
     }
-  }, [dispatch, visibleAreaIds]);
-
-  const statsForAreas = useAppSelector(
-    (state) => state.areas.assignmentStatsByAreaId
-  );
+  }, [dispatch, visibleAreaIds, statsByAreaId]);
 
   const areasWithStatsGeojson: GeoJSON.FeatureCollection<
     Zetkin2Area['boundary'],
-    { id: number }
+    { id: number; stats: ZetkinAreaStats | null }
   > = useMemo(() => {
     return {
       features: areas.map((area) => {
         return {
           geometry: area.boundary,
-          properties: { id: area.id, stats: {} },
+          properties: { id: area.id, stats: statsByAreaId[area.id]?.data },
           type: 'Feature',
         };
       }),
       type: 'FeatureCollection',
     };
-  }, [areas]);
+  }, [areas, statsByAreaId]);
 
   return areasWithStatsGeojson;
 };
@@ -85,18 +88,18 @@ const Areas: FC<Props> = ({ areas, areasInView }) => {
 
   return (
     <>
-      {/*     {areasWithStatsGeojson.features.map((area) => {
+      {areasWithStatsGeojson.features.map((area) => {
         const center = centerOfMass(area);
 
         return (
           <AreaMarker
             key={area.properties.id}
-            id={area.properties.id}
             lat={center.geometry.coordinates[1]}
             lng={center.geometry.coordinates[0]}
+            stats={area.properties.stats}
           />
         );
-      })} */}
+      })}
       <Source data={areasWithStatsGeojson} id="areas" type="geojson">
         <Layer
           id="outlines"

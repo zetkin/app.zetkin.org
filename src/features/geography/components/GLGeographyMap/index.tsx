@@ -43,7 +43,6 @@ const SETTINGS_PANEL_WIDTH_PX = 400;
 const SETTINGS_PANEL_GAP_PX = 8;
 
 const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
-  console.log('rendering map');
   const env = useEnv();
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -52,7 +51,6 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
   const [map, setMap] = useState<MapType | null>(null);
   const bounds = useMapBounds({ areas, map });
   const areasInView = useAreasInView(areas, map);
-  console.log(areasInView);
 
   const { selectedArea, setSelectedId } = useAreaSelection({
     areas,
