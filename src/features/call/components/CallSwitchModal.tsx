@@ -258,13 +258,12 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
 
   const modalRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (modalRef.current) {
+    const node = modalRef.current;
+    if (node) {
       const addListener = (ev: KeyboardEvent) => ev.stopPropagation();
-      modalRef.current.addEventListener('keydown', addListener);
+      node.addEventListener('keydown', addListener);
 
-      return () =>
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        modalRef.current?.removeEventListener('keydown', addListener);
+      return () => node.removeEventListener('keydown', addListener);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalRef.current]);
