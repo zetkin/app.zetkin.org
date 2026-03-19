@@ -327,14 +327,22 @@ const QuestionStatsBarPlot = ({
 
   const data = useMemo(() => {
     const bars = isOptionsStats(questionStats)
-      ? questionStats.options.map((o) => ({
-          count: showPercent
-            ? percentBase
-              ? Math.round((o.count / percentBase) * 100)
-              : 0
-            : o.count,
-          option: o.option.text,
-        }))
+      ? questionStats.options.map((o) => {
+          let count = o.count;
+
+          if (showPercent) {
+            if (percentBase) {
+              count = Math.round((o.count / percentBase) * 100);
+            } else {
+              count = 0;
+            }
+          }
+
+          return {
+            count,
+            option: o.option.text,
+          };
+        })
       : Object.entries(questionStats.topWordFrequencies).map(
           ([word, count]) => ({
             count: count,
@@ -441,14 +449,22 @@ const QuestionStatsPie = ({
   };
   const data = useMemo(() => {
     const items = isOptionsStats(questionStats)
-      ? questionStats.options.map((o) => ({
-          label: getEllipsedString(o.option.text, 60),
-          value: showPercent
-            ? percentBase
-              ? Math.round((o.count / percentBase) * 100)
-              : 0
-            : o.count,
-        }))
+      ? questionStats.options.map((o) => {
+          let value = o.count;
+
+          if (showPercent) {
+            if (percentBase) {
+              value = Math.round((o.count / percentBase) * 100);
+            } else {
+              value = 0;
+            }
+          }
+
+          return {
+            label: getEllipsedString(o.option.text, 60),
+            value,
+          };
+        })
       : Object.entries(questionStats.topWordFrequencies).map(
           ([word, count]) => ({
             label: getEllipsedString(word, 60),
