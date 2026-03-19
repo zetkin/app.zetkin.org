@@ -2,7 +2,7 @@ import { Layer, Marker, Source } from '@vis.gl/react-maplibre';
 import { FC } from 'react';
 import { centerOfMass } from '@turf/turf';
 
-import { Zetkin2Area, ZetkinAreaStats } from 'features/areas/types';
+import { Zetkin2Area } from 'features/areas/types';
 import oldTheme from 'theme';
 import HouseholdOverlayMarker from 'features/areas/components/markers/HouseholdOverlayMarker';
 import useAreasWithStats from 'features/geography/hooks/useAreasWithStats';
@@ -10,21 +10,6 @@ import useAreasWithStats from 'features/geography/hooks/useAreasWithStats';
 type Props = {
   areas: Zetkin2Area[];
   areasInView: Zetkin2Area[];
-};
-
-const AreaMarker: FC<{
-  lat: number;
-  lng: number;
-  stats: ZetkinAreaStats | null;
-}> = ({ lat, lng, stats }) => {
-  return (
-    <Marker anchor="top-left" latitude={lat} longitude={lng}>
-      <HouseholdOverlayMarker
-        numberOfHouseholds={stats?.num_households || 0}
-        numberOfLocations={stats?.num_locations || 0}
-      />
-    </Marker>
-  );
 };
 
 const Areas: FC<Props> = ({ areas, areasInView }) => {
@@ -39,12 +24,17 @@ const Areas: FC<Props> = ({ areas, areasInView }) => {
         const center = centerOfMass(area);
 
         return (
-          <AreaMarker
-            key={area.properties.id}
-            lat={center.geometry.coordinates[1]}
-            lng={center.geometry.coordinates[0]}
-            stats={area.properties.stats}
-          />
+          <Marker
+            key={area.id}
+            anchor="top-left"
+            latitude={center.geometry.coordinates[1]}
+            longitude={center.geometry.coordinates[0]}
+          >
+            <HouseholdOverlayMarker
+              numberOfHouseholds={area.properties.stats?.num_households || 0}
+              numberOfLocations={area.properties.stats?.num_locations || 0}
+            />
+          </Marker>
         );
       })}
       <Source data={areasWithStatsGeojson} id="areas" type="geojson">
