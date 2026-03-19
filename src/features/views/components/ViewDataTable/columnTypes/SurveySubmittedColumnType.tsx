@@ -52,7 +52,7 @@ const Cell: FC<{ cell: SurveySubmittedViewCell | undefined }> = ({ cell }) => {
     return null;
   }
 
-  const sorted = cell.sort((sub0, sub1) => {
+  const sorted = [...cell].sort((sub0, sub1) => {
     const d0 = new Date(sub0.submitted);
     const d1 = new Date(sub1.submitted);
     return d1.getTime() - d0.getTime();
