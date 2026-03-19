@@ -5,7 +5,7 @@ export default function getOffsetStartEnd(
   events: ZetkinEvent[],
   offset: number
 ) {
-  const sortedEvents = events.sort((firstEvent, secondEvent) => {
+  const sortedEvents = [...events].sort((firstEvent, secondEvent) => {
     const firstEventStartDate = new Date(firstEvent.start_time);
     const secondEventStartDate = new Date(secondEvent.start_time);
     if (dateIsAfter(firstEventStartDate, secondEventStartDate)) {
