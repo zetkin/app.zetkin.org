@@ -281,9 +281,7 @@ const areaAssignmentSlice = createSlice({
 
       const [assignmentIdStr] = key.split(':');
       const assignmentId = Number(assignmentIdStr);
-      state.locationsByAssignmentId[assignmentId] = remoteListLoaded(
-        locations
-      );
+      state.locationsByAssignmentId[assignmentId] = remoteListLoaded(locations);
     },
     metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
       const [assignmentId, metric] = action.payload;
