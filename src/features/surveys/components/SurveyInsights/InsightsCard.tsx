@@ -256,6 +256,9 @@ export const ChartWrapper = (
   }
 ) => {
   const { typeSelection, children, ...other } = props;
+
+  const messages = useMessages(messageIds);
+
   return (
     <Box
       sx={{
@@ -279,9 +282,15 @@ export const ChartWrapper = (
             value={typeSelection.analysisType}
             variant={'standard'}
           >
-            <MenuItem value={'word-frequency'}>Words</MenuItem>
-            <MenuItem value={'verb-frequency'}>Verbs</MenuItem>
-            <MenuItem value={'entity-frequency'}>Entities</MenuItem>
+            <MenuItem value={'word-frequency'}>
+              {messages.insights.textFields.analysisType.words()}
+            </MenuItem>
+            <MenuItem value={'verb-frequency'}>
+              {messages.insights.textFields.analysisType.verbs()}
+            </MenuItem>
+            <MenuItem value={'entity-frequency'}>
+              {messages.insights.textFields.analysisType.entities()}
+            </MenuItem>
           </Select>
         </Box>
       )}
