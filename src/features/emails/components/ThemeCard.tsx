@@ -1,4 +1,4 @@
-import { Box, Button, Card, Typography } from '@mui/material';
+import { Box, Button, Card, Stack, Typography } from '@mui/material';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -14,31 +14,41 @@ const ThemeCard: React.FC<ThemeCardProps> = (props) => {
   const { deleteEmailTheme } = useEmailThemeMutations(props.orgId);
 
   return (
-    <Card sx={{ alignItems: 'flex-start', display: 'flex', p: 2 }}>
-      <Box
-        sx={{
-          alignItems: 'center',
-          bgcolor: 'grey.200',
-          display: 'flex',
-          height: 180,
-          justifyContent: 'center',
-          mr: 2,
-          width: 120,
-        }}
-      >
-        <Typography color="textSecondary" variant="caption">
-          Preview coming soon
-        </Typography>
-      </Box>
-      <Box display="flex" justifyContent="space-between">
-        <Typography variant="h6">Theme {props.themeId}</Typography>
-        <Button size="small" variant="outlined">
-          {messages.themes.themeCard.edit()}
-        </Button>
-        <Button onClick={() => deleteEmailTheme(props.themeId)} size="small">
-          {messages.themes.themeCard.delete()}
-        </Button>
-      </Box>
+    <Card sx={{ p: 2 }}>
+      <Stack direction="row" spacing={2}>
+        <Stack direction="column" spacing={2}>
+          <Box
+            sx={{
+              alignItems: 'center',
+              bgcolor: 'grey.200',
+              display: 'flex',
+              height: 180,
+              justifyContent: 'center',
+              width: 120,
+            }}
+          >
+            <Typography color="textSecondary" variant="caption">
+              Preview coming soon
+            </Typography>
+          </Box>
+        </Stack>
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={1}>
+            <Button size="small" variant="outlined">
+              {messages.themes.themeCard.edit()}
+            </Button>
+            <Button
+              onClick={() => deleteEmailTheme(props.themeId)}
+              size="small"
+            >
+              {messages.themes.themeCard.delete()}
+            </Button>
+          </Stack>
+          <Typography variant="h6">
+            {messages.themes.themeCard.title({ themeId: props.themeId })}
+          </Typography>
+        </Stack>
+      </Stack>
     </Card>
   );
 };

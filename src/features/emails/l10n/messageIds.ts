@@ -245,6 +245,7 @@ export default makeMessages('feat.emails', {
     themeCard: {
       delete: m('Delete'),
       edit: m('Edit'),
+      title: m<{ themeId: number }>('Theme {themeId}'),
     },
   },
   unsubscribePage: {
