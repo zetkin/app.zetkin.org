@@ -27,6 +27,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import AreaStats from 'features/geography/components/GLGeographyMap/AreaStats';
 
 export const AREA_OVERLAY_WIDTH = 400;
 
@@ -228,6 +229,7 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
+      <AreaStats areas={[area]} />
       <Box ref={tagsElement} flexGrow={1} my={2}>
         {/*
         <TagsSection area={area} />
