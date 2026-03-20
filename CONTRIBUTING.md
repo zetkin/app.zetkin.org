@@ -63,7 +63,7 @@ For VSCode, install the [plugin](https://marketplace.visualstudio.com/items?item
 - Go to `Settings / Text Editor / Formatting` and check **Editor: Format On Save**
 
 ### Pre-commit hook
-To avoid commiting anything that breaks linting rules, you can set up a git
+To avoid committing anything that breaks linting rules, you can set up a git
 pre-commit hook. The `.githooks/` directory contains such a hook, so the easiest
 way to set it up is to just configure git to use hooks from there:
 
