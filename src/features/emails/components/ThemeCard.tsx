@@ -34,7 +34,11 @@ const ThemeCard: React.FC<ThemeCardProps> = (props) => {
         </Stack>
         <Stack direction="column" spacing={1}>
           <Stack direction="row" spacing={1}>
-            <Button size="small" variant="outlined">
+            <Button
+              href={`/organize/${props.orgId}/settings/themes/${props.themeId}`}
+              size="small"
+              variant="outlined"
+            >
               {messages.themes.themeCard.edit()}
             </Button>
             <Button
