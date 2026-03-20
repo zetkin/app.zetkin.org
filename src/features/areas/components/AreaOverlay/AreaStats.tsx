@@ -9,7 +9,13 @@ type Props = {
 };
 
 const AreaStats: FC<Props> = ({ areaId }) => {
-  const stats = useAreaStats(areaId);
+  const getAreaStats = useAreaStats();
+  const stats = getAreaStats(areaId);
+
+  if (!stats) {
+    return null;
+  }
+
   return (
     <Box padding={2}>
       <Typography variant="h6">Area Stats (ID: {stats.area_id})</Typography>

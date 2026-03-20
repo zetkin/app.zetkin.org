@@ -5,7 +5,7 @@ import { centerOfMass } from '@turf/turf';
 import { Zetkin2Area } from 'features/areas/types';
 import oldTheme from 'theme';
 import HouseholdOverlayMarker from 'features/areas/components/markers/HouseholdOverlayMarker';
-import useAreasWithStats from 'features/geography/hooks/useAreasWithStats';
+import useAreasWithStats from 'features/areas/hooks/useAreasWithStats';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -13,10 +13,7 @@ type Props = {
 };
 
 const Areas: FC<Props> = ({ areas, areasInView }) => {
-  const areasWithStatsGeojson = useAreasWithStats(
-    areas,
-    areasInView.map((area) => area.id)
-  );
+  const areasWithStatsGeojson = useAreasWithStats(areas, areasInView);
 
   return (
     <>
