@@ -229,7 +229,7 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
-      <AreaStats areaId={area.id} />
+      {[15, 16, 19, 28].includes(area.id) && <AreaStats areaId={area.id} />}
       <Box ref={tagsElement} flexGrow={1} my={2}>
         {/*
         <TagsSection area={area} />
