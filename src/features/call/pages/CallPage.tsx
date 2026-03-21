@@ -15,12 +15,14 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 const CallPage: FC = () => {
-  const { initialize, canInitialize } = useCallInitialization();
+  const { clearCallLanes, clearStaleCallLanes, initialize, canInitialize } =
+    useCallInitialization();
 
   useEffect(() => {
     if (canInitialize) {
       initialize();
     } else {
+      clearStaleCallLanes();
       return redirect('/my');
     }
   }, []);
@@ -66,7 +68,7 @@ const CallPage: FC = () => {
           </Box>
         }
       >
-        {canInitialize && <Call />}
+        {canInitialize && <Call clearCallLanes={() => clearCallLanes()} />}
       </ErrorBoundary>
     </main>
   );

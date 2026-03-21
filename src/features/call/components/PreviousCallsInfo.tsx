@@ -13,65 +13,70 @@ import {
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
-import { ZetkinCall } from '../types';
+import {
+  CallState,
+  callStateToString,
+  FinishedCall,
+  UnfinishedCall,
+} from '../types';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import { MUIIcon } from 'zui/components/types';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type PreviousCallsInfoProps = {
-  call: ZetkinCall;
+  call: UnfinishedCall;
 };
 
-export const labels: Record<number, string> = {
-  1: 'Success',
-  11: 'No response',
-  12: 'Line busy',
-  13: 'Unavailable to talk',
-  14: 'No time to talk',
-  15: 'Left voice mail',
-  21: 'Wrong number',
+export const icons: Record<FinishedCall['state'], MUIIcon> = {
+  [CallState.SUCCESSFUL]: CallMade,
+  [CallState.NO_PICKUP]: CallMissedOutgoing,
+  [CallState.LINE_BUSY]: KeyboardTab,
+  [CallState.CALL_BACK]: RemoveCircleOutline,
+  [CallState.NOT_AVAILABLE]: AccessTime,
+  [CallState.LEFT_MESSAGE]: Voicemail,
+  [CallState.WRONG_NUMBER]: TurnSlightLeft,
 };
 
-export const icons: Record<number, MUIIcon> = {
-  1: CallMade,
-  11: CallMissedOutgoing,
-  12: KeyboardTab,
-  13: RemoveCircleOutline,
-  14: AccessTime,
-  15: Voicemail,
-  21: TurnSlightLeft,
-};
-
-export const colors: Record<number, 'success' | 'warning' | 'error'> = {
-  1: 'success',
-  11: 'error',
-  12: 'error',
-  13: 'warning',
-  14: 'warning',
-  15: 'warning',
-  21: 'error',
+export const colors: Record<
+  FinishedCall['state'],
+  'success' | 'warning' | 'error'
+> = {
+  [CallState.SUCCESSFUL]: 'success',
+  [CallState.NO_PICKUP]: 'error',
+  [CallState.LINE_BUSY]: 'error',
+  [CallState.CALL_BACK]: 'warning',
+  [CallState.NOT_AVAILABLE]: 'warning',
+  [CallState.LEFT_MESSAGE]: 'warning',
+  [CallState.WRONG_NUMBER]: 'error',
 };
 
 const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
   const isMobile = useIsMobile();
-  const fullName = call.caller.name;
-  const [callerFirstName, ...rest] = fullName.split(' ');
-  const callerLastName = rest.join(' ');
   const callLog = call.target.call_log || [];
 
   const hasPreviousCalls = callLog.length > 0;
 
   return (
     <>
-      <ZUIText variant="headingMd">Previous calls</ZUIText>
+      <ZUIText variant="headingMd">
+        <Msg id={messageIds.about.previousCalls.title} />
+      </ZUIText>
       {!hasPreviousCalls && (
-        <ZUIText color="secondary">Never been called</ZUIText>
+        <ZUIText color="secondary">
+          <Msg id={messageIds.about.previousCalls.hasNoPreviousCalls} />
+        </ZUIText>
       )}
       {hasPreviousCalls &&
-        callLog.map((call, index) => {
+        callLog.map((previousCall, index) => {
+          const fullName = previousCall.caller.name;
+          const [callerFirstName, ...rest] = fullName.split(' ');
+          const callerLastName = rest.join(' ');
+
           return (
-            <Box key={call.id}>
+            <Box key={previousCall.id}>
               <Box mb={1}>
                 <Box
                   alignItems="center"
@@ -83,7 +88,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                     display="flex"
                     gap={1}
                     sx={(theme) => {
-                      const color = colors[call.state];
+                      const color = colors[previousCall.state];
                       if (color == 'warning') {
                         return { color: theme.palette.warning.dark };
                       } else {
@@ -92,27 +97,35 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                     }}
                   >
                     <ZUIIcon
-                      color={colors[call.state]}
-                      icon={icons[call.state]}
+                      color={colors[previousCall.state]}
+                      icon={icons[previousCall.state]}
                       size="small"
                     />
-                    <ZUIText color="inherit">{labels[call.state]}</ZUIText>
+                    <ZUIText color="inherit">
+                      <Msg
+                        id={
+                          messageIds.about.previousCalls.status[
+                            callStateToString[previousCall.state]
+                          ]
+                        }
+                      />
+                    </ZUIText>
                   </Box>
                   {isMobile ? (
                     <ZUIPersonAvatar
                       firstName={callerFirstName}
-                      id={call.caller.id}
+                      id={previousCall.caller.id}
                       lastName={callerLastName}
                       size="small"
                     />
                   ) : (
                     <Box alignItems="center" display="flex" gap={1}>
                       <ZUIText color="secondary">
-                        <ZUIDateTime datetime={call.update_time} />
+                        <ZUIDateTime datetime={previousCall.update_time} />
                       </ZUIText>
                       <ZUIPersonAvatar
                         firstName={callerFirstName}
-                        id={call.caller.id}
+                        id={previousCall.caller.id}
                         lastName={callerLastName}
                         size="small"
                       />
@@ -122,20 +135,34 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                 {isMobile && (
                   <Box ml="1.75rem">
                     <ZUIText color="secondary">
-                      <ZUIDateTime datetime={call.update_time} />
+                      <ZUIDateTime datetime={previousCall.update_time} />
                     </ZUIText>
                   </Box>
                 )}
-                {call.message_to_organizer && (
-                  <Box display="flex" ml="1.75rem">
-                    <ZUIText>Note: {call.message_to_organizer}</ZUIText>
-                  </Box>
-                )}
-                {call.call_back_after && (
+                {previousCall.notes && (
                   <Box display="flex" ml="1.75rem">
                     <ZUIText>
-                      Call {call.target.first_name} back after:{' '}
-                      <ZUIDateTime datetime={call.call_back_after} />
+                      <Msg
+                        id={messageIds.about.previousCalls.note}
+                        values={{ note: previousCall.notes }}
+                      />
+                    </ZUIText>
+                  </Box>
+                )}
+                {previousCall.call_back_after && (
+                  <Box display="flex" ml="1.75rem">
+                    <ZUIText>
+                      <Msg
+                        id={messageIds.about.previousCalls.callBackAfter}
+                        values={{
+                          name: previousCall.target.first_name,
+                          time: (
+                            <ZUIDateTime
+                              datetime={previousCall.call_back_after}
+                            />
+                          ),
+                        }}
+                      />
                     </ZUIText>
                   </Box>
                 )}

@@ -40,11 +40,15 @@ export default class PersonTagColumnType implements IColumnType {
   getColDef(
     column: PersonTagViewColumn,
     accessLevel: ZetkinObjectAccess['level'],
-    tagListState: RemoteList<ZetkinTag>,
-    apiClient: IApiClient,
-    dispatch: AppDispatch,
-    orgId: number
+    optionalParams: {
+      apiClient: IApiClient;
+      dispatch: AppDispatch;
+      orgId: number;
+      tagListState: RemoteList<ZetkinTag>;
+    }
   ): Omit<GridColDef, 'field'> {
+    const { apiClient, dispatch, orgId, tagListState } = optionalParams;
+
     const tagId = column.config.tag_id;
 
     let tag: ZetkinTag | null = null;

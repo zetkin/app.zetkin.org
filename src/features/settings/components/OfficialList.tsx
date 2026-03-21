@@ -5,7 +5,7 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
-import useMemberships from 'features/organizations/hooks/useMemberships';
+import useOfficialMemberships from 'features/organizations/hooks/useOfficialMemberships';
 import { useMessages } from 'core/i18n';
 import useOfficialMutations from '../hooks/useOfficialMutations';
 import useOrganization from 'features/organizations/hooks/useOrganization';
@@ -23,7 +23,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
   const { removeAccess, updateRole } = useOfficialMutations(orgId);
   const user = useCurrentUser();
   const parentOrg = useOrganization(orgId);
-  const userMemberships = useMemberships();
+  const userMemberships = useOfficialMemberships();
   const sortedOfficialList = [...officialList].sort((a, b) => {
     if (a.profile.id === user?.id) {
       return -1;

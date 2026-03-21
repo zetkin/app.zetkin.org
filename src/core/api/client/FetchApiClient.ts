@@ -67,7 +67,7 @@ export default class FetchApiClient implements IApiClient {
     await assertOk(res);
 
     const body = await res.json();
-    return body.data;
+    return body?.data;
   }
 
   async put<DataType = void>(

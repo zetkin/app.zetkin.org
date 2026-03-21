@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import { FC, useRef } from 'react';
 import { ChevronLeft } from '@mui/icons-material';
 
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
+import { ZetkinSurvey } from 'utils/types/zetkin';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
@@ -15,7 +15,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
 
 type Props = {
-  survey: ZetkinSurveyExtended;
+  survey: ZetkinSurvey;
 };
 
 const Survey: FC<Props> = ({ survey }) => {

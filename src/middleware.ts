@@ -5,7 +5,7 @@ import { getIronSession } from 'iron-session';
 import requiredEnvVar from 'utils/requiredEnvVar';
 import { AppSession } from 'utils/types';
 
-const protectedRoutes = ['/my'];
+const protectedRoutes = ['/my', '/call'];
 
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);

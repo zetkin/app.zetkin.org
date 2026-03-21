@@ -77,7 +77,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       };
     } else {
       return {
-        props: {},
+        redirect: {
+          destination: '/my/home',
+          permanent: false,
+        },
       };
     }
   },

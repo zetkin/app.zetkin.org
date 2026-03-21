@@ -13,10 +13,12 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  DataGridProProps,
   GridColDef,
   GridSortDirection,
   GridSortModel,
 } from '@mui/x-data-grid-pro';
+import { GridCallbackDetails } from '@mui/x-data-grid/models/api';
 
 import { Msg } from 'core/i18n';
 import ShiftKeyIcon from '../../features/views/components/ViewDataTable/ShiftKeyIcon';
@@ -24,7 +26,7 @@ import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIDataTableSortingProps {
   gridColumns: GridColDef[];
-  onSortModelChange: (model: GridSortModel | []) => void;
+  onSortModelChange: DataGridProProps['onSortModelChange'];
   sortModel: GridSortModel | [];
 }
 
@@ -34,6 +36,9 @@ const ZUIDataTableSorting: React.FunctionComponent<
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = open ? 'sort-options' : undefined;
+
+  const innerOnSortModelChange = (model: GridSortModel) =>
+    onSortModelChange?.(model, {} as GridCallbackDetails);
 
   const handleSortButtonClick = (
     event: React.SyntheticEvent<HTMLButtonElement>
@@ -54,11 +59,11 @@ const ZUIDataTableSorting: React.FunctionComponent<
         : item;
     });
 
-    onSortModelChange(newSortModel);
+    innerOnSortModelChange(newSortModel);
   };
 
   const handleDelete = (field: string) => {
-    onSortModelChange(sortModel.filter((item) => item.field !== field));
+    innerOnSortModelChange(sortModel.filter((item) => item.field !== field));
   };
 
   const handleAdd = () => {
@@ -69,7 +74,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
     );
     const newSortModel = sortModel?.length ? sortModel.map((item) => item) : [];
     newSortModel.push({ field: availableColumns[0].field, sort: 'asc' });
-    onSortModelChange(newSortModel);
+    innerOnSortModelChange(newSortModel);
   };
 
   return (

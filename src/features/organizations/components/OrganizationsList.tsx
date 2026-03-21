@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 
 import messageIds from 'features/organizations/l10n/messageIds';
-import useMemberships from '../hooks/useMemberships';
+import useOfficialMemberships from '../hooks/useOfficialMemberships';
 import { Msg, useMessages } from 'core/i18n';
 import ZUIFuture from 'zui/ZUIFuture';
 import { useEnv } from 'core/hooks';
@@ -20,7 +20,7 @@ import { useEnv } from 'core/hooks';
 const OrganizationsList = () => {
   const messages = useMessages(messageIds);
   const env = useEnv();
-  const organizations = useMemberships();
+  const organizations = useOfficialMemberships();
 
   return (
     <ZUIFuture future={organizations} ignoreDataWhileLoading>

@@ -11,8 +11,8 @@ on:
         description: 'A script to run before testing.'
         required: false
         type: string
-      yarn-test-script:
-        description: 'The name of the yarn script that runs the test.'
+      test-script:
+        description: 'The name of the script that runs the test.'
         required: true
         type: string
       upload-path:
@@ -46,10 +46,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
-          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
@@ -58,7 +57,7 @@ jobs:
         if: inputs.build-script
 
       - name: Test
-        run: yarn ${{ inputs.yarn-test-script }}
+        run: npm run ${{ inputs.test-script }}
 
       - uses: actions/upload-artifact@v4
         if: always() && inputs.upload-path

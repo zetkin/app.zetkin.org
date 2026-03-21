@@ -18,7 +18,7 @@ interface ColumnConfig {
 }
 
 function orderColumns(
-  columns: GridColDef[],
+  columns: readonly GridColDef[],
   fieldOrder: string[]
 ): GridColDef[] {
   return columns.concat().sort((c0, c1) => {
@@ -39,7 +39,7 @@ function orderColumns(
 
 export default function useConfigurableDataGridColumns(
   storageKey: string,
-  inputColumns: GridColDef[],
+  inputColumns: readonly GridColDef[],
   storage: StorageBackend = localStorage
 ): ConfigurableDataGridColumns {
   const key = `dataGridConfig-${storageKey}`;

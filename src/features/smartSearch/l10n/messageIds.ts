@@ -97,6 +97,12 @@ export default makeMessages('feat.smartSearch', {
         ),
         title: m('People on a journey'),
       },
+      official: {
+        description: m(
+          'Find people who have organizer or administrator access in an organization'
+        ),
+        title: m('Based on their access level'),
+      },
       person_data: {
         description: m('Name, address, email and more!'),
         title: m('Personal info'),
@@ -444,6 +450,23 @@ export default makeMessages('feat.smartSearch', {
       numPeopleSelect:
         m<{ numPeopleSelect: ReactElement | number }>('{numPeopleSelect}'),
     },
+    official: {
+      examples: {
+        one: m(
+          'Add all people who have access as either organizer or administrator.'
+        ),
+        two: m('Remove all people who have access as administrator.'),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        roleSelect: ReactElement;
+      }>('{addRemoveSelect} all people who have access as {roleSelect}.'),
+      roleSelect: {
+        admin: m('administrators'),
+        any: m('either organizer or administrator'),
+        organizer: m('organizers'),
+      },
+    },
     personData: {
       ellipsis: m('...'),
       examples: {
@@ -524,6 +547,7 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     personTags: {
+      addAllFromGroupButton: m('Add all'),
       condition: {
         conditionSelect: {
           all: m('all'),

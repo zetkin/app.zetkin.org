@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 import {
+  DataGridProProps,
   GridColDef,
   GridSortModel,
   GridToolbarFilterButton,
@@ -11,21 +12,21 @@ import ZUIDataTableSorting from 'zui/ZUIDataTableSorting';
 
 interface ToolbarProps {
   gridColumns: GridColDef[];
-  onQuickSearchChange: (quickSearch: string) => void;
-  onSortModelChange: (model: GridSortModel) => void;
+  setQuickSearch: (quickSearch: string) => void;
+  onSortModelChange: DataGridProProps['onSortModelChange'];
   sortModel: GridSortModel;
 }
 
 const Toolbar: React.FunctionComponent<ToolbarProps> = ({
   gridColumns,
-  onQuickSearchChange,
+  setQuickSearch,
   onSortModelChange,
   sortModel,
 }) => {
   return (
     <Box role="toolbar">
       <GridToolbarFilterButton
-        componentsProps={{
+        slotProps={{
           button: { color: 'secondary', size: 'medium' },
         }}
       />
@@ -34,10 +35,7 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({
         onSortModelChange={onSortModelChange}
         sortModel={sortModel}
       />
-      <ZUIDataTableSearch
-        onChange={(searchString) => onQuickSearchChange(searchString)}
-        searchById
-      />
+      <ZUIDataTableSearch onChange={setQuickSearch} searchById />
     </Box>
   );
 };

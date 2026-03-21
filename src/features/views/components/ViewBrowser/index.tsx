@@ -223,6 +223,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                   },
                 },
               ]}
+              keepMounted={false}
             />
           );
         },
