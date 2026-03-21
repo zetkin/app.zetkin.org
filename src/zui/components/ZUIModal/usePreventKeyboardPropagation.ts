@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 
-// Set to true to enable debug logging
-const DEBUG = false;
-
 /**
  * Hook to prevent keyboard events from propagating outside a modal element.
  *
@@ -30,53 +27,15 @@ export const usePreventKeyboardPropagation = (
   const [element, setElement] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (DEBUG) {
-      // eslint-disable-next-line no-console
-      console.log('[usePreventKeyboardPropagation] Hook triggered', {
-        allowPropagation,
-        hasElement: !!element,
-        open,
-      });
-    }
-
     if (!open || allowPropagation || !element) {
-      if (DEBUG) {
-        // eslint-disable-next-line no-console
-        console.log(
-          '[usePreventKeyboardPropagation] Skipping event listeners',
-          {
-            reason: !open
-              ? 'modal not open'
-              : allowPropagation
-              ? 'propagation allowed'
-              : 'no element',
-          }
-        );
-      }
       return;
     }
 
     const handleKeyEvent = (event: KeyboardEvent) => {
-      if (DEBUG) {
-        // eslint-disable-next-line no-console
-        console.log('[usePreventKeyboardPropagation] Stopping propagation', {
-          currentTarget: event.currentTarget,
-          key: event.key,
-          target: event.target,
-          type: event.type,
-        });
-      }
       event.stopPropagation();
       event.stopImmediatePropagation();
     };
 
-    if (DEBUG) {
-      // eslint-disable-next-line no-console
-      console.log(
-        '[usePreventKeyboardPropagation] Adding event listeners to element',
-        element
-      );
-    }
     element.addEventListener('keydown', handleKeyEvent, { capture: true });
     element.addEventListener('keyup', handleKeyEvent, { capture: true });
     element.addEventListener('keypress', handleKeyEvent, {
@@ -84,12 +43,6 @@ export const usePreventKeyboardPropagation = (
     });
 
     return () => {
-      if (DEBUG) {
-        // eslint-disable-next-line no-console
-        console.log(
-          '[usePreventKeyboardPropagation] Removing event listeners from element'
-        );
-      }
       element.removeEventListener('keydown', handleKeyEvent, {
         capture: true,
       });
@@ -101,12 +54,6 @@ export const usePreventKeyboardPropagation = (
   }, [allowPropagation, element, open]);
 
   return useCallback((node: HTMLElement | null) => {
-    if (DEBUG) {
-      // eslint-disable-next-line no-console
-      console.log('[usePreventKeyboardPropagation] Callback ref called', {
-        node,
-      });
-    }
     setElement(node);
   }, []);
 };
