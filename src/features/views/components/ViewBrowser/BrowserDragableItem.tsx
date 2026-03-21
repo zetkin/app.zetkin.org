@@ -23,7 +23,13 @@ const BrowserDraggableItem: FC<BrowserDragItemProps> = ({ children, item }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Box ref={dragRef} display="flex" gap={1}>
+    <Box
+      ref={(node: HTMLDivElement | null) => {
+        dragRef(node);
+      }}
+      display="flex"
+      gap={1}
+    >
       {children}
     </Box>
   );

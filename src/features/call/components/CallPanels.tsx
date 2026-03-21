@@ -1,5 +1,5 @@
-import { FC, Suspense } from 'react';
-import { Box, CircularProgress, List, ListItem } from '@mui/material';
+import { FC } from 'react';
+import { Box, List, ListItem } from '@mui/material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
@@ -19,6 +19,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import CallSummary from './CallSummary';
+import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -133,25 +134,12 @@ const CallPanels: FC<Props> = ({
           width: 1 / 3,
         })}
       >
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
+        <SuspenseWithCircularLoader>
           <AssignmentStats
             assignmentId={assignment.id}
             orgId={assignment.organization.id}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
       </Box>
       <Box
         sx={(theme) => ({
@@ -233,26 +221,13 @@ const CallPanels: FC<Props> = ({
           zIndex: lane.step == LaneStep.START ? -1 : 0,
         })}
       >
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
+        <SuspenseWithCircularLoader>
           <ActivitiesSection
             assignment={assignment}
             step={lane.step}
             target={call?.target ?? null}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
       </Box>
       <Box
         sx={(theme) => ({
