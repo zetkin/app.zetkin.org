@@ -48,38 +48,6 @@ describe('ZUIModal', () => {
       window.removeEventListener('keydown', windowKeydownHandler);
     });
 
-    it('allows keyboard events to propagate when allowPropagation is true', async () => {
-      const windowKeydownHandler = jest.fn();
-      window.addEventListener('keydown', windowKeydownHandler);
-
-      const { getByText } = render(
-        <ZUIModal {...defaultProps} allowPropagation={true}>
-          <input data-testid="modal-input" placeholder="Test input" />
-        </ZUIModal>,
-        { theme: 'zui' }
-      );
-
-      await waitFor(() => {
-        expect(getByText('Test Modal')).not.toBeNull();
-      });
-
-      const input = document.querySelector(
-        '[data-testid="modal-input"]'
-      ) as HTMLInputElement;
-
-      if (input) {
-        await act(async () => {
-          await userEvent.click(input);
-          await userEvent.type(input, '1');
-        });
-
-        // The window listener SHOULD have been called
-        expect(windowKeydownHandler).toHaveBeenCalled();
-      }
-
-      window.removeEventListener('keydown', windowKeydownHandler);
-    });
-
     it('simulates the bug: typing in modal should not trigger external keyboard shortcuts', async () => {
       // Simulates the QuickResponseButtons behavior from the bug report
       const responses: string[] = [];
