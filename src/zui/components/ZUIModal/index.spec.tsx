@@ -1,7 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { act, render } from 'utils/testing/zui';
+import { act, render } from 'utils/testing';
 import ZUIModal, { ZUIModalProps } from '.';
 
 const defaultProps: ZUIModalProps = {
@@ -21,7 +21,8 @@ describe('ZUIModal', () => {
       const { getByText } = render(
         <ZUIModal {...defaultProps}>
           <input data-testid="modal-input" placeholder="Test input" />
-        </ZUIModal>
+        </ZUIModal>,
+        { theme: 'zui' }
       );
 
       // Wait for modal to render
@@ -54,7 +55,8 @@ describe('ZUIModal', () => {
       const { getByText } = render(
         <ZUIModal {...defaultProps} allowPropagation={true}>
           <input data-testid="modal-input" placeholder="Test input" />
-        </ZUIModal>
+        </ZUIModal>,
+        { theme: 'zui' }
       );
 
       await waitFor(() => {
@@ -97,7 +99,8 @@ describe('ZUIModal', () => {
             placeholder="Type to find"
             type="text"
           />
-        </ZUIModal>
+        </ZUIModal>,
+        { theme: 'zui' }
       );
 
       await waitFor(() => {
@@ -128,7 +131,9 @@ describe('ZUIModal', () => {
 
   describe('basic modal functionality', () => {
     it('renders the modal with title', async () => {
-      const { getByText } = render(<ZUIModal {...defaultProps} />);
+      const { getByText } = render(<ZUIModal {...defaultProps} />, {
+        theme: 'zui',
+      });
 
       await waitFor(() => {
         expect(getByText('Test Modal')).not.toBeNull();
@@ -139,7 +144,8 @@ describe('ZUIModal', () => {
       const { getByText } = render(
         <ZUIModal {...defaultProps}>
           <div>Modal Content</div>
-        </ZUIModal>
+        </ZUIModal>,
+        { theme: 'zui' }
       );
 
       await waitFor(() => {
@@ -149,7 +155,10 @@ describe('ZUIModal', () => {
 
     it('does not render when open is false', () => {
       const { queryByText } = render(
-        <ZUIModal {...defaultProps} open={false} />
+        <ZUIModal {...defaultProps} open={false} />,
+        {
+          theme: 'zui',
+        }
       );
 
       expect(queryByText('Test Modal')).toBeNull();
