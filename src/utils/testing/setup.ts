@@ -25,6 +25,47 @@ jest.mock('react-dnd', () => ({
   ],
 }));
 
+// Mock CanvasRenderingContext2D for JSDOM (used by ModalBackground)
+if (typeof HTMLCanvasElement !== 'undefined') {
+  Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+    value: function () {
+      const mockMethods = [
+        'fillRect',
+        'clearRect',
+        'getImageData',
+        'putImageData',
+        'drawImage',
+        'beginPath',
+        'closePath',
+        'moveTo',
+        'lineTo',
+        'stroke',
+        'fill',
+      ];
+      const ctx: any = {
+        canvas: this,
+        globalAlpha: 1,
+        globalCompositeOperation: 'source-over',
+      };
+      mockMethods.forEach((m) => {
+        ctx[m] = jest.fn();
+      });
+      return ctx as CanvasRenderingContext2D;
+    },
+  });
+}
+
+// Mock createImageBitmap for JSDOM (used by ModalBackground)
+if (typeof global.createImageBitmap === 'undefined') {
+  global.createImageBitmap = jest.fn(() =>
+    Promise.resolve({
+      close: jest.fn(),
+      height: 0,
+      width: 0,
+    })
+  ) as unknown as typeof createImageBitmap;
+}
+
 // Mock ImageData for JSDOM (used by ModalBackground)
 if (typeof ImageData === 'undefined') {
   global.ImageData = class ImageData {
