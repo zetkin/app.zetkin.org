@@ -29,7 +29,7 @@ jest.mock('react-dnd', () => ({
 if (typeof HTMLCanvasElement !== 'undefined') {
   Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
     value: function () {
-      const mockMethods = [
+      type MockMethods = [
         'fillRect',
         'clearRect',
         'getImageData',
@@ -40,17 +40,34 @@ if (typeof HTMLCanvasElement !== 'undefined') {
         'moveTo',
         'lineTo',
         'stroke',
-        'fill',
+        'fill'
       ];
-      const ctx: any = {
+
+      type MockCanvasContext = Pick<
+        CanvasRenderingContext2D,
+        'canvas' | 'globalAlpha' | 'globalCompositeOperation'
+      > & {
+        [K in MockMethods[number]]: jest.Mock;
+      };
+
+      const ctx: MockCanvasContext = {
+        beginPath: jest.fn(),
         canvas: this,
+        clearRect: jest.fn(),
+        closePath: jest.fn(),
+        drawImage: jest.fn(),
+        fill: jest.fn(),
+        fillRect: jest.fn(),
+        getImageData: jest.fn(),
         globalAlpha: 1,
         globalCompositeOperation: 'source-over',
+        lineTo: jest.fn(),
+        moveTo: jest.fn(),
+        putImageData: jest.fn(),
+        stroke: jest.fn(),
       };
-      mockMethods.forEach((m) => {
-        ctx[m] = jest.fn();
-      });
-      return ctx as CanvasRenderingContext2D;
+
+      return ctx as unknown as CanvasRenderingContext2D;
     },
   });
 }
