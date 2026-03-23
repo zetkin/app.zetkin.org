@@ -10,9 +10,10 @@ import useAreasWithStats from 'features/areas/hooks/useAreasWithStats';
 type Props = {
   areas: Zetkin2Area[];
   areasInView: Zetkin2Area[];
+  onSelectArea: (areaId: number) => void;
 };
 
-const Areas: FC<Props> = ({ areas, areasInView }) => {
+const Areas: FC<Props> = ({ areas, areasInView, onSelectArea }) => {
   const areasWithStatsGeojson = useAreasWithStats(areas, areasInView);
 
   return (
@@ -26,6 +27,8 @@ const Areas: FC<Props> = ({ areas, areasInView }) => {
             anchor="top-left"
             latitude={center.geometry.coordinates[1]}
             longitude={center.geometry.coordinates[0]}
+            onClick={() => onSelectArea(area.properties.id)}
+            style={{ cursor: 'pointer' }}
           >
             <HouseholdOverlayMarker
               numberOfHouseholds={area.properties.stats?.num_households || 0}
