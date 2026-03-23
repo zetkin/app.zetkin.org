@@ -9,7 +9,7 @@
     "start": "next start -p 80",
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000 --turbo",
     "docs:build": "storybook build -o public/storybook",
-    "lint:eslint": "eslint src integrationTesting",
+    "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
     "lint:translations": "ts-node src/tools/lint-translations.ts",
     "lint": "run-p lint:*",

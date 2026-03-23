@@ -12,6 +12,7 @@ module.exports = {
     '.out/*',
     '!.prettierrc.js',
     'src/locale/*',
+    'public/*',
   ],
   extends: [
     'eslint:recommended',
