@@ -173,6 +173,12 @@ export type EmailTheme = {
   id: number;
 };
 
+export type EmailThemePatchBody = {
+  block_attributes?: EmailTheme['block_attributes'];
+  css?: EmailTheme['css'];
+  frame_mjml?: EmailTheme['frame_mjml'];
+};
+
 export type ZetkinEmailRecipient = {
   delivered: string | null;
   email: {

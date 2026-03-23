@@ -9,9 +9,9 @@ import { useNumericRouteParams } from 'core/hooks';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
-import useEmailThemeMutations from 'features/emails/hooks/useEmailThemeMutations';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import ThemeCard from 'features/emails/components/ThemeCard';
+import useCreateEmailTheme from 'features/emails/hooks/useCreateEmailTheme';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -30,7 +30,7 @@ interface ThemesSettingsPageProps {
 const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const { createEmailTheme } = useEmailThemeMutations(orgId);
+  const { createEmailTheme } = useCreateEmailTheme(orgId);
   const themes = useEmailThemes(orgId).data || [];
 
   if (onServer) {

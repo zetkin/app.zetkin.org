@@ -194,6 +194,47 @@ const emailsSlice = createSlice({
         state.themeList.isStale = true;
       }
     },
+    themeLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.themeList.items.find((item) => item.id == id);
+      state.themeList.items = state.themeList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    themeLoaded: (state, action: PayloadAction<EmailTheme>) => {
+      const id = action.payload.id;
+      const item = state.themeList.items.find((item) => item.id == id);
+      if (item) {
+        item.data = action.payload;
+        item.loaded = new Date().toISOString();
+        item.isLoading = false;
+        item.isStale = false;
+      }
+    },
+    themeUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [id, mutating] = action.payload;
+      const item = state.themeList.items.find((item) => item.id == id);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    themeUpdated: (state, action: PayloadAction<[EmailTheme, string[]]>) => {
+      const [theme, mutating] = action.payload;
+      const item = state.themeList.items.find((item) => item.id == theme.id);
+
+      if (item) {
+        item.mutating = item.mutating.filter(
+          (attr) => !mutating.includes(attr)
+        );
+        if (item.data) {
+          item.data = theme;
+        }
+      }
+
+      state.themeList.items = state.themeList.items.concat([
+        remoteItem(theme.id, { data: theme }),
+      ]);
+    },
     themesLoad: (state) => {
       state.themeList.isLoading = true;
     },
@@ -227,6 +268,10 @@ export const {
   themeCreate,
   themeCreated,
   themeDeleted,
+  themeLoad,
+  themeLoaded,
+  themeUpdate,
+  themeUpdated,
   themesLoad,
   themesLoaded,
   statsLoad,

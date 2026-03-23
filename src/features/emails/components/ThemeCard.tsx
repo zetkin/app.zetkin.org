@@ -1,8 +1,9 @@
 import { Box, Button, Card, Stack, Typography } from '@mui/material';
+import React from 'react';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
-import useEmailThemeMutations from 'features/emails/hooks/useEmailThemeMutations';
+import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 
 interface ThemeCardProps {
   orgId: number;
@@ -11,7 +12,7 @@ interface ThemeCardProps {
 
 const ThemeCard: React.FC<ThemeCardProps> = (props) => {
   const messages = useMessages(messageIds);
-  const { deleteEmailTheme } = useEmailThemeMutations(props.orgId);
+  const { deleteEmailTheme } = useEmailTheme(props.orgId, props.themeId);
 
   return (
     <Card sx={{ p: 2 }}>
