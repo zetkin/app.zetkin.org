@@ -17,3 +17,6 @@ src/locale/**/*.yml
 
 # production
 /build
+
+# bundled/third-party scripts
+public/**/*.js

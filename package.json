@@ -10,7 +10,7 @@
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000 --turbo",
     "docs:build": "storybook build -o public/storybook",
     "lint:eslint": "eslint src integrationTesting",
-    "lint:prettier": "prettier --check src integrationTesting",
+    "lint:prettier": "prettier --check .",
     "lint:translations": "ts-node src/tools/lint-translations.ts",
     "lint": "run-p lint:*",
     "check-types": "tsc --noEmit",
@@ -166,8 +166,10 @@
     "node": ">=22"
   },
   "lint-staged": {
+    "*": [
+      "prettier --check --ignore-unknown"
+    ],
     "*.ts[x]": [
-      "prettier --check",
       "eslint"
     ],
     "src/locale/*.yml": [
