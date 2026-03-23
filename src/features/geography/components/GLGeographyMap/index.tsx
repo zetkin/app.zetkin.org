@@ -351,6 +351,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
             areas={visibleAreas}
             areasInView={areasInView}
             onSelectArea={(areaId) => setSelectedId(areaId)}
+            zoomLevel={map?.getZoom()}
           />
           {!!drawingPoints && <DrawingArea drawingPoints={drawingPoints} />}
 

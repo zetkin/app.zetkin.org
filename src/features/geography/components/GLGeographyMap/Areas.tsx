@@ -11,31 +11,43 @@ type Props = {
   areas: Zetkin2Area[];
   areasInView: Zetkin2Area[];
   onSelectArea: (areaId: number) => void;
+  zoomLevel?: number;
 };
 
-const Areas: FC<Props> = ({ areas, areasInView, onSelectArea }) => {
-  const areasWithStatsGeojson = useAreasWithStats(areas, areasInView);
+const Areas: FC<Props> = ({
+  areas,
+  areasInView,
+  onSelectArea,
+  zoomLevel = 0,
+}) => {
+  const areasWithStatsGeojson = useAreasWithStats(
+    areas,
+    areasInView,
+    zoomLevel
+  );
 
   return (
     <>
       {areasWithStatsGeojson.features.map((area) => {
         const center = centerOfMass(area);
 
-        return (
-          <Marker
-            key={area.id}
-            anchor="top-left"
-            latitude={center.geometry.coordinates[1]}
-            longitude={center.geometry.coordinates[0]}
-            onClick={() => onSelectArea(area.properties.id)}
-            style={{ cursor: 'pointer' }}
-          >
-            <HouseholdOverlayMarker
-              numberOfHouseholds={area.properties.stats?.num_households || 0}
-              numberOfLocations={area.properties.stats?.num_locations || 0}
-            />
-          </Marker>
-        );
+        if (zoomLevel > 10) {
+          return (
+            <Marker
+              key={area.id}
+              anchor="top-left"
+              latitude={center.geometry.coordinates[1]}
+              longitude={center.geometry.coordinates[0]}
+              onClick={() => onSelectArea(area.properties.id)}
+              style={{ cursor: 'pointer' }}
+            >
+              <HouseholdOverlayMarker
+                numberOfHouseholds={area.properties.stats?.num_households || 0}
+                numberOfLocations={area.properties.stats?.num_locations || 0}
+              />
+            </Marker>
+          );
+        }
       })}
       <Source data={areasWithStatsGeojson} id="areas" type="geojson">
         <Layer

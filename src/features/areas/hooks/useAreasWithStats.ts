@@ -5,20 +5,21 @@ import useAreaStats from './useAreaStats';
 
 export default function useAreasWithStats(
   allAreas: Zetkin2Area[],
-  areasInView: Zetkin2Area[]
+  areasInView: Zetkin2Area[],
+  zoomLevel: number
 ) {
   const getAreaStats = useAreaStats();
 
   // Fetch stats for the areas in view
   useEffect(() => {
-    if (areasInView.length > 0) {
+    if (zoomLevel > 10 && areasInView.length > 0) {
       Promise.all(
         areasInView.map(async ({ id: areaId }) => {
           getAreaStats(areaId);
         })
       );
     }
-  }, [areasInView, getAreaStats]);
+  }, [areasInView, getAreaStats, zoomLevel]);
 
   // Build geojson object of areas, attach stats if they exist
   const areasWithStatsGeojson: GeoJSON.FeatureCollection<
