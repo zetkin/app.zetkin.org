@@ -30,8 +30,7 @@ const Areas: FC<Props> = ({
     <>
       {areasWithStatsGeojson.features.map((area) => {
         const center = centerOfMass(area);
-
-        if (zoomLevel > 10) {
+        if (zoomLevel > 10 && area.properties.stats) {
           return (
             <Marker
               key={area.id}

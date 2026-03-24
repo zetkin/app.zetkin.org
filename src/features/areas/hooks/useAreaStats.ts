@@ -1,31 +1,35 @@
-import { useAppDispatch, useAppSelector } from 'core/hooks';
+import {
+  useApiClient,
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 import {
   assignmentStatsLoad,
   assignmentStatsLoaded,
 } from 'features/areas/store';
-import { ZetkinAreaStats } from '../types';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { futureToObject } from 'core/caching/futures';
+import { ZetkinAreaStats } from '../types';
 
 export default function useAreaStats() {
+  const { orgId } = useNumericRouteParams();
+  const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const allAreaStats = useAppSelector(
     (state) => state.areas.assignmentStatsByAreaId
   );
+
   const getAreaStats = (areaId: number) => {
     const areaStats = allAreaStats[areaId];
     const statsFuture = loadItemIfNecessary(areaStats, dispatch, {
       actionOnLoad: () => dispatch(assignmentStatsLoad(areaId)),
       actionOnSuccess: (data) =>
         dispatch(assignmentStatsLoaded([areaId, data])),
-      loader: async () => {
-        if ([15, 16, 19, 28].includes(areaId)) {
-          const res = await fetch(`/areaAssignmentStats/${areaId}.json`);
-          const stats: ZetkinAreaStats = await res.json();
-          return stats;
-        }
-        return null;
-      },
+      loader: () =>
+        apiClient.get<ZetkinAreaStats>(
+          `/api2/orgs/${orgId}/areas/${areaId}/stats`
+        ),
     });
     return futureToObject(statsFuture).data;
   };
