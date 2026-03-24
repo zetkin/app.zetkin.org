@@ -37,21 +37,17 @@ const TagConfig: FC<TagConfigProps> = ({ uiDataColumn }) => {
         <Typography sx={{ paddingBottom: 2 }} variant="h5">
           <Msg id={messageIds.configuration.configure.tags.header} />
         </Typography>
-        <Button
-          onClick={() => {
-            guessTags();
-          }}
-        >
+        <Button onClick={() => guessTags()}>
           {messages.configuration.configure.tags.guess()}
         </Button>
       </Box>
       <Box alignItems="center" display="flex" paddingY={2}>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {uiDataColumn.title.toLocaleUpperCase()}
           </Typography>
         </Box>
-        <Box width="50%">
+        <Box flex={1}>
           <Typography variant="body2">
             {messages.configuration.configure.tags
               .tagsHeader()
