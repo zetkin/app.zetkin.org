@@ -12,8 +12,14 @@ module.exports = {
     '.out/*',
     '!.prettierrc.js',
     'src/locale/*',
+    'public/*',
   ],
-  extends: ['eslint:recommended', 'next', 'prettier', 'plugin:storybook/recommended'],
+  extends: [
+    'eslint:recommended',
+    'next',
+    'prettier',
+    'plugin:storybook/recommended',
+  ],
   rules: {
     'storybook/prefer-pascal-case': 'off',
   },
