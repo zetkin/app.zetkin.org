@@ -1,5 +1,5 @@
 import { Box, Fade, Modal, Paper } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import { ZUISize } from '../types';
 import ModalBackground from './ModalBackground';
@@ -22,13 +22,46 @@ const DesktopModal: FC<ZUIModalProps> = ({
   secondaryButton,
   size = 'auto',
   title,
-}) => (
-  <Modal
-    disableRestoreFocus
-    onClose={onClose}
-    open={open}
-    slots={{
-      backdrop: () => (
+}) => {
+  const seed = useRef(0);
+  useEffect(() => {
+    seed.current = Math.random();
+  }, [open]);
+  return (
+    <Modal
+      disableRestoreFocus
+      hideBackdrop={true}
+      onClose={onClose}
+      open={open}
+    >
+      <>
+        <Fade in={open} timeout={300}>
+          <Paper
+            sx={(theme) => ({
+              border: `0.063rem solid ${theme.palette.dividers.main}`,
+              boxShadow: theme.elevation.bottom.big.medium,
+              height: size == 'full' ? 'calc(100dvh - 3.75rem)' : 'auto',
+              left: '50%',
+              maxWidth: 'calc(100dvw - 2.5rem)',
+              minWidth: '25rem',
+              position: 'absolute',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: widths[size],
+              zIndex: 10,
+            })}
+          >
+            <ModalContent
+              isMobile={false}
+              onClose={onClose}
+              primaryButton={primaryButton}
+              secondaryButton={secondaryButton}
+              title={title}
+            >
+              {children}
+            </ModalContent>
+          </Paper>
+        </Fade>
         <Fade in={open} timeout={300}>
           <Box
             onClick={onClose}
@@ -36,41 +69,15 @@ const DesktopModal: FC<ZUIModalProps> = ({
               backgroundColor: 'rgba(255,255,255,0.5)',
               height: '100%',
               width: '100%',
+              zIndex: 0,
             }}
           >
-            <ModalBackground height="100%" width="100%" />
+            <ModalBackground height="100%" seed={seed.current} width="100%" />
           </Box>
         </Fade>
-      ),
-    }}
-  >
-    <Fade in={open} timeout={300}>
-      <Paper
-        sx={(theme) => ({
-          border: `0.063rem solid ${theme.palette.dividers.main}`,
-          boxShadow: theme.elevation.bottom.big.medium,
-          height: size == 'full' ? 'calc(100dvh - 3.75rem)' : 'auto',
-          left: '50%',
-          maxWidth: 'calc(100dvw - 2.5rem)',
-          minWidth: '25rem',
-          position: 'absolute',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: widths[size],
-        })}
-      >
-        <ModalContent
-          isMobile={false}
-          onClose={onClose}
-          primaryButton={primaryButton}
-          secondaryButton={secondaryButton}
-          title={title}
-        >
-          {children}
-        </ModalContent>
-      </Paper>
-    </Fade>
-  </Modal>
-);
+      </>
+    </Modal>
+  );
+};
 
 export default DesktopModal;

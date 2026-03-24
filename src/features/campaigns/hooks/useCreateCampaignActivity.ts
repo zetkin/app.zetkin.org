@@ -31,7 +31,7 @@ export default function useCreateCampaignActivity(
   const createCallAssignment = (
     callAssignmentBody: ZetkinCallAssignmentPartial
   ): IFuture<ZetkinCallAssignment> => {
-    dispatch(callAssignmentCreate);
+    dispatch(callAssignmentCreate());
 
     const promise = apiClient
       .rpc(createCallAssignmentRpc, {
@@ -50,7 +50,7 @@ export default function useCreateCampaignActivity(
   const createSurvey = (
     surveyBody: ZetkinSurveyPostBody
   ): IFuture<ZetkinSurvey> => {
-    dispatch(surveyCreate);
+    dispatch(surveyCreate());
 
     const promise = apiClient
       .post<ZetkinSurveyExtended, ZetkinSurveyPostBody>(
