@@ -19,11 +19,10 @@ interface DisplayPersonViewProps {
 const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   const { config } = filter;
   const { orgId } = useNumericRouteParams();
-  const orgIds = useOrgIdsFromOrgScope(
-    orgId,
-    filter.config.organizations || [orgId]
-  );
-  const viewsFuture = useSubOrgViews(orgIds);
+  const filterScope = filter.config.organizations || [orgId];
+
+  const orgIds = useOrgIdsFromOrgScope(orgId, filterScope);
+  const viewsFuture = useSubOrgViews(orgIds, filterScope);
   const personViews = viewsFuture.data || [];
 
   const view = personViews.find((v) => v.id == config.view);

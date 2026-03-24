@@ -4,13 +4,20 @@ import { viewsByOrgIdLoad, viewsByOrgIdLoaded } from '../store';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { RemoteItem } from 'utils/storeUtils';
+import { FilterConfigOrgOptions } from 'features/smartSearch/components/types';
 
 export default function useSubOrgViews(
-  orgIds: number[]
+  orgIds: number[],
+  scope: FilterConfigOrgOptions
 ): IFuture<ZetkinView[]> {
   const apiClient = useApiClient();
   const views = useAppSelector((state) => state.views);
   const dispatch = useAppDispatch();
+  const isSingleOrgScope = Array.isArray(scope);
+
+  if (isSingleOrgScope) {
+    return new ResolvedFuture([]);
+  }
 
   const missingOrgIds = orgIds.filter((orgId) =>
     shouldLoad(views.viewsByOrgId[orgId])

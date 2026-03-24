@@ -43,11 +43,12 @@ const PersonView = ({
       operator: IN_OPERATOR.IN,
       view: 0,
     });
-  const orgIds = useOrgIdsFromOrgScope(
-    orgId,
-    filter.config.organizations || [orgId]
-  );
-  const viewsFuture = useSubOrgViews(orgIds);
+
+  const filterScope = filter.config.organizations || [orgId];
+
+  const orgIds = useOrgIdsFromOrgScope(orgId, filterScope);
+  const viewsFuture = useSubOrgViews(orgIds, filterScope);
+
   const personViews = viewsFuture.data || [];
   const personViewsSorted = personViews.sort((pv1, pv2) => {
     return pv1.title.localeCompare(pv2.title);
