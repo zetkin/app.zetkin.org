@@ -10,6 +10,8 @@ src/locale/**/*.yml
 
 # testing
 .nyc_output
+playwright-report
+test-results
 
 # next.js
 /.next/
@@ -18,5 +20,20 @@ src/locale/**/*.yml
 # production
 /build
 
-# bundled/third-party scripts
-public/**/*.js
+# public
+public/
+
+# vercel
+.vercel
+
+# Ignore everything in the .vscode folder
+.vscode/*
+# Except the launch.json file and extensions.json file
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# intellij
+.idea
+!.idea/launch.json
+
+
