@@ -22,7 +22,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   const filterScope = filter.config.organizations || [orgId];
 
   const orgIds = useOrgIdsFromOrgScope(orgId, filterScope);
-  const viewsFuture = useSubOrgViews(orgIds, filterScope);
+  const viewsFuture = useSubOrgViews(orgIds);
   const personViews = viewsFuture.data || [];
 
   const view = personViews.find((v) => v.id == config.view);

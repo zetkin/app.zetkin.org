@@ -47,10 +47,10 @@ const PersonView = ({
   const filterScope = filter.config.organizations || [orgId];
 
   const orgIds = useOrgIdsFromOrgScope(orgId, filterScope);
-  const viewsFuture = useSubOrgViews(orgIds, filterScope);
+  const viewsFuture = useSubOrgViews(orgIds);
 
   const personViews = viewsFuture.data || [];
-  const personViewsSorted = personViews.sort((pv1, pv2) => {
+  const personViewsSorted = [...personViews].sort((pv1, pv2) => {
     return pv1.title.localeCompare(pv2.title);
   });
 
@@ -83,7 +83,11 @@ const PersonView = ({
       enableOrgSelect
       onCancel={onCancel}
       onOrgsChange={(orgs) => {
-        setConfig({ ...filter.config, organizations: orgs });
+        setConfig({
+          ...filter.config,
+          organizations: orgs,
+          view: 0,
+        });
       }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
