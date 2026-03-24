@@ -167,13 +167,13 @@
   },
   "lint-staged": {
     "*": [
-      "prettier --check --ignore-unknown"
+      "npx prettier --check --ignore-unknown"
     ],
     "*.{js,ts,tsx}": [
       "eslint"
     ],
     "src/locale/*.yml": [
-      "yarn lint:translations"
+      "npm run lint:translations"
     ]
   },
   "overrides": {
