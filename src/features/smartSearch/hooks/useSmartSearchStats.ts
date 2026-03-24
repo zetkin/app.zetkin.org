@@ -13,9 +13,8 @@ function filterSpecForStats(
   filters: ZetkinSmartSearchFilter[]
 ): ZetkinSmartSearchFilter[] {
   return filters.map((filter) => {
-    const { id: _id, ...spec } = filter as ZetkinSmartSearchFilter & {
-      id?: number;
-    };
+    const spec = { ...filter } as ZetkinSmartSearchFilter & { id?: number };
+    delete spec.id;
 
     return spec;
   });

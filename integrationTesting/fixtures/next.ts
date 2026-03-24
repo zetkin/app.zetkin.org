@@ -130,7 +130,8 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
   moxy: [
     async ({}, use, workerInfo) => {
       const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
-      const MOXY_PORT = 3000 + workerInfo.workerIndex;
+      const MOXY_BASE_PORT = Number(process.env.MOXY_BASE_PORT ?? 43000);
+      const MOXY_PORT = MOXY_BASE_PORT + workerInfo.workerIndex;
 
       const { start, stop, setMock, ...rest } = moxy({
         forward: PROXY_FORWARD_URI,

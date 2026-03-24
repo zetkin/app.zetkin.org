@@ -5,7 +5,9 @@ import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { RemoteItem } from 'utils/storeUtils';
 
-export default function useSubOrgViews(orgIds: number[]): IFuture<ZetkinView[]> {
+export default function useSubOrgViews(
+  orgIds: number[]
+): IFuture<ZetkinView[]> {
   const apiClient = useApiClient();
   const views = useAppSelector((state) => state.views);
   const dispatch = useAppDispatch();

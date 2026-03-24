@@ -167,7 +167,7 @@
   },
   "lint-staged": {
     "*.ts[x]": [
-      "prettier --check",
+      "npx prettier --check",
       "eslint"
     ],
     "src/locale/*.yml": [
