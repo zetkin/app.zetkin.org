@@ -63,6 +63,7 @@ const mockEmail = (emailOverrides?: Partial<ZetkinEmail>): ZetkinEmail => {
     },
     theme: { frame_mjml: null, id: 1 },
     title: 'Welcome email for new members',
+    uuid: '2079ac84-cca5-4cfa-851a-2089e357e81d',
     ...emailOverrides,
   };
 };

@@ -84,6 +84,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         id: 'folders/' + recentlyCreatedFolder.id,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recentlyCreatedFolder]);
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [

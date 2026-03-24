@@ -1,5 +1,5 @@
-import { FC, Suspense } from 'react';
-import { Box, CircularProgress, List, ListItem } from '@mui/material';
+import { FC } from 'react';
+import { Box, List, ListItem } from '@mui/material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
@@ -12,12 +12,14 @@ import InstructionsSection from './InstructionsSection';
 import AboutSection from './AboutSection';
 import ActivitiesSection from './ActivitiesSection';
 import ReportForm from './Report';
-import { useAppDispatch } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { reportUpdated } from '../store';
+import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import CallSummary from './CallSummary';
+import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -43,8 +45,19 @@ const CallPanels: FC<Props> = ({
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
 
+  const queueError = useAppSelector((state) => state.call.queueError);
+
   return (
     <>
+      {queueError && (
+        <ZUIAlert
+          appear
+          description={messages.callAlert.description()}
+          severity="warning"
+          title={messages.callAlert.title()}
+        />
+      )}
+
       <Box
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
@@ -121,25 +134,12 @@ const CallPanels: FC<Props> = ({
           width: 1 / 3,
         })}
       >
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
+        <SuspenseWithCircularLoader>
           <AssignmentStats
             assignmentId={assignment.id}
             orgId={assignment.organization.id}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
       </Box>
       <Box
         sx={(theme) => ({
@@ -221,26 +221,13 @@ const CallPanels: FC<Props> = ({
           zIndex: lane.step == LaneStep.START ? -1 : 0,
         })}
       >
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
+        <SuspenseWithCircularLoader>
           <ActivitiesSection
             assignment={assignment}
             step={lane.step}
             target={call?.target ?? null}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
       </Box>
       <Box
         sx={(theme) => ({

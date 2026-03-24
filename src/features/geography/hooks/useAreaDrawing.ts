@@ -84,6 +84,7 @@ export default function useAreaDrawing({
       map?.off('click', handleClick);
       map?.off('mousemove', handleMove);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drawingPoints, map]);
 
   const startedDrawing = !!drawingPoints && drawingPoints.length > 0;

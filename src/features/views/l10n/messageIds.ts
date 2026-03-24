@@ -440,7 +440,9 @@ export default makeMessages('feat.views', {
     bulk: {
       createList: m('Create list from selection'),
       delete: m('Delete selected people from organization'),
-      handleSelection: m('Handle selection'),
+      handleSelection: m<{ numSelected: number }>(
+        'Handle selection ({numSelected})'
+      ),
       removeFromList: m('Remove selected people from list'),
     },
     createColumn: m('New column'),

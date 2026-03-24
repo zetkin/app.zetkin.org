@@ -25,6 +25,7 @@ const CallPage: FC = () => {
       clearStaleCallLanes();
       return redirect('/my');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onServer = useServerSide();

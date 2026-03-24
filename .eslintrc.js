@@ -13,7 +13,10 @@ module.exports = {
     '!.prettierrc.js',
     'src/locale/*',
   ],
-  extends: ['eslint:recommended', 'next', 'prettier'],
+  extends: ['eslint:recommended', 'next', 'prettier', 'plugin:storybook/recommended'],
+  rules: {
+    'storybook/prefer-pascal-case': 'off',
+  },
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files
@@ -92,7 +95,7 @@ module.exports = {
         'react/prefer-stateless-function': 'error',
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
-        'react-hooks/exhaustive-deps': 'off',
+        'react-hooks/exhaustive-deps': 'error',
         'react/self-closing-comp': [
           'error',
           {
