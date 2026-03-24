@@ -169,7 +169,7 @@
     "*": [
       "prettier --check --ignore-unknown"
     ],
-    "*.ts[x]": [
+    "*.{js,ts,tsx}": [
       "eslint"
     ],
     "src/locale/*.yml": [
