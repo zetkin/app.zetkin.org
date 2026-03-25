@@ -48,8 +48,10 @@ export default function useEventParticipantsMutations(
     dispatch(participantAdded([eventId, participant]));
   };
 
-  const addParticipants = async (parsonIds: number[]) => {
-    await Promise.all(parsonIds.map((id) => addParticipant(id)));
+  const addParticipants = async (verifiedSignedUpParticipantIds: number[]) => {
+    await Promise.all(
+      verifiedSignedUpParticipantIds.map((id) => addParticipant(id))
+    );
   };
 
   const deleteParticipant = async (participantId: number) => {

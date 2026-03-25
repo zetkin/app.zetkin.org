@@ -11,14 +11,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Link,
-  Skeleton,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Link, Skeleton, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
 
@@ -246,44 +239,30 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                   size="xs"
                 />
               </Box>
-              <Typography
-                color={
-                  (verifiedSignedUpParticipants.length ?? 0) > 0
-                    ? 'red'
-                    : 'secondary'
-                }
-              >
-                {isLoading ? (
-                  <Skeleton width={20} />
-                ) : (
-                  <Box alignItems="center" display="flex">
-                    <Button
-                      color="primary"
-                      disableElevation
-                      onClick={() => bookVerifiedSignedUpParticipants()}
-                      size="small"
-                      sx={{ mr: 2 }}
-                      variant="outlined"
-                    >
-                      {isBooking && (
-                        <CircularProgress
-                          size="1em"
-                          style={{
-                            left: 'calc(-0.5em + 50%)',
-                            position: 'relative',
-                          }}
-                        />
-                      )}
-                      <span
-                        style={{ color: isBooking ? 'transparent' : 'inherit' }}
-                      >
-                        {messages.eventPopper.bookAll().toLocaleUpperCase()}
-                      </span>
-                    </Button>
-                    {verifiedSignedUpParticipants.length ?? 0}
-                  </Box>
-                )}
-              </Typography>
+              {isLoading ? (
+                <Skeleton width={20} />
+              ) : (
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+                  <Button
+                    color="primary"
+                    loading={isBooking}
+                    onClick={() => bookVerifiedSignedUpParticipants()}
+                    size="small"
+                    variant="outlined"
+                  >
+                    {messages.eventPopper.bookAll()}
+                  </Button>
+                  <Typography
+                    color={
+                      verifiedSignedUpParticipants.length > 0
+                        ? 'red'
+                        : 'secondary'
+                    }
+                  >
+                    {verifiedSignedUpParticipants.length}
+                  </Typography>
+                </Box>
+              )}
             </Box>
             {isLoading ? (
               <Skeleton height={20} variant="rectangular" width="100%" />
