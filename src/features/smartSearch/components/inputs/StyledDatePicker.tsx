@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import updateLocale from 'dayjs/plugin/updateLocale';
 import { useTheme } from '@mui/material';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
@@ -7,12 +6,10 @@ const StyledDatePicker: React.FC<DatePickerProps<dayjs.Dayjs>> = (
   props
 ): React.ReactElement => {
   const theme = useTheme();
-  dayjs.extend(updateLocale);
-  dayjs.updateLocale('en', { weekStart: 1 });
+
   return (
     <DatePicker
       {...props}
-      format="YYYY/MM/DD"
       slotProps={{
         textField: {
           inputProps: {
