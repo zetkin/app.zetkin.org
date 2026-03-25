@@ -2,6 +2,11 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.areas', {
   areas: {
+    areaDetails: {
+      households: m('Households'),
+      locations: m('Locations'),
+      title: m('Area details'),
+    },
     areaSettings: {
       delete: m('Delete'),
       edit: {
@@ -12,6 +17,14 @@ export default makeMessages('feat.areas', {
       tags: {
         title: m('Area tags'),
       },
+    },
+    assignmentStats: {
+      percentSuccessfulHouseholdVisits: m(
+        'of household visits were successful'
+      ),
+      percentVisited: m('of locations visited'),
+      successfulVisits: m('successful visits'),
+      title: m('Visits'),
     },
     controlLabels: {
       filters: m('Filters'),

@@ -33,3 +33,14 @@ export type Zetkin2Area = {
 export type Zetkin2AreaPostBody = Partial<
   Omit<Zetkin2Area, 'id' | 'organization_id'>
 >;
+
+export type ZetkinAreaStats = {
+  area_id: number;
+  id: number;
+  num_households: number;
+  num_households_successfully_visited: number;
+  num_households_visited: number;
+  num_locations: number;
+  num_locations_visited: number;
+  num_successfull_visits: number;
+};
