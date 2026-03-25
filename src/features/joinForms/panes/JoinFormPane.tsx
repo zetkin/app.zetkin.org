@@ -36,6 +36,11 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       field !== NATIVE_PERSON_FIELDS.EXT_ID && field !== NATIVE_PERSON_FIELDS.ID
   );
 
+  const writableCustomFields =
+    customFields.data?.filter(
+      (field) => field.organization.id == orgId || field.org_write == 'suborgs'
+    ) ?? [];
+
   if (!joinForm) {
     return null;
   }
@@ -98,7 +103,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
           }}
           options={[
             ...nativePersonFields,
-            ...(customFields.data?.map((field) => field.slug) ?? []),
+            ...writableCustomFields.map((field) => field.slug),
           ]}
           renderInput={(params) => (
             <TextField

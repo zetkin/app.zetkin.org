@@ -58,18 +58,19 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const orgId = event.organization.id;
-  const { participantsFuture, respondentsFuture } = useEventParticipants(
-    event.organization.id,
-    event.id
-  );
+  const {
+    verifiedParticipantsFuture,
+    respondentsFuture,
+    numSignedUpParticipants,
+    verifiedSignedUpParticipants,
+  } = useEventParticipants(event.organization.id, event.id);
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
     useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
   const { addParticipants } = useEventParticipantsMutations(orgId, event.id);
 
   const dispatch = useAppDispatch();
-  const participants = participantsFuture.data || [];
-  const respondents = respondentsFuture.data || [];
+  const participants = verifiedParticipantsFuture.data || [];
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -85,20 +86,18 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);
-  const signedParticipants = respondents.filter(
-    (r) => !participants.some((p) => p.id === r.id)
-  );
 
-  const bookSignedParticipants = async () => {
+  const bookVerifiedSignedUpParticipants = async () => {
     setBooking(true);
-    await addParticipants(signedParticipants.map((p) => p.person.id));
+    await addParticipants(verifiedSignedUpParticipants.map((p) => p.person.id));
     setBooking(false);
   };
+
   const isLoading =
-    participantsFuture.isLoading ||
+    verifiedParticipantsFuture.isLoading ||
     respondentsFuture.isLoading ||
     state == EventState.UNKNOWN;
-  const showSignups = signedParticipants.length > 0 || isLoading;
+  const showSignups = numSignedUpParticipants > 0 || isLoading;
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
@@ -249,7 +248,9 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
               </Box>
               <Typography
                 color={
-                  (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
+                  (verifiedSignedUpParticipants.length ?? 0) > 0
+                    ? 'red'
+                    : 'secondary'
                 }
               >
                 {isLoading ? (
@@ -259,7 +260,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                     <Button
                       color="primary"
                       disableElevation
-                      onClick={() => bookSignedParticipants()}
+                      onClick={() => bookVerifiedSignedUpParticipants()}
                       size="small"
                       sx={{ mr: 2 }}
                       variant="outlined"
@@ -279,7 +280,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                         {messages.eventPopper.bookAll().toLocaleUpperCase()}
                       </span>
                     </Button>
-                    {signedParticipants.length ?? 0}
+                    {verifiedSignedUpParticipants.length ?? 0}
                   </Box>
                 )}
               </Typography>
@@ -287,10 +288,10 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             {isLoading ? (
               <Skeleton height={20} variant="rectangular" width="100%" />
             ) : (
-              signedParticipants.length > 0 && (
+              numSignedUpParticipants > 0 && (
                 <ParticipantAvatars
                   orgId={orgId}
-                  participants={signedParticipants}
+                  participants={verifiedSignedUpParticipants}
                 />
               )
             )}

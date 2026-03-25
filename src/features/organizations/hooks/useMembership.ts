@@ -21,8 +21,8 @@ export default function useMembership(
   }
 
   const membershipsFuture = loadListIfNecessary(membershipList, dispatch, {
-    actionOnLoad: () => dispatch(userMembershipsLoad()),
-    actionOnSuccess: (data) => dispatch(userMembershipsLoaded(data)),
+    actionOnLoad: () => userMembershipsLoad(),
+    actionOnSuccess: (data) => userMembershipsLoaded(data),
     loader: () =>
       apiClient.get<ZetkinMembership[]>(`/api/users/me/memberships`),
   });

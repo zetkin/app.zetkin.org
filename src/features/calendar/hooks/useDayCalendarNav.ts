@@ -86,6 +86,7 @@ export default function useDayCalendarNav(
         },
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusDateStr]);
 
   return {

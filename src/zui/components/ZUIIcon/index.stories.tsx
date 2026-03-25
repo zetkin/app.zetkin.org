@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Event } from '@mui/icons-material';
 
 import ZUIIcon from './index';

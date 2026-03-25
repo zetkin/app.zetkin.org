@@ -23,6 +23,7 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
       setLabelPos(calcHoverXPos(labelElem));
       setValuePos(calcHoverXPos(valueElem));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [barIndex, valueElem, labelElem]);
 
   function calcHoverXPos(el: HTMLDivElement | null) {

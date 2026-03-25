@@ -54,7 +54,7 @@ const TagsPage: PageWithLayout = () => {
 
   const groupedTags = useMemo(
     () => groupTags(tags || [], messages.tagsPage.ungroupedHeader()),
-    [tags, tagGroups]
+    [tags, messages.tagsPage]
   );
 
   if (onServer) {
