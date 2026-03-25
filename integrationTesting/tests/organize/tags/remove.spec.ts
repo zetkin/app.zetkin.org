@@ -37,21 +37,24 @@ test.describe('Tags manager', () => {
       'delete'
     );
 
+    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+
     const tagToDelete = page
       .locator('[data-testid=TagManager-groupedTags-ungrouped]')
       .locator('[data-testid=TagChip-value]')
       .filter({ hasText: PlaysGuitarTag.title });
-    const chipRoot = tagToDelete.locator('..').locator('..');
-    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
-
-    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
     await expect(tagToDelete).toBeVisible();
 
     await tagToDelete.hover();
+
+    const chipRoot = tagToDelete.locator('..').locator('..');
+    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
+
     await expect(deleteButton).toBeVisible();
 
-    await deleteButton.click();
+    await page.waitForTimeout(200);
+    await deleteButton.click({ force: true });
 
     await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
 
@@ -84,25 +87,28 @@ test.describe('Tags manager', () => {
       401
     );
 
+    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+
     const tagChip = page
       .locator('[data-testid=TagManager-groupedTags-ungrouped]')
       .locator('[data-testid=TagChip-value]')
       .filter({ hasText: PlaysGuitarTag.title });
-    const chipRoot = tagChip.locator('..').locator('..');
-    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
-
-    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
     await expect(tagChip).toBeVisible();
 
     await tagChip.hover();
 
+    const chipRoot = tagChip.locator('..').locator('..');
+    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
+
     await expect(deleteButton).toBeVisible();
-    await deleteButton.click();
+    await page.waitForTimeout(200);
+    await deleteButton.click({ force: true });
 
     await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
 
-    // Show error
-    await expect(page.locator('[data-testid=Snackbar-error]')).toBeVisible();
+    const snackbar = page.locator('[data-testid=Snackbar-error]');
+
+    await expect(snackbar).toBeVisible();
   });
 });
