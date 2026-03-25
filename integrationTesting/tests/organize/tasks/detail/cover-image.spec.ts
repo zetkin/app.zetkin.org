@@ -122,10 +122,9 @@ test.describe('Task detail page', () => {
     await page.goto(appUri + '/organize/1/projects/1/tasks/1');
     await image.waitFor({ state: 'visible' });
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PATCH'),
-      page.locator('data-testid=ZetkinEditableImage-resetButton').click(),
-    ]);
+    await page.locator('data-testid=ZetkinEditableImage-resetButton').click();
+
+    await expect.poll(() => patchLog().length).toBe(1);
 
     expect(patchLog()[0].data).toEqual({
       cover_file_id: null,

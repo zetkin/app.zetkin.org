@@ -37,25 +37,27 @@ test.describe('Tags manager', () => {
       'delete'
     );
 
-    const tagToDelete = page.locator(
-      `data-testid=TagManager-groupedTags-ungrouped >> text="${PlaysGuitarTag.title}"`
-    );
-    const deleteButton = page.locator('[data-testid=TagChip-deleteButton]');
+    const tagToDelete = page
+      .locator('[data-testid=TagManager-groupedTags-ungrouped]')
+      .locator('[data-testid=TagChip-value]')
+      .filter({ hasText: PlaysGuitarTag.title });
+    const chipRoot = tagToDelete.locator('..').locator('..');
+    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
 
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
-    await tagToDelete.waitFor({ state: 'visible' });
+
+    await expect(tagToDelete).toBeVisible();
 
     await tagToDelete.hover();
-    await deleteButton.waitFor({ state: 'visible' });
+    await expect(deleteButton).toBeVisible();
 
-    await Promise.all([
-      page.waitForRequest((req) => req.method() == 'DELETE'),
-      deleteButton.click(),
-    ]);
+    await deleteButton.click();
+
+    await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
 
-    await tagToDelete.waitFor({ state: 'hidden' });
+    await expect(tagToDelete).toHaveCount(0);
 
     // Expect to have made request to delete tag
     expect(deleteTagLog().length).toEqual(1);
@@ -75,19 +77,32 @@ test.describe('Tags manager', () => {
       'get',
       [PlaysGuitarTag]
     );
-    moxy.setZetkinApiMock(
+    const { log: deleteTagLog } = moxy.setZetkinApiMock(
       `/orgs/1/people/${ClaraZetkin.id}/tags/${PlaysGuitarTag.id}`,
       'delete',
       undefined,
       401
     );
 
+    const tagChip = page
+      .locator('[data-testid=TagManager-groupedTags-ungrouped]')
+      .locator('[data-testid=TagChip-value]')
+      .filter({ hasText: PlaysGuitarTag.title });
+    const chipRoot = tagChip.locator('..').locator('..');
+    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
+
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
-    await page.locator(`text="${PlaysGuitarTag.title}"`).hover();
-    await page.locator('[data-testid=TagChip-deleteButton]').click();
+    await expect(tagChip).toBeVisible();
+
+    await tagChip.hover();
+
+    await expect(deleteButton).toBeVisible();
+    await deleteButton.click();
+
+    await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
 
     // Show error
-    await page.locator('data-testid=Snackbar-error').waitFor();
+    await expect(page.locator('[data-testid=Snackbar-error]')).toBeVisible();
   });
 });
