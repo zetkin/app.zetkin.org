@@ -92,6 +92,9 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     state == EventState.UNKNOWN;
   const showSignups = numSignedUpParticipants > 0 || isLoading;
 
+  const allSignedUpParticipantsAreVerified =
+    numSignedUpParticipants == verifiedSignedUpParticipants.length;
+
   const handleMove = () => {
     setIsMoveDialogOpen(true);
   };
@@ -243,23 +246,21 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                 <Skeleton width={20} />
               ) : (
                 <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
-                  <Button
-                    color="primary"
-                    loading={isBooking}
-                    onClick={() => bookVerifiedSignedUpParticipants()}
-                    size="small"
-                    variant="outlined"
-                  >
-                    {messages.eventPopper.bookAll()}
-                  </Button>
+                  {allSignedUpParticipantsAreVerified && (
+                    <Button
+                      color="primary"
+                      loading={isBooking}
+                      onClick={() => bookVerifiedSignedUpParticipants()}
+                      size="small"
+                      variant="outlined"
+                    >
+                      {messages.eventPopper.bookAll()}
+                    </Button>
+                  )}
                   <Typography
-                    color={
-                      verifiedSignedUpParticipants.length > 0
-                        ? 'red'
-                        : 'secondary'
-                    }
+                    color={numSignedUpParticipants > 0 ? 'red' : 'secondary'}
                   >
-                    {verifiedSignedUpParticipants.length}
+                    {numSignedUpParticipants}
                   </Typography>
                 </Box>
               )}
