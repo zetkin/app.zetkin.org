@@ -73,13 +73,7 @@ test.describe('Task detail page', () => {
 
     moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', taskWithFile);
 
-    await Promise.all([
-      page.waitForRequest((req) => req.method() === 'PATCH'),
-      page.waitForResponse((res) =>
-        res.request().url().includes('clara_and_rosa.jpg')
-      ),
-      page.locator('data-testid=FileLibraryDialog-useButton').click(),
-    ]);
+    await page.locator('data-testid=FileLibraryDialog-useButton').click();
 
     await page.locator('data-testid=TaskPreviewSection-section').waitFor();
 

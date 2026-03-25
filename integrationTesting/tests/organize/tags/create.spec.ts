@@ -59,19 +59,10 @@ test.describe('Tag manager', () => {
       [ActivistTag, CodingSkillsTag, ActivistTag]
     );
 
-    await Promise.all([
-      page.waitForResponse('**/orgs/1/people/tags'),
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
-      ),
-      page.click('data-testid=SubmitCancelButtons-submitButton'),
-    ]);
+    await page.click('data-testid=SubmitCancelButtons-submitButton');
 
-    // Check that request made to create tag
-    expect(createTagRequest.log().length).toEqual(1);
-
-    // Check that request made to apply tag
-    expect(assignNewTagRequest.log().length).toEqual(1);
+    await expect.poll(() => createTagRequest.log().length).toBe(1);
+    await expect.poll(() => assignNewTagRequest.log().length).toBe(1);
   });
 
   test('lets user create a tag group and tag with that group', async ({
@@ -107,22 +98,10 @@ test.describe('Tag manager', () => {
     );
     await page.click(`text=Add "${SkillsGroup.title}"`);
 
-    await Promise.all([
-      page.waitForResponse(`**/orgs/1/tag_groups`),
-      page.waitForResponse('**/orgs/1/people/tags'),
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
-      ),
-      page.click('data-testid=SubmitCancelButtons-submitButton'),
-    ]);
+    await page.click('data-testid=SubmitCancelButtons-submitButton');
 
-    // Check that request made to create group
-    expect(createTagGroupRequest.log().length).toEqual(1);
-
-    // Check that request made to create tag
-    expect(createTagRequest.log().length).toEqual(1);
-
-    // Check that request made to apply tag
-    expect(assignNewTagRequest.log().length).toEqual(1);
+    await expect.poll(() => createTagGroupRequest.log().length).toBe(1);
+    await expect.poll(() => createTagRequest.log().length).toBe(1);
+    await expect.poll(() => assignNewTagRequest.log().length).toBe(1);
   });
 });

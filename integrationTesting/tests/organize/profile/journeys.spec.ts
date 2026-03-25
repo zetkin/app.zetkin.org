@@ -45,13 +45,10 @@ test.describe('Profile page journeys section', () => {
     await page.goto(appUri + `/organize/${KPD.id}/people/${ClaraZetkin.id}`);
 
     await page.locator('data-testid=PersonJourneysCard-addButton').click();
-    await Promise.all([
-      page.waitForNavigation(),
-      page.locator(`text=${MarxistTraining.title}`).click(),
-    ]);
+    await page.locator(`text=${MarxistTraining.title}`).click();
 
-    expect(page.url()).toMatch(/journeys\/2\/new/);
-    expect(page.url()).toMatch(/\?subject=1$/);
+    await page.waitForURL(/journeys\/2\/new/);
+    await expect(page).toHaveURL(/\?subject=1$/);
   });
 
   test('is not visible if the organization does not have any journeys.', async ({
