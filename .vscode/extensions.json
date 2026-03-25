@@ -1,5 +1,3 @@
 {
-    "recommendations": [
-        "firefox-devtools.vscode-firefox-debug"
-    ]
+  "recommendations": ["firefox-devtools.vscode-firefox-debug"]
 }
