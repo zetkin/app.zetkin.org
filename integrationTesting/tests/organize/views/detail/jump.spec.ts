@@ -43,12 +43,9 @@ test.describe('View detail page', () => {
 
     // Press down to select view and enter to navigate
     await page.keyboard.press('ArrowDown');
-
-    await Promise.all([page.waitForNavigation(), page.keyboard.press('Enter')]);
+    await page.keyboard.press('Enter');
 
     // Assert that we navigate away to the new view
-    expect(page.url()).toEqual(
-      appUri + `/organize/1/people/lists/${NewView.id}`
-    );
+    await page.waitForURL(appUri + `/organize/1/people/lists/${NewView.id}`);
   });
 });

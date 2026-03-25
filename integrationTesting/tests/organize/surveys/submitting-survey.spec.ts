@@ -590,7 +590,9 @@ test.describe('User submitting a survey', () => {
     });
   });
 
-  test('preserves inputs on error', async ({ appUri, page }) => {
+  test('preserves inputs on error', async ({ appUri, moxy, page }) => {
+    moxy.setZetkinApiMock(apiPostPath, 'post', null, 500);
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
