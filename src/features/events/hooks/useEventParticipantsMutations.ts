@@ -3,12 +3,14 @@ import { ZetkinEventParticipant } from 'utils/types/zetkin';
 import {
   participantAdded,
   participantDeleted,
+  participantsAdded,
   participantsRemind,
   participantsReminded,
   participantUpdated,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinEventReminder } from '../types';
+import addParticipantsRPC from '../rpc/addParticipants';
 
 export enum participantStatus {
   ATTENDED = 'attended',
@@ -49,9 +51,12 @@ export default function useEventParticipantsMutations(
   };
 
   const addParticipants = async (verifiedSignedUpParticipantIds: number[]) => {
-    await Promise.all(
-      verifiedSignedUpParticipantIds.map((id) => addParticipant(id))
-    );
+    const participants = await apiClient.rpc(addParticipantsRPC, {
+      eventId,
+      orgId,
+      participantIds: verifiedSignedUpParticipantIds,
+    });
+    dispatch(participantsAdded([eventId, participants]));
   };
 
   const deleteParticipant = async (participantId: number) => {
