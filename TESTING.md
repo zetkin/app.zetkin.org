@@ -1,7 +1,9 @@
 # Testing
+
 This file contains information and instructions about our automated testing.
 
 ## Integration tests
+
 Integration tests are run with [Playwright](https://playwright.dev/docs/intro). To run tests:
 
 ```
@@ -15,6 +17,7 @@ npm run e2e:skipbuild
 ```
 
 ### Investigating failures
+
 When a test fails (locally or in CI), Playwright captures screenshots, videos, and
 traces. Run `npx playwright show-report` to open the HTML report in your browser.
 

@@ -47,6 +47,7 @@ const CanvassMapOverlays: FC<Props> = ({
     if (!selectedLocation && expanded) {
       setExpanded(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLocation]);
 
   return (
@@ -59,12 +60,17 @@ const CanvassMapOverlays: FC<Props> = ({
             gap: 8,
             justifyContent: 'center',
             padding: 8,
+            pointerEvents: 'none',
             position: 'absolute',
             width: '100%',
             zIndex: 1000,
           }}
         >
-          <Button onClick={() => onToggleCreating(true)} variant="contained">
+          <Button
+            onClick={() => onToggleCreating(true)}
+            sx={{ pointerEvents: 'all' }}
+            variant="contained"
+          >
             <Msg id={messageIds.map.addLocation.add} />
           </Button>
         </Box>

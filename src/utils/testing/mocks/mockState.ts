@@ -26,7 +26,7 @@ export default function mockState(overrides?: RootState) {
       finishedCalls: remoteList(),
       lanes: [],
       myAssignmentsList: remoteList(),
-      queueHasError: null,
+      queueError: null,
       unfinishedCalls: remoteList(),
       upcomingEventsList: remoteList(),
     },
@@ -180,7 +180,7 @@ export default function mockState(overrides?: RootState) {
       officialList: remoteList(),
       recentlyCreatedFolder: null,
       rowsByViewId: {},
-      viewList: remoteList(),
+      viewsByOrgId: {},
     },
   };
 

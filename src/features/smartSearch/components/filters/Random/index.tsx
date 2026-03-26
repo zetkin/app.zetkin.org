@@ -67,6 +67,7 @@ const Random = ({
         size: quantityDisplay / 100,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, quantityDisplay]);
 
   const handleSubmit = (e: FormEvent) => {
