@@ -43,7 +43,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
 const MyHomeLayout: FC<Props> = async ({ children, params }) => {
   const headersList = headers();
   const headersEntries = headersList.entries();
