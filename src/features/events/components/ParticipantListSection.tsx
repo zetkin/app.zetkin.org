@@ -420,7 +420,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         rows={
           filterString
             ? filterSignupOrParticipantRows(rows, filterString)
-            : rows ?? []
+            : (rows ?? [])
         }
         sx={{
           '& .MuiDataGrid-row:hover': {
