@@ -22,7 +22,8 @@
     "suite": "run-s suite:*",
     "e2e": "cross-env NODE_ENV=production playwright test",
     "e2e:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test",
-    "e2e:ci": "cross-env NODE_ENV=production playwright test",
+    "e2e:ci": "cross-env NODE_ENV=production PLAYWRIGHT_WORKERS=2 playwright test",
+    "e2e:ci:report": "ts-node src/tools/e2e-ci-report.ts",
     "storybook": "storybook dev -p 6006",
     "make-yaml": "ts-node src/tools/make-yaml.ts"
   },
