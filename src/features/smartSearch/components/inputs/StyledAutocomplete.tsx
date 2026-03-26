@@ -307,6 +307,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
 
   return (
     <Autocomplete
+      clearIcon={null}
       disableClearable={!props.clearable}
       disableListWrap
       groupBy={(option) => option.group ?? ''}
@@ -378,7 +379,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         '& .MuiOutlinedInput-root': {
           border: 'none',
           borderRadius: 0,
-          padding: 0,
+          padding: '0 !important',
         },
         '& .MuiOutlinedInput-root .MuiInputBase-input': {
           fontSize: '34px',
