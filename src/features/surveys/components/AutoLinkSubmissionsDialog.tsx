@@ -77,7 +77,7 @@ export const AutoLinkSubmissionsDialog: FC<{
         'suggestion'
       ),
     ];
-  }, []);
+  }, [messages.autoLink.columns]);
 
   const [selection, setSelection] = useState<number[]>([]);
   const bulkSetRespondentId = useSurveySubmissionBulkSetResponder(orgId);
@@ -92,10 +92,13 @@ export const AutoLinkSubmissionsDialog: FC<{
       throw new Error('No data');
     }
 
-    const selectionMap = selection.reduce((prev, cur) => {
-      prev[cur] = true;
-      return prev;
-    }, {} as Record<number, boolean>);
+    const selectionMap = selection.reduce(
+      (prev, cur) => {
+        prev[cur] = true;
+        return prev;
+      },
+      {} as Record<number, boolean>
+    );
 
     const toLink = autoLinkableSubmissions.data.autoLinkable.filter(
       (candidate) => selectionMap[candidate.id]

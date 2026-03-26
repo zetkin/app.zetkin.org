@@ -76,10 +76,10 @@ export const getAutoLinkableSubmissions = async (
   const suggestions = await Promise.all(
     submissions.map((sub) =>
       apiClient
-        .post<ZetkinPerson[], { q: string }>(
-          `/api/orgs/${orgId}/search/person`,
-          { q: sub.respondent.email }
-        )
+        .post<
+          ZetkinPerson[],
+          { q: string }
+        >(`/api/orgs/${orgId}/search/person`, { q: sub.respondent.email })
         .then((sug) => ({
           submission: sub,
           suggestions: sug,
