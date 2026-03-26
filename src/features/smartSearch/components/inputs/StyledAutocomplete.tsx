@@ -4,6 +4,7 @@ import {
   FC,
   HTMLAttributes,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -270,6 +271,12 @@ const StyledAutocomplete: FC<Props> = (props) => {
   };
 
   const [inputValue, setInputValue] = useState(valueItem?.label ?? '');
+
+  useEffect(() => {
+    if (valueItem) {
+      setInputValue(valueItem.label);
+    }
+  }, [valueItem]);
 
   const onChange = useCallback(
     (
