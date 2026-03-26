@@ -90,8 +90,12 @@ const ListboxComponent = React.forwardRef<
   const itemData: ItemData = [];
   const optionIndexMap = React.useMemo(() => new Map<string, number>(), []);
 
-  (children as ItemData).forEach((item) => {
-    if ('group' in item && item.group.trim() !== '') {
+  (children as ItemData).forEach((item, index) => {
+    if (
+      'group' in item &&
+      item.group.trim() !== 'pinned' &&
+      (index > 0 || item.group.trim() !== '')
+    ) {
       itemData.push(item);
     }
     if ('children' in item && Array.isArray(item.children)) {
@@ -120,8 +124,8 @@ const ListboxComponent = React.forwardRef<
   const itemSize = smUp ? 36 : 48;
 
   const getChildSize = (child: ItemData[number]) => {
-    if (Object.prototype.hasOwnProperty.call(child, 'group')) {
-      return 48;
+    if ('group' in child) {
+      return child.group === '' ? 24 : 48;
     }
     return itemSize;
   };
@@ -213,15 +217,6 @@ const StyledAutocomplete: FC<Props> = (props) => {
           }
 
           return ret;
-        })
-        .map((item) => {
-          if (item.group === 'pinned') {
-            return {
-              id: item.id,
-              label: item.label,
-            };
-          }
-          return item;
         })
         .map((item) => ({
           ...item,
