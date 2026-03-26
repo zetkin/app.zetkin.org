@@ -87,6 +87,7 @@ const SubQuery = ({
         queries.find((q) => q.id === filter.config.query_id) || queries[0]
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [standaloneQueries, assignments]);
 
   const renderedOptions = queries.filter((q) => q.type === selectedQuery?.type);

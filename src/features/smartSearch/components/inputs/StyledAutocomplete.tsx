@@ -235,7 +235,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
           ? undefined
           : props.items[0]
         : options.find((item) => item.id === props.value),
-    [props.value, options]
+    [props.value, options, props.items]
   );
 
   // Use react-window v2's useListRef hook for imperative API access
@@ -284,7 +284,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         details
       );
     },
-    [props.onChange, setInputValue]
+    [props]
   );
 
   if (!valueItem) {

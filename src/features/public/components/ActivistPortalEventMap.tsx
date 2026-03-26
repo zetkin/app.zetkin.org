@@ -13,13 +13,14 @@ import { Latitude, Longitude } from 'features/areas/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import useMapMarkerClick from '../hooks/useMapMarkerClick';
 
+const defaultFitBoundOptions = { padding: 80 };
+
 export const ActivistPortalEventMap: FC<{
   events: ZetkinEventWithStatus[];
   locationFilter: GeoJSON.Feature[];
   setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
 }> = ({ events, locationFilter, setLocationFilter }) => {
   const [map, setMap] = useState<MapType | null>(null);
-  const defaultFitBoundOptions = { padding: 80 };
 
   const onMarkerClick = useCallback(
     (geojsonFeatures: GeoJSON.Feature[]) => {
@@ -115,6 +116,7 @@ export const ActivistPortalEventMap: FC<{
         }) ?? [],
       type: 'FeatureCollection',
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [events, locationFilter]);
 
   return (

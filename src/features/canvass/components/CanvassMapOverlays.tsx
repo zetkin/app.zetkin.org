@@ -47,6 +47,7 @@ const CanvassMapOverlays: FC<Props> = ({
     if (!selectedLocation && expanded) {
       setExpanded(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLocation]);
 
   return (

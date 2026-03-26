@@ -327,6 +327,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areas, map]);
 
   const { assigneesFilter } = useContext(assigneesFilterContext);

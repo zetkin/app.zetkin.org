@@ -190,6 +190,7 @@ const TaskDetailsForm = ({
     visitUrl,
   ]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const errors = useMemo(() => validate(composedValues), [composedValues]);
   const hasErrors = (
     obj: Record<string, string | Record<string, string>>

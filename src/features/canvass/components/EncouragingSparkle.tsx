@@ -11,6 +11,7 @@ type Props = {
 const EncouragingSparkle: FC<Props> = ({ duration = 2000, onComplete }) => {
   useEffect(() => {
     setTimeout(() => onComplete?.(), duration);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const particleSx: SxProps = {
