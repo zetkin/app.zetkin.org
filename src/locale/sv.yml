@@ -367,9 +367,9 @@ feat:
       title: Ett oväntat fel inträffade.
     header:
       primaryButton:
-        summary: Avsluta & rapportera
+        call: Avsluta & rapportera
       secondaryButton:
-        summary: Avsluta
+        start: Avsluta
     instructions:
       title: Instruktioner
     report:
