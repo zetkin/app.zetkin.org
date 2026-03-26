@@ -53,9 +53,8 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     options.find((o) => o.value == report.callBackAfter?.slice(-5)) ||
     options[0];
 
-  const [time, setTime] = useState<{ label: string; value: string }>(
-    initialTime
-  );
+  const [time, setTime] =
+    useState<{ label: string; value: string }>(initialTime);
   const [date, setDate] = useState<Dayjs>(initialDate);
 
   const getNextMonday = () => {

@@ -79,8 +79,9 @@ export type NewTaskValues = Omit<
 };
 
 // POST and PUT requests use this data shape
-export interface ZetkinTaskRequestBody<Config = AnyTaskTypeConfig>
-  extends Partial<
+export interface ZetkinTaskRequestBody<
+  Config = AnyTaskTypeConfig
+> extends Partial<
     Omit<
       // Remove these fields
       ZetkinTask<Config>,
