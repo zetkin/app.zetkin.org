@@ -97,10 +97,14 @@ const LocationSearch: FC<LocationSearchProps> = ({
     inputRef.current?.focus();
   }, []);
 
-  const existingLocationsFuse = new Fuse(existingLocations, {
-    keys: ['title'],
-    threshold: 0.5,
-  });
+  const existingLocationsFuse = useMemo(
+    () =>
+      new Fuse(existingLocations, {
+        keys: ['title'],
+        threshold: 0.5,
+      }),
+    [existingLocations]
+  );
   const [matchingExistingLocations, setMatchingExistingLocations] = useState<
     ZetkinLocation[]
   >([]);
@@ -114,7 +118,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
       : existingLocations;
     setMatchingExistingLocations(matchingLocations);
     lastFuseQueryString.current = inputValue;
-  }, [inputValue, open]);
+  }, [existingLocations, existingLocationsFuse, inputValue, open]);
 
   const options: Option[] = useMemo(() => {
     if (!hasLoaded) {

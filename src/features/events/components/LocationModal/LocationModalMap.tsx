@@ -58,7 +58,7 @@ const LocationModalMap: FC<MapProps> = ({
 
   useEffect(() => {
     mapRef.current = map;
-  }, [map]);
+  }, [map, mapRef]);
 
   const { dragPosition } = useMapMarkerDrag({
     inMoveState,
@@ -74,16 +74,16 @@ const LocationModalMap: FC<MapProps> = ({
   const bounds = useMemo(
     () =>
       locations.length > 0
-        ? pointsToBounds(
+        ? (pointsToBounds(
             locations.map((location) => [
               asLongitude(location.lng),
               asLatitude(location.lat),
             ])
-          ) ?? undefined
-        : pointsToBounds([
+          ) ?? undefined)
+        : (pointsToBounds([
             [asLongitude(-170), asLatitude(75)],
             [asLongitude(180), asLatitude(-60)],
-          ]) ?? undefined,
+          ]) ?? undefined),
     [locations]
   );
 
