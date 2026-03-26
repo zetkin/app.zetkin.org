@@ -4,6 +4,7 @@ import { Box, Chip, MenuItem } from '@mui/material';
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -210,22 +211,20 @@ const Journey: FC<JourneyProps> = ({
               </>
             ),
             journeySelect: (
-              <StyledSelect
-                minWidth="10rem"
-                onChange={(e) =>
+              <StyledAutocomplete
+                clearable={true}
+                items={journeys.map((journey) => ({
+                  id: journey.id,
+                  label: journey.plural_label,
+                }))}
+                onChange={(e) => {
                   setConfig({
                     ...filter.config,
-                    journey: parseInt(e.target.value),
-                  })
-                }
-                value={filter.config.journey || ''}
-              >
-                {journeys.map((journey) => (
-                  <MenuItem key={`journey-${journey.id}`} value={journey.id}>
-                    {journey.plural_label}
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+                    journey: +e.target.value,
+                  });
+                }}
+                value={filter.config.journey}
+              />
             ),
             openedTimeFrame: (
               <TimeFrame
