@@ -7,7 +7,6 @@ import StyledSelect from '../../inputs/StyledSelect';
 import { truncateOnMiddle } from 'utils/stringUtils';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
-import useViewTree from 'features/views/hooks/useViewTree';
 import {
   IN_OPERATOR,
   NewSmartSearchFilter,
@@ -17,6 +16,8 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import useOrgIdsFromOrgScope from 'features/smartSearch/hooks/useOrgIdsFromOrgScope';
+import useSubOrgViews from 'features/views/hooks/useSubOrgViews';
 const localMessageIds = messageIds.filters.personView;
 
 interface PersonViewProps {
@@ -37,17 +38,21 @@ const PersonView = ({
   filter: initialFilter,
 }: PersonViewProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const viewTree = useViewTree(orgId);
-  const personViews = viewTree.data?.views ?? [];
-  const personViewsSorted = personViews.sort((pv1, pv2) => {
-    return pv1.title.localeCompare(pv2.title);
-  });
-
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<PersonViewFilterConfig>(initialFilter, {
       operator: IN_OPERATOR.IN,
       view: 0,
     });
+
+  const filterScope = filter.config.organizations || [orgId];
+
+  const orgIds = useOrgIdsFromOrgScope(orgId, filterScope);
+  const viewsFuture = useSubOrgViews(orgIds);
+
+  const personViews = viewsFuture.data || [];
+  const personViewsSorted = [...personViews].sort((pv1, pv2) => {
+    return pv1.title.localeCompare(pv2.title);
+  });
 
   const submittable = !!(filter.config.view > 0 && filter.config.operator);
 
@@ -78,7 +83,11 @@ const PersonView = ({
       enableOrgSelect
       onCancel={onCancel}
       onOrgsChange={(orgs) => {
-        setConfig({ ...filter.config, organizations: orgs });
+        setConfig({
+          ...filter.config,
+          organizations: orgs,
+          view: 0,
+        });
       }}
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
