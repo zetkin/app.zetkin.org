@@ -178,11 +178,12 @@ type Item = {
 };
 
 type Props = {
+  clearable?: boolean;
   items: Item[];
   minWidth?: string;
   onChange?: (
     event: React.SyntheticEvent & { target: { value: string } },
-    value: AutocompleteValue<Item, false, true, false>,
+    value: AutocompleteValue<Item, false, boolean, false>,
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<Item>
   ) => void;
@@ -228,15 +229,21 @@ const StyledAutocomplete: FC<Props> = (props) => {
     [props.items]
   );
 
-  const valueItem = useMemo(
-    () =>
-      props.value === undefined
-        ? props.items.length === 0
-          ? undefined
-          : props.items[0]
-        : options.find((item) => item.id === props.value),
-    [props.value, options, props.items]
-  );
+  const valueItem = useMemo(() => {
+    if (props.value !== undefined) {
+      return options.find((item) => item.id === props.value);
+    }
+
+    if (props.clearable) {
+      return null;
+    }
+
+    if (props.items.length === 0) {
+      return undefined;
+    }
+
+    return props.items[0];
+  }, [props.value, props.clearable, props.items, options]);
 
   // Use react-window v2's useListRef hook for imperative API access
   const internalListRef = useListRef(null);
@@ -262,12 +269,12 @@ const StyledAutocomplete: FC<Props> = (props) => {
     }
   };
 
-  const [inputValue, setInputValue] = useState(valueItem?.label);
+  const [inputValue, setInputValue] = useState(valueItem?.label ?? '');
 
   const onChange = useCallback(
     (
       event: React.SyntheticEvent,
-      value: AutocompleteValue<Item, false, true, false>,
+      value: AutocompleteValue<Item, false, boolean, false>,
       reason: AutocompleteChangeReason,
       details?: AutocompleteChangeDetails<Item>
     ) => {
@@ -287,13 +294,13 @@ const StyledAutocomplete: FC<Props> = (props) => {
     [props]
   );
 
-  if (!valueItem) {
+  if (valueItem === undefined) {
     return null;
   }
 
   return (
     <Autocomplete
-      disableClearable={true}
+      disableClearable={!props.clearable}
       disableListWrap
       groupBy={(option) => option.group ?? ''}
       inputValue={inputValue}
@@ -344,7 +351,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         } as SlotProps<
           ComponentType<HTMLAttributes<HTMLUListElement>>,
           unknown,
-          AutocompleteOwnerState<Item, false, true, false, 'div'>
+          AutocompleteOwnerState<Item, false, boolean, false, 'div'>
         >,
         popper: {
           placement: 'bottom-start',
