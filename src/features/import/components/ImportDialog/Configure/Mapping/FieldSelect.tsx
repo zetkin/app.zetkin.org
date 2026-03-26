@@ -103,7 +103,14 @@ const FieldSelect: FC<FieldSelectProps> = ({
           justifyContent="space-between"
           width="100%"
         >
-          <ListItemText>{label}</ListItemText>
+          <ListItemText
+            sx={{
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            {label}
+          </ListItemText>
           {importID == value && open && (
             <BadgeOutlined color="secondary" fontSize="small" />
           )}
@@ -221,10 +228,6 @@ const FieldSelect: FC<FieldSelectProps> = ({
       onOpen={() => setOpen(true)}
       open={open}
       sx={{
-        '& .MuiListItemText-root': {
-          margin: 0,
-          padding: 0,
-        },
         opacity: column.originalColumn.selected ? '' : '50%',
       }}
       value={getValue()}
