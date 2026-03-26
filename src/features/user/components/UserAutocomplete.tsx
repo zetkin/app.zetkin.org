@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import {
   Autocomplete,
   Avatar,
@@ -19,6 +19,7 @@ type Props = {
 };
 
 const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
+  const [searchValue, setSearchValue] = useState<string>('');
   const users = useOrgUsers(orgId);
 
   const filterOptions = (
@@ -44,9 +45,14 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
       filterOptions={filterOptions}
       getOptionKey={(user) => user.id}
       getOptionLabel={(user) => `${user.first_name} ${user.last_name}`}
+      inputValue={searchValue}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       onChange={(event, value) => {
         onSelect(value);
+        setSearchValue('');
+      }}
+      onInputChange={(_, value) => {
+        setSearchValue(value);
       }}
       options={users}
       renderInput={(params) => (
@@ -73,6 +79,7 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
           </ListItem>
         );
       }}
+      value={null}
     />
   );
 };
