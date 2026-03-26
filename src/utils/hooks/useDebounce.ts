@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import { useCallback, useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 type DefaultCallbackArgs = Array<unknown>;
 type CallbackFn<Args extends DefaultCallbackArgs, ReturnType> = (
@@ -16,14 +16,22 @@ export default function useDebounce<
   callback: CallbackFn<Args, ReturnType>,
   delay: number
 ): (...args: Args) => Promise<ReturnType> | undefined {
-  // Memoizing the callback because if it's an arrow function
-  // it would be different on each render
-  const memoizedCallback = useCallback(callback, []);
-  const debouncedFn = useRef(debounce(memoizedCallback, delay));
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
 
-  useEffect(() => {
-    debouncedFn.current = debounce(memoizedCallback, delay);
-  }, [memoizedCallback, debouncedFn, delay]);
+  const delayRef = useRef(delay);
+  const debouncedFn = useRef(
+    debounce((...args: Args) => callbackRef.current(...args), delay)
+  );
+
+  if (delay !== delayRef.current) {
+    delayRef.current = delay;
+    debouncedFn.current.cancel();
+    debouncedFn.current = debounce(
+      (...args: Args) => callbackRef.current(...args),
+      delay
+    );
+  }
 
   return debouncedFn.current;
 }

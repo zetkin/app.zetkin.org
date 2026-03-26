@@ -39,6 +39,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     if (!disabled && !showPostRequestError) {
       onCancel();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disabled]);
 
   // Markdown string is truthy even if the visible text box is empty

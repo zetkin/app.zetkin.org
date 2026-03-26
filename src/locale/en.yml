@@ -2045,8 +2045,6 @@ feat:
     surveyDialog:
       add: Add
       cancel: Don't add
-      description: The person you are about to link does not have an email address
-        while the survey response does. Would you like to add it the person?
       title: Add email address
     surveyForm:
       accept: I accept the terms stated below

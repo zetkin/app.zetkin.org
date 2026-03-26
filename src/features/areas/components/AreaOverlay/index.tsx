@@ -81,6 +81,7 @@ const AreaOverlay: FC<Props> = ({
   useEffect(() => {
     setTitle(area.title);
     setDescription(area.description);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [area.id]);
 
   return (

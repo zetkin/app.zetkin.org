@@ -166,6 +166,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
     return fuse.search(searchString).map((fuseResult) => fuseResult.item);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const campaignsThatMatchSearch = useMemo(() => search(), [searchString]);
 
   const [activeCampaigns, archivedCampaigns] = useMemo(() => {
@@ -185,6 +186,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
     }
 
     return [active, archived];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [campaigns, searchString]);
 
   if (onServer) {

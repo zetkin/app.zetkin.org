@@ -1,16 +1,15 @@
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 import { UnfinishedCall } from '../types';
 import useRemoteList from 'core/hooks/useRemoteList';
 import { unfinishedCallsLoad, unfinishedCallsLoaded } from '../store';
 
 export default function useUnfinishedCalls(): UnfinishedCall[] {
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
   const unfinishedCalls = useAppSelector((state) => state.call.unfinishedCalls);
 
   return useRemoteList(unfinishedCalls, {
-    actionOnLoad: () => dispatch(unfinishedCallsLoad()),
-    actionOnSuccess: (data) => dispatch(unfinishedCallsLoaded(data)),
+    actionOnLoad: () => unfinishedCallsLoad(),
+    actionOnSuccess: (data) => unfinishedCallsLoaded(data),
     loader: () => {
       return apiClient.get<
         UnfinishedCall[]
