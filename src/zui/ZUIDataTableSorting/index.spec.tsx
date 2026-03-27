@@ -64,12 +64,40 @@ describe('ZUIDataTableSorting.tsx', () => {
     // Show popover
     const sortButton = getByText('zui.dataTableSorting.button');
     await userEvent.click(sortButton);
-    await userEvent.click(getByText('zui.dataTableSorting.addButton'));
-    expect(getByText('zui.dataTableSorting.title')).toBeTruthy();
 
     expect(getByText(fields[0])).toBeTruthy();
     expect(getByText(fields[1])).toBeTruthy();
     expect(getAllByText('zui.dataTableSorting.ascending')).toHaveLength(2);
+  });
+
+  it('updates correctly when adding a sort field', async () => {
+    const { getAllByText, getByText, rerender } = render(
+      <ZUIDataTableSorting
+        gridColumns={gridColumns}
+        onSortModelChange={handleSetSortModel}
+        sortModel={sortModel}
+      />
+    );
+
+    // Show popover and add sort field
+    const sortButton = getByText('zui.dataTableSorting.button');
+    await userEvent.click(sortButton);
+    await userEvent.click(getByText('zui.dataTableSorting.addButton'));
+
+    const updatedSortModel = handleSetSortModel.mock.calls.at(-1)?.[0];
+
+    rerender(
+      <ZUIDataTableSorting
+        gridColumns={gridColumns}
+        onSortModelChange={handleSetSortModel}
+        sortModel={updatedSortModel}
+      />
+    );
+
+    expect(getByText(fields[0])).toBeTruthy();
+    expect(getByText(fields[1])).toBeTruthy();
+    expect(getByText(fields[2])).toBeTruthy();
+    expect(getAllByText('zui.dataTableSorting.ascending')).toHaveLength(3);
   });
 
   it('Calls setSortModel correctly on user input', async () => {
