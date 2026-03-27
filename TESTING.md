@@ -1,7 +1,9 @@
 # Testing
+
 This file contains information and instructions about our automated testing.
 
 ## Integration tests
+
 Integration tests are run with [Playwright](https://playwright.dev/docs/intro). To run tests:
 
 ```
@@ -12,6 +14,23 @@ This will also build the next.js application. You can save time and not rebuild 
 
 ```
 npm run e2e:skipbuild
+```
+
+### Investigating failures
+
+When a test fails (locally or in CI), Playwright captures screenshots, videos, and
+traces. Run `npx playwright show-report` to open the HTML report in your browser.
+
+To view the report from the latest CI run for your branch (requires [GitHub CLI](https://cli.github.com/)):
+
+```
+npm run e2e:ci:report
+```
+
+If your local branch name doesn't match the remote (e.g. when checking out from a fork), specify the branch explicitly:
+
+```
+npm run e2e:ci:report -- feat/my-branch
 ```
 
 ## Unit tests

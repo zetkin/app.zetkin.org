@@ -7,6 +7,7 @@ import 'dayjs/locale/de';
 import 'dayjs/locale/da';
 import 'dayjs/locale/nn';
 import 'dayjs/locale/sv';
+import 'dayjs/locale/nl';
 
 import { SUPPORTED_LANGUAGES, SupportedLanguage } from 'core/i18n/languages';
 

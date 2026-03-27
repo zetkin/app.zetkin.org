@@ -1,4 +1,5 @@
 # Contributing
+
 We are a growing community of contributors who help the international left by
 contributing code to the Zetkin Platform. In this document we try to collect the
 information you need to have a smooth experience contributing.
@@ -12,22 +13,26 @@ information you need to have a smooth experience contributing.
 7. Summary (checklist)
 
 ## 1. How and when to contribute
+
 You can contribute whenever and however you like (but it helps to follow the guidelines
 in this file). Some contributors work from home and submit code in their own time, while
 others attend our events and focus their efforts there.
 
 ### Join us on Slack
+
 it's easier to contribute, and more fun, when you're part of the community. Email us at
 [info@zetkin.org](mailto:info@zetkin.org) to be added to our Slack. We post the most
 urgent issues and advertise our events there.
 
 ### Events
+
 We usually run one-day **hackathons** every other weekend where you can attend in person
 or remotely, and full-weekend **Code Camps** where we assemble a group of volunteers in
 a summer camp type facility in the woods. It's a lot of fun to meet other leftist coders
 and a good way to contribute.
 
 ### Contributing in your own time
+
 If you are unable to attend our events or if you prefer to get started right away you are
 very welcome to do so by taking on an issue.
 
@@ -39,10 +44,12 @@ When you take on an issue, write a short comment on the issue to let others know
 you're working on it, so that it isn't taken on by someone else as well.
 
 ## 2. Code style and formatting
+
 In order to keep things consistent we try to automate as much as possible when it comes
 to code style and formatting.
 
 ### Linting
+
 The CI server will run eslint and typescript to verify type safety and code
 style. You can run the linter yourself like this:
 
@@ -51,6 +58,7 @@ $ npm run lint
 ```
 
 ### Automatic formatting with Prettier
+
 The linting script also runs [Prettier](https://prettier.io) so make sure you run Prettier before you commit, or your work won't pass CI. Some IDEs support Prettier as standard and for some you need to download a plugin.
 
 For VSCode, install the [plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), then
@@ -63,6 +71,7 @@ For VSCode, install the [plugin](https://marketplace.visualstudio.com/items?item
 - Go to `Settings / Text Editor / Formatting` and check **Editor: Format On Save**
 
 ### Pre-commit hook
+
 To avoid commiting anything that breaks linting rules, you can set up a git
 pre-commit hook. The `.githooks/` directory contains such a hook, so the easiest
 way to set it up is to just configure git to use hooks from there:
@@ -72,20 +81,22 @@ $ git config core.hooksPath .githooks
 ```
 
 ## 3. Git conventions
+
 Although some of us care deeply about this kind of thing, you don't have to. But if you do
 want to follow the same conventions that the core team does, here's a distilled version:
 
-* When you start working on a new issue, branch off of the `main` branch and do your work
+- When you start working on a new issue, branch off of the `main` branch and do your work
   in the new branch
-* Name branches `issue-N/some-description` where `N` is the number of the issue on GitHub,
+- Name branches `issue-N/some-description` where `N` is the number of the issue on GitHub,
   and `some-description` is your own "slugified" short description of the issue.
-* Name branches `undocumented/some-description` if there is no issue for the thing that you
+- Name branches `undocumented/some-description` if there is no issue for the thing that you
   want to contribute (e.g. an update to a README, config or whatever)
-* As a general style, we write our commit messages as short sentences in
-[imperative mood](https://en.wikipedia.org/wiki/Imperative_mood), e.g. "_Add_
-MyList component" rather than "_Added_ MyList component".
+- As a general style, we write our commit messages as short sentences in
+  [imperative mood](https://en.wikipedia.org/wiki/Imperative_mood), e.g. "_Add_
+  MyList component" rather than "_Added_ MyList component".
 
 ## 4. Handling text (and i18n)
+
 The Zetkin codebase is internationalized and is continuously translated to multiple
 languages. For that purpose, we never use statically defined ("hard-coded") strings
 in UI components.
@@ -96,6 +107,7 @@ system components (`src/zui/l10n/messageIds.ts`). The messages have an ID derive
 from their object structure, and a default (English) string.
 
 ### Adding new strings
+
 Some tasks will require you to add a new piece of text, like a button label or a default
 value for some input field. To add new text, first find the suitable `messageIds` module.
 In that module you will find a large object literal with a structure that in some way
@@ -106,9 +118,10 @@ defined using the `m()` function.
 Messages use [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages) for variable interpolation and pluralization (e.g. `{orgCount, plural, =0 {No organizations} =1 {One organization} other {# organizations}}`).
 
 ### How it works
+
 Translations are stored in YAML files in `src/locale`. These files are not created by
-humans, but generated by [Lyra](https://lyra.zetkin.org), our translator interface. 
-When changing texts, change them in Lyra. 
+humans, but generated by [Lyra](https://lyra.zetkin.org), our translator interface.
+When changing texts, change them in Lyra.
 
 When the GUI is rendered, translations take precedence. This means that **if you want
 to change a string** that already exists, you need to update it in `messageIds` and
@@ -125,6 +138,7 @@ More information about how our internationalization system works can be found in
 ## 5. The design system
 
 Our design system consists of three parts:
+
 - Material UI (MUI): This is our base and widely used in the codebase. Use `sx` to style
   your components.
 - The old utility designs (src/zui): Think of them as utility components we use to
@@ -140,11 +154,13 @@ npm run storybook
 ```
 
 ## 6. Submitting your contribution
+
 Once you're ready to submit your contribution you will need to create a pull request
 that will then be reviewed by some other contributor, usually someone from the core
 team.
 
 ### Creating a pull request
+
 You will have already created a branch (probably named something like
 `issue-99/event-component`) and the first step to sharing your work is to push that
 branch to GitHub. If you don't yet have write access to the repository, you can
@@ -157,6 +173,7 @@ When you click "Create pull request" you will be presented with a template where
 should write a short description, include a screenshot etc. [Here's an example](https://github.com/zetkin/app.zetkin.org/pull/1434)
 
 ### Make sure CI (will) pass
+
 Pull requests have automated tests ("Continuous Integration" or "CI") that runs to
 try to assess whether the changes to the code break anything.
 
@@ -167,6 +184,7 @@ You can be quite certain that CI will pass if you run `npm run suite` locally an
 passes on your machine.
 
 ### Review process
+
 Within a few days someone should review your code and give you feedback. Most PRs
 require some changes before they're merged, even the ones coming from the core team.
 
@@ -174,6 +192,7 @@ If at any point you find that you don't have time, just let us know, and someone
 else will finish the PR for you.
 
 ## 7. Checklist
+
 Here's a list of all the steps to contribute, in summary:
 
 - [ ] Clone and run the project locally (see [README](./README.md) for details)

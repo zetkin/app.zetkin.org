@@ -28,11 +28,10 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
     cancelledParticipants,
     numAvailParticipants,
     numCancelledParticipants,
-    numSignedParticipants,
-    numUnverifiedParticipants,
-    pendingSignUps,
+    numSignedUpParticipants,
     respondentsFuture,
-    unverifiedParticipants,
+    unverifiedSignedUpParticipants,
+    verifiedSignedUpParticipants,
   } = useEventParticipants(orgId, data.id);
   const { addParticipant } = useEventParticipantsMutations(orgId, data.id);
   const participantStatus = useParticipantStatus(orgId, data.id);
@@ -40,22 +39,22 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
 
   return (
     <Box ref={ref}>
-      {numUnverifiedParticipants > 0 && (
+      {unverifiedSignedUpParticipants.length > 0 && (
         <UnverifiedSignupsSection
           chipColor={oldTheme.palette.grey[500]}
-          chipNumber={numUnverifiedParticipants.toString()}
+          chipNumber={unverifiedSignedUpParticipants.length.toString()}
           description={messages.eventParticipantsList.descriptionUnverifiedSignups()}
           eventId={data.id}
           filterString={filterString}
           orgId={orgId}
-          rows={unverifiedParticipants ?? []}
+          rows={unverifiedSignedUpParticipants}
           title={messages.eventParticipantsList.unverifiedSignups()}
         />
       )}
-      {numSignedParticipants > 0 && (
+      {numSignedUpParticipants > 0 && (
         <ParticipantListSection
           chipColor={oldTheme.palette.grey[500]}
-          chipNumber={numSignedParticipants.toString()}
+          chipNumber={numSignedUpParticipants.toString()}
           description={messages.eventParticipantsList.descriptionSignups()}
           eventId={data.id}
           filterString={filterString}
@@ -77,7 +76,7 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
             </Button>
           }
           orgId={orgId}
-          rows={pendingSignUps ?? []}
+          rows={verifiedSignedUpParticipants ?? []}
           title={messages.eventParticipantsList.signUps()}
           type="signups"
         />

@@ -12,8 +12,17 @@ module.exports = {
     '.out/*',
     '!.prettierrc.js',
     'src/locale/*',
+    'public/*',
   ],
-  extends: ['eslint:recommended', 'next', 'prettier'],
+  extends: [
+    'eslint:recommended',
+    'next',
+    'prettier',
+    'plugin:storybook/recommended',
+  ],
+  rules: {
+    'storybook/prefer-pascal-case': 'off',
+  },
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files
