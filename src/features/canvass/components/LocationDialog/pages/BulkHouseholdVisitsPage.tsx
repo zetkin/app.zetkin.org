@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Stack,
   Step,
   StepButton,
   StepContent,
@@ -9,7 +10,8 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { Check, Close } from '@mui/icons-material';
+import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
@@ -72,15 +74,33 @@ const BulkHouseholdVisitsPage: FC<BulkHouseholdVisitsPageProps> = ({
     >
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
+          const yesLabel = messages.visit.household.yesButtonLabel();
+          const noLabel = messages.visit.household.noButtonLabel();
+          const renderSuccessOptionLabel = (
+            icon: ReactNode,
+            label: string
+          ): ReactNode => (
+            <Stack alignItems="center" direction="row" gap={1}>
+              {icon}
+              <span>{label}</span>
+            </Stack>
+          );
+
           const options =
             metric.type == 'bool'
               ? [
                   {
-                    label: messages.visit.household.yesButtonLabel(),
+                    label: renderSuccessOptionLabel(
+                      <Check fontSize="small" />,
+                      yesLabel
+                    ),
                     value: 'yes',
                   },
                   {
-                    label: messages.visit.household.noButtonLabel(),
+                    label: renderSuccessOptionLabel(
+                      <Close fontSize="small" />,
+                      noLabel
+                    ),
                     value: 'no',
                   },
                 ]
