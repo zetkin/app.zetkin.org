@@ -374,7 +374,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         '& .MuiOutlinedInput-root': {
           border: 'none',
           borderRadius: 0,
-          padding: '0 !important',
+          padding: 0,
         },
         '& .MuiOutlinedInput-root .MuiInputBase-input': {
           fontSize: '34px',
@@ -414,6 +414,10 @@ const StyledAutocomplete: FC<Props> = (props) => {
         '& .MuiSvgIcon-root:hover': {
           color: 'rgba(0, 0, 0, 0.54)',
         },
+        '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root':
+          {
+            padding: 0,
+          },
         display: 'inline-block',
         minWidth: props.minWidth,
         verticalAlign: 'bottom',
