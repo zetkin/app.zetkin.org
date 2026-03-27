@@ -23,7 +23,7 @@ export function useSendPasswordResetToken(): Return {
       });
       return { success: true };
     } catch (err) {
-      if (err instanceof ApiClientError && err.status == 404) {
+      if (err instanceof ApiClientError && err.status === 404) {
         return { success: true };
       }
 

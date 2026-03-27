@@ -233,7 +233,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                     </Box>
                     <TextField
                       // eslint-disable-next-line jsx-a11y/no-autofocus
-                      autoFocus={addedOptionId == option.id}
+                      autoFocus={addedOptionId === option.id}
                       fullWidth
                       onBlur={(ev) => {
                         updateElementOption(
@@ -245,7 +245,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       onChange={(ev) => {
                         setOptions(
                           options.map((oldOpt) =>
-                            oldOpt.id == option.id
+                            oldOpt.id === option.id
                               ? { ...oldOpt, text: ev.target.value }
                               : oldOpt
                           )

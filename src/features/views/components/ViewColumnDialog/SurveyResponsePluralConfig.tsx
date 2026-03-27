@@ -71,7 +71,7 @@ const SurveyResponsesConfig = ({
                 {(data) => {
                   const questionFromSurvey: ZetkinSurveyQuestionElement[] =
                     data.filter(
-                      (elem) => elem.type == ELEMENT_TYPE.QUESTION
+                      (elem) => elem.type === ELEMENT_TYPE.QUESTION
                     ) as ZetkinSurveyQuestionElement[];
 
                   return (

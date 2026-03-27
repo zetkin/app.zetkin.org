@@ -10,7 +10,7 @@ export default function useAreaAssignment(orgId: number, areaAssId: number) {
     (state) => state.areaAssignments.areaAssignmentList.items
   );
   const areaAssignmentItem = areaAssignmenList.find(
-    (item) => item.id == areaAssId
+    (item) => item.id === areaAssId
   );
 
   return loadItemIfNecessary(areaAssignmentItem, dispatch, {

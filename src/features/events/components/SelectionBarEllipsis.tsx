@@ -36,7 +36,7 @@ const SelectionBarEllipsis = () => {
 
   const publishedEvents = events.filter((event) =>
     selectedEventIds.some(
-      (selectedEvent) => selectedEvent == event.id && event.data?.published
+      (selectedEvent) => selectedEvent === event.id && event.data?.published
     )
   );
 

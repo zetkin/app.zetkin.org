@@ -50,7 +50,7 @@ export default function useModelsFromQueryString(): UseModelsFromQueryString {
       .filter((elem) => elem.length)
       .join('?');
 
-    if (modelPath != router.asPath) {
+    if (modelPath !== router.asPath) {
       router.push(modelPath, modelPath, {
         shallow: true,
       });
@@ -125,7 +125,7 @@ function parseFilterModelFromQuery(query: ParsedUrlQuery): GridFilterModel {
     items,
     ...(!!items.length && {
       logicOperator:
-        query.filterOperator == 'or'
+        query.filterOperator === 'or'
           ? GridLogicOperator.Or
           : GridLogicOperator.And,
     }),
@@ -173,7 +173,7 @@ function serializeSortQueryString(sortModel: GridSortModel): string {
     return (
       'sort=' +
       sortModel
-        .map((item) => (item.sort == 'desc' ? `-${item.field}` : item.field))
+        .map((item) => (item.sort === 'desc' ? `-${item.field}` : item.field))
         .join(',')
     );
   } else {

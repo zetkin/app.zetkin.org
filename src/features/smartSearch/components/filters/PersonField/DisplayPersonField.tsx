@@ -36,16 +36,16 @@ const DisplayPersonField = ({
 
   const fieldType = field?.type || '';
   if (
-    fieldType != CUSTOM_FIELD_TYPE.DATE &&
-    fieldType != CUSTOM_FIELD_TYPE.TEXT &&
-    fieldType != CUSTOM_FIELD_TYPE.URL &&
-    fieldType != CUSTOM_FIELD_TYPE.ENUM
+    fieldType !== CUSTOM_FIELD_TYPE.DATE &&
+    fieldType !== CUSTOM_FIELD_TYPE.TEXT &&
+    fieldType !== CUSTOM_FIELD_TYPE.URL &&
+    fieldType !== CUSTOM_FIELD_TYPE.ENUM
   ) {
     // TODO:
     return null;
   }
   let fieldMessage;
-  if (fieldType == CUSTOM_FIELD_TYPE.DATE) {
+  if (fieldType === CUSTOM_FIELD_TYPE.DATE) {
     fieldMessage = (
       <Msg
         id={localMessageIds.preview.date}
@@ -56,7 +56,7 @@ const DisplayPersonField = ({
       />
     );
   } else if (
-    fieldType == CUSTOM_FIELD_TYPE.ENUM &&
+    fieldType === CUSTOM_FIELD_TYPE.ENUM &&
     field?.enum_choices &&
     search !== undefined
   ) {
@@ -68,7 +68,7 @@ const DisplayPersonField = ({
           searchTerm: (
             <UnderlinedText
               text={
-                field?.enum_choices.find((c) => c.key == search)?.label ||
+                field?.enum_choices.find((c) => c.key === search)?.label ||
                 search
               }
             />

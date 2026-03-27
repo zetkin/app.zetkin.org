@@ -53,7 +53,7 @@ export default class SurveyResponseColumnType
   getSearchableStrings(cell: SurveyResponseViewCell): string[] {
     return cell
       .map((response) => response?.text)
-      .filter((e) => typeof e == 'string');
+      .filter((e) => typeof e === 'string');
   }
 }
 

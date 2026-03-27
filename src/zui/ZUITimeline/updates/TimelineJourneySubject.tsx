@@ -19,7 +19,7 @@ const TimelineJourneySubject: React.FC<TimelineJourneySubjectProps> = ({
       <Msg
         id={
           messageIds.updates.journeyinstance[
-            update.type == UPDATE_TYPES.JOURNEYINSTANCE_ADDSUBJECT
+            update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDSUBJECT
               ? 'addsubject'
               : 'removesubject'
           ]

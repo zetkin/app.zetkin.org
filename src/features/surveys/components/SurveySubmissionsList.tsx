@@ -289,7 +289,7 @@ const SurveySubmissionsList = ({
   };
 
   const creatingFromSubmission = submissions.find(
-    (sub) => sub.id == createPersonOpen
+    (sub) => sub.id === createPersonOpen
   );
 
   return (
@@ -338,12 +338,12 @@ const SurveySubmissionsList = ({
             setCreatePersonOpen(-1);
           }}
           onSubmit={(e, person) => {
-            if (createPersonOpen == -1) {
+            if (createPersonOpen === -1) {
               return;
             }
             setRespondentId(person.id);
           }}
-          open={createPersonOpen != -1}
+          open={createPersonOpen !== -1}
           submitLabel={messages.submissions.createPersonSubmit()}
           title={messages.submissions.createPersonTitle()}
         />

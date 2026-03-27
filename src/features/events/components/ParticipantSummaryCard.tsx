@@ -97,7 +97,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                   setAnchorEl(null);
                   if (
                     newReqParticipants != null &&
-                    newReqParticipants != reqParticipants
+                    newReqParticipants !== reqParticipants
                   ) {
                     setReqParticipants(newReqParticipants);
                   }
@@ -117,7 +117,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                         }
 
                         const intVal = parseInt(val);
-                        if (!isNaN(intVal) && intVal.toString() == val) {
+                        if (!isNaN(intVal) && intVal.toString() === val) {
                           setNewReqParticipants(intVal);
                         }
                       }}

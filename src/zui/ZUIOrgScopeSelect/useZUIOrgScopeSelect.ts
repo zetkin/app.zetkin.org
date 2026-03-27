@@ -47,12 +47,12 @@ export default function useZUIOrgScopeSelect({
     },
     setScope: (scope: Scope) => {
       setScope(scope);
-      if (scope == 'this') {
+      if (scope === 'this') {
         setOrgs([currentOrg]);
         onChange?.([currentOrg]);
-      } else if (scope == 'suborgs') {
+      } else if (scope === 'suborgs') {
         onChange?.('suborgs');
-      } else if (scope == 'all') {
+      } else if (scope === 'all') {
         onChange?.('all');
       }
     },

@@ -44,7 +44,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
   );
 
   const lnglatFields =
-    customFields.filter((e) => e.type == CUSTOM_FIELD_TYPE.LNGLAT) || [];
+    customFields.filter((e) => e.type === CUSTOM_FIELD_TYPE.LNGLAT) || [];
   const initialLnglatField: string =
     lnglatFields && lnglatFields?.length != 0 ? lnglatFields[0].slug : '';
   if (!filter.config.field) {

@@ -58,7 +58,7 @@ const FloorEditor: FC<Props> = ({
         <form
           onSubmit={(ev) => {
             ev.preventDefault();
-            if (level != draft.level) {
+            if (level !== draft.level) {
               onLevelChange(level);
             }
           }}
@@ -67,7 +67,7 @@ const FloorEditor: FC<Props> = ({
             defaultValue={level}
             disabled={!levelEnabled}
             onBlur={() => {
-              if (level != draft.level) {
+              if (level !== draft.level) {
                 onLevelChange(level);
               }
             }}

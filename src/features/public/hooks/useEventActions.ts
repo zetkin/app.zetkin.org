@@ -12,7 +12,7 @@ export default function useEventActions(orgId: number, eventId: number) {
   const dispatch = useAppDispatch();
   const memberships = useUserMemberships();
   const relevantMembership = memberships.find(
-    (membership) => membership.organization.id == orgId
+    (membership) => membership.organization.id === orgId
   );
   let personId = relevantMembership?.profile.id;
 

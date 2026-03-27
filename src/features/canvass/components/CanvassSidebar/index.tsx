@@ -99,7 +99,7 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
         <Box gridColumn="span 2">
           <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
         </Box>
-        {assignment.reporting_level == 'location' && (
+        {assignment.reporting_level === 'location' && (
           <>
             <Box>
               <Typography variant="body1">
@@ -123,7 +123,7 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
           </>
         )}
 
-        {assignment.reporting_level == 'household' && (
+        {assignment.reporting_level === 'household' && (
           <>
             <Box>
               <Typography variant="body1">

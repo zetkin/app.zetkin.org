@@ -33,7 +33,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
               <ProceduralColorIcon id={item.id} />
             </Box>
             <Typography
-              sx={{ fontWeight: orgId == item.id ? 'bold' : 'normal' }}
+              sx={{ fontWeight: orgId === item.id ? 'bold' : 'normal' }}
               variant="body2"
             >
               {item.title}

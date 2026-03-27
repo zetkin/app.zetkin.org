@@ -127,7 +127,7 @@ export default function useCallers(
   };
 
   const isCaller = (personId: number) =>
-    !!allCallersFuture.data?.find((caller) => caller.id == personId);
+    !!allCallersFuture.data?.find((caller) => caller.id === personId);
 
   return {
     addCaller,

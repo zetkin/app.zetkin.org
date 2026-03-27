@@ -112,7 +112,7 @@ const EmailClick = ({
     });
   };
 
-  const selectedEmail = emails.find((email) => email.id == filter.config.email);
+  const selectedEmail = emails.find((email) => email.id === filter.config.email);
 
   return (
     <FilterForm

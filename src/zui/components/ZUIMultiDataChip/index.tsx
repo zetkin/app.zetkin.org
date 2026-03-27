@@ -28,9 +28,9 @@ const ZUIMultiDataChip: FC<ZUIMultiDataChipProps> = ({
   const colors = [theme.palette.data.main, theme.palette.data.final];
 
   //Add middle colors to the colors array
-  if (values.length == 3) {
+  if (values.length === 3) {
     colors.splice(1, 0, theme.palette.data.mid2);
-  } else if (values.length == 4) {
+  } else if (values.length === 4) {
     colors.splice(1, 0, theme.palette.data.mid3, theme.palette.data.mid1);
   }
 
@@ -38,7 +38,7 @@ const ZUIMultiDataChip: FC<ZUIMultiDataChipProps> = ({
     <Box sx={{ display: 'flex', height: 'fit-content' }}>
       {values.map((value, index) => {
         const isFirst = index == 0;
-        const isLast = index == values.length - 1;
+        const isLast = index === values.length - 1;
 
         const getBorderRadius = () => {
           if (isFirst) {
@@ -59,7 +59,7 @@ const ZUIMultiDataChip: FC<ZUIMultiDataChipProps> = ({
                 index > 0 ? `0.063rem solid ${theme.palette.common.white}` : '',
               borderRadius: getBorderRadius(),
               color:
-                index == values.length - 1
+                index === values.length - 1
                   ? theme.palette.common.black
                   : theme.palette.common.white,
               paddingLeft: index == 0 ? '0.625rem' : '0.375rem',

@@ -108,10 +108,10 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
   title,
   variant = 'default',
 }) => {
-  const showProgressChip = variant != 'narrow' && isValuesMeta(meta);
-  const showBarDiagram = variant == 'narrow' && isValuesMeta(meta);
+  const showProgressChip = variant !== 'narrow' && isValuesMeta(meta);
+  const showBarDiagram = variant === 'narrow' && isValuesMeta(meta);
   const hasEventWarningIcons = isEventWarningIconsMeta(meta);
-  const showAvatars = avatars && variant != 'narrow';
+  const showAvatars = avatars && variant !== 'narrow';
 
   const makeBarDiagramValues = (values: ValuesMeta['values']) => {
     const sum = values.reduce((prev, curr) => (prev += curr));
@@ -182,7 +182,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
               sx={{
                 alignItems: 'center',
                 display: 'flex',
-                flexDirection: variant == 'wide' ? 'row-reverse' : 'column',
+                flexDirection: variant === 'wide' ? 'row-reverse' : 'column',
                 gap: variant == 'wide' ? '0.625rem' : '0.438rem',
                 paddingRight: '1.25rem',
               }}
@@ -194,7 +194,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
               sx={{
                 alignItems: 'baseline',
                 display: 'flex',
-                flexDirection: variant == 'wide' ? 'row' : 'column',
+                flexDirection: variant === 'wide' ? 'row' : 'column',
                 flexGrow: 1,
                 minWidth: 0,
                 paddingRight: '0.5rem',
@@ -204,7 +204,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                 color="primary"
                 sx={{
                   flexGrow: 1,
-                  maxWidth: variant == 'wide' ? 'fit-content' : '100%',
+                  maxWidth: variant === 'wide' ? 'fit-content' : '100%',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -236,7 +236,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
               display: 'flex',
               flexGrow: variant == 'narrow' ? 0 : 1,
               justifyContent:
-                variant == 'narrow' || !showProgressChip
+                variant === 'narrow' || !showProgressChip
                   ? 'flex-end'
                   : 'space-between',
             }}
@@ -245,7 +245,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
               sx={{
                 alignItems: variant == 'narrow' ? 'flex-end' : '',
                 display: 'flex',
-                flexDirection: variant == 'narrow' ? 'column-reverse' : 'row',
+                flexDirection: variant === 'narrow' ? 'column-reverse' : 'row',
                 flexGrow: 1,
                 justifyContent: 'space-between',
               }}
@@ -292,7 +292,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                     display: 'flex',
                     gap: '0.5rem',
                     justifyContent: 'flex-end',
-                    width: variant == 'narrow' ? 'fit-content' : '5rem',
+                    width: variant === 'narrow' ? 'fit-content' : '5rem',
                   }}
                 >
                   <Typography color="secondary" variant="bodyMdRegular">

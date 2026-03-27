@@ -67,7 +67,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const isPersonNumberFormat = (
     dateFormat: string
   ): dateFormat is PersonNumberFormat => {
-    return !!personNumberFormats.find((format) => format == dateFormat);
+    return !!personNumberFormats.find((format) => format === dateFormat);
   };
 
   const onDateFormatChange = (newFormat: string) => {

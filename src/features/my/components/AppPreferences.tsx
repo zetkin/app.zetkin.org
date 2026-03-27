@@ -68,7 +68,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 ]}
                 label={messages.settings.appPreferences.lang.label()}
                 onChange={(newValue) => {
-                  if (newValue == 'auto') {
+                  if (newValue === 'auto') {
                     setSelectedLanguage(null);
                   } else {
                     setSelectedLanguage(newValue as ZetkinUserLanguage);
@@ -78,7 +78,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 size="large"
               />
               <ZUIButton
-                disabled={selectedLanguage == user.lang}
+                disabled={selectedLanguage === user.lang}
                 label={messages.settings.appPreferences.lang.saveButton()}
                 onClick={async () => {
                   await updateUser({ lang: selectedLanguage });

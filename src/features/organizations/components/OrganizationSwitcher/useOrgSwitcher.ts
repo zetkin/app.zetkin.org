@@ -38,13 +38,13 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   function onSwitchOrg() {
     setRecentOrganizationIds([
       orgId,
-      ...recentOrganizationIds.filter((id) => id != orgId),
+      ...recentOrganizationIds.filter((id) => id !== orgId),
     ]);
   }
 
   const recentOrgs = recentOrganizationIds
     .map((id) => flatOrgData.find((org) => org.id === id))
-    .filter((org) => org?.id != orgId);
+    .filter((org) => org?.id !== orgId);
 
   const recentOrgsFuse = useMemo(() => {
     return new Fuse(recentOrgs, {

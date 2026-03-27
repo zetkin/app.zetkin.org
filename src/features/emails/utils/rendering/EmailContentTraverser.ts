@@ -34,7 +34,7 @@ export default class EmailContentTraverser {
       const handledNode = handleInline(inputNode);
 
       if (handledNode) {
-        if (handledNode.kind == 'bold' || handledNode.kind == 'link') {
+        if (handledNode.kind === 'bold' || handledNode.kind === 'link') {
           output.push({
             ...handledNode,
             content: this._traverseInlineNodes(
@@ -65,7 +65,7 @@ export default class EmailContentTraverser {
       const handledBlock = handleBlock(inputBlock);
 
       if (handledBlock) {
-        if (handledBlock.kind == 'header') {
+        if (handledBlock.kind === 'header') {
           blocks.push({
             ...handledBlock,
             data: {
@@ -76,7 +76,7 @@ export default class EmailContentTraverser {
               ),
             },
           });
-        } else if (handledBlock.kind == 'paragraph') {
+        } else if (handledBlock.kind === 'paragraph') {
           blocks.push({
             ...handledBlock,
             data: {

@@ -57,7 +57,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const baseEventWithStatus: ZetkinEventWithStatus | undefined = baseEvent
     ? { ...baseEvent, status: null }
     : undefined;
-  const myEvent = myEvents.find((userEvent) => userEvent.id == eventId);
+  const myEvent = myEvents.find((userEvent) => userEvent.id === eventId);
   const event = myEvent || baseEventWithStatus;
 
   // Split info_text into paragraphs based on double newlines
@@ -88,14 +88,14 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
 
   const contactPerson = event?.contact;
   const orgMembership = userMemberships.find(
-    (membership) => membership.organization.id == orgId
+    (membership) => membership.organization.id === orgId
   );
 
   const isLoggedInAsContactPerson =
     contactPerson != undefined && contactPerson.id == orgMembership?.profile.id;
 
   const showContactDetails =
-    !event?.cancelled && event?.status == 'booked' && !!contactPerson;
+    !event?.cancelled && event?.status === 'booked' && !!contactPerson;
 
   const getFlexDirection = () => {
     if (isMobile) {
@@ -354,7 +354,7 @@ const SignUpSection: FC<{
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
-      {event.status == 'booked' && (
+      {event.status === 'booked' && (
         <Box alignItems="center" display="flex" gap={1}>
           <ZUIButton
             disabled

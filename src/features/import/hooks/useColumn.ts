@@ -27,37 +27,37 @@ export default function useColumn(orgId: number) {
   };
 
   const allSelectedColumns = columns.filter(
-    (column) => column.selected && column.kind != ColumnKind.UNKNOWN
+    (column) => column.selected && column.kind !== ColumnKind.UNKNOWN
   );
 
   const selectedColumns = allSelectedColumns.filter(
-    (column) => column.kind != ColumnKind.TAG
+    (column) => column.kind !== ColumnKind.TAG
   );
 
   const optionAlreadySelected = (value: string) => {
-    if (value == 'tag') {
+    if (value === 'tag') {
       return false;
     }
 
     const exists = selectedColumns.find((column) => {
-      if (column.kind == ColumnKind.ID_FIELD) {
-        return column.idField == value;
+      if (column.kind === ColumnKind.ID_FIELD) {
+        return column.idField === value;
       }
 
-      if (column.kind == ColumnKind.FIELD) {
-        return column.field == value.slice(6);
+      if (column.kind === ColumnKind.FIELD) {
+        return column.field === value.slice(6);
       }
 
-      if (column.kind == ColumnKind.GENDER) {
-        return column.field == value;
+      if (column.kind === ColumnKind.GENDER) {
+        return column.field === value;
       }
 
-      if (column.kind == ColumnKind.DATE) {
-        return column.field == value.slice(5);
+      if (column.kind === ColumnKind.DATE) {
+        return column.field === value.slice(5);
       }
 
-      if (column.kind == ColumnKind.ENUM) {
-        return column.field == value.slice(5);
+      if (column.kind === ColumnKind.ENUM) {
+        return column.field === value.slice(5);
       }
     });
 
@@ -67,7 +67,7 @@ export default function useColumn(orgId: number) {
   const nativeFieldsOptions: Option[] = Object.values(NATIVE_PERSON_FIELDS)
     .filter(
       (fieldSlug) =>
-        fieldSlug != 'id' && fieldSlug != 'ext_id' && fieldSlug != 'email'
+        fieldSlug !== 'id' && fieldSlug !== 'ext_id' && fieldSlug !== 'email'
     )
     .map((fieldSlug) => ({
       disabled: false,
@@ -76,8 +76,8 @@ export default function useColumn(orgId: number) {
     }));
 
   const customFieldsOptions: Option[] = customFields.map((field) => {
-    const belongsToCurrentOrg = field.organization.id == orgId;
-    const suborgsCanWrite = field.org_write == 'suborgs';
+    const belongsToCurrentOrg = field.organization.id === orgId;
+    const suborgsCanWrite = field.org_write === 'suborgs';
     const currentOrgCanWrite = belongsToCurrentOrg || suborgsCanWrite;
     const readOnly = !currentOrgCanWrite;
     const label = readOnly
@@ -92,7 +92,7 @@ export default function useColumn(orgId: number) {
         label,
         value: `date:${field.slug}`,
       };
-    } else if (field.type == CUSTOM_FIELD_TYPE.ENUM && field.enum_choices) {
+    } else if (field.type === CUSTOM_FIELD_TYPE.ENUM && field.enum_choices) {
       return {
         disabled: readOnly,
         label,

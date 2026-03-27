@@ -39,11 +39,11 @@ export default function useFilteredEvents({
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
-    if (!dateFilterState || dateFilterState == 'custom') {
+    if (!dateFilterState || dateFilterState === 'custom') {
       return customDatesToFilterBy;
-    } else if (dateFilterState == 'today') {
+    } else if (dateFilterState === 'today') {
       return [today, null];
-    } else if (dateFilterState == 'tomorrow') {
+    } else if (dateFilterState === 'tomorrow') {
       return [today.add(1, 'day'), null];
     } else {
       //dateFilterState is 'thisWeek'

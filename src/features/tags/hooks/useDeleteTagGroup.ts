@@ -13,7 +13,7 @@ export default function useDeleteTagGroup(orgId: number) {
     dispatch(tagGroupDeleted(tagGroupId));
 
     for (const tagItem of tagList.items) {
-      if (tagItem.data?.group?.id == tagGroupId) {
+      if (tagItem.data?.group?.id === tagGroupId) {
         await updateTag({
           ...tagItem.data,
           group: undefined,

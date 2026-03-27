@@ -243,7 +243,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
               }
 
               const intVal = parseInt(val);
-              if (!isNaN(intVal) && intVal.toString() == val) {
+              if (!isNaN(intVal) && intVal.toString() === val) {
                 onEventParticipantsChange(intVal);
               }
             }}

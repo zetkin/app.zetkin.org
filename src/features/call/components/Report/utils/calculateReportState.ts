@@ -11,15 +11,15 @@ export default function calculateReportState(
   } else if (wasReached && !couldTalk && report.callBackAfter) {
     return CallState.CALL_BACK;
   } else {
-    if (report.failureReason == 'lineBusy') {
+    if (report.failureReason === 'lineBusy') {
       return CallState.LINE_BUSY;
-    } else if (report.failureReason == 'noPickup') {
+    } else if (report.failureReason === 'noPickup') {
       if (report.leftMessage) {
         return CallState.LEFT_MESSAGE;
       } else {
         return CallState.NO_PICKUP;
       }
-    } else if (report.failureReason == 'notAvailable' && report.callBackAfter) {
+    } else if (report.failureReason === 'notAvailable' && report.callBackAfter) {
       return CallState.NOT_AVAILABLE;
     } else {
       return CallState.WRONG_NUMBER;

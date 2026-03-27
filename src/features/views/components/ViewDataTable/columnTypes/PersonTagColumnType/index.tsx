@@ -54,7 +54,7 @@ export default class PersonTagColumnType implements IColumnType {
     let tag: ZetkinTag | null = null;
 
     if (!accessLevel) {
-      const tagItem = tagListState.items.find((item) => item.id == tagId);
+      const tagItem = tagListState.items.find((item) => item.id === tagId);
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
         actionOnLoad: () => tagLoad(tagId),

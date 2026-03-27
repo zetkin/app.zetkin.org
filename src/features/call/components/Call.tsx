@@ -54,7 +54,7 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
   );
 
   const switchedTo = allUserAssignments.find(
-    (oc) => oc.id == assignmentSwitchedTo
+    (oc) => oc.id === assignmentSwitchedTo
   );
 
   if (onServer) {
@@ -100,7 +100,7 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
               switchToUnfinishedCall(callId, assignmentId);
-              if (assignmentId != assignment.id) {
+              if (assignmentId !== assignment.id) {
                 setAssignmentSwitchedTo(assignmentId);
               }
             }}
@@ -111,7 +111,7 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
       </Box>
       <ZUIModal
         open={
-          !call && (lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT)
+          !call && (lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT)
         }
         primaryButton={{
           label: messages.unexpectedError.reloadButton(),
@@ -139,7 +139,7 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
         assignment={assignment}
         onClose={() => setCallLogOpen(false)}
         onSwitch={(assignmentId) => {
-          if (assignmentId != assignment.id) {
+          if (assignmentId !== assignment.id) {
             setAssignmentSwitchedTo(assignmentId);
           }
         }}
@@ -174,7 +174,7 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         autoHideDuration={5000}
         onClose={(ev, reason) => {
-          if (reason == 'clickaway') {
+          if (reason === 'clickaway') {
             return;
           } else {
             setAssignmentSwitchedTo(null);

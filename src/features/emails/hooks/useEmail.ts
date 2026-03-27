@@ -35,7 +35,7 @@ export default function useEmail(
   const dispatch = useAppDispatch();
 
   const emailItems = useAppSelector((state) => state.emails.emailList.items);
-  const emailItem = emailItems.find((item) => item.id == emailId);
+  const emailItem = emailItems.find((item) => item.id === emailId);
   const email = emailItem?.data;
 
   const emailFuture = loadItemIfNecessary(emailItem, dispatch, {

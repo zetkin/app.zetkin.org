@@ -53,11 +53,11 @@ export default function useFilteredActivities(orgId: number) {
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
-    if (!eventDateFilterState || eventDateFilterState == 'custom') {
+    if (!eventDateFilterState || eventDateFilterState === 'custom') {
       return customDatesToFilterEventsBy;
-    } else if (eventDateFilterState == 'today') {
+    } else if (eventDateFilterState === 'today') {
       return [today, null];
-    } else if (eventDateFilterState == 'tomorrow') {
+    } else if (eventDateFilterState === 'tomorrow') {
       return [today.add(1, 'day'), null];
     } else {
       //dateFilterState is 'thisWeek'
@@ -81,7 +81,7 @@ export default function useFilteredActivities(orgId: number) {
         return false;
       }
       const isBooked = target.future_actions.some(
-        (futureEvent) => futureEvent.id == event.id
+        (futureEvent) => futureEvent.id === event.id
       );
 
       const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
@@ -134,15 +134,15 @@ export default function useFilteredActivities(orgId: number) {
 
   const filteredActivities: Activity[] = [...filteredEvents, ...filteredSurveys]
     .filter((activity) => {
-      if (filterState.alreadyIn && activity.kind == 'survey') {
+      if (filterState.alreadyIn && activity.kind === 'survey') {
         return false;
       }
 
-      if (filterState.events && activity.kind == 'survey') {
+      if (filterState.events && activity.kind === 'survey') {
         return false;
       }
 
-      if (filterState.surveys && activity.kind == 'event') {
+      if (filterState.surveys && activity.kind === 'event') {
         return false;
       }
 
@@ -170,11 +170,11 @@ export default function useFilteredActivities(orgId: number) {
         return true;
       }
 
-      if (activity.kind == 'event') {
+      if (activity.kind === 'event') {
         return idsOfEventsRespondedTo.includes(activity.data.id);
       }
 
-      if (activity.kind == 'survey') {
+      if (activity.kind === 'survey') {
         return Object.keys(surveySubmissionBySubmissionId).includes(
           activity.data.id.toString()
         );

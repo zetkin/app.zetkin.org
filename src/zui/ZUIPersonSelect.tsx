@@ -146,7 +146,7 @@ export const usePersonSelect: UsePersonSelect = ({
       getOptionDisabled,
       getOptionLabel: (person: ZetkinPerson) => `${person.id}`,
       getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) =>
-        option?.id == value?.id,
+        option?.id === value?.id,
       getOptionValue: (person: ZetkinPerson) => person.id || null,
       inputRef,
       inputValue: searchFieldValue,

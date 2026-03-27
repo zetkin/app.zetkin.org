@@ -87,7 +87,7 @@ const CallHeader: FC<Props> = ({
           left: 16,
           position: 'absolute',
           top:
-            lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+            lane.step === LaneStep.START || lane.step === LaneStep.SUMMARY
               ? 16
               : -50,
           transition: '0.5s',
@@ -99,7 +99,7 @@ const CallHeader: FC<Props> = ({
       <Box
         sx={{
           bottom:
-            lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+            lane.step === LaneStep.START || lane.step === LaneStep.SUMMARY
               ? 16
               : 60,
           left: 16,
@@ -109,7 +109,7 @@ const CallHeader: FC<Props> = ({
       >
         <ZUIText
           variant={
-            lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+            lane.step === LaneStep.START || lane.step === LaneStep.SUMMARY
               ? 'headingLg'
               : 'bodyMdRegular'
           }
@@ -124,7 +124,7 @@ const CallHeader: FC<Props> = ({
           display: 'flex',
           gap: 1,
           left:
-            lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+            lane.step === LaneStep.START || lane.step === LaneStep.SUMMARY
               ? '-100%'
               : 16,
           position: 'absolute',
@@ -156,7 +156,7 @@ const CallHeader: FC<Props> = ({
           right: 16,
         }}
       >
-        {lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY && (
+        {lane.step !== LaneStep.START && lane.step !== LaneStep.SUMMARY && (
           <ZUIButton
             label="Stop"
             onClick={() => {
@@ -169,16 +169,16 @@ const CallHeader: FC<Props> = ({
         )}
         <ZUIButton
           endIcon={
-            lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY
+            lane.step !== LaneStep.START && lane.step !== LaneStep.SUMMARY
               ? SkipNext
               : undefined
           }
           href={lane.step == LaneStep.START ? '/my/home' : undefined}
           label={messages.header.secondaryButton[lane.step]()}
           onClick={() => {
-            if (lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY) {
+            if (lane.step !== LaneStep.START && lane.step !== LaneStep.SUMMARY) {
               onSkipCall();
-            } else if (lane.step == LaneStep.SUMMARY) {
+            } else if (lane.step === LaneStep.SUMMARY) {
               dispatch(updateLaneStep(LaneStep.START));
             }
           }}
@@ -186,14 +186,14 @@ const CallHeader: FC<Props> = ({
         />
         <ZUIButton
           disabled={
-            !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
+            !!queueError || (lane.step === LaneStep.REPORT && !report.completed)
           }
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
-            if (lane.step == LaneStep.START) {
+            if (lane.step === LaneStep.START) {
               await allocateCall();
               dispatch(updateLaneStep(LaneStep.CALL));
-            } else if (lane.step == LaneStep.CALL) {
+            } else if (lane.step === LaneStep.CALL) {
               dispatch(updateLaneStep(LaneStep.REPORT));
 
               const hasSurveySubmissions =
@@ -236,7 +236,7 @@ const CallHeader: FC<Props> = ({
                   dispatch(surveySubmissionDeleted(selectedSurvey.id));
                 }
               }
-            } else if (lane.step == LaneStep.REPORT) {
+            } else if (lane.step === LaneStep.REPORT) {
               if (!report || !call) {
                 return;
               }
@@ -246,7 +246,7 @@ const CallHeader: FC<Props> = ({
                 .filter(([, surveySubmissionData]) => {
                   return Object.entries(surveySubmissionData).some(
                     ([, value]) => {
-                      if (typeof value == 'string') {
+                      if (typeof value === 'string') {
                         return value.trim() !== '';
                       }
                       return true;
@@ -277,7 +277,7 @@ const CallHeader: FC<Props> = ({
           variant={
             isAllocatingCall || submittingReport
               ? 'loading'
-              : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
+              : lane.step === LaneStep.SUMMARY && hasUnfinishedCalls
               ? 'secondary'
               : 'primary'
           }

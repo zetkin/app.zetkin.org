@@ -97,7 +97,7 @@ export function linkToolFactory(title: string) {
       };
 
       this._input.onkeyup = (ev) => {
-        if (ev.code == 'Enter' || ev.code == 'NumpadEnter') {
+        if (ev.code === 'Enter' || ev.code === 'NumpadEnter') {
           this._focused = false;
           this._api.inlineToolbar.close();
           this.clear();
@@ -225,7 +225,7 @@ export function linkToolFactory(title: string) {
       ) {
         const anchors = getAnchorTags(range);
 
-        if (anchors.length == 1) {
+        if (anchors.length === 1) {
           this._selectedAnchor = anchors[0];
           this._container.style.display = 'block';
           this._input.value = this._selectedAnchor.getAttribute('href') || '';

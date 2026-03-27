@@ -137,11 +137,11 @@ const AllEventsList: FC = () => {
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
-    if (!dateFilterState || dateFilterState == 'custom') {
+    if (!dateFilterState || dateFilterState === 'custom') {
       return customDatesToFilterBy;
-    } else if (dateFilterState == 'today') {
+    } else if (dateFilterState === 'today') {
       return [today, null];
-    } else if (dateFilterState == 'tomorrow') {
+    } else if (dateFilterState === 'tomorrow') {
       return [today.add(1, 'day'), null];
     } else {
       //dateFilterState is 'thisWeek'
@@ -245,7 +245,7 @@ const AllEventsList: FC = () => {
 
   const filters = [
     {
-      active: dateFilterState == 'today',
+      active: dateFilterState === 'today',
       key: 'today',
       label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
@@ -256,7 +256,7 @@ const AllEventsList: FC = () => {
       },
     },
     {
-      active: dateFilterState == 'tomorrow',
+      active: dateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
@@ -267,7 +267,7 @@ const AllEventsList: FC = () => {
       },
     },
     {
-      active: dateFilterState == 'thisWeek',
+      active: dateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
@@ -278,7 +278,7 @@ const AllEventsList: FC = () => {
       },
     },
     {
-      active: dateFilterState == 'custom',
+      active: dateFilterState === 'custom',
       key: 'custom',
       label:
         dateFilterState == 'custom' && customDatesToFilterBy[0]
@@ -405,7 +405,7 @@ const AllEventsList: FC = () => {
       ))}
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'calendar'}
+        open={drawerContent === 'calendar'}
       >
         <Box
           alignItems="center"
@@ -467,7 +467,7 @@ const AllEventsList: FC = () => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'orgs'}
+        open={drawerContent === 'orgs'}
       >
         <List>
           {orgs.map((org) => (
@@ -485,7 +485,7 @@ const AllEventsList: FC = () => {
                     setFilters({ orgs: [...orgIdsToFilterBy, org.id] });
                   } else {
                     setFilters({
-                      orgs: orgIdsToFilterBy.filter((id) => id != org.id),
+                      orgs: orgIdsToFilterBy.filter((id) => id !== org.id),
                     });
                   }
                 }}
@@ -496,7 +496,7 @@ const AllEventsList: FC = () => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'eventTypes'}
+        open={drawerContent === 'eventTypes'}
       >
         <List>
           {eventTypeFilter.eventTypeLabels.map((eventType) => (

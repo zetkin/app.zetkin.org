@@ -90,8 +90,8 @@ const SurveyResponseConfig = ({
                   const questionsFromSurvey: ZetkinSurveyQuestionElement[] =
                     (data.filter(
                       (elem) =>
-                        elem.type == ELEMENT_TYPE.QUESTION &&
-                        (elem.question.response_type == RESPONSE_TYPE.TEXT ||
+                        elem.type === ELEMENT_TYPE.QUESTION &&
+                        (elem.question.response_type === RESPONSE_TYPE.TEXT ||
                           elem.question.options?.length)
                     ) as ZetkinSurveyQuestionElement[]) ?? [];
                   return (
@@ -225,8 +225,8 @@ const makeOptionColumns = (
   surveyId: number
 ) => {
   if (
-    selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
-    selectedQuestion.question.response_type != RESPONSE_TYPE.OPTIONS
+    selectedQuestion?.type !== ELEMENT_TYPE.QUESTION ||
+    selectedQuestion.question.response_type !== RESPONSE_TYPE.OPTIONS
   ) {
     return [];
   }

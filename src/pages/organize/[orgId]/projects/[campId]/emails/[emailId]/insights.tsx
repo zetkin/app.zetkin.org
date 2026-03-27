@@ -77,7 +77,7 @@ const EmailPage: PageWithLayout = () => {
               onChange={(_, value) => setSecondaryEmailId(value?.id ?? 0)}
               options={emails.filter(
                 // Can only compare with published emails, and not itself
-                (email) => email.id != emailId && email.published
+                (email) => email.id !== emailId && email.published
               )}
               renderInput={(params) => (
                 <TextField

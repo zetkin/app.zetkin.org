@@ -54,15 +54,15 @@ export type JourneyTagColumn =
 export function makeJourneyTagColumn(
   colData: JourneyTagColumnData
 ): JourneyTagColumn {
-  if (colData.type == JourneyTagColumnType.TAG_GROUP) {
+  if (colData.type === JourneyTagColumnType.TAG_GROUP) {
     return {
       ...colData,
       tagsGetter: (allTags: ZetkinJourneyInstance['tags']) =>
         allTags.filter(
-          (tag) => tag.group?.id == colData.group.id && !tag.value_type
+          (tag) => tag.group?.id === colData.group.id && !tag.value_type
         ),
     };
-  } else if (colData.type == JourneyTagColumnType.UNSORTED) {
+  } else if (colData.type === JourneyTagColumnType.UNSORTED) {
     return {
       ...colData,
       tagsGetter: (allTags: ZetkinJourneyInstance['tags']) =>

@@ -61,7 +61,7 @@ export default function usePreflight(orgId: number) {
   }
 
   const hasError = problems.some(
-    (problem) => levelForProblem(problem) == 'error'
+    (problem) => levelForProblem(problem) === 'error'
   );
 
   const importDisabled = !allWarningsApproved || hasError;

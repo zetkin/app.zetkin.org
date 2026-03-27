@@ -159,7 +159,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={
-        state == SurveyState.PUBLISHED ? (
+        state === SurveyState.PUBLISHED ? (
           <Button
             disabled={isShared}
             onClick={() => unpublish()}
@@ -243,7 +243,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
             >
               {({ data: { elements, stats } }) => {
                 const questionLength = elements.filter(
-                  (elem) => elem.type == ELEMENT_TYPE.QUESTION
+                  (elem) => elem.type === ELEMENT_TYPE.QUESTION
                 ).length;
 
                 const labels: ZUIIconLabelProps[] = [];

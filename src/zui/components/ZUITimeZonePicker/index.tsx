@@ -26,7 +26,7 @@ type ZUITimezonePickerProps = {
 
 export const findCurrentTZ = () => {
   const tzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return timezones.find((timezone) => timezone.tzCode == tzCode)!;
+  return timezones.find((timezone) => timezone.tzCode === tzCode)!;
 };
 
 const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({

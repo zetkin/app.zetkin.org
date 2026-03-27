@@ -112,7 +112,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return {
       features:
         locations.data?.map((location) => {
-          const selected = location.id == selectedLocationId;
+          const selected = location.id === selectedLocationId;
           const successfulVisits =
             location?.num_households_successful ||
             location?.num_successful_visits ||
@@ -269,7 +269,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         });
 
         if (nearestDistance < 20) {
-          if (nearestLocation != selectedLocation) {
+          if (nearestLocation !== selectedLocation) {
             setSelectedLocationId(nearestLocation);
           }
         } else {

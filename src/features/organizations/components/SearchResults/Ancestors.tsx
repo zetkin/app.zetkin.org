@@ -84,7 +84,7 @@ const Ancestors: FC<AncestorsProps> = ({ ancestors }) => {
                 >
                   {crumbStates[index] ? ancestor.title : '...'}
                 </Typography>
-                {index == ancestors.length - 1 ? (
+                {index === ancestors.length - 1 ? (
                   ''
                 ) : (
                   <ChevronRight color="secondary" fontSize="small" />

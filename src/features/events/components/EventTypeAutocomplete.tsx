@@ -163,13 +163,13 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         }}
         onChange={(_, value) => {
           setText(value.title);
-          if (value.id == 'CREATE') {
+          if (value.id === 'CREATE') {
             createType(value.title!);
             setCreatedType(value.title!);
             return;
           }
           onChange(
-            value.id == 'UNCATEGORIZED'
+            value.id === 'UNCATEGORIZED'
               ? null
               : {
                   id: value.id,
@@ -203,7 +203,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         renderOption={(props, option) => {
           return (
             <Box key={option.id}>
-              {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
+              {option.id !== 'CREATE' && option.id !== 'UNCATEGORIZED' && (
                 <li {...props} style={{ justifyContent: 'space-between' }}>
                   {option.title}
                   <DeleteOutline
@@ -215,7 +215,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                             deleteType(option.id);
                             //If the current event has the deleted event type,
                             //set the current event's type to null
-                            if (value && option.id == value.id) {
+                            if (value && option.id === value.id) {
                               onChange(null);
                             }
                           }
@@ -237,10 +237,10 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                   />
                 </li>
               )}
-              {option.id == 'UNCATEGORIZED' && (
+              {option.id === 'UNCATEGORIZED' && (
                 <li {...props}>{uncategorizedMsg}</li>
               )}
-              {option.id == 'CREATE' && (
+              {option.id === 'CREATE' && (
                 <li {...props}>
                   <Add sx={{ marginRight: 1 }} />
                   {messages.type.createType({ type: option.title! })}

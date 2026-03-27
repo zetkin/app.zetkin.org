@@ -22,7 +22,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
     beforeDate: before?.toISOString().slice(0, 10) ?? '',
   };
 
-  if (timeFrame == TIME_FRAME.AFTER_DATE) {
+  if (timeFrame === TIME_FRAME.AFTER_DATE) {
     return (
       <UnderlinedMsg
         id={messageIds.timeFrame.preview.afterDate}
@@ -31,7 +31,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
         }}
       />
     );
-  } else if (timeFrame == TIME_FRAME.ON_DATE) {
+  } else if (timeFrame === TIME_FRAME.ON_DATE) {
     return (
       <UnderlinedMsg
         id={dateOnMessageId}
@@ -40,7 +40,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
         }}
       />
     );
-  } else if (timeFrame == TIME_FRAME.BEFORE_DATE) {
+  } else if (timeFrame === TIME_FRAME.BEFORE_DATE) {
     return (
       <UnderlinedMsg
         id={messageIds.timeFrame.preview.beforeDate}
@@ -49,7 +49,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
         }}
       />
     );
-  } else if (timeFrame == TIME_FRAME.BETWEEN) {
+  } else if (timeFrame === TIME_FRAME.BETWEEN) {
     return (
       <UnderlinedMsg
         id={messageIds.timeFrame.preview.between}
@@ -59,7 +59,7 @@ const DisplayTimeFrame: FC<DisplayTimeFrameProps> = ({
         }}
       />
     );
-  } else if (timeFrame == TIME_FRAME.LAST_FEW_DAYS) {
+  } else if (timeFrame === TIME_FRAME.LAST_FEW_DAYS) {
     return (
       <UnderlinedMsg
         id={messageIds.timeFrame.preview.lastFew}

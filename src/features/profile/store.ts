@@ -68,14 +68,14 @@ const profilesSlice = createSlice({
       state.notesByPersonId[personId].items = state.notesByPersonId[
         personId
       ].items
-        .filter((c) => c.id != note.id)
+        .filter((c) => c.id !== note.id)
         .concat([remoteItem(note.id, { data: note })]);
     },
     personNoteDelete: (state, action: PayloadAction<[number, number]>) => {
       const [personId, noteId] = action.payload;
 
       const noteItem = state.notesByPersonId[personId].items.find(
-        (item) => item.id == noteId
+        (item) => item.id === noteId
       );
 
       if (noteItem) {
@@ -87,7 +87,7 @@ const profilesSlice = createSlice({
 
       state.notesByPersonId[personId].items = state.notesByPersonId[
         personId
-      ].items.filter((item) => item.id != noteId);
+      ].items.filter((item) => item.id !== noteId);
     },
     personNotesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;

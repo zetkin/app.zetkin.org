@@ -86,7 +86,7 @@ const ZUISelect: FC<ZUISelectProps> = ({
     disabled={disabled}
     error={error}
     fullWidth={fullWidth}
-    size={size == 'medium' ? 'small' : 'medium'}
+    size={size === 'medium' ? 'small' : 'medium'}
     sx={(theme) => ({
       '& > label': {
         fontFamily: theme.typography.fontFamily,
@@ -118,7 +118,7 @@ const ZUISelect: FC<ZUISelectProps> = ({
       label={label}
       labelId={`${label}-select`}
       onChange={(ev) => onChange(ev.target.value)}
-      size={size == 'medium' ? 'small' : 'medium'}
+      size={size === 'medium' ? 'small' : 'medium'}
       sx={{
         '& > .MuiSelect-select': {
           paddingY: size == 'medium' ? '0.594rem' : '',

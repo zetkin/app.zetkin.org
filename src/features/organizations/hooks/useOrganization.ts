@@ -8,7 +8,7 @@ const useOrganization = (orgId: number): IFuture<ZetkinOrganization> => {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
   const orgItem = useAppSelector((state) =>
-    state.organizations.orgList.items.find((item) => item.id == orgId)
+    state.organizations.orgList.items.find((item) => item.id === orgId)
   );
 
   return loadItemIfNecessary(orgItem, dispatch, {

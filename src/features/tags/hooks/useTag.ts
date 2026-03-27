@@ -12,7 +12,7 @@ export default function useTag(orgId: number, tagId: number): UseTagReturn {
   const dispatch = useAppDispatch();
   const tags = useAppSelector((state) => state.tags);
 
-  const item = tags.tagList.items.find((item) => item.id == tagId);
+  const item = tags.tagList.items.find((item) => item.id === tagId);
 
   const tagFuture = loadItemIfNecessary(item, dispatch, {
     actionOnLoad: () => tagLoad(tagId),

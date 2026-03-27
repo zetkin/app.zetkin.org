@@ -51,8 +51,8 @@ export const TabBadge: FC<Omit<ZUIBadgeProps, 'children'>> = ({
   number,
   truncateLargeNumber = false,
 }) => {
-  const colorName = color == 'danger' ? 'error' : color;
-  const hasNumber = typeof number == 'number';
+  const colorName = color === 'danger' ? 'error' : color;
+  const hasNumber = typeof number === 'number';
 
   const truncateLowNumber = hasNumber && truncateLargeNumber && number > 99;
   const truncateExtremeNumber =

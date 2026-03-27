@@ -54,7 +54,7 @@ const QueryOverviewFilterListItem: FC<QueryOverviewFilterListItemProps> = ({
         onClickDelete={() => onDeleteFilter(filter)}
         onClickEdit={() => onEditFilter(filter)}
         organizations={
-          filter.type != FILTER_TYPE.ALL && 'organizations' in filter.config
+          filter.type !== FILTER_TYPE.ALL && 'organizations' in filter.config
             ? filter.config.organizations
             : undefined
         }

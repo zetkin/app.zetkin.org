@@ -26,7 +26,7 @@ const SearchResults = ({
 
     const getParent = (childOrg: TreeItemData) => {
       return flatOrgData.find((org) => {
-        return org.id == childOrg.parent?.id;
+        return org.id === childOrg.parent?.id;
       });
     };
 

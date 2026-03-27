@@ -29,10 +29,10 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
   if (!activeOrgs.length) {
     return null;
   }
-  const org = activeOrgs.find((org) => org.id == orgId);
+  const org = activeOrgs.find((org) => org.id === orgId);
 
   const sortedActiveOrgs = activeOrgs
-    .filter((org) => org.id != orgId)
+    .filter((org) => org.id !== orgId)
     .sort((orgA, orgB) => {
       return orgA.title.localeCompare(orgB.title);
     });

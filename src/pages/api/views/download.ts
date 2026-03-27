@@ -31,7 +31,7 @@ export default async function handler(
     return;
   }
 
-  if (format != 'csv' && format != 'xlsx') {
+  if (format !== 'csv' && format !== 'xlsx') {
     res.status(400).end();
     return;
   }
@@ -71,7 +71,7 @@ export default async function handler(
   });
   XLSX.utils.book_append_sheet(wb, sheet);
 
-  if (format == 'csv') {
+  if (format === 'csv') {
     // Make header uppercase
     headerRow.forEach((_, idx) => {
       const addr = XLSX.utils.encode_cell({ c: idx, r: 0 });
@@ -79,7 +79,7 @@ export default async function handler(
     });
 
     fileData = XLSX.write(wb, { bookType: 'csv', type: 'buffer' });
-  } else if (format == 'xlsx') {
+  } else if (format === 'xlsx') {
     sheet['!cols'] = headerRow.map((col, idx) => {
       const allLengths = [
         col.length,

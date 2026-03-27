@@ -41,7 +41,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           };
         } else {
           const alreadyAdded = groupsById[groupId].tags.some(
-            (oldTag) => oldTag.id == tag.id
+            (oldTag) => oldTag.id === tag.id
           );
           if (!alreadyAdded) {
             groupsById[groupId].tags.push(tag);
@@ -90,7 +90,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                     setActiveTagIdsByGroup({
                       ...activeTagIdsByGroup,
                       [groupId]: selected
-                        ? currentIds.filter((id) => tag.id != id)
+                        ? currentIds.filter((id) => tag.id !== id)
                         : [...currentIds, tag.id],
                     });
                   },
@@ -102,7 +102,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                   : messages.areas.filter.ungroupedTagsLabel()
               }
               onToggle={(open) => setOpenDropdown(open ? groupId : null)}
-              open={openDropdown == groupId}
+              open={openDropdown === groupId}
               startIcon={
                 currentIds.length > 0 ? (
                   <Box
@@ -146,7 +146,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
               : messages.areas.filter.ungroupedTagsLabel(),
             onClick: () => {
               if (selected) {
-                setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));
+                setActiveGroupIds(activeGroupIds.filter((id) => groupId !== id));
                 const newValue = { ...activeTagIdsByGroup };
                 delete newValue[groupId];
                 setActiveTagIdsByGroup(newValue);
@@ -158,7 +158,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           };
         })}
         onToggle={(open) => setOpenDropdown(open ? 'add' : null)}
-        open={openDropdown == 'add'}
+        open={openDropdown === 'add'}
       />
     </>
   );

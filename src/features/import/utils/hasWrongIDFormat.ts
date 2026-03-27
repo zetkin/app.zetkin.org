@@ -5,13 +5,13 @@ export default function hasWrongIDFormat(
   cellValues: CellData[],
   firstRowIsHeaders: boolean
 ) {
-  if (column.kind != ColumnKind.ID_FIELD) {
+  if (column.kind !== ColumnKind.ID_FIELD) {
     return false;
   }
 
   if (
-    column.idField == 'email' ||
-    column.idField == 'ext_id' ||
+    column.idField === 'email' ||
+    column.idField === 'ext_id' ||
     column.idField == null
   ) {
     return false;

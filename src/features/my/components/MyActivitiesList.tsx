@@ -46,7 +46,7 @@ const MyActivitiesList: FC = () => {
                 label={messages.activityList.filters[kind]()}
                 onClick={() => {
                   const newValue = filteredKinds.filter(
-                    (prevKind) => prevKind != kind
+                    (prevKind) => prevKind !== kind
                   );
 
                   if (!active) {
@@ -79,7 +79,7 @@ const MyActivitiesList: FC = () => {
       {filteredActivities.map((activity) => {
         let elem, href;
 
-        if (activity.kind == 'call') {
+        if (activity.kind === 'call') {
           href = `/call/${activity.data.id}`;
           elem = (
             <MyActivityListItem
@@ -112,12 +112,12 @@ const MyActivitiesList: FC = () => {
               }
             />
           );
-        } else if (activity.kind == 'canvass') {
+        } else if (activity.kind === 'canvass') {
           href = `/canvass/${activity.data.id}`;
           elem = (
             <AreaAssignmentListItem assignment={activity.data} href={href} />
           );
-        } else if (activity.kind == 'event') {
+        } else if (activity.kind === 'event') {
           href = `/o/${activity.data.organization.id}/events/${activity.data.id}`;
           elem = <EventListItem event={activity.data} href={href} />;
         }

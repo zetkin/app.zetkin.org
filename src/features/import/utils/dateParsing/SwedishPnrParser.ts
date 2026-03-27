@@ -76,6 +76,6 @@ export class SwedishPnrParser implements IDateParser {
     const dateString =
       makeDate(format, dateParts) + dateParts.delimiter + dateParts.suffix;
 
-    return dateString == stringValue;
+    return dateString === stringValue;
   }
 }

@@ -49,7 +49,7 @@ export default class LocalBoolColumnType implements IColumnType {
     ev: MuiEvent<KeyboardEvent<HTMLElement>>,
     accessLevel: ZetkinObjectAccess['level'] | null
   ): void {
-    if (accessLevel == 'readonly') {
+    if (accessLevel === 'readonly') {
       return;
     }
 

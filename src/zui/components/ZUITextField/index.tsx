@@ -173,7 +173,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
     }}
     placeholder={placeholder}
     required={required}
-    size={size == 'medium' ? 'small' : 'medium'}
+    size={size === 'medium' ? 'small' : 'medium'}
     slotProps={{
       htmlInput: {
         'aria-describedby': ariaDescribedBy,

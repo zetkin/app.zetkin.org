@@ -96,7 +96,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       renderCell: (params) => {
         const item = params.row;
         const subPath = item.folderId ? 'folders/' + item.folderId : '';
-        if (item.type == 'back') {
+        if (item.type === 'back') {
           return (
             <NextLink href={`${basePath}/${subPath}`} legacyBehavior passHref>
               <Link color="inherit" onClick={(ev) => onSelect?.(item, ev)}>
@@ -147,7 +147,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       flex: 1,
       headerName: messages.viewsList.columns.owner(),
       renderCell: (params) => {
-        if (params.row.type == 'view') {
+        if (params.row.type === 'view') {
           const owner = params.row.data.owner;
           return (
             <ZUIPersonHoverCard personId={owner.id}>
@@ -166,7 +166,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         headerName: '',
         renderCell: (params) => {
           const item = params.row;
-          if (item.type == 'back') {
+          if (item.type === 'back') {
             return null;
           }
           return (
@@ -190,9 +190,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                     e.stopPropagation();
                     showConfirmDialog({
                       onSubmit: () => {
-                        if (item.type == 'folder') {
+                        if (item.type === 'folder') {
                           deleteFolder(item.data.id);
-                        } else if (params.row.type == 'view') {
+                        } else if (params.row.type === 'view') {
                           deleteView(item.data.id);
                         }
                       },
@@ -211,7 +211,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                   },
                 },
                 {
-                  disabled: item.type != 'view',
+                  disabled: item.type !== 'view',
                   id: 'duplicate-item',
                   label: messages.browser.menu.duplicate(),
                   onSelect: (e) => {
@@ -250,14 +250,14 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           if (item0.type != 'back' && item1.type != 'back') {
             for (const column of sortModel) {
               let sort = 0;
-              if (column.field == 'title') {
+              if (column.field === 'title') {
                 sort = item0.title.localeCompare(item1.title);
-              } else if (column.field == 'owner') {
+              } else if (column.field === 'owner') {
                 sort = item0.owner.localeCompare(item1.owner);
               }
 
               if (sort != 0) {
-                return column.sort == 'asc' ? sort : -sort;
+                return column.sort === 'asc' ? sort : -sort;
               }
             }
           }
@@ -274,10 +274,10 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
               columns={colDefs}
               disableRowSelectionOnClick
               hideFooter
-              isCellEditable={(params) => params.row.type != 'back'}
+              isCellEditable={(params) => params.row.type !== 'back'}
               onSortModelChange={(model) => setSortModel(model)}
               processRowUpdate={(item) => {
-                if (item.type != 'back') {
+                if (item.type !== 'back') {
                   renameItem(item.type, item.data.id, item.title);
                 }
                 return item;

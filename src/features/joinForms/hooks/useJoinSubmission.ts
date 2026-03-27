@@ -7,7 +7,7 @@ export default function useJoinSubmission(orgId: number, submissionId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const item = useAppSelector((state) =>
-    state.joinForms.submissionList.items.find((item) => item.id == submissionId)
+    state.joinForms.submissionList.items.find((item) => item.id === submissionId)
   );
 
   return loadItemIfNecessary(item, dispatch, {

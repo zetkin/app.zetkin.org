@@ -35,7 +35,7 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
   );
 
   useEffect(() => {
-    if (step == LaneStep.REPORT) {
+    if (step === LaneStep.REPORT) {
       setSelectedTab('instructions');
       setTimeout(() => {
         setSelectedTab('about');
@@ -45,7 +45,7 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
     }
   }, [step]);
 
-  if (call && step == LaneStep.REPORT) {
+  if (call && step === LaneStep.REPORT) {
     return (
       <Box
         sx={(theme) => ({
@@ -81,7 +81,7 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
             },
           ]}
           onSelectTab={() =>
-            setSelectedTab(selectedTab == 'about' ? 'instructions' : 'about')
+            setSelectedTab(selectedTab === 'about' ? 'instructions' : 'about')
           }
           selectedTab={selectedTab}
         />
@@ -94,7 +94,7 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
       borders={false}
       fullHeight
       renderContent={() => {
-        if (!call && step != LaneStep.START) {
+        if (!call && step !== LaneStep.START) {
           return null;
         }
 

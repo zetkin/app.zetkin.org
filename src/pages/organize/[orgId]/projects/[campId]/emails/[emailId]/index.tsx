@@ -70,7 +70,7 @@ const EmailPage: PageWithLayout = () => {
           <Grid size={{ md: 4 }}>
             <EmailURLCard
               emailId={emailId}
-              isOpen={emailState == EmailState.SENT}
+              isOpen={emailState === EmailState.SENT}
               orgId={orgId}
             />
           </Grid>

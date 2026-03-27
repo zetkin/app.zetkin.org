@@ -87,7 +87,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                         setAnchorEl(null);
                         if (
                           newCooldown != null &&
-                          newCooldown != callAssignment?.cooldown
+                          newCooldown !== callAssignment?.cooldown
                         ) {
                           updateCallAssignment({ cooldown: newCooldown });
                         }
@@ -107,7 +107,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                               }
 
                               const intVal = parseInt(val);
-                              if (!isNaN(intVal) && intVal.toString() == val) {
+                              if (!isNaN(intVal) && intVal.toString() === val) {
                                 setNewCooldown(intVal);
                               }
                             }}
@@ -116,7 +116,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
                                 setAnchorEl(null);
                                 if (
                                   newCooldown != null &&
-                                  newCooldown != callAssignment?.cooldown
+                                  newCooldown !== callAssignment?.cooldown
                                 ) {
                                   updateCallAssignment({
                                     cooldown: newCooldown,

@@ -98,7 +98,7 @@ const SuborgsList: FC<{
       <Stack divider={<Divider />}>
         {suborgsWithStats.map((orgWithStats) => {
           if (isError(orgWithStats)) {
-            if (orgWithStats.id == 'loadingError') {
+            if (orgWithStats.id === 'loadingError') {
               return (
                 <Alert severity="error">{`Error loading suborg data`}</Alert>
               );

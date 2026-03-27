@@ -112,11 +112,11 @@ const FloorMatrix: FC<Props> = ({
           nextLevel={maxLevel + 1}
           onClick={() => {
             const lastDraft = draftFloors?.find(
-              (draft) => draft.level == maxLevel
+              (draft) => draft.level === maxLevel
             );
 
             const lastLevelHouseholds = households.filter(
-              (household) => household.level == maxLevel
+              (household) => household.level === maxLevel
             );
 
             const numDraftsOnLastLevel = lastDraft?.draftHouseholdCount ?? 0;
@@ -137,10 +137,10 @@ const FloorMatrix: FC<Props> = ({
         .reverse()
         .map((floor, thisFloorIndex) => {
           const householdsOnFloor = householdsByFloor[floor] || [];
-          const draftFloor = draftFloors?.find((draft) => draft.level == floor);
+          const draftFloor = draftFloors?.find((draft) => draft.level === floor);
 
           const hasNoHouseholdsFromBefore = households.length == 0;
-          const isBottomFloor = floor == minLevel;
+          const isBottomFloor = floor === minLevel;
           const isInitialFloor = isBottomFloor && hasNoHouseholdsFromBefore;
 
           if (editing) {
@@ -158,14 +158,14 @@ const FloorMatrix: FC<Props> = ({
                 onChange={(newDraft) => {
                   onEditChange([
                     ...draftFloors.filter(
-                      (oldDraft) => newDraft.level != oldDraft.level
+                      (oldDraft) => newDraft.level !== oldDraft.level
                     ),
                     newDraft,
                   ]);
                 }}
                 onDelete={() =>
                   onEditChange(
-                    draftFloors.filter((oldDraft) => oldDraft.level != floor)
+                    draftFloors.filter((oldDraft) => oldDraft.level !== floor)
                   )
                 }
                 onLevelChange={(newLevel) => {
@@ -191,8 +191,8 @@ const FloorMatrix: FC<Props> = ({
                 !!successMetric &&
                 mostRecentVisit.metrics.some(
                   (metric) =>
-                    metric.metric_id == successMetric.id &&
-                    metric.response == 'yes'
+                    metric.metric_id === successMetric.id &&
+                    metric.response === 'yes'
                 );
 
               return {
@@ -231,11 +231,11 @@ const FloorMatrix: FC<Props> = ({
           nextLevel={minLevel - 1}
           onClick={() => {
             const lastDraft = draftFloors?.find(
-              (draft) => draft.level == minLevel
+              (draft) => draft.level === minLevel
             );
 
             const lastLevelHouseholds = households.filter(
-              (household) => household.level == minLevel
+              (household) => household.level === minLevel
             );
             const numDraftsOnLastLevel = lastDraft?.draftHouseholdCount ?? 0;
             const numHouseholdsOnLastLevel =

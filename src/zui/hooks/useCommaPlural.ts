@@ -17,7 +17,7 @@ export default function useCommaPlural(
 
   if (values.length == 0) {
     return '';
-  } else if (values.length == 1) {
+  } else if (values.length === 1) {
     return messageFuncs.single({ value: values[0] });
   } else if (values.length > maxCommaValues + 1) {
     const commaValues = values.slice(0, maxCommaValues);
