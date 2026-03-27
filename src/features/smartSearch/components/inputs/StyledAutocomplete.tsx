@@ -90,14 +90,35 @@ const ListboxComponent = React.forwardRef<
   const itemData: ItemData = [];
   const optionIndexMap = React.useMemo(() => new Map<string, number>(), []);
 
-  (children as ItemData).forEach((item, index) => {
-    if (
-      'group' in item &&
-      item.group.trim() !== 'pinned' &&
-      (index > 0 || item.group.trim() !== '')
-    ) {
-      itemData.push(item);
+  const addGroupHeader = (
+    groupItem: {
+      children: React.ReactNode;
+      group: string;
+      key: number;
+    },
+    index: number
+  ) => {
+    const isPinnedGroup = groupItem.group.trim() === 'pinned';
+    const isEmptyGroup = groupItem.group.trim() === '';
+    const isFirstElement = index === 0;
+
+    if (isPinnedGroup) {
+      return;
     }
+
+    if (isEmptyGroup && isFirstElement) {
+      return;
+    }
+
+    itemData.push(groupItem);
+  };
+
+  (children as ItemData).forEach((item, index) => {
+    const isGroupItem = 'group' in item;
+    if (isGroupItem) {
+      addGroupHeader(item, index);
+    }
+
     if ('children' in item && Array.isArray(item.children)) {
       itemData.push(...item.children);
     }
