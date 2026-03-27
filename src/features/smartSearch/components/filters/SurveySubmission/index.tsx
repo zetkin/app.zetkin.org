@@ -1,10 +1,10 @@
-import { Box, MenuItem, Tooltip } from '@mui/material';
-import { FormEvent, useEffect, useState } from 'react';
+import { MenuItem } from '@mui/material';
+import { FormEvent, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   NewSmartSearchFilter,
@@ -15,9 +15,10 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveys from 'features/surveys/hooks/useSurveys';
+
 const localMessageIds = messageIds.filters.surveySubmission;
 
 const DEFAULT_VALUE = 'none';
@@ -39,27 +40,14 @@ const SurveySubmission = ({
   onCancel,
   filter: initialFilter,
 }: SurveySubmissionProps): JSX.Element => {
+  const messages = useMessages(localMessageIds);
   const { orgId } = useNumericRouteParams();
   const surveys = useSurveys(orgId).data || [];
-  const sortedSurveys = surveys.sort((sur1, sur2) => {
-    return sur1.title.localeCompare(sur2.title);
-  });
 
   const [submittable, setSubmittable] = useState(false);
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<SurveySubmissionFilterConfig>(initialFilter);
-
-  useEffect(() => {
-    if (surveys.length) {
-      setConfig({
-        operator: 'submitted',
-        survey: filter.config.survey || surveys[0].id,
-      });
-      setSubmittable(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [surveys.length]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -124,43 +112,21 @@ const SurveySubmission = ({
               </StyledSelect>
             ),
             surveySelect: (
-              <StyledSelect
-                onChange={(e) => handleSurveySelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.surveySelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.surveySelect.survey}
-                        values={{
-                          surveyTitle: truncateOnMiddle(
-                            surveys.find((s) => s.id === value)?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.surveySelect.any(),
                   },
-                }}
+                  ...surveys.map((s) => ({
+                    id: s.id,
+                    label: s.title,
+                  })),
+                ]}
+                onChange={(e) => handleSurveySelectChange(e.target.value)}
                 value={filter.config.survey || DEFAULT_VALUE}
-              >
-                {!surveys.length && (
-                  <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id={localMessageIds.surveySelect.none} />
-                  </MenuItem>
-                )}
-                {sortedSurveys.map((s) => (
-                  <MenuItem key={s.id} value={s.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={s.title.length >= 40 ? s.title : ''}
-                    >
-                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             timeFrame: (
               <TimeFrame

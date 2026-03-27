@@ -1,10 +1,9 @@
 import { FormEvent } from 'react';
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
@@ -84,14 +83,8 @@ const CampaignParticipation = ({
 
   // TODO: Show loading indicator instead of empty arrays?
   const activities = useEventTypes(orgId).data || [];
-  const sortedActivities = activities.sort((act1, act2) => {
-    return act1.title.localeCompare(act2.title);
-  });
   const campaigns = useCampaigns(orgId, orgIds).data || [];
   const locations = useEventLocations(orgId) || [];
-  const locationsSorted = locations.sort((l1, l2) => {
-    return l1.title.localeCompare(l2.title);
-  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -178,42 +171,23 @@ const CampaignParticipation = ({
           id={localMessageIds.inputString}
           values={{
             activitySelect: (
-              <StyledSelect
-                onChange={(e) => handleActivitySelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.activitySelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.activitySelect.activity}
-                        values={{
-                          activity: truncateOnMiddle(
-                            sortedActivities.find((l) => l.id === value)
-                              ?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.activitySelect.any(),
                   },
+                  ...activities.map((activity) => ({
+                    id: activity.id,
+                    label: activity.title,
+                  })),
+                ]}
+                onChange={(e) => {
+                  handleActivitySelectChange(e.target.value);
                 }}
-                value={filter.config.activity || DEFAULT_VALUE}
-              >
-                <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id={localMessageIds.activitySelect.any} />
-                </MenuItem>
-                {sortedActivities.map((a) => (
-                  <MenuItem key={a.id} value={a.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={a.title.length >= 40 ? a.title : ''}
-                    >
-                      <Box>{a.title}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+                value={filter.config.campaign || DEFAULT_VALUE}
+              />
             ),
             addRemoveSelect: (
               <StyledSelect
@@ -295,7 +269,7 @@ const CampaignParticipation = ({
                     id: DEFAULT_VALUE,
                     label: messages.locationSelect.any(),
                   },
-                  ...locationsSorted.map((loc) => ({
+                  ...locations.map((loc) => ({
                     id: loc.id,
                     label: loc.title,
                   })),
