@@ -56,7 +56,9 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
 
   // Get the state of the events, or UNKNOWN if the states vary
   let status = getEventState(cluster.events[0]);
-  if (cluster.events.filter((event) => getEventState(event) !== status).length) {
+  if (
+    cluster.events.filter((event) => getEventState(event) !== status).length
+  ) {
     status = EventState.UNKNOWN;
   }
 

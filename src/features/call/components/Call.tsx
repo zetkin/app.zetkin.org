@@ -111,7 +111,8 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
       </Box>
       <ZUIModal
         open={
-          !call && (lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT)
+          !call &&
+          (lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT)
         }
         primaryButton={{
           label: messages.unexpectedError.reloadButton(),

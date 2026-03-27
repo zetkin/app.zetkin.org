@@ -38,7 +38,8 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
 
   const writableCustomFields =
     customFields.data?.filter(
-      (field) => field.organization.id === orgId || field.org_write === 'suborgs'
+      (field) =>
+        field.organization.id === orgId || field.org_write === 'suborgs'
     ) ?? [];
 
   if (!joinForm) {

@@ -121,7 +121,10 @@ export function predictProblems(
               rowHasFirstName = true;
             } else if (column.field === 'last_name') {
               rowHasLastName = true;
-            } else if (column.field === 'phone' || column.field === 'alt_phone') {
+            } else if (
+              column.field === 'phone' ||
+              column.field === 'alt_phone'
+            ) {
               if (!isValidPhoneNumber(cleanPhoneNumber(value), country)) {
                 const isKnownProblem = accumulateFieldProblem(
                   column.field,

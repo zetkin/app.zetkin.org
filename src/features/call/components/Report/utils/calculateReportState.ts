@@ -19,7 +19,10 @@ export default function calculateReportState(
       } else {
         return CallState.NO_PICKUP;
       }
-    } else if (report.failureReason === 'notAvailable' && report.callBackAfter) {
+    } else if (
+      report.failureReason === 'notAvailable' &&
+      report.callBackAfter
+    ) {
       return CallState.NOT_AVAILABLE;
     } else {
       return CallState.WRONG_NUMBER;
