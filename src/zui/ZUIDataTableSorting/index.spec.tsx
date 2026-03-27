@@ -100,7 +100,7 @@ describe('ZUIDataTableSorting.tsx', () => {
     expect(getAllByText('zui.dataTableSorting.ascending')).toHaveLength(3);
   });
 
-  it('Calls setSortModel correctly on user input', async () => {
+  it('calls setSortModel correctly on user input', async () => {
     const { getAllByText, getByText, getAllByTestId } = render(
       <ZUIDataTableSorting
         gridColumns={gridColumns}
@@ -117,20 +117,31 @@ describe('ZUIDataTableSorting.tsx', () => {
     // Modify sort direction
     await userEvent.click(getAllByText('zui.dataTableSorting.ascending')[0]);
     await userEvent.click(getByText('zui.dataTableSorting.descending'));
-    expect(handleSetSortModel.mock.results.at(-1)?.value[0].sort).toEqual(
-      'desc'
+    expect(handleSetSortModel).toHaveBeenLastCalledWith(
+      [
+        { field: fields[0], sort: 'desc' },
+        { field: fields[1], sort: 'asc' },
+      ],
+      {}
     );
 
     // Modify sort field
     await userEvent.click(getByText(fields[0]));
     await userEvent.click(getByText(fields[2]));
-    expect(handleSetSortModel.mock.results.at(-1)?.value[0].field).toEqual(
-      'middle_name'
+    expect(handleSetSortModel).toHaveBeenLastCalledWith(
+      [
+        { field: fields[2], sort: 'asc' },
+        { field: fields[1], sort: 'asc' },
+      ],
+      {}
     );
 
     // Delete an item from the sort model
     const deleteButtons = getAllByTestId('deleteSortModelItem');
     await userEvent.click(deleteButtons[0]);
-    expect(handleSetSortModel.mock.results.at(-1)?.value.length).toEqual(1);
+    expect(handleSetSortModel).toHaveBeenLastCalledWith(
+      [{ field: fields[1], sort: 'asc' }],
+      {}
+    );
   });
 });
