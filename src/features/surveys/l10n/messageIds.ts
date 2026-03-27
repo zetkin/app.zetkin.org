@@ -133,6 +133,11 @@ export default makeMessages('feat.surveys', {
       ),
     },
     textFields: {
+      analysisType: {
+        entities: m('Entities'),
+        verbs: m('Verbs'),
+        words: m('Words'),
+      },
       subheader: m<{
         answerCount: number;
         totalUniqueWordCount: number;
