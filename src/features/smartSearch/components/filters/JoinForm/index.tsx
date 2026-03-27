@@ -83,9 +83,10 @@ const JoinFormFilter: FC<Props> = ({
                   })),
                 ]}
                 onChange={(e) => {
+                  const formId = +e.target.value;
                   const config = { ...filter.config };
                   if (e.target.value) {
-                    config.form = +e.target.value;
+                    config.form = formId;
                   } else {
                     delete config.form;
                   }

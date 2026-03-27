@@ -114,9 +114,10 @@ const AllInSuborg: FC<Props> = ({
         label: suborg.title,
       }))}
       onChange={(e) => {
+        const orgId = +e.target.value;
         setConfig({
           ...filter.config,
-          organizations: [+e.target.value],
+          organizations: [orgId],
         });
       }}
       value={selectedSuborgs[0]?.id}

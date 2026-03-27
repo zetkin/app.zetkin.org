@@ -95,9 +95,10 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
         label: area.title,
       }))}
       onChange={(e) => {
+        const areaId = +e.target.value;
         setConfig({
           ...filter.config,
-          area: +e.target.value,
+          area: areaId,
         });
       }}
       value={filter.config.area === 0 ? undefined : filter.config.area}
