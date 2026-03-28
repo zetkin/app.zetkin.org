@@ -10,20 +10,24 @@ import {
   Select,
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
+import { Lock } from '@mui/icons-material';
 
 import EditPersonField from './EditPersonField';
 import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/messageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
+import profileMessageIds from 'features/profile/l10n/messageIds';
 import messageIds from 'zui/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from '../../hooks/useCustomFields';
 import {
   CUSTOM_FIELD_TYPE,
   ZetkinCreatePerson,
+  ZetkinCustomField,
   ZetkinPerson,
 } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 
 enum GENDERS {
   FEMALE = 'f',
@@ -51,6 +55,8 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
 }) => {
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
+  const profileMessages = useMessages(profileMessageIds);
+  const org = useOrganization(orgId);
 
   return (
     <Box display="flex" flexDirection="column" gap={2} paddingTop={1}>
@@ -173,105 +179,126 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         onReset={() => onReset(NATIVE_PERSON_FIELDS.EXT_ID)}
         value={fieldValues.ext_id ? fieldValues.ext_id : ''}
       />
+      {customFields.length && <Msg id={profileMessageIds.customFields.title} />}
       {customFields.map((field) => {
         const fieldWritable =
           field.organization.id == orgId || field.org_write == 'suborgs';
-        if (field.type === CUSTOM_FIELD_TYPE.JSON) {
-          return;
-        } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
-          return (
-            <Box display="flex">
-              <DatePicker
-                key={field.slug}
-                disabled={!fieldWritable}
-                format="DD-MM-YYYY"
-                label={field.title}
-                onChange={(date: Dayjs | null) => {
-                  if (date) {
-                    const dateStr = makeNaiveDateString(date.utc().toDate());
-                    onChange(field.slug, dateStr);
-                  }
-                }}
-                sx={{ width: '100%' }}
-                value={
-                  fieldValues[field.slug]
-                    ? dayjs(fieldValues[field.slug]?.toString())
-                    : null
-                }
-              />
-              {field.slug in fieldsToUpdate && (
-                <IconButton onClick={() => onReset(field.slug)}>
-                  <UndoIcon />
-                </IconButton>
-              )}
-            </Box>
-          );
-        } else if (field.type === CUSTOM_FIELD_TYPE.URL) {
-          return (
-            <EditPersonField
-              key={field.slug}
-              disabled={!fieldWritable}
-              error={invalidFields.includes(field.slug)}
-              field={field.slug}
-              hasChanges={field.slug in fieldsToUpdate}
-              isURLField
-              label={field.title}
-              onChange={(field, newValue) => {
-                const formattedUrl = formatUrl(newValue as string);
-                onChange(field, formattedUrl ?? newValue);
-              }}
-              onReset={() => onReset(field.slug)}
-              value={fieldValues[field.slug]?.toString() ?? ''}
-            />
-          );
-        } else if (
-          field.type === CUSTOM_FIELD_TYPE.ENUM &&
-          field.enum_choices
-        ) {
-          return (
-            <Box alignItems="flex-start" display="flex" flex={1}>
-              <FormControl fullWidth>
-                <InputLabel>{field.title}</InputLabel>
-                <Select
-                  key={field.slug}
+
+        const Component = ({ field }: { field: ZetkinCustomField }) => {
+          if (field.type === CUSTOM_FIELD_TYPE.JSON) {
+            return null;
+          } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
+            return (
+              <Box display="flex">
+                <DatePicker
                   disabled={!fieldWritable}
-                  fullWidth
+                  format="DD-MM-YYYY"
                   label={field.title}
-                  onChange={(ev) => {
-                    let value: string | null = ev.target.value;
-                    if (value === '') {
-                      value = null;
+                  onChange={(date: Dayjs | null) => {
+                    if (date) {
+                      const dateStr = makeNaiveDateString(date.utc().toDate());
+                      onChange(field.slug, dateStr);
                     }
-                    onChange(field.slug, value);
                   }}
-                  value={fieldValues[field.slug]?.toString() ?? ''}
-                >
-                  <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
-                    <Msg id={messageIds.createPerson.enumFields.noneOption} />
-                  </MenuItem>
-                  {field.enum_choices.map((c) => (
-                    <MenuItem key={c.key} value={c.key}>
-                      {c.label}
+                  sx={{ width: '100%' }}
+                  value={
+                    fieldValues[field.slug]
+                      ? dayjs(fieldValues[field.slug]?.toString())
+                      : null
+                  }
+                />
+                {field.slug in fieldsToUpdate && (
+                  <IconButton onClick={() => onReset(field.slug)}>
+                    <UndoIcon />
+                  </IconButton>
+                )}
+              </Box>
+            );
+          } else if (field.type === CUSTOM_FIELD_TYPE.URL) {
+            return (
+              <EditPersonField
+                disabled={!fieldWritable}
+                error={invalidFields.includes(field.slug)}
+                field={field.slug}
+                hasChanges={field.slug in fieldsToUpdate}
+                isURLField
+                label={field.title}
+                onChange={(field, newValue) => {
+                  const formattedUrl = formatUrl(newValue as string);
+                  onChange(field, formattedUrl ?? newValue);
+                }}
+                onReset={() => onReset(field.slug)}
+                value={fieldValues[field.slug]?.toString() ?? ''}
+              />
+            );
+          } else if (
+            field.type === CUSTOM_FIELD_TYPE.ENUM &&
+            field.enum_choices
+          ) {
+            return (
+              <Box alignItems="flex-start" display="flex" flex={1}>
+                <FormControl disabled={!fieldWritable} fullWidth>
+                  <InputLabel>{field.title}</InputLabel>
+                  <Select
+                    fullWidth
+                    label={field.title}
+                    onChange={(ev) => {
+                      let value: string | null = ev.target.value;
+                      if (value === '') {
+                        value = null;
+                      }
+                      onChange(field.slug, value);
+                    }}
+                    value={fieldValues[field.slug]?.toString() ?? ''}
+                  >
+                    <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
+                      <Msg id={messageIds.createPerson.enumFields.noneOption} />
                     </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          );
-        } else {
-          return (
-            <EditPersonField
-              key={field.slug}
-              disabled={!fieldWritable}
-              field={field.slug}
-              hasChanges={field.slug in fieldsToUpdate}
-              label={field.title}
-              onChange={(field, newValue) => onChange(field, newValue)}
-              onReset={() => onReset(field.slug)}
-              value={fieldValues[field.slug]?.toString() ?? ''}
-            />
-          );
-        }
+                    {field.enum_choices.map((c) => (
+                      <MenuItem key={c.key} value={c.key}>
+                        {c.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            );
+          } else {
+            return (
+              <EditPersonField
+                disabled={!fieldWritable}
+                field={field.slug}
+                hasChanges={field.slug in fieldsToUpdate}
+                label={field.title}
+                onChange={(field, newValue) => onChange(field, newValue)}
+                onReset={() => onReset(field.slug)}
+                value={fieldValues[field.slug]?.toString() ?? ''}
+              />
+            );
+          }
+        };
+        const title = !fieldWritable
+          ? profileMessages.customFields.orgLocked({
+              org: org.data?.parent?.title || '',
+            })
+          : '';
+        return (
+          <Box key={field.slug} position="relative" title={title}>
+            {!fieldWritable && (
+              <Lock
+                sx={{
+                  background: 'white',
+                  borderRadius: '50%',
+                  left: '50%',
+                  position: 'absolute',
+                  top: -10,
+                  zIndex: 1,
+                }}
+              />
+            )}
+            <Component field={field} />
+          </Box>
+        );
       })}
     </Box>
   );
