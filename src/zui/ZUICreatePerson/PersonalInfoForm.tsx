@@ -30,20 +30,17 @@ import {
   ZetkinCreatePerson,
 } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
+import { tagAddToPerson } from 'features/profile/types';
 
 dayjs.extend(utc);
 
 type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
-type BasicTagProps = {
-  tagId: number;
-  tagValue: string | number | null;
-};
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null | BasicTagProps) => void;
+  onChange: (field: string, value: string | null | tagAddToPerson) => void;
   personalInfo: ZetkinCreatePerson;
-  tags: BasicTagProps[];
+  tags: tagAddToPerson[];
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
