@@ -3,6 +3,7 @@ import { Box, Paper, Switch, Typography } from '@mui/material';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useCallAssignment from '../hooks/useCallAssignment';
+import ZUISelect from 'zui/components/ZUISelect';
 
 interface ConversationSettingsProps {
   assignmentId: number;
@@ -67,6 +68,35 @@ const ConversationSettings = ({
         <Typography>
           <Msg id={messageIds.conversation.settings.targetData.message} />
         </Typography>
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          marginTop={1}
+        >
+          <Typography variant="h6">
+            <Msg id={messageIds.conversation.settings.dialingMode.title} />
+          </Typography>
+        </Box>
+        <Typography>
+          <Msg id={messageIds.conversation.settings.dialingMode.message} />
+        </Typography>
+        <ZUISelect
+          items={[
+            {
+              label: 'Manual',
+              value: 'manual',
+            },
+            {
+              label: 'Automatic',
+              value: 'automatic',
+            },
+          ]}
+          label="Dialling modes"
+          onChange={(newValue) => alert('You chose ' + newValue)}
+          selectedOption={''}
+          size="large"
+        />
       </Box>
     </Paper>
   );

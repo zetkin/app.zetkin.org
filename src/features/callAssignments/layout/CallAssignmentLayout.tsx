@@ -1,6 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { ArrowForward, Delete, Headset, People } from '@mui/icons-material';
+import {
+  ArrowForward,
+  Delete,
+  Headset,
+  Phone,
+  People,
+} from '@mui/icons-material';
 import { useRouter } from 'next/router';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
@@ -164,6 +170,25 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
                     <Msg
                       id={messageIds.stats.callers}
                       values={{ numCallers: data.length }}
+                    />
+                  </Typography>
+                </>
+              )}
+            </ZUIFuture>
+          </Box>
+          <Box display="flex" marginX={1}>
+            <ZUIFuture
+              future={filteredCallersFuture}
+              ignoreDataWhileLoading
+              skeletonWidth={100}
+            >
+              {() => (
+                <>
+                  <Phone />
+                  <Typography marginLeft={1}>
+                    <Msg
+                      id={messageIds.stats.dialingMode}
+                      values={{ dialingMode: 'Manual' }}
                     />
                   </Typography>
                 </>
