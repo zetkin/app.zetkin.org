@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { OpenInNew } from '@mui/icons-material';
 import { Box, Grid, Link, Typography } from '@mui/material';
@@ -14,6 +15,8 @@ import useServerSide from 'core/useServerSide';
 import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Msg, useMessages } from 'core/i18n';
+import { ZetkinMembership } from 'utils/types/zetkin';
+import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -29,12 +32,31 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const SettingsPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const listFuture = useOfficialMemberships(orgId).data || [];
+  const {
+    data: memberships,
+    error: membershipsError,
+    isLoading: membershipsLoading,
+  } = useOfficialMemberships(orgId);
   const messages = useMessages(messageIds);
   const publicOrgUrl = `${location.protocol}//${location.host}/o/${orgId}`;
 
-  const adminList = listFuture.filter((user) => user.role === 'admin');
-  const organizerList = listFuture.filter((user) => user.role === 'organizer');
+  const [adminList, setAdminList] = useState<ZetkinMembership[] | null>(null);
+  const [organizerList, setOrganizerList] = useState<ZetkinMembership[] | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (!membershipsLoading && memberships && !adminList && !organizerList) {
+      setAdminList(memberships.filter((user) => user.role === 'admin'));
+      setOrganizerList(memberships.filter((user) => user.role === 'organizer'));
+    }
+  }, [memberships, membershipsLoading, adminList, organizerList]);
+
+  useEffect(() => {
+    if (membershipsError) {
+      // showError;
+    }
+  }, [membershipsError]);
 
   if (onServer) {
     return null;
@@ -55,16 +77,22 @@ const SettingsPage: PageWithLayout = () => {
           <Typography variant="h4">
             <Msg id={messageIds.officials.administrators.title} />
           </Typography>
-          <AddOfficialButton
-            disabledList={adminList}
-            orgId={orgId}
-            roleType="admin"
-          />
+          {!membershipsLoading && (
+            <AddOfficialButton
+              disabledList={adminList || []}
+              orgId={orgId}
+              roleType="admin"
+            />
+          )}
         </Box>
         <Typography mb={2} variant="body2">
           <Msg id={messageIds.officials.administrators.description} />
         </Typography>
-        <OfficialList officialList={adminList} orgId={orgId} />
+        {membershipsLoading ? (
+          <ZUILogoLoadingIndicator />
+        ) : (
+          <OfficialList officialList={adminList || []} orgId={orgId} />
+        )}
         <Box
           alignItems="center"
           display="flex"
@@ -77,16 +105,22 @@ const SettingsPage: PageWithLayout = () => {
           <Typography variant="h4">
             <Msg id={messageIds.officials.organizers.title} />
           </Typography>
-          <AddOfficialButton
-            disabledList={organizerList}
-            orgId={orgId}
-            roleType="organizer"
-          />
+          {!membershipsLoading && (
+            <AddOfficialButton
+              disabledList={organizerList || []}
+              orgId={orgId}
+              roleType="organizer"
+            />
+          )}
         </Box>
         <Typography mb={2} variant="body2">
           <Msg id={messageIds.officials.organizers.description} />
         </Typography>
-        <OfficialList officialList={organizerList} orgId={orgId} />
+        {membershipsLoading ? (
+          <ZUILogoLoadingIndicator />
+        ) : (
+          <OfficialList officialList={organizerList || []} orgId={orgId} />
+        )}
       </Grid>
       <Grid size={{ md: 4 }}>
         <ZUICard
