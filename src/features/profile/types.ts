@@ -7,3 +7,8 @@ export type ZetkinPersonNote = {
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   text: string;
 };
+
+export type tagAddToPerson = {
+  tagId: number;
+  tagValue: string | number | null;
+};

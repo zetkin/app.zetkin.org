@@ -2,11 +2,7 @@ import { personLoaded } from '../store';
 import useTagging from 'features/tags/hooks/useTagging';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
-
-type BasicTagProps = {
-  tagId: number;
-  tagValue: string | number | null;
-};
+import { tagAddToPerson } from '../types';
 
 export default function useCreatePerson(orgId: number) {
   const apiClient = useApiClient();
@@ -15,7 +11,7 @@ export default function useCreatePerson(orgId: number) {
 
   const createPerson = async (
     body: ZetkinCreatePerson,
-    tags: BasicTagProps[]
+    tags: tagAddToPerson[]
   ): Promise<ZetkinPerson> => {
     const person = await apiClient.post<ZetkinPerson, ZetkinCreatePerson>(
       `/api/orgs/${orgId}/people`,

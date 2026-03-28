@@ -29,23 +29,17 @@ import {
 } from 'utils/types/zetkin';
 import messageIds from 'zui/l10n/messageIds';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
-import checkInvalidFields from './checkInvalidFields';
-import PersonFieldInput from './PersonFieldInput';
-import PersonLngLatFieldInput from './PersonLngLatFieldInput';
+import { tagAddToPerson } from 'features/profile/types';
 
 dayjs.extend(utc);
 
 type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
-type BasicTagProps = {
-  tagId: number;
-  tagValue: string | number | null;
-};
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null | BasicTagProps) => void;
+  onChange: (field: string, value: string | null | tagAddToPerson) => void;
   personalInfo: ZetkinCreatePerson;
-  tags: BasicTagProps[];
+  tags: tagAddToPerson[];
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
