@@ -158,6 +158,7 @@ export default makeMessages('feat.events', {
     description: m('Description'),
     draft: m('Draft'),
     end: m('End'),
+    error: m('Could not create multi-shift event. Please try again.'),
     event: m('Event'),
     eventDuration: m('Event duration'),
     header: m('Create multi-shift event'),
@@ -183,6 +184,12 @@ export default makeMessages('feat.events', {
     shiftsHeader: m('Shifts'),
     showMoreSettingsButton: m('More settings'),
     start: m('Start'),
+    successDraft: m<{ no: number }>(
+      '{no, plural, one {Created 1 draft event} other {Created # draft events}}'
+    ),
+    successPublish: m<{ no: number }>(
+      '{no, plural, one {Published 1 shift} other {Published # shifts}}'
+    ),
     type: m('Type'),
   },
   eventStatus: {
