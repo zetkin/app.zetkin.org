@@ -1,6 +1,6 @@
 import AbcIcon from '@mui/icons-material/Abc';
 import SortIcon from '@mui/icons-material/Sort';
-import { BaseSyntheticEvent, FC, useState } from 'react';
+import { BaseSyntheticEvent, FC, useEffect, useRef, useState } from 'react';
 import {
   Box,
   ClickAwayListener,
@@ -52,29 +52,58 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
       : FIELDTYPE.SINGLELINE
   );
 
+  // store data locally to prevent loose in case of shouldLoad.ts DEFAULT_TTL passed
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
   const [multiline, setMultiline] = useState(
     elemQuestion.response_config.multiline
   );
 
+  // ref to remember if the user is editing
+  const isEditingRef = useRef(false);
+
+  // restore data if the user is not editing
+  useEffect(() => {
+    if (!isEditingRef.current) {
+      setTitle(elemQuestion.question);
+      setDescription(elemQuestion.description);
+      setMultiline(elemQuestion.response_config.multiline);
+      setFieldType(
+        elemQuestion.response_config.multiline === true
+          ? FIELDTYPE.MULTILINE
+          : FIELDTYPE.SINGLELINE
+      );
+    }
+  }, [
+    elemQuestion.question,
+    elemQuestion.description,
+    elemQuestion.response_config.multiline,
+  ]);
+
   const handleSelect = (event: BaseSyntheticEvent) => {
     setFieldType(event.target.value);
+    setMultiline(event.target.value === FIELDTYPE.MULTILINE);
   };
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
       editable,
-      onEditModeEnter,
-      onEditModeExit,
+      onEditModeEnter: () => {
+        isEditingRef.current = true;
+        onEditModeEnter();
+      },
+      onEditModeExit: () => {
+        isEditingRef.current = false;
+        onEditModeExit();
+      },
       readOnly,
       save: () => {
         updateElement(element.id, {
           question: {
-            description: description,
+            description,
             question: title,
             response_config: {
-              multiline: multiline,
+              multiline,
             },
           },
         });
