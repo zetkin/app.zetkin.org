@@ -112,6 +112,14 @@ const CampaignActionButtons: React.FunctionComponent<
       onClick: handleCreateEvent,
     },
     {
+      icon: <SplitscreenOutlined />,
+      label: campaginMessages.createButton.createMultiShiftEvent(),
+      onClick: () => {
+        setShiftModalDates(getDefaultEventDates());
+        setShiftModalOpen(true);
+      },
+    },
+    {
       icon: <HeadsetMic />,
       label: campaginMessages.createButton.createCallAssignment(),
       onClick: () =>
@@ -175,15 +183,6 @@ const CampaignActionButtons: React.FunctionComponent<
         }),
     });
   }
-
-  menuItems.push({
-    icon: <SplitscreenOutlined />,
-    label: campaginMessages.createButton.createMultiShiftEvent(),
-    onClick: () => {
-      setShiftModalDates(getDefaultEventDates());
-      setShiftModalOpen(true);
-    },
-  });
 
   return (
     <Box display="flex" gap={1}>
