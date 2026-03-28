@@ -51,7 +51,7 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', []);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', []);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/content_query',
       'delete',
@@ -66,7 +66,7 @@ test.describe('View detail page', () => {
     await page.fill('[name=person]', `${NewPerson.last_name}`);
 
     await Promise.all([
-      page.waitForResponse('**/orgs/1/people/views/1/rows'),
+      page.waitForResponse('**/orgs/1/lists/1/rows**'),
       page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`),
     ]);
 
@@ -98,8 +98,7 @@ test.describe('View detail page', () => {
         .log()
         .filter(
           (req) =>
-            req.method === 'GET' &&
-            req.path === '/v1/orgs/1/people/views/1/rows'
+            req.method === 'GET' && req.path === '/v2/orgs/1/lists/1/rows'
         ).length
     ).toBeGreaterThan(1);
   });
@@ -109,8 +108,8 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApiMock(
-      '/orgs/1/people/views/1/rows',
+    moxy.setZetkinApi2Mock(
+      '/orgs/1/lists/1/rows',
       'get',
       AllMembersRows.slice(0, 1)
     );
