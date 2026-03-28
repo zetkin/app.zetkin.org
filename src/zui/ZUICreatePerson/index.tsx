@@ -22,6 +22,7 @@ import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
 import zuiMessages from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import { tagAddToPerson } from 'features/profile/types';
 
 interface ZUICreatePersonProps {
   initialValues?: ZetkinCreatePerson;
@@ -47,7 +48,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const createPerson = useCreatePerson(orgId);
   const organization = useOrganization(orgId).data;
   const countryCode = organization?.country as CountryCode;
-  const [tags, setTags] = useState<number[]>([]);
+  const [tags, setTags] = useState<tagAddToPerson[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({
     ...initialValues,
@@ -87,10 +88,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 setPersonalInfo(copied);
               } else {
                 if (field === 'tags' && value) {
+                  const tag = value as tagAddToPerson;
                   setTags((prev) =>
-                    tags.includes(value as number)
-                      ? tags.filter((item) => item !== value)
-                      : [...prev, value as number]
+                    tags.find((item) => item.tagId === tag.tagId)
+                      ? tags.filter((item) => item.tagId !== tag.tagId)
+                      : [...prev, tag]
                   );
                 } else {
                   setPersonalInfo((prev) => {
