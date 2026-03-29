@@ -15,6 +15,7 @@ import {
 import {
   FC,
   MouseEvent as ReactMouseEvent,
+  startTransition,
   useEffect,
   useRef,
   useState,
@@ -155,7 +156,9 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     document.removeEventListener('mouseup', onMouseUp);
 
     if (onDragEnd) {
-      onDragEnd();
+      startTransition(() => {
+        onDragEnd();
+      });
     }
   };
 
