@@ -1,4 +1,11 @@
-import { Box, BoxProps, IconButton, Menu, MenuItem } from '@mui/material';
+import {
+  Box,
+  BoxProps,
+  IconButton,
+  Menu,
+  MenuItem,
+  SvgIcon,
+} from '@mui/material';
 import {
   DragIndicatorOutlined,
   KeyboardArrowDown,
@@ -216,32 +223,32 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
               }}
               onDelete={onDelete}
               onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
-              widgets={widgets.filter((widget) => {
+              widgets={widgets.map((widget) => {
                 if (disableClick) {
                   // Hide all widgets when click is disabled
-                  return false;
+                  return [widget, false];
                 }
 
                 if (
                   widget == ZUIReorderableWidget.MOVE_DOWN &&
                   index < items.length - 1
                 ) {
-                  return true;
+                  return [widget, true];
                 } else if (
                   widget == ZUIReorderableWidget.MOVE_UP &&
                   index > 0
                 ) {
-                  return true;
+                  return [widget, true];
                 } else if (
                   widget == ZUIReorderableWidget.DRAG &&
                   !disableDrag
                 ) {
-                  return true;
+                  return [widget, true];
                 } else if (widget == ZUIReorderableWidget.MENU) {
-                  return true;
+                  return [widget, true];
                 }
 
-                return false;
+                return [widget, false];
               })}
               widgetsOnlyOnHover={widgetsOnlyOnHover}
               widgetsProps={widgetsProps}
@@ -267,7 +274,7 @@ const ZUIReorderableItem: FC<{
   onClickUp: () => void;
   onDelete?: (id: IDType) => void;
   onNodeExists: (node: HTMLDivElement) => void;
-  widgets: ZUIReorderableWidget[];
+  widgets: [ZUIReorderableWidget, boolean][];
   widgetsOnlyOnHover?: boolean;
   widgetsProps?: BoxProps;
 }> = ({
@@ -321,7 +328,15 @@ const ZUIReorderableItem: FC<{
             zIndex: shown ? 10 : undefined,
           }}
         >
-          {widgets.map((widget) => {
+          {widgets.map(([widget, shown]) => {
+            if (!shown) {
+              return (
+                <IconButton>
+                  <SvgIcon />
+                </IconButton>
+              );
+            }
+
             if (widget == ZUIReorderableWidget.DRAG) {
               return (
                 <IconButton
