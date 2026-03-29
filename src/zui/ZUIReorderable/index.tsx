@@ -291,6 +291,8 @@ const ZUIReorderableItem: FC<{
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const menuOpen = Boolean(menuAnchor);
 
+  const shown = widgetsOnlyOnHover ? hovered : true;
+
   return (
     <Box
       key={item.id}
@@ -309,17 +311,25 @@ const ZUIReorderableItem: FC<{
           position: dragging ? 'absolute' : 'static',
         }}
       >
-        <Box display="flex" flexDirection="column" {...widgetsProps}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          {...widgetsProps}
+          sx={{
+            ...widgetsProps?.sx,
+            opacity: shown ? 1 : 0,
+            zIndex: shown ? 10 : undefined,
+          }}
+        >
           {widgets.map((widget) => {
-            if (widgetsOnlyOnHover && !hovered) {
-              // Hide all widgets when not hovering
-              return false;
-            }
-
             if (widget == ZUIReorderableWidget.DRAG) {
               return (
                 <IconButton
                   onMouseDown={(ev) => {
+                    if (!shown) {
+                      return;
+                    }
+
                     if (itemRef.current && contentRef.current) {
                       onBeginDrag(itemRef.current, contentRef.current, ev);
                     }
@@ -330,20 +340,22 @@ const ZUIReorderableItem: FC<{
               );
             } else if (widget == ZUIReorderableWidget.MOVE_DOWN) {
               return (
-                <IconButton onClick={() => onClickDown()}>
+                <IconButton onClick={() => shown && onClickDown()}>
                   <KeyboardArrowDown />
                 </IconButton>
               );
             } else if (widget == ZUIReorderableWidget.MOVE_UP) {
               return (
-                <IconButton onClick={() => onClickUp()}>
+                <IconButton onClick={() => shown && onClickUp()}>
                   <KeyboardArrowUp />
                 </IconButton>
               );
             } else if (widget == ZUIReorderableWidget.MENU) {
               return (
                 <>
-                  <IconButton onClick={(ev) => setMenuAnchor(ev.currentTarget)}>
+                  <IconButton
+                    onClick={(ev) => shown && setMenuAnchor(ev.currentTarget)}
+                  >
                     <MoreVert />
                   </IconButton>
                   <Menu
