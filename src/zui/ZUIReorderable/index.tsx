@@ -332,6 +332,10 @@ const ZUIReorderableItem: FC<{
           }}
         >
           {widgets.map(([widget, shown]) => {
+            if (!shown && !centerWidgets) {
+              return null;
+            }
+
             if (!shown) {
               return (
                 <IconButton>
