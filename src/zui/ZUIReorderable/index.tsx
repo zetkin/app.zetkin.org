@@ -229,29 +229,29 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
               widgets={widgets.map((widget) => {
                 if (disableClick) {
                   // Hide all widgets when click is disabled
-                  return [widget, false];
+                  return { shown: false, widget };
                 }
 
                 if (
                   widget == ZUIReorderableWidget.MOVE_DOWN &&
                   index < items.length - 1
                 ) {
-                  return [widget, true];
+                  return { shown: true, widget };
                 } else if (
                   widget == ZUIReorderableWidget.MOVE_UP &&
                   index > 0
                 ) {
-                  return [widget, true];
+                  return { shown: true, widget };
                 } else if (
                   widget == ZUIReorderableWidget.DRAG &&
                   !disableDrag
                 ) {
-                  return [widget, true];
+                  return { shown: true, widget };
                 } else if (widget == ZUIReorderableWidget.MENU) {
-                  return [widget, true];
+                  return { shown: true, widget };
                 }
 
-                return [widget, false];
+                return { shown: false, widget };
               })}
               widgetsOnlyOnHover={widgetsOnlyOnHover}
               widgetsProps={widgetsProps}
@@ -260,6 +260,11 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
       )}
     </Box>
   );
+};
+
+type WidgetState = {
+  shown: boolean;
+  widget: ZUIReorderableWidget;
 };
 
 const ZUIReorderableItem: FC<{
@@ -277,7 +282,7 @@ const ZUIReorderableItem: FC<{
   onClickUp: () => void;
   onDelete?: (id: IDType) => void;
   onNodeExists: (node: HTMLDivElement) => void;
-  widgets: [ZUIReorderableWidget, boolean][];
+  widgets: WidgetState[];
   widgetsOnlyOnHover?: boolean;
   widgetsProps?: BoxProps;
 }> = ({
@@ -331,7 +336,7 @@ const ZUIReorderableItem: FC<{
             zIndex: shown ? 10 : undefined,
           }}
         >
-          {widgets.map(([widget, shown]) => {
+          {widgets.map(({ widget, shown }) => {
             if (!shown && !centerWidgets) {
               return null;
             }
