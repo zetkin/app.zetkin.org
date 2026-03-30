@@ -52,7 +52,8 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
       : FIELDTYPE.SINGLELINE
   );
 
-  // store data locally to prevent loose in case of shouldLoad.ts DEFAULT_TTL passed
+  // Store draft in local component state to survive server refetches when        
+  shouldLoad.ts DEFAULT_TTL expires
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
   const [multiline, setMultiline] = useState(
