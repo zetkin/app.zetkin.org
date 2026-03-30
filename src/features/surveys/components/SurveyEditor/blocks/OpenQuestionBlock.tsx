@@ -52,8 +52,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
       : FIELDTYPE.SINGLELINE
   );
 
-  // Store draft in local component state to survive server refetches when        
-  shouldLoad.ts DEFAULT_TTL expires
+  // Store draft in local component state to survive server refetches when shouldLoad.ts DEFAULT_TTL expires
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
   const [multiline, setMultiline] = useState(
