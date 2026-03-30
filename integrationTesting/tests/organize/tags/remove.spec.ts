@@ -53,6 +53,7 @@ test.describe('Tags manager', () => {
 
     await expect(deleteButton).toBeVisible();
 
+    // wait for button animation to finish
     await page.waitForTimeout(200);
     await deleteButton.click({ force: true });
 
@@ -102,6 +103,8 @@ test.describe('Tags manager', () => {
     const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
 
     await expect(deleteButton).toBeVisible();
+
+    // wait for button animation to finish
     await page.waitForTimeout(200);
     await deleteButton.click({ force: true });
 
