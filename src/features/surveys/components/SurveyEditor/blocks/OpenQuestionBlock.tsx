@@ -59,7 +59,6 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
     elemQuestion.response_config.multiline
   );
 
-  // ref to remember if the user is editing
   const isEditingRef = useRef(false);
 
   // restore data if the user is not editing
