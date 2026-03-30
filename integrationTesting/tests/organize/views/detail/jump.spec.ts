@@ -33,7 +33,7 @@ test.describe('View detail page', () => {
     await page.click('data-testid=view-jump-menu-button');
 
     // Assert that the input is automatically focused, and type in part of the title of NewView
-    expect(
+    await expect(
       page.locator('data-testid=view-jump-menu-popover >> input')
     ).toBeFocused();
     await page.fill(
