@@ -147,9 +147,6 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               margin="normal"
               onChange={(event) => {
                 handleSelect(event);
-                setMultiline(
-                  event.target.value === FIELDTYPE.MULTILINE ? true : false
-                );
               }}
               select
               SelectProps={{
