@@ -44,9 +44,6 @@ test.describe('Tag manager', () => {
     await expect(page.locator(`text="${ActivistTag.title}"`)).toBeVisible();
 
     expect(
-      await page.locator(`text="${ActivistTag.title}"`).isVisible()
-    ).toBeTruthy();
-    expect(
       await page.locator(`text="${OrganizerTag.title}"`).isVisible()
     ).toBeTruthy();
     expect(

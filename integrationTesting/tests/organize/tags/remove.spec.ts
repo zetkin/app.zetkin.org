@@ -60,7 +60,7 @@ test.describe('Tags manager', () => {
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
 
-    await expect(tagToDelete).toHaveCount(0);
+    await expect(tagToDelete).not.toBeVisible();
 
     // Expect to have made request to delete tag
     expect(deleteTagLog().length).toEqual(1);

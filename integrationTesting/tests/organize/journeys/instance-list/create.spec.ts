@@ -136,13 +136,12 @@ test.describe('Creating a journey instance from journey instance page', () => {
 
     await page.locator('data-testid=SubmitCancelButtons-submitButton').click();
 
-    await expect.poll(() => instMock.log().length).toBe(1);
-
     // Expect requests to have been made to:
     // * POST to create journey instance
     // * PUT to add assignee
     // * PUT to add subject
     // * PUT to assign tag
+    await expect.poll(() => instMock.log().length).toBe(1);
     await expect.poll(() => assigneeMock.log().length).toBe(1);
     await expect.poll(() => subjectMock.log().length).toBe(1);
     await expect.poll(() => tagMock.log().length).toBe(1);
