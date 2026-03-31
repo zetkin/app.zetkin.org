@@ -6,3 +6,4 @@ export const OFFICIALS = 'FEAT_OFFICIALS';
 export const TASKS = 'FEAT_TASKS';
 export const PERSON_NOTES = 'FEAT_PERSON_NOTES';
 export const UNAUTH_EVENT_SIGNUP = 'FEAT_UNAUTH_EVENT_SIGNUP';
+export const AREA_STATS = 'FEAT_AREA_STATS';
