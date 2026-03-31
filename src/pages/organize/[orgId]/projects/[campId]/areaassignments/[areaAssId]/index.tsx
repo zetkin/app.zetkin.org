@@ -19,6 +19,7 @@ import { ZetkinAssignmentAreaStatsItem } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areaAssignments/l10n/messageIds';
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
+import { AREA_STATS, hasFeature } from 'utils/featureFlags';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -52,6 +53,8 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
   const numAreas = new Set(
     sessionsFuture.data?.map((session) => session.area_id) ?? []
   ).size;
+
+  const hasAreaFeature = hasFeature(AREA_STATS, parseInt(orgId), process.env);
 
   return (
     <>
@@ -127,83 +130,88 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                       />
                     </Box>
                   </Card>
-                  <Grid container spacing={2}>
-                    <ZUIFutures futures={{ areasStats, dataGraph }}>
-                      {({ data: { areasStats, dataGraph } }) => {
-                        const filteredAreas = dataGraph
-                          .map((area) => {
-                            return areasStats.stats.filter(
-                              (item) => item.area_id === area.area_id
-                            );
-                          })
-                          .flat();
+                  {hasAreaFeature && (
+                    <Grid container spacing={2}>
+                      <ZUIFutures futures={{ areasStats, dataGraph }}>
+                        {({ data: { areasStats, dataGraph } }) => {
+                          const filteredAreas = dataGraph
+                            .map((area) => {
+                              return areasStats.stats.filter(
+                                (item) => item.area_id === area.area_id
+                              );
+                            })
+                            .flat();
 
-                        const sortedAreas = filteredAreas
-                          .map((area) => {
-                            const successfulVisitsTotal =
-                              dataGraph
-                                .find((graph) => graph.area_id === area.area_id)
-                                ?.data.reduce(
-                                  (sum, item) => sum + item.successfulVisits,
-                                  0
-                                ) || 0;
+                          const sortedAreas = filteredAreas
+                            .map((area) => {
+                              const successfulVisitsTotal =
+                                dataGraph
+                                  .find(
+                                    (graph) => graph.area_id === area.area_id
+                                  )
+                                  ?.data.reduce(
+                                    (sum, item) => sum + item.successfulVisits,
+                                    0
+                                  ) || 0;
 
-                            return {
-                              area,
-                              successfulVisitsTotal,
-                            };
-                          })
-                          .sort(
-                            (a, b) =>
-                              b.successfulVisitsTotal - a.successfulVisitsTotal
-                          )
-                          .map(({ area }) => area);
-
-                        const maxHouseholdVisits = Math.max(
-                          ...dataGraph.flatMap((areaCard) =>
-                            areaCard.data.map(
-                              (graphData) => graphData.householdVisits
+                              return {
+                                area,
+                                successfulVisitsTotal,
+                              };
+                            })
+                            .sort(
+                              (a, b) =>
+                                b.successfulVisitsTotal -
+                                a.successfulVisitsTotal
                             )
-                          )
-                        );
+                            .map(({ area }) => area);
 
-                        const noAreaData = dataGraph.find(
-                          (graph) => !graph.area_id
-                        );
-                        if (noAreaData && noAreaData.data.length > 0) {
-                          const latestEntry = [...noAreaData.data].sort(
-                            (a, b) =>
-                              new Date(b.date).getTime() -
-                              new Date(a.date).getTime()
-                          )[0];
+                          const maxHouseholdVisits = Math.max(
+                            ...dataGraph.flatMap((areaCard) =>
+                              areaCard.data.map(
+                                (graphData) => graphData.householdVisits
+                              )
+                            )
+                          );
 
-                          const num_successful_visited_households =
-                            latestEntry.successfulVisits;
+                          const noAreaData = dataGraph.find(
+                            (graph) => !graph.area_id
+                          );
+                          if (noAreaData && noAreaData.data.length > 0) {
+                            const latestEntry = [...noAreaData.data].sort(
+                              (a, b) =>
+                                new Date(b.date).getTime() -
+                                new Date(a.date).getTime()
+                            )[0];
 
-                          const num_visited_households =
-                            latestEntry.householdVisits;
+                            const num_successful_visited_households =
+                              latestEntry.successfulVisits;
 
-                          const noArea: ZetkinAssignmentAreaStatsItem = {
-                            area_id: null,
-                            num_households: 0,
-                            num_locations: 0,
-                            num_successful_visited_households,
-                            num_visited_households,
-                            num_visited_locations: 0,
-                          };
-                          sortedAreas.push(noArea);
-                        }
-                        return (
-                          <AreaCard
-                            areas={sortedAreas}
-                            assignment={assignment}
-                            data={dataGraph}
-                            maxVisitedHouseholds={maxHouseholdVisits}
-                          />
-                        );
-                      }}
-                    </ZUIFutures>
-                  </Grid>
+                            const num_visited_households =
+                              latestEntry.householdVisits;
+
+                            const noArea: ZetkinAssignmentAreaStatsItem = {
+                              area_id: null,
+                              num_households: 0,
+                              num_locations: 0,
+                              num_successful_visited_households,
+                              num_visited_households,
+                              num_visited_locations: 0,
+                            };
+                            sortedAreas.push(noArea);
+                          }
+                          return (
+                            <AreaCard
+                              areas={sortedAreas}
+                              assignment={assignment}
+                              data={dataGraph}
+                              maxVisitedHouseholds={maxHouseholdVisits}
+                            />
+                          );
+                        }}
+                      </ZUIFutures>
+                    </Grid>
+                  )}
                 </>
               )}
             </Box>
