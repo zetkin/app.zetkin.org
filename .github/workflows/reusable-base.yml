@@ -11,9 +11,13 @@ on:
         description: 'A script to run before testing.'
         required: false
         type: string
-      yarn-test-script:
-        description: 'The name of the yarn script that runs the test.'
+      test-script:
+        description: 'The name of the script that runs the test.'
         required: true
+        type: string
+      upload-name:
+        description: 'The name of the artifact to upload.'
+        required: false
         type: string
       upload-path:
         description: 'The path of a folder to upload.'
@@ -46,10 +50,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
-          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
@@ -58,10 +61,17 @@ jobs:
         if: inputs.build-script
 
       - name: Test
-        run: yarn ${{ inputs.yarn-test-script }}
+        run: npm run ${{ inputs.test-script }}
+
+      - name: Validate upload inputs
+        if: inputs.upload-name && !inputs.upload-path
+        run: |
+          echo "upload-name requires upload-path" >&2
+          exit 1
 
       - uses: actions/upload-artifact@v4
         if: always() && inputs.upload-path
         with:
+          name: ${{ inputs.upload-name || 'artifact' }}
           path: ${{ inputs.upload-path }}
           retention-days: 30

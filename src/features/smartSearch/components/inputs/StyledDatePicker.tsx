@@ -6,6 +6,7 @@ const StyledDatePicker: React.FC<DatePickerProps<dayjs.Dayjs>> = (
   props
 ): React.ReactElement => {
   const theme = useTheme();
+
   return (
     <DatePicker
       {...props}

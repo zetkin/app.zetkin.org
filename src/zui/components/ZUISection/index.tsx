@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import ZUIDivider from '../ZUIDivider';
 import { ZUIOrientation } from '../types';
@@ -8,7 +8,7 @@ type SubSectionBase = {
   /**
    * The content of the sub section.
    */
-  renderContent: () => JSX.Element;
+  renderContent: () => ReactNode;
 
   /**
    * The subtitle of the sub section.
@@ -70,7 +70,7 @@ type SectionWithContent = SectionBase & {
   /**
    * A function that returns an element to be rendered as the content of the section.
    */
-  renderContent: () => JSX.Element;
+  renderContent: () => ReactNode;
 };
 
 type SectionWithSubSections = SectionBase & {

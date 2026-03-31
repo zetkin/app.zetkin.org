@@ -152,6 +152,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         showSnackbar('error', messages.surveyToList.error());
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiClient, orgId, surveyId, router.push, surveyFuture.data]
   );
 

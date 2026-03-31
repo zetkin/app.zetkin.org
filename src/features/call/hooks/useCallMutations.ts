@@ -9,14 +9,27 @@ import {
   allocatePreviousCall,
 } from '../store';
 import { UnfinishedCall } from '../types';
+import useMyAssignments from './useMyAssignments';
 
 export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const assignments = useMyAssignments();
 
-  const abandonUnfinishedCall = async (callId: number) => {
-    await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
-    dispatch(unfinishedCallAbandoned(callId));
+  const abandonUnfinishedCall = async (
+    assignmentId: number,
+    callId: number
+  ) => {
+    const assignment = assignments.find(
+      (assignment) => assignment.id == assignmentId
+    );
+
+    if (assignment) {
+      await apiClient.delete(
+        `/api/orgs/${assignment.organization.id}/calls/${callId}`
+      );
+      dispatch(unfinishedCallAbandoned(callId));
+    }
   };
 
   const quitCurrentCall = async (callId: number) => {
@@ -51,13 +64,22 @@ export default function useCallMutations(orgId: number) {
     assignmentId: number,
     targetId: number
   ) => {
-    const newCall = await apiClient.post<UnfinishedCall, { target_id: number }>(
-      `/api/orgs/${orgId}/call_assignments/${assignmentId}/calls`,
-      {
-        target_id: targetId,
-      }
+    const assignment = assignments.find(
+      (assignment) => assignment.id == assignmentId
     );
-    dispatch(allocatePreviousCall(newCall));
+
+    if (assignment) {
+      const newCall = await apiClient.post<
+        UnfinishedCall,
+        { target_id: number }
+      >(
+        `/api/orgs/${assignment.organization.id}/call_assignments/${assignmentId}/calls`,
+        {
+          target_id: targetId,
+        }
+      );
+      dispatch(allocatePreviousCall(newCall));
+    }
   };
 
   const switchToUnfinishedCall = (callId: number, assignmentId: number) => {

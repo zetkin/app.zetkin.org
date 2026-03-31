@@ -67,13 +67,12 @@ export default makeMessages('feat.organizations', {
     },
     map: {
       viewInList: m('View in list'),
-      viewInMap: m('View in map'),
+      viewOnMap: m('View on map'),
     },
     menu: {
-      allEvents: m('All events'),
       logout: m('Logout'),
-      myActivities: m('My activities'),
       myZetkin: m('My Zetkin'),
+      organize: m('Organize'),
       settings: m('Settings'),
     },
     tabs: {

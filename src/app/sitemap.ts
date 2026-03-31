@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import organizationsDef from 'features/public/rpc/organizations';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const headersList = headers();
@@ -15,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = `${protocol}://${host}`;
 
   const orgs = await apiClient
-    .get<ZetkinOrganization[]>(`/api/orgs`)
+    .rpc(organizationsDef, {})
     .catch(() => [] as ZetkinOrganization[]);
 
   const staticPages = ['', '/my/home', '/my/feed', '/my/settings'].map(

@@ -52,7 +52,7 @@ export default function useViewDataTableMutations(
     await apiClient.delete(
       `/api/orgs/${orgId}/people/views/${viewId}/content_query`
     );
-    dispatch(viewQueryUpdated([viewId, null]));
+    dispatch(viewQueryUpdated([orgId, viewId, null]));
   };
 
   const updateContentQuery = async (data: Pick<ZetkinQuery, 'filter_spec'>) => {
@@ -60,7 +60,7 @@ export default function useViewDataTableMutations(
       `/api/orgs/${orgId}/people/views/${viewId}/content_query`,
       data
     );
-    dispatch(viewQueryUpdated([viewId, query]));
+    dispatch(viewQueryUpdated([orgId, viewId, query]));
   };
   return {
     addColumn,

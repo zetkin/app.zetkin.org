@@ -9,6 +9,7 @@ import {
   PersonFieldViewColumn,
   ZetkinViewColumn,
 } from '../../types';
+import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 
 type SimpleData = string | number | boolean | null;
 
@@ -21,14 +22,24 @@ const getValue = (cell: SimpleData, column: PersonFieldViewColumn) => {
   }
 };
 
-export default class PersonFieldColumnType
-  implements IColumnType<ZetkinViewColumn, SimpleData>
-{
+export default class PersonFieldColumnType implements IColumnType<
+  ZetkinViewColumn,
+  SimpleData
+> {
   cellToString(cell: SimpleData, column: PersonFieldViewColumn): string {
     return getValue(cell, column);
   }
 
-  getColDef(column: PersonFieldViewColumn): Omit<GridColDef, 'field'> {
+  getColDef(
+    column: PersonFieldViewColumn,
+    _discarded: unknown,
+    { customFieldsInfo }: { customFieldsInfo?: ZetkinCustomField[] }
+  ): Omit<GridColDef, 'field'> {
+    const customField = customFieldsInfo?.find(
+      (cf) => cf.slug === column.config.field
+    );
+    const isDate = customField?.type === CUSTOM_FIELD_TYPE.DATE;
+
     return {
       filterable: true,
       renderCell: (params) => {
@@ -52,10 +63,15 @@ export default class PersonFieldColumnType
         ) {
           return <Link href={`tel:${value}`}>{value}</Link>;
         }
-
         return <div>{value}</div>;
       },
+      type: isDate ? 'date' : undefined,
       valueGetter: (value: SimpleData) => {
+        if (isDate && typeof value === 'string') {
+          // For date fields, MUI expects a Date object
+          return new Date(value);
+        }
+
         return getValue(value, column);
       },
     };

@@ -57,14 +57,33 @@ export default async function handle(
       const url = `${protocol}://${host}:${port}/v1/${pathStr}`;
       const result = await fetch(url, { redirect: 'manual' });
       const location = result.headers.get('location');
-      const headers = location
-        ? {
-            location: location,
-          }
-        : undefined;
-      res.writeHead(result.status, headers);
 
-      res.end();
+      // In dev, proxy the image server-side to avoid HTTPS-only mode issues
+      const shouldProxy =
+        !stringToBool(process.env.ZETKIN_USE_TLS) &&
+        location &&
+        result.status >= 300 &&
+        result.status < 400;
+
+      if (shouldProxy) {
+        const imageResponse = await fetch(location);
+
+        if (imageResponse.ok) {
+          const contentType = imageResponse.headers.get('content-type');
+          if (contentType) {
+            res.setHeader('Content-Type', contentType);
+          }
+
+          const imageBuffer = await imageResponse.arrayBuffer();
+          res.status(200).send(Buffer.from(imageBuffer));
+        } else {
+          res.status(imageResponse.status).end();
+        }
+      } else {
+        const headers = location ? { location } : undefined;
+        res.writeHead(result.status, headers);
+        res.end();
+      }
     } catch (err) {
       res.status(500).json(err);
     }
