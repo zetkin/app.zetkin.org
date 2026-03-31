@@ -53,7 +53,7 @@ export default class PersonTagColumnType implements IColumnType {
 
     let tag: ZetkinTag | null = null;
 
-    if (!accessLevel) {
+    if (accessLevel !== 'readonly') {
       const tagItem = tagListState.items.find((item) => item.id == tagId);
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
@@ -228,7 +228,7 @@ const BasicTagCell: FC<{
   const { tagFuture } = useTag(orgId, tagId);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
 
-  const [isRestricted, accessLevel] = useAccessLevel();
+  const [, accessLevel] = useAccessLevel();
 
   if (cell) {
     return (
@@ -241,7 +241,7 @@ const BasicTagCell: FC<{
       />
     );
   } else {
-    if (!isRestricted) {
+    if (accessLevel !== 'readonly') {
       // Only render "ghost" tag in full-access (non-restricted) mode, as it's
       // likely that a user in restricted mode will not have access to assign
       // (or even retrieve) the tag.
