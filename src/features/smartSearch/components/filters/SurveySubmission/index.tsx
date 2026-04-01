@@ -70,7 +70,11 @@ const SurveySubmission = ({
     if (surveyValue === DEFAULT_VALUE) {
       setSubmittable(false);
     } else {
-      setConfig({ ...filter.config, survey: +surveyValue });
+      setConfig({
+        ...filter.config,
+        operator: 'submitted',
+        survey: +surveyValue,
+      });
       setSubmittable(true);
     }
   };
