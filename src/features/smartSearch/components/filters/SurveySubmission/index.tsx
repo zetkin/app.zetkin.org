@@ -15,13 +15,11 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg, useMessages } from 'core/i18n';
+import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 
 const localMessageIds = messageIds.filters.surveySubmission;
-
-const DEFAULT_VALUE = 'none';
 
 interface SurveySubmissionProps {
   filter:
@@ -40,7 +38,6 @@ const SurveySubmission = ({
   onCancel,
   filter: initialFilter,
 }: SurveySubmissionProps): JSX.Element => {
-  const messages = useMessages(localMessageIds);
   const { orgId } = useNumericRouteParams();
   const surveys = useSurveys(orgId).data || [];
 
@@ -119,19 +116,13 @@ const SurveySubmission = ({
             ),
             surveySelect: (
               <StyledAutocomplete
-                items={[
-                  {
-                    group: 'pinned',
-                    id: DEFAULT_VALUE,
-                    label: messages.surveySelect.any(),
-                  },
-                  ...surveys.map((s) => ({
-                    id: s.id,
-                    label: s.title,
-                  })),
-                ]}
+                clearable={true}
+                items={surveys.map((s) => ({
+                  id: s.id,
+                  label: s.title,
+                }))}
                 onChange={(e) => handleSurveySelectChange(e.target.value)}
-                value={filter.config.survey || DEFAULT_VALUE}
+                value={filter.config.survey}
               />
             ),
             timeFrame: (
