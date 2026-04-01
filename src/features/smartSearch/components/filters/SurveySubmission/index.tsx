@@ -54,10 +54,9 @@ const SurveySubmission = ({
 
   const handleTimeFrameChange = useCallback(
     (range: { after?: string; before?: string }) => {
-      const { operator, survey } = filter.config;
       setConfig({
-        operator,
-        survey,
+        ...filter.config,
+        operator: 'submitted',
         ...range,
       });
     },
