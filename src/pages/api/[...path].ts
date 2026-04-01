@@ -58,12 +58,9 @@ export default async function handle(
       const result = await fetch(url, { redirect: 'manual' });
       const location = result.headers.get('location');
 
-      // In dev, proxy the image server-side to avoid HTTPS-only mode issues
+      // Proxy image redirects server-side
       const shouldProxy =
-        !stringToBool(process.env.ZETKIN_USE_TLS) &&
-        location &&
-        result.status >= 300 &&
-        result.status < 400;
+        location && result.status >= 300 && result.status < 400;
 
       if (shouldProxy) {
         const imageResponse = await fetch(location);
