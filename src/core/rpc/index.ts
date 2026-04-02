@@ -33,6 +33,7 @@ import { surveyToListDef } from 'features/surveys/rpc/surveyToList';
 import { duplicateSurveyDef } from 'features/surveys/rpc/duplicateSurvey';
 import { loadPersonFieldsDef } from 'features/duplicates/rpc/loadPersonFields';
 import { getSurveyResponseStatsDef } from 'features/surveys/rpc/getSurveyResponseStats';
+import { searchLocationDef } from 'features/events/rpc/searchLocation';
 import { getPublicOrganizationsDef } from 'features/public/rpc/organizations';
 import { addParticipantsDef } from 'features/events/rpc/addParticipants';
 
@@ -53,6 +54,7 @@ export function createRPCRouter() {
   rpcRouter.register(getPrevEventDayDef);
   rpcRouter.register(getNextEventDayDef);
   rpcRouter.register(moveParticipantsDef);
+  rpcRouter.register(searchLocationDef);
   rpcRouter.register(updateEventsDef);
   rpcRouter.register(copyEmailDef);
   rpcRouter.register(copyEventsDef);
