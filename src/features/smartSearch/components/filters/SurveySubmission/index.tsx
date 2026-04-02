@@ -1,5 +1,5 @@
 import { MenuItem } from '@mui/material';
-import { FormEvent, useCallback } from 'react';
+import { FormEvent } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
@@ -44,35 +44,29 @@ const SurveySubmission = ({
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<SurveySubmissionFilterConfig>(initialFilter);
 
-  const handleSubmit = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-      onSubmit(filter);
-    },
-    [filter, onSubmit]
-  );
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSubmit(filter);
+  };
 
-  const handleTimeFrameChange = useCallback(
-    (range: { after?: string; before?: string }) => {
-      setConfig({
-        ...filter.config,
-        operator: 'submitted',
-        ...range,
-      });
-    },
-    [filter.config, setConfig]
-  );
+  const handleTimeFrameChange = (range: {
+    after?: string;
+    before?: string;
+  }) => {
+    setConfig({
+      ...filter.config,
+      operator: 'submitted',
+      ...range,
+    });
+  };
 
-  const handleSurveySelectChange = useCallback(
-    (surveyValue: string) => {
-      setConfig({
-        ...filter.config,
-        operator: 'submitted',
-        survey: +surveyValue,
-      });
-    },
-    [filter.config, setConfig]
-  );
+  const handleSurveySelectChange = (surveyValue: string) => {
+    setConfig({
+      ...filter.config,
+      operator: 'submitted',
+      survey: +surveyValue,
+    });
+  };
 
   const submittable =
     !!filter.config.survey && filter.config.operator === 'submitted';
