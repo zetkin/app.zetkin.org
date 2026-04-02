@@ -55,8 +55,9 @@ const SurveySubmission = ({
   }) => {
     setConfig({
       ...filter.config,
+      after: range.after,
+      before: range.before,
       operator: 'submitted',
-      ...range,
     });
   };
 
