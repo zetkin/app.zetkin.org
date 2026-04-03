@@ -37,25 +37,31 @@ test.describe('Tags manager', () => {
       'delete'
     );
 
-    const tagToDelete = page.locator(
-      `data-testid=TagManager-groupedTags-ungrouped >> text="${PlaysGuitarTag.title}"`
-    );
-    const deleteButton = page.locator('[data-testid=TagChip-deleteButton]');
-
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
-    await tagToDelete.waitFor({ state: 'visible' });
+
+    const tagToDelete = page
+      .locator('[data-testid=TagManager-groupedTags-ungrouped]')
+      .locator('[data-testid=TagChip-value]')
+      .filter({ hasText: PlaysGuitarTag.title });
+
+    await expect(tagToDelete).toBeVisible();
 
     await tagToDelete.hover();
-    await deleteButton.waitFor({ state: 'visible' });
 
-    await Promise.all([
-      page.waitForRequest((req) => req.method() == 'DELETE'),
-      deleteButton.click(),
-    ]);
+    const chipRoot = tagToDelete.locator('..').locator('..');
+    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
+
+    await expect(deleteButton).toBeVisible();
+
+    // wait for button animation to finish
+    await page.waitForTimeout(200);
+    await deleteButton.click({ force: true });
+
+    await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
 
-    await tagToDelete.waitFor({ state: 'hidden' });
+    await expect(tagToDelete).not.toBeVisible();
 
     // Expect to have made request to delete tag
     expect(deleteTagLog().length).toEqual(1);
@@ -75,7 +81,7 @@ test.describe('Tags manager', () => {
       'get',
       [PlaysGuitarTag]
     );
-    moxy.setZetkinApiMock(
+    const { log: deleteTagLog } = moxy.setZetkinApiMock(
       `/orgs/1/people/${ClaraZetkin.id}/tags/${PlaysGuitarTag.id}`,
       'delete',
       undefined,
@@ -84,10 +90,28 @@ test.describe('Tags manager', () => {
 
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
-    await page.locator(`text="${PlaysGuitarTag.title}"`).hover();
-    await page.locator('[data-testid=TagChip-deleteButton]').click();
+    const tagChip = page
+      .locator('[data-testid=TagManager-groupedTags-ungrouped]')
+      .locator('[data-testid=TagChip-value]')
+      .filter({ hasText: PlaysGuitarTag.title });
 
-    // Show error
-    await page.locator('data-testid=Snackbar-error').waitFor();
+    await expect(tagChip).toBeVisible();
+
+    await tagChip.hover();
+
+    const chipRoot = tagChip.locator('..').locator('..');
+    const deleteButton = chipRoot.locator('[data-testid=TagChip-deleteButton]');
+
+    await expect(deleteButton).toBeVisible();
+
+    // wait for button animation to finish
+    await page.waitForTimeout(200);
+    await deleteButton.click({ force: true });
+
+    await expect.poll(() => deleteTagLog().length).toBeGreaterThan(0);
+
+    const snackbar = page.locator('[data-testid=Snackbar-error]');
+
+    await expect(snackbar).toBeVisible();
   });
 });
