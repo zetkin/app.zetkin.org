@@ -291,7 +291,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             />
           );
         } else if (type == 'booked') {
-          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
+          if (event && new Date(removeOffset(event.start_time)) < new Date(new Date().setHours(new Date().getHours() + 1))) {
             const options: ButtonOption[] = [
               {
                 callback: () => {
