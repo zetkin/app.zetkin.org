@@ -26,7 +26,7 @@ function mockColumns(count: number, widths: number[] = []): GridColDef[] {
   for (let i = 0; i < count; i++) {
     columns.push({
       field: `field${i}`,
-      width: i < widths.length ? widths[0] : 100,
+      width: i < widths.length ? widths[i] : 100,
     });
   }
 
