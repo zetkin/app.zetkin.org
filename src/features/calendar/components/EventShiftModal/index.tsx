@@ -55,26 +55,36 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     invalidShiftTimes.includes(true);
 
   async function publishShifts(publish: boolean) {
-    eventShifts.forEach(async (shift, index) => {
+    for (const shift of eventShifts) {
+      const index = eventShifts.indexOf(shift);
       const endTime =
         index < eventShifts.length - 1
           ? dayjs(eventShifts[index + 1])
           : dayjs(eventEndTime);
 
-      let startDate: Dayjs = dayjs(eventDate);
-      startDate = startDate
-        .set('hour', shift.hour() + 2)
-        .set('minute', shift.minute());
+      const startDate = new Date(
+        Date.UTC(
+          shift.year(),
+          shift.month(),
+          shift.date(),
+          shift.hour(),
+          shift.minute()
+        )
+      );
 
-      let endDate: Dayjs = dayjs(eventDate);
-      endDate = endDate
-        .set('hour', endTime.hour() + 2)
-        .set('minute', endTime.minute());
-
-      const now = dayjs();
+      const endDate = new Date(
+        Date.UTC(
+          endTime.year(),
+          endTime.month(),
+          endTime.date(),
+          endTime.hour(),
+          endTime.minute()
+        )
+      );
+      const now = new Date();
       const published = startDate < now ? startDate : now;
 
-      createEvent(
+      await createEvent(
         {
           activity_id: type ? type.id : null,
           campaign_id: campId,
@@ -89,7 +99,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         },
         false
       );
-    });
+    }
     close();
   }
 
