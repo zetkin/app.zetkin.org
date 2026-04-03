@@ -27,7 +27,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
     verifiedParticipantsFuture,
     numSignedUpParticipants,
     numRemindedParticipants,
-    bookedParticipants,
+    numAvailParticipants,
   } = useEventParticipants(orgId, eventId);
 
   if (!event) {
@@ -38,7 +38,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
     <EventWarningIconsSansModel
       compact={compact}
       hasContact={!!event.contact}
-      numParticipants={bookedParticipants.length}
+      numParticipants={numAvailParticipants}
       numRemindersSent={numRemindedParticipants}
       numSignups={numSignedUpParticipants}
       participantsLoading={!verifiedParticipantsFuture.data}
