@@ -13,7 +13,7 @@ test.describe('View detail page', () => {
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers, NewView]);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/columns',
       'get',

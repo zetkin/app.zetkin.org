@@ -36,6 +36,16 @@ export interface NextWorkerFixtures {
   fileServerUri: string;
   moxy: {
     port: number;
+    setZetkinApi2Mock: <G>(
+      path: string,
+      method?: HTTPMethod,
+      data?: G,
+      status?: MockResponseSetter['status'],
+      headers?: MockResponseSetter['headers']
+    ) => {
+      log: <T>() => LoggedRequest<T, { data: G }>[];
+      removeMock: () => void;
+    };
     setZetkinApiMock: <G>(
       path: string,
       method?: HTTPMethod,
@@ -160,6 +170,24 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
         });
       };
 
+      const setZetkinApi2Mock = <G>(
+        path: string,
+        method?: HTTPMethod,
+        data?: G,
+        status?: MockResponseSetter['status'],
+        headers?: MockResponseSetter['headers']
+      ) => {
+        return setMock<{ data: G }>(`/v2${path}`, method, {
+          status,
+          headers,
+          data: data
+            ? {
+                data,
+              }
+            : undefined,
+        });
+      };
+
       const teardown = () => {
         rest.clearLog();
         rest.removeMock();
@@ -170,6 +198,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
       await use({
         port: MOXY_PORT,
         setZetkinApiMock,
+        setZetkinApi2Mock,
         setMock,
         teardown,
         ...rest,
