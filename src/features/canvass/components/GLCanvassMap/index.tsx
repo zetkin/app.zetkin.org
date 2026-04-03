@@ -259,7 +259,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             location.latitude,
           ]);
           const dx = screenPos.x - markerPos.markerX;
-          const dy = screenPos.y - markerPos.markerY;
+          const dy = screenPos.y - 10 - markerPos.markerY;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < nearestDistance) {
@@ -268,7 +268,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           }
         });
 
-        if (nearestDistance < 20) {
+        if (nearestDistance < 23) {
           if (nearestLocation != selectedLocation) {
             setSelectedLocationId(nearestLocation);
           }
@@ -415,7 +415,9 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           updateSelection();
           setMapZoom(ev.target.getZoom());
         }}
-        onMoveEnd={() => saveBounds()}
+        onMoveEnd={() => {
+          saveBounds();
+        }}
         RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         style={{ height: '100%', width: '100%' }}
       >
