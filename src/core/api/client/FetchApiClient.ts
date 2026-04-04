@@ -24,6 +24,10 @@ export default class FetchApiClient implements IApiClient {
     await assertOk(res);
   }
 
+  async fetch(path: string, init?: RequestInit) {
+    return await this._fetch(path, init);
+  }
+
   async get<DataType>(path: string): Promise<DataType> {
     const res = await this._fetch(path);
 
