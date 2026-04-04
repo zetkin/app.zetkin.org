@@ -77,7 +77,7 @@ const Cell: FC<{
   );
 
   const checked = !!cell;
-  const [isRestricted] = useAccessLevel();
+  const [, accessLevel] = useAccessLevel();
 
   return (
     <Box
@@ -91,7 +91,7 @@ const Cell: FC<{
       <Checkbox
         checked={checked}
         color="success"
-        disabled={isRestricted}
+        disabled={accessLevel === 'readonly'}
         onChange={onChange}
         tabIndex={-1}
       />
