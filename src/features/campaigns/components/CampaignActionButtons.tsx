@@ -11,6 +11,7 @@ import {
   Map,
   OpenInNew,
   Settings,
+  SplitscreenOutlined,
   Unarchive,
 } from '@mui/icons-material';
 import React, { useContext, useState } from 'react';
@@ -35,6 +36,7 @@ import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
+import EventShiftModal from 'features/calendar/components/EventShiftModal';
 
 enum CAMPAIGN_MENU_ITEMS {
   ARCHIVE_CAMPAIGN = 'archiveCampaign',
@@ -60,6 +62,10 @@ const CampaignActionButtons: React.FunctionComponent<
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
+  const [shiftModalOpen, setShiftModalOpen] = useState(false);
+  const [shiftModalDates, setShiftModalDates] = useState<[Date, Date] | null>(
+    null
+  );
 
   const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
   const createEvent = useCreateEvent(orgId);
@@ -72,7 +78,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const themes = useEmailThemes(orgId).data || [];
   const configs = useEmailConfigs(orgId).data || [];
 
-  const handleCreateEvent = () => {
+  const getDefaultEventDates = (): [Date, Date] => {
     const defaultStart = new Date();
     defaultStart.setDate(defaultStart.getDate() + 1);
     defaultStart.setMinutes(0);
@@ -80,7 +86,11 @@ const CampaignActionButtons: React.FunctionComponent<
     defaultStart.setMilliseconds(0);
 
     const defaultEnd = new Date(defaultStart.getTime() + 60 * 60 * 1000);
+    return [defaultStart, defaultEnd];
+  };
 
+  const handleCreateEvent = () => {
+    const [defaultStart, defaultEnd] = getDefaultEventDates();
     createEvent({
       activity_id: null,
       campaign_id: campaign.id,
@@ -100,6 +110,14 @@ const CampaignActionButtons: React.FunctionComponent<
       icon: <Event />,
       label: campaginMessages.createButton.createEvent(),
       onClick: handleCreateEvent,
+    },
+    {
+      icon: <SplitscreenOutlined />,
+      label: campaginMessages.createButton.createMultiShiftEvent(),
+      onClick: () => {
+        setShiftModalDates(getDefaultEventDates());
+        setShiftModalOpen(true);
+      },
     },
     {
       icon: <HeadsetMic />,
@@ -273,6 +291,16 @@ const CampaignActionButtons: React.FunctionComponent<
           }}
         />
       </ZUIDialog>
+      {shiftModalDates && (
+        <EventShiftModal
+          close={() => {
+            setShiftModalOpen(false);
+            setShiftModalDates(null);
+          }}
+          dates={shiftModalDates}
+          open={shiftModalOpen}
+        />
+      )}
     </Box>
   );
 };
