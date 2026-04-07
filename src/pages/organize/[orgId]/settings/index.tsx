@@ -33,7 +33,7 @@ const SettingsPage: PageWithLayout = () => {
   const listFuture = useOfficialMemberships(orgId).data || [];
   const messages = useMessages(messageIds);
   const env = useEnv();
-  const publicOrgUrl = `${env.vars.ZETKIN_APP_DOMAIN}/o/${orgId}`;
+  const publicOrgUrl = `${location.protocol}//${location.host}/o/${orgId}`;
 
   const adminList = listFuture.filter((user) => user.role === 'admin');
   const organizerList = listFuture.filter((user) => user.role === 'organizer');
