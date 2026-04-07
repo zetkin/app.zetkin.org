@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import editorjsBlocksToZetkinBlocks from './editorjsBlocksToZetkinBlocks';
 import { BLOCK_TYPES, BlockKind, InlineNodeKind } from '../types';
 

@@ -4,16 +4,16 @@ import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
-  SURVEY_CONDITION_OP,
   FilterConfigOrgOptions,
   NewSmartSearchFilter,
   OPERATION,
   SmartSearchFilterWithId,
+  SURVEY_CONDITION_OP,
   SurveyOptionFilterConfig,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
@@ -26,6 +26,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
+
 const localMessageIds = messageIds.filters.surveyOption;
 
 const DEFAULT_VALUE = 'none';
@@ -58,9 +59,6 @@ const SurveyOption = ({
   const { orgId } = useNumericRouteParams();
   const surveysWithElementsFuture = useSurveysWithElements(orgId);
   const surveys = surveysWithElementsFuture.data ?? [];
-  const surveysSorted = surveys.sort((s1, s2) => {
-    return s1.title.localeCompare(s2.title);
-  });
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<InternalConfig>(
     initialFilter,
@@ -96,9 +94,6 @@ const SurveyOption = ({
           e.type === ELEMENT_TYPE.QUESTION &&
           e.question.response_type === RESPONSE_TYPE.OPTIONS
       ) as ZetkinSurveyQuestionElement[]) || [];
-  const validQuestionsSorted = validQuestions.sort((vq1, vq2) => {
-    return vq1.question.question.localeCompare(vq2.question.question);
-  });
 
   const selectedElement = surveys
     .find((s) => s.id === filter.config.survey)
@@ -264,88 +259,24 @@ const SurveyOption = ({
               </Box>
             ),
             questionSelect: (
-              <StyledSelect
-                disabled={!surveys.length}
+              <StyledAutocomplete
+                items={validQuestions.map((q) => ({
+                  id: q.id,
+                  label: q.question.question,
+                }))}
                 onChange={(e) => handleQuestionSelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.questionSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.questionSelect.question}
-                        values={{
-                          question: truncateOnMiddle(
-                            validQuestions.find((q) => q.id === value)?.question
-                              .question ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
-                  },
-                }}
-                value={filter.config.question || DEFAULT_VALUE}
-              >
-                {!validQuestions.length && (
-                  <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id={localMessageIds.questionSelect.none} />
-                  </MenuItem>
-                )}
-                {validQuestionsSorted.map((q) => (
-                  <MenuItem key={q.id} value={q.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={
-                        q.question.question.length >= 40
-                          ? q.question.question
-                          : ''
-                      }
-                    >
-                      <Box>{truncateOnMiddle(q.question.question, 40)}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+                value={filter.config.question}
+              />
             ),
             surveySelect: (
-              <StyledSelect
+              <StyledAutocomplete
+                items={surveys.map((s) => ({
+                  id: s.id,
+                  label: s.title,
+                }))}
                 onChange={(e) => handleSurveySelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.surveySelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.surveySelect.survey}
-                        values={{
-                          surveyTitle: truncateOnMiddle(
-                            surveys.find((s) => s.id === value)?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
-                  },
-                }}
-                value={filter.config.survey || DEFAULT_VALUE}
-              >
-                {!surveys.length && (
-                  <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id={localMessageIds.surveySelect.none} />
-                  </MenuItem>
-                )}
-                {surveysSorted.map((s) => (
-                  <MenuItem key={s.id} value={s.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={s.title.length >= 40 ? s.title : ''}
-                    >
-                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+                value={filter.config.survey}
+              />
             ),
           }}
         />

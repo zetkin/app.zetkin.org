@@ -1,10 +1,10 @@
 import { FormEvent } from 'react';
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -50,9 +50,6 @@ const PersonView = ({
   const viewsFuture = useSubOrgViews(orgIds);
 
   const personViews = viewsFuture.data || [];
-  const personViewsSorted = [...personViews].sort((pv1, pv2) => {
-    return pv1.title.localeCompare(pv2.title);
-  });
 
   const submittable = !!(filter.config.view > 0 && filter.config.operator);
 
@@ -134,21 +131,17 @@ const PersonView = ({
                 </StyledSelect>
               ),
               viewSelect: (
-                <StyledSelect
-                  onChange={(e) => handleViewChange(+e.target.value as number)}
-                  value={filter.config.view}
-                >
-                  {personViewsSorted.map((v) => (
-                    <MenuItem key={v.id} value={v.id}>
-                      <Tooltip
-                        placement="right-start"
-                        title={v.title.length >= 40 ? v.title : ''}
-                      >
-                        <Box>{truncateOnMiddle(v.title, 40)}</Box>
-                      </Tooltip>
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
+                <StyledAutocomplete
+                  clearable={true}
+                  items={personViews.map((v) => ({
+                    id: v.id,
+                    label: v.title,
+                  }))}
+                  onChange={(e) => handleViewChange(+e.target.value)}
+                  value={
+                    filter.config.view === 0 ? undefined : filter.config.view
+                  }
+                />
               ),
             }}
           />

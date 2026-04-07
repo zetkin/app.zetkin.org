@@ -1,12 +1,12 @@
 import { FormEvent } from 'react';
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -43,18 +43,13 @@ const Task = ({
   onCancel,
   filter: initialFilter,
 }: TaskProps): JSX.Element => {
+  const messages = useMessages(localMessageIds);
   const { orgId } = useNumericRouteParams();
 
   const tasksQuery = useTasks(orgId);
   const tasks = tasksQuery.data || [];
-  const tasksSorted = tasks.sort((t1, t2) => {
-    return t1.title.localeCompare(t2.title);
-  });
 
   const campaigns = useCampaigns(orgId).data || [];
-  const campaignsSorted = campaigns.sort((c1, c2) => {
-    return c1.title.localeCompare(c2.title);
-  });
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(
     initialFilter,
@@ -167,22 +162,21 @@ const Task = ({
                 <Box component="span" paddingX={1}>
                   <Msg id={localMessageIds.campaignSelect.in} />
                 </Box>
-                <StyledSelect
+                <StyledAutocomplete
+                  items={[
+                    {
+                      group: 'pinned',
+                      id: ANY_CAMPAIGN,
+                      label: messages.campaignSelect.any(),
+                    },
+                    ...campaigns.map((c) => ({
+                      id: c.id,
+                      label: c.title,
+                    })),
+                  ]}
                   onChange={(e) => handleCampaignSelectChange(e.target.value)}
                   value={filter.config.campaign || ANY_CAMPAIGN}
-                >
-                  <MenuItem key={ANY_CAMPAIGN} value={ANY_CAMPAIGN}>
-                    <Msg id={localMessageIds.campaignSelect.any} />
-                  </MenuItem>
-                  {campaignsSorted.map((c) => (
-                    <MenuItem key={c.id} value={c.id}>
-                      <Msg
-                        id={localMessageIds.campaignSelect.campaign}
-                        values={{ campaign: c.title }}
-                      />
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
+                />
               </>
             ) : null,
             matchingSelect: (
@@ -192,41 +186,21 @@ const Task = ({
               />
             ),
             taskSelect: (
-              <StyledSelect
-                onChange={(e) => handleTaskSelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === ANY_TASK ? (
-                      <Msg id={localMessageIds.taskSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.taskSelect.task}
-                        values={{
-                          task: truncateOnMiddle(
-                            tasks.find((t) => t.id === value)?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: ANY_TASK,
+                    label: messages.taskSelect.any(),
                   },
-                }}
+                  ...tasks.map((t) => ({
+                    id: t.id,
+                    label: t.title,
+                  })),
+                ]}
+                onChange={(e) => handleTaskSelectChange(e.target.value)}
                 value={filter.config.task || ANY_TASK}
-              >
-                <MenuItem key={ANY_TASK} value={ANY_TASK}>
-                  <Msg id={localMessageIds.taskSelect.any} />
-                </MenuItem>
-                {tasksSorted.map((t) => (
-                  <MenuItem key={t.id} value={t.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={t.title.length >= 40 ? t.title : ''}
-                    >
-                      <Box>{truncateOnMiddle(t.title, 40)}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             taskStatusSelect: (
               <StyledSelect

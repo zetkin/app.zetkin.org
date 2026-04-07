@@ -63,7 +63,8 @@ const StyledGroupedSelect: FC<Props> = (props) => {
         },
         select: {
           renderValue: (value) =>
-            props.items.find((item) => item.id == value)?.label ?? '',
+            props.items.find((item) => String(item.id) === String(value))
+              ?.label ?? '',
           ...props.SelectProps,
           sx: {
             fontSize: oldTheme.typography.h4.fontSize,
