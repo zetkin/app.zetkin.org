@@ -21,7 +21,11 @@ export default async function Page({ params, searchParams }: PageProps) {
   const apiClient = new BackendApiClient(headersObject);
 
   const unsubUrl = searchParams.unsub;
-  if (!unsubUrl) {
+
+  const validUnsubUrl =
+    unsubUrl && unsubUrl.startsWith('https://') && unsubUrl.includes('zetk.in');
+
+  if (!unsubUrl || !validUnsubUrl) {
     return notFound();
   }
 
