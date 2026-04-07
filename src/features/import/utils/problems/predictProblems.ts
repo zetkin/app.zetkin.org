@@ -20,7 +20,7 @@ import { cleanPhoneNumber } from '../phoneUtils';
 const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   date: (value) => {
     try {
-      return new Date(value).toISOString().slice(0, 10) == value;
+      return new Date(value).toISOString().slice(0, 10) === value;
     } catch (err) {
       return false;
     }

@@ -19,7 +19,7 @@ type UseZUIOrgScopeSelectProps = {
 
 function getScopeFromValue(value: ValueType, currentOrg: number): Scope {
   if (Array.isArray(value)) {
-    if (value.length == 1 && value[0] == currentOrg) {
+    if (value.length === 1 && value[0] === currentOrg) {
       return 'this';
     } else {
       return 'specific';

@@ -12,14 +12,15 @@ export default function hasWrongIDFormat(
   if (
     column.idField === 'email' ||
     column.idField === 'ext_id' ||
-    column.idField == null
+    column.idField === null ||
+    column.idField === undefined
   ) {
     return false;
   }
 
   //idField must be "id"
   return cellValues.some((value, index) => {
-    if (firstRowIsHeaders && index == 0) {
+    if (firstRowIsHeaders && index === 0) {
       return false;
     }
 

@@ -60,7 +60,7 @@ export function clusterEvents(
   sortedEvents.forEach((event, index) => {
     const lastEvent = sortedEvents[index - 1];
 
-    if (lastEvent?.start_time.slice(0, 10) != event.start_time.slice(0, 10)) {
+    if (lastEvent?.start_time.slice(0, 10) !== event.start_time.slice(0, 10)) {
       // This event is the first of this day, so we can reset all
       // cluster lookups, to speed up future lookups
       allClusters = allClusters.concat(pendingClusters);

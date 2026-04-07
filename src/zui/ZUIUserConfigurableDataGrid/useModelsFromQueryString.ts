@@ -136,7 +136,7 @@ function parseSortModelFromQuery(query: ParsedUrlQuery): GridSortModel {
   const sort = Array.isArray(query.sort) ? query.sort[0] : query.sort;
   if (sort) {
     return sort.split(',').map((sortStr) => {
-      const direction = sortStr.charAt(0) == '-' ? 'desc' : 'asc';
+      const direction = sortStr.charAt(0) === '-' ? 'desc' : 'asc';
       const field = '+-'.includes(sortStr.charAt(0))
         ? sortStr.slice(1)
         : sortStr;

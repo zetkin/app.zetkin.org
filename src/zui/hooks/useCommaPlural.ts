@@ -15,7 +15,7 @@ export default function useCommaPlural(
 
   const maxCommaValues = max - 1;
 
-  if (values.length == 0) {
+  if (values.length === 0) {
     return '';
   } else if (values.length === 1) {
     return messageFuncs.single({ value: values[0] });

@@ -31,13 +31,6 @@ export default function prepareSurveyApiSubmission(
       });
     }
 
-    if (type === 'options' && typeof value === 'string') {
-      responses.push({
-        options: value == '' ? [] : [parseInt(value, 10)],
-        question_id: parseInt(id, 10),
-      });
-    }
-
     if (type === 'options' && Array.isArray(value)) {
       responses.push({
         options: value

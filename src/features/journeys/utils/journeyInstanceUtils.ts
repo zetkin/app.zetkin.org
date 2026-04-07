@@ -73,7 +73,7 @@ export function makeJourneyTagColumn(
     return {
       ...colData,
       valueGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) =>
-        instance.tags.find((tag) => tag.id == colData.tag.id)?.value ?? null,
+        instance.tags.find((tag) => tag.id === colData.tag.id)?.value ?? null,
     };
   }
 }
