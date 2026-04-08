@@ -161,7 +161,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       active: dateFilterState === 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
@@ -227,7 +227,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   );
 
   const events =
-    includeSubOrgs || topOrgEvents.length == 0 ? allEvents : topOrgEvents;
+    includeSubOrgs || topOrgEvents.length === 0 ? allEvents : topOrgEvents;
 
   const eventsByDate = locationEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
@@ -251,7 +251,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const dates = Object.keys(eventsByDate).sort();
   const indexForSubOrgsButton = Math.min(1, dates.length - 1);
   const showSubOrgBlurb =
-    orgIdsToFilterBy.length == 0 && locationEvents.length > events.length;
+    orgIdsToFilterBy.length === 0 && locationEvents.length > events.length;
 
   const showNoEventsBlurb = !allEvents.length;
 
@@ -280,7 +280,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           />
         </Box>
       )}
-      {allEvents.length != 0 && (
+      {allEvents.length !== 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -319,7 +319,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </Box>
       )}
-      {locationEvents.length == 0 && (
+      {locationEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"

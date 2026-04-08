@@ -167,13 +167,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     }
   }
 
-  const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
+  const numLists = lists.status === 'fulfilled' ? lists.value.length : 0;
   const numPeople =
-    suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
+    suborgStats.status === 'fulfilled' ? suborgStats.value[0].result : 0;
   const numProjects =
-    projects.status == 'fulfilled' ? projects.value.length : 0;
+    projects.status === 'fulfilled' ? projects.value.length : 0;
   const title =
-    organization.status == 'fulfilled' ? organization.value.title : '';
+    organization.status === 'fulfilled' ? organization.value.title : '';
   const numBookedForEvents =
     eventParticipationStats.status === 'fulfilled'
       ? eventParticipationStats.value[0].result

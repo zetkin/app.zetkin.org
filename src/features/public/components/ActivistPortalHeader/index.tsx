@@ -41,7 +41,7 @@ const ActivistPortalHeader: FC<Props> = ({
   const router = useRouter();
 
   const memberships = useUserMemberships();
-  const isOfficial = memberships.find((membership) => membership.role != null);
+  const isOfficial = memberships.find((membership) => membership.role !== null);
 
   const menuItems: MenuItem[] = useMemo(
     () => [

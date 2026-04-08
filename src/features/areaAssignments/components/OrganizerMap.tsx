@@ -99,7 +99,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     const inputValue = matchString.trim().toLowerCase();
 
     const afterTextFilter =
-      inputValue.length == 0
+      inputValue.length === 0
         ? areas.concat()
         : areas.filter((area) => {
             const areaDesc =
@@ -112,7 +112,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           });
 
     const afterComplexFilter =
-      filteredAreaIds == null
+      filteredAreaIds === null
         ? afterTextFilter
         : afterTextFilter.filter((area) => filteredAreaIds.includes(area.id));
 
@@ -265,7 +265,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               maxWidth: 400,
               minWidth: 400,
               overflow: 'hidden',
-              paddingX: settingsOpen == 'select' ? 0 : 2,
+              paddingX: settingsOpen === 'select' ? 0 : 2,
               paddingY: 1,
               position: 'absolute',
               right: '1rem',

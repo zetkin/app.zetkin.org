@@ -131,7 +131,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
         display: 'flex',
         paddingLeft: checkboxProps ? '0.625rem' : '1.25rem',
         paddingRight: '1.25rem',
-        paddingY: variant == 'wide' ? '0.875rem' : '1rem',
+        paddingY: variant === 'wide' ? '0.875rem' : '1rem',
         width: '100%',
       })}
     >
@@ -174,8 +174,8 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
             sx={{
               alignItems: 'center',
               display: 'flex',
-              flexGrow: variant == 'narrow' ? 1 : '',
-              width: variant == 'narrow' ? '' : '50%',
+              flexGrow: variant === 'narrow' ? 1 : '',
+              width: variant === 'narrow' ? '' : '50%',
             }}
           >
             <Box
@@ -183,7 +183,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                 alignItems: 'center',
                 display: 'flex',
                 flexDirection: variant === 'wide' ? 'row-reverse' : 'column',
-                gap: variant == 'wide' ? '0.625rem' : '0.438rem',
+                gap: variant === 'wide' ? '0.625rem' : '0.438rem',
                 paddingRight: '1.25rem',
               }}
             >
@@ -219,8 +219,8 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                   flexGrow: 1,
                   maxWidth: '100%',
                   overflow: 'hidden',
-                  paddingLeft: variant == 'wide' ? '0.5rem' : '',
-                  paddingTop: variant != 'wide' ? '0.2rem' : '',
+                  paddingLeft: variant === 'wide' ? '0.5rem' : '',
+                  paddingTop: variant !== 'wide' ? '0.2rem' : '',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
@@ -234,7 +234,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
             sx={{
               alignItems: 'center',
               display: 'flex',
-              flexGrow: variant == 'narrow' ? 0 : 1,
+              flexGrow: variant === 'narrow' ? 0 : 1,
               justifyContent:
                 variant === 'narrow' || !showProgressChip
                   ? 'flex-end'
@@ -243,7 +243,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
           >
             <Box
               sx={{
-                alignItems: variant == 'narrow' ? 'flex-end' : '',
+                alignItems: variant === 'narrow' ? 'flex-end' : '',
                 display: 'flex',
                 flexDirection: variant === 'narrow' ? 'column-reverse' : 'row',
                 flexGrow: 1,

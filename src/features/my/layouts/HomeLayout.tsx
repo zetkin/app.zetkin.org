@@ -45,7 +45,7 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
   const messages = useMessages(messageIds);
   const user = useUser();
   const memberships = useUserMemberships();
-  const isOfficial = memberships.find((membership) => membership.role != null);
+  const isOfficial = memberships.find((membership) => membership.role !== null);
 
   const path = usePathname();
   const lastSegment = path?.split('/').pop() ?? 'home';

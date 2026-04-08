@@ -165,7 +165,7 @@ const AllEventsList: FC = () => {
 
   const filteredEvents = allEvents
     .filter((event) => {
-      if (orgIdsToFilterBy.length == 0) {
+      if (orgIdsToFilterBy.length === 0) {
         return true;
       }
       return orgIdsToFilterBy.includes(event.organization.id);
@@ -173,7 +173,7 @@ const AllEventsList: FC = () => {
     .filter((event) => {
       if (
         !dateFilterState ||
-        (dateFilterState == 'custom' && !customDatesToFilterBy[0])
+        (dateFilterState === 'custom' && !customDatesToFilterBy[0])
       ) {
         return true;
       }
@@ -281,7 +281,7 @@ const AllEventsList: FC = () => {
       active: dateFilterState === 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
@@ -331,7 +331,7 @@ const AllEventsList: FC = () => {
       overflow="hidden"
       position="relative"
     >
-      {allEvents.length != 0 && (
+      {allEvents.length !== 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -358,7 +358,7 @@ const AllEventsList: FC = () => {
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {filteredEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"

@@ -41,12 +41,12 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
     options.push({
       label:
-        i == 0
+        i === 0
           ? messages.report.steps.callBack.question.anyTimeOptionLabel()
           : messages.report.steps.callBack.question.afterSpecificHourOptionLabel(
               { hour }
             ),
-      value: i == 0 ? 'any' : hour,
+      value: i === 0 ? 'any' : hour,
     });
   }
   const initialTime =
@@ -59,7 +59,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
   const getNextMonday = () => {
     const indexOfToday = today.day();
-    return today.add(indexOfToday == 0 ? 1 : 8 - indexOfToday, 'day');
+    return today.add(indexOfToday === 0 ? 1 : 8 - indexOfToday, 'day');
   };
 
   const makeCallBackAfter = (timeToCallBack: string, dateToCallBack: Dayjs) => {

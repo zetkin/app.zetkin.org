@@ -432,7 +432,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             // Always render selected last, so that it gets
             // rendered on top of the unselected ones in case
             // there are overlaps.
-            if (a0.id == selectedId) {
+            if (a0.id === selectedId) {
               return 1;
             } else if (a1.id === selectedId) {
               return -1;
@@ -479,7 +479,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <Polygon
                 key={key}
-                color={areaStyle == 'hide' ? '' : 'black'}
+                color={areaStyle === 'hide' ? '' : 'black'}
                 dashArray={!area.hasPeople ? '5px 7px' : ''}
                 eventHandlers={{
                   click: () => {

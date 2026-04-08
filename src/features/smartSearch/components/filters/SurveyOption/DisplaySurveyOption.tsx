@@ -43,7 +43,7 @@ const DisplaySurveyOption = ({
 
   const element = surveyElements?.find((e) => e.id === questionId);
   const question =
-    element?.type == ELEMENT_TYPE.QUESTION ? element.question : null;
+    element?.type === ELEMENT_TYPE.QUESTION ? element.question : null;
 
   const options =
     question && question.response_type === RESPONSE_TYPE.OPTIONS

@@ -59,7 +59,7 @@ const FloorMatrix: FC<Props> = ({
     const floor0 = h0.level ?? Infinity;
     const floor1 = h1.level ?? Infinity;
 
-    if (floor0 == floor1) {
+    if (floor0 === floor1) {
       return naturalCmp(h0.title, h1.title);
     }
 
@@ -93,7 +93,7 @@ const FloorMatrix: FC<Props> = ({
   const editing = !!draftFloors;
   const selecting = !!selectedHouseholdIds;
 
-  const hasOnlyLevelZero = minLevel == 0 && maxLevel == 0;
+  const hasOnlyLevelZero = minLevel === 0 && maxLevel === 0;
   const unlikelyToBeSingleFloorInRealLife = households.length > 8;
   const householdsLikelyCreatedWithoutFloors =
     hasOnlyLevelZero && unlikelyToBeSingleFloorInRealLife;
@@ -141,7 +141,7 @@ const FloorMatrix: FC<Props> = ({
             (draft) => draft.level === floor
           );
 
-          const hasNoHouseholdsFromBefore = households.length == 0;
+          const hasNoHouseholdsFromBefore = households.length === 0;
           const isBottomFloor = floor === minLevel;
           const isInitialFloor = isBottomFloor && hasNoHouseholdsFromBefore;
 

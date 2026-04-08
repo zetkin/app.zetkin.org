@@ -96,7 +96,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                 onClickAway={() => {
                   setAnchorEl(null);
                   if (
-                    newReqParticipants != null &&
+                    newReqParticipants !== null &&
                     newReqParticipants !== reqParticipants
                   ) {
                     setReqParticipants(newReqParticipants);
@@ -111,7 +111,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                       onChange={(ev) => {
                         const val = ev.target.value;
 
-                        if (val == '') {
+                        if (val === '') {
                           setNewReqParticipants(null);
                           return;
                         }
@@ -124,7 +124,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                       onKeyDown={(ev) => {
                         if (ev.key === 'Enter') {
                           setAnchorEl(null);
-                          if (newReqParticipants != null) {
+                          if (newReqParticipants !== null) {
                             setReqParticipants(newReqParticipants);
                           }
                         } else if (ev.key === 'Escape') {

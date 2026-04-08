@@ -59,7 +59,7 @@ export default function useEmail(
   };
 
   const isTargeted = !!(
-    emailFuture.data && emailFuture.data.target?.filter_spec?.length != 0
+    emailFuture.data && emailFuture.data.target?.filter_spec?.length !== 0
   );
 
   const updateEmail = async (data: ZetkinEmailPatchBody) => {

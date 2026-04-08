@@ -165,7 +165,7 @@ const ZUITimeZonePicker: FC<ZUITimezonePickerProps> = ({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {filteredCities.length == 0 && (
+                    {filteredCities.length === 0 && (
                       <Typography
                         sx={(theme) => ({
                           color: theme.palette.secondary.main,

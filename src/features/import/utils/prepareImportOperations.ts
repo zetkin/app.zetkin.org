@@ -22,7 +22,7 @@ export default function prepareImportOperations(
   const preparedOps: BulkOp[] = [];
 
   sheet.rows.forEach((row, index) => {
-    if (sheet.firstRowIsHeaders && index == 0) {
+    if (sheet.firstRowIsHeaders && index === 0) {
       return;
     }
 

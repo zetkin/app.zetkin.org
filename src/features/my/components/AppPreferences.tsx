@@ -60,7 +60,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                   },
                   ...Object.entries(languageOptions)
                     // TODO: Remove this filter once nl is supported on server
-                    .filter((entry) => entry[0] != 'nl')
+                    .filter((entry) => entry[0] !== 'nl')
                     .map(([code, label]) => ({
                       label,
                       value: code,

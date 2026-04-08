@@ -92,7 +92,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   );
 
   const isLoggedInAsContactPerson =
-    contactPerson != undefined && contactPerson.id == orgMembership?.profile.id;
+    !!contactPerson && contactPerson.id === orgMembership?.profile.id;
 
   const showContactDetails =
     !event?.cancelled && event?.status === 'booked' && !!contactPerson;

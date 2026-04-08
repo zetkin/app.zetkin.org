@@ -31,5 +31,5 @@ export default function useOfficialMemberships(): IFuture<ZetkinMembership[]> {
     return new LoadingFuture();
   }
 
-  return new ResolvedFuture((future.data || []).filter((m) => m.role != null));
+  return new ResolvedFuture((future.data || []).filter((m) => m.role !== null));
 }

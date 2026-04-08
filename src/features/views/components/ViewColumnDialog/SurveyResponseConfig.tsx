@@ -231,7 +231,7 @@ const makeOptionColumns = (
     return [];
   }
 
-  if (selectedQuestion !== undefined && selectedQuestion !== null) {
+  if (selectedQuestion) {
     if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
       return [
         {

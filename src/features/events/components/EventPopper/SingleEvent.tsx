@@ -75,7 +75,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     state === EventState.CANCELLED;
 
   const numRemindedParticipants =
-    participants.filter((p) => p.reminder_sent != null && !p.cancelled)
+    participants.filter((p) => p.reminder_sent !== null && !p.cancelled)
       .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);

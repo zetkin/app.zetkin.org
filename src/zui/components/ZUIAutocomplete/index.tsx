@@ -273,7 +273,7 @@ const ZUIAutocomplete: FC<Props> = ({
           {
             paddingLeft: '0.375rem',
             paddingRight:
-              (Array.isArray(value) && value.length == 0) || !value
+              (Array.isArray(value) && value.length === 0) || !value
                 ? '2.5rem'
                 : '3.75rem',
           },

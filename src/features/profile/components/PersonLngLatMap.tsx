@@ -26,7 +26,7 @@ function isLngLatValue(
   value: ZetkinCustomFieldValue
 ): value is ZetkinLngLatFieldValue {
   return (
-    value != null &&
+    value !== null &&
     typeof value === 'object' &&
     typeof value['lng'] === 'number' &&
     typeof value['lat'] === 'number'
@@ -49,7 +49,7 @@ const PersonLngLatMap: FC<Props> = ({
     (field) => !!person[field.slug]
   );
 
-  if (lngLatFieldsWithValues.length == 0) {
+  if (lngLatFieldsWithValues.length === 0) {
     return null;
   }
 

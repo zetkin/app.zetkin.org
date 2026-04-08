@@ -52,7 +52,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
         )}
       </Box>
       <Box sx={{ alignItems: 'center', display: 'flex', width: '1.25rem' }}>
-        {numSignups == 0 && (
+        {numSignups === 0 && (
           <EmojiPeople
             sx={(theme) => ({
               color: theme.palette.grey[200],

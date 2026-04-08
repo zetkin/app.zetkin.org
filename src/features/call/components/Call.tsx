@@ -50,7 +50,7 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
   );
 
   const filteredUnfinishedCalls = unfinishedCalls.filter((unfinishedCall) =>
-    call ? call.id != unfinishedCall.id : true
+    call ? call.id !== unfinishedCall.id : true
   );
 
   const switchedTo = allUserAssignments.find(

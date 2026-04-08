@@ -136,7 +136,7 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
           </ZUIText>
         </Box>
       )}
-      {call.target.past_actions.num_actions == 0 && (
+      {call.target.past_actions.num_actions === 0 && (
         <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
           <ZUIText color="secondary">
             <Msg

@@ -30,10 +30,10 @@ import BrowserItemIcon from './ViewBrowser/BrowserItemIcon';
 import { ViewTreeData } from 'pages/api/views/tree';
 
 const folderById = (id: number | null, viewTree: ViewTreeData) => {
-  if (id == null) {
+  if (id === null) {
     return null;
   }
-  return viewTree.folders.find((f) => f.id == id) ?? null;
+  return viewTree.folders.find((f) => f.id === id) ?? null;
 };
 
 const getAllParentFolderIds = (
@@ -42,7 +42,7 @@ const getAllParentFolderIds = (
 ) => {
   let parentFolderIds: number[] = [];
 
-  while (folderId != null) {
+  while (folderId !== null) {
     parentFolderIds = [folderId, ...parentFolderIds];
 
     const folder = folderById(folderId, viewTree);
@@ -166,7 +166,7 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
               (item): item is Exclude<typeof item, ViewBrowserBackItem> =>
                 item.type !== 'back'
             );
-            if (relevantItems.length == 0) {
+            if (relevantItems.length === 0) {
               return (
                 <List>
                   <ListItem
@@ -192,7 +192,9 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
                     <ListItem
                       key={`${type}-${id}`}
                       onClick={
-                        type == 'folder' ? () => setViewedFolder(id) : undefined
+                        type === 'folder'
+                          ? () => setViewedFolder(id)
+                          : undefined
                       }
                       sx={
                         type === 'folder'

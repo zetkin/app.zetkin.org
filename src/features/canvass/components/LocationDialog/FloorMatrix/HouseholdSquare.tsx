@@ -15,7 +15,7 @@ const HouseholdSquare: FC<Props> = ({ active, color, content }) => {
   const isCross = content === 'cross';
   const isLiteral = !isCheck && !isCross;
 
-  color = color == 'clear' ? null : color;
+  color = color === 'clear' ? null : color;
   const backgroundColor = active ? 'black' : '#bbb';
 
   return (

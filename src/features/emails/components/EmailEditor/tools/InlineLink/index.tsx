@@ -263,7 +263,7 @@ export function linkToolFactory(title: string) {
         }
 
         //switch between icons for adding and removing this._link
-        this.updateButton(!this._selectedAnchor && anchors.length == 0);
+        this.updateButton(!this._selectedAnchor && anchors.length === 0);
       }
     }
 

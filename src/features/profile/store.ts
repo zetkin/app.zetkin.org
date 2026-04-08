@@ -167,7 +167,7 @@ const profilesSlice = createSlice({
       ids.forEach((id, index) => {
         const personItem = state.personById[id];
         if (personItem) {
-          if (index == 0) {
+          if (index === 0) {
             personItem.isStale = true;
           } else {
             personItem.deleted = true;

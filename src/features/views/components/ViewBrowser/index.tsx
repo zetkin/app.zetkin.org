@@ -238,7 +238,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       {(data) => {
         const rows = data.sort((item0, item1) => {
           const typeSort = typeComparator(item0, item1);
-          if (typeSort != 0) {
+          if (typeSort !== 0) {
             return typeSort;
           }
 
@@ -247,7 +247,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           // always returns non-zero when the two items are of different
           // type. We still check for "back" here, because TypeScript
           // doesn't understand the logic described above.
-          if (item0.type != 'back' && item1.type != 'back') {
+          if (item0.type !== 'back' && item1.type !== 'back') {
             for (const column of sortModel) {
               let sort = 0;
               if (column.field === 'title') {
@@ -256,7 +256,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                 sort = item0.owner.localeCompare(item1.owner);
               }
 
-              if (sort != 0) {
+              if (sort !== 0) {
                 return column.sort === 'asc' ? sort : -sort;
               }
             }

@@ -150,7 +150,7 @@ const AllInSuborg: FC<Props> = ({
         organizationsConfig.length < activeSuborgs.length && (
           <StyledItemSelect
             getOptionDisabled={(item) =>
-              selectedSuborgs.some((s) => s.id == item.id) || false
+              selectedSuborgs.some((s) => s.id === item.id) || false
             }
             onChange={(_, items) => {
               const ids = items.map((item) => item.id);

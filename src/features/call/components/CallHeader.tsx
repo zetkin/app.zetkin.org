@@ -173,7 +173,7 @@ const CallHeader: FC<Props> = ({
               ? SkipNext
               : undefined
           }
-          href={lane.step == LaneStep.START ? '/my/home' : undefined}
+          href={lane.step === LaneStep.START ? '/my/home' : undefined}
           label={messages.header.secondaryButton[lane.step]()}
           onClick={() => {
             if (
@@ -221,7 +221,8 @@ const CallHeader: FC<Props> = ({
               }
 
               const selectedSurvey =
-                surveys.find((survey) => survey.id == selectedSurveyId) || null;
+                surveys.find((survey) => survey.id === selectedSurveyId) ||
+                null;
               if (selectedSurvey) {
                 const response = responseBySurveyId[selectedSurvey.id];
                 const hasMeaningfulContent =

@@ -88,7 +88,7 @@ const StatusReport = ({ onClickBack, onClose, onDone }: StatusReportProps) => {
             : messages.actionButtons.done()
         }
         secondaryButtonMsg={
-          result.status == 'error' ? messages.actionButtons.back() : undefined
+          result.status === 'error' ? messages.actionButtons.back() : undefined
         }
       />
     </Box>

@@ -107,7 +107,7 @@ export const usePersonSelect: UsePersonSelect = ({
 
   if (isLoading) {
     searchLabel = messages.personSelect.searching();
-  } else if (results?.length == 0) {
+  } else if (results?.length === 0) {
     searchLabel = messages.personSelect.noResult();
   }
 

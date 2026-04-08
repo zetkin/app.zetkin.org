@@ -101,7 +101,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         ? eventParticipationStats.value[0].result
         : 0;
     const numPeople =
-      suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
+      suborgStats.status === 'fulfilled' ? suborgStats.value[0].result : 0;
     const numSubmissions =
       surveySubmissions.status === 'fulfilled'
         ? surveySubmissions.value.filter(

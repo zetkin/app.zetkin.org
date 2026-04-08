@@ -85,7 +85,7 @@ export default function useVisitReporting(
       }
 
       const todayStr = now.toISOString().slice(0, 10);
-      if (visit.created.slice(0, 10) != todayStr) {
+      if (visit.created.slice(0, 10) !== todayStr) {
         return false;
       }
 

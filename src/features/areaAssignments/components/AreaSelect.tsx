@@ -166,7 +166,7 @@ const AreaSelect: FC<Props> = ({
                 .map((session) => session.user_id);
               return (
                 <>
-                  {index != 0 && <Divider />}
+                  {index !== 0 && <Divider />}
                   <Box
                     key={area.id}
                     display="flex"
@@ -178,7 +178,7 @@ const AreaSelect: FC<Props> = ({
                         color: theme.palette.primary.main,
                       },
                       cursor: 'pointer',
-                      pt: index == 0 ? 1 : 0,
+                      pt: index === 0 ? 1 : 0,
                     }}
                   >
                     <Typography>{area.title || 'Untitled area'}</Typography>

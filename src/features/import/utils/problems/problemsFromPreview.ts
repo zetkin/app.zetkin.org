@@ -74,7 +74,7 @@ export default function problemsFromPreview(
     summary.tagged.total +
     summary.updated.total;
 
-  if (problems.length == 0 && totalImpact == 0) {
+  if (problems.length === 0 && totalImpact === 0) {
     problems.push({
       kind: ImportProblemKind.NO_IMPACT,
     });

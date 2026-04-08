@@ -203,7 +203,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     'orgs' | 'calendar' | 'context' | null
   >(null);
   const selectedSurvey =
-    surveys.find((survey) => survey.id == selectedSurveyId) || null;
+    surveys.find((survey) => survey.id === selectedSurveyId) || null;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -397,7 +397,8 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     numProjects: projectIdsToFilterActivitiesBy.length,
                   })
                 : projects.find(
-                    (project) => project.id == projectIdsToFilterActivitiesBy[0]
+                    (project) =>
+                      project.id === projectIdsToFilterActivitiesBy[0]
                   )?.title ||
                   messages.activities.filters.projects({ numProjects: 0 }),
             onClick: () => {
@@ -426,7 +427,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           filtersUpdated({
             customDatesToFilterEventsBy: [null, null],
             eventDateFilterState:
-              eventDateFilterState == 'today' ? null : 'today',
+              eventDateFilterState === 'today' ? null : 'today',
           })
         );
       },
@@ -440,7 +441,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           filtersUpdated({
             customDatesToFilterEventsBy: [null, null],
             eventDateFilterState:
-              eventDateFilterState == 'tomorrow' ? null : 'tomorrow',
+              eventDateFilterState === 'tomorrow' ? null : 'tomorrow',
           })
         );
       },
@@ -454,7 +455,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           filtersUpdated({
             customDatesToFilterEventsBy: [null, null],
             eventDateFilterState:
-              eventDateFilterState == 'thisWeek' ? null : 'thisWeek',
+              eventDateFilterState === 'thisWeek' ? null : 'thisWeek',
           })
         );
       },
@@ -463,7 +464,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       active: eventDateFilterState === 'custom',
       key: 'custom',
       label:
-        eventDateFilterState == 'custom' && customDatesToFilterEventsBy[0]
+        eventDateFilterState === 'custom' && customDatesToFilterEventsBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterEventsBy[1],
               customDatesToFilterEventsBy[0]
@@ -577,10 +578,10 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   dispatch(surveySelected(surveyId));
                 }}
                 showNoActivities={
-                  filteredActivities.length == 0 && !filterState.alreadyIn
+                  filteredActivities.length === 0 && !filterState.alreadyIn
                 }
                 showNoSignups={
-                  filteredActivities.length == 0 && filterState.alreadyIn
+                  filteredActivities.length === 0 && filterState.alreadyIn
                 }
                 target={target}
               />

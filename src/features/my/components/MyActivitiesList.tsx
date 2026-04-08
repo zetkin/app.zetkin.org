@@ -29,7 +29,7 @@ const MyActivitiesList: FC = () => {
   ) as KindOfActivity[];
 
   const filteredActivities = activities.filter((activity) => {
-    const notFiltering = filteredKinds.length == 0;
+    const notFiltering = filteredKinds.length === 0;
     return notFiltering || filteredKinds.includes(activity.kind);
   });
 
@@ -60,7 +60,7 @@ const MyActivitiesList: FC = () => {
           })}
         </Box>
       )}
-      {filteredActivities.length == 0 && (
+      {filteredActivities.length === 0 && (
         <Box
           alignItems="center"
           display="flex"

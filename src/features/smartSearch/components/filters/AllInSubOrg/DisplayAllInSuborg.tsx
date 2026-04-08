@@ -45,7 +45,7 @@ const DisplayAllInSuborg: FC<Props> = ({ filter }) => {
     filter.config.organizations.length === 1
   ) {
     const selectedSuborg = activeSuborgs.find(
-      (suborg) => suborg.id == filter.config.organizations[0]
+      (suborg) => suborg.id === filter.config.organizations[0]
     );
     return (
       <Msg

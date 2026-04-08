@@ -102,7 +102,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         lengthRef.current < options.length
       ) {
         const lastOption = options[options.length - 1];
-        if (lastOption.text == '') {
+        if (lastOption.text === '') {
           // Only focus the last added option if it's empty, i.e. if it was
           // added individually, to be edited after adding (not bulk).
           setAddedOptionId(lastOption.id);

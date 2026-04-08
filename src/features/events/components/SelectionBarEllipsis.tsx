@@ -30,7 +30,7 @@ const SelectionBarEllipsis = () => {
   const unpublishedEvents = events.filter((event) =>
     selectedEventIds.some(
       (selectedEvent) =>
-        selectedEvent == event.id && event.data?.published === null
+        selectedEvent === event.id && event.data?.published === null
     )
   );
 

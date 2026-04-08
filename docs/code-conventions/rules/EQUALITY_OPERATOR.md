@@ -11,6 +11,7 @@ Use strict equality operators (`===` and `!==`) by default. They make comparison
 - Comparisons should match the actual intent of the check.
 - When checking for a missing or falsy value, code should use `!value` or `!!value` as appropriate.
 - When checking specifically for `null` and `undefined`, code should use an explicit nullish check instead of a general falsy check.
+- If optional chaining or nullish-aware access already expresses the null-safe intent, remove redundant explicit `null`/`undefined` guards instead of duplicating checks.
 - When checking for missing, empty, or whitespace-only strings, code should use an explicit string check instead of relying on equality operators alone.
 - When comparing values from external boundaries such as APIs, user input, query params, storage, or third-party libraries, code should prefer explicit narrowing or validation before branching on equality.
 

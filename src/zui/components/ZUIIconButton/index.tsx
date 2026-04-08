@@ -122,8 +122,8 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
     >
       {variant === 'loading' && (
         <CircularProgress
-          size={size == 'small' ? '0.875rem' : '1rem'}
-          sx={{ margin: size == 'small' ? '0.188rem' : '0.25rem' }}
+          size={size === 'small' ? '0.875rem' : '1rem'}
+          sx={{ margin: size === 'small' ? '0.188rem' : '0.25rem' }}
         />
       )}
       {variant !== 'loading' && (

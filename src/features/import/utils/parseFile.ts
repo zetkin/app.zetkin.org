@@ -18,7 +18,7 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
         complete: (result) => {
           if (result.data) {
             const rows = result.data
-              .filter((rowData) => rowData.length > 1 || rowData[0] != '')
+              .filter((rowData) => rowData.length > 1 || rowData[0] !== '')
               .map((rowData) => ({ data: rowData }));
             const sheetObject = {
               columns: [],
@@ -92,7 +92,7 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
             });
 
             // Only include if there are non-null values in the row
-            if (rowValues.find((v) => v != null)) {
+            if (rowValues.find((v) => v !== null)) {
               table.rows.push({
                 data: rowValues.flat(),
               });

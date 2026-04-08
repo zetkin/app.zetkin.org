@@ -71,7 +71,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         // has not yet been configured
         const areaTagIds = area.tags.map((tag) => tag.id);
         return (
-          idsInGroup.length == 0 ||
+          idsInGroup.length === 0 ||
           idsInGroup.some((id) => areaTagIds.includes(id))
         );
       });

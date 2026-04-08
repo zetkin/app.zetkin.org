@@ -134,7 +134,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       active: dateFilterState === 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
@@ -231,7 +231,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           />
         </Box>
       )}
-      {allEvents.length != 0 && (
+      {allEvents.length !== 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -267,7 +267,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {filteredEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"

@@ -237,7 +237,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
             onChange={(ev) => {
               const val = ev.target.value;
 
-              if (val == '') {
+              if (val === '') {
                 onEventParticipantsChange(null);
                 return;
               }

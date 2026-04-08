@@ -67,7 +67,7 @@ export default function useFilteredActivities(orgId: number) {
 
   const filteredEvents: EventActivity[] = events
     .filter((event) => {
-      if (orgIdsToFilterEventsBy.length == 0) {
+      if (orgIdsToFilterEventsBy.length === 0) {
         return true;
       }
       return orgIdsToFilterEventsBy.includes(event.organization.id);
@@ -91,7 +91,7 @@ export default function useFilteredActivities(orgId: number) {
     .filter((event) => {
       if (
         !eventDateFilterState ||
-        (eventDateFilterState == 'custom' && !customDatesToFilterEventsBy[0])
+        (eventDateFilterState === 'custom' && !customDatesToFilterEventsBy[0])
       ) {
         return true;
       }
@@ -149,7 +149,7 @@ export default function useFilteredActivities(orgId: number) {
       return true;
     })
     .filter((activity) => {
-      if (projectIdsToFilterActivitiesBy.length == 0) {
+      if (projectIdsToFilterActivitiesBy.length === 0) {
         return true;
       }
 

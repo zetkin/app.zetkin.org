@@ -526,7 +526,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
           // Remove ID again after 2 seconds, unless the state has changed
           setTimeout(() => {
-            setAddedId((curState) => (curState == person.id ? 0 : curState));
+            setAddedId((curState) => (curState === person.id ? 0 : curState));
           }, 2000);
 
           // Scroll (jump) to row after short delay
@@ -583,7 +583,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     ]
   );
 
-  const empty = gridRows.length == 0;
+  const empty = gridRows.length === 0;
   const contentSource = view.content_query
     ? VIEW_CONTENT_SOURCE.DYNAMIC
     : VIEW_CONTENT_SOURCE.STATIC;
@@ -593,7 +593,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const getRowClassName = useCallback(
     (params: GridRowClassNameParams): string =>
-      params.id == addedId ? 'addedRow' : '',
+      params.id === addedId ? 'addedRow' : '',
     [addedId]
   );
 

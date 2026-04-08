@@ -42,7 +42,7 @@ export default function useUIDataColumn(
   }
 
   cellValuesSorted.forEach((value, idx) => {
-    if (firstRowIsHeaders && idx == 0) {
+    if (firstRowIsHeaders && idx === 0) {
       return;
     }
 
@@ -62,7 +62,9 @@ export default function useUIDataColumn(
 
   const valueInFirstRow = cellValues[0];
   const title =
-    firstRowIsHeaders && valueInFirstRow != null
+    firstRowIsHeaders &&
+    valueInFirstRow !== null &&
+    valueInFirstRow !== undefined
       ? valueInFirstRow.toString()
       : messages.configuration.mapping.defaultColumnHeader({
           columnIndex: columnIndex + 1,

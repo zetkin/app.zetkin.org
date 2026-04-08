@@ -81,7 +81,7 @@ export default function useCallInitialization() {
     canInitialize = true;
   } else if (callLanes && callLanes.version === CURRENT_CALL_LANES_VERSION) {
     const thisUserHasSavedLanes =
-      activeLanes.length > 0 && !!user && callLanes.userId == user.id;
+      activeLanes.length > 0 && !!user && callLanes.userId === user.id;
 
     const savedLanesAreFresh =
       callLanes.timestamp > new Date().getTime() - LANES_TTL;
@@ -101,7 +101,7 @@ export default function useCallInitialization() {
   const initialize = () => {
     if (assignmentIdFromQuery) {
       const thisUserHasSavedLanes =
-        activeLanes.length > 0 && !!user && callLanes?.userId == user.id;
+        activeLanes.length > 0 && !!user && callLanes?.userId === user.id;
 
       const savedLanesAreFresh =
         callLanes && callLanes.timestamp > new Date().getTime() - LANES_TTL;

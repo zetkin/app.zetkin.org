@@ -105,7 +105,7 @@ export default class PersonTagColumnType implements IColumnType {
       return;
     }
 
-    if (ev.key == 'Enter' || ev.key == ' ') {
+    if (ev.key === 'Enter' || ev.key === ' ') {
       viewGrid.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
     }

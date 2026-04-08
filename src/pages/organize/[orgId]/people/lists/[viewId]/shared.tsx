@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     parseInt(viewId as string)
   );
 
-  if (accessLevel == null) {
+  if (accessLevel === null) {
     return {
       notFound: true,
     };

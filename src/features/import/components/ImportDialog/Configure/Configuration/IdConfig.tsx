@@ -115,7 +115,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                             ),
                         });
                       } else {
-                        updateImportID(importID == idField ? null : idField);
+                        updateImportID(importID === idField ? null : idField);
                       }
                     }}
                   />

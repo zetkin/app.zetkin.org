@@ -116,7 +116,7 @@ const EmailPage: PageWithLayout = () => {
                 minWidth: 300,
               }}
               value={
-                emails.find((email) => email.id == secondaryEmailId) || null
+                emails.find((email) => email.id === secondaryEmailId) || null
               }
             />
           )}

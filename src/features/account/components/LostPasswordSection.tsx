@@ -22,7 +22,7 @@ type LostPasswordSectionProps = {
 const wasSuccessful = (
   result: PasswordResetStatus
 ): result is PasswordSuccess => {
-  return result.success == true;
+  return result.success === true;
 };
 
 const LostPasswordSection: FC<LostPasswordSectionProps> = ({

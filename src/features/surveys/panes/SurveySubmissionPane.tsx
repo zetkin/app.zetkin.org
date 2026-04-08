@@ -103,7 +103,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                     hidden={elem.hidden}
                     question={elem.question}
                   >
-                    {elem.selectedOptions.length == 0 && '-'}
+                    {elem.selectedOptions.length === 0 && '-'}
                     {elem.selectedOptions.map((option) => (
                       <ResponseItem key={option.id} icon={<Check />}>
                         {option.text}

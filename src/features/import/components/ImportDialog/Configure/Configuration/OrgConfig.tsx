@@ -78,7 +78,7 @@ const OrgConfig: FC<OrgConfigProps> = ({ uiDataColumn }) => {
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <Box key={index}>
-          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          {index !== 0 && <Divider sx={{ marginY: 1 }} />}
           <OrgConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectOrg={() => deselectOrg(uniqueValue)}

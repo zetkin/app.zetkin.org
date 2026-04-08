@@ -177,7 +177,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
       return null;
     }
 
-    return locations.data?.find((loc) => loc.id == selectedLocationId) || null;
+    return locations.data?.find((loc) => loc.id === selectedLocationId) || null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations]);
 
@@ -193,7 +193,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
 
     let accuracyPx = 18;
 
-    if (userAccuracy != null && mapZoom != null) {
+    if (userAccuracy !== null && mapZoom !== null) {
       const lat = userLocation[1];
       const metersPerPixel =
         (156543.03392 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, mapZoom);

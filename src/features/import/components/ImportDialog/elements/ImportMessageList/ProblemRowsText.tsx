@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ProblemRowsText: FC<Props> = ({ breakpoint = 8, rows }) => {
-  if (rows.length == 0) {
+  if (rows.length === 0) {
     return null;
   } else if (rows.length === 1) {
     return (

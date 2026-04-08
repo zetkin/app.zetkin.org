@@ -45,7 +45,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     }
 
     // Found the root
-    if (org.parent == null) {
+    if (org.parent === null) {
       return newBest;
     }
 

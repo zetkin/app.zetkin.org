@@ -37,7 +37,7 @@ const ZUIMultiDataChip: FC<ZUIMultiDataChipProps> = ({
   return (
     <Box sx={{ display: 'flex', height: 'fit-content' }}>
       {values.map((value, index) => {
-        const isFirst = index == 0;
+        const isFirst = index === 0;
         const isLast = index === values.length - 1;
 
         const getBorderRadius = () => {
@@ -62,10 +62,10 @@ const ZUIMultiDataChip: FC<ZUIMultiDataChipProps> = ({
                 index === values.length - 1
                   ? theme.palette.common.black
                   : theme.palette.common.white,
-              paddingLeft: index == 0 ? '0.625rem' : '0.375rem',
+              paddingLeft: index === 0 ? '0.625rem' : '0.375rem',
               paddingRight:
-                index == values.length - 1 ? '0.625rem' : '0.375rem',
-              paddingY: size == 'small' ? '0.188rem' : '0.438rem',
+                index === values.length - 1 ? '0.625rem' : '0.375rem',
+              paddingY: size === 'small' ? '0.188rem' : '0.438rem',
             })}
           >
             <Typography variant="labelSmMedium">{value}</Typography>

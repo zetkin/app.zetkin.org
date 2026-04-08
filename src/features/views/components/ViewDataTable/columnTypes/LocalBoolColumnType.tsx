@@ -53,7 +53,7 @@ export default class LocalBoolColumnType implements IColumnType {
       return;
     }
 
-    if (ev.key == 'Enter' || ev.key == ' ') {
+    if (ev.key === 'Enter' || ev.key === ' ') {
       viewGrid.setCellValue(personId, column.id, !data);
       ev.defaultMuiPrevented = true;
       ev.preventDefault();

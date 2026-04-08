@@ -50,7 +50,7 @@ export default function useCallAssignment(
 
   const isTargeted = !!(
     callAssignmentFuture.data &&
-    callAssignmentFuture.data.target?.filter_spec?.length != 0
+    callAssignmentFuture.data.target?.filter_spec?.length !== 0
   );
 
   const updateTargets = (query: Partial<ZetkinQuery>): void => {
