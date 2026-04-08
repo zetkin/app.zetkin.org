@@ -67,8 +67,6 @@ test.describe('View detail page', () => {
 
     await page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`);
 
-    await page.waitForTimeout(500);
-
     // Make sure the row was added
     expect(
       moxy
