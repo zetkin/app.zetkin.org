@@ -13,7 +13,6 @@ import {
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
-  PersonFieldViewColumn,
   SelectedViewColumn,
   ZetkinViewColumn,
 } from '../types';
@@ -63,7 +62,7 @@ const PersonFieldConfig = ({
 
   const personFieldsInView = existingColumns.filter(
     (column) => column.type === COLUMN_TYPE.PERSON_FIELD
-  ) as PersonFieldViewColumn[];
+  );
 
   const makeColumns = (slugs: string[]) => {
     return slugs.map((slug) => {

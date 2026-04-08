@@ -85,7 +85,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     return (
       <Msg
         id={messageId}
-        values={{ orgTitle: surveyFuture.data!.organization.title }}
+        values={{ orgTitle: surveyFuture.data.organization.title }}
       />
     );
   };

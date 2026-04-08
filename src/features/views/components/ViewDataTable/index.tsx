@@ -777,8 +777,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           onSave={onSaveCreateColumn}
         />
       )}
-      {renderConfigDialog &&
-        renderConfigDialog(
+      {columnToConfigure &&
+        renderConfigDialog?.(
           columnToConfigure,
           onConfigureColumnCancel,
           onConfigureColumnSave

@@ -67,7 +67,7 @@ const TagSelect: FC<TagSelectProps> = ({
     });
 
   const groupedFilteredTags = groupTags(
-    groupedOptions as ZetkinTag[],
+    groupedOptions,
     messages.manager.ungroupedHeader()
   );
 

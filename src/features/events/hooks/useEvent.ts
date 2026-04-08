@@ -14,7 +14,7 @@ export default function useEvent(
 
   const item = eventList.items.find((item) => item.id === id);
 
-  if (item && item.deleted) {
+  if (item?.deleted) {
     return null;
   }
 

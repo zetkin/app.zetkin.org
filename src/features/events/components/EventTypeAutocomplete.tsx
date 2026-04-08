@@ -74,9 +74,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
       const newEventType = types.find((item) => item.title === createdType);
-      setText(newEventType ? newEventType!.title : uncategorizedMsg);
+      setText(newEventType ? newEventType.title : uncategorizedMsg);
       if (newEventType) {
-        onChangeNewOption(newEventType!.id);
+        onChangeNewOption(newEventType.id);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,7 +148,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           });
           return inputValue ? filteredResult : options;
         }}
-        getOptionLabel={(option) => option.title!}
+        getOptionLabel={(option) => option.title}
         isOptionEqualToValue={(option, value) => option.title === value.title}
         onBlur={() => {
           // show 'uncategorized' in textField when blurring
@@ -164,8 +164,8 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onChange={(_, value) => {
           setText(value.title);
           if (value.id === 'CREATE') {
-            createType(value.title!);
-            setCreatedType(value.title!);
+            createType(value.title);
+            setCreatedType(value.title);
             return;
           }
           onChange(
@@ -173,7 +173,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
               ? null
               : {
                   id: value.id,
-                  title: value.title!,
+                  title: value.title,
                 }
           );
         }}
@@ -243,7 +243,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
               {option.id === 'CREATE' && (
                 <li {...props}>
                   <Add sx={{ marginRight: 1 }} />
-                  {messages.type.createType({ type: option.title! })}
+                  {messages.type.createType({ type: option.title })}
                 </li>
               )}
             </Box>

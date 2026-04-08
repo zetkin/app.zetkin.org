@@ -66,9 +66,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       campaign_id: campaignId,
     });
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/callassignments/${
-        callAssignment!.id
-      }`
+      `/organize/${orgId}/projects/${campaignId}/callassignments/${callAssignment.id}`
     );
     showSnackbar(
       'success',

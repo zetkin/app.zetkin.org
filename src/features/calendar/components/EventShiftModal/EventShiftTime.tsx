@@ -240,7 +240,7 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
                   no: index + 1,
                 })}
                 onChange={(newShiftStart) => {
-                  if (newShiftStart && newShiftStart.isValid()) {
+                  if (newShiftStart?.isValid()) {
                     onEventShiftsChange([
                       ...eventShifts.slice(0, index),
                       dayjs(newShiftStart),

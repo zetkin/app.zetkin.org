@@ -17,9 +17,7 @@ const getEllipsedString = (string: string, maxLength: number): string => {
     return string;
   }
   const matches = Array.from(string.matchAll(/(\s)/g));
-  const ellipseIndex = matches.find(
-    (m) => (m.index as number) >= maxLength
-  )?.index;
+  const ellipseIndex = matches.find((m) => m.index >= maxLength)?.index;
   return string.slice(0, ellipseIndex) + '...';
 };
 

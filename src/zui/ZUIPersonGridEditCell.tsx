@@ -75,7 +75,7 @@ const ZUIPersonGridEditCell: FC<{
     disabled: isRestrictedMode,
   });
 
-  let searchResults = autoComplete.groupedOptions as ZetkinPerson[];
+  let searchResults = autoComplete.groupedOptions;
   const showSuggestedPeople =
     !!suggestedPeople.length && (!cell?.id || searching);
 

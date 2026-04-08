@@ -59,7 +59,7 @@ export default function useMapMarkerClick(
         return;
       }
 
-      onMarkerClick?.(leaves as GeoJSON.Feature[]);
+      onMarkerClick?.(leaves);
     };
 
     const onMouseEnter = () => {

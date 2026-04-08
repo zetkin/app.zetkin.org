@@ -83,9 +83,7 @@ const ViewJumpMenu: FunctionComponent = () => {
   }, [listRef, activeIndex]);
 
   // Exclude the current view from the list of views to jump to
-  const allOptions = (
-    inputValue.length ? groupedOptions : views || []
-  ) as ZetkinView[];
+  const allOptions = inputValue.length ? groupedOptions : views || [];
 
   const options = allOptions.filter((view) => view.id !== viewId);
   const tfProps = getInputProps();

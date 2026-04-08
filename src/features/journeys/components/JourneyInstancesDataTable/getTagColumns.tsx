@@ -133,9 +133,7 @@ const getTagColumns = (
         renderCell: (params: GridRenderCellParams<ZetkinJourneyInstance>) => {
           return col
             .tagsGetter(params.row.tags)
-            .map((tag) => (
-              <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
-            ));
+            .map((tag) => <TagChip key={tag.id} size="small" tag={tag} />);
         },
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
         valueFormatter: (value: ZetkinAppliedTag[]) =>
@@ -198,9 +196,7 @@ const getTagColumns = (
         renderCell: (params: GridRenderCellParams<ZetkinJourneyInstance>) =>
           col
             .tagsGetter(params.row.tags)
-            .map((tag) => (
-              <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
-            )),
+            .map((tag) => <TagChip key={tag.id} size="small" tag={tag} />),
         renderHeader: () => (
           <div className="MuiDataGrid-columnHeaderTitle">
             <Msg id={messageIds.instances.columns.tagsFree} />

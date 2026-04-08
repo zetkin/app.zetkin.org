@@ -44,7 +44,7 @@ export function injectIntl<MapType extends MessageMap>(
         );
       };
     } else {
-      output[key] = injectIntl(val, intl) as UseMessagesMap<typeof val>;
+      output[key] = injectIntl(val, intl);
     }
   });
 

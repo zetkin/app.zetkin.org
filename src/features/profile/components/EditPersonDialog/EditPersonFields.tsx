@@ -217,7 +217,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               isURLField
               label={field.title}
               onChange={(field, newValue) => {
-                const formattedUrl = formatUrl(newValue as string);
+                const formattedUrl = formatUrl(newValue);
                 onChange(field, formattedUrl ?? newValue);
               }}
               onReset={() => onReset(field.slug)}

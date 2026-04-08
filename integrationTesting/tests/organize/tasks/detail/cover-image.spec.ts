@@ -123,7 +123,7 @@ test.describe('Task detail page', () => {
     await image.waitFor({ state: 'visible' });
 
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PATCH'),
+      page.waitForResponse((res) => res.request().method() === 'PATCH'),
       page.locator('data-testid=ZetkinEditableImage-resetButton').click(),
     ]);
 

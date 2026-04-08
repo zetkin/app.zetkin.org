@@ -76,7 +76,7 @@ const TagChip: React.FunctionComponent<{
 
   return (
     <Box
-      onClick={() => !disabled && onClick && onClick(tag)}
+      onClick={() => !disabled && onClick?.(tag)}
       sx={{
         '& > span': { maxWidth: '100%' },
         '&:hover': {

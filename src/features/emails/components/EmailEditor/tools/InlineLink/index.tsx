@@ -58,7 +58,7 @@ export function linkToolFactory(title: string) {
 
     onToolClose(): void {
       //If the input is empty, remove anchor tag
-      if (this._input && this._input.value.length === 0) {
+      if (this._input?.value.length === 0) {
         if (this._selectedAnchor) {
           this._selectedAnchor.replaceWith(
             ...Array.from(this._selectedAnchor.childNodes)

@@ -127,9 +127,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
                   <FormControl fullWidth variant="standard">
                     <Select
                       name="column"
-                      onChange={(evt) =>
-                        handleChange(index, evt.target.value as string)
-                      }
+                      onChange={(evt) => handleChange(index, evt.target.value)}
                       value={item.field}
                       variant="standard"
                     >

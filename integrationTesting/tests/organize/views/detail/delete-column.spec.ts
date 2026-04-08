@@ -39,7 +39,7 @@ test.describe('View detail page', () => {
 
     // Delete first column
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'DELETE'),
+      page.waitForResponse((res) => res.request().method() === 'DELETE'),
       (async () => {
         await page.hover('[role=columnheader]:has-text("First name")');
         await page.click(
@@ -79,7 +79,7 @@ test.describe('View detail page', () => {
 
     // Delete first column
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'DELETE'),
+      page.waitForResponse((res) => res.request().method() === 'DELETE'),
       (async () => {
         await page.hover('[role=columnheader]:has-text("First name")');
         await page.click(
@@ -110,7 +110,7 @@ test.describe('View detail page', () => {
 
     // Delete local column
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'DELETE'),
+      page.waitForResponse((res) => res.request().method() === 'DELETE'),
       (async () => {
         await page.hover('[role=columnheader]:has-text("Active")');
         await page.click(

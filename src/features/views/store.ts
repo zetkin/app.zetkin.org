@@ -227,7 +227,7 @@ const viewsSlice = createSlice({
                   content: columnOrder.map((colId) => {
                     const idx = colList.items.findIndex(
                       (col) => col.id === colId
-                    )!;
+                    );
                     return row.data?.content[idx];
                   }),
                   id: row.data.id,

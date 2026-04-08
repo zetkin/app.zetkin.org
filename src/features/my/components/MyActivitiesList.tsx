@@ -26,7 +26,7 @@ const MyActivitiesList: FC = () => {
 
   const kinds = Array.from(
     new Set(activities.map((activity) => activity.kind))
-  ) as KindOfActivity[];
+  );
 
   const filteredActivities = activities.filter((activity) => {
     const notFiltering = filteredKinds.length === 0;

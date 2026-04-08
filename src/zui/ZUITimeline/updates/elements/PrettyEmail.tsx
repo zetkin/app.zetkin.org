@@ -110,7 +110,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
           ([key]) => key.toLowerCase() === headerName.toLowerCase()
         );
 
-        if (matchedHeader && matchedHeader[1]) {
+        if (matchedHeader?.[1]) {
           const values = matchedHeader[1].split(',');
 
           return (

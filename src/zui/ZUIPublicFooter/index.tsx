@@ -29,8 +29,8 @@ const ZUIPublicFooter: FC = () => {
       typeof env.vars.INSTANCE_OWNER_HREF === 'string'
         ? [
             {
-              href: env.vars.INSTANCE_OWNER_HREF as string,
-              text: env.vars.INSTANCE_OWNER_NAME as string,
+              href: env.vars.INSTANCE_OWNER_HREF,
+              text: env.vars.INSTANCE_OWNER_NAME,
             },
           ]
         : []),

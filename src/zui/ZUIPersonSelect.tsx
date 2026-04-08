@@ -132,12 +132,12 @@ export const usePersonSelect: UsePersonSelect = ({
     }
   };
 
-  let personOptions = (results || []) as ZetkinPerson[];
+  let personOptions = results || [];
   if (
     selectedPerson &&
     !personOptions.some((o) => o.id === selectedPerson.id)
   ) {
-    personOptions = [selectedPerson as ZetkinPerson].concat(personOptions);
+    personOptions = [selectedPerson].concat(personOptions);
   }
 
   return {

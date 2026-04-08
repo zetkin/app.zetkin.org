@@ -29,9 +29,9 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
   function calcHoverXPos(el: HTMLDivElement | null) {
     const container = containerRef.current;
     if (barIndex >= 0 && container && el) {
-      const hoveredBar = container.querySelector(
+      const hoveredBar = container.querySelector<HTMLElement>(
         `.barContainer:nth-of-type(${barIndex + 1})`
-      ) as HTMLLIElement | null;
+      );
       if (hoveredBar) {
         const containerWidth = container.clientWidth;
         const barOffset = hoveredBar.offsetLeft;

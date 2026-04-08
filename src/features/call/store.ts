@@ -87,7 +87,7 @@ const CallSlice = createSlice({
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
 
-      if (currentLane && currentLane.currentCallId === null) {
+      if (currentLane?.currentCallId === null) {
         const filteredLanes = state.lanes.filter(
           (lane) => lane.currentCallId !== null
         );
@@ -382,7 +382,7 @@ const CallSlice = createSlice({
       const currentLane = state.lanes[currentLaneIndex];
 
       const weHaveNotStartedCallingInThisLane =
-        currentLane && currentLane.currentCallId === null;
+        currentLane?.currentCallId === null;
       if (weHaveNotStartedCallingInThisLane) {
         const lanesWithCalls = state.lanes.filter(
           (lane) => lane.currentCallId !== null
