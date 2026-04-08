@@ -2,10 +2,7 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
   fields: {
-    fieldsLayout: {
-      fields: m('Fields'),
-      title: m('Fields'),
-    },
+    title: m('Fields'),
   },
   officials: {
     addPerson: {
@@ -39,6 +36,7 @@ export default makeMessages('feat.settings', {
     },
     settingsLayout: {
       access: m('Access'),
+      fields: m('Fields'),
       title: m('Settings'),
     },
     tableButtons: {
