@@ -39,7 +39,7 @@ const Fields: PageWithLayout = () => {
           }}
         >
           <Typography variant="h4">
-            <Msg id={messageIds.fields.fieldsLayout.title} />
+            <Msg id={messageIds.fields.title} />
           </Typography>
         </Box>
       </Grid>
