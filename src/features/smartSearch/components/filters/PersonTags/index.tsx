@@ -169,7 +169,7 @@ const PersonTags = ({
               </StyledSelect>
             ),
             condition:
-              selected == 'some' ? (
+              selected === 'some' ? (
                 <Msg
                   id={localMessageIds.condition.edit.some}
                   values={{
@@ -259,19 +259,19 @@ const PersonTags = ({
                     })}
                     renderGroup={(params) => {
                       const group = groupedTags.find(
-                        (tagGroup) => tagGroup.title == params.group
+                        (tagGroup) => tagGroup.title === params.group
                       );
 
                       const alreadySelectedTagsFromThisGroup =
                         group?.tags.filter(
                           (tag) =>
                             !!filter.config.tags.some(
-                              (tagId) => tagId == tag.id
+                              (tagId) => tagId === tag.id
                             )
                         ) || [];
 
                       const allTagsInGroupAreSelected =
-                        group?.tags.length ==
+                        group?.tags.length ===
                         alreadySelectedTagsFromThisGroup.length;
 
                       return (
@@ -298,13 +298,13 @@ const PersonTags = ({
                               disabled={allTagsInGroupAreSelected}
                               onClick={() => {
                                 const group = groupedTags.find(
-                                  (tagGroup) => tagGroup.title == params.group
+                                  (tagGroup) => tagGroup.title === params.group
                                 );
 
                                 const existingTags = tags.filter(
                                   (tag) =>
                                     !!filter.config.tags.some(
-                                      (tagId) => tagId == tag.id
+                                      (tagId) => tagId === tag.id
                                     )
                                 );
 
@@ -315,7 +315,7 @@ const PersonTags = ({
                                       .filter(
                                         (tag) =>
                                           !existingTags.some(
-                                            (t) => t.id == tag.id
+                                            (t) => t.id === tag.id
                                           )
                                       )
                                       .map((tag) => ({
@@ -350,12 +350,12 @@ const PersonTags = ({
                     }}
                     renderOption={(params, tag) => {
                       const alreadySelected = !!selectedTags.find(
-                        (t) => t.id == tag.id
+                        (t) => t.id === tag.id
                       );
 
                       const existingTags = tags.filter(
                         (tag) =>
-                          !!filter.config.tags.some((tagId) => tagId == tag.id)
+                          !!filter.config.tags.some((tagId) => tagId === tag.id)
                       );
                       return (
                         <Box

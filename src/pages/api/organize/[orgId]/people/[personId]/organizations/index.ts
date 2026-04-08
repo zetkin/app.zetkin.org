@@ -58,7 +58,7 @@ const getOrganizationTrees = async (
     // Add all parent orgs, recursively, of any org the member is connected to
     const personOrgs = getPersonOrganizations(
       flattenTree(orgTree) as PersonOrganization[],
-      connectedOrgs as PersonOrganization[]
+      connectedOrgs
     );
 
     // Return organizations trees

@@ -10,10 +10,9 @@ import { LocalQueryViewColumn, ZetkinViewColumn } from '../../types';
 
 type LocalQueryViewCell = boolean | null;
 
-export default class LocalQueryColumnType implements IColumnType<
-  ZetkinViewColumn,
-  LocalQueryViewCell
-> {
+export default class LocalQueryColumnType
+  implements IColumnType<ZetkinViewColumn, LocalQueryViewCell>
+{
   cellToString(cell: LocalQueryViewCell): string {
     return cell ? cell.toString() : '';
   }

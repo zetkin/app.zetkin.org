@@ -9,11 +9,11 @@ export default function parserFactory(format: string) {
   const danishCprParser = new DanishCprParser();
   const norwegianFnrParser = new NorwegianFnrParser();
 
-  if (format == 'se') {
+  if (format === 'se') {
     return swedishPnrParser;
-  } else if (format == 'no') {
+  } else if (format === 'no') {
     return norwegianFnrParser;
-  } else if (format == 'dk') {
+  } else if (format === 'dk') {
     return danishCprParser;
   } else {
     return anyFormatDateParser;

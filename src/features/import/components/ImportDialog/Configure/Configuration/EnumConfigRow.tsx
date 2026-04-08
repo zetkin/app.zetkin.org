@@ -78,7 +78,7 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
                 <Select
                   label={title}
                   onChange={(event) => {
-                    if (typeof event.target.value == 'string') {
+                    if (typeof event.target.value === 'string') {
                       onSelectOption(event.target.value);
                     }
                   }}

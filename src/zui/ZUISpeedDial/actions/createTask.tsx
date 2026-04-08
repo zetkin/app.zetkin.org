@@ -13,7 +13,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
   const router = useRouter();
   const { campId, orgId } = router.query as { campId: string; orgId: string };
 
-  const createTask = useCreateTask(parseInt(orgId as string));
+  const createTask = useCreateTask(parseInt(orgId));
   //createTask function in hook async,
   const handleFormSubmit = async (task: ZetkinTaskRequestBody) => {
     // Set defaults for config and target_filters

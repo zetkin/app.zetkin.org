@@ -106,8 +106,8 @@ const Journey: FC<JourneyProps> = ({
   const selected = !filter.config.tags
     ? REGARDLESS_TAGS
     : filter.config.tags.min_matching
-      ? JOURNEY_CONDITION_OP.SOME
-      : filter.config.tags.condition;
+    ? JOURNEY_CONDITION_OP.SOME
+    : filter.config.tags.condition;
 
   const notRegardlessTags = !!filter.config.tags;
 
@@ -157,7 +157,7 @@ const Journey: FC<JourneyProps> = ({
               </StyledSelect>
             ),
             closedTimeFrame:
-              state == 'closed' ? (
+              state === 'closed' ? (
                 <TimeFrame
                   filterConfig={{
                     after: filter.config.opened?.after,
@@ -258,7 +258,7 @@ const Journey: FC<JourneyProps> = ({
                   setConfig({
                     ...filter.config,
                     closed:
-                      ev.target.value == 'open'
+                      ev.target.value === 'open'
                         ? null
                         : filter.config.closed || {},
                   });

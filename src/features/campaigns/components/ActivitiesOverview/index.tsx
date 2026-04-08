@@ -63,7 +63,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
       (item) =>
         item.kind === 'survey' &&
         item.data.org_access === 'suborgs' &&
-        item.data.organization.id != orgId
+        item.data.organization.id !== orgId
     );
   };
 
@@ -108,7 +108,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
           const totalLength =
             data.today.length + data.tomorrow.length + data.alsoThisWeek.length;
 
-          if (totalLength == 0) {
+          if (totalLength === 0) {
             return (
               <Box>
                 <ZUIEmptyState

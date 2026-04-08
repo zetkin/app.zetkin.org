@@ -27,10 +27,9 @@ type LocalPersonViewCell = null | ZetkinPerson;
 const makeName = (cell: { first_name: string; last_name: string }) =>
   `${cell.first_name} ${cell.last_name}`;
 
-export default class LocalPersonColumnType implements IColumnType<
-  LocalPersonViewColumn,
-  LocalPersonViewCell
-> {
+export default class LocalPersonColumnType
+  implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
+{
   cellToString(cell: LocalPersonViewCell): string {
     return cell ? makeName(cell) : '';
   }
@@ -133,7 +132,7 @@ function getPeopleInView(
   }
 
   const personColumnIndices = cols
-    .filter((col) => col.type == COLUMN_TYPE.LOCAL_PERSON)
+    .filter((col) => col.type === COLUMN_TYPE.LOCAL_PERSON)
     .map((col) => cols.indexOf(col));
 
   const peopleInView: ZetkinPerson[] = [];
@@ -151,7 +150,7 @@ function getPeopleInView(
       }
 
       const person = cell as ZetkinPerson;
-      if (peopleInView.some((existing) => existing.id == person.id)) {
+      if (peopleInView.some((existing) => existing.id === person.id)) {
         // Skip people that are already in the list
         return;
       }

@@ -17,9 +17,7 @@ const getEllipsedString = (string: string, maxLength: number): string => {
     return string;
   }
   const matches = Array.from(string.matchAll(/(\s)/g));
-  const ellipseIndex = matches.find(
-    (m) => (m.index as number) >= maxLength
-  )?.index;
+  const ellipseIndex = matches.find((m) => m.index >= maxLength)?.index;
   return string.slice(0, ellipseIndex) + '...';
 };
 
@@ -62,7 +60,7 @@ const truncateOnMiddle = (str: string, maxLength: number) => {
   const lastPartBase = str.substring(str.length - halfLength);
   const lastWhitespaceOfFirst = firstPartBase.lastIndexOf(' ');
   const firstWhitespaceOfLast = lastPartBase.indexOf(' ');
-  if (lastWhitespaceOfFirst == -1 || firstWhitespaceOfLast == -1) {
+  if (lastWhitespaceOfFirst === -1 || firstWhitespaceOfLast === -1) {
     return `${firstPartBase}...${lastPartBase}`;
   }
   const firstPart = firstPartBase.substring(0, lastWhitespaceOfFirst);

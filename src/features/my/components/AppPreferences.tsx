@@ -60,7 +60,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                   },
                   ...Object.entries(languageOptions)
                     // TODO: Remove this filter once nl is supported on server
-                    .filter((entry) => entry[0] != 'nl')
+                    .filter((entry) => entry[0] !== 'nl')
                     .map(([code, label]) => ({
                       label,
                       value: code,
@@ -68,7 +68,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 ]}
                 label={messages.settings.appPreferences.lang.label()}
                 onChange={(newValue) => {
-                  if (newValue == 'auto') {
+                  if (newValue === 'auto') {
                     setSelectedLanguage(null);
                   } else {
                     setSelectedLanguage(newValue as ZetkinUserLanguage);
@@ -78,7 +78,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 size="large"
               />
               <ZUIButton
-                disabled={selectedLanguage == user.lang}
+                disabled={selectedLanguage === user.lang}
                 label={messages.settings.appPreferences.lang.saveButton()}
                 onClick={async () => {
                   await updateUser({ lang: selectedLanguage });

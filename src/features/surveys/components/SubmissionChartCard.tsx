@@ -127,7 +127,7 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
                           <Typography variant="body2">
                             <Msg
                               id={messageIds.chart.tooltip.submissions}
-                              values={{ count: dataPoint.data.y as number }}
+                              values={{ count: dataPoint.data.y }}
                             />
                           </Typography>
                         </Box>

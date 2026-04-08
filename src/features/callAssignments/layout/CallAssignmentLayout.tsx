@@ -66,9 +66,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       campaign_id: campaignId,
     });
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/callassignments/${
-        callAssignment!.id
-      }`
+      `/organize/${orgId}/projects/${campaignId}/callassignments/${callAssignment.id}`
     );
     showSnackbar(
       'success',
@@ -82,8 +80,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={
-        state == CallAssignmentState.OPEN ||
-        state == CallAssignmentState.ACTIVE ? (
+        state === CallAssignmentState.OPEN ||
+        state === CallAssignmentState.ACTIVE ? (
           <Button onClick={() => end()} variant="outlined">
             <Msg id={messageIds.actions.end} />
           </Button>

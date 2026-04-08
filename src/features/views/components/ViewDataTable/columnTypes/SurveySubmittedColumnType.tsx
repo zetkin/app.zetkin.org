@@ -17,10 +17,9 @@ type SurveySubmittedViewCell =
     }[]
   | null;
 
-export default class SurveySubmittedColumnType implements IColumnType<
-  SurveySubmittedViewColumn,
-  SurveySubmittedViewCell
-> {
+export default class SurveySubmittedColumnType
+  implements IColumnType<SurveySubmittedViewColumn, SurveySubmittedViewCell>
+{
   cellToString(cell: SurveySubmittedViewCell): string {
     return cell?.length ? new Date(cell[0].submitted).toLocaleDateString() : '';
   }

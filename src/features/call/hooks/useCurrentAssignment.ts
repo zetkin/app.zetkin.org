@@ -8,7 +8,7 @@ export default function useCurrentAssignment() {
   const userAssignments = useMyAssignments();
 
   const assignment = userAssignments.find(
-    (assignment) => assignment.id == lane.assignmentId
+    (assignment) => assignment.id === lane.assignmentId
   );
 
   if (!assignment) {

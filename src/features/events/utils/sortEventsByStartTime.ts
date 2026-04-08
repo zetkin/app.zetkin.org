@@ -6,7 +6,7 @@ export default function sortEventsByStartTime(a: ZetkinEvent, b: ZetkinEvent) {
   const diffStart = aStart.getTime() - bStart.getTime();
 
   // Primarily sort by start time
-  if (diffStart != 0) {
+  if (diffStart !== 0) {
     return diffStart;
   }
 

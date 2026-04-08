@@ -56,9 +56,9 @@ const MappingRow: FC<MappingRowProps> = ({
   const makeColumnValuesMessage = useColumnValuesMessage();
 
   const getMappingRowButtonMessageId = () => {
-    if (column.originalColumn.kind == ColumnKind.DATE) {
+    if (column.originalColumn.kind === ColumnKind.DATE) {
       return messageIds.configuration.mapping.configButton;
-    } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+    } else if (column.originalColumn.kind === ColumnKind.ID_FIELD) {
       return messageIds.configuration.mapping.configButton;
     } else {
       return messageIds.configuration.mapping.mapValuesButton;
@@ -66,8 +66,8 @@ const MappingRow: FC<MappingRowProps> = ({
   };
 
   const columnIsSelectedAsImportID =
-    column.originalColumn.kind == ColumnKind.ID_FIELD &&
-    column.originalColumn.idField == importID;
+    column.originalColumn.kind === ColumnKind.ID_FIELD &&
+    column.originalColumn.idField === importID;
 
   return (
     <Box

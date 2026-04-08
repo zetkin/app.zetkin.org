@@ -80,12 +80,12 @@ export default function useVisitReporting(
   const now = new Date();
   const currentLocationVisit =
     locationVisits.find((visit) => {
-      if (visit.created_by_user_id != user?.id) {
+      if (visit.created_by_user_id !== user?.id) {
         return false;
       }
 
       const todayStr = now.toISOString().slice(0, 10);
-      if (visit.created.slice(0, 10) != todayStr) {
+      if (visit.created.slice(0, 10) !== todayStr) {
         return false;
       }
 
@@ -103,7 +103,7 @@ export default function useVisitReporting(
     currentLocationVisit,
     lastVisitByHouseholdId,
     async reportHouseholdVisit(householdId, responses) {
-      if (assignment?.reporting_level == 'location') {
+      if (assignment?.reporting_level === 'location') {
         const updated = {
           ...lastVisitByHouseholdId,
           [householdId]: {
@@ -163,7 +163,7 @@ export default function useVisitReporting(
       householdIds: number[],
       responses: MetricResponse[]
     ) {
-      if (assignment?.reporting_level == 'location') {
+      if (assignment?.reporting_level === 'location') {
         const nowStr = new Date().toISOString();
         const updated: VisitByHouseholdIdMap = { ...lastVisitByHouseholdId };
         householdIds.forEach((householdId) => {

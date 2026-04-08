@@ -140,7 +140,7 @@ const SubQuery = ({
         </>
       )}
       renderSentence={() =>
-        queries.length == 0 ? (
+        queries.length === 0 ? (
           <Msg id={messageIds.filters.subQuery.noSmartSearches} />
         ) : (
           <Msg

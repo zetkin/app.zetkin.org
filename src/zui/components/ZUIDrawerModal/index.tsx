@@ -140,7 +140,7 @@ const ZUIDrawerModal: FC<Props> = ({
                         {crumb.charAt(0).toUpperCase() +
                           crumb.toLowerCase().slice(1)}
                       </Typography>
-                      {index != subtitle.length - 1 && (
+                      {index !== subtitle.length - 1 && (
                         <ChevronRight
                           color="secondary"
                           sx={{ fontSize: '1.25rem' }}
@@ -157,7 +157,7 @@ const ZUIDrawerModal: FC<Props> = ({
             label={messages.drawerModal.close()}
             onClick={onClose}
             onKeyDown={(ev) => {
-              if (ev.key == 'Enter') {
+              if (ev.key === 'Enter') {
                 onClose();
               }
             }}

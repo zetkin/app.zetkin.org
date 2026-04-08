@@ -1,5 +1,4 @@
 import { useAppSelector } from 'core/hooks';
-import { ZetkinEvent } from 'utils/types/zetkin';
 
 export default function useSelectedEvents() {
   const selectedEventIds = useAppSelector(
@@ -12,7 +11,7 @@ export default function useSelectedEvents() {
     .map((selectedEventId) =>
       events.find((event) => event?.id === selectedEventId)
     )
-    .filter((event) => !!event) as ZetkinEvent[];
+    .filter((event) => !!event);
 
   return selectedEvents;
 }

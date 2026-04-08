@@ -127,8 +127,8 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
             option === 'CREATE_NEW_LOCATION'
               ? messages.eventOverviewCard.createLocation()
               : option === 'NO_PHYSICAL_LOCATION'
-                ? messages.eventOverviewCard.noLocation()
-                : option.title
+              ? messages.eventOverviewCard.noLocation()
+              : option.title
           }
           onChange={(_ev, option) => {
             if (option === 'CREATE_NEW_LOCATION') {
@@ -237,13 +237,13 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
             onChange={(ev) => {
               const val = ev.target.value;
 
-              if (val == '') {
+              if (val === '') {
                 onEventParticipantsChange(null);
                 return;
               }
 
               const intVal = parseInt(val);
-              if (!isNaN(intVal) && intVal.toString() == val) {
+              if (!isNaN(intVal) && intVal.toString() === val) {
                 onEventParticipantsChange(intVal);
               }
             }}

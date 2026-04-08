@@ -105,7 +105,7 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
           stats={segment.stats}
         />
       )}
-      {segment.kind == SEGMENT_KIND.EXIT && (
+      {segment.kind === SEGMENT_KIND.EXIT && (
         <SmartSearchSankeyExitPopper
           anchorEl={canvasRef.current}
           open={hovered}

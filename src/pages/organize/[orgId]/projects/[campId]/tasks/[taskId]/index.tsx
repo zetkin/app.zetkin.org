@@ -25,8 +25,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
       `/api/orgs/${orgId}/tasks/${taskId}`
     );
     if (
-      parseInt(campId as string) == task.campaign.id &&
-      parseInt(orgId as string) == task.organization.id
+      parseInt(campId as string) === task.campaign.id &&
+      parseInt(orgId as string) === task.organization.id
     ) {
       return {
         props: {

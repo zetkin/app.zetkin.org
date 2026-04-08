@@ -70,12 +70,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const [isBooking, setBooking] = useState(false);
 
   const showPublishButton =
-    state == EventState.DRAFT ||
-    state == EventState.SCHEDULED ||
-    state == EventState.CANCELLED;
+    state === EventState.DRAFT ||
+    state === EventState.SCHEDULED ||
+    state === EventState.CANCELLED;
 
   const numRemindedParticipants =
-    participants.filter((p) => p.reminder_sent != null && !p.cancelled)
+    participants.filter((p) => p.reminder_sent !== null && !p.cancelled)
       .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);
@@ -89,11 +89,11 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const isLoading =
     verifiedParticipantsFuture.isLoading ||
     respondentsFuture.isLoading ||
-    state == EventState.UNKNOWN;
+    state === EventState.UNKNOWN;
   const showSignups = numSignedUpParticipants > 0 || isLoading;
 
   const allSignedUpParticipantsAreVerified =
-    numSignedUpParticipants == verifiedSignedUpParticipants.length;
+    numSignedUpParticipants === verifiedSignedUpParticipants.length;
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);

@@ -5,11 +5,11 @@ export default function getTagContrastColor(color: string) {
   let contrastColor = '';
 
   Object.values(funSwatches).forEach((funSwatch) => {
-    if (color == funSwatch.dark.color) {
+    if (color === funSwatch.dark.color) {
       contrastColor = funSwatch.dark.contrast;
-    } else if (color == funSwatch.medium.color) {
+    } else if (color === funSwatch.medium.color) {
       contrastColor = funSwatch.medium.contrast;
-    } else if (color == funSwatch.light.color) {
+    } else if (color === funSwatch.light.color) {
       contrastColor = funSwatch.light.contrast;
     }
   });

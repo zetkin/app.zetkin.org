@@ -46,7 +46,7 @@ const settingsSlice = createSlice({
         (item) => item.id === membershipId
       );
 
-      if (item && item.data) {
+      if (item?.data) {
         item.data.role = membership.role;
         item.data = { ...item.data, ...membership, id: membershipId };
       } else {

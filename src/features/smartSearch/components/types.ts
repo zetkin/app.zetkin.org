@@ -388,9 +388,8 @@ export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
   type: FILTER_TYPE;
 }
 
-export interface SmartSearchFilterWithId<
-  C = AnyFilterConfig,
-> extends ZetkinSmartSearchFilter<C> {
+export interface SmartSearchFilterWithId<C = AnyFilterConfig>
+  extends ZetkinSmartSearchFilter<C> {
   id: number;
 }
 

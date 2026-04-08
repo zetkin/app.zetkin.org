@@ -80,9 +80,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                 <Box marginBottom={1}>{mostRecent.matchingContent}</Box>
                 {!isRestricted && (
                   <Button
-                    onClick={() =>
-                      onOpenSubmission && onOpenSubmission(mostRecent.id)
-                    }
+                    onClick={() => onOpenSubmission?.(mostRecent.id)}
                     startIcon={<AssignmentTurnedInOutlined />}
                   >
                     <Msg id={messageIds.surveyPreview.mostRecent.openButton} />
@@ -121,9 +119,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                       </Typography>
                       {!isRestricted && (
                         <Button
-                          onClick={() =>
-                            onOpenSubmission && onOpenSubmission(submission.id)
-                          }
+                          onClick={() => onOpenSubmission?.(submission.id)}
                           startIcon={<AssignmentTurnedInOutlined />}
                         >
                           <Msg id={messageIds.surveyPreview.older.openButton} />

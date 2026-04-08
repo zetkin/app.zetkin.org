@@ -75,7 +75,7 @@ const ZUIPersonGridEditCell: FC<{
     disabled: isRestrictedMode,
   });
 
-  let searchResults = autoComplete.groupedOptions as ZetkinPerson[];
+  let searchResults = autoComplete.groupedOptions;
   const showSuggestedPeople =
     !!suggestedPeople.length && (!cell?.id || searching);
 
@@ -88,7 +88,7 @@ const ZUIPersonGridEditCell: FC<{
 
     // Filter search results to exclude suggested people
     searchResults = searchResults.filter(
-      (p) => !suggestedPeople.find((s) => s.id == p.id)
+      (p) => !suggestedPeople.find((s) => s.id === p.id)
     );
   }
 
@@ -126,21 +126,21 @@ const ZUIPersonGridEditCell: FC<{
           inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
           onKeyDown={(ev) => {
-            if (ev.code == 'ArrowUp') {
+            if (ev.code === 'ArrowUp') {
               const nextIndex = activeIndex - 1;
               setActiveIndex(
                 nextIndex >= 0
                   ? nextIndex
                   : searchResults.length + suggestedPeople.length - 1
               );
-            } else if (ev.code == 'ArrowDown') {
+            } else if (ev.code === 'ArrowDown') {
               const nextIndex = activeIndex + 1;
               setActiveIndex(
                 nextIndex < searchResults.length + suggestedPeople.length
                   ? nextIndex
                   : 0
               );
-            } else if (ev.code == 'Enter') {
+            } else if (ev.code === 'Enter') {
               if (activeIndex < suggestedPeople.length) {
                 onUpdate(suggestedPeople[activeIndex]);
               } else {
@@ -157,7 +157,7 @@ const ZUIPersonGridEditCell: FC<{
         />
       </Box>
 
-      {suggestedPeople.length || autoComplete.inputValue != '' ? (
+      {suggestedPeople.length || autoComplete.inputValue !== '' ? (
         <Popper
           anchorEl={anchorEl}
           open={!!anchorEl}
@@ -247,30 +247,29 @@ const ZUIPersonGridEditCell: FC<{
                       width: '100%',
                     }}
                   >
-                    {showSuggestedPeople &&
-                      filteredSuggestedPeople.length > 0 && (
-                        <>
-                          <ListSubheader
-                            disableSticky={true}
-                            sx={{ marginTop: 0, paddingTop: 0 }}
-                          >
-                            {suggestedPeopleLabel}
-                          </ListSubheader>
-                          {filteredSuggestedPeople.map((option, index) => (
-                            <PersonListItem
-                              key={option.id}
-                              itemProps={{
-                                onClick: () => {
-                                  onUpdate(option);
-                                },
-                              }}
-                              orgId={orgId}
-                              person={option}
-                              selected={activeIndex == index}
-                            />
-                          ))}
-                        </>
-                      )}
+                    {showSuggestedPeople && filteredSuggestedPeople.length > 0 && (
+                      <>
+                        <ListSubheader
+                          disableSticky={true}
+                          sx={{ marginTop: 0, paddingTop: 0 }}
+                        >
+                          {suggestedPeopleLabel}
+                        </ListSubheader>
+                        {filteredSuggestedPeople.map((option, index) => (
+                          <PersonListItem
+                            key={option.id}
+                            itemProps={{
+                              onClick: () => {
+                                onUpdate(option);
+                              },
+                            }}
+                            orgId={orgId}
+                            person={option}
+                            selected={activeIndex === index}
+                          />
+                        ))}
+                      </>
+                    )}
                     {searching && (
                       <List
                         {...autoComplete.getListboxProps()}
@@ -308,7 +307,7 @@ const ZUIPersonGridEditCell: FC<{
                               orgId={orgId}
                               person={option}
                               selected={
-                                index + suggestedPeople.length == activeIndex
+                                index + suggestedPeople.length === activeIndex
                               }
                             />
                           );

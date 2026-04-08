@@ -49,7 +49,7 @@ const OpenJourneyInstancesPage: PageWithLayout = () => {
       <ZUIFuture future={journeyInstancesFuture}>
         {(data) => {
           const openJourneyInstances = data.journeyInstances.filter(
-            (journeyInstance) => journeyInstance.closed == null
+            (journeyInstance) => journeyInstance.closed === null
           );
 
           return (

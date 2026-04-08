@@ -74,19 +74,19 @@ const ShareViewDialogShareTab = () => {
               <MUIOnlyPersonSelect
                 disabled
                 getOptionDisabled={(person) =>
-                  accessList.some((item) => item.person.id == person.id) ||
-                  officials.some((item) => item.id == person.id)
+                  accessList.some((item) => item.person.id === person.id) ||
+                  officials.some((item) => item.id === person.id)
                 }
                 getOptionExtraLabel={(person) => {
                   const accessItem = accessList.find(
-                    (item) => item.person.id == person.id
+                    (item) => item.person.id === person.id
                   );
                   if (accessItem) {
                     return globalMessages.accessLevels[accessItem.level]();
                   }
 
                   const official = officials.find(
-                    (item) => item.id == person.id
+                    (item) => item.id === person.id
                   );
                   if (official) {
                     return globalMessages.roles[official.role]();

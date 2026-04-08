@@ -8,8 +8,8 @@ export default function isEventCluster(
   activity: ClusteredActivity
 ): activity is ClusteredEvent {
   return (
-    activity.kind == CLUSTER_TYPE.SINGLE ||
-    activity.kind == CLUSTER_TYPE.MULTI_LOCATION ||
-    activity.kind == CLUSTER_TYPE.MULTI_SHIFT
+    activity.kind === CLUSTER_TYPE.SINGLE ||
+    activity.kind === CLUSTER_TYPE.MULTI_LOCATION ||
+    activity.kind === CLUSTER_TYPE.MULTI_SHIFT
   );
 }

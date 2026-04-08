@@ -48,6 +48,9 @@ you're working on it, so that it isn't taken on by someone else as well.
 In order to keep things consistent we try to automate as much as possible when it comes
 to code style and formatting.
 
+For rule-level conventions and how to propose or change them, see
+[`docs/code-conventions/CODE_CONVENTIONS.md`](./docs/code-conventions/CODE_CONVENTIONS.md).
+
 ### Linting
 
 The CI server will run eslint and typescript to verify type safety and code

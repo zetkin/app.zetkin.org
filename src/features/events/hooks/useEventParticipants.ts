@@ -88,7 +88,7 @@ export default function useEventParticipants(
   });
 
   const numAvailParticipants = verifiedParticipantsFuture.data
-    ? verifiedParticipantsFuture.data.filter((p) => p.cancelled == null).length
+    ? verifiedParticipantsFuture.data.filter((p) => p.cancelled === null).length
     : 0;
 
   const unverifiedSignedUpParticipants =
@@ -103,26 +103,26 @@ export default function useEventParticipants(
     verifiedSignedUpParticipants.length + unverifiedSignedUpParticipants.length;
 
   const bookedParticipants =
-    verifiedParticipantsFuture?.data?.filter((p) => p.cancelled == null) ?? [];
+    verifiedParticipantsFuture?.data?.filter((p) => p.cancelled === null) ?? [];
 
   const cancelledParticipants =
-    verifiedParticipantsFuture?.data?.filter((p) => p.cancelled != null) ?? [];
+    verifiedParticipantsFuture?.data?.filter((p) => p.cancelled !== null) ?? [];
 
   const numCancelledParticipants =
-    verifiedParticipantsFuture.data?.filter((p) => p.cancelled != null)
+    verifiedParticipantsFuture.data?.filter((p) => p.cancelled !== null)
       .length ?? 0;
 
   const numConfirmedParticipants = verifiedParticipantsFuture.data
-    ? verifiedParticipantsFuture.data.filter((p) => p.attended != null).length
+    ? verifiedParticipantsFuture.data.filter((p) => p.attended !== null).length
     : 0;
 
   const numNoshowParticipants = verifiedParticipantsFuture.data
-    ? verifiedParticipantsFuture.data.filter((p) => p.noshow != null).length
+    ? verifiedParticipantsFuture.data.filter((p) => p.noshow !== null).length
     : 0;
 
   const numRemindedParticipants =
     verifiedParticipantsFuture.data?.filter(
-      (p) => p.reminder_sent != null && p.cancelled == null
+      (p) => p.reminder_sent !== null && p.cancelled === null
     ).length ?? 0;
 
   return {

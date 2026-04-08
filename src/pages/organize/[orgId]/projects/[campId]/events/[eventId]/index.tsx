@@ -51,7 +51,7 @@ interface EventPageProps {
 const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
   const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
-  if (!eventFuture || !eventFuture.data) {
+  if (!eventFuture?.data) {
     return null;
   }
 
@@ -71,7 +71,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
               <EventRelatedCard data={data} orgId={parseInt(orgId)} />
               <EventURLCard
                 eventId={parseInt(eventId)}
-                isOpen={data.published != null}
+                isOpen={data.published !== null}
                 orgId={parseInt(orgId)}
               />
             </Grid>

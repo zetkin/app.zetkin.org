@@ -43,7 +43,7 @@ const TagsPreview = ({ tags, currentSheet }: TagPreviewProps) => {
                 tag={tag}
               />
             ))}
-            {hiddenTags!.length > 0 && (
+            {hiddenTags.length > 0 && (
               <Tooltip title={tooltipTitle}>
                 <Box
                   border={2}
@@ -61,7 +61,7 @@ const TagsPreview = ({ tags, currentSheet }: TagPreviewProps) => {
                     textOverflow: 'ellipsis',
                   }}
                 >
-                  {`${displayedTags!.length > 0 ? '+' : ''}${
+                  {`${displayedTags.length > 0 ? '+' : ''}${
                     hiddenTags?.length
                   }`}
                 </Box>

@@ -199,9 +199,8 @@ export default makeMessages('feat.surveys', {
     anonymous: m('Anonymous'),
     hidden: m('Hidden'),
     linked: m('Linked'),
-    subtitle: m<{ date: ReactElement; person: ReactElement }>(
-      '{person} {date}'
-    ),
+    subtitle:
+      m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
   },
   submissions: {
     anonymous: m('Anonymous'),

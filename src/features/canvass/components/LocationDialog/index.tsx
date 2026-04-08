@@ -242,7 +242,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         </Box>
         <Box key="locationVisit" height="100%">
           <LocationVisitPage
-            active={dialogStep == 'locationVisit'}
+            active={dialogStep === 'locationVisit'}
             assignment={assignment}
             onBack={() => back()}
             onClose={onClose}

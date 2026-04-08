@@ -35,7 +35,7 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
   const actionWhileTrickingTypescript = action;
 
   useEffect(() => {
-    if (status == 'submitted') {
+    if (status === 'submitted') {
       const url = new URL(location.toString());
       const query = url.searchParams;
       const redirectUrl = query.get('redirect');
@@ -49,13 +49,13 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
 
   return (
     <div>
-      {status == 'editing' && (
+      {status === 'editing' && (
         <form action={actionWhileTrickingTypescript}>
           <input name="__joinFormData" type="hidden" value={encrypted} />
           {fields.map((field) => {
             const isCustom = 'l' in field;
             const isEnum =
-              isCustom && field.t == CUSTOM_FIELD_TYPE.ENUM && 'e' in field;
+              isCustom && field.t === CUSTOM_FIELD_TYPE.ENUM && 'e' in field;
             const label = isCustom
               ? field.l
               : globalMessages.personFields[field.s]();
@@ -82,16 +82,16 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
                   <label>
                     {label}
                     <div>
-                      {field.s != 'gender' && (
+                      {field.s !== 'gender' && (
                         <input
                           name={field.s}
                           required={
-                            field.s == 'first_name' || field.s == 'last_name'
+                            field.s === 'first_name' || field.s === 'last_name'
                           }
                           type="text"
                         />
                       )}
-                      {field.s == 'gender' && (
+                      {field.s === 'gender' && (
                         <select name={field.s}>
                           <option value="unspecified">
                             {globalMessages.genderOptions.unspecified()}
@@ -118,7 +118,7 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
           </button>
         </form>
       )}
-      {status == 'submitted' && (
+      {status === 'submitted' && (
         <h2>
           <Msg id={messageIds.embedding.formSubmitted} />
         </h2>

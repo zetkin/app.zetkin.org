@@ -22,10 +22,9 @@ type SurveyOptionViewCell =
     }[]
   | null;
 
-export default class SurveyOptionColumnType implements IColumnType<
-  SurveyOptionViewColumn,
-  SurveyOptionViewCell
-> {
+export default class SurveyOptionColumnType
+  implements IColumnType<SurveyOptionViewColumn, SurveyOptionViewCell>
+{
   cellToString(cell: SurveyOptionViewCell): string {
     const pickedThisOption = cell?.filter((submission) => submission.selected);
     return pickedThisOption?.length ? pickedThisOption[0].submitted : '';
@@ -39,7 +38,7 @@ export default class SurveyOptionColumnType implements IColumnType<
       },
       sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
         const getPriority = (cell: SurveyOptionViewCell) => {
-          if (!cell || cell.length == 0) {
+          if (!cell || cell.length === 0) {
             return 1;
           }
 

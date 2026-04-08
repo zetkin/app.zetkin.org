@@ -17,7 +17,7 @@ type ZUIPreviewableInputProps<ValueType, InputType> = {
 
 function ZUIPreviewableInput<
   ValueType extends string | number,
-  InputType extends HTMLInputElement,
+  InputType extends HTMLInputElement
 >({
   focusInitially = false,
   mode,
@@ -32,7 +32,7 @@ function ZUIPreviewableInput<
     focusingRef.current = focusInitially;
   }, [focusInitially, mode]);
 
-  if (mode == ZUIPreviewableMode.EDITABLE) {
+  if (mode === ZUIPreviewableMode.EDITABLE) {
     return (
       <Box>
         {renderInput({

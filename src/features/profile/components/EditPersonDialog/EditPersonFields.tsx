@@ -175,7 +175,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
       />
       {customFields.map((field) => {
         const fieldWritable =
-          field.organization.id == orgId || field.org_write == 'suborgs';
+          field.organization.id === orgId || field.org_write === 'suborgs';
         if (field.type === CUSTOM_FIELD_TYPE.JSON) {
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
@@ -217,7 +217,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               isURLField
               label={field.title}
               onChange={(field, newValue) => {
-                const formattedUrl = formatUrl(newValue as string);
+                const formattedUrl = formatUrl(newValue);
                 onChange(field, formattedUrl ?? newValue);
               }}
               onReset={() => onReset(field.slug)}

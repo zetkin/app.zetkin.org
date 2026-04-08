@@ -26,10 +26,9 @@ const surveyOptionsColumnSortRank = (allOptionsJoined: string) => {
   return -lastOption.length;
 };
 
-export default class SurveyOptionsColumnType implements IColumnType<
-  ZetkinViewColumn,
-  SurveyOptionsViewCell
-> {
+export default class SurveyOptionsColumnType
+  implements IColumnType<ZetkinViewColumn, SurveyOptionsViewCell>
+{
   cellToString(cell: SurveyOptionsViewCell): string {
     return cell?.length ? cell[0].selected.map((o) => o.text).toString() : '';
   }
@@ -163,7 +162,7 @@ const Cell: FC<{
         submissions={cell.map((sub, index) => ({
           id: sub.submission_id,
           matchingContent:
-            index == cell.length - 1
+            index === cell.length - 1
               ? sub.selected.map((s) => (
                   <Chip
                     key={s.id}

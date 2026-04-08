@@ -30,13 +30,13 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
 
   function slugToLabel(slug: string): string {
     const isNativeField = Object.values(NATIVE_PERSON_FIELDS).some(
-      (nativeSlug) => nativeSlug == slug
+      (nativeSlug) => nativeSlug === slug
     );
     if (isNativeField) {
       const typedSlug = slug as NATIVE_PERSON_FIELDS;
       return globalMessages.personFields[typedSlug]();
     } else {
-      const field = customFields.data?.find((field) => field.slug == slug);
+      const field = customFields.data?.find((field) => field.slug === slug);
       return field?.title ?? '';
     }
   }

@@ -23,7 +23,7 @@ type SurveyFormProps = {
 const isTextQuestionType = (
   question: ZetkinSurveyQuestionElement
 ): question is ZetkinSurveyTextQuestionElement => {
-  return question.question.response_type == 'text';
+  return question.question.response_type === 'text';
 };
 
 const SurveyForm: FC<SurveyFormProps> = ({
@@ -53,7 +53,7 @@ const SurveyForm: FC<SurveyFormProps> = ({
             {data
               .filter((element) => element.hidden !== true)
               .map((element) => {
-                const isTextBlock = element.type == 'text';
+                const isTextBlock = element.type === 'text';
                 const isTextQuestion =
                   !isTextBlock && isTextQuestionType(element);
                 const isOptionsQuestion = !isTextBlock && !isTextQuestion;

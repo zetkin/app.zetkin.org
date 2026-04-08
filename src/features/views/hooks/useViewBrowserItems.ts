@@ -46,7 +46,7 @@ export default function useViewBrowserItems(
 
   if (folderId) {
     const folder = itemsFuture.data.folders.find(
-      (folder) => folder.id == folderId
+      (folder) => folder.id === folderId
     );
     if (folder) {
       items.push({
@@ -59,7 +59,7 @@ export default function useViewBrowserItems(
   }
 
   itemsFuture.data.folders
-    .filter((folder) => folder.parent?.id == folderId)
+    .filter((folder) => folder.parent?.id === folderId)
     .forEach((folder) => {
       items.push({
         data: folder,
@@ -74,7 +74,7 @@ export default function useViewBrowserItems(
   itemsFuture.data.views
     .filter((view) => {
       if (view) {
-        return view.folder?.id == folderId;
+        return view.folder?.id === folderId;
       }
     })
     .forEach((view) => {

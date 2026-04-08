@@ -29,7 +29,7 @@ const JoinFormSelect: FC<Props> = ({
     if (event.target.value === 'all') {
       onFormSelect(undefined);
     } else {
-      onFormSelect(forms.find((f) => f.id === event.target.value)!);
+      onFormSelect(forms.find((f) => f.id === event.target.value));
     }
   };
 

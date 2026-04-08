@@ -61,11 +61,11 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
                 whiteSpace: 'nowrap',
               }}
             >
-              {clusterType == CLUSTER_TYPE.MULTI_LOCATION && (
+              {clusterType === CLUSTER_TYPE.MULTI_LOCATION && (
                 <LocationLabel location={event.location} />
               )}
-              {clusterType == CLUSTER_TYPE.MULTI_SHIFT && timeSpan}
-              {clusterType == CLUSTER_TYPE.ARBITRARY &&
+              {clusterType === CLUSTER_TYPE.MULTI_SHIFT && timeSpan}
+              {clusterType === CLUSTER_TYPE.ARBITRARY &&
                 (event.title ||
                   event.activity?.title ||
                   messages.common.noTitle())}

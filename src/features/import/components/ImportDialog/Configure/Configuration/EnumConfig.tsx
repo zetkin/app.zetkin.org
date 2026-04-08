@@ -23,14 +23,17 @@ const EnumConfig: FC<EnumConfigProps> = ({ uiDataColumn }) => {
     uiDataColumn.columnIndex
   );
 
-  if (!fields || !fields.length) {
+  if (!fields?.length) {
     return null;
   }
   const field = fields.find(
     (field) => field.slug === uiDataColumn.originalColumn.field
   );
+  if (!field) {
+    return null;
+  }
   const options = field?.enum_choices;
-  if (!options || !options.length) {
+  if (!options?.length) {
     return null;
   }
 
@@ -60,7 +63,7 @@ const EnumConfig: FC<EnumConfigProps> = ({ uiDataColumn }) => {
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
         <Box key={index}>
-          {index != 0 && <Divider sx={{ marginY: 1 }} />}
+          {index !== 0 && <Divider sx={{ marginY: 1 }} />}
           <EnumConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectOption={() => deselectOption(uniqueValue)}

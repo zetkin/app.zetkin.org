@@ -14,7 +14,7 @@ export default function useFinishedCalls() {
 
   const loadFinishedCalls = async () => {
     dispatch(finishedCallsLoad());
-    if (finishedCalls.length == 0) {
+    if (finishedCalls.length === 0) {
       setLoading(true);
     }
     const newLoadedFinishedCalls = await apiClient.get<
@@ -26,7 +26,7 @@ export default function useFinishedCalls() {
     dispatch(finishedCallsLoaded(loadedFinishedCalls));
     setFinishedCalls(loadedFinishedCalls);
 
-    if (newLoadedFinishedCalls.length == 0) {
+    if (newLoadedFinishedCalls.length === 0) {
       setLoading(false);
     }
   };

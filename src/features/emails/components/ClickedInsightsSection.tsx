@@ -69,14 +69,14 @@ const ClickedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
                 <EmailKPIChart
                   mainEmail={email}
                   mainTotal={
-                    clickMetric == 'ctr' ? stats.numSent : stats.numOpened
+                    clickMetric === 'ctr' ? stats.numSent : stats.numOpened
                   }
                   mainValue={stats.numClicked}
                   secondaryEmail={secondaryEmail}
                   secondaryTotal={
-                    clickMetric == 'ctr'
-                      ? (secondaryStats?.num_sent ?? null)
-                      : (secondaryStats?.num_opened ?? null)
+                    clickMetric === 'ctr'
+                      ? secondaryStats?.num_sent ?? null
+                      : secondaryStats?.num_opened ?? null
                   }
                   secondaryValue={secondaryStats?.num_clicks ?? null}
                   title={messages.insights.clicked.gauge.headers[clickMetric]()}

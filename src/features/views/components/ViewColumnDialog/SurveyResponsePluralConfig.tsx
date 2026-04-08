@@ -70,9 +70,7 @@ const SurveyResponsesConfig = ({
               <ZUIFuture future={selectedSurvey}>
                 {(data) => {
                   const questionFromSurvey: ZetkinSurveyQuestionElement[] =
-                    data.filter(
-                      (elem) => elem.type == ELEMENT_TYPE.QUESTION
-                    ) as ZetkinSurveyQuestionElement[];
+                    data.filter((elem) => elem.type === ELEMENT_TYPE.QUESTION);
 
                   return (
                     <Autocomplete

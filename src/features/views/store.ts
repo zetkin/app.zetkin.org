@@ -57,7 +57,7 @@ const viewsSlice = createSlice({
         deletedPersonIds.forEach((deletedPersonId) => {
           Object.values(state.rowsByViewId).forEach((rowList) => {
             rowList.items = rowList.items.filter(
-              (item) => item.id != deletedPersonId
+              (item) => item.id !== deletedPersonId
             );
           });
         });
@@ -93,7 +93,7 @@ const viewsSlice = createSlice({
         });
 
         list.items = list.items.map((item) => {
-          if (item.id == accessObj.person.id) {
+          if (item.id === accessObj.person.id) {
             updated = true;
             return newItem;
           } else {
@@ -132,7 +132,7 @@ const viewsSlice = createSlice({
       const [viewId, personId] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
-        list.items = list.items.filter((item) => item.id != personId);
+        list.items = list.items.filter((item) => item.id !== personId);
       }
     },
     allItemsLoad: (state, action: PayloadAction<number>) => {
@@ -160,12 +160,12 @@ const viewsSlice = createSlice({
     ) => {
       const [viewId, rowId, colId, newValue] = action.payload;
       const rowList = state.rowsByViewId[viewId];
-      const rowItem = rowList.items.find((item) => item.id == rowId);
+      const rowItem = rowList.items.find((item) => item.id === rowId);
       const columnList = state.columnsByViewId[viewId];
-      const colIndex = columnList.items.findIndex((item) => item.id == colId);
+      const colIndex = columnList.items.findIndex((item) => item.id === colId);
       if (rowItem?.data?.content) {
         rowItem.data.content = rowItem.data.content.map((oldValue, idx) =>
-          idx == colIndex ? newValue : oldValue
+          idx === colIndex ? newValue : oldValue
         );
       }
     },
@@ -207,7 +207,7 @@ const viewsSlice = createSlice({
       if (colList) {
         const newColListItems = columnOrder
           .map((colId) => {
-            const col = colList.items.find((col) => col.id == colId);
+            const col = colList.items.find((col) => col.id === colId);
             if (col) {
               return col;
             } else {
@@ -226,8 +226,8 @@ const viewsSlice = createSlice({
                 data: {
                   content: columnOrder.map((colId) => {
                     const idx = colList.items.findIndex(
-                      (col) => col.id == colId
-                    )!;
+                      (col) => col.id === colId
+                    );
                     return row.data?.content[idx];
                   }),
                   id: row.data.id,
@@ -251,9 +251,10 @@ const viewsSlice = createSlice({
       if (colList) {
         let configChanged = false;
         colList.items = colList.items.map((item) => {
-          if (item.id == column.id) {
+          if (item.id === column.id) {
             if (
-              JSON.stringify(column.config) != JSON.stringify(item.data?.config)
+              JSON.stringify(column.config) !==
+              JSON.stringify(item.data?.config)
             ) {
               configChanged = true;
             }
@@ -330,7 +331,7 @@ const viewsSlice = createSlice({
     },
     folderUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
-      const item = state.folderList.items.find((item) => item.id == id);
+      const item = state.folderList.items.find((item) => item.id === id);
       if (item) {
         item.mutating = mutating;
       }
@@ -344,7 +345,7 @@ const viewsSlice = createSlice({
       action: PayloadAction<[ZetkinViewFolder, string[]]>
     ) => {
       const [folder, mutating] = action.payload;
-      const item = state.folderList.items.find((item) => item.id == folder.id);
+      const item = state.folderList.items.find((item) => item.id === folder.id);
       if (item) {
         item.mutating = item.mutating.filter(
           (attr) => !mutating.includes(attr)
@@ -366,7 +367,7 @@ const viewsSlice = createSlice({
       const list = state.rowsByViewId[viewId];
       if (list) {
         list.items = list.items
-          .filter((item) => item.id != row.id)
+          .filter((item) => item.id !== row.id)
           .concat([remoteItem(row.id, { data: row })]);
       } else {
         state.rowsByViewId[viewId] = remoteList([row]);
@@ -376,7 +377,7 @@ const viewsSlice = createSlice({
       const [viewId, rowId] = action.payload;
       const list = state.rowsByViewId[viewId];
       if (list) {
-        list.items = list.items.filter((item) => item.id != rowId);
+        list.items = list.items.filter((item) => item.id !== rowId);
       }
     },
     rowsLoad: (state, action: PayloadAction<number>) => {
@@ -437,7 +438,7 @@ const viewsSlice = createSlice({
         state.viewsByOrgId[orgId] = remoteList();
       }
       const item = state.viewsByOrgId[orgId].items.find(
-        (item) => item.id == viewId
+        (item) => item.id === viewId
       );
       if (item) {
         item.isLoading = true;
@@ -453,7 +454,7 @@ const viewsSlice = createSlice({
         state.viewsByOrgId[orgId] = remoteList();
       }
       state.viewsByOrgId[orgId].items = state.viewsByOrgId[orgId].items
-        .filter((item) => item.id != view.id)
+        .filter((item) => item.id !== view.id)
         .concat([
           remoteItem(view.id, { data: view, loaded: new Date().toISOString() }),
         ]);
@@ -467,7 +468,7 @@ const viewsSlice = createSlice({
         state.viewsByOrgId[orgId] = remoteList();
       }
       const item = state.viewsByOrgId[orgId].items.find(
-        (item) => item.id == viewId
+        (item) => item.id === viewId
       );
       if (item) {
         if (item.data) {
@@ -488,7 +489,7 @@ const viewsSlice = createSlice({
         state.viewsByOrgId[orgId] = remoteList();
       }
       const item = state.viewsByOrgId[orgId].items.find(
-        (item) => item.id == id
+        (item) => item.id === id
       );
       if (item) {
         item.mutating = mutating;
@@ -503,7 +504,7 @@ const viewsSlice = createSlice({
         state.viewsByOrgId[orgId] = remoteList();
       }
       const item = state.viewsByOrgId[orgId].items.find(
-        (item) => item.id == view.id
+        (item) => item.id === view.id
       );
       if (item) {
         item.mutating = item.mutating.filter(
@@ -548,8 +549,8 @@ function setTagOnRelevantRows(
     const relevantColumnIndices: number[] = [];
     columnList.items.forEach((colItem, index) => {
       if (
-        colItem.data?.type == COLUMN_TYPE.PERSON_TAG &&
-        colItem.data.config.tag_id == tagId
+        colItem.data?.type === COLUMN_TYPE.PERSON_TAG &&
+        colItem.data.config.tag_id === tagId
       ) {
         relevantColumnIndices.push(index);
       }
@@ -560,7 +561,7 @@ function setTagOnRelevantRows(
       const rowItems = state.rowsByViewId[viewId]?.items;
       if (rowItems) {
         rowItems.forEach((item) => {
-          if (item.data?.id == personId) {
+          if (item.data?.id === personId) {
             for (const colIndex of relevantColumnIndices) {
               item.data.content[colIndex] = tag;
             }
@@ -582,7 +583,7 @@ function updateCallOnRelevantRows(
     // Find indices of relevant columns
     const relevantColumnIndices: number[] = [];
     columnList.items.forEach((colItem, index) => {
-      if (colItem.data?.type == COLUMN_TYPE.ORGANIZER_ACTION) {
+      if (colItem.data?.type === COLUMN_TYPE.ORGANIZER_ACTION) {
         relevantColumnIndices.push(index);
       }
     });
@@ -592,13 +593,13 @@ function updateCallOnRelevantRows(
       const rowItems = state.rowsByViewId[viewId]?.items;
       if (rowItems) {
         rowItems.forEach((item) => {
-          if (item.data?.id == personId) {
+          if (item.data?.id === personId) {
             for (const colIndex of relevantColumnIndices) {
               const calls = item.data.content[
                 colIndex
               ] as ZetkinOrganizerAction[];
               for (const c of calls) {
-                if (call.id == c.id) {
+                if (call.id === c.id) {
                   if (mutations.includes('organizer_action_taken')) {
                     c.organizer_action_taken = call.organizer_action_taken;
                   }
@@ -631,7 +632,7 @@ function invalidateDependentViews(
 
     for (let i = 0; i < dependencies.length; i++) {
       const dependency = dependencies[i];
-      const isDependentOnUpdatedView = dependency.to == updatedViewId;
+      const isDependentOnUpdatedView = dependency.to === updatedViewId;
 
       if (isDependentOnUpdatedView) {
         const alreadyChecked = viewsCheckedForDependencies.includes(

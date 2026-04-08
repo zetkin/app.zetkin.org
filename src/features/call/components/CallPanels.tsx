@@ -62,7 +62,7 @@ const CallPanels: FC<Props> = ({
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left: lane.step == LaneStep.START ? 0 : 'calc(-100% / 3)',
+          left: lane.step === LaneStep.START ? 0 : 'calc(-100% / 3)',
           maxHeight: '100%',
           overflowY: 'auto',
           position: 'absolute',
@@ -126,7 +126,7 @@ const CallPanels: FC<Props> = ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
           left:
-            lane.step == LaneStep.START ? 'calc(100% / 3)' : 'calc(-100% / 3)',
+            lane.step === LaneStep.START ? 'calc(100% / 3)' : 'calc(-100% / 3)',
           maxHeight: '100%',
           overflowY: 'auto',
           position: 'absolute',
@@ -149,21 +149,22 @@ const CallPanels: FC<Props> = ({
           },
           animationDuration: '0.5s',
           animationFillMode: 'backwards',
-          animationName: lane.step == LaneStep.SUMMARY ? 'instructionsOut' : '',
+          animationName:
+            lane.step === LaneStep.SUMMARY ? 'instructionsOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
           left:
-            lane.step == LaneStep.START
+            lane.step === LaneStep.START
               ? 'calc((100% / 3) * 2)'
-              : lane.step == LaneStep.SUMMARY
-                ? '100%'
-                : 0,
+              : lane.step === LaneStep.SUMMARY
+              ? '100%'
+              : 0,
           maxHeight: '100%',
           overflowY: 'auto',
           position: 'absolute',
-          transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
+          transition: lane.step !== LaneStep.SUMMARY ? 'left 0.5s' : '',
           width: 1 / 3,
-          zIndex: lane.step == LaneStep.REPORT || LaneStep.CALL ? 2 : '',
+          zIndex: lane.step === LaneStep.REPORT || LaneStep.CALL ? 2 : '',
         })}
       >
         <InstructionsSection
@@ -177,18 +178,18 @@ const CallPanels: FC<Props> = ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
           left:
-            lane.step == LaneStep.START
+            lane.step === LaneStep.START
               ? '100%'
-              : lane.step == LaneStep.CALL
-                ? 'calc(100% / 3)'
-                : lane.step == LaneStep.REPORT
-                  ? 0
-                  : 'calc(100% + (100% / 3))',
+              : lane.step === LaneStep.CALL
+              ? 'calc(100% / 3)'
+              : lane.step === LaneStep.REPORT
+              ? 0
+              : 'calc(100% + (100% / 3))',
 
           overflowY: 'auto',
           position: 'absolute',
           transition: 'left 0.5s',
-          visibility: lane.step == LaneStep.SUMMARY ? 'hidden' : '',
+          visibility: lane.step === LaneStep.SUMMARY ? 'hidden' : '',
           width: 1 / 3,
         })}
       >
@@ -203,22 +204,22 @@ const CallPanels: FC<Props> = ({
           },
           animationDuration: '0.5s',
           animationFillMode: 'backwards',
-          animationName: lane.step == LaneStep.SUMMARY ? 'activitiesOut' : '',
+          animationName: lane.step === LaneStep.SUMMARY ? 'activitiesOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
           left:
-            lane.step == LaneStep.START
+            lane.step === LaneStep.START
               ? '100%'
-              : lane.step == LaneStep.CALL
-                ? 'calc((100% / 3) * 2)'
-                : lane.step == LaneStep.REPORT
-                  ? 'calc(100% / 3)'
-                  : 'calc(100% + (100% / 3) * 2)',
+              : lane.step === LaneStep.CALL
+              ? 'calc((100% / 3) * 2)'
+              : lane.step === LaneStep.REPORT
+              ? 'calc(100% / 3)'
+              : 'calc(100% + (100% / 3) * 2)',
           overflowY: 'auto',
           position: 'absolute',
-          transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
+          transition: lane.step !== LaneStep.SUMMARY ? 'left 0.5s' : '',
           width: 1 / 3,
-          zIndex: lane.step == LaneStep.START ? -1 : 0,
+          zIndex: lane.step === LaneStep.START ? -1 : 0,
         })}
       >
         <SuspenseWithCircularLoader>
@@ -237,13 +238,13 @@ const CallPanels: FC<Props> = ({
           },
           animationDuration: '0.5s',
           animationFillMode: 'backwards',
-          animationName: lane.step == LaneStep.SUMMARY ? 'reportOut' : '',
+          animationName: lane.step === LaneStep.SUMMARY ? 'reportOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left: lane.step == LaneStep.REPORT ? 'calc((100% / 3) * 2)' : '100%',
+          left: lane.step === LaneStep.REPORT ? 'calc((100% / 3) * 2)' : '100%',
           overflowY: 'auto',
           position: 'absolute',
-          transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
+          transition: lane.step !== LaneStep.SUMMARY ? 'left 0.5s' : '',
           width: 1 / 3,
         })}
       >
@@ -277,20 +278,20 @@ const CallPanels: FC<Props> = ({
           alignItems: 'center',
           animationDuration: '0.5s',
           animationFillMode: 'backwards',
-          animationName: lane.step == LaneStep.CALL ? 'summaryOut' : '',
+          animationName: lane.step === LaneStep.CALL ? 'summaryOut' : '',
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
           justifyContent: 'space-evenly',
-          left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 4)' : '120%',
+          left: lane.step === LaneStep.SUMMARY ? 'calc(100% / 4)' : '120%',
           position: 'relative',
-          transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
+          transition: lane.step !== LaneStep.CALL ? 'left 0.5s' : '',
           visibility:
             !call &&
-            (lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT)
+            (lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT)
               ? 'hidden'
               : undefined,
-          width: lane.step == LaneStep.SUMMARY ? 1 / 2 : 1 / 3,
+          width: lane.step === LaneStep.SUMMARY ? 1 / 2 : 1 / 3,
         }}
       >
         <CallSummary
@@ -332,7 +333,7 @@ const CallPanels: FC<Props> = ({
             variant="secondary"
           />
         </Box>
-        {lane.step != LaneStep.SUMMARY && (
+        {lane.step !== LaneStep.SUMMARY && (
           <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
             {unfinishedCalls.map((c) => (
               <ZUITooltip key={c.id} label={c.target.name}>

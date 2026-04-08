@@ -35,7 +35,7 @@ export default function useEmail(
   const dispatch = useAppDispatch();
 
   const emailItems = useAppSelector((state) => state.emails.emailList.items);
-  const emailItem = emailItems.find((item) => item.id == emailId);
+  const emailItem = emailItems.find((item) => item.id === emailId);
   const email = emailItem?.data;
 
   const emailFuture = loadItemIfNecessary(emailItem, dispatch, {
@@ -59,17 +59,17 @@ export default function useEmail(
   };
 
   const isTargeted = !!(
-    emailFuture.data && emailFuture.data.target?.filter_spec?.length != 0
+    emailFuture.data && emailFuture.data.target?.filter_spec?.length !== 0
   );
 
   const updateEmail = async (data: ZetkinEmailPatchBody) => {
     const mutating = Object.keys(data);
     dispatch(emailUpdate([emailId, mutating]));
     return await apiClient
-      .patch<
-        ZetkinEmail,
-        ZetkinEmailPatchBody
-      >(`/api/orgs/${orgId}/emails/${emailId}`, data)
+      .patch<ZetkinEmail, ZetkinEmailPatchBody>(
+        `/api/orgs/${orgId}/emails/${emailId}`,
+        data
+      )
       .then((email: ZetkinEmail) => {
         dispatch(emailUpdated([email, mutating]));
         return email;

@@ -134,7 +134,7 @@ const CallSummary: FC<Props> = ({
                 }}
                 unfinishedCall={unfinishedCall}
               />
-              {index != unfinishedCalls.length - 1 && <ZUIDivider />}
+              {index !== unfinishedCalls.length - 1 && <ZUIDivider />}
             </Fragment>
           ))}
         </Box>

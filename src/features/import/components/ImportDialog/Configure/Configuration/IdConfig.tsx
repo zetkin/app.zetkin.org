@@ -42,7 +42,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
 
   const importIDHasBeenSelected = !!importID;
   const selectedImportIDIsOtherThanTheFieldBeingConfigured =
-    importIDHasBeenSelected && importID != idField;
+    importIDHasBeenSelected && importID !== idField;
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
@@ -50,7 +50,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
         <Typography variant="h5">
           <Msg id={messageIds.configuration.configure.ids.field[idField]} />
         </Typography>
-        {idField == 'id' && (
+        {idField === 'id' && (
           <>
             <Typography>
               <Msg id={messageIds.configuration.configure.ids.zetkinIDInfo} />
@@ -66,7 +66,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             )}
           </>
         )}
-        {idField == 'ext_id' && (
+        {idField === 'ext_id' && (
           <Typography>
             <Msg id={messageIds.configuration.configure.ids.externalIDInfo} />
           </Typography>
@@ -88,12 +88,12 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           </Typography>
         </Box>
         <Box ml={2}>
-          {idField != 'id' && (
+          {idField !== 'id' && (
             <Box display="flex" flexDirection="column" mb={1}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={importID == idField}
+                    checked={importID === idField}
                     onChange={() => {
                       if (selectedImportIDIsOtherThanTheFieldBeingConfigured) {
                         showConfirmDialog({
@@ -115,7 +115,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                             ),
                         });
                       } else {
-                        updateImportID(importID == idField ? null : idField);
+                        updateImportID(importID === idField ? null : idField);
                       }
                     }}
                   />
@@ -137,7 +137,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
               </Typography>
             </Box>
           )}
-          {importID == idField && (
+          {importID === idField && (
             <Box display="flex" flexDirection="column">
               <FormControlLabel
                 control={

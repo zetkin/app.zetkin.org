@@ -27,7 +27,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnIndex]);
 
-  const noCustomFormat = dateFormat == '';
+  const noCustomFormat = dateFormat === '';
 
   let parser: IDateParser | null = null;
   if (column.dateFormat) {
@@ -67,7 +67,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const isPersonNumberFormat = (
     dateFormat: string
   ): dateFormat is PersonNumberFormat => {
-    return !!personNumberFormats.find((format) => format == dateFormat);
+    return !!personNumberFormats.find((format) => format === dateFormat);
   };
 
   const onDateFormatChange = (newFormat: string) => {
@@ -81,7 +81,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   };
 
   const isCustomFormat =
-    dateFormat != null &&
+    dateFormat !== null &&
     !Object.keys(dateFormats).includes(dateFormat) &&
     !isPersonNumberFormat(dateFormat);
 

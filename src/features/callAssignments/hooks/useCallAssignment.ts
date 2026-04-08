@@ -36,7 +36,7 @@ export default function useCallAssignment(
   const dispatch = useAppDispatch();
   const callAssignmentSlice = useAppSelector((state) => state.callAssignments);
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
-  const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
+  const caItem = callAssignmentItems.find((item) => item.id === assignmentId);
   const callAssignment = caItem?.data;
 
   const callAssignmentFuture = loadItemIfNecessary(caItem, dispatch, {
@@ -50,7 +50,7 @@ export default function useCallAssignment(
 
   const isTargeted = !!(
     callAssignmentFuture.data &&
-    callAssignmentFuture.data.target?.filter_spec?.length != 0
+    callAssignmentFuture.data.target?.filter_spec?.length !== 0
   );
 
   const updateTargets = (query: Partial<ZetkinQuery>): void => {

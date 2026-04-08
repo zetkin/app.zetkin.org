@@ -50,7 +50,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           };
         } else {
           const alreadyAdded = groupsById[groupId].tags.some(
-            (oldTag) => oldTag.id == tag.id
+            (oldTag) => oldTag.id === tag.id
           );
           if (!alreadyAdded) {
             groupsById[groupId].tags.push(tag);
@@ -71,7 +71,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         // has not yet been configured
         const areaTagIds = area.tags.map((tag) => tag.id);
         return (
-          idsInGroup.length == 0 ||
+          idsInGroup.length === 0 ||
           idsInGroup.some((id) => areaTagIds.includes(id))
         );
       });
@@ -99,10 +99,10 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           <FilterDropDown
             items={[
               {
-                icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
+                icon: <Checkbox checked={assigneesFilter === 'assigned'} />,
                 label: messages.map.filter.assignees.assigned(),
                 onClick: () => {
-                  if (!assigneesFilter || assigneesFilter == 'unassigned') {
+                  if (!assigneesFilter || assigneesFilter === 'unassigned') {
                     onAssigneesFilterChange('assigned');
                   } else {
                     onAssigneesFilterChange(null);
@@ -110,10 +110,10 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                 },
               },
               {
-                icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
+                icon: <Checkbox checked={assigneesFilter === 'unassigned'} />,
                 label: messages.map.filter.assignees.unassigned(),
                 onClick: () => {
-                  if (!assigneesFilter || assigneesFilter == 'assigned') {
+                  if (!assigneesFilter || assigneesFilter === 'assigned') {
                     onAssigneesFilterChange('unassigned');
                   } else {
                     onAssigneesFilterChange(null);
@@ -173,7 +173,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                         setActiveTagIdsByGroup({
                           ...activeTagIdsByGroup,
                           [groupId]: selected
-                            ? currentIds.filter((id) => tag.id != id)
+                            ? currentIds.filter((id) => tag.id !== id)
                             : [...currentIds, tag.id],
                         });
                       },
@@ -187,7 +187,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                   onToggle={(open) =>
                     setOpenTagsDropdown(open ? groupId : null)
                   }
-                  open={openTagsDropdown == groupId}
+                  open={openTagsDropdown === groupId}
                   startIcon={
                     currentIds.length > 0 ? (
                       <Box
@@ -219,7 +219,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                 <IconButton
                   onClick={() => {
                     setActiveGroupIds(
-                      activeGroupIds.filter((id) => groupId != id)
+                      activeGroupIds.filter((id) => groupId !== id)
                     );
                     const newValue = { ...activeTagIdsByGroup };
                     delete newValue[groupId];
@@ -246,7 +246,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
               : messages.map.filter.ungroupedTags(),
             onClick: () => {
               if (selected) {
-                setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));
+                setActiveGroupIds(activeGroupIds.filter((id) => groupId !== id));
                 const newValue = { ...activeTagIdsByGroup };
                 delete newValue[groupId];
                 setActiveTagIdsByGroup(newValue);
@@ -258,7 +258,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           };
         })}
         onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
-        open={openTagsDropdown == 'add'}
+        open={openTagsDropdown === 'add'}
       />
       */}
     </Box>

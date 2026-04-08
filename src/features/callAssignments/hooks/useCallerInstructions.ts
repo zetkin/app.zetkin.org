@@ -102,7 +102,7 @@ export default function useCallerInstructions(
     const lsInstructions = localStorage.getItem(key)?.trim() || '';
     const dataInstructions = callAssignment.instructions.trim();
 
-    return dataInstructions != lsInstructions;
+    return dataInstructions !== lsInstructions;
   };
 
   const isSaving = (): boolean => {

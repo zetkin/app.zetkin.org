@@ -57,7 +57,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
 
   const getAvatars = (value: string) => {
     const peopleWithMatchingValues = duplicates.filter(
-      (person) => person[field] == value
+      (person) => person[field] === value
     );
 
     return (

@@ -49,7 +49,7 @@ export default function useAreaAssignmentInstructions(
     const lsInstructions = localStorage.getItem(key)?.trim() || '';
     const dataInstructions = canvassAssignment.instructions?.trim();
 
-    return dataInstructions != lsInstructions;
+    return dataInstructions !== lsInstructions;
   };
 
   const hasEmptyInstrunctions = (): boolean => {

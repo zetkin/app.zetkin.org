@@ -101,7 +101,7 @@ const AreaSelectPanel: FC<Props> = ({
           >
             {matchingAreas.map((area, index) => (
               <Box key={area.id}>
-                {index != 0 && <Divider sx={{ my: 1 }} />}
+                {index !== 0 && <Divider sx={{ my: 1 }} />}
                 <Box
                   display="flex"
                   justifyContent="space-between"
@@ -112,7 +112,7 @@ const AreaSelectPanel: FC<Props> = ({
                       color: 'primary.main',
                     },
                     cursor: 'pointer',
-                    pt: index == 0 ? 1 : 0,
+                    pt: index === 0 ? 1 : 0,
                   }}
                 >
                   <Typography>
