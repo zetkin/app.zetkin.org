@@ -1,6 +1,12 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
+  fields: {
+    fieldsLayout: {
+      fields: m('Fields'),
+      title: m('Fields'),
+    },
+  },
   officials: {
     addPerson: {
       addAdmin: m('Add administrator'),

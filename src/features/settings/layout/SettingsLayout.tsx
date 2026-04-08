@@ -19,8 +19,14 @@ const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
     <TabbedLayout
       baseHref={`/organize/${orgId}/settings`}
       defaultTab="/"
-      tabs={[{ href: `/`, label: messages.officials.settingsLayout.access() }]}
-      title={messages.officials.settingsLayout.title()}
+      tabs={[
+        { href: `/`, label: messages.officials.settingsLayout.access() },
+        { href: `/fields`, label: messages.fields.fieldsLayout.fields() },
+      ]}
+      title={
+        messages.officials.settingsLayout.title()
+        // messages.fields.fieldsLayout.title(),
+      }
     >
       {children}
     </TabbedLayout>
