@@ -22,7 +22,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
   state,
 }) => {
   const theme = useTheme();
-  const sent = true;
+  const sent = state === EmailState.SENT;
 
   let numTargets = 0;
   if (sent) {
