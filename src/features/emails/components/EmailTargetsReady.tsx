@@ -22,7 +22,17 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
   state,
 }) => {
   const theme = useTheme();
-  const sent = state === EmailState.SENT;
+  const sent = true;
+
+  let numTargets = 0;
+  if (sent) {
+    numTargets = numSent;
+  } else if (lockedReadyTargets === null) {
+    numTargets = readyTargets;
+  } else {
+    numTargets = lockedReadyTargets;
+  }
+
   return (
     <Card>
       <Box
@@ -44,15 +54,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
           </Typography>
         </Box>
         <Box alignItems="center" display="flex" gap={2}>
-          <ZUIAnimatedNumber
-            value={
-              sent
-                ? numSent
-                : lockedReadyTargets === null
-                ? readyTargets
-                : lockedReadyTargets
-            }
-          >
+          <ZUIAnimatedNumber value={numTargets}>
             {(animatedValue) => (
               <Box
                 sx={{
