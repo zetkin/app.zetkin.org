@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Stack,
   Step,
   StepButton,
   StepContent,
@@ -11,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Check, Close, Undo } from '@mui/icons-material';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
@@ -93,33 +92,15 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
     >
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
-          const yesLabel = messages.visit.household.yesButtonLabel();
-          const noLabel = messages.visit.household.noButtonLabel();
-          const renderSuccessOptionLabel = (
-            icon: ReactNode,
-            label: string
-          ): ReactNode => (
-            <Stack alignItems="center" direction="row" gap={1}>
-              {icon}
-              <span>{label}</span>
-            </Stack>
-          );
-
           const options =
             metric.type == 'bool'
               ? [
                   {
-                    label: renderSuccessOptionLabel(
-                      <Check fontSize="small" />,
-                      yesLabel
-                    ),
+                    label: messages.visit.household.yesButtonLabel(),
                     value: 'yes',
                   },
                   {
-                    label: renderSuccessOptionLabel(
-                      <Close fontSize="small" />,
-                      noLabel
-                    ),
+                    label: messages.visit.household.noButtonLabel(),
                     value: 'no',
                   },
                 ]
@@ -221,6 +202,12 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                         key={option.value.toString()}
                         value={option.value}
                       >
+                        {metric.defines_success && option.value === 'yes' && (
+                          <Check sx={{ marginRight: 1 }} />
+                        )}
+                        {metric.defines_success && option.value === 'no' && (
+                          <Close sx={{ marginRight: 1 }} />
+                        )}
                         {option.label}
                       </ToggleButton>
                     ))}
