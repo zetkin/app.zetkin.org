@@ -56,8 +56,8 @@ test.describe('Journey instance list', () => {
     const secondRow = rows.nth(2);
     await secondRow.waitFor();
 
-    expect(firstRow).toContainText('Better');
-    expect(secondRow).toContainText('Another');
+    await expect(firstRow).toContainText('Better');
+    await expect(secondRow).toContainText('Another');
     expect(await rows.count()).toBe(3);
 
     // Reload the page
@@ -70,8 +70,8 @@ test.describe('Journey instance list', () => {
     const secondRowAfterRefresh = rowsAfterRefresh.nth(2);
     await secondRowAfterRefresh.waitFor();
 
-    expect(firstRowAfterRefresh).toContainText('Better');
-    expect(secondRowAfterRefresh).toContainText('Another');
+    await expect(firstRowAfterRefresh).toContainText('Better');
+    await expect(secondRowAfterRefresh).toContainText('Another');
     expect(await rowsAfterRefresh.count()).toBe(3);
   });
 });
