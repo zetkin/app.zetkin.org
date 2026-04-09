@@ -27,9 +27,9 @@ export const viewQuickSearch = (
 
   return rows.filter((row) => {
     const columnsText = columns
-      .flatMap((col, idx) => {
+      .flatMap((col) => {
         return columnTypes[col.type].getSearchableStrings(
-          row.content[idx],
+          row.cells[String(col.id)],
           col
         );
       })
