@@ -26,7 +26,6 @@ const Fields: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const customFields = useCustomFields(orgId).data ?? [];
-  const nativeFields = NATIVE_PERSON_FIELDS;
 
   if (onServer) {
     return null;
@@ -52,8 +51,7 @@ const Fields: PageWithLayout = () => {
         </Grid>
       </Grid>
       <Box display="flex" flexDirection="column" gap={1}>
-        Native Fields
-        {Object.entries(nativeFields).map(([key, value]) => (
+        {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
           <Box key={key} display="flex" gap={1}>
             <Box>{key}</Box>
             <Box>{value}</Box>
