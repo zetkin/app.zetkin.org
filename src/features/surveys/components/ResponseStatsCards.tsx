@@ -19,12 +19,10 @@ import {
   CardContent,
   Collapse,
   Divider,
-  Fade,
   IconButton,
   Link,
   Menu,
   MenuItem,
-  Popper,
   Skeleton,
   ToggleButton,
   ToggleButtonGroup,
@@ -52,6 +50,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import { scaleLog } from 'd3-scale';
 import { BoxOwnProps } from '@mui/system';
+import { Check, ContentCopy } from '@mui/icons-material';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -70,7 +69,6 @@ import range from 'utils/range';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
-import zuiMessageIds from 'zui/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { useNumericRouteParams } from 'core/hooks';
@@ -78,7 +76,6 @@ import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
-import { CopyIcon } from 'zui/ZUIInlineCopyToClipBoard';
 import ZUIText from 'zui/components/ZUIText';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
@@ -142,7 +139,7 @@ const ResponseStatsCard = ({
         if (format === 'png') {
           await exportApi.current.exportAsImage({
             fileName: sanitizeFileName(
-              questionStats.question.question.question,
+              questionStats.question.question.question
             ),
             onBeforeExport: (iframe) => {
               const doc = iframe.contentDocument;
@@ -152,7 +149,7 @@ const ResponseStatsCard = ({
 
               const contentOverrides =
                 containerRef.current.getElementsByClassName(
-                  'zetkin-chart-content',
+                  'zetkin-chart-content'
                 );
               const contentBox =
                 contentOverrides.length > 0
@@ -179,7 +176,7 @@ const ResponseStatsCard = ({
       containerRef,
       exportApi,
       questionStats.question.question.question,
-    ],
+    ]
   );
 
   const exportMenuItems = useMemo(
@@ -193,7 +190,7 @@ const ResponseStatsCard = ({
         onSelect: () => exportChart('pdf'),
       },
     ],
-    [exportChart],
+    [exportChart]
   );
 
   const [exportMenuAnchorEl, setExportMenuAnchorEl] =
@@ -203,7 +200,7 @@ const ResponseStatsCard = ({
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setExportMenuAnchorEl(event.currentTarget);
     },
-    [setExportMenuAnchorEl],
+    [setExportMenuAnchorEl]
   );
   const exportMenuHandleClose = useCallback(() => {
     setExportMenuAnchorEl(null);
@@ -322,7 +319,7 @@ const QuestionStatsBarPlot = ({
           ([word, count]) => ({
             count: count,
             option: word,
-          }),
+          })
         );
     let sorted = bars.sort((a, b) => b.count - a.count);
     if (isTextStats(questionStats)) {
@@ -410,7 +407,7 @@ const QuestionStatsPie = ({
           ([word, count]) => ({
             label: getEllipsedString(word, 60),
             value: count,
-          }),
+          })
         );
     return items
       .sort((a, b) => b.value - a.value)
@@ -444,7 +441,7 @@ const QuestionStatsPie = ({
               {messages.insights.optionsFields.warningMultipleSelectedOptionsPie(
                 {
                   respondentCount: questionStats.multipleSelectedOptionsCount,
-                },
+                }
               )}
             </Alert>
           </Collapse>
@@ -499,7 +496,7 @@ const OptionsStatsCard = ({
         answerCount: questionStats.answerCount,
         totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       }),
-    [questionStats, messages.insights.optionsFields.subheader],
+    [questionStats, messages.insights.optionsFields.subheader]
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
@@ -580,9 +577,9 @@ const TextResponseWordCloud = ({
         ([word, frequency]) => ({
           text: word,
           value: frequency,
-        }),
+        })
       ),
-    [questionStats.topWordFrequencies],
+    [questionStats.topWordFrequencies]
   );
 
   const containerRef = useRef<HTMLDivElement>();
@@ -607,8 +604,8 @@ const TextResponseWordCloud = ({
           disableAnimation: () => () => {},
         },
         svgRef: svgRef,
-      }) as ChartPluginOptions<UseChartProExportSignature>,
-    [],
+      } as ChartPluginOptions<UseChartProExportSignature>),
+    []
   );
 
   const { publicAPI } = useChartProExport(exportOptions);
@@ -622,7 +619,7 @@ const TextResponseWordCloud = ({
     (elem: HTMLElement) => {
       setWidth(elem.clientWidth);
     },
-    [setWidth],
+    [setWidth]
   );
 
   const getRotationDegree = useMemo(() => {
@@ -639,7 +636,7 @@ const TextResponseWordCloud = ({
   }, [words, width]);
   const fontSizeSetter = useCallback(
     (datum: WordData) => fontScale(datum.value),
-    [fontScale],
+    [fontScale]
   );
 
   const resizeObserverRef = useResizeObserver(onResize);
@@ -711,17 +708,22 @@ const TextResponseCard = ({
   questionId: number;
   submission: SubmissionStats;
 }) => {
-  const zuiMessages = useMessages(zuiMessageIds);
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const extendedSubmissionFuture = useSurveySubmission(
     orgId,
-    submission.submissionId,
+    submission.submissionId
   );
   const { openPane } = usePanes();
+  const [hasCopiedResponse, setHasCopiedResponse] = useState(false);
 
-  const [anchorEl, setAnchorEl] = useState<
-    null | (EventTarget & HTMLButtonElement)
-  >(null);
+  useEffect(() => {
+    if (hasCopiedResponse === true) {
+      setTimeout(() => {
+        setHasCopiedResponse(false);
+      }, 2000);
+    }
+  }, [hasCopiedResponse]);
 
   return (
     <ZUIFuture
@@ -734,30 +736,16 @@ const TextResponseCard = ({
         }
 
         const questionResponse = extendedSubmission.responses.find(
-          (response) => response.question_id === questionId,
+          (response) => response.question_id === questionId
         );
 
         if (!questionResponse || !isTextResponse(questionResponse)) {
           return null;
         }
 
-        let clickedCopy = false;
-        const copy = async (
-          e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-        ) => {
-          clickedCopy = true;
-          await navigator.clipboard.writeText(questionResponse.response);
-          setAnchorEl(e.target as HTMLButtonElement);
-          setTimeout(() => setAnchorEl(null), 1000);
-        };
-
         return (
           <Link
             onClick={() => {
-              if (clickedCopy) {
-                clickedCopy = false;
-                return;
-              }
               openPane({
                 render() {
                   return (
@@ -803,29 +791,35 @@ const TextResponseCard = ({
                       float: 'right',
                     }}
                   >
-                    <IconButton aria-label="previous" onClick={copy}>
-                      <CopyIcon />
-                    </IconButton>
-                    <Popper
-                      anchorEl={anchorEl}
-                      open={!!anchorEl}
-                      placement="top"
-                      transition
+                    <Tooltip
+                      title={
+                        hasCopiedResponse
+                          ? messages.insights.textFields.copyResponse.wasCopied()
+                          : messages.insights.textFields.copyResponse.copy()
+                      }
                     >
-                      {({ TransitionProps }) => (
-                        <Fade {...TransitionProps}>
-                          <Box
-                            sx={{
-                              bgcolor: 'background.paper',
-                              border: 1,
-                              p: 1,
-                            }}
-                          >
-                            {zuiMessages.copyToClipboard.copied()}
-                          </Box>
-                        </Fade>
-                      )}
-                    </Popper>
+                      <span>
+                        <IconButton
+                          aria-label="previous"
+                          disabled={hasCopiedResponse}
+                          onClick={async (ev) => {
+                            ev.stopPropagation();
+                            await navigator.clipboard.writeText(
+                              questionResponse.response
+                            );
+
+                            setHasCopiedResponse(true);
+                          }}
+                          sx={(theme) => ({
+                            '&: hover, &.Mui-focusVisible': {
+                              color: theme.palette.text.secondary,
+                            },
+                          })}
+                        >
+                          {hasCopiedResponse ? <Check /> : <ContentCopy />}
+                        </IconButton>
+                      </span>
+                    </Tooltip>
                   </Box>
                   {questionResponse.response}
                 </Typography>
@@ -910,12 +904,12 @@ const TextResponseList = ({
       chunk(
         submissionStats.filter((submission) =>
           submission.answeredTextQuestions.some(
-            (questionId) => questionId === questionStats.question.id,
-          ),
+            (questionId) => questionId === questionStats.question.id
+          )
         ),
-        columnCount,
+        columnCount
       ),
-    [submissionStats, columnCount, questionStats.question.id],
+    [submissionStats, columnCount, questionStats.question.id]
   );
 
   const rowProps = useMemo(
@@ -924,7 +918,7 @@ const TextResponseList = ({
       questionId: questionStats.question.id,
       rows,
     }),
-    [columnCount, questionStats.question.id, rows],
+    [columnCount, questionStats.question.id, rows]
   );
 
   if (!rows) {
@@ -961,7 +955,7 @@ const TextStatsCard = ({
         totalUniqueWordCount: questionStats.totalUniqueWordCount,
         totalWordCount: questionStats.totalWordCount,
       }),
-    [questionStats, messages.insights.textFields.subheader],
+    [questionStats, messages.insights.textFields.subheader]
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
@@ -1076,7 +1070,7 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
                   questionStats={questionStats}
                   submissionStats={data.submissionStats}
                 />
-              ),
+              )
             )}
           </>
         );
