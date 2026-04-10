@@ -7,12 +7,12 @@ import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import ResponseStatsCards from 'features/surveys/components/ResponseStatsCards';
 import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
 import useServerSide from 'core/useServerSide';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import { ZetkinSurvey } from 'utils/types/zetkin';
+import SurveyInsights from 'features/surveys/components/SurveyInsights';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -81,7 +81,7 @@ const InsightsPage: PageWithLayout<InsightsPageProps> = ({
           <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
         ) : (
           <Grid container spacing={2}>
-            <ResponseStatsCards
+            <SurveyInsights
               orgId={parseInt(orgId)}
               surveyId={parseInt(surveyId)}
             />
