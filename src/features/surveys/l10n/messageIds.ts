@@ -133,6 +133,10 @@ export default makeMessages('feat.surveys', {
       ),
     },
     textFields: {
+      copyResponse: {
+        copy: m('Copy to clipboard'),
+        wasCopied: m('Copied!'),
+      },
       subheader: m<{
         answerCount: number;
         totalUniqueWordCount: number;
