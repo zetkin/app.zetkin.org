@@ -143,7 +143,7 @@ const ResponseStatsCard = ({
         if (format === 'png') {
           await exportApi.current.exportAsImage({
             fileName: sanitizeFileName(
-              questionStats.question.question.question
+              questionStats.question.question.question,
             ),
             onBeforeExport: (iframe) => {
               const doc = iframe.contentDocument;
@@ -153,7 +153,7 @@ const ResponseStatsCard = ({
 
               const contentOverrides =
                 containerRef.current.getElementsByClassName(
-                  'zetkin-chart-content'
+                  'zetkin-chart-content',
                 );
               const contentBox =
                 contentOverrides.length > 0
@@ -181,7 +181,7 @@ const ResponseStatsCard = ({
       containerRef,
       exportApi,
       questionStats.question.question.question,
-    ]
+    ],
   );
 
   const exportMenuItems = useMemo(
@@ -195,8 +195,7 @@ const ResponseStatsCard = ({
         onSelect: () => exportChart('pdf'),
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [exportChart]
+    [exportChart],
   );
 
   const [exportMenuAnchorEl, setExportMenuAnchorEl] =
@@ -206,7 +205,7 @@ const ResponseStatsCard = ({
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setExportMenuAnchorEl(event.currentTarget);
     },
-    [setExportMenuAnchorEl]
+    [setExportMenuAnchorEl],
   );
   const exportMenuHandleClose = useCallback(() => {
     setExportMenuAnchorEl(null);
@@ -352,7 +351,7 @@ const QuestionStatsBarPlot = ({
           ([word, count]) => ({
             count: count,
             option: word,
-          })
+          }),
         );
     let sorted = bars.sort((a, b) => b.count - a.count);
     if (isTextStats(questionStats)) {
@@ -474,7 +473,7 @@ const QuestionStatsPie = ({
           ([word, count]) => ({
             label: getEllipsedString(word, 60),
             value: count,
-          })
+          }),
         );
     return items
       .sort((a, b) => b.value - a.value)
@@ -508,7 +507,7 @@ const QuestionStatsPie = ({
               {messages.insights.optionsFields.warningMultipleSelectedOptionsPie(
                 {
                   respondentCount: questionStats.multipleSelectedOptionsCount,
-                }
+                },
               )}
             </Alert>
           </Collapse>
@@ -565,8 +564,7 @@ const OptionsStatsCard = ({
         answerCount: questionStats.answerCount,
         totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questionStats, messages.insights.optionsFields.subheader]
+    [questionStats, messages.insights.optionsFields.subheader],
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
@@ -651,9 +649,9 @@ const TextResponseWordCloud = ({
         ([word, frequency]) => ({
           text: word,
           value: frequency,
-        })
+        }),
       ),
-    [questionStats.topWordFrequencies]
+    [questionStats.topWordFrequencies],
   );
 
   const containerRef = useRef<HTMLDivElement>();
@@ -679,7 +677,7 @@ const TextResponseWordCloud = ({
         },
         svgRef: svgRef,
       }) as ChartPluginOptions<UseChartProExportSignature>,
-    []
+    [],
   );
 
   const { publicAPI } = useChartProExport(exportOptions);
@@ -694,7 +692,7 @@ const TextResponseWordCloud = ({
     (elem: HTMLElement) => {
       setWidth(elem.clientWidth);
     },
-    [setWidth]
+    [setWidth],
   );
 
   const getRotationDegree = useMemo(() => {
@@ -712,7 +710,7 @@ const TextResponseWordCloud = ({
   }, [words, width]);
   const fontSizeSetter = useCallback(
     (datum: WordData) => fontScale(datum.value),
-    [fontScale]
+    [fontScale],
   );
 
   const resizeObserverRef = useResizeObserver(onResize);
@@ -788,7 +786,7 @@ const TextResponseCard = ({
   const { orgId } = useNumericRouteParams();
   const extendedSubmissionFuture = useSurveySubmission(
     orgId,
-    submission.submissionId
+    submission.submissionId,
   );
   const { openPane } = usePanes();
 
@@ -807,7 +805,7 @@ const TextResponseCard = ({
         }
 
         const questionResponse = extendedSubmission.responses.find(
-          (response) => response.question_id === questionId
+          (response) => response.question_id === questionId,
         );
 
         if (!questionResponse || !isTextResponse(questionResponse)) {
@@ -816,7 +814,7 @@ const TextResponseCard = ({
 
         let clickedCopy = false;
         const copy = async (
-          e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+          e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
         ) => {
           clickedCopy = true;
           await navigator.clipboard.writeText(questionResponse.response);
@@ -983,12 +981,12 @@ const TextResponseList = ({
       chunk(
         submissionStats.filter((submission) =>
           submission.answeredTextQuestions.some(
-            (questionId) => questionId === questionStats.question.id
-          )
+            (questionId) => questionId === questionStats.question.id,
+          ),
         ),
-        columnCount
+        columnCount,
       ),
-    [submissionStats, columnCount, questionStats.question.id]
+    [submissionStats, columnCount, questionStats.question.id],
   );
 
   const rowProps = useMemo(
@@ -997,7 +995,7 @@ const TextResponseList = ({
       questionId: questionStats.question.id,
       rows,
     }),
-    [columnCount, questionStats.question.id, rows]
+    [columnCount, questionStats.question.id, rows],
   );
 
   if (!rows) {
@@ -1034,8 +1032,7 @@ const TextStatsCard = ({
         totalUniqueWordCount: questionStats.totalUniqueWordCount,
         totalWordCount: questionStats.totalWordCount,
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questionStats, messages.insights.textFields.subheader]
+    [questionStats, messages.insights.textFields.subheader],
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
@@ -1151,7 +1148,7 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
                   questionStats={questionStats}
                   submissionStats={data.submissionStats}
                 />
-              )
+              ),
             )}
           </>
         );
