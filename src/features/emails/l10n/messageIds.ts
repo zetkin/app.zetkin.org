@@ -263,6 +263,22 @@ export default makeMessages('feat.emails', {
       },
       title: m<{ themeId: number }>('Theme {themeId}'),
     },
+    themePreview: {
+      button: m('I am a button.'),
+      heading: {
+        1: m('I am a heading 1'),
+        2: m('I am a heading 2'),
+        3: m('I am a heading 3'),
+      },
+      paragraph: {
+        1: m('I am a paragraph with '),
+        2: m(', '),
+        3: m(' text and an '),
+        bold: m('bold'),
+        italic: m('italic'),
+        link: m('external link'),
+      },
+    },
   },
   unsubscribePage: {
     consent: m('I understand'),

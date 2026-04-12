@@ -12,13 +12,114 @@ interface ThemePreviewProps {
 
 const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
   const messages = useMessages(messageIds);
+  const content =
+    `
+{
+  "blocks": [
+    {
+      "kind": "header",
+      "data": {
+        "content": [
+          { "kind": "string", "value": "` +
+    messages.themes.themePreview.heading['1']() +
+    `" }
+        ],
+        "level": 1
+      }
+    },
+    {
+      "kind": "header",
+      "data": {
+        "content": [
+          { "kind": "string", "value": "` +
+    messages.themes.themePreview.heading['2']() +
+    `" }
+        ],
+        "level": 2
+      }
+    },
+    {
+      "kind": "header",
+      "data": {
+        "content": [
+          { "kind": "string", "value": "` +
+    messages.themes.themePreview.heading['1']() +
+    `" }
+        ],
+        "level": 3
+      }
+    },
+    {
+      "kind": "paragraph",
+      "data": {
+        "content": [
+          { "kind": "string", "value": "` +
+    messages.themes.themePreview.paragraph['1']() +
+    `" },
+          {
+            "kind": "bold",
+            "content": [
+              { "kind": "string", "value": "` +
+    messages.themes.themePreview.paragraph.bold() +
+    `" }
+            ]
+          },
+          { "kind": "string", "value": "` +
+    messages.themes.themePreview.paragraph['2']() +
+    `" },
+          {
+            "kind": "italic",
+            "content": [
+              { "kind": "string", "value": "` +
+    messages.themes.themePreview.paragraph.italic() +
+    `" }
+            ]
+          },
+          { "kind": "string", "value": "` +
+    messages.themes.themePreview.paragraph['3']() +
+    `" },
+          {
+            "kind": "link",
+            "content": [
+              { "kind": "string", "value": "` +
+    messages.themes.themePreview.paragraph.link() +
+    `" }
+            ],
+            "href": "https://zetkin.org/",
+            "tag": "sjf8dtwj"
+          },
+          { "kind": "string", "value": "." }
+        ]
+      }
+    },
+    {
+      "kind": "image",
+      "data": {
+        "alt": "logo-zetkin.png",
+        "fileId": 2,
+        "src": "http://files.dev.zetkin.org/1/61a0fe34-247c-4c8c-9514-6bf7f9e3d578.png"
+      }
+    },
+    {
+      "kind": "button",
+      "data": {
+        "href": "https://zetkin.org",
+        "tag": "tja96d3p",
+        "text": "` +
+    messages.themes.themePreview.button() +
+    `"
+      }
+    }
+  ]
+}
+`;
   const [previewHtml, setPreviewHtml] = useState('');
 
   useEffect(() => {
     if (!theme) {
       return;
     }
-    previewEmailThemeHtml(theme).then((html) => {
+    previewEmailThemeHtml(content, theme).then((html) => {
       setPreviewHtml(html);
     });
   }, [theme]);
