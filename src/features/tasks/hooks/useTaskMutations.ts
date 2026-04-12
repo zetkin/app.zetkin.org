@@ -26,10 +26,10 @@ export default function useTaskMutations(
   const updateTask = async (body: ZetkinTaskRequestBody) => {
     dispatch(taskUpdate([taskId, Object.keys(body)]));
     const taskFuture = await apiClient
-      .patch<ZetkinTask, ZetkinTaskRequestBody>(
-        `/api/orgs/${orgId}/tasks/${taskId}`,
-        body
-      )
+      .patch<
+        ZetkinTask,
+        ZetkinTaskRequestBody
+      >(`/api/orgs/${orgId}/tasks/${taskId}`, body)
       .then((data: ZetkinTask) => {
         dispatch(taskUpdated(data));
         return data;

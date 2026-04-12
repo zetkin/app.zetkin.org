@@ -12,8 +12,17 @@ module.exports = {
     '.out/*',
     '!.prettierrc.js',
     'src/locale/*',
+    'public/*',
   ],
-  extends: ['eslint:recommended', 'next', 'prettier'],
+  extends: [
+    'eslint:recommended',
+    'next',
+    'prettier',
+    'plugin:storybook/recommended',
+  ],
+  rules: {
+    'storybook/prefer-pascal-case': 'off',
+  },
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files
@@ -112,6 +121,17 @@ module.exports = {
       parser: 'yaml-eslint-parser',
       rules: {
         'yml/quotes': ['error', { prefer: 'single' }],
+      },
+    },
+    {
+      files: ['integrationTesting/**/*.ts', 'integrationTesting/**/*.tsx'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
+      },
+      rules: {
+        '@typescript-eslint/no-floating-promises': ['error'],
       },
     },
   ],

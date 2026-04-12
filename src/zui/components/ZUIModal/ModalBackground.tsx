@@ -191,11 +191,12 @@ const ModalBackground: FC<Props> = ({ height, seed = 1, width }) => {
             }}
           >
             <canvas
-              ref={async (canvas) => {
+              ref={(canvas) => {
                 const ctx = canvas?.getContext('2d');
                 if (ctx) {
-                  const bitmap = await createImageBitmap(imageData);
-                  ctx.drawImage(bitmap, 0, 0);
+                  createImageBitmap(imageData).then((bitmap) => {
+                    ctx.drawImage(bitmap, 0, 0);
+                  });
                 }
               }}
               height={imageHeight}

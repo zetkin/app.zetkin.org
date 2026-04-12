@@ -33,8 +33,9 @@ test.describe('Journey instance page', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1');
     await page.locator('button[role="tab"]:has-text("Milestones")').click();
-    await page.waitForNavigation();
 
-    expect(page.url()).toEqual(appUri + '/organize/1/journeys/1/1/milestones');
+    await expect(page).toHaveURL(
+      appUri + '/organize/1/journeys/1/1/milestones'
+    );
   });
 });

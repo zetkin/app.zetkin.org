@@ -114,6 +114,10 @@ export default makeMessages('feat.surveys', {
       toPng: m('Export to png'),
     },
     optionsFields: {
+      displayInsights: {
+        absoluteCount: m('Amount'),
+        percentCount: m('Percent'),
+      },
       subheader: m<{
         answerCount: number;
         totalSelectedOptionsCount: number;
@@ -195,8 +199,9 @@ export default makeMessages('feat.surveys', {
     anonymous: m('Anonymous'),
     hidden: m('Hidden'),
     linked: m('Linked'),
-    subtitle:
-      m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
+    subtitle: m<{ date: ReactElement; person: ReactElement }>(
+      '{person} {date}'
+    ),
   },
   submissions: {
     anonymous: m('Anonymous'),

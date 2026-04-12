@@ -56,7 +56,9 @@ const BrowserRow: FC<BrowserRowProps> = ({ item, rowProps }) => {
     // If it's not a view, wrap it in a drop target
     content = (
       <Box
-        ref={dropRef}
+        ref={(node: HTMLDivElement | null) => {
+          dropRef(node);
+        }}
         style={{
           backgroundColor: dropProps.active
             ? theme.palette.background.paper

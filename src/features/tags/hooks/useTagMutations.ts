@@ -26,10 +26,10 @@ export default function useTagMutations(orgId: number): UseTagMutationsReturn {
       // eslint-disable-next-line
       const { id, ...resourceWithoutId } = tagWithNewGroup;
       const tagFuture = await apiClient
-        .patch<ZetkinTag, Omit<ZetkinTagPatchBody, 'id'>>(
-          `/api/orgs/${orgId}/people/tags/${tag.id}`,
-          resourceWithoutId
-        )
+        .patch<
+          ZetkinTag,
+          Omit<ZetkinTagPatchBody, 'id'>
+        >(`/api/orgs/${orgId}/people/tags/${tag.id}`, resourceWithoutId)
         .then((data: ZetkinTag) => {
           dispatch(tagUpdated(data));
           return data;
