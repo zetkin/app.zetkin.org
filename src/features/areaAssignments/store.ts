@@ -33,7 +33,7 @@ export interface AreaAssignmentsStoreSlice {
     number,
     RemoteItem<ZetkinAssignmentAreaStats & { id: number }>
   >;
-  areaAssignmentList: RemoteList<ZetkinAreaAssignment>;
+  areaAssignmentsByOrgId: Record<number, RemoteList<ZetkinAreaAssignment>>;
   areasByAssignmentId: Record<string, RemoteList<Zetkin2Area>>;
   assigneesByAssignmentId: Record<
     number,
@@ -49,7 +49,7 @@ export interface AreaAssignmentsStoreSlice {
 }
 
 const initialState: AreaAssignmentsStoreSlice = {
-  areaAssignmentList: remoteList(),
+  areaAssignmentsByOrgId: {},
   areaGraphByAssignmentId: {},
   areaStatsByAssignmentId: {},
   areasByAssignmentId: {},
@@ -69,38 +69,57 @@ const areaAssignmentSlice = createSlice({
       action: PayloadAction<ZetkinAreaAssignment>
     ) => {
       const areaAssignment = action.payload;
-      remoteItemUpdated(state.areaAssignmentList, areaAssignment);
+      const orgId = areaAssignment.organization_id;
+      if (!state.areaAssignmentsByOrgId[orgId]) {
+        state.areaAssignmentsByOrgId[orgId] = remoteList();
+      }
+      remoteItemUpdated(state.areaAssignmentsByOrgId[orgId], areaAssignment);
     },
-    areaAssignmentDeleted: (state, action: PayloadAction<number>) => {
-      const areaAssId = action.payload;
-      remoteItemDeleted(state.areaAssignmentList, areaAssId);
+    areaAssignmentDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [orgId, areaAssId] = action.payload;
+      if (state.areaAssignmentsByOrgId[orgId]) {
+        remoteItemDeleted(state.areaAssignmentsByOrgId[orgId], areaAssId);
+      }
     },
-    areaAssignmentLoad: (state, action: PayloadAction<number>) => {
-      const areaAssId = action.payload;
-      remoteItemLoad(state.areaAssignmentList, areaAssId);
+    areaAssignmentLoad: (state, action: PayloadAction<[number, number]>) => {
+      const [orgId, areaAssId] = action.payload;
+      if (!state.areaAssignmentsByOrgId[orgId]) {
+        state.areaAssignmentsByOrgId[orgId] = remoteList();
+      }
+      remoteItemLoad(state.areaAssignmentsByOrgId[orgId], areaAssId);
     },
     areaAssignmentLoaded: (
       state,
-      action: PayloadAction<ZetkinAreaAssignment>
+      action: PayloadAction<[number, ZetkinAreaAssignment]>
     ) => {
-      const areaAssignment = action.payload;
-      remoteItemUpdated(state.areaAssignmentList, areaAssignment);
+      const [orgId, areaAssignment] = action.payload;
+      if (!state.areaAssignmentsByOrgId[orgId]) {
+        state.areaAssignmentsByOrgId[orgId] = remoteList();
+      }
+      remoteItemUpdated(state.areaAssignmentsByOrgId[orgId], areaAssignment);
     },
     areaAssignmentUpdated: (
       state,
-      action: PayloadAction<ZetkinAreaAssignment>
+      action: PayloadAction<[number, ZetkinAreaAssignment]>
     ) => {
-      const updatedArea = action.payload;
-      remoteItemUpdated(state.areaAssignmentList, updatedArea);
+      const [orgId, updatedArea] = action.payload;
+      if (!state.areaAssignmentsByOrgId[orgId]) {
+        state.areaAssignmentsByOrgId[orgId] = remoteList();
+      }
+      remoteItemUpdated(state.areaAssignmentsByOrgId[orgId], updatedArea);
     },
-    areaAssignmentsLoad: (state) => {
-      state.areaAssignmentList = remoteListLoad(state.areaAssignmentList);
+    areaAssignmentsLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      state.areaAssignmentsByOrgId[orgId] = remoteListLoad(
+        state.areaAssignmentsByOrgId[orgId]
+      );
     },
     areaAssignmentsLoaded: (
       state,
-      action: PayloadAction<ZetkinAreaAssignment[]>
+      action: PayloadAction<[number, ZetkinAreaAssignment[]]>
     ) => {
-      state.areaAssignmentList = remoteListLoaded(action.payload);
+      const [orgId, areaAssignments] = action.payload;
+      state.areaAssignmentsByOrgId[orgId] = remoteListLoaded(areaAssignments);
     },
     areaGraphLoad: (state, action: PayloadAction<number>) => {
       const assignmentId = action.payload;

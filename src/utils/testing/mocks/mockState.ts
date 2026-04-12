@@ -4,7 +4,7 @@ import { remoteItem, remoteList } from 'utils/storeUtils';
 export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
     areaAssignments: {
-      areaAssignmentList: remoteList(),
+      areaAssignmentsByOrgId: {},
       areaGraphByAssignmentId: {},
       areaStatsByAssignmentId: {},
       areasByAssignmentId: {},
