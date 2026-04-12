@@ -249,9 +249,10 @@ export default makeMessages('feat.emails', {
     editor: {
       tabs: {
         block: m('Block'),
+        css: m('CSS'),
         frame: m('Frame'),
-        style: m('Style'),
       },
+      title: m<{ themeId: number }>('Theme {themeId}'),
     },
     themeCard: {
       delete: m('Delete'),

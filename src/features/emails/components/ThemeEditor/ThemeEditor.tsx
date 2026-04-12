@@ -1,95 +1,126 @@
-import TabContext from '@mui/lab/TabContext';
-import React, { useState } from 'react';
-import TabList from '@mui/lab/TabList';
-import { CircularProgress, Stack, Tab } from '@mui/material';
-import TabPanel from '@mui/lab/TabPanel';
+import React, { useEffect, useState } from 'react';
+import { Box, Button, CircularProgress, Stack } from '@mui/material';
+import { MJMLJsonObject, MJMLJsonSelfClosingTag } from 'mjml-core';
 
+import useEmailTheme from 'features/emails/hooks/useEmailTheme';
+import ZUITextField from 'zui/components/ZUITextField';
+import {
+  BlockAttributes,
+  EmailTheme,
+  EmailThemePatchBody,
+} from 'features/emails/types';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
-import useEmailTheme from 'features/emails/hooks/useEmailTheme';
-import EditTab from 'features/emails/components/ThemeEditor/EditTab';
 
-interface ThemeEditorProps {
+interface EditTabProps {
   orgId: number;
   themeId: number;
-  selectedBlockIndex: number;
+  editingSection: 'frame_mjml' | 'css' | 'block_attributes';
 }
 
-const ThemeEditor: React.FC<ThemeEditorProps> = (props) => {
+const parseField = (
+  section: string | MJMLJsonObject | BlockAttributes | null | undefined,
+  editingSection: EditTabProps['editingSection']
+) => {
+  if (section === null || section === undefined) {
+    return '';
+  }
+  if (editingSection === 'css') {
+    return section || '';
+  }
+  return JSON.stringify(section, null, 2);
+};
+
+const serializeField = (
+  value: string | MJMLJsonSelfClosingTag | BlockAttributes,
+  editingSection: EditTabProps['editingSection']
+) => {
+  if (editingSection === 'css') {
+    return value;
+  }
+  try {
+    return JSON.parse(value as string);
+  } catch {
+    return value;
+  }
+};
+
+const ThemeEditor: React.FC<EditTabProps> = ({
+  orgId,
+  themeId,
+  editingSection,
+}) => {
   const messages = useMessages(messageIds);
-  const [activeTab, setActiveTab] = useState<'frame' | 'style' | 'block'>(
-    'frame'
-  );
+  const {
+    data: theme,
+    updateEmailTheme,
+    mutating,
+    isLoading,
+  } = useEmailTheme(orgId, themeId);
 
-  const { isLoading } = useEmailTheme(props.orgId, props.themeId);
+  const sectionValue = theme
+    ? parseField(theme[editingSection], editingSection)
+    : '';
+  const [localValue, setLocalValue] = useState(sectionValue);
+  const [dirty, setDirty] = useState(false);
 
-  if (isLoading) {
+  useEffect(() => {
+    setLocalValue(sectionValue);
+    setDirty(false);
+  }, [sectionValue, themeId]);
+
+  const handleChange = (newValue: string) => {
+    setLocalValue(newValue);
+    setDirty(true);
+  };
+
+  const handleSave = async () => {
+    const patch: EmailThemePatchBody = {
+      [editingSection]: serializeField(localValue, editingSection),
+    };
+    await updateEmailTheme(patch as EmailTheme);
+    setDirty(false);
+  };
+
+  let jsonError = false;
+  if (editingSection !== 'css' && localValue) {
+    try {
+      JSON.parse(localValue as string);
+      jsonError = false;
+    } catch {
+      jsonError = true;
+    }
+  }
+
+  if (isLoading || mutating.includes(editingSection)) {
     return <CircularProgress />;
   }
 
   return (
-    <Stack direction="column" display="flex" gap={2}>
-      <TabContext value={activeTab}>
-        <TabList onChange={(_, newValue) => setActiveTab(newValue)}>
-          <Tab
-            label={messages.themes.editor.tabs.frame()}
-            sx={{ marginLeft: 2 }}
-            value={'content'}
-          />
-          <Tab
-            label={messages.themes.editor.tabs.style()}
-            sx={{ marginLeft: 2 }}
-            value={'style'}
-          />
-          <Tab
-            label={messages.themes.editor.tabs.block()}
-            sx={{ marginLeft: 2 }}
-            value={'block'}
-          />
-        </TabList>
-        <TabPanel
-          sx={{
-            flexGrow: 0,
-            overflowY: 'auto',
-            padding: 0,
-          }}
-          value="content"
+    <Stack direction="column" display="flex">
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        <ZUITextField
+          error={jsonError}
+          fullWidth
+          helperText={
+            jsonError ? messages.themes.themeEditor.jsonError() : undefined
+          }
+          maxRows={20}
+          multiline
+          onChange={handleChange}
+          value={localValue as string}
+        />
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+        <Button
+          color="primary"
+          disabled={!dirty || jsonError}
+          onClick={handleSave}
+          variant="contained"
         >
-          <EditTab
-            editingSection="frame_mjml"
-            orgId={props.orgId}
-            themeId={props.themeId}
-          />
-        </TabPanel>
-        <TabPanel
-          sx={{
-            flexGrow: 0,
-            overflowY: 'auto',
-            padding: 0,
-          }}
-          value="style"
-        >
-          <EditTab
-            editingSection="css"
-            orgId={props.orgId}
-            themeId={props.themeId}
-          />
-        </TabPanel>
-        <TabPanel
-          sx={{
-            flexGrow: 0,
-            overflowY: 'auto',
-            padding: 0,
-          }}
-          value="block"
-        >
-          <EditTab
-            editingSection="block_attributes"
-            orgId={props.orgId}
-            themeId={props.themeId}
-          />
-        </TabPanel>
-      </TabContext>
+          {messages.themes.themeEditor.saveButton()}
+        </Button>
+      </Box>
     </Stack>
   );
 };
