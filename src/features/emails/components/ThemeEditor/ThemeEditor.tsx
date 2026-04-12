@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, Stack } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { MJMLJsonObject, MJMLJsonSelfClosingTag } from 'mjml-core';
 
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
@@ -20,7 +26,7 @@ interface EditTabProps {
 
 const parseField = (
   section: string | MJMLJsonObject | BlockAttributes | null | undefined,
-  editingSection: EditTabProps['editingSection']
+  editingSection: EditTabProps['editingSection'],
 ) => {
   if (section === null || section === undefined) {
     return '';
@@ -33,7 +39,7 @@ const parseField = (
 
 const serializeField = (
   value: string | MJMLJsonSelfClosingTag | BlockAttributes,
-  editingSection: EditTabProps['editingSection']
+  editingSection: EditTabProps['editingSection'],
 ) => {
   if (editingSection === 'css') {
     return value;
@@ -97,20 +103,21 @@ const ThemeEditor: React.FC<EditTabProps> = ({
   }
 
   return (
-    <Stack direction="column" display="flex">
-      <Box sx={{ flex: 1, overflow: 'auto' }}>
-        <ZUITextField
-          error={jsonError}
-          fullWidth
-          helperText={
-            jsonError ? messages.themes.themeEditor.jsonError() : undefined
-          }
-          maxRows={20}
-          multiline
-          onChange={handleChange}
-          value={localValue as string}
-        />
-      </Box>
+    <Stack gap={2} sx={{ flex: 1, minWidth: '0' }}>
+      <Typography variant="h5">
+        {messages.themes.themeEditor.editTitle()}
+      </Typography>
+      <ZUITextField
+        error={jsonError}
+        fullWidth
+        helperText={
+          jsonError ? messages.themes.themeEditor.jsonError() : undefined
+        }
+        maxRows={20}
+        multiline
+        onChange={handleChange}
+        value={localValue as string}
+      />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
         <Button
           color="primary"

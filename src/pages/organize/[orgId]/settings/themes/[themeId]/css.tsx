@@ -9,6 +9,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ThemeEditor from 'features/emails/components/ThemeEditor/ThemeEditor';
+import ThemePreview from 'features/emails/components/ThemeEditor/ThemePreview';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -27,7 +28,7 @@ interface ThemePageProps {
 const ThemePage: PageWithLayout<ThemePageProps> = () => {
   const onServer = useServerSide();
   const { orgId, themeId } = useNumericRouteParams();
-  const { isLoading } = useEmailTheme(orgId, themeId);
+  const { isLoading, data } = useEmailTheme(orgId, themeId);
 
   if (onServer) {
     return null;
@@ -37,11 +38,9 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
   }
 
   return (
-    <Stack direction="row" display="flex" gap={2}>
-      <Box sx={{ flex: 1, minWidth: '0' }}>
-        <ThemeEditor editingSection="css" orgId={orgId} themeId={themeId} />
-      </Box>
-      <Box sx={{ flex: 1, minWidth: '0' }} />
+    <Stack direction="row" display="flex" gap={2} sx={{ height: '100vh' }}>
+      <ThemeEditor editingSection="css" orgId={orgId} themeId={themeId} />
+      <ThemePreview theme={data} />
     </Stack>
   );
 };
