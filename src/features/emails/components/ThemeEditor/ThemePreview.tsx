@@ -122,7 +122,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
     previewEmailThemeHtml(content, theme).then((html) => {
       setPreviewHtml(html);
     });
-  }, [theme]);
+  });
 
   return (
     <Stack gap={2} sx={{ flex: 1, minWidth: '0' }}>

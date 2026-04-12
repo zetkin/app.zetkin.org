@@ -26,7 +26,7 @@ interface EditTabProps {
 
 const parseField = (
   section: string | MJMLJsonObject | BlockAttributes | null | undefined,
-  editingSection: EditTabProps['editingSection'],
+  editingSection: EditTabProps['editingSection']
 ) => {
   if (section === null || section === undefined) {
     return '';
@@ -39,7 +39,7 @@ const parseField = (
 
 const serializeField = (
   value: string | MJMLJsonSelfClosingTag | BlockAttributes,
-  editingSection: EditTabProps['editingSection'],
+  editingSection: EditTabProps['editingSection']
 ) => {
   if (editingSection === 'css') {
     return value;

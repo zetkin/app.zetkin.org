@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Box, CircularProgress, Stack } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 import React from 'react';
 
 import { scaffold } from 'utils/next';

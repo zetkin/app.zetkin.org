@@ -57,7 +57,8 @@ const defaultFrameMjml = {
   tagName: 'mj-wrapper',
 };
 
-const defaultCss = "h1 {}\nh2 {}\nh3 {}\na:link {}\na:visited {}\na:hover {}\np {}\np b {}";
+const defaultCss =
+  'h1 {}\nh2 {}\nh3 {}\na:link {}\na:visited {}\na:hover {}\np {}\np b {}';
 
 export default function useCreateEmailTheme(
   orgId: number
@@ -66,13 +67,13 @@ export default function useCreateEmailTheme(
   const dispatch = useDispatch();
 
   const createEmailTheme = async () => {
-    dispatch(themeCreate);
+    dispatch(themeCreate());
     const theme = await apiClient.post<EmailTheme>(
       `/api/orgs/${orgId}/email_themes`,
       {
         block_attributes: defaultBlockAttributes,
         css: defaultCss,
-        frame_mjml: defaultFrameMjml
+        frame_mjml: defaultFrameMjml,
       }
     );
     dispatch(themeCreated([theme, orgId]));
