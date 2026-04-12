@@ -181,10 +181,13 @@ const emailsSlice = createSlice({
     themeCreate: (state) => {
       state.themeList.isLoading = true;
     },
-    themeCreated: (state, action: PayloadAction<EmailTheme>) => {
-      const theme = action.payload;
+    themeCreated: (state, action: PayloadAction<[EmailTheme, number]>) => {
+      const [theme, orgId] = action.payload;
+      const themeWithOrgId = { ...theme, orgId };
       state.themeList.isLoading = false;
-      state.themeList.items.push(remoteItem(theme.id, { data: theme }));
+      state.themeList.items.push(
+        remoteItem(theme.id, { data: themeWithOrgId })
+      );
     },
     themeDeleted: (state, action: PayloadAction<number>) => {
       const themeId = action.payload;

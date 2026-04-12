@@ -20,7 +20,7 @@ export default function useCreateEmailTheme(
       `/api/orgs/${orgId}/email_themes`,
       { frame_mjml: null }
     );
-    dispatch(themeCreated(theme));
+    dispatch(themeCreated([theme, orgId]));
     return theme;
   };
 
