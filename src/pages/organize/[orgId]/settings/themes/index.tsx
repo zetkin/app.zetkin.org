@@ -55,8 +55,10 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
       </Box>
       <Grid container spacing={2}>
         {themes.map((theme) => (
-          <Grid key={theme.id} size={{ md: 6, xs: 6 }}>
-            <ThemeCard orgId={orgId} themeId={theme.id} />
+          <Grid key={theme.id} size={{ md: 6, sm: 6, xs: 12 }}>
+            <Box sx={{ height: '100%', minHeight: '400px' }}>
+              <ThemeCard orgId={orgId} themeId={theme.id} />
+            </Box>
           </Grid>
         ))}
       </Grid>
