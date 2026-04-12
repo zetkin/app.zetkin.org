@@ -4,7 +4,7 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import { FinishedCall } from '../types';
 import { finishedCallsLoad, finishedCallsLoaded } from '../store';
 
-export default function useFinishedCalls() {
+export default function useFinishedCalls(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
@@ -13,7 +13,7 @@ export default function useFinishedCalls() {
   const [loading, setLoading] = useState(false);
 
   const loadFinishedCalls = async () => {
-    dispatch(finishedCallsLoad());
+    dispatch(finishedCallsLoad(orgId));
     if (finishedCalls.length == 0) {
       setLoading(true);
     }
@@ -23,7 +23,7 @@ export default function useFinishedCalls() {
          `);
 
     const loadedFinishedCalls = [...finishedCalls, ...newLoadedFinishedCalls];
-    dispatch(finishedCallsLoaded(loadedFinishedCalls));
+    dispatch(finishedCallsLoaded([orgId, loadedFinishedCalls]));
     setFinishedCalls(loadedFinishedCalls);
 
     if (newLoadedFinishedCalls.length == 0) {

@@ -3,13 +3,15 @@ import { UnfinishedCall } from '../types';
 import useRemoteList from 'core/hooks/useRemoteList';
 import { unfinishedCallsLoad, unfinishedCallsLoaded } from '../store';
 
-export default function useUnfinishedCalls(): UnfinishedCall[] {
+export default function useUnfinishedCalls(orgId: number): UnfinishedCall[] {
   const apiClient = useApiClient();
-  const unfinishedCalls = useAppSelector((state) => state.call.unfinishedCalls);
+  const unfinishedCalls = useAppSelector(
+    (state) => state.call.unfinishedCallsByOrgId[orgId]
+  );
 
   return useRemoteList(unfinishedCalls, {
-    actionOnLoad: () => unfinishedCallsLoad(),
-    actionOnSuccess: (data) => unfinishedCallsLoaded(data),
+    actionOnLoad: () => unfinishedCallsLoad(orgId),
+    actionOnSuccess: (data) => unfinishedCallsLoaded([orgId, data]),
     loader: () => {
       return apiClient.get<
         UnfinishedCall[]
