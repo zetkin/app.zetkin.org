@@ -9,7 +9,7 @@ export default function useAreaMutations(orgId: number, areaId: number) {
   return {
     async deleteArea() {
       await apiClient.delete(`/api2/orgs/${orgId}/areas/${areaId}`);
-      dispatch(areaDeleted(areaId));
+      dispatch(areaDeleted([orgId, areaId]));
     },
     async updateArea(data: Zetkin2AreaPostBody) {
       const area = await apiClient.patch<Zetkin2Area, Zetkin2AreaPostBody>(
@@ -17,7 +17,7 @@ export default function useAreaMutations(orgId: number, areaId: number) {
         data
       );
 
-      dispatch(areaUpdated(area));
+      dispatch(areaUpdated([orgId, area]));
     },
   };
 }
