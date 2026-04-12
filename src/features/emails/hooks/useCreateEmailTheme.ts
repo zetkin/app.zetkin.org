@@ -14,47 +14,47 @@ const defaultBlockAttributes = {
 };
 
 const defaultFrameMjml = {
-  tagName: 'mj-wrapper',
+  attributes: {},
   children: [
     {
-      tagName: 'mj-section',
-      children: [],
       attributes: {},
+      children: [],
+      tagName: 'mj-section',
     },
     {
-      tagName: 'mj-section',
+      attributes: {},
       children: [
         {
-          tagName: 'mj-column',
+          attributes: {},
           children: [
             {
-              tagName: 'placeholder',
               attributes: {},
+              tagName: 'placeholder',
             },
           ],
-          attributes: {},
+          tagName: 'mj-column',
         },
       ],
-      attributes: {},
+      tagName: 'mj-section',
     },
     {
-      tagName: 'mj-section',
+      attributes: {},
       children: [
         {
-          content:
-            'To unsubscribe from emails, click <a href="{{unsub_org_url}}">here</a>.',
-          tagName: 'mj-text',
           attributes: {
             align: 'center',
             color: '#a1a1a1',
             'font-size': '12px',
           },
+          content:
+            'To unsubscribe from emails, click <a href="{{unsub_org_url}}">here</a>.',
+          tagName: 'mj-text',
         },
       ],
-      attributes: {},
+      tagName: 'mj-section',
     },
   ],
-  attributes: {},
+  tagName: 'mj-wrapper',
 };
 
 const defaultCss = "h1 {}\nh2 {}\nh3 {}\na:link {}\na:visited {}\na:hover {}\np {}\np b {}";
