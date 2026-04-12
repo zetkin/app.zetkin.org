@@ -20,14 +20,14 @@ const EmailThemeLayout: FunctionComponent<SettingsLayoutProps> = ({
       baseHref={`/organize/${orgId}/settings/themes/${themeId}`}
       defaultTab="/frame"
       tabs={[
-        { href: `/frame`, label: messages.themes.editor.tabs.frame() },
-        { href: `/css`, label: messages.themes.editor.tabs.css() },
+        { href: `/frame`, label: messages.themes.themeEditor.tabs.frame() },
+        { href: `/css`, label: messages.themes.themeEditor.tabs.css() },
         {
           href: `/block_attributes`,
-          label: messages.themes.editor.tabs.block(),
+          label: messages.themes.themeEditor.tabs.block(),
         },
       ]}
-      title={messages.themes.editor.title({ themeId: themeId })}
+      title={messages.themes.themeEditor.title({ themeId: themeId })}
     >
       {children}
     </TabbedLayout>

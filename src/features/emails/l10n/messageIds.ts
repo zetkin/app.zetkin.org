@@ -246,22 +246,22 @@ export default makeMessages('feat.emails', {
     viewButton: m('View target group'),
   },
   themes: {
-    editor: {
-      tabs: {
-        block: m('Block'),
-        css: m('CSS'),
-        frame: m('Frame'),
-      },
-      title: m<{ themeId: number }>('Theme {themeId}'),
-    },
     themeCard: {
       delete: m('Delete'),
       edit: m('Edit'),
       title: m<{ themeId: number }>('Theme {themeId}'),
     },
     themeEditor: {
+      editTitle: m('Edit'),
       jsonError: m('Invalid JSON'),
+      previewTitle: m('Preview'),
       saveButton: m('Save'),
+      tabs: {
+        block: m('Block'),
+        css: m('CSS'),
+        frame: m('Frame'),
+      },
+      title: m<{ themeId: number }>('Theme {themeId}'),
     },
   },
   unsubscribePage: {
