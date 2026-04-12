@@ -1,11 +1,19 @@
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest,
+} from '@jest/globals';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { usePreventKeyboardPropagation } from './usePreventKeyboardPropagation';
 
 describe('usePreventKeyboardPropagation', () => {
   let mockElement: HTMLDivElement;
-  let addEventListenerSpy: jest.SpyInstance;
-  let removeEventListenerSpy: jest.SpyInstance;
+  let addEventListenerSpy: ReturnType<typeof jest.spyOn>;
+  let removeEventListenerSpy: ReturnType<typeof jest.spyOn>;
 
   beforeEach(() => {
     mockElement = document.createElement('div');
@@ -35,6 +43,7 @@ describe('usePreventKeyboardPropagation', () => {
     });
 
     await waitFor(() => {
+      expect(addEventListenerSpy).toHaveBeenCalledTimes(3);
       expect(addEventListenerSpy).toHaveBeenCalledWith(
         'keydown',
         expect.any(Function),
@@ -93,6 +102,7 @@ describe('usePreventKeyboardPropagation', () => {
 
     unmount();
 
+    expect(removeEventListenerSpy).toHaveBeenCalledTimes(3);
     expect(removeEventListenerSpy).toHaveBeenCalledWith(
       'keydown',
       expect.any(Function),
@@ -154,13 +164,6 @@ describe('usePreventKeyboardPropagation', () => {
       expect(addEventListenerSpy).toHaveBeenCalled();
     });
 
-    // Get the handler that was registered
-    const keydownHandler = addEventListenerSpy.mock.calls.find(
-      (call) => call[0] === 'keydown'
-    )?.[1] as EventListener;
-
-    expect(keydownHandler).toBeDefined();
-
     // Create a mock keyboard event
     const event = new KeyboardEvent('keydown', { bubbles: true, key: '1' });
     const stopPropagationSpy = jest.spyOn(event, 'stopPropagation');
@@ -169,8 +172,7 @@ describe('usePreventKeyboardPropagation', () => {
       'stopImmediatePropagation'
     );
 
-    // Call the handler
-    keydownHandler(event);
+    mockElement.dispatchEvent(event);
 
     expect(stopPropagationSpy).toHaveBeenCalled();
     expect(stopImmediatePropagationSpy).toHaveBeenCalled();
@@ -189,10 +191,22 @@ describe('usePreventKeyboardPropagation', () => {
       expect(addEventListenerSpy).toHaveBeenCalled();
     });
 
-    // Verify all listeners use capture: true
-    addEventListenerSpy.mock.calls.forEach((call) => {
-      expect(call[2]).toEqual({ capture: true });
-    });
+    expect(addEventListenerSpy).toHaveBeenCalledTimes(3);
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'keydown',
+      expect.any(Function),
+      { capture: true }
+    );
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'keyup',
+      expect.any(Function),
+      { capture: true }
+    );
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'keypress',
+      expect.any(Function),
+      { capture: true }
+    );
   });
 
   it('handles null element gracefully', () => {
