@@ -13,12 +13,15 @@ import {
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
 
+import { useNumericRouteParams } from 'core/hooks';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDataTableSearch from 'zui/ZUIDataTableSearch';
 import ZUIDataTableSorting from 'zui/ZUIDataTableSorting';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/views/l10n/messageIds';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
+import { BULK_DELETE } from 'utils/featureFlags';
+import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 
 export interface ViewDataTableToolbarProps {
   disableBulkActions?: boolean;
@@ -57,8 +60,10 @@ const ViewDataTableToolbar: React.FunctionComponent<
 }) => {
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { orgId } = useNumericRouteParams();
 
   const hasSelection = !!selection.length;
+  const hasBulkDelete = useFeatureWithOrg(BULK_DELETE, orgId);
 
   const onClickRemoveRows = () => {
     showConfirmDialog({
@@ -82,6 +87,15 @@ const ViewDataTableToolbar: React.FunctionComponent<
       icon: <RemoveCircleOutline />,
       label: messages.toolbar.bulk.removeFromList(),
       onClick: onClickRemoveRows,
+    },
+  ];
+
+  const bulkDeletePersons = [
+    {
+      disabled: disabled,
+      icon: <DeleteOutline />,
+      label: messages.toolbar.bulk.delete(),
+      onClick: onClickDelete,
     },
   ];
 
@@ -112,12 +126,8 @@ const ViewDataTableToolbar: React.FunctionComponent<
                     onClick: onViewCreate,
                   },
                   ...(isSmartSearch ? [] : bulkActionsForStaticLists),
-                  {
-                    disabled: disabled,
-                    icon: <DeleteOutline />,
-                    label: messages.toolbar.bulk.delete(),
-                    onClick: onClickDelete,
-                  },
+
+                  ...(hasBulkDelete ? bulkDeletePersons : []),
                 ]}
                 label={messages.toolbar.bulk.handleSelection({
                   numSelected: selection.length,
