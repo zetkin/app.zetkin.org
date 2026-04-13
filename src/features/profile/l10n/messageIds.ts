@@ -2,8 +2,7 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.profile', {
   customFields: {
-    orgLocked: m<{ org: string }>('Field locked by {org}'),
-    title: m('Custom fields'),
+    notEditable: m('This field cannot be edited by your organization'),
   },
   delete: {
     button: m('Delete person'),
