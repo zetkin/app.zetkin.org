@@ -21,7 +21,9 @@ export default async function Page({ params, searchParams }: PageProps) {
   const apiClient = new BackendApiClient(headersObject);
 
   const unsubUrl = searchParams.unsub;
-  if (!unsubUrl) {
+  const validUnsubUrl = unsubUrl?.startsWith('https://');
+
+  if (!unsubUrl || !validUnsubUrl) {
     return notFound();
   }
 

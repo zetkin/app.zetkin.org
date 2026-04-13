@@ -81,6 +81,7 @@ const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
         onSuccess();
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({

@@ -8,7 +8,8 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
-import useViewTree from 'features/views/hooks/useViewTree';
+import useOrgIdsFromOrgScope from 'features/smartSearch/hooks/useOrgIdsFromOrgScope';
+import useSubOrgViews from 'features/views/hooks/useSubOrgViews';
 const localMessageIds = messageIds.filters.personView;
 
 interface DisplayPersonViewProps {
@@ -18,8 +19,11 @@ interface DisplayPersonViewProps {
 const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   const { config } = filter;
   const { orgId } = useNumericRouteParams();
-  const viewTree = useViewTree(orgId);
-  const personViews = viewTree.data?.views ?? [];
+  const filterScope = filter.config.organizations || [orgId];
+
+  const orgIds = useOrgIdsFromOrgScope(orgId, filterScope);
+  const viewsFuture = useSubOrgViews(orgIds);
+  const personViews = viewsFuture.data || [];
 
   const view = personViews.find((v) => v.id == config.view);
   const operator = config.operator;

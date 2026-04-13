@@ -84,25 +84,19 @@ test.describe('Journey instance detail page', () => {
     );
 
     //Click type of journey to convert to, "Marxist Training"
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
-      ),
-      page.waitForNavigation({
-        url: `**/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`,
-      }),
-      page.locator('text=Marxist training').click(),
-    ]);
+    await page.locator('text=Marxist training').click();
 
     //Expect the id to be the MarxistJourney id.
+    await expect
+      .poll(() => patchReqLog<{ journey_id: number }>().length)
+      .toBe(1);
     expect(patchReqLog<{ journey_id: number }>()[0].data?.journey_id).toBe(
       MarxistTraining.id
     );
 
     //Expect redirect to journey instance paage with new journey id.
-    expect(page.url()).toEqual(
-      appUri +
-        `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
+    await page.waitForURL(
+      `**/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
     );
   });
 

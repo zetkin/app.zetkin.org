@@ -30,6 +30,7 @@ const ActivistPortalOrgEventsMap: FC<Props> = ({ orgId }) => {
         router.push(`/o/${orgId}`);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch, filtersUpdated, lastSegment, router.push, orgId]
   );
 

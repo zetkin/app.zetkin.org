@@ -521,6 +521,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
         })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target?.id]);
 
   useEffect(() => {
@@ -539,6 +540,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
         })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
   return (

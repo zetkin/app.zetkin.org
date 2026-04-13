@@ -3,7 +3,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { FC } from 'react';
 
 import ZUIItemCard from 'zui/components/ZUIItemCard';
-import ZUIIconLabel from 'zui/components/ZUIIconLabel';
+import ZUIIconLabel, { ZUILabelText } from 'zui/components/ZUIIconLabel';
 
 type Props = {
   actions?: JSX.Element[];
@@ -12,7 +12,7 @@ type Props = {
   image?: string;
   info: {
     Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
-    labels: string[];
+    labels: ZUILabelText[];
   }[];
   title: string;
 };

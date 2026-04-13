@@ -110,6 +110,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         window.removeEventListener('popstate', handlePopState);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -117,6 +118,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
       pushedRef.current = true;
       goto('location');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(

@@ -34,17 +34,10 @@ test.describe.skip('Campaigns list page', async () => {
     await page.fill('input:near(#status)', 'published');
     await page.fill('input:near(#visibility)', ReferendumSignatures.visibility);
 
-    await Promise.all([
-      // Page may navigate away from modal (#createCampaign) before it
-      // navigates to the new campaign, so wait for specific URL
-      page.waitForNavigation({
-        url: `**/organize/1/campaigns/${ReferendumSignatures.id}`,
-      }),
-      page.click('button:text("Submit")'),
-    ]);
+    await page.click('button:text("Submit")');
 
     // Check for redirect
-    expect(page.url()).toEqual(
+    await expect(page).toHaveURL(
       appUri + '/organize/1/campaigns/' + ReferendumSignatures.id
     );
   });
