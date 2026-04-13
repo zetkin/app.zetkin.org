@@ -23,12 +23,20 @@ export default class LocalBoolColumnType implements IColumnType {
     return String(!!cell);
   }
 
-  getColDef(column: LocalBoolViewColumn, accessLevel: ZetkinObjectAccess['level'] | null): Omit<GridColDef, 'field'> {
+  getColDef(
+    column: LocalBoolViewColumn,
+    accessLevel: ZetkinObjectAccess['level'] | null
+  ): Omit<GridColDef, 'field'> {
     return {
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<ZetkinViewRow, boolean>) => {
         return (
-          <Cell cell={params.value} column={column} isEditable={accessLevel !== 'readonly'} personId={params.row.id} />
+          <Cell
+            cell={params.value}
+            column={column}
+            isEditable={accessLevel !== 'readonly'}
+            personId={params.row.id}
+          />
         );
       },
       sortingOrder: ['desc', 'asc', null],
