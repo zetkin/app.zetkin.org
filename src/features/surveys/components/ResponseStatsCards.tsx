@@ -792,7 +792,7 @@ const TextResponseCard = ({
                     }}
                   >
                     <Tooltip
-                      arrow
+                      arrow={true}
                       title={
                         hasCopiedResponse
                           ? messages.insights.textFields.copyResponse.wasCopied()
