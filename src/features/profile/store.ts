@@ -36,6 +36,12 @@ const profilesSlice = createSlice({
   initialState,
   name: 'profiles',
   reducers: {
+    fieldRemoved: (state, action: PayloadAction<number>) => {
+      const fieldId = action.payload;
+      state.fieldsList.items = state.fieldsList.items.filter(
+        (item) => item.id !== fieldId
+      );
+    },
     fieldsLoad: (state) => {
       state.fieldsList.isLoading = true;
     },
@@ -180,6 +186,7 @@ const profilesSlice = createSlice({
 
 export default profilesSlice;
 export const {
+  fieldRemoved,
   fieldsLoad,
   fieldsLoaded,
   personLoad,
