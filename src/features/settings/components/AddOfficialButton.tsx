@@ -11,12 +11,14 @@ import { Msg, useMessages } from 'core/i18n';
 
 interface AddOfficialButtonProps {
   orgId: number;
-  disabledList: ZetkinMembership[];
+  disabled: boolean;
+  peopleToDisable: ZetkinMembership[];
   roleType: 'admin' | 'organizer';
 }
 
 const AddOfficialButton = ({
-  disabledList,
+  peopleToDisable,
+  disabled,
   orgId,
   roleType,
 }: AddOfficialButtonProps) => {
@@ -24,8 +26,9 @@ const AddOfficialButton = ({
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const addAdmin = roleType === 'admin';
   const { updateRole } = useOfficialMutations(orgId);
+
   const getOptionExtraLabel = (personId: number) => {
-    if (disabledList.some((person) => person.profile.id === personId)) {
+    if (peopleToDisable.some((person) => person.profile.id === personId)) {
       return (
         <Box
           sx={{
@@ -41,9 +44,11 @@ const AddOfficialButton = ({
     }
     return '';
   };
+
   return (
     <>
       <Button
+        disabled={disabled}
         onClick={(ev) => {
           setAnchorEl(ev.target as Element);
         }}
@@ -86,7 +91,7 @@ const AddOfficialButton = ({
           <ZUIPersonSelect
             disabled
             getOptionDisabled={(option) =>
-              disabledList.some((person) => person.profile.id == option.id)
+              peopleToDisable.some((person) => person.profile.id == option.id)
             }
             getOptionExtraLabel={(option) => {
               return getOptionExtraLabel(option.id);
