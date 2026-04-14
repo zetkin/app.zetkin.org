@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import CanvassInstructionsPage from 'features/canvass/components/CanvassInstructionsPage';
+import { ApiClientError } from 'core/api/errors';
 
 interface PageProps {
   params: {
@@ -23,6 +24,9 @@ export default async function Page({ params }: PageProps) {
 
     return <CanvassInstructionsPage areaAssId={areaAssId} />;
   } catch (err) {
-    return redirect(`/login?redirect=/canvass/${areaAssId}`);
+    if (err instanceof ApiClientError && err.status === 401) {
+      return redirect(`/login?redirect=/canvass/${areaAssId}`);
+    }
+    throw err;
   }
 }

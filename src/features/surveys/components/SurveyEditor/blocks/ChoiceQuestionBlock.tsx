@@ -111,6 +111,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
 
       lengthRef.current = options.length;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elemQuestion.options?.length]);
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =

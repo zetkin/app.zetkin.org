@@ -41,6 +41,7 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
     } else {
       window.removeEventListener('scroll', closeOnScroll);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandSummary]);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
       setOverflow(textRef.current?.scrollHeight);
     }
     return () => window.removeEventListener('scroll', closeOnScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

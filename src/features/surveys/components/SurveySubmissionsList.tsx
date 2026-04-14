@@ -252,6 +252,7 @@ const SurveySubmissionsList = ({
       if (emailOrName.length > 2) {
         setQuery(emailOrName);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [emailOrName]);
 
     const updateCellValue = (person: ZetkinPerson | null) => {

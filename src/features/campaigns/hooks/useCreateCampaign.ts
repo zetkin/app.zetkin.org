@@ -13,10 +13,10 @@ export default function useCreateCampaign(
     dispatch(campaignCreate());
 
     const promise = apiClient
-      .post<ZetkinCampaign, ZetkinCampaignPostBody>(
-        `/api/orgs/${orgId}/campaigns`,
-        campaignBody
-      )
+      .post<
+        ZetkinCampaign,
+        ZetkinCampaignPostBody
+      >(`/api/orgs/${orgId}/campaigns`, campaignBody)
       .then((campaign: ZetkinCampaign) => {
         dispatch(campaignCreated(campaign));
         return campaign;

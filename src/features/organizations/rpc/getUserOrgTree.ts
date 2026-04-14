@@ -20,9 +20,8 @@ export const getUserOrgTreeDef = {
 export default makeRPCDef<Params, Result>(getUserOrgTreeDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
-  const allOrganizations = await apiClient.get<ZetkinOrganization[]>(
-    `/api/orgs/`
-  );
+  const allOrganizations =
+    await apiClient.get<ZetkinOrganization[]>(`/api/orgs/`);
 
   const memberships = await apiClient.get<ZetkinMembership[]>(
     `/api/users/me/memberships`

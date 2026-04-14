@@ -26,7 +26,7 @@ test.describe('View detail page', () => {
   });
 
   test('lets user remove row from view', async ({ page, appUri, moxy }) => {
-    moxy.setZetkinApiMock(
+    const { log: deleteLog } = moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/rows/1',
       'delete',
       undefined,
@@ -48,24 +48,11 @@ test.describe('View detail page', () => {
     await page.locator('[role="menuitem"]:has-text("remove")').click();
     await expect(page.locator(confirmButtonInModal)).toBeVisible();
 
-    await Promise.all([
-      page.waitForResponse((res) =>
-        res.url().includes('/api/views/removeRows')
-      ),
-      page.locator(confirmButtonInModal).click(),
-    ]);
+    await page.locator(confirmButtonInModal).click();
 
     await expect(page.locator(confirmButtonInModal)).toBeHidden();
 
     // Check for delete request
-    expect(
-      moxy
-        .log()
-        .find(
-          (req) =>
-            req.method === 'DELETE' &&
-            req.path === '/v1/orgs/1/people/views/1/rows/1'
-        )
-    ).toBeTruthy();
+    await expect.poll(() => deleteLog().length).toBe(1);
   });
 });

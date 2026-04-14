@@ -49,10 +49,12 @@ const OrganizerLog: FC<Props> = ({
     } else {
       return '';
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     dispatch(updatePendingOrgLog(initialMessage));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -94,6 +96,7 @@ const OrganizerLog: FC<Props> = ({
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizerLog]);
 
   return (

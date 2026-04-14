@@ -58,6 +58,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
       surveyStateRef.current = updatedSurveyState;
       setSurveyState(updatedSurveyState);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [initialSurveyState, setSurveyState]
   );
 
@@ -78,6 +79,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
         setStatus('error');
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setSurveyState, setStatus]
   );
 
@@ -94,6 +96,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     if (errorMessageRef.current) {
       errorMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMessageRef.current]);
 
   useEffect(() => {

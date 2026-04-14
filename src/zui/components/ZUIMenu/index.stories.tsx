@@ -1,6 +1,6 @@
 import { AssignmentOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIMenu from './index';
