@@ -1,15 +1,14 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid, Typography } from '@mui/material';
 
-import messageIds from 'features/settings/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useServerSide from 'core/useServerSide';
-import { Msg } from 'core/i18n';
-import useCustomFields from 'features/profile/hooks/useCustomFields';
-import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
+import FieldsList from 'features/settings/components/FieldsList';
+import Msg from 'core/i18n/Msg';
+import messageIds from 'features/settings/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -22,10 +21,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-const Fields: PageWithLayout = () => {
+const FieldsPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const customFields = useCustomFields(orgId).data ?? [];
 
   if (onServer) {
     return null;
@@ -50,27 +48,13 @@ const Fields: PageWithLayout = () => {
           </Box>
         </Grid>
       </Grid>
-      <Box display="flex" flexDirection="column" gap={1}>
-        {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
-          <Box key={key} display="flex" gap={1}>
-            <Box>{key}</Box>
-            <Box>{value}</Box>
-          </Box>
-        ))}
-      </Box>
-      <Box display="flex" flexDirection="column" gap={1} mt={2}>
-        {customFields.map((field) => (
-          <Box key={field.slug} display="flex" gap={1}>
-            <Typography>{field.title}</Typography>
-          </Box>
-        ))}
-      </Box>
+      <FieldsList orgId={orgId} />
     </Box>
   );
 };
 
-Fields.getLayout = function getLayout(page) {
+FieldsPage.getLayout = function getLayout(page) {
   return <SettingsLayout>{page}</SettingsLayout>;
 };
 
-export default Fields;
+export default FieldsPage;
