@@ -9,7 +9,6 @@ import OfficialList from 'features/settings/components/OfficialList';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
-import { useEnv } from 'core/hooks';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import useOfficialMemberships from 'features/settings/hooks/useOfficialMemberships';
 import useServerSide from 'core/useServerSide';
@@ -32,9 +31,7 @@ const SettingsPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-
-  const env = useEnv();
-  const publicOrgUrl = `${env.vars.ZETKIN_APP_DOMAIN}/o/${orgId}`;
+  const publicOrgUrl = `${location.protocol}//${location.host}/o/${orgId}`;
 
   const { data: memberships, isLoading: membershipsLoading } =
     useOfficialMemberships(orgId);

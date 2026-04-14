@@ -1,5 +1,5 @@
 import { MenuItem } from '@mui/material';
-import { FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
@@ -15,13 +15,11 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg, useMessages } from 'core/i18n';
+import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 
 const localMessageIds = messageIds.filters.surveySubmission;
-
-const DEFAULT_VALUE = 'none';
 
 interface SurveySubmissionProps {
   filter:
@@ -40,11 +38,8 @@ const SurveySubmission = ({
   onCancel,
   filter: initialFilter,
 }: SurveySubmissionProps): JSX.Element => {
-  const messages = useMessages(localMessageIds);
   const { orgId } = useNumericRouteParams();
   const surveys = useSurveys(orgId).data || [];
-
-  const [submittable, setSubmittable] = useState(false);
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<SurveySubmissionFilterConfig>(initialFilter);
@@ -58,22 +53,24 @@ const SurveySubmission = ({
     after?: string;
     before?: string;
   }) => {
-    const { operator, survey } = filter.config;
     setConfig({
-      operator,
-      survey,
-      ...range,
+      ...filter.config,
+      after: range.after,
+      before: range.before,
+      operator: 'submitted',
     });
   };
 
   const handleSurveySelectChange = (surveyValue: string) => {
-    if (surveyValue === DEFAULT_VALUE) {
-      setSubmittable(false);
-    } else {
-      setConfig({ ...filter.config, survey: +surveyValue });
-      setSubmittable(true);
-    }
+    setConfig({
+      ...filter.config,
+      operator: 'submitted',
+      survey: +surveyValue,
+    });
   };
+
+  const submittable =
+    !!filter.config.survey && filter.config.operator === 'submitted';
 
   return (
     <FilterForm
@@ -113,19 +110,13 @@ const SurveySubmission = ({
             ),
             surveySelect: (
               <StyledAutocomplete
-                items={[
-                  {
-                    group: 'pinned',
-                    id: DEFAULT_VALUE,
-                    label: messages.surveySelect.any(),
-                  },
-                  ...surveys.map((s) => ({
-                    id: s.id,
-                    label: s.title,
-                  })),
-                ]}
+                clearable={true}
+                items={surveys.map((s) => ({
+                  id: s.id,
+                  label: s.title,
+                }))}
                 onChange={(e) => handleSurveySelectChange(e.target.value)}
-                value={filter.config.survey || DEFAULT_VALUE}
+                value={filter.config.survey}
               />
             ),
             timeFrame: (

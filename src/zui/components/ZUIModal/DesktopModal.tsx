@@ -5,6 +5,7 @@ import { ZUISize } from '../types';
 import ModalBackground from './ModalBackground';
 import { ZUIModalProps } from '.';
 import ModalContent from './ModalContent';
+import { usePreventKeyboardPropagation } from './usePreventKeyboardPropagation';
 
 const widths: Record<ZUISize | 'auto' | 'full', string> = {
   auto: 'auto',
@@ -15,6 +16,7 @@ const widths: Record<ZUISize | 'auto' | 'full', string> = {
 };
 
 const DesktopModal: FC<ZUIModalProps> = ({
+  allowPropagation = false,
   children,
   onClose,
   open,
@@ -27,6 +29,9 @@ const DesktopModal: FC<ZUIModalProps> = ({
   useEffect(() => {
     seed.current = Math.random();
   }, [open]);
+
+  const paperRef = usePreventKeyboardPropagation(open, allowPropagation);
+
   return (
     <Modal
       disableRestoreFocus
@@ -37,6 +42,7 @@ const DesktopModal: FC<ZUIModalProps> = ({
       <>
         <Fade in={open} timeout={300}>
           <Paper
+            ref={paperRef}
             sx={(theme) => ({
               border: `0.063rem solid ${theme.palette.dividers.main}`,
               boxShadow: theme.elevation.bottom.big.medium,
