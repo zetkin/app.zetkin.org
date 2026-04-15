@@ -135,3 +135,7 @@ export function getOffset(dateString: string) {
   const offset = dateString.match(offsetRegex);
   return offset ? offset[0] : null;
 }
+
+export function getDayTimeInMinutes(dateString: string | dayjs.Dayjs) {
+  return dayjs(dateString).hour() * 60 + dayjs(dateString).minute();
+}

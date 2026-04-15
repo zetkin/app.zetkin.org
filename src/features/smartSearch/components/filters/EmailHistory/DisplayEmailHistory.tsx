@@ -50,8 +50,8 @@ const DisplayEmailHistory = ({
               filter.config.campaign
                 ? localMessageIds.emailScopeSelect.project
                 : filter.config.email
-                ? localMessageIds.emailScopeSelect.email
-                : localMessageIds.emailScopeSelect.any
+                  ? localMessageIds.emailScopeSelect.email
+                  : localMessageIds.emailScopeSelect.any
             }
           />
         ),

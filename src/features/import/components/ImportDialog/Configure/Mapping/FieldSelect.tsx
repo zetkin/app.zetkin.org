@@ -103,7 +103,14 @@ const FieldSelect: FC<FieldSelectProps> = ({
           justifyContent="space-between"
           width="100%"
         >
-          <ListItemText>{label}</ListItemText>
+          <ListItemText
+            sx={{
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            {label}
+          </ListItemText>
           {importID == value && open && (
             <BadgeOutlined color="secondary" fontSize="small" />
           )}

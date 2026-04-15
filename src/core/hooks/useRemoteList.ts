@@ -8,7 +8,7 @@ import usePromiseCache from './usePromiseCache';
 export default function useRemoteList<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType[]
+  OnSuccessPayload = DataType[],
 >(
   remoteList: RemoteList<DataType> | undefined,
   hooks: {
