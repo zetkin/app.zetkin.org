@@ -22,7 +22,7 @@ import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
 import zuiMessages from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import { tagAddToPerson } from 'features/profile/types';
+import { TagToBeAdded } from 'features/profile/types';
 
 interface ZUICreatePersonProps {
   initialValues?: ZetkinCreatePerson;
@@ -48,7 +48,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const createPerson = useCreatePerson(orgId);
   const organization = useOrganization(orgId).data;
   const countryCode = organization?.country as CountryCode;
-  const [tags, setTags] = useState<tagAddToPerson[]>([]);
+  const [tags, setTags] = useState<TagToBeAdded[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({
     ...initialValues,
@@ -88,11 +88,11 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 setPersonalInfo(copied);
               } else {
                 if (field === 'tags' && value) {
-                  const tag = value as tagAddToPerson;
+                  const tag = value as TagToBeAdded;
                   setTags((prev) =>
-                    tags.find((item) => item.tagId === tag.tagId)
-                      ? tags.filter((item) => item.tagId !== tag.tagId)
-                      : [...prev, tag]
+                    tags.find((item) => item.id === tag.id)
+                      ? tags.filter((item) => item.id !== tag.id)
+                      : [...prev, tag],
                   );
                 } else {
                   setPersonalInfo((prev) => {
@@ -132,7 +132,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                   checkInvalidFields(
                     customFields || [],
                     personalInfo,
-                    countryCode
+                    countryCode,
                   ).length !== 0
                 }
                 onClick={async (e) => {
