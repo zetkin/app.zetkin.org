@@ -133,6 +133,10 @@ export default makeMessages('feat.surveys', {
       ),
     },
     textFields: {
+      copyResponse: {
+        copy: m('Copy to clipboard'),
+        wasCopied: m('Copied!'),
+      },
       subheader: m<{
         answerCount: number;
         totalUniqueWordCount: number;
@@ -199,8 +203,9 @@ export default makeMessages('feat.surveys', {
     anonymous: m('Anonymous'),
     hidden: m('Hidden'),
     linked: m('Linked'),
-    subtitle:
-      m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
+    subtitle: m<{ date: ReactElement; person: ReactElement }>(
+      '{person} {date}'
+    ),
   },
   submissions: {
     anonymous: m('Anonymous'),

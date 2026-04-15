@@ -489,6 +489,26 @@ const eventsSlice = createSlice({
         }
       }
     },
+    participantsAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventParticipant[]]>
+    ) => {
+      const [eventId, participants] = action.payload;
+
+      participants.forEach((participant) => {
+        state.participantsByEventId[eventId].items.push(
+          remoteItem(participant.id, { data: participant })
+        );
+      });
+
+      const event = state.eventList.items.find(
+        (e) => e?.data?.id === eventId
+      )?.data;
+
+      if (event) {
+        updateAvailParticipantToState(state, event);
+      }
+    },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       if (!state.participantsByEventId[eventId]) {
@@ -826,6 +846,7 @@ export const {
   locationsLoad,
   locationsLoaded,
   participantAdded,
+  participantsAdded,
   participantDeleted,
   participantOpAdd,
   participantOpsClear,

@@ -50,6 +50,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import { scaleLog } from 'd3-scale';
 import { BoxOwnProps } from '@mui/system';
+import { Check, ContentCopy } from '@mui/icons-material';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -676,7 +677,7 @@ const TextResponseWordCloud = ({
           disableAnimation: () => () => {},
         },
         svgRef: svgRef,
-      } as ChartPluginOptions<UseChartProExportSignature>),
+      }) as ChartPluginOptions<UseChartProExportSignature>,
     []
   );
 
@@ -782,12 +783,22 @@ const TextResponseCard = ({
   questionId: number;
   submission: SubmissionStats;
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const extendedSubmissionFuture = useSurveySubmission(
     orgId,
     submission.submissionId
   );
   const { openPane } = usePanes();
+  const [hasCopiedResponse, setHasCopiedResponse] = useState(false);
+
+  useEffect(() => {
+    if (hasCopiedResponse === true) {
+      setTimeout(() => {
+        setHasCopiedResponse(false);
+      }, 2000);
+    }
+  }, [hasCopiedResponse]);
 
   return (
     <ZUIFuture
@@ -837,7 +848,7 @@ const TextResponseCard = ({
                 width: '100%',
               }}
             >
-              <CardContent>
+              <CardContent sx={{ width: '100%' }}>
                 <Typography
                   sx={{
                     WebkitBoxOrient: 'vertical',
@@ -847,6 +858,45 @@ const TextResponseCard = ({
                     wordBreak: 'break-word',
                   }}
                 >
+                  <Box
+                    justifyContent="flex-end"
+                    sx={{
+                      alignItems: 'center',
+                      display: 'float',
+                      float: 'right',
+                    }}
+                  >
+                    <Tooltip
+                      arrow={true}
+                      title={
+                        hasCopiedResponse
+                          ? messages.insights.textFields.copyResponse.wasCopied()
+                          : messages.insights.textFields.copyResponse.copy()
+                      }
+                    >
+                      <span>
+                        <IconButton
+                          aria-label="previous"
+                          disabled={hasCopiedResponse}
+                          onClick={async (ev) => {
+                            ev.stopPropagation();
+                            await navigator.clipboard.writeText(
+                              questionResponse.response
+                            );
+
+                            setHasCopiedResponse(true);
+                          }}
+                          sx={(theme) => ({
+                            '&: hover, &.Mui-focusVisible': {
+                              color: theme.palette.text.secondary,
+                            },
+                          })}
+                        >
+                          {hasCopiedResponse ? <Check /> : <ContentCopy />}
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  </Box>
                   {questionResponse.response}
                 </Typography>
               </CardContent>

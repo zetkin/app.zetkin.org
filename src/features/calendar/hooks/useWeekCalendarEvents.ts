@@ -45,7 +45,7 @@ export default function useWeekCalendarEvents({
         return (
           isSameDate(start, date) ||
           isSameDate(end, date) ||
-          (dateIsAfter(start, date) && dateIsBefore(end, date))
+          (dateIsBefore(start, date) && dateIsAfter(end, date))
         );
       })
       .map((activity) => ({

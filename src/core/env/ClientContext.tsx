@@ -11,6 +11,11 @@ import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { EmotionCache } from '@emotion/utils';
+import 'dayjs/locale/de';
+import 'dayjs/locale/da';
+import 'dayjs/locale/nn';
+import 'dayjs/locale/sv';
+import 'dayjs/locale/nl';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment, { EnvVars } from 'core/env/Environment';
@@ -72,7 +77,10 @@ const ClientContext: FC<ClientContextProps> = ({
           <ThemeProvider theme={oldThemeWithLocale(lang)}>
             <EnvProvider env={env}>
               <UserProvider user={user}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider
+                  adapterLocale={lang}
+                  dateAdapter={AdapterDayjs}
+                >
                   <IntlProvider
                     defaultLocale="en"
                     locale={lang}

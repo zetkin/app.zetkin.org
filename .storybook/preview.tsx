@@ -18,7 +18,10 @@ import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
 import { LicenseInfo } from '@mui/x-license';
 import CssBaseline from '@mui/material/CssBaseline';
-import { DocsContainer, DocsContainerProps } from '@storybook/addon-docs/blocks';
+import {
+  DocsContainer,
+  DocsContainerProps,
+} from '@storybook/addon-docs/blocks';
 import { createTheme } from '@mui/material/styles';
 import { darkPalette } from 'zui/theme/palette';
 import { useStorybookDarkMode } from 'zui/hooks/useStorybookDarkMode';

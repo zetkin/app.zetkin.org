@@ -53,10 +53,10 @@ export default function useCreateCampaignActivity(
     dispatch(surveyCreate());
 
     const promise = apiClient
-      .post<ZetkinSurveyExtended, ZetkinSurveyPostBody>(
-        `/api/orgs/${orgId}/campaigns/${campId}/surveys`,
-        surveyBody
-      )
+      .post<
+        ZetkinSurveyExtended,
+        ZetkinSurveyPostBody
+      >(`/api/orgs/${orgId}/campaigns/${campId}/surveys`, surveyBody)
       .then((survey) => {
         dispatch(surveyCreated(survey));
         return survey;
