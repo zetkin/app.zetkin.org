@@ -243,7 +243,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field.enum_choices
           ) {
             return (
-              <Box alignItems="flex-start" display="flex" flex={1}>
+              <Box
+                key={field.slug}
+                alignItems="flex-start"
+                display="flex"
+                flex={1}
+              >
                 <FormControl fullWidth>
                   <InputLabel>{field.title}</InputLabel>
                   <Select
