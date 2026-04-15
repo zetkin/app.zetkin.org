@@ -185,7 +185,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
           return (
-            <Box display="flex">
+            <Box key={field.slug} display="flex">
               <DatePicker
                 key={field.slug}
                 disabled={!isFieldWritable}
@@ -230,7 +230,12 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           field.enum_choices
         ) {
           return (
-            <Box alignItems="flex-start" display="flex" flex={1}>
+            <Box
+              key={field.slug}
+              alignItems="flex-start"
+              display="flex"
+              flex={1}
+            >
               <FormControl fullWidth>
                 <InputLabel>{field.title}</InputLabel>
                 <Select

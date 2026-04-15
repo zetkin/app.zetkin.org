@@ -141,6 +141,7 @@ const Preview = () => {
                     const fieldValue = fields?.[column.idField];
                     return (
                       <PreviewGrid
+                        key={columnIdx}
                         columnHeader={messages.configuration.preview.ids[
                           column.idField
                         ]()}
