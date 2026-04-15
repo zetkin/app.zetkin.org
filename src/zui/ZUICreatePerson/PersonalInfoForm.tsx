@@ -67,7 +67,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     }, []) ?? [];
   const customFields = useCustomFields(orgId).data ?? [];
   const genderKeys = Object.keys(
-    messageIds.createPerson.genders,
+    messageIds.createPerson.genders
   ) as GenderKeyType[];
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const invalidFields = checkInvalidFields(
     customFields,
     personalInfo,
-    countryCode,
+    countryCode
   );
 
   return (
@@ -144,7 +144,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               onChange={(e) =>
                 onChange(
                   'gender',
-                  e.target.value === 'unknown' ? '' : e.target.value,
+                  e.target.value === 'unknown' ? '' : e.target.value
                 )
               }
             >
