@@ -87,8 +87,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 delete copied[field];
                 setPersonalInfo(copied);
               } else {
-                if (field === 'tags' && value) {
-                  const tag = value as TagToBeAdded;
+                if (field === 'tags' && value && typeof value !== 'string') {
+                  const tag = value;
                   setTags((prev) =>
                     tags.find((item) => item.id === tag.id)
                       ? tags.filter((item) => item.id !== tag.id)
