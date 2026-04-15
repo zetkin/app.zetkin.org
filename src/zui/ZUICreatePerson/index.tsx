@@ -92,7 +92,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                   setTags((prev) =>
                     tags.find((item) => item.id === tag.id)
                       ? tags.filter((item) => item.id !== tag.id)
-                      : [...prev, tag],
+                      : [...prev, tag]
                   );
                 } else {
                   setPersonalInfo((prev) => {
@@ -132,7 +132,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                   checkInvalidFields(
                     customFields || [],
                     personalInfo,
-                    countryCode,
+                    countryCode
                   ).length !== 0
                 }
                 onClick={async (e) => {

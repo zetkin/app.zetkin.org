@@ -11,11 +11,11 @@ export default function useCreatePerson(orgId: number) {
 
   const createPerson = async (
     body: ZetkinCreatePerson,
-    tags: TagToBeAdded[],
+    tags: TagToBeAdded[]
   ): Promise<ZetkinPerson> => {
     const person = await apiClient.post<ZetkinPerson, ZetkinCreatePerson>(
       `/api/orgs/${orgId}/people`,
-      body,
+      body
     );
     dispatch(personLoaded([person.id, person]));
     tags.map((tag) => {
