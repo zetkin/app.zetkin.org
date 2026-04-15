@@ -30,7 +30,7 @@ import {
   ZetkinCreatePerson,
 } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
-import { tagAddToPerson } from 'features/profile/types';
+import { TagToBeAdded } from 'features/profile/types';
 
 dayjs.extend(utc);
 
@@ -38,9 +38,9 @@ type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null | tagAddToPerson) => void;
+  onChange: (field: string, value: string | null | TagToBeAdded) => void;
   personalInfo: ZetkinCreatePerson;
-  tags: tagAddToPerson[];
+  tags: TagToBeAdded[];
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
@@ -60,15 +60,15 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
     tags.reduce((acc: ZetkinAppliedTag[], item) => {
-      const tag = allTags.find((t) => t.id === item.tagId);
+      const tag = allTags.find((t) => t.id === item.id);
       if (tag) {
-        return acc.concat({ ...tag, value: item.tagValue });
+        return acc.concat({ ...tag, value: item.value });
       }
       return acc;
     }, []) ?? [];
   const customFields = useCustomFields(orgId).data ?? [];
   const genderKeys = Object.keys(
-    messageIds.createPerson.genders
+    messageIds.createPerson.genders,
   ) as GenderKeyType[];
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const invalidFields = checkInvalidFields(
     customFields,
     personalInfo,
-    countryCode
+    countryCode,
   );
 
   return (
@@ -145,7 +145,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               onChange={(e) =>
                 onChange(
                   'gender',
-                  e.target.value === 'unknown' ? '' : e.target.value
+                  e.target.value === 'unknown' ? '' : e.target.value,
                 )
               }
             >
@@ -302,10 +302,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       <TagManagerSection
         assignedTags={selectedTags}
         onAssignTag={(tag) => {
-          onChange('tags', { tagId: tag.id, tagValue: tag.value });
+          onChange('tags', { id: tag.id, value: tag.value });
         }}
         onUnassignTag={(tag) => {
-          onChange('tags', { tagId: tag.id, tagValue: tag.value });
+          onChange('tags', { id: tag.id, value: tag.value });
         }}
         submitCreateTagLabel={messages.createPerson.tagCreateAndApplyLabel()}
       />
