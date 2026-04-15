@@ -38,6 +38,10 @@ test.describe('User submitting a survey', () => {
   });
 
   test('submits text input', async ({ appUri, moxy, page }) => {
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
@@ -45,15 +49,11 @@ test.describe('User submitting a survey', () => {
     await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toEqual({
       responses: [
         {
@@ -154,31 +154,23 @@ test.describe('User submitting a survey', () => {
       }
     );
 
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
     );
 
     await page.locator('input[name="1.options"][value="1"]').click();
 
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toEqual({
       responses: [
         {
@@ -291,16 +283,12 @@ test.describe('User submitting a survey', () => {
       }
     );
 
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
     );
 
     await page.locator('input[name="3.options"][value="1"]').click();
@@ -308,15 +296,11 @@ test.describe('User submitting a survey', () => {
 
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toEqual({
       responses: [
         {
@@ -363,16 +347,12 @@ test.describe('User submitting a survey', () => {
       }
     );
 
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
     );
 
     const selectInput = await page.locator(
@@ -387,15 +367,11 @@ test.describe('User submitting a survey', () => {
 
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toEqual({
       responses: [
         {
@@ -506,14 +482,9 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    // Respond when survey is submitted
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
-    );
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
 
     // Navigate to survey and submit without touching the select widget (or any)
     await page.goto(
@@ -527,15 +498,11 @@ test.describe('User submitting a survey', () => {
 
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toEqual({
       responses: [
         {
@@ -548,16 +515,12 @@ test.describe('User submitting a survey', () => {
   });
 
   test('submits email signature', async ({ appUri, moxy, page }) => {
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
     );
 
     await page.locator('input[name="1.options"][value="1"]').click();
@@ -567,15 +530,11 @@ test.describe('User submitting a survey', () => {
     await page.fill('input[name="sig.first_name"]', 'Test');
     await page.fill('input[name="sig.last_name"]', 'User');
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toMatchObject({
       signature: {
         email: 'testuser@example.org',
@@ -586,68 +545,54 @@ test.describe('User submitting a survey', () => {
   });
 
   test('submits user signature', async ({ appUri, moxy, page }) => {
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
     );
 
     await page.locator('input[name="1.options"][value="1"]').click();
     await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.locator('input[name="sig"][value="user"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toMatchObject({
       signature: 'user',
     });
   });
 
   test('submits anonymous signature', async ({ appUri, moxy, page }) => {
+    const { log: postLog } = moxy.setZetkinApiMock(apiPostPath, 'post', {
+      timestamp: '1857-05-07T13:37:00.000Z',
+    });
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
-      'post',
-      {
-        timestamp: '1857-05-07T13:37:00.000Z',
-      }
     );
 
     await page.locator('input[name="1.options"][value="1"]').click();
     await page.fill('[name="2.text"]', 'Topple capitalism');
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
-    const log = moxy.log(`/v1${apiPostPath}`);
-    expect(log.length).toBe(1);
+    await expect.poll(() => postLog().length).toBe(1);
 
-    const data = log[0].data as ZetkinSurveyApiSubmission;
+    const data = postLog()[0].data as ZetkinSurveyApiSubmission;
     expect(data).toMatchObject({
       signature: null,
     });
   });
 
-  test('preserves inputs on error', async ({ appUri, page }) => {
+  test('preserves inputs on error', async ({ appUri, moxy, page }) => {
+    moxy.setZetkinApiMock(apiPostPath, 'post', null, 500);
+
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
@@ -657,10 +602,7 @@ test.describe('User submitting a survey', () => {
     await page.locator('input[name="sig"][value="anonymous"]').click();
     await page.locator('data-testid=Survey-acceptTerms').click();
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.locator('data-testid=Survey-submit').click(),
-    ]);
+    await page.locator('data-testid=Survey-submit').click();
 
     await expect(page.locator('data-testid=Survey-error')).toBeVisible();
     await expect(

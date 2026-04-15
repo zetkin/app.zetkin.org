@@ -85,20 +85,15 @@ test.describe('Journey instance detail page sidebar', () => {
       ClarasOnboarding
     );
 
-    //click Angela in search results and wait for response
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`
-      ),
-      page
-        .locator(
-          `text=${ClarasOnboarding.assignees[0].first_name} ${ClarasOnboarding.assignees[0].last_name}`
-        )
-        .click(),
-    ]);
+    //click Angela in search results
+    await page
+      .locator(
+        `text=${ClarasOnboarding.assignees[0].first_name} ${ClarasOnboarding.assignees[0].last_name}`
+      )
+      .click();
 
     //Expect PUT-request to be done
-    expect(putTagLog().length).toEqual(1);
+    await expect.poll(() => putTagLog().length).toBe(1);
 
     //Expect Add assignee-button to be visible
     expect(
@@ -122,47 +117,32 @@ test.describe('Journey instance detail page sidebar', () => {
       ClarasOnboarding
     );
     //DELETE Angela from list of assignees
-    moxy.setZetkinApiMock(
+    const { log: deleteLog } = moxy.setZetkinApiMock(
       `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`,
       'delete'
     );
 
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
-    // Set up two parallel async tracks
-    await Promise.all([
-      // Track A waits for HTTP requests and updates mocks to reflect that
-      // an assignee has been deleted
-      (async () => {
-        await page.waitForRequest((res) => res.method() == 'DELETE');
+    // Hover over Angela
+    await page
+      .locator(`data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}`)
+      .hover();
 
-        // Update journey instance mock with no assignees
+    // Set up parallel tracks: update mock and click delete
+    await Promise.all([
+      (async () => {
+        await page.waitForRequest((req) => req.method() == 'DELETE');
         moxy.setZetkinApiMock(
           `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
           'get',
           { ...ClarasOnboarding, assignees: [] }
         );
-
         await page.waitForResponse(
-          (res) =>
-            res.request().method() === 'GET' &&
-            res
-              .request()
-              .url()
-              .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
         );
       })(),
-
-      // Track B performs UI interactions in parallel with track A
       (async () => {
-        // Hover over Angela
-        await page
-          .locator(
-            `data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}`
-          )
-          .hover();
-
-        // Click X icon
         await page
           .locator(
             `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
@@ -171,7 +151,9 @@ test.describe('Journey instance detail page sidebar', () => {
       })(),
     ]);
 
-    // Wait a short while for React to re-render after data has been retrieved
+    await expect.poll(() => deleteLog().length).toBe(1);
+
+    // Wait for React to re-render
     await page.waitForTimeout(200);
 
     //there should be no Angela in list of assignees
@@ -252,20 +234,15 @@ test.describe('Journey instance detail page sidebar', () => {
       ClarasOnboarding
     );
 
-    //click Clara in search results and awit for response
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`
-      ),
-      page
-        .locator(
-          `text=${ClarasOnboarding.subjects[0].first_name} ${ClarasOnboarding.subjects[0].last_name}`
-        )
-        .click(),
-    ]);
+    //click Clara in search results
+    await page
+      .locator(
+        `text=${ClarasOnboarding.subjects[0].first_name} ${ClarasOnboarding.subjects[0].last_name}`
+      )
+      .click();
 
     //Expect PUT-request to be done
-    expect(putTagLog().length).toEqual(1);
+    await expect.poll(() => putTagLog().length).toBe(1);
 
     //Expect Add subject-button to be visible
     expect(
@@ -289,45 +266,35 @@ test.describe('Journey instance detail page sidebar', () => {
       'get',
       ClarasOnboarding
     );
-    //DELETE Angela from list of assignees
-    moxy.setZetkinApiMock(
+    //DELETE Clara from list of subjects
+    const { log: deleteLog } = moxy.setZetkinApiMock(
       `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`,
       'delete'
     );
 
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
-    // Set up two parallel async tracks
+    // Hover over Clara
+    await page
+      .locator(
+        `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
+      )
+      .hover();
+
+    // Set up parallel tracks: update mock and click delete
     await Promise.all([
       (async () => {
         await page.waitForRequest((req) => req.method() == 'DELETE');
-
-        // Update journey instance mocke, with no subjects
         moxy.setZetkinApiMock(
           `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
           'get',
           { ...ClarasOnboarding, subjects: [] }
         );
-
         await page.waitForResponse(
-          (res) =>
-            res.request().method() === 'GET' &&
-            res
-              .request()
-              .url()
-              .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
         );
       })(),
-
       (async () => {
-        // Hover over Clara
-        await page
-          .locator(
-            `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
-          )
-          .hover();
-
-        // Click X icon
         await page
           .locator(
             `data-testid=JourneyPerson-remove-${ClarasOnboarding.subjects[0].id}`
@@ -336,10 +303,12 @@ test.describe('Journey instance detail page sidebar', () => {
       })(),
     ]);
 
-    // Wait for React to re-render after response
+    await expect.poll(() => deleteLog().length).toBe(1);
+
+    // Wait for React to re-render
     await page.waitForTimeout(200);
 
-    //there should be no Clara in list of subejcts
+    //there should be no Clara in list of subjects
     expect(
       await page
         .locator(
@@ -366,18 +335,10 @@ test.describe('Journey instance detail page sidebar', () => {
       MemberOnboarding
     );
 
-    await Promise.all([
-      page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
-      page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
-      await page.goto(appUri + '/organize/1/journeys/1/1'),
-    ]);
+    await page.goto(appUri + '/organize/1/journeys/1/1');
 
-    expect(
-      await page.locator(`text="${ActivistTag.title}"`).isVisible()
-    ).toBeTruthy();
-    expect(
-      await page.locator(`text="${PlaysGuitarTag.title}"`).isVisible()
-    ).toBeTruthy();
+    await expect(page.locator(`text="${ActivistTag.title}"`)).toBeVisible();
+    await expect(page.locator(`text="${PlaysGuitarTag.title}"`)).toBeVisible();
   });
   test('let user assign a tag to the journey instance', async ({
     appUri,
@@ -406,23 +367,14 @@ test.describe('Journey instance detail page sidebar', () => {
       'put'
     );
 
-    await Promise.all([
-      page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
-      page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
-      page.goto(appUri + '/organize/1/journeys/1/1'),
-    ]);
+    await page.goto(appUri + '/organize/1/journeys/1/1');
 
     await page.locator('text=Add tag').click();
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${CodingSkillsTag.id}`
-      ),
-      page.click(`text=${CodingSkillsTag.title}`),
-    ]);
+    await page.click(`text=${CodingSkillsTag.title}`);
 
     // Expect to have made request to put tag
-    expect(putTagLog().length).toEqual(1);
+    await expect.poll(() => putTagLog().length).toBe(1);
   });
   test('lets user unassign a tag from the journey instance', async ({
     appUri,
@@ -450,18 +402,12 @@ test.describe('Journey instance detail page sidebar', () => {
       'delete'
     );
 
-    await Promise.all([
-      page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
-      page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
-      page.goto(appUri + '/organize/1/journeys/1/1'),
-    ]);
+    await page.goto(appUri + '/organize/1/journeys/1/1');
 
     await page.locator(`text="${ActivistTag.title}"`).hover();
     await page.locator(`[data-testid=TagChip-deleteButton]`).first().click();
 
     // Expect to have made request to delete tag
-    await expect(() => {
-      expect(deleteTagLog()).toHaveLength(1);
-    }).toPass();
+    await expect.poll(() => deleteTagLog().length).toBe(1);
   });
 });

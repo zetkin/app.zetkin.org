@@ -10,11 +10,17 @@ const ZUITextfieldToClipboard: React.FunctionComponent<{
   copyText: string | number | boolean;
 }> = ({ children, copyText }) => {
   const [copied, setCopied] = useState<boolean>(false);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout>>();
+
+  React.useEffect(() => {
+    return () => clearTimeout(timerRef.current);
+  }, []);
 
   const handleClick = () => {
     copy(copyText.toString());
     setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setCopied(false), 2500);
   };
 
   return (

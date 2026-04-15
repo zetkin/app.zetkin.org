@@ -21,9 +21,7 @@ import { ZetkinLocation } from 'features/areaAssignments/types';
 
 const OrganizerMap = dynamic(
   () =>
-    import(
-      '../../../../../../../features/areaAssignments/components/OrganizerMap'
-    ),
+    import('../../../../../../../features/areaAssignments/components/OrganizerMap'),
   { ssr: false }
 );
 

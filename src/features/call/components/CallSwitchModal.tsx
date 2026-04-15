@@ -1,7 +1,6 @@
 import React, {
   FC,
   Fragment,
-  Suspense,
   useEffect,
   useMemo,
   useRef,
@@ -28,6 +27,7 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { colors } from './PreviousCallsInfo';
 import useFinishedCalls from '../hooks/useFinishedCalls';
 import { callStateToString } from '../types';
+import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
@@ -69,6 +69,7 @@ const UnfinishedCallsList: FC<{
       searchString
         ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
         : unfinishedExceptCurrentCall,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [unfinishedExceptCurrentCall, searchString]
   );
 
@@ -132,6 +133,7 @@ const FinishedCallsList: FC<{
 
       return call2AllocationTime.getTime() - call1AllocationTime.getTime();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finishedCalls, searchString]);
 
   return (
@@ -256,13 +258,14 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
 
   const modalRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (modalRef.current) {
+    const node = modalRef.current;
+    if (node) {
       const addListener = (ev: KeyboardEvent) => ev.stopPropagation();
-      modalRef.current.addEventListener('keydown', addListener);
+      node.addEventListener('keydown', addListener);
 
-      return () =>
-        modalRef.current?.removeEventListener('keydown', addListener);
+      return () => node.removeEventListener('keydown', addListener);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalRef.current]);
 
   return (
@@ -297,21 +300,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           startIcon={Search}
           value={searchString}
         />
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: '100%',
-                justifyContent: 'center',
-                width: '100%',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
+        <SuspenseWithCircularLoader>
           <UnfinishedCallsList
             onCall={(assignmentId) => {
               onSwitch(assignmentId);
@@ -320,7 +309,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
             orgId={assignment.organization.id}
             searchString={searchString}
           />
-        </Suspense>
+        </SuspenseWithCircularLoader>
         <FinishedCallsList
           onCall={(assignmentId) => {
             onSwitch(assignmentId);

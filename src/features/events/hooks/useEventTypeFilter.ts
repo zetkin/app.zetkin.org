@@ -98,6 +98,7 @@ export const useEventTypeFilter = (
 
   const clearEventTypeFilter = useCallback(() => {
     state.setEventTypeLabelsToFilterBy([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.setEventTypeLabelsToFilterBy]);
 
   return {

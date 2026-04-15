@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -49,9 +49,6 @@ const EmailHistory = ({
 }: EmailHistoryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const emailsSorted = emails.sort((e1, e2) => {
-    return e1.title!.localeCompare(e2.title!);
-  });
   const projects = useCampaigns(orgId).data || [];
   const projectsSorted = projects.sort((p1, p2) => {
     return p1.title.localeCompare(p2.title);
@@ -152,31 +149,14 @@ const EmailHistory = ({
             ),
             emailSelect:
               emailSelectScope === 'email' ? (
-                <StyledSelect
-                  minWidth="10rem"
-                  onChange={(e) =>
-                    setValueToKey('email', parseInt(e.target.value))
-                  }
-                  value={filter.config.email || ''}
-                >
-                  {emailsSorted.map((email) => (
-                    <MenuItem key={`email-${email.id}`} value={email.id}>
-                      <Tooltip
-                        placement="right-start"
-                        title={
-                          !email.title || email.title.length < 40
-                            ? ''
-                            : email.title
-                        }
-                      >
-                        <Box>{`"${truncateOnMiddle(
-                          email.title ?? '',
-                          40
-                        )}"`}</Box>
-                      </Tooltip>
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
+                <StyledAutocomplete
+                  items={emails.map((email) => ({
+                    id: email.id,
+                    label: email.title ?? '',
+                  }))}
+                  onChange={(e) => setValueToKey('email', +e.target.value)}
+                  value={filter.config.email}
+                />
               ) : null,
             operatorSelect: (
               <StyledSelect
@@ -197,19 +177,14 @@ const EmailHistory = ({
             ),
             projectSelect:
               emailSelectScope === 'project' ? (
-                <StyledSelect
-                  minWidth="10rem"
-                  onChange={(e) =>
-                    setValueToKey('campaign', parseInt(e.target.value))
-                  }
-                  value={filter.config.campaign || ''}
-                >
-                  {projectsSorted.map((project) => (
-                    <MenuItem key={`proejct-${project.id}`} value={project.id}>
-                      {`"${project.title}"`}
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
+                <StyledAutocomplete
+                  items={projectsSorted.map((project) => ({
+                    id: project.id,
+                    label: project.title,
+                  }))}
+                  onChange={(e) => setValueToKey('campaign', +e.target.value)}
+                  value={filter.config.campaign}
+                />
               ) : null,
             timeFrame: (
               <TimeFrame

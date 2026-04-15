@@ -44,7 +44,7 @@ const closeJourneyInstance = async (
             ? JSON.stringify({ value: tag.value })
             : undefined;
 
-          apiFetch(
+          return apiFetch(
             `/orgs/${orgId}/journey_instances/${instanceId}/tags/${tag.id}`,
             {
               body: data,

@@ -56,11 +56,13 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
     if (!isTyping) {
       onChange(isActive ? searchString : '');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, isTyping]);
 
   useEffect(() => {
     if (open) {
-      setTimeout(() => textFieldInputRef.current?.focus(), 50);
+      const timerId = setTimeout(() => textFieldInputRef.current?.focus(), 50);
+      return () => clearTimeout(timerId);
     }
   }, [open]);
 

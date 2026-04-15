@@ -20,6 +20,14 @@ type HrefButton = ButtonBase & {
 
 export type ZUIModalProps = {
   /**
+   * Whether to allow keyboard events to propagate outside the modal.
+   *
+   * Defaults to false, which prevents keyboard events from propagating
+   * to elements outside the modal.
+   */
+  allowPropagation?: boolean;
+
+  /**
    * The content of the modal.
    */
   children?: ReactNode;
@@ -62,6 +70,7 @@ export type ZUIModalProps = {
 };
 
 const ZUIModal: FC<ZUIModalProps> = ({
+  allowPropagation = false,
   open,
   primaryButton,
   title,
@@ -75,6 +84,7 @@ const ZUIModal: FC<ZUIModalProps> = ({
 
   return isMobile ? (
     <MobileModal
+      allowPropagation={allowPropagation}
       onClose={onClose}
       open={open}
       primaryButton={primaryButton}
@@ -85,6 +95,7 @@ const ZUIModal: FC<ZUIModalProps> = ({
     </MobileModal>
   ) : (
     <DesktopModal
+      allowPropagation={allowPropagation}
       onClose={onClose}
       open={open}
       primaryButton={primaryButton}

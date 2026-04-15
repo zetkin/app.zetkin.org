@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Event, People, PentagonOutlined } from '@mui/icons-material';
 
 import ZUIIconLabelRow from './index';
