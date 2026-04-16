@@ -114,6 +114,10 @@ export default makeMessages('feat.surveys', {
       toPng: m('Export to png'),
     },
     optionsFields: {
+      displayInsights: {
+        absoluteCount: m('Amount'),
+        percentCount: m('Percent'),
+      },
       subheader: m<{
         answerCount: number;
         totalSelectedOptionsCount: number;
@@ -129,6 +133,10 @@ export default makeMessages('feat.surveys', {
       ),
     },
     textFields: {
+      copyResponse: {
+        copy: m('Copy to clipboard'),
+        wasCopied: m('Copied!'),
+      },
       subheader: m<{
         answerCount: number;
         totalUniqueWordCount: number;
@@ -195,8 +203,9 @@ export default makeMessages('feat.surveys', {
     anonymous: m('Anonymous'),
     hidden: m('Hidden'),
     linked: m('Linked'),
-    subtitle:
-      m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
+    subtitle: m<{ date: ReactElement; person: ReactElement }>(
+      '{person} {date}'
+    ),
   },
   submissions: {
     anonymous: m('Anonymous'),
@@ -230,6 +239,8 @@ export default makeMessages('feat.surveys', {
     description: m(
       'The person you have just linked does not have an email address while the survey response does. Would you like to add it the person?'
     ),
+    new: m('New'),
+    old: m('Old'),
     title: m('Add email address'),
   },
   surveyDialogDifferentEmail: {

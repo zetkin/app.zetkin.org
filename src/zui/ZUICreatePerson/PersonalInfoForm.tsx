@@ -30,6 +30,7 @@ import {
   ZetkinCreatePerson,
 } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
+import { TagToBeAdded } from 'features/profile/types';
 
 dayjs.extend(utc);
 
@@ -37,9 +38,9 @@ type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null | number) => void;
+  onChange: (field: string, value: string | null | TagToBeAdded) => void;
   personalInfo: ZetkinCreatePerson;
-  tags: number[];
+  tags: TagToBeAdded[];
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
@@ -59,9 +60,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
     tags.reduce((acc: ZetkinAppliedTag[], item) => {
-      const tag = allTags.find((t) => t.id === item);
+      const tag = allTags.find((t) => t.id === item.id);
       if (tag) {
-        return acc.concat({ ...tag, value: null });
+        return acc.concat({ ...tag, value: item.value });
       }
       return acc;
     }, []) ?? [];
@@ -242,7 +243,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field.enum_choices
           ) {
             return (
-              <Box alignItems="flex-start" display="flex" flex={1}>
+              <Box
+                key={field.slug}
+                alignItems="flex-start"
+                display="flex"
+                flex={1}
+              >
                 <FormControl fullWidth>
                   <InputLabel>{field.title}</InputLabel>
                   <Select
@@ -300,13 +306,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       </Box>
       <TagManagerSection
         assignedTags={selectedTags}
-        disableEditTags
-        disableValueTags
         onAssignTag={(tag) => {
-          onChange('tags', tag.id);
+          onChange('tags', { id: tag.id, value: tag.value });
         }}
         onUnassignTag={(tag) => {
-          onChange('tags', tag.id);
+          onChange('tags', { id: tag.id, value: tag.value });
         }}
         submitCreateTagLabel={messages.createPerson.tagCreateAndApplyLabel()}
       />

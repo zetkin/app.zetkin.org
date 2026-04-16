@@ -1,4 +1,11 @@
-import { Box, BoxProps, IconButton, Menu, MenuItem } from '@mui/material';
+import {
+  Box,
+  BoxProps,
+  IconButton,
+  Menu,
+  MenuItem,
+  SvgIcon,
+} from '@mui/material';
 import {
   DragIndicatorOutlined,
   KeyboardArrowDown,
@@ -8,6 +15,7 @@ import {
 import {
   FC,
   MouseEvent as ReactMouseEvent,
+  startTransition,
   useEffect,
   useRef,
   useState,
@@ -148,7 +156,9 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     document.removeEventListener('mouseup', onMouseUp);
 
     if (onDragEnd) {
-      onDragEnd();
+      startTransition(() => {
+        onDragEnd();
+      });
     }
   };
 
@@ -216,32 +226,32 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
               }}
               onDelete={onDelete}
               onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
-              widgets={widgets.filter((widget) => {
+              widgets={widgets.map((widget) => {
                 if (disableClick) {
                   // Hide all widgets when click is disabled
-                  return false;
+                  return { shown: false, widget };
                 }
 
                 if (
                   widget == ZUIReorderableWidget.MOVE_DOWN &&
                   index < items.length - 1
                 ) {
-                  return true;
+                  return { shown: true, widget };
                 } else if (
                   widget == ZUIReorderableWidget.MOVE_UP &&
                   index > 0
                 ) {
-                  return true;
+                  return { shown: true, widget };
                 } else if (
                   widget == ZUIReorderableWidget.DRAG &&
                   !disableDrag
                 ) {
-                  return true;
+                  return { shown: true, widget };
                 } else if (widget == ZUIReorderableWidget.MENU) {
-                  return true;
+                  return { shown: true, widget };
                 }
 
-                return false;
+                return { shown: false, widget };
               })}
               widgetsOnlyOnHover={widgetsOnlyOnHover}
               widgetsProps={widgetsProps}
@@ -250,6 +260,11 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
       )}
     </Box>
   );
+};
+
+type WidgetState = {
+  shown: boolean;
+  widget: ZUIReorderableWidget;
 };
 
 const ZUIReorderableItem: FC<{
@@ -267,7 +282,7 @@ const ZUIReorderableItem: FC<{
   onClickUp: () => void;
   onDelete?: (id: IDType) => void;
   onNodeExists: (node: HTMLDivElement) => void;
-  widgets: ZUIReorderableWidget[];
+  widgets: WidgetState[];
   widgetsOnlyOnHover?: boolean;
   widgetsProps?: BoxProps;
 }> = ({
@@ -291,6 +306,8 @@ const ZUIReorderableItem: FC<{
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const menuOpen = Boolean(menuAnchor);
 
+  const shown = widgetsOnlyOnHover ? hovered : true;
+
   return (
     <Box
       key={item.id}
@@ -309,17 +326,38 @@ const ZUIReorderableItem: FC<{
           position: dragging ? 'absolute' : 'static',
         }}
       >
-        <Box display="flex" flexDirection="column" {...widgetsProps}>
-          {widgets.map((widget) => {
-            if (widgetsOnlyOnHover && !hovered) {
-              // Hide all widgets when not hovering
-              return false;
+        <Box
+          display="flex"
+          flexDirection="column"
+          {...widgetsProps}
+          sx={{
+            ...widgetsProps?.sx,
+            opacity: shown ? 1 : 0,
+            zIndex: shown ? 10 : undefined,
+          }}
+        >
+          {widgets.map(({ widget, shown }, idx) => {
+            if (!shown && !centerWidgets) {
+              return null;
+            }
+
+            if (!shown) {
+              return (
+                <IconButton key={`${widget}-${idx}`}>
+                  <SvgIcon />
+                </IconButton>
+              );
             }
 
             if (widget == ZUIReorderableWidget.DRAG) {
               return (
                 <IconButton
+                  key={`${widget}-${idx}`}
                   onMouseDown={(ev) => {
+                    if (!shown) {
+                      return;
+                    }
+
                     if (itemRef.current && contentRef.current) {
                       onBeginDrag(itemRef.current, contentRef.current, ev);
                     }
@@ -330,20 +368,28 @@ const ZUIReorderableItem: FC<{
               );
             } else if (widget == ZUIReorderableWidget.MOVE_DOWN) {
               return (
-                <IconButton onClick={() => onClickDown()}>
+                <IconButton
+                  key={`${widget}-${idx}`}
+                  onClick={() => shown && onClickDown()}
+                >
                   <KeyboardArrowDown />
                 </IconButton>
               );
             } else if (widget == ZUIReorderableWidget.MOVE_UP) {
               return (
-                <IconButton onClick={() => onClickUp()}>
+                <IconButton
+                  key={`${widget}-${idx}`}
+                  onClick={() => shown && onClickUp()}
+                >
                   <KeyboardArrowUp />
                 </IconButton>
               );
             } else if (widget == ZUIReorderableWidget.MENU) {
               return (
                 <>
-                  <IconButton onClick={(ev) => setMenuAnchor(ev.currentTarget)}>
+                  <IconButton
+                    onClick={(ev) => shown && setMenuAnchor(ev.currentTarget)}
+                  >
                     <MoreVert />
                   </IconButton>
                   <Menu

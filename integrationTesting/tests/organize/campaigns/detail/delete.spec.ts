@@ -33,8 +33,10 @@ test.describe('Campaign detail page', async () => {
     await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
     await page.click('data-testid=ZUIEllipsisMenu-item-deleteCampaign');
 
-    await page.click('button:text("Confirm")');
-    await page.waitForURL(appUri + '/organize/1/projects');
+    await Promise.all([
+      page.waitForURL(appUri + '/organize/1/projects'),
+      page.click('button:text("Confirm")'),
+    ]);
     expect(log().length).toEqual(1);
   });
 });
