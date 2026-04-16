@@ -12,6 +12,7 @@ import {
 interface PersonFieldInputProps {
   disabled?: boolean;
   field: keyof ZetkinCreatePerson;
+  helperText?: string;
   label?: string;
   onChange: (field: string, newValue: string) => void;
   required?: boolean;
@@ -24,6 +25,7 @@ interface PersonFieldInputProps {
 const PersonFieldInput: FC<PersonFieldInputProps> = ({
   disabled = false,
   field,
+  helperText,
   label,
   onChange,
   required,
@@ -41,8 +43,10 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
       error={error}
       fullWidth
       helperText={
-        error && (
+        error ? (
           <FieldValidationWarning field={field} isURLField={isURLField} />
+        ) : (
+          helperText
         )
       }
       inputRef={inputRef}
