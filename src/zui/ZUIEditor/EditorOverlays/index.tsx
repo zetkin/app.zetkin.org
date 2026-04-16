@@ -159,7 +159,7 @@ const EditorOverlays: FC<Props> = ({
 
       if (isNodeSelection(selection)) {
         node = selection.node;
-      } else if (state.doc.childCount > 0) {
+      } else if (index < state.doc.childCount) {
         node = state.doc.child(index);
       }
     }
