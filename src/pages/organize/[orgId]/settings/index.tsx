@@ -85,11 +85,7 @@ const SettingsPage: PageWithLayout = () => {
             </Typography>
           </Box>
           {membershipsLoading ? (
-            <Box>
-              <Skeleton sx={{ height: '50px' }} />
-              <Skeleton sx={{ height: '50px' }} />
-              <Skeleton sx={{ height: '50px' }} />
-            </Box>
+            <Skeleton sx={{ height: '156px', transform: 'scale(1)' }} />
           ) : (
             <OfficialList
               emptyListMessage={messages.officials.administrators.empty()}
@@ -129,11 +125,7 @@ const SettingsPage: PageWithLayout = () => {
             </Typography>
           </Box>
           {membershipsLoading ? (
-            <Box>
-              <Skeleton sx={{ height: '50px' }} />
-              <Skeleton sx={{ height: '50px' }} />
-              <Skeleton sx={{ height: '50px' }} />
-            </Box>
+            <Skeleton sx={{ height: '156px', transform: 'scale(1)' }} />
           ) : (
             <OfficialList
               emptyListMessage={messages.officials.organizers.empty()}
