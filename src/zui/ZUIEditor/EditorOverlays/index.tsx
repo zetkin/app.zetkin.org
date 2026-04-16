@@ -21,7 +21,6 @@ import { RemirrorBlockType } from '../types';
 import editorBlockProblems, {
   BlockProblem,
 } from '../utils/editorBlockProblems';
-import { remirrorToZetkinWithIndexRemap } from 'features/emails/utils/conversion/remirrorToZetkin';
 import { areDOMRectRecordsEqual } from 'zui/ZUIEditor/utils/domRects';
 
 export type BlockDividerData = {
@@ -140,17 +139,6 @@ const EditorOverlays: FC<Props> = ({
     return rects;
   }, [editorRect.x, editorRect.y, state.doc, view]);
 
-  const onSelectRemirrorBlock = useCallback(
-    (blockIndex: number) => {
-      const [, remap] = remirrorToZetkinWithIndexRemap(
-        state.doc.content.toJSON()
-      );
-      const zetkinBlockIndex = remap[blockIndex];
-      onSelectBlock?.(zetkinBlockIndex);
-    },
-    [onSelectBlock, state.doc.content]
-  );
-
   const findSelectedNode = useCallback(() => {
     const selection = state.selection;
     const resolved = state.doc.resolve(selection.$head.pos);
@@ -182,7 +170,7 @@ const EditorOverlays: FC<Props> = ({
 
     const elem = view.nodeDOM(posBefore);
     if (elem instanceof HTMLElement && allBlockRects?.[index]) {
-      onSelectRemirrorBlock(index);
+      onSelectBlock?.(index);
       setCurrentBlock({
         attributes: node.attrs,
         node: node,
@@ -194,7 +182,7 @@ const EditorOverlays: FC<Props> = ({
         type: node.type.name as BlockType,
       });
     }
-  }, [state.selection, state.doc, view, onSelectRemirrorBlock, allBlockRects]);
+  }, [state.selection, state.doc, view, onSelectBlock, allBlockRects]);
 
   useEffect(() => {
     const observer = new ResizeObserver(findSelectedNode);

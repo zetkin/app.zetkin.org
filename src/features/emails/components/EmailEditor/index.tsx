@@ -121,7 +121,8 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
             });
           }}
           onSelectBlock={(selectedBlockIndex) => {
-            setSelectedBlockIndex(selectedBlockIndex);
+            const zetkinBlockIndex = emailBlockIndexRemap[selectedBlockIndex];
+            setSelectedBlockIndex(zetkinBlockIndex);
           }}
         />
       </Box>
