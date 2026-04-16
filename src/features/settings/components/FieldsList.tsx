@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
@@ -14,7 +15,7 @@ type FieldsListProps = {
 const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const onServer = useServerSide();
   const customFields = useCustomFields(orgId).data ?? [];
-  const { removeField } = useOfficialFieldMutations(orgId);
+  const { removeField, createField } = useOfficialFieldMutations(orgId);
 
   if (onServer) {
     return null;
@@ -22,6 +23,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
 
   return (
     <Box>
+      <Button onClick={() => createField()}>Create Field</Button>
       <Box display="flex" flexDirection="column" gap={1}>
         {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
           <Box key={key} display="flex" gap={1}>
