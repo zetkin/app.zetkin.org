@@ -6,16 +6,22 @@ import { Typography } from '@mui/material';
 import BlockToolbarBase from './BlockToolbarBase';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import { useNumericRouteParams } from 'core/hooks';
+import useFile from 'features/files/hooks/useFile';
 
 type ImageToolbarProps = {
+  fileId: number | null;
   range: FromToProps;
-  src: string | null;
 };
 
-const ImageToolbar: FC<ImageToolbarProps> = ({ src, range }) => {
+const ImageToolbar: FC<ImageToolbarProps> = ({ fileId, range }) => {
+  const { orgId } = useNumericRouteParams();
+
   const messages = useMessages(messageIds);
-  const splitSrc = src?.split('/');
-  const fileName = splitSrc ? splitSrc[splitSrc.length - 1] : '';
+
+  const file = useFile(orgId, fileId);
+  const fileName = file.data?.original_name || '';
+
   return (
     <BlockToolbarBase
       icon={<ImageIcon />}

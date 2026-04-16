@@ -75,7 +75,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
           />
         )}
         {blockType == 'zimage' && (
-          <ImageToolbar range={range} src={blockAttributes.src} />
+          <ImageToolbar fileId={blockAttributes.fileId} range={range} />
         )}
         {blockType == 'orderedList' && <OrderedListToolbar range={range} />}
         {blockType == 'bulletList' && <BulletListToolbar range={range} />}
