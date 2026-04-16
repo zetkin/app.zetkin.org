@@ -94,7 +94,7 @@ const CallerInstructions = ({
                       showConfirmDialog({
                         onSubmit: () => {
                           revert();
-                          //Force Slate to re-mount
+                          //Force ZUIMarkdownEditor to re-mount
                           setKey((current) => current + 1);
                         },
                         warningText:
