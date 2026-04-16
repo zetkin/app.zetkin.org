@@ -175,6 +175,11 @@ export default makeMessages('zui', {
         medium: m('2 - Medium'),
         small: m('3 - Small'),
       },
+      image: {
+        altText: m('Alt text'),
+        apply: m('Apply'),
+        cancel: m('Cancel'),
+      },
       link: {
         apply: m('Apply'),
         cancel: m('Cancel'),

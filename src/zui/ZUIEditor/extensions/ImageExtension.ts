@@ -102,6 +102,17 @@ export default class ImageExtension extends NodeExtension<ImageOptions> {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
+  setImageAlt(pos: number, altText: string): CommandFunction {
+    return ({ dispatch, tr }) => {
+      tr.setNodeAttribute(pos, 'alt', altText);
+      dispatch?.(tr);
+      return true;
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
   setImageFile(file: ZetkinFile | null, pos: number): CommandFunction {
     return (props) => {
       const { dispatch, tr } = props;
