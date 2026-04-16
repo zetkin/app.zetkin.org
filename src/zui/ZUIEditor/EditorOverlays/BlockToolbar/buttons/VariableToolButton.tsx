@@ -1,7 +1,7 @@
 import { Button, Menu, MenuItem } from '@mui/material';
 import { FC, useState } from 'react';
-import { DataObject } from '@mui/icons-material';
 import { useCommands } from '@remirror/react';
+import { Tag } from '@mui/icons-material';
 
 import { VariableName } from '../../../extensions/VariableExtension';
 import { Msg } from 'core/i18n';
@@ -26,7 +26,7 @@ const VariableToolButton: FC = () => {
         size="small"
         variant="outlined"
       >
-        <DataObject />
+        <Tag />
       </Button>
       <Menu
         anchorEl={anchorEl}
