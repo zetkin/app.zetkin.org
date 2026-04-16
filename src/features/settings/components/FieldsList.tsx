@@ -6,7 +6,8 @@ import { FC } from 'react';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useServerSide from 'core/useServerSide';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
-import useOfficialFieldMutations from '../hooks/useOfficialFieldMutations';
+import useFieldMutations from '../hooks/useFieldMutations';
+import useCreateField from '../hooks/useCreateField';
 
 type FieldsListProps = {
   orgId: number;
@@ -15,7 +16,8 @@ type FieldsListProps = {
 const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const onServer = useServerSide();
   const customFields = useCustomFields(orgId).data ?? [];
-  const { removeField, createField } = useOfficialFieldMutations(orgId);
+  const { createField } = useCreateField(orgId);
+  const { removeField } = useFieldMutations(orgId);
 
   if (onServer) {
     return null;
