@@ -12,7 +12,7 @@ import oldTheme from 'theme';
 import { useMessages } from 'core/i18n';
 import { ZetkinNoteBody } from 'utils/types/zetkin';
 import ZUISubmitCancelButtons from '../ZUISubmitCancelButtons';
-import ZUITextEditor from '../ZUITextEditor';
+import ZUIMarkdownEditor from '../ZUIMarkdownEditor';
 import useFileUploads, {
   FileUploadState,
 } from 'features/files/hooks/useFileUploads';
@@ -94,7 +94,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   return (
     <form onSubmit={onSubmitHandler}>
       <Box {...getDropZoneProps()}>
-        <ZUITextEditor
+        <ZUIMarkdownEditor
           editorApiRef={editorApiRef}
           fileUploads={fileUploads}
           onCancelFile={cancelFileUpload}

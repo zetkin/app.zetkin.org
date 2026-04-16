@@ -2,7 +2,7 @@ import { Box, Button, Link, Paper, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
 
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import ZUITextEditor from 'zui/ZUITextEditor';
+import ZUIMarkdownEditor from 'zui/ZUIMarkdownEditor';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useCallerInstructions from '../hooks/useCallerInstructions';
@@ -68,7 +68,7 @@ const CallerInstructions = ({
               minHeight: 0,
             }}
           >
-            <ZUITextEditor
+            <ZUIMarkdownEditor
               key={key}
               initialValue={instructions}
               onChange={(markdown) => setInstructions(markdown)}

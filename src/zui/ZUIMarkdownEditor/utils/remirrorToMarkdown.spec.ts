@@ -6,7 +6,7 @@ import {
   RemirrorBlockType,
   TextBlockContentType,
 } from 'zui/ZUIEditor/types';
-import { markdownToRemirror } from 'zui/ZUITextEditor/utils/markdownToRemirror';
+import { markdownToRemirror } from 'zui/ZUIMarkdownEditor/utils/markdownToRemirror';
 
 describe('remirrorToMarkdown()', () => {
   it('returns empty string for empty array', () => {

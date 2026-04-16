@@ -52,13 +52,13 @@ export default function useCallerInstructions(
     }
 
     localStorage.setItem(key, callAssignment?.instructions);
-    //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
+    //TODO: remove this ugly ass forced re-render by making ZUIMarkdownEditor better
     setPointlessState(pointlessState + 1);
   };
 
   const setInstructions = (instructions: string): void => {
     localStorage.setItem(key, instructions);
-    //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
+    //TODO: remove this ugly ass forced re-render by making ZUIMarkdownEditor better
     setPointlessState(pointlessState + 1);
   };
 

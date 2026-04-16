@@ -5,7 +5,7 @@ module.exports = {
   stories: [
     '../src/**/*.mdx',
     '../src/zui/!(ZUIAccessList|ZUIJourneyInstanceCard|ZUIAnimatedNumber|ZUIConfirmDialog|ZUIAutoTextArea|ZUICollapse|ZUIDate)/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/zui/!(ZUITimeline|ZUITextEditor|ZUIRelativeTime|ZUIReorderable|ZUISection|ZUIUserAvatar|ZUIDialog|ZUIEllipsisMenu|ZUIFileChip|ZUIJourneyInstanceItem|ZUIList|ZUILogo|ZUIPerson|ZUIPersonAvatar|ZUIPersonLink|ZUIPreviewableInput)/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/zui/!(ZUITimeline|ZUIMarkdownEditor|ZUIRelativeTime|ZUIReorderable|ZUISection|ZUIUserAvatar|ZUIDialog|ZUIEllipsisMenu|ZUIFileChip|ZUIJourneyInstanceItem|ZUIList|ZUILogo|ZUIPerson|ZUIPersonAvatar|ZUIPersonLink|ZUIPreviewableInput)/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',

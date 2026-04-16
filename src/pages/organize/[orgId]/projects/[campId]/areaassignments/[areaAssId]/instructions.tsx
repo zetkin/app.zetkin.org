@@ -7,7 +7,7 @@ import { AREAS } from 'utils/featureFlags';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import ZUITextEditor from 'zui/ZUITextEditor';
+import ZUIMarkdownEditor from 'zui/ZUIMarkdownEditor';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import useAreaAssignmentInstructions from 'features/areaAssignments/hooks/useCanvassInstructions';
 import { Msg, useMessages } from 'core/i18n';
@@ -90,7 +90,7 @@ const AreaAssignmentInstructionsPage: PageWithLayout<
                   minHeight: 0,
                 }}
               >
-                <ZUITextEditor
+                <ZUIMarkdownEditor
                   key={key}
                   initialValue={instructions}
                   onChange={(markdown) => setInstructions(markdown)}

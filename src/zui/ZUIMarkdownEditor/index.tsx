@@ -10,7 +10,7 @@ import ZUIEditor, { ZUIEditorApi } from 'zui/ZUIEditor';
 import { markdownToRemirror } from './utils/markdownToRemirror';
 import { remirrorToMarkdown } from './utils/remirrorToMarkdown';
 
-export interface ZUITextEditorProps {
+export interface ZUIMarkdownEditorProps {
   /**
    * @deprecated Will be ignored. Use editorApiRef instead
    */
@@ -27,7 +27,7 @@ export interface ZUITextEditorProps {
   placeholder?: string;
 }
 
-const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
+const ZUIMarkdownEditor: React.FunctionComponent<ZUIMarkdownEditorProps> = ({
   clear,
   editorApiRef: propEditorApiRef,
   fileUploads,
@@ -122,4 +122,4 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   );
 };
 
-export default ZUITextEditor;
+export default ZUIMarkdownEditor;

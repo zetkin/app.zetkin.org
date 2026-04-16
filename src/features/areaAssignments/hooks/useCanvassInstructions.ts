@@ -72,7 +72,7 @@ export default function useAreaAssignmentInstructions(
       }
 
       localStorage.setItem(key, canvassAssignment?.instructions);
-      //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
+      //TODO: remove this ugly ass forced re-render by making ZUIMarkdownEditor better
       setPointlessState(pointlessState + 1);
     },
     save: () => {
@@ -85,7 +85,7 @@ export default function useAreaAssignmentInstructions(
     },
     setInstructions: (instructions: string): void => {
       localStorage.setItem(key, instructions);
-      //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
+      //TODO: remove this ugly ass forced re-render by making ZUIMarkdownEditor better
       setPointlessState(pointlessState + 1);
     },
   };
