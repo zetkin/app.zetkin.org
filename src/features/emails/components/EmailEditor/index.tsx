@@ -16,7 +16,9 @@ import { EmailContentBlock } from 'features/emails/types';
 import { ZetkinEmail, ZetkinEmailPostBody } from 'utils/types/zetkin';
 import ZUIEditor, { ZUIEditorApi } from 'zui/ZUIEditor';
 import EmailSettings from './EmailSettings';
-import { remirrorToZetkinWithIndexRemap } from 'features/emails/utils/conversion/remirrorToZetkin';
+import remirrorToZetkin, {
+  remirrorToZetkinWithIndexRemap,
+} from 'features/emails/utils/conversion/remirrorToZetkin';
 import zetkinToRemirror from 'features/emails/utils/conversion/zetkinToRemirror';
 
 type EmailEditorProps = {
@@ -114,7 +116,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
             setContent(newContent);
             onSave({
               content: JSON.stringify({
-                blocks: newContent,
+                blocks: remirrorToZetkin(newContent),
               }),
             });
           }}
