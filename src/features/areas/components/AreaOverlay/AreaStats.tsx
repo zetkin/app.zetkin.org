@@ -11,7 +11,7 @@ type Props = {
 };
 
 const AreaStats: FC<Props> = ({ areaId }) => {
-  const getAreaStats = useAreaStats();
+  const { getAreaStats } = useAreaStats();
   const stats = getAreaStats(areaId);
 
   if (!stats) {

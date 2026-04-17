@@ -34,5 +34,5 @@ export default function useAreaStats() {
     return futureToObject(statsFuture).data;
   };
 
-  return getAreaStats;
+  return { getAreaStats };
 }

@@ -8,7 +8,7 @@ export default function useAreasWithStats(
   areasInView: Zetkin2Area[],
   zoomLevel: number
 ) {
-  const getAreaStats = useAreaStats();
+  const { getAreaStats } = useAreaStats();
 
   // Fetch stats for the areas in view
   useEffect(() => {
