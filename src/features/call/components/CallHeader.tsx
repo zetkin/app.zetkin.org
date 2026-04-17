@@ -2,14 +2,19 @@ import { SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
-import { LaneState, LaneStep, Report, ZetkinCall } from '../types';
+import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIButton from 'zui/components/ZUIButton';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated, previousCallAdd, updateLaneStep } from '../store';
+import {
+  filtersUpdated,
+  surveyDeselected,
+  surveySubmissionDeleted,
+  updateLaneStep,
+} from '../store';
 import useAllocateCall from '../hooks/useAllocateCall';
 import useSubmitReport from '../hooks/useSubmitReport';
 import useCallMutations from '../hooks/useCallMutations';
@@ -17,10 +22,11 @@ import { objectToFormData } from './utils/objectToFormData';
 import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useFilteredActivities from '../hooks/useFilteredActivities';
 
 type Props = {
   assignment: ZetkinCallAssignment;
-  call: ZetkinCall | null;
+  call: UnfinishedCall | null;
   hasUnfinishedCalls: boolean;
   lane: LaneState;
   onSkipCall: () => void;
@@ -38,6 +44,15 @@ const CallHeader: FC<Props> = ({
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
 
+  const { surveys } = useFilteredActivities(assignment.organization.id);
+  const { selectedSurveyId } = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex]
+  );
+  const responseBySurveyId = useAppSelector(
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
+  );
+
   const [submittingReport, setSubmittingReport] = useState(false);
 
   const submissionDataBySurveyId = useAppSelector(
@@ -48,10 +63,10 @@ const CallHeader: FC<Props> = ({
   const { quitCurrentCall } = useCallMutations(assignment.organization.id);
   const {
     allocateCall,
-    error: errorAllocatingCall,
+    queueError,
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
-  const { submitReport } = useSubmitReport(assignment.organization.id);
+  const submitReport = useSubmitReport(assignment.organization.id);
 
   return (
     <Box
@@ -124,11 +139,11 @@ const CallHeader: FC<Props> = ({
               lastName={call.target.last_name}
             />
             <ZUIText variant="headingLg">{call.target.name}</ZUIText>
-            <ZUIText color="secondary" variant="headingLg">{`${
-              call.target.phone
-            }${
-              call.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
-            }`}</ZUIText>
+            <ZUIText color="secondary" variant="headingLg">
+              {[call.target.phone, call.target.alt_phone]
+                .filter((number) => !!number)
+                .join('/')}
+            </ZUIText>
           </>
         )}
       </Box>
@@ -171,8 +186,7 @@ const CallHeader: FC<Props> = ({
         />
         <ZUIButton
           disabled={
-            !!errorAllocatingCall ||
-            (lane.step == LaneStep.REPORT && !report.completed)
+            !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
           }
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
@@ -201,6 +215,26 @@ const CallHeader: FC<Props> = ({
                     projectIdsToFilterActivitiesBy: [],
                   })
                 );
+              }
+
+              const selectedSurvey =
+                surveys.find((survey) => survey.id == selectedSurveyId) || null;
+              if (selectedSurvey) {
+                const response = responseBySurveyId[selectedSurvey.id];
+                const hasMeaningfulContent =
+                  !!response &&
+                  Object.entries(response).some(([, value]) => {
+                    if (typeof value === 'string') {
+                      return value.trim() !== '';
+                    }
+                    return value.length > 0;
+                  });
+
+                if (hasMeaningfulContent) {
+                  dispatch(surveyDeselected());
+                } else {
+                  dispatch(surveySubmissionDeleted(selectedSurvey.id));
+                }
               }
             } else if (lane.step == LaneStep.REPORT) {
               if (!report || !call) {
@@ -231,13 +265,8 @@ const CallHeader: FC<Props> = ({
                   };
                 });
 
-              const result = await submitReport(call.id, report, submissions);
+              await submitReport(call.id, report, submissions);
 
-              if (result.kind === 'success') {
-                dispatch(previousCallAdd(call));
-              } else {
-                setSubmittingReport(false);
-              }
               setSubmittingReport(false);
               dispatch(updateLaneStep(LaneStep.SUMMARY));
             } else {
@@ -249,8 +278,8 @@ const CallHeader: FC<Props> = ({
             isAllocatingCall || submittingReport
               ? 'loading'
               : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
-              ? 'secondary'
-              : 'primary'
+                ? 'secondary'
+                : 'primary'
           }
         />
       </Box>

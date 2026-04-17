@@ -37,25 +37,44 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
         <>
           {results.slice(0, 6).map((result) => {
             if (result.type === SEARCH_DATA_TYPE.PERSON) {
-              return <PersonListItem person={result.match} />;
+              return (
+                <PersonListItem key={result.match.id} person={result.match} />
+              );
             }
             if (result.type === SEARCH_DATA_TYPE.CAMPAIGN) {
-              return <CampaignListItem campaign={result.match} />;
+              return (
+                <CampaignListItem
+                  key={result.match.id}
+                  campaign={result.match}
+                />
+              );
             }
             if (result.type === SEARCH_DATA_TYPE.TASK) {
-              return <TaskListItem task={result.match} />;
+              return <TaskListItem key={result.match.id} task={result.match} />;
             }
             if (result.type === SEARCH_DATA_TYPE.CALL_ASSIGNMENT) {
-              return <CallAssignmentListItem callAssignment={result.match} />;
+              return (
+                <CallAssignmentListItem
+                  key={result.match.id}
+                  callAssignment={result.match}
+                />
+              );
             }
             if (result.type === SEARCH_DATA_TYPE.SURVEY) {
-              return <SurveyListItem survey={result.match} />;
+              return (
+                <SurveyListItem key={result.match.id} survey={result.match} />
+              );
             }
             if (result.type === SEARCH_DATA_TYPE.VIEW) {
-              return <ViewListItem view={result.match} />;
+              return <ViewListItem key={result.match.id} view={result.match} />;
             }
             if (result.type === SEARCH_DATA_TYPE.JOURNEY_INSTANCE) {
-              return <JourneyInstanceListItem journeyInstance={result.match} />;
+              return (
+                <JourneyInstanceListItem
+                  key={result.match.id}
+                  journeyInstance={result.match}
+                />
+              );
             }
           })}
         </>

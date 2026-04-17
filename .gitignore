@@ -24,8 +24,6 @@ test-results
 
 # debug
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # local env files
 .env
@@ -54,3 +52,4 @@ tsconfig.tsbuildinfo
 # generated docs
 public/docs
 public/storybook
+storybook-static/

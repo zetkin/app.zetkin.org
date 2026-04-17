@@ -53,8 +53,9 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     options.find((o) => o.value == report.callBackAfter?.slice(-5)) ||
     options[0];
 
-  const [time, setTime] =
-    useState<{ label: string; value: string }>(initialTime);
+  const [time, setTime] = useState<{ label: string; value: string }>(
+    initialTime
+  );
   const [date, setDate] = useState<Dayjs>(initialDate);
 
   const getNextMonday = () => {
@@ -166,6 +167,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callBackAfter]);
 
   const dateIsValid = date.isValid() && date.isAfter(today.date());

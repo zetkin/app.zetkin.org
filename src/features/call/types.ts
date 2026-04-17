@@ -8,7 +8,18 @@ import {
   ZetkinTag,
 } from 'utils/types/zetkin';
 
-export type ZetkinCall = {
+export enum CallState {
+  UNFINISHED = 0,
+  SUCCESSFUL = 1,
+  NO_PICKUP = 11,
+  LINE_BUSY = 12,
+  CALL_BACK = 13,
+  NOT_AVAILABLE = 14,
+  LEFT_MESSAGE = 15,
+  WRONG_NUMBER = 21,
+}
+
+type CallBase = {
   allocation_time: string;
   assignment_id: number;
   call_back_after: string | null;
@@ -18,10 +29,46 @@ export type ZetkinCall = {
   notes: string | null;
   organizer_action_needed: boolean;
   organizer_action_taken: string | null;
-  state: number;
   target: ZetkinCallTarget;
   update_time: string;
 };
+
+export type UnfinishedCall = CallBase & {
+  state: CallState.UNFINISHED;
+};
+
+export type FinishedCall = CallBase & {
+  state:
+    | CallState.SUCCESSFUL
+    | CallState.CALL_BACK
+    | CallState.LEFT_MESSAGE
+    | CallState.LINE_BUSY
+    | CallState.NOT_AVAILABLE
+    | CallState.NO_PICKUP
+    | CallState.WRONG_NUMBER;
+};
+
+export type ZetkinCall = UnfinishedCall | FinishedCall;
+
+export type CallStateString =
+  | 'success'
+  | 'noPickup'
+  | 'lineBusy'
+  | 'callBack'
+  | 'notAvailable'
+  | 'leftMessage'
+  | 'wrongNumber';
+
+export const callStateToString: Record<FinishedCall['state'], CallStateString> =
+  {
+    [CallState.SUCCESSFUL]: 'success',
+    [CallState.NO_PICKUP]: 'noPickup',
+    [CallState.LINE_BUSY]: 'lineBusy',
+    [CallState.CALL_BACK]: 'callBack',
+    [CallState.NOT_AVAILABLE]: 'notAvailable',
+    [CallState.LEFT_MESSAGE]: 'leftMessage',
+    [CallState.WRONG_NUMBER]: 'wrongNumber',
+  };
 
 type ZetkinCaller = {
   id: number;
@@ -30,7 +77,7 @@ type ZetkinCaller = {
 
 export type ZetkinCallTarget = ZetkinPerson & {
   action_responses: CombinedEventResponse[];
-  call_log: ZetkinCall[];
+  call_log: FinishedCall[];
   future_actions: ZetkinEvent[];
   name: string;
   past_actions: {
@@ -40,7 +87,7 @@ export type ZetkinCallTarget = ZetkinPerson & {
   tags: ZetkinTag[];
 };
 
-export type ZetkinCallPatchResponse = Omit<ZetkinCall, 'target'> & {
+export type ZetkinUpdatedCall = Omit<FinishedCall, 'target'> & {
   target: {
     alt_phone: string | null;
     id: number;
@@ -91,10 +138,10 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
 }
 
 export enum LaneStep {
-  START = 0,
-  CALL = 1,
-  REPORT = 2,
-  SUMMARY = 3,
+  START = 'start',
+  CALL = 'call',
+  REPORT = 'report',
+  SUMMARY = 'summary',
 }
 
 export type SurveySubmissionData = Record<string, string | string[]>;
@@ -117,12 +164,29 @@ export type LaneState = {
   callIsBeingAllocated: boolean;
   currentCallId: number | null;
   filters: ActivityFilters;
-  previousCall: ZetkinCall | null;
+  pendingOrgLog: string;
+  previousCall: ZetkinUpdatedCall | null;
   report: Report;
+  reportSubmissionError: ReportSubmissionError | null;
   respondedEventIds: number[];
   selectedSurveyId: number | null;
   step: LaneStep;
   submissionDataBySurveyId: Record<number, SurveySubmissionData>;
-  surveySubmissionError: boolean;
-  updateCallError: boolean;
 };
+
+export type ReportSubmissionSuccess = {
+  kind: 'success';
+  updatedCall: ZetkinUpdatedCall;
+};
+
+export type SurveySubmissionError = {
+  details: { surveyId: number; targetId: number };
+  kind: 'submissionError';
+};
+type CallUpdateError = { kind: 'updateError' };
+
+export type ReportSubmissionError = SurveySubmissionError | CallUpdateError;
+
+export type ReportSubmissionResult =
+  | ReportSubmissionSuccess
+  | ReportSubmissionError;

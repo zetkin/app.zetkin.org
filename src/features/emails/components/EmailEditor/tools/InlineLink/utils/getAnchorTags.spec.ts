@@ -1,4 +1,4 @@
-/** @jest-environment jsdom */
+import { describe, expect, it } from '@jest/globals';
 
 import getAnchorTags from './getAnchorTags';
 

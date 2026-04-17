@@ -595,3 +595,144 @@ const palette: Omit<
 };
 
 export default palette;
+
+export const darkPalette: Omit<
+  Palette,
+  | 'action'
+  | 'augmentColor'
+  | 'divider'
+  | 'contrastThreshold'
+  | 'tonalOffset'
+  | 'getContrastText'
+> = {
+  activityStatusColors: {
+    cancelled: uiSwatches.grey[500],
+    closed: uiSwatches.grey[200],
+    draft: uiSwatches.yellow[400],
+    ended: uiSwatches.grey[200],
+    published: uiSwatches.green[600],
+    scheduled: uiSwatches.blue[600],
+  },
+  background: {
+    default: '#000000',
+    paper: '#000000',
+  },
+  common: {
+    black: uiSwatches.basic.black,
+    white: uiSwatches.basic.white,
+  },
+  data: {
+    final: uiSwatches.purple[100],
+    main: uiSwatches.purple[900],
+    mid1: uiSwatches.purple[300],
+    mid2: uiSwatches.purple[500],
+    mid3: uiSwatches.purple[700],
+  },
+  dividers: {
+    lighter: uiSwatches.grey[700],
+    main: uiSwatches.grey[800],
+  },
+  error: {
+    contrastText: uiSwatches.basic.white,
+    dark: uiSwatches.red[800],
+    light: uiSwatches.red[400],
+    main: uiSwatches.red[600],
+  },
+  //TODO: Remove when use of theses color have been replaced everywhere.
+  filterCategoryColors: {
+    darkBlue: { pale: '#BED0F9', strong: '#2563EB' },
+    green: { pale: '#D1F39A', strong: '#A3E635' },
+    lightBlue: { pale: '#93E9EB', strong: '#28D4D7' },
+    orange: { pale: '#FDD497', strong: '#FBA930' },
+    pink: { pale: ' #FCE4EC', strong: '#F48FB1' },
+    purple: { pale: '#E5C0F5', strong: '#C026D3' },
+    red: { pale: '#F1A8A8', strong: '#DC2626' },
+    teal: { pale: '#99E9CC ', strong: '#34D399' },
+    yellow: { pale: '#EEEA8F', strong: '#DDD520' },
+  },
+  //Remove A.. properties from type?
+  grey: {
+    [100]: '#bdbdbd',
+    [200]: '#a3a3a3',
+    [300]: '#838383',
+    [400]: '#5a5a5a',
+    [50]: '#F6F6F6',
+    [500]: '#505050',
+    [600]: '#3c3c3c',
+    [700]: '#2b2b2b',
+    [800]: '#1e1e1e',
+    [900]: '#131313',
+    A100: '',
+    A200: '',
+    A400: '',
+    A700: '',
+  },
+  info: {
+    contrastText: uiSwatches.basic.white,
+    dark: uiSwatches.blue[800],
+    light: uiSwatches.blue[400],
+    main: uiSwatches.blue[600],
+  },
+  mode: 'dark',
+  //TODO: Remove when use of these colors have been replaced everywhere.
+  onSurface: {
+    disabled: '#CDB1B961',
+    high: '#CDB1B9DE',
+    medium: '#CDB1B999',
+  },
+  //TODO: Remove when use of this color has been replaced everywhere.
+  outline: {
+    main: 'rgba(255,255,255,0.12)',
+  },
+  primary: {
+    contrastText: uiSwatches.basic.black,
+    dark: uiSwatches.basic.black,
+    focus: alpha(uiSwatches.basic.white, 0.12),
+    focusVisible: alpha(uiSwatches.basic.white, 0.3),
+    hover: alpha(uiSwatches.basic.white, 0.04),
+    light: uiSwatches.grey[200],
+    main: uiSwatches.basic.white,
+    outlinedBorder: alpha(uiSwatches.basic.white, 0.5),
+    selected: alpha(uiSwatches.basic.white, 0.08),
+  },
+  secondary: {
+    contrastText: uiSwatches.basic.white,
+    dark: '', // Remove from type?
+    light: uiSwatches.grey[300],
+    main: uiSwatches.grey[200],
+  },
+  //TODO:Remove when use of these colors have been replaced everywhere
+  statusColors: {
+    blue: 'rgba(25, 118, 210, 1)',
+    green: 'rgba(102, 187, 106, 1)',
+    grey: 'rgba(0, 0, 0, 0.12)',
+    orange: 'rgba(245, 124, 0, 1)',
+    red: 'rgba(239, 83, 80, 1)',
+  },
+  success: {
+    contrastText: uiSwatches.basic.white,
+    dark: uiSwatches.green[800],
+    light: uiSwatches.green[400],
+    main: uiSwatches.green[600],
+  },
+  swatches: swatches,
+  text: {
+    disabled: uiSwatches.grey[200],
+    primary: uiSwatches.basic.white,
+    secondary: uiSwatches.grey[100],
+  },
+  //TODO:Remove when use of these colors have been replaced everywhere
+  transparentGrey: { light: 'rgba(0,0,0,0.04)' },
+  //TODO:Remove when use of these colors have been replaced everywhere
+  viewColumnGallery: {
+    blue: '#1976D2',
+    purple: '#BA68C8',
+    red: '#ED1C55',
+  },
+  warning: {
+    contrastText: uiSwatches.basic.black,
+    dark: uiSwatches.yellow[600],
+    light: uiSwatches.yellow[200],
+    main: uiSwatches.yellow[400],
+  },
+};

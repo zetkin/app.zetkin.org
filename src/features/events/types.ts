@@ -15,3 +15,14 @@ export type ParticipantWithPoolState = {
   person: ZetkinPerson;
   status: 'added' | 'booked' | 'removed' | 'pending';
 };
+
+export type ZetkinEventReminder = {
+  action: {
+    id: number;
+  };
+  person: {
+    id: number;
+    name: string;
+  };
+  sent: string;
+};

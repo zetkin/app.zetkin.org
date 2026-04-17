@@ -96,6 +96,7 @@ export enum TIME_FRAME {
   EVER = 'ever',
   FUTURE = 'future',
   BEFORE_TODAY = 'beforeToday',
+  ON_DATE = 'onDate',
   BEFORE_DATE = 'beforeDate',
   AFTER_DATE = 'afterDate',
   BETWEEN = 'between',
@@ -387,8 +388,9 @@ export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
   type: FILTER_TYPE;
 }
 
-export interface SmartSearchFilterWithId<C = AnyFilterConfig>
-  extends ZetkinSmartSearchFilter<C> {
+export interface SmartSearchFilterWithId<
+  C = AnyFilterConfig,
+> extends ZetkinSmartSearchFilter<C> {
   id: number;
 }
 

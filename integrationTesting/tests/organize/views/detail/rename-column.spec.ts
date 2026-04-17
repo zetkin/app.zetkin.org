@@ -4,6 +4,7 @@ import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
 import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMembers/rows';
+import AllCustomFields from '../../../../mockData/orgs/KPD/people/views/AllMembers/fields';
 import KPD from '../../../../mockData/orgs/KPD';
 
 test.describe('View detail page', () => {
@@ -17,6 +18,7 @@ test.describe('View detail page', () => {
       'get',
       AllMembersColumns
     );
+    moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
   });
 
   test.afterEach(({ moxy }) => {
@@ -52,14 +54,23 @@ test.describe('View detail page', () => {
 
     await page.fill('#rename-column-title-field', newTitle);
 
-    await Promise.all([
-      page.waitForResponse((res) =>
-        res.url().includes(`/views/1/columns/${AllMembersColumns[0].id}`)
-      ),
-      page.click('button:text("Save")'),
-    ]);
+    await page.click('button:text("Save")');
 
     // Check body of request
+    await expect
+      .poll(
+        () =>
+          moxy
+            .log()
+            .filter(
+              (mock) =>
+                mock.method === 'PATCH' &&
+                mock.path ===
+                  `/v1/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`
+            ).length
+      )
+      .toBeGreaterThan(0);
+
     const columnPatchRequest = moxy
       .log()
       .find(

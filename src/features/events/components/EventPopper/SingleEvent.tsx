@@ -11,7 +11,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Link, Skeleton, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
 
@@ -40,6 +40,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import useEventParticipantsMutations from 'features/events/hooks/useEventParticipantsMutations';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -50,20 +51,23 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const orgId = event.organization.id;
-  const { participantsFuture, respondentsFuture } = useEventParticipants(
-    event.organization.id,
-    event.id
-  );
+  const {
+    verifiedParticipantsFuture,
+    respondentsFuture,
+    numSignedUpParticipants,
+    verifiedSignedUpParticipants,
+  } = useEventParticipants(event.organization.id, event.id);
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
     useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
+  const { addParticipants } = useEventParticipantsMutations(orgId, event.id);
 
   const dispatch = useAppDispatch();
-  const participants = participantsFuture.data || [];
-  const respondents = respondentsFuture.data || [];
+  const participants = verifiedParticipantsFuture.data || [];
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const [isBooking, setBooking] = useState(false);
 
   const showPublishButton =
     state == EventState.DRAFT ||
@@ -75,9 +79,21 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);
-  const signedParticipants = respondents.filter(
-    (r) => !participants.some((p) => p.id === r.id)
-  );
+
+  const bookVerifiedSignedUpParticipants = async () => {
+    setBooking(true);
+    await addParticipants(verifiedSignedUpParticipants.map((p) => p.person.id));
+    setBooking(false);
+  };
+
+  const isLoading =
+    verifiedParticipantsFuture.isLoading ||
+    respondentsFuture.isLoading ||
+    state == EventState.UNKNOWN;
+  const showSignups = numSignedUpParticipants > 0 || isLoading;
+
+  const allSignedUpParticipantsAreVerified =
+    numSignedUpParticipants == verifiedSignedUpParticipants.length;
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
@@ -206,7 +222,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         </Typography>
       </Box>
       <Box display="flex" flexDirection="column" gap={1} sx={{ mb: 2 }}>
-        {signedParticipants.length > 0 && (
+        {showSignups && (
           <>
             <Box
               alignItems="center"
@@ -226,18 +242,39 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                   size="xs"
                 />
               </Box>
-              <Typography
-                color={
-                  (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
-                }
-              >
-                {signedParticipants.length ?? 0}
-              </Typography>
+              {isLoading ? (
+                <Skeleton width={20} />
+              ) : (
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+                  {allSignedUpParticipantsAreVerified && (
+                    <Button
+                      color="primary"
+                      loading={isBooking}
+                      onClick={() => bookVerifiedSignedUpParticipants()}
+                      size="small"
+                      variant="outlined"
+                    >
+                      {messages.eventPopper.bookAll()}
+                    </Button>
+                  )}
+                  <Typography
+                    color={numSignedUpParticipants > 0 ? 'red' : 'secondary'}
+                  >
+                    {numSignedUpParticipants}
+                  </Typography>
+                </Box>
+              )}
             </Box>
-            <ParticipantAvatars
-              orgId={orgId}
-              participants={signedParticipants}
-            />
+            {isLoading ? (
+              <Skeleton height={20} variant="rectangular" width="100%" />
+            ) : (
+              numSignedUpParticipants > 0 && (
+                <ParticipantAvatars
+                  orgId={orgId}
+                  participants={verifiedSignedUpParticipants}
+                />
+              )
+            )}
           </>
         )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -254,11 +291,15 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             numerator={event.num_participants_available}
           />
         </Box>
-        {availableParticipants.length > 0 && (
-          <ParticipantAvatars
-            orgId={orgId}
-            participants={availableParticipants}
-          />
+        {isLoading ? (
+          <Skeleton height={20} variant="rectangular" width="100%" />
+        ) : (
+          availableParticipants.length > 0 && (
+            <ParticipantAvatars
+              orgId={orgId}
+              participants={availableParticipants}
+            />
+          )
         )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Box alignItems="center" display="flex">

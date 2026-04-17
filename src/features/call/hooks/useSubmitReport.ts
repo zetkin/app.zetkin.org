@@ -1,12 +1,8 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinSurveyApiSubmission } from 'utils/types/zetkin';
-import submitSurveysRpc, { Result } from '../rpc/submitSurveysAndUpdateCall';
-import {
-  reportSubmitted,
-  setSurveySubmissionError,
-  setUpdateCallError,
-} from '../store';
-import { Report } from '../types';
+import submitSurveysRpc from '../rpc/submitSurveysAndUpdateCall';
+import { reportSubmitted, setReportSubmissionError } from '../store';
+import { CallState, Report } from '../types';
 import calculateReportState from '../components/Report/utils/calculateReportState';
 
 type CallSubmissions = {
@@ -19,14 +15,17 @@ export default function useSubmitReport(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const submitReport = async (
+  return async (
     callId: number,
     report: Report,
     submissions: CallSubmissions
-  ): Promise<Result> => {
+  ) => {
     const state = calculateReportState(report);
     const reportData = {
-      call_back_after: state == 13 || state == 14 ? report.callBackAfter : null,
+      call_back_after:
+        state == CallState.CALL_BACK || state == CallState.NOT_AVAILABLE
+          ? report.callBackAfter
+          : null,
       message_to_organizer:
         report.organizerActionNeeded && report.organizerLog
           ? report.organizerLog
@@ -44,18 +43,8 @@ export default function useSubmitReport(orgId: number) {
     });
     if (result.kind == 'success') {
       dispatch(reportSubmitted(result.updatedCall));
-      return result;
-    } else if (result.kind == 'submissionError') {
-      dispatch(setSurveySubmissionError(true));
-      return result;
-    } else if (result.kind == 'updateError') {
-      dispatch(setUpdateCallError(true));
-      return result;
     } else {
-      // This should never happen, but we return the result to satisfy TypeScript's checker
-      return result;
+      dispatch(setReportSubmissionError(result));
     }
   };
-
-  return { submitReport };
 }

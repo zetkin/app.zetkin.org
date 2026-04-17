@@ -4,6 +4,7 @@ import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
 import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMembers/rows';
+import AllCustomFields from '../../../../mockData/orgs/KPD/people/views/AllMembers/fields';
 import KPD from '../../../../mockData/orgs/KPD';
 import NewView from '../../../../mockData/orgs/KPD/people/views/NewView';
 import NewViewColumns from '../../../../mockData/orgs/KPD/people/views/NewView/columns';
@@ -31,6 +32,7 @@ test.describe('View detail page', () => {
       'get',
       AllMembersColumns
     );
+    moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
 
     moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 201);
     moxy.setZetkinApiMock(
@@ -59,12 +61,11 @@ test.describe('View detail page', () => {
       .click();
     await page.locator('button:has-text("handle selection")').click();
 
-    await Promise.all([
-      page.waitForNavigation(),
-      page
-        .locator('[role="menuitem"]:has-text("create list from selection")')
-        .click(),
-    ]);
+    await page
+      .locator('[role="menuitem"]:has-text("create list from selection")')
+      .click();
+
+    await page.waitForURL(appUri + `/organize/1/people/lists/${NewView.id}`);
 
     // Get POST requests for creating new view and columns
     const moxyLog = moxy.log<{ title: string }>();
@@ -94,10 +95,5 @@ test.describe('View detail page', () => {
     // Expect that the correct rows were added
     expect(rowPutLogs[0].path).toMatch(/1$/);
     expect(rowPutLogs[1].path).toMatch(/2$/);
-
-    // Expect that user is navigated to new view's page
-    expect(page.url()).toEqual(
-      appUri + `/organize/1/people/lists/${NewView.id}`
-    );
   });
 });

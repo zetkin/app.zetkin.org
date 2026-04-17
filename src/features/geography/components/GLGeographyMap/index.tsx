@@ -9,14 +9,16 @@ import {
 import { Pentagon } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
 import { FC, startTransition, useEffect, useMemo, useState } from 'react';
-import { Map as MapType } from 'maplibre-gl';
+import { LngLatBounds, Map as MapType, Point } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Fuse from 'fuse.js';
 
 import { Zetkin2Area } from 'features/areas/types';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
-import AreaOverlay from 'features/areas/components/AreaOverlay';
+import AreaOverlay, {
+  AREA_OVERLAY_WIDTH,
+} from 'features/areas/components/AreaOverlay';
 import oldAreaFormat from 'features/areas/utils/oldAreaFormat';
 import useAreaEditing from 'features/geography/hooks/useAreaEditing';
 import useAreaSelection from 'features/geography/hooks/useAreaSelection';
@@ -34,6 +36,7 @@ type Props = {
   orgId: number;
 };
 
+const AREA_OVERLAY_MARGIN_PX = 16; // equal to 1 rem
 const NO_SELECTED_AREA_ID = 0;
 const SETTINGS_PANEL_WIDTH_PX = 400;
 const SETTINGS_PANEL_GAP_PX = 8;
@@ -125,6 +128,52 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
       document.removeEventListener('keydown', handleEscapeKeydown);
     };
   });
+
+  useEffect(() => {
+    if (map && selectedArea) {
+      const firstPolygon = selectedArea.boundary.coordinates[0];
+      if (!firstPolygon?.length) {
+        return;
+      }
+
+      const areaBounds = new LngLatBounds(firstPolygon[0], firstPolygon[0]);
+      firstPolygon.forEach((lngLat) => areaBounds.extend(lngLat));
+
+      const mapWidth = map.getContainer().clientWidth;
+      const rightmostPartOfArea = map.project(areaBounds.getNorthEast()).x;
+
+      const overlayWidth = AREA_OVERLAY_WIDTH + AREA_OVERLAY_MARGIN_PX;
+      const overlayLeftEdge = mapWidth - overlayWidth;
+      const areaPartlyHiddenByOverlay = rightmostPartOfArea > overlayLeftEdge;
+      if (areaPartlyHiddenByOverlay) {
+        const rightPadding = AREA_OVERLAY_MARGIN_PX * 2;
+
+        const pixelsToPan =
+          rightmostPartOfArea - overlayLeftEdge + AREA_OVERLAY_MARGIN_PX;
+        const sw = map.project(map.getBounds().getSouthWest());
+
+        const newNorthEast = map.unproject(new Point(rightmostPartOfArea, 0));
+        const newSouthWestPoint = sw.sub(new Point(-pixelsToPan, 0));
+        const newSouthWest = map.unproject(newSouthWestPoint);
+
+        const newBounds = new LngLatBounds(newSouthWest, newNorthEast);
+
+        const willPanOutOfBounds = areaBounds.getWest() < newSouthWest.lng;
+        const leftPadding = willPanOutOfBounds ? AREA_OVERLAY_MARGIN_PX : 0;
+        newBounds.extend(areaBounds);
+
+        map.fitBounds(newBounds, {
+          animate: true,
+          curve: 0.1, // reduce default zoom animation
+          duration: 800,
+          padding: {
+            left: leftPadding,
+            right: AREA_OVERLAY_WIDTH + rightPadding,
+          },
+        });
+      }
+    }
+  }, [map, selectedArea]);
 
   return (
     <Box
