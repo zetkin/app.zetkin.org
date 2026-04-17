@@ -36,6 +36,16 @@ const profilesSlice = createSlice({
   initialState,
   name: 'profiles',
   reducers: {
+    fieldCreate: (state) => {
+      state.fieldsList.isLoading = true;
+    },
+    fieldCreated: (state, action: PayloadAction<ZetkinCustomField>) => {
+      const field = action.payload;
+
+      state.fieldsList.items = state.fieldsList.items.concat([
+        remoteItem(field.id, { data: field, isLoading: false }),
+      ]);
+    },
     fieldRemoved: (state, action: PayloadAction<number>) => {
       const fieldId = action.payload;
       state.fieldsList.items = state.fieldsList.items.filter(
@@ -186,6 +196,8 @@ const profilesSlice = createSlice({
 
 export default profilesSlice;
 export const {
+  fieldCreate,
+  fieldCreated,
   fieldRemoved,
   fieldsLoad,
   fieldsLoaded,
