@@ -5,7 +5,9 @@ import { centerOfMass } from '@turf/turf';
 import { Zetkin2Area } from 'features/areas/types';
 import oldTheme from 'theme';
 import HouseholdOverlayMarker from 'features/areas/components/markers/HouseholdOverlayMarker';
-import useAreasWithStats from 'features/areas/hooks/useAreasWithStats';
+import useAreasWithStats, {
+  MIN_FETCH_ZOOM,
+} from 'features/areas/hooks/useAreasWithStats';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -30,7 +32,7 @@ const Areas: FC<Props> = ({
     <>
       {areasWithStatsGeojson.features.map((area) => {
         const center = centerOfMass(area);
-        if (zoomLevel > 10 && area.properties.stats) {
+        if (zoomLevel > MIN_FETCH_ZOOM && area.properties.stats) {
           return (
             <Marker
               key={area.id}

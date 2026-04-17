@@ -3,6 +3,8 @@ import { useEffect, useMemo } from 'react';
 import { Zetkin2Area, ZetkinAreaStats } from 'features/areas/types';
 import useAreaStats from './useAreaStats';
 
+export const MIN_FETCH_ZOOM = 10;
+
 export default function useAreasWithStats(
   allAreas: Zetkin2Area[],
   areasInView: Zetkin2Area[],
@@ -12,7 +14,7 @@ export default function useAreasWithStats(
 
   // Fetch stats for the areas in view
   useEffect(() => {
-    if (zoomLevel > 10 && areasInView.length > 0) {
+    if (zoomLevel > MIN_FETCH_ZOOM && areasInView.length > 0) {
       Promise.all(
         areasInView.map(async ({ id: areaId }) => {
           getAreaStats(areaId);
