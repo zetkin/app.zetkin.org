@@ -36,11 +36,12 @@ export type Zetkin2AreaPostBody = Partial<
 
 export type ZetkinAreaStats = {
   area_id: number;
+  count_households: number;
+  count_locations: number;
+  count_unique_households_visited: number;
+  count_unique_locations_visited: number;
   id: number;
-  num_households: number;
-  num_households_successfully_visited: number;
-  num_households_visited: number;
-  num_locations: number;
-  num_locations_visited: number;
-  num_successfull_visits: number;
+
+  sum_successful_visits: number;
+  sum_visits: number;
 };

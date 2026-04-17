@@ -41,8 +41,10 @@ const Areas: FC<Props> = ({
               style={{ cursor: 'pointer' }}
             >
               <HouseholdOverlayMarker
-                numberOfHouseholds={area.properties.stats?.num_households || 0}
-                numberOfLocations={area.properties.stats?.num_locations || 0}
+                numberOfHouseholds={
+                  area.properties.stats?.count_households || 0
+                }
+                numberOfLocations={area.properties.stats?.count_locations || 0}
               />
             </Marker>
           );

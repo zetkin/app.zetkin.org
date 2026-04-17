@@ -29,7 +29,7 @@ const AreaStats: FC<Props> = ({ areaId }) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ width: '50%' }}>
             <Typography color="primary" variant="h5">
-              {stats.num_locations}
+              {stats.count_locations}
             </Typography>
             <Typography>
               <Msg id={messageIds.areas.areaDetails.locations} />
@@ -37,7 +37,7 @@ const AreaStats: FC<Props> = ({ areaId }) => {
           </Box>
           <Box sx={{ width: '50%' }}>
             <Typography color="primary" variant="h5">
-              {stats.num_households}
+              {stats.count_households}
             </Typography>
             <Typography>
               <Msg id={messageIds.areas.areaDetails.households} />
@@ -58,7 +58,7 @@ const AreaStats: FC<Props> = ({ areaId }) => {
         </Typography>
         <Box>
           <Typography color="primary" variant="h5">
-            {stats.num_successfull_visits}
+            {stats.sum_successful_visits}
           </Typography>
           <Typography>
             <Msg id={messageIds.areas.assignmentStats.successfulVisits} />
@@ -67,7 +67,8 @@ const AreaStats: FC<Props> = ({ areaId }) => {
         <Box>
           <Typography color="primary" variant="h5">
             {Math.round(
-              (stats.num_locations_visited / stats.num_locations) * 100
+              (stats.count_unique_locations_visited / stats.count_locations) *
+                100
             ) / 100}
             %
           </Typography>
@@ -75,12 +76,13 @@ const AreaStats: FC<Props> = ({ areaId }) => {
             <Msg id={messageIds.areas.assignmentStats.percentVisited} />
           </Typography>
         </Box>
-        {stats.num_households_visited > 0 && (
+        {stats.count_unique_households_visited > 0 && (
           <Box>
             <Typography color="primary" variant="h5">
               {Math.round(
-                (stats.num_households_visited /
-                  stats.num_households_successfully_visited) *
+                (stats.count_unique_households_visited +
+                  stats.count_unique_locations_visited /
+                    stats.sum_successful_visits) *
                   100
               ) / 100}
               %
