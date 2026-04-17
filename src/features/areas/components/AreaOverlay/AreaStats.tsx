@@ -76,23 +76,17 @@ const AreaStats: FC<Props> = ({ areaId }) => {
             <Msg id={messageIds.areas.assignmentStats.percentVisited} />
           </Typography>
         </Box>
-        {stats.count_unique_households_visited > 0 && (
+        {stats.sum_successful_visits > 0 && (
           <Box>
             <Typography color="primary" variant="h5">
               {Math.round(
-                (stats.count_unique_households_visited +
-                  stats.count_unique_locations_visited /
-                    stats.sum_successful_visits) *
-                  100
+                (stats.sum_successful_visits / stats.sum_visits) * 100
               ) / 100}
               %
             </Typography>
             <Typography>
               <Msg
-                id={
-                  messageIds.areas.assignmentStats
-                    .percentSuccessfulHouseholdVisits
-                }
+                id={messageIds.areas.assignmentStats.percentSuccessfulVisits}
               />
             </Typography>
           </Box>

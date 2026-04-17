@@ -19,9 +19,7 @@ export default makeMessages('feat.areas', {
       },
     },
     assignmentStats: {
-      percentSuccessfulHouseholdVisits: m(
-        'of household visits were successful'
-      ),
+      percentSuccessfulVisits: m('of visits were successful'),
       percentVisited: m('of locations visited'),
       successfulVisits: m('successful visits'),
       title: m('Visits'),
