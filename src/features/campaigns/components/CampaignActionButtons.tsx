@@ -300,7 +300,7 @@ const CampaignActionButtons: React.FunctionComponent<
         />
       </ZUIDialog>
       <EventShiftModal
-        key={eventShiftModalKey}
+        key={eventShiftModalState}
         close={() => {
           setShiftModalDates(null);
         }}
