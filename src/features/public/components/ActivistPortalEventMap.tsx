@@ -13,6 +13,8 @@ import { Latitude, Longitude } from 'features/areas/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import useMapMarkerClick from '../hooks/useMapMarkerClick';
 
+const defaultFitBoundOptions = { padding: 80 };
+
 export const ActivistPortalEventMap: FC<{
   events: ZetkinEventWithStatus[];
   locationFilter: GeoJSON.Feature[];
@@ -40,7 +42,7 @@ export const ActivistPortalEventMap: FC<{
           animate: true,
           duration: 1200,
           maxZoom: 16,
-          padding: 20,
+          ...defaultFitBoundOptions,
         });
       }
 
@@ -69,17 +71,23 @@ export const ActivistPortalEventMap: FC<{
         events
           .map((event) => event.location)
           .filter(notEmpty)
-          .reduce((acc, location) => {
-            const key = `${location.lat},${location.lng}`;
-            if (!acc[key]) {
-              acc[key] = {
-                count: 0,
-                ...location,
-              };
-            }
-            acc[key].count += 1;
-            return acc;
-          }, {} as Record<string, { count: number; id: number; lat: Latitude; lng: Longitude }>)
+          .reduce(
+            (acc, location) => {
+              const key = `${location.lat},${location.lng}`;
+              if (!acc[key]) {
+                acc[key] = {
+                  count: 0,
+                  ...location,
+                };
+              }
+              acc[key].count += 1;
+              return acc;
+            },
+            {} as Record<
+              string,
+              { count: number; id: number; lat: Latitude; lng: Longitude }
+            >
+          )
       ),
     [events]
   );
@@ -114,6 +122,7 @@ export const ActivistPortalEventMap: FC<{
         }) ?? [],
       type: 'FeatureCollection',
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [events, locationFilter]);
 
   return (
@@ -126,7 +135,7 @@ export const ActivistPortalEventMap: FC<{
             map.fitBounds(bounds, {
               animate: true,
               duration: 800,
-              padding: 20,
+              ...defaultFitBoundOptions,
             });
           }
         }}
@@ -140,7 +149,7 @@ export const ActivistPortalEventMap: FC<{
         ref={(map) => setMap(map?.getMap() ?? null)}
         initialViewState={{
           bounds,
-          fitBoundsOptions: { padding: 200 },
+          fitBoundsOptions: defaultFitBoundOptions,
         }}
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {

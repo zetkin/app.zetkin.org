@@ -64,6 +64,7 @@ const LocationModal: FC<LocationModalProps> = ({
   useEffect(() => {
     setSelectedLocationId(locationId);
     setPendingLocation(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (

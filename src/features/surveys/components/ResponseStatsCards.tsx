@@ -50,6 +50,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import { scaleLog } from 'd3-scale';
 import { BoxOwnProps } from '@mui/system';
+import { Check, ContentCopy } from '@mui/icons-material';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -66,7 +67,7 @@ import {
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
 import range from 'utils/range';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -76,6 +77,7 @@ import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import ZUIText from 'zui/components/ZUIText';
+import { makeDeterministicRNG } from 'utils/randomUtils';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -102,6 +104,7 @@ export interface UseChartProExportPublicApi {
 
 const ResponseStatsCard = ({
   children,
+  controls,
   exportApi,
   exportDisabled,
   onTabChange,
@@ -111,6 +114,7 @@ const ResponseStatsCard = ({
   tabValue,
 }: {
   children: ReactNode;
+  controls?: ReactNode;
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   exportDisabled: boolean;
   onTabChange: (tab: string) => void;
@@ -170,6 +174,7 @@ const ResponseStatsCard = ({
         document.body.style.overflow = docOverflow;
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       showSnackbar,
       containerRef,
@@ -189,6 +194,7 @@ const ResponseStatsCard = ({
         onSelect: () => exportChart('pdf'),
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [exportChart]
   );
 
@@ -235,6 +241,7 @@ const ResponseStatsCard = ({
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
+          {controls}
           <Box>
             <Button
               disabled={exportDisabled}
@@ -299,21 +306,47 @@ const ChartWrapper = (props: BoxOwnProps) => {
   );
 };
 
+type DisplayMode = 'absolute' | 'percent';
+
 const QuestionStatsBarPlot = ({
+  displayMode,
   exportApi,
   questionStats,
 }: {
+  displayMode: DisplayMode;
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
   const theme = useTheme();
+  const isOptions = isOptionsStats(questionStats);
+  const percentBase = isOptions
+    ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
+    : 0;
+  const percentFormatter = (value: number | null) =>
+    value == null ? '' : `${value}%`;
+  const absoluteFormatter = (value: number | null) =>
+    value == null ? '' : value.toString();
+  const showPercent = isOptions && displayMode === 'percent';
+  const valueFormatter = showPercent ? percentFormatter : absoluteFormatter;
 
   const data = useMemo(() => {
     const bars = isOptionsStats(questionStats)
-      ? questionStats.options.map((o) => ({
-          count: o.count,
-          option: o.option.text,
-        }))
+      ? questionStats.options.map((o) => {
+          let count = o.count;
+
+          if (showPercent) {
+            if (percentBase) {
+              count = Math.round((o.count / percentBase) * 100);
+            } else {
+              count = 0;
+            }
+          }
+
+          return {
+            count,
+            option: o.option.text,
+          };
+        })
       : Object.entries(questionStats.topWordFrequencies).map(
           ([word, count]) => ({
             count: count,
@@ -325,7 +358,7 @@ const QuestionStatsBarPlot = ({
       sorted = sorted.slice(0, 10);
     }
     return sorted;
-  }, [questionStats]);
+  }, [questionStats, showPercent, percentBase]);
 
   return (
     <ChartWrapper>
@@ -343,6 +376,7 @@ const QuestionStatsBarPlot = ({
         series={[
           {
             data: data.map((option) => option.count),
+            valueFormatter,
           },
         ]}
         slotProps={{
@@ -368,6 +402,7 @@ const QuestionStatsBarPlot = ({
           {
             disableLine: true,
             tickLabelStyle: { fill: theme.palette.grey['700'] },
+            valueFormatter,
           },
         ]}
         yAxis={[
@@ -390,18 +425,50 @@ const QuestionStatsBarPlot = ({
 };
 
 const QuestionStatsPie = ({
+  displayMode,
   exportApi,
   questionStats,
 }: {
+  displayMode: DisplayMode;
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
+  const isOptions = isOptionsStats(questionStats);
+  const percentBase = isOptions
+    ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
+    : 0;
+  const pieArcLabelFormatter = (
+    item: { value: number } & Record<string, unknown>
+  ) => `${item.value}%`;
+  const showPercent = isOptions && displayMode === 'percent';
+  const pieValueFormatter = (
+    value: number | { value: number } | null
+  ): string => {
+    if (value == null) {
+      return '';
+    }
+
+    const numericValue = typeof value === 'number' ? value : value.value;
+    return showPercent ? `${numericValue}%` : numericValue.toString();
+  };
   const data = useMemo(() => {
     const items = isOptionsStats(questionStats)
-      ? questionStats.options.map((o) => ({
-          label: getEllipsedString(o.option.text, 60),
-          value: o.count,
-        }))
+      ? questionStats.options.map((o) => {
+          let value = o.count;
+
+          if (showPercent) {
+            if (percentBase) {
+              value = Math.round((o.count / percentBase) * 100);
+            } else {
+              value = 0;
+            }
+          }
+
+          return {
+            label: getEllipsedString(o.option.text, 60),
+            value,
+          };
+        })
       : Object.entries(questionStats.topWordFrequencies).map(
           ([word, count]) => ({
             label: getEllipsedString(word, 60),
@@ -416,7 +483,7 @@ const QuestionStatsPie = ({
         label,
         value,
       }));
-  }, [questionStats]);
+  }, [questionStats, showPercent, percentBase]);
   const messages = useMessages(messageIds);
   const [hasSeenPieInaccuracyWarning, setHasSeenPieInaccuracyWarning] =
     useState(false);
@@ -453,11 +520,12 @@ const QuestionStatsPie = ({
           height={CHART_HEIGHT}
           series={[
             {
-              arcLabel: 'value',
+              arcLabel: showPercent ? pieArcLabelFormatter : 'value',
               cornerRadius: 5,
               data,
               innerRadius: 80,
               outerRadius: 180,
+              valueFormatter: pieValueFormatter,
             },
           ]}
           slotProps={{
@@ -487,6 +555,7 @@ const OptionsStatsCard = ({
   questionStats: OptionsQuestionStats;
 }) => {
   const [tab, setTab] = useState('bar-plot');
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('percent');
   const messages = useMessages(messageIds);
 
   const subheader = useMemo(
@@ -495,13 +564,35 @@ const OptionsStatsCard = ({
         answerCount: questionStats.answerCount,
         totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [questionStats, messages.insights.optionsFields.subheader]
   );
 
   const exportApi = useRef<UseChartProExportPublicApi>();
+  const displayToggle = (
+    <ToggleButtonGroup
+      exclusive
+      onChange={(_, newValue) => newValue && setDisplayMode(newValue)}
+      orientation={'horizontal'}
+      size={'small'}
+      value={displayMode}
+    >
+      <ToggleButton size={'small'} value={'absolute'}>
+        <Msg
+          id={messageIds.insights.optionsFields.displayInsights.absoluteCount}
+        />
+      </ToggleButton>
+      <ToggleButton size={'small'} value={'percent'}>
+        <Msg
+          id={messageIds.insights.optionsFields.displayInsights.percentCount}
+        />
+      </ToggleButton>
+    </ToggleButtonGroup>
+  );
 
   return (
     <ResponseStatsCard
+      controls={displayToggle}
       exportApi={exportApi}
       exportDisabled={false}
       onTabChange={(selected) => setTab(selected)}
@@ -521,12 +612,17 @@ const OptionsStatsCard = ({
     >
       {tab === 'bar-plot' && (
         <QuestionStatsBarPlot
+          displayMode={displayMode}
           exportApi={exportApi}
           questionStats={questionStats}
         />
       )}
       {tab === 'pie-chart' && (
-        <QuestionStatsPie exportApi={exportApi} questionStats={questionStats} />
+        <QuestionStatsPie
+          displayMode={displayMode}
+          exportApi={exportApi}
+          questionStats={questionStats}
+        />
       )}
     </ResponseStatsCard>
   );
@@ -537,28 +633,6 @@ interface WordData {
   value: number;
 }
 const WordCloudFixedValueGenerator = () => 0.5;
-
-/**
- * Deterministically generate random numbers using a Linear Congruential Generator (LCG). NOT SAFE for cryptography.
- * @param seed the initial seed
- * @returns A pseudo-random number in the interval [0, 1]
- */
-export function makeDeterministicRNG(seed: number) {
-  let state = seed;
-
-  // Linear Congruential Generator (LCG), Numerical Recipes parameters: https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
-  const LCG_MULTIPLIER = 1664525;
-  const LCG_INCREMENT = 1013904223;
-  const UINT32_MAX = 0xffffffff;
-
-  return function nextUniform01() {
-    // advance RNG state (32-bit wraparound)
-    state = (state * LCG_MULTIPLIER + LCG_INCREMENT) >>> 0;
-
-    return state / UINT32_MAX;
-  };
-}
-
 const wordCloudTextStyle: CSSProperties = {
   transition: 'transform 200ms ease',
 };
@@ -603,13 +677,14 @@ const TextResponseWordCloud = ({
           disableAnimation: () => () => {},
         },
         svgRef: svgRef,
-      } as ChartPluginOptions<UseChartProExportSignature>),
+      }) as ChartPluginOptions<UseChartProExportSignature>,
     []
   );
 
   const { publicAPI } = useChartProExport(exportOptions);
   useEffect(() => {
     exportApi.current = publicAPI as UseChartProExportPublicApi;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publicAPI]);
 
   const [width, setWidth] = useState(600);
@@ -624,6 +699,7 @@ const TextResponseWordCloud = ({
   const getRotationDegree = useMemo(() => {
     const rng = makeDeterministicRNG(42);
     return () => (rng() > 0.5 ? 0 : 90);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words, width]);
 
   const fontScale = useMemo(() => {
@@ -707,12 +783,22 @@ const TextResponseCard = ({
   questionId: number;
   submission: SubmissionStats;
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const extendedSubmissionFuture = useSurveySubmission(
     orgId,
     submission.submissionId
   );
   const { openPane } = usePanes();
+  const [hasCopiedResponse, setHasCopiedResponse] = useState(false);
+
+  useEffect(() => {
+    if (hasCopiedResponse === true) {
+      setTimeout(() => {
+        setHasCopiedResponse(false);
+      }, 2000);
+    }
+  }, [hasCopiedResponse]);
 
   return (
     <ZUIFuture
@@ -762,7 +848,7 @@ const TextResponseCard = ({
                 width: '100%',
               }}
             >
-              <CardContent>
+              <CardContent sx={{ width: '100%' }}>
                 <Typography
                   sx={{
                     WebkitBoxOrient: 'vertical',
@@ -772,6 +858,45 @@ const TextResponseCard = ({
                     wordBreak: 'break-word',
                   }}
                 >
+                  <Box
+                    justifyContent="flex-end"
+                    sx={{
+                      alignItems: 'center',
+                      display: 'float',
+                      float: 'right',
+                    }}
+                  >
+                    <Tooltip
+                      arrow={true}
+                      title={
+                        hasCopiedResponse
+                          ? messages.insights.textFields.copyResponse.wasCopied()
+                          : messages.insights.textFields.copyResponse.copy()
+                      }
+                    >
+                      <span>
+                        <IconButton
+                          aria-label="previous"
+                          disabled={hasCopiedResponse}
+                          onClick={async (ev) => {
+                            ev.stopPropagation();
+                            await navigator.clipboard.writeText(
+                              questionResponse.response
+                            );
+
+                            setHasCopiedResponse(true);
+                          }}
+                          sx={(theme) => ({
+                            '&: hover, &.Mui-focusVisible': {
+                              color: theme.palette.text.secondary,
+                            },
+                          })}
+                        >
+                          {hasCopiedResponse ? <Check /> : <ContentCopy />}
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  </Box>
                   {questionResponse.response}
                 </Typography>
               </CardContent>
@@ -906,6 +1031,7 @@ const TextStatsCard = ({
         totalUniqueWordCount: questionStats.totalUniqueWordCount,
         totalWordCount: questionStats.totalWordCount,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [questionStats, messages.insights.textFields.subheader]
   );
 
@@ -943,6 +1069,7 @@ const TextStatsCard = ({
         )}
         {tab === 'word-frequency-bars' && (
           <QuestionStatsBarPlot
+            displayMode="absolute"
             exportApi={exportApi}
             questionStats={questionStats}
           />

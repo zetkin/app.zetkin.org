@@ -80,14 +80,14 @@ export type NewTaskValues = Omit<
 
 // POST and PUT requests use this data shape
 export interface ZetkinTaskRequestBody<
-  Config = AnyTaskTypeConfig
+  Config = AnyTaskTypeConfig,
 > extends Partial<
-    Omit<
-      // Remove these fields
-      ZetkinTask<Config>,
-      'campaign' | 'cover_file' | 'organization' | 'target'
-    >
-  > {
+  Omit<
+    // Remove these fields
+    ZetkinTask<Config>,
+    'campaign' | 'cover_file' | 'organization' | 'target'
+  >
+> {
   campaign_id?: number;
   cover_file_id?: number | null;
   organization_id?: number;

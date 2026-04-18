@@ -58,6 +58,7 @@ function useOrgSwitcher(orgId: number, searchString: string) {
     return searchString
       ? recentOrgsFuse.search(searchString).map((fuseResult) => fuseResult.item)
       : recentOrgs;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString]);
 
   const allOrgsFuse = useMemo(() => {
@@ -72,6 +73,7 @@ function useOrgSwitcher(orgId: number, searchString: string) {
     return searchString
       ? allOrgsFuse.search(searchString).map((fuseResult) => fuseResult.item)
       : flatOrgData;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString]);
 
   const showLoadingState = treeDataList.isLoading;

@@ -19,10 +19,12 @@ export default function useActivityFilters(
 ) {
   const filtersKey = useMemo(
     () => `activities:${orgId}:${campId ?? 'all'}:${location}:filters`,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [campId, orgId]
   );
   const searchKey = useMemo(
     () => `activities:${orgId}:${campId ?? 'all'}:${location}:search`,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [campId, orgId]
   );
 

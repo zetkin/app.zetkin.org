@@ -12,8 +12,9 @@ export default function useCreateTag(
   const createTagGroup = useCreateTagGroup(orgId);
 
   const createTag = async (tag: NewTag): Promise<ZetkinTag> => {
-    if ('group' in tag) {
-      const newGroup = await createTagGroup(tag.group);
+    const hasTagGroup = 'group' in tag && !!tag.group;
+    if (hasTagGroup) {
+      const newGroup = await createTagGroup(tag.group!);
       const tagWithNewGroup = {
         ...tag,
         group: undefined,
@@ -21,10 +22,10 @@ export default function useCreateTag(
       };
       dispatch(tagCreate());
       const tagFuture = await apiClient
-        .post<ZetkinTag, ZetkinTagPostBody>(
-          `/api/orgs/${orgId}/people/tags`,
-          tagWithNewGroup
-        )
+        .post<
+          ZetkinTag,
+          ZetkinTagPostBody
+        >(`/api/orgs/${orgId}/people/tags`, tagWithNewGroup)
         .then((data: ZetkinTag) => {
           dispatch(tagCreated(data));
           return data;
@@ -33,10 +34,10 @@ export default function useCreateTag(
     } else {
       dispatch(tagCreate());
       const tagFuture = await apiClient
-        .post<ZetkinTag, ZetkinTagPostBody>(
-          `/api/orgs/${orgId}/people/tags`,
-          tag
-        )
+        .post<
+          ZetkinTag,
+          ZetkinTagPostBody
+        >(`/api/orgs/${orgId}/people/tags`, tag)
         .then((data: ZetkinTag) => {
           dispatch(tagCreated(data));
           return data;

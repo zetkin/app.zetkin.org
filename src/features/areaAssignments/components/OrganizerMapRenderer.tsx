@@ -253,6 +253,7 @@ function AssigneeOverlayMarker({
         } else if (index == 5) {
           return (
             <Box
+              key={`${userId}-${index}`}
               alignItems="center"
               bgcolor="white"
               borderRadius="100%"
@@ -327,6 +328,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areas, map]);
 
   const { assigneesFilter } = useContext(assigneesFilterContext);

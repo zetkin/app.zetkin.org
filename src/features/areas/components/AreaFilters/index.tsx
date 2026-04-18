@@ -69,6 +69,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     });
 
     onFilteredIdsChange(filteredAreas.map((area) => area.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeGroupIds, activeTagIdsByGroup]);
 
   return (
@@ -79,6 +80,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         if (info) {
           return (
             <FilterDropDown
+              key={groupId}
               items={info.tags.map((tag) => {
                 const selected = currentIds.includes(tag.id) ?? false;
 
