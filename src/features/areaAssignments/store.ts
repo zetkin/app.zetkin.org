@@ -254,7 +254,7 @@ const areaAssignmentSlice = createSlice({
         ({
           ...itemToUpdate.data,
           ...location,
-        } as ZetkinLocation);
+        }) as ZetkinLocation;
 
       Object.values(state.locationsByAssignmentId).forEach((list) => {
         remoteItemUpdated(list, location, updateStategy);
