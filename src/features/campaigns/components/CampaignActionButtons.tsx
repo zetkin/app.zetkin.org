@@ -183,11 +183,11 @@ const CampaignActionButtons: React.FunctionComponent<
   }
 
   let eventShiftModalDates = getDefaultEventDates();
-  let eventShiftModalKey = 'closed';
+  let eventShiftModalState = 'closed';
 
   if (shiftModalDates) {
     eventShiftModalDates = shiftModalDates;
-    eventShiftModalKey = shiftModalDates
+    eventShiftModalState = shiftModalDates
       .map((date: Date) => date.toISOString())
       .join('-');
   }
