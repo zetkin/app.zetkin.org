@@ -85,7 +85,9 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               end_time: endDate.toISOString(),
               info_text: eventDescription,
               location_id: locationId,
-              num_participants_required: eventParticipants ? eventParticipants : 0,
+              num_participants_required: eventParticipants
+                ? eventParticipants
+                : 0,
               published: publish ? published.toISOString() : null,
               start_time: startDate.toISOString(),
               title: eventTitle || null,
