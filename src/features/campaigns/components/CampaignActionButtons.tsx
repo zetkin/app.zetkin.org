@@ -62,7 +62,6 @@ const CampaignActionButtons: React.FunctionComponent<
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
-  const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [shiftModalDates, setShiftModalDates] = useState<[Date, Date] | null>(
     null
   );
@@ -116,7 +115,6 @@ const CampaignActionButtons: React.FunctionComponent<
       label: campaginMessages.createButton.createMultiShiftEvent(),
       onClick: () => {
         setShiftModalDates(getDefaultEventDates());
-        setShiftModalOpen(true);
       },
     },
     {
@@ -182,6 +180,16 @@ const CampaignActionButtons: React.FunctionComponent<
           title: campaginMessages.form.createEmail.newEmail(),
         }),
     });
+  }
+
+  let eventShiftModalDates = getDefaultEventDates();
+  let eventShiftModalKey = 'closed';
+
+  if (shiftModalDates) {
+    eventShiftModalDates = shiftModalDates;
+    eventShiftModalKey = shiftModalDates
+      .map((date: Date) => date.toISOString())
+      .join('-');
   }
 
   return (
@@ -291,16 +299,14 @@ const CampaignActionButtons: React.FunctionComponent<
           }}
         />
       </ZUIDialog>
-      {shiftModalDates && (
-        <EventShiftModal
-          close={() => {
-            setShiftModalOpen(false);
-            setShiftModalDates(null);
-          }}
-          dates={shiftModalDates}
-          open={shiftModalOpen}
-        />
-      )}
+      <EventShiftModal
+        key={eventShiftModalKey}
+        close={() => {
+          setShiftModalDates(null);
+        }}
+        dates={eventShiftModalDates}
+        open={!!shiftModalDates}
+      />
     </Box>
   );
 };
