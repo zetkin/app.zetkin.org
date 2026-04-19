@@ -84,7 +84,7 @@ const CurrentTimeLineMarker = ({
         opacity: 0.5,
         position: 'absolute',
         translate: '0 -50%',
-        width: 'calc((100% + 7px) * 7)',
+        width: 'calc((100% + 7px) * 7 - 1px)',
         zIndex: 1000,
       }}
     />
