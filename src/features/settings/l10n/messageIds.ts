@@ -27,7 +27,7 @@ export default makeMessages('feat.settings', {
         name: m('Name'),
       },
       description: m(
-        'Organizers have enough privileges to do things like organizing campaigns and managing existing call assignments.'
+        'Organizers have enough privileges to do things like organizing projects and managing existing call assignments.'
       ),
       empty: m('You have not added any organizers yet.'),
       roleInheritance: m('Organizer in'),

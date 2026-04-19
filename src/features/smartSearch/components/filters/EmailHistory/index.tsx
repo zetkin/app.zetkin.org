@@ -7,7 +7,7 @@ import { Msg } from 'core/i18n';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -49,7 +49,7 @@ const EmailHistory = ({
 }: EmailHistoryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const projects = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
   const projectsSorted = projects.sort((p1, p2) => {
     return p1.title.localeCompare(p2.title);
   });
@@ -60,7 +60,7 @@ const EmailHistory = ({
     });
   const [emailSelectScope, setEmailSelectScope] =
     useState<EmailSelectScopeType>(
-      filter.config.campaign ? 'project' : filter.config.email ? 'email' : 'any'
+      filter.config.project ? 'project' : filter.config.email ? 'email' : 'any'
     );
 
   const setValueToKey = (
@@ -98,7 +98,7 @@ const EmailHistory = ({
   return (
     <FilterForm
       disableSubmit={
-        (emailSelectScope === 'project' && !filter.config.campaign) ||
+        (emailSelectScope === 'project' && !filter.config.project) ||
         (emailSelectScope === 'email' && !filter.config.email)
       }
       enableOrgSelect
@@ -129,7 +129,7 @@ const EmailHistory = ({
             emailScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  removeKey(['email', 'campaign']);
+                  removeKey(['email', 'project']);
                   setEmailSelectScope(e.target.value as EmailSelectScopeType);
                 }}
                 value={emailSelectScope}
@@ -182,8 +182,8 @@ const EmailHistory = ({
                     id: project.id,
                     label: project.title,
                   }))}
-                  onChange={(e) => setValueToKey('campaign', +e.target.value)}
-                  value={filter.config.campaign}
+                  onChange={(e) => setValueToKey('project', +e.target.value)}
+                  value={filter.config.project}
                 />
               ) : null,
             timeFrame: (

@@ -2,7 +2,7 @@ import { ApiFetch } from 'utils/apiFetch';
 import handleResponseData from './handleResponseData';
 import {
   CallAssignmentSearchResult,
-  CampaignSearchResult,
+  ProjectSearchResult,
   JourneyInstanceSearchResult,
   PersonSearchResult,
   SEARCH_DATA_TYPE,
@@ -28,13 +28,13 @@ async function makeSearchRequest(
   apiFetch: ApiFetch
 ): Promise<TaskSearchResult[]>;
 async function makeSearchRequest(
-  dataType: SEARCH_DATA_TYPE.CAMPAIGN,
+  dataType: SEARCH_DATA_TYPE.PROJECT,
   query: {
     orgId: number | string;
     q: string;
   },
   apiFetch: ApiFetch
-): Promise<CampaignSearchResult[]>;
+): Promise<ProjectSearchResult[]>;
 async function makeSearchRequest(
   dataType: SEARCH_DATA_TYPE.PERSON,
   query: {
