@@ -1,7 +1,7 @@
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import UnderlinedCampaignTitle from '../CampaignParticipation/UnderlinedCampaignTitle';
+import UnderlinedProjectTitle from '../ProjectParticipation/UnderlinedProjectTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedTaskTitle from './UnderlinedTaskTitle';
 import { useNumericRouteParams } from 'core/hooks';
@@ -38,16 +38,6 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        campaignSelect: config.task ? null : (
-          <>
-            <Msg id={localMessageIds.campaignSelect.in} />
-            {config.campaign && !config.task ? (
-              <UnderlinedCampaignTitle campId={config.campaign} orgId={orgId} />
-            ) : (
-              <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
-            )}
-          </>
-        ),
         matchingSelect: (
           // TODO: Move this to reusable component
           <UnderlinedMsg
@@ -57,6 +47,19 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
               min: matching.config?.min ?? 0,
             }}
           />
+        ),
+        projectSelect: config.task ? null : (
+          <>
+            <Msg id={localMessageIds.projectSelect.in} />
+            {config.project && !config.task ? (
+              <UnderlinedProjectTitle
+                orgId={orgId}
+                projectId={config.project}
+              />
+            ) : (
+              <UnderlinedMsg id={localMessageIds.projectSelect.any} />
+            )}
+          </>
         ),
         taskSelect: config.task ? (
           <UnderlinedTaskTitle orgId={orgId} taskId={config.task} />
