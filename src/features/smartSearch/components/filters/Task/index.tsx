@@ -7,7 +7,7 @@ import { Msg, useMessages } from 'core/i18n';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTasks from 'features/tasks/hooks/useTasks';
@@ -25,7 +25,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
-const ANY_CAMPAIGN = 'any';
+const ANY_PROJECT = 'any';
 const ANY_TASK = 'any';
 
 interface TaskProps {
@@ -49,7 +49,7 @@ const Task = ({
   const tasksQuery = useTasks(orgId);
   const tasks = tasksQuery.data || [];
 
-  const campaigns = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(
     initialFilter,
@@ -92,22 +92,22 @@ const Task = ({
     if (taskValue === ANY_TASK) {
       setConfig({ ...filter.config, task: undefined });
     } else {
-      // When specifying a task we don't want to specify a campaign
+      // When specifying a task we don't want to specify a project
       setConfig({
         ...filter.config,
-        campaign: undefined,
+        project: undefined,
         task: +taskValue,
       });
     }
   };
 
-  const handleCampaignSelectChange = (campaignValue: string) => {
-    if (campaignValue === ANY_CAMPAIGN) {
-      setConfig({ ...filter.config, campaign: undefined });
+  const handleProjectSelectChange = (projectValue: string) => {
+    if (projectValue === ANY_PROJECT) {
+      setConfig({ ...filter.config, project: undefined });
     } else {
       setConfig({
         ...filter.config,
-        campaign: +campaignValue,
+        project: +projectValue,
         task: undefined,
       });
     }
@@ -157,34 +157,34 @@ const Task = ({
                 ))}
               </StyledSelect>
             ),
-            campaignSelect: !filter.config.task ? (
-              <>
-                <Box component="span" paddingX={1}>
-                  <Msg id={localMessageIds.campaignSelect.in} />
-                </Box>
-                <StyledAutocomplete
-                  items={[
-                    {
-                      group: 'pinned',
-                      id: ANY_CAMPAIGN,
-                      label: messages.campaignSelect.any(),
-                    },
-                    ...campaigns.map((c) => ({
-                      id: c.id,
-                      label: c.title,
-                    })),
-                  ]}
-                  onChange={(e) => handleCampaignSelectChange(e.target.value)}
-                  value={filter.config.campaign || ANY_CAMPAIGN}
-                />
-              </>
-            ) : null,
             matchingSelect: (
               <Matching
                 filterConfig={filter.config.matching || {}}
                 onChange={handleMatchingChange}
               />
             ),
+            projectSelect: !filter.config.task ? (
+              <>
+                <Box component="span" paddingX={1}>
+                  <Msg id={localMessageIds.projectSelect.in} />
+                </Box>
+                <StyledAutocomplete
+                  items={[
+                    {
+                      group: 'pinned',
+                      id: ANY_PROJECT,
+                      label: messages.projectSelect.any(),
+                    },
+                    ...projects.map((c) => ({
+                      id: c.id,
+                      label: c.title,
+                    })),
+                  ]}
+                  onChange={(e) => handleProjectSelectChange(e.target.value)}
+                  value={filter.config.project || ANY_PROJECT}
+                />
+              </>
+            ) : null,
             taskSelect: (
               <StyledAutocomplete
                 items={[

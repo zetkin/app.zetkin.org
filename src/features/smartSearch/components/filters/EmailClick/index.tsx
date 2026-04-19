@@ -8,7 +8,7 @@ import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -53,7 +53,7 @@ const EmailClick = ({
 }: EmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const projects = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
@@ -65,7 +65,7 @@ const EmailClick = ({
   });
 
   const [linkSelectScope, setLinkSelectScope] = useState<LINK_SELECT_SCOPE>(
-    filter.config.campaign
+    filter.config.project
       ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
       : filter.config.email && !filter.config.links
         ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
@@ -112,7 +112,7 @@ const EmailClick = ({
     <FilterForm
       disableSubmit={
         (linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT &&
-          !filter.config.campaign) ||
+          !filter.config.project) ||
         (linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL &&
           !filter.config.email) ||
         (linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS &&
@@ -158,7 +158,7 @@ const EmailClick = ({
             linkScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  removeKey(['campaign', 'email', 'links']);
+                  removeKey(['project', 'email', 'links']);
                   setLinkSelectScope(e.target.value as LINK_SELECT_SCOPE);
                 }}
                 value={linkSelectScope}
@@ -260,8 +260,8 @@ const EmailClick = ({
                     id: project.id,
                     label: project.title,
                   }))}
-                  onChange={(e) => setValueToKey('campaign', +e.target.value)}
-                  value={filter.config.campaign}
+                  onChange={(e) => setValueToKey('project', +e.target.value)}
+                  value={filter.config.project}
                 />
               ) : null,
             timeFrame: (

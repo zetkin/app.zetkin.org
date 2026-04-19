@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js';
 
-import { EventActivity } from 'features/campaigns/types';
+import { EventActivity } from 'features/projects/types';
 import { EventState } from './useEventState';
 import getEventState from '../utils/getEventState';
 import { useAppSelector } from 'core/hooks';
@@ -117,7 +117,7 @@ export default function useFilteredEventActivities(
         'data.title',
         'data.activity.title',
         'data.location.title',
-        'data.campaign.title',
+        'data.project.title',
       ],
       threshold: 0.2,
     });
@@ -129,7 +129,7 @@ export default function useFilteredEventActivities(
             { $path: ['data', 'title'], $val: token },
             { $path: ['data', 'activity', 'title'], $val: token },
             { $path: ['data', 'location', 'title'], $val: token },
-            { $path: ['data', 'campaign', 'title'], $val: token },
+            { $path: ['data', 'project', 'title'], $val: token },
           ],
         })),
       })

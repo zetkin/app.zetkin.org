@@ -1,9 +1,9 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import clusterEventsForWeekCalender from './clusterEventsForWeekCalender';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
+import { ACTIVITIES, EventActivity } from 'features/projects/types';
 import { asLatitude, asLongitude } from '../../areas/utils/asLongitudeLatitude';
 
 const mockEventData: ZetkinEvent = {

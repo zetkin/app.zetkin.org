@@ -23,7 +23,6 @@ feat:
       calendar: Calendar
       callassignments: Call assignments
       callers: Callers
-      campaigns: Projects
       closed: Closed
       compose: Compose
       conversation: Conversation
@@ -225,7 +224,7 @@ feat:
       editButton: Edit target group
       subtitle: Use smart search to define target group for this assignment.
       title: Targets
-  campaigns:
+  projects:
     activitiesOverview:
       button: Browse all activities
       empty: Nothing on this day
@@ -287,17 +286,17 @@ feat:
     form:
       createCallAssignment:
         newCallAssignment: My call assignment
-      createCampaign:
+      createProject:
         create: Create project
         error: There was an error creating the project
-        newCampaign: My project
+        newProject: My project
       createEmail:
         newEmail: Untitled email
       createSurvey:
         newSurvey: My survey
       createTask:
         title: Create task
-      deleteCampaign:
+      deleteProject:
         cancel: Cancel
         error: There was an error deleting the project
         submitButton: Confirm deletion
@@ -305,7 +304,7 @@ feat:
         warning: Are you sure you want to delete this project? This action is permanent.
       description: Description
       edit: Edit project
-      editCampaignTitle:
+      editProjectTitle:
         error: Error updating project title
         success: Project title updated
       manager:
@@ -324,7 +323,7 @@ feat:
     indefinite: Indefinite timeline
     layout:
       activities: Activities
-      allCampaigns: All Projects & Activities
+      allProjects: All Projects & Activities
       archive: Archive
       calendar: Calendar
       insights: Insights
@@ -610,9 +609,9 @@ feat:
       warning: '"{eventTitle}" will be deleted.'
       warningCancel: '"{eventTitle}" will be canceled.'
       warningRestore: '"{eventTitle}" will be restored.'
-    eventChangeCampaignDialog:
+    eventChangeProjectDialog:
       error: 'Error: Could not move the event to the selected project'
-      success: Event moved to "{campaignTitle}"
+      success: Event moved to "{projectTitle}"
     eventContactCard:
       header: Contact
       noContact: No Contact Assigned!
@@ -1407,7 +1406,7 @@ feat:
           inheritance: Role inheritance
           name: Name
         description: Organizers have enough privileges to do things like organizing
-          campaigns and managing existing call assignments.
+          projects and managing existing call assignments.
         roleInheritance: Organizer in
         title: Organizers
       settingsLayout:
@@ -1463,7 +1462,7 @@ feat:
         call_history:
           description: Find people who were called, reached or tried.
           title: Call history
-        campaign_participation:
+        project_participation:
           description: Who signed up? Got booked? Who didn't? Find them!
           title: Participation in events
         email_blacklist:
@@ -1543,16 +1542,16 @@ feat:
           {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes, plural, one {once} other {# times}}'
         minTimesInput: at least {input} {minTimes, plural, one {time} other {times}}
-      campaignParticipation:
+      projectParticipation:
         activitySelect:
           activity: type "{activity}"
           any: any type
         bookedSelect:
           booked: been booked
           signed_up: signed up
-        campaignSelect:
+        projectSelect:
           any: any project
-          campaign: project "{campaign}"
+          project: project "{project}"
         examples:
           one: Add people who have signed up for events in any project of any type at
             location 'Dorfplatz' at any point in time
@@ -1793,9 +1792,9 @@ feat:
           none: This organization has no surveys yet
           survey: survey "{surveyTitle}"
       task:
-        campaignSelect:
+        projectSelect:
           any: any project
-          campaign: project "{campaign}"
+          project: project "{project}"
           in: ' in '
         examples:
           one: Add people who have completed task "Tell your friends" at least once at any
@@ -1803,7 +1802,7 @@ feat:
           two: Add people who have ignored any task in any project between 2 and 5 times
             before today
         inputString: '{addRemoveSelect} people who have {taskStatusSelect}
-          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
+          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: any task
           task: task "{task}"
@@ -2194,7 +2193,7 @@ feat:
       title: Edit task
     form:
       fields:
-        campaign: Campaign
+        project: Campaign
         deadline: Completion Deadline
         expires: Expiration Date
         instructions: Instructions

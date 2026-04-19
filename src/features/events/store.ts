@@ -54,7 +54,7 @@ export type FilterCategoryType =
 export interface EventsStoreSlice {
   allEventsList: RemoteList<ZetkinEvent>;
   eventList: RemoteList<ZetkinEvent>;
-  eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
+  eventsByProjectId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
   filters: {
     selectedActions: string[];
@@ -80,8 +80,8 @@ export interface EventsStoreSlice {
 const initialState: EventsStoreSlice = {
   allEventsList: remoteList(),
   eventList: remoteList(),
-  eventsByCampaignId: {},
   eventsByDate: {},
+  eventsByProjectId: {},
   filters: {
     selectedActions: [],
     selectedStates: [],
@@ -114,21 +114,6 @@ const eventsSlice = createSlice({
     allEventsUnload: (state) => {
       state.allEventsList = remoteList();
     },
-    campaignEventsLoad: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
-      state.eventsByCampaignId[id] = remoteList<ZetkinEvent>();
-      state.eventsByCampaignId[id].isLoading = true;
-    },
-    campaignEventsLoaded: (
-      state,
-      action: PayloadAction<[number, ZetkinEvent[]]>
-    ) => {
-      const [id, events] = action.payload;
-      const timestamp = new Date().toISOString();
-      addEventToState(state, events);
-      state.eventsByCampaignId[id].isLoading = false;
-      state.eventsByCampaignId[id].loaded = timestamp;
-    },
     eventCreate: (state) => {
       state.eventList.isLoading = true;
     },
@@ -157,8 +142,8 @@ const eventsSlice = createSlice({
         }
       }
 
-      for (const campaignId in state.eventsByCampaignId) {
-        const item = state.eventsByCampaignId[campaignId].items.find(
+      for (const projectId in state.eventsByProjectId) {
+        const item = state.eventsByProjectId[projectId].items.find(
           (item) => item.id === eventId
         );
 
@@ -275,7 +260,7 @@ const eventsSlice = createSlice({
           });
 
           if (event.campaign) {
-            state.eventsByCampaignId[event.campaign.id].items.push(
+            state.eventsByProjectId[event.campaign.id].items.push(
               remoteItem(event.id, { data: event })
             );
           }
@@ -309,7 +294,7 @@ const eventsSlice = createSlice({
           ].items.filter((event) => event.id !== updatedEvent.id);
 
           if (updatedEvent.campaign) {
-            const eventItem = state.eventsByCampaignId[
+            const eventItem = state.eventsByProjectId[
               updatedEvent.campaign.id
             ].items.find((item) => item.id == updatedEvent.id);
             if (eventItem) {
@@ -550,6 +535,21 @@ const eventsSlice = createSlice({
         }
       });
     },
+    projectEventsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.eventsByProjectId[id] = remoteList<ZetkinEvent>();
+      state.eventsByProjectId[id].isLoading = true;
+    },
+    projectEventsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEvent[]]>
+    ) => {
+      const [id, events] = action.payload;
+      const timestamp = new Date().toISOString();
+      addEventToState(state, events);
+      state.eventsByProjectId[id].isLoading = false;
+      state.eventsByProjectId[id].loaded = timestamp;
+    },
     resetSelection: (state) => {
       state.selectedEventIds = [];
     },
@@ -758,21 +758,21 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
     state.eventsByDate[dateStr].isStale = false;
     state.eventsByDate[dateStr].loaded = new Date().toISOString();
 
-    const campaign = event.campaign;
-    if (campaign) {
-      if (!state.eventsByCampaignId[campaign.id]) {
-        state.eventsByCampaignId[campaign.id] = remoteList();
+    const project = event.campaign;
+    if (project) {
+      if (!state.eventsByProjectId[project.id]) {
+        state.eventsByProjectId[project.id] = remoteList();
       }
 
-      const eventByCampIdItem = state.eventsByCampaignId[
-        campaign.id
-      ].items.find((item) => item.id == event.id);
+      const eventByCampIdItem = state.eventsByProjectId[project.id].items.find(
+        (item) => item.id == event.id
+      );
 
       if (eventByCampIdItem) {
         eventByCampIdItem.data = { ...eventByCampIdItem.data, ...event };
         eventByCampIdItem.mutating = [];
       } else {
-        state.eventsByCampaignId[campaign.id].items.push(
+        state.eventsByProjectId[project.id].items.push(
           remoteItem(event.id, { data: event })
         );
       }
@@ -798,7 +798,7 @@ function updateAvailParticipantToState(
   }
 
   if (event.campaign) {
-    const eventByCampIdItem = state.eventsByCampaignId[
+    const eventByCampIdItem = state.eventsByProjectId[
       event.campaign.id
     ].items.find((item) => item.id === event.id);
 
@@ -817,8 +817,8 @@ export const {
   allEventsLoad,
   allEventsLoaded,
   allEventsUnload,
-  campaignEventsLoad,
-  campaignEventsLoaded,
+  projectEventsLoad,
+  projectEventsLoaded,
   eventCreate,
   eventCreated,
   eventDeleted,

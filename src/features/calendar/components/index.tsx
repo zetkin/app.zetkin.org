@@ -35,7 +35,7 @@ const Calendar = () => {
   const router = useRouter();
 
   const orgId = router.query.orgId;
-  const campId = router.query.campId;
+  const projectId = router.query.projectId;
 
   const focusDateStr = router.query.focusDate as string;
   const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
@@ -55,7 +55,7 @@ const Calendar = () => {
       {
         pathname: undefined,
         query: {
-          ...(campId && { campId: campId }),
+          ...(projectId && { projectId: projectId }),
           focusDate: focusedDate,
           orgId: orgId,
           timeScale: timeScale,
