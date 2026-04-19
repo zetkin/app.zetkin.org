@@ -15,7 +15,6 @@ import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
 import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinView } from 'features/views/components/types';
-import useCustomFields from 'features/profile/hooks/useCustomFields';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -110,7 +109,6 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
 
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const viewFuture = useView(parsedOrgId, parsedViewId);
-  const customFieldsFuture = useCustomFields(parsedOrgId);
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -122,12 +120,11 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
     <ZUIFutures
       futures={{
         cols: columnsFuture,
-        customFields: customFieldsFuture,
         rows: rowsFuture,
         view: viewFuture,
       }}
     >
-      {({ data: { cols, customFields, rows, view } }) => (
+      {({ data: { cols, rows, view } }) => (
         <>
           <Head>
             <title>{view.title}</title>
@@ -136,7 +133,6 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
             {!columnsFuture.isLoading ? (
               <ViewDataTable
                 columns={cols}
-                customFields={customFields}
                 disableConfigure={!canConfigure}
                 rows={rows}
                 view={view}

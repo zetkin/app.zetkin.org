@@ -13,7 +13,6 @@ import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinView } from 'features/views/components/types';
-import useCustomFields from 'features/profile/hooks/useCustomFields';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -91,7 +90,6 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   const parsedViewId = parseInt(viewId);
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const viewFuture = useView(parsedOrgId, parsedViewId);
-  const customFieldsFuture = useCustomFields(parsedOrgId);
 
   if (onServer) {
     return null;
@@ -101,12 +99,11 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
     <ZUIFutures
       futures={{
         cols: columnsFuture,
-        customFields: customFieldsFuture,
         rows: rowsFuture,
         view: viewFuture,
       }}
     >
-      {({ data: { cols, customFields, rows, view } }) => (
+      {({ data: { cols, rows, view } }) => (
         <>
           <Head>
             <title>{view.title}</title>
@@ -116,7 +113,6 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
             {!columnsFuture.isLoading || !!columnsFuture.data?.length ? (
               <ViewDataTable
                 columns={cols}
-                customFields={customFields}
                 rows={rows}
                 rowSelection={{
                   mode: 'selectWithBulkActions',
