@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 import { People, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
