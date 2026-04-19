@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import dayjs from 'dayjs';
 
-import { NonEventActivity } from 'features/campaigns/hooks/useClusteredActivities';
+import { NonEventActivity } from 'features/projects/hooks/useClusteredActivities';
 import range from 'utils/range';
 import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
-  CampaignActivity,
+  ProjectActivity,
   EventActivity,
-} from 'features/campaigns/types';
+} from 'features/projects/types';
 
 export function isAllDay(start: string, end: string): boolean {
   const startDate = new Date(removeOffset(start));
@@ -117,7 +117,7 @@ export type MultiDayEventActivity = {
 };
 
 export const getActivitiesByDay = (
-  activities: (CampaignActivity | MultiDayEventActivity)[]
+  activities: (ProjectActivity | MultiDayEventActivity)[]
 ): Record<string, DaySummary> => {
   const dateHashmap: Record<string, DaySummary> = {};
 

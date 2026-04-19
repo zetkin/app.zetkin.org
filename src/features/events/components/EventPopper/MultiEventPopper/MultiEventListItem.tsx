@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 import { ChevronRightOutlined, People } from '@mui/icons-material';
 
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';

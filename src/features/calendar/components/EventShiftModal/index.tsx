@@ -23,7 +23,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   );
 
   const messages = useMessages(messageIds);
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
 
   const [type, setType] = useState<ZetkinEvent['activity']>(null);
   const [eventTitle, setEventTitle] = useState<string>('');
@@ -77,7 +77,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
       createEvent(
         {
           activity_id: type ? type.id : null,
-          campaign_id: campId,
+          campaign_id: projectId,
           end_time: endDate.toISOString(),
           info_text: eventDescription,
           location_id: locationId,

@@ -1,20 +1,20 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
 
-import ActivityList from 'features/campaigns/components/ActivityList';
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
-import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
-import messageIds from 'features/campaigns/l10n/messageIds';
+import ActivityList from 'features/projects/components/ActivityList';
+import AllProjectsLayout from 'features/projects/layout/AllProjectsLayout';
+import FilterActivities from 'features/projects/components/ActivityList/FilterActivities';
+import messageIds from 'features/projects/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useActivityArchive from 'features/campaigns/hooks/useActivityArchive';
+import useActivityArchive from 'features/projects/hooks/useActivityArchive';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import { CampaignActivity } from 'features/campaigns/types';
-import useActivityFilters from 'features/campaigns/hooks/useActivityFilters';
+import { ProjectActivity } from 'features/projects/types';
+import useActivityFilters from 'features/projects/hooks/useActivityFilters';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -55,7 +55,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
           }
 
           const activityTypes = data.map(
-            (activity: CampaignActivity) => activity.kind
+            (activity: ProjectActivity) => activity.kind
           );
           const filterTypes = [...new Set(activityTypes)];
 
@@ -88,7 +88,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
 };
 
 ActivitiesArchivePage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
+  return <AllProjectsLayout>{page}</AllProjectsLayout>;
 };
 
 export default ActivitiesArchivePage;
