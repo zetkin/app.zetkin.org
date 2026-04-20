@@ -314,7 +314,7 @@ const viewsSlice = createSlice({
         state.folderList.items.filter((item) =>
           foldersDeleted.includes(item.id)
         ) || [];
-      deletedFolderItems.forEach((item) => item.deleted);
+      deletedFolderItems.forEach((item) => (item.deleted = true));
       state.folderList.isStale = true;
 
       const deletedViewItems =

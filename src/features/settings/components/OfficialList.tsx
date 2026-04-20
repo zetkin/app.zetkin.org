@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
-import { Button, FormControl, Typography } from '@mui/material';
+import { ArrowDownward, ArrowUpward, InfoOutline } from '@mui/icons-material';
+import { Box, Button, FormControl, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from '../l10n/messageIds';
@@ -14,11 +14,16 @@ import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 interface OfficialListProps {
+  emptyListMessage: string;
   orgId: number;
   officialList: ZetkinMembership[];
 }
 
-const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
+const OfficialList: FC<OfficialListProps> = ({
+  orgId,
+  officialList,
+  emptyListMessage,
+}) => {
   const messages = useMessages(messageIds);
   const { removeAccess, updateRole } = useOfficialMutations(orgId);
   const user = useCurrentUser();
@@ -33,6 +38,22 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
     }
     return a.profile.name.localeCompare(b.profile.name);
   });
+
+  if (sortedOfficialList.length == 0) {
+    return (
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: 4,
+        }}
+      >
+        <InfoOutline color="disabled" fontSize="large" />
+        <Typography color="secondary">{emptyListMessage}</Typography>
+      </Box>
+    );
+  }
 
   const columns: GridColDef[] = [
     {

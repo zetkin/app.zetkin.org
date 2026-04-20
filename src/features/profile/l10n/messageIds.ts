@@ -1,6 +1,9 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.profile', {
+  customFields: {
+    notEditable: m('This field cannot be edited by your organization'),
+  },
   delete: {
     button: m('Delete person'),
     confirm: m<{ name: string; org: string }>(

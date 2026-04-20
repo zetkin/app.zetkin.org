@@ -37,6 +37,13 @@ test.describe('View detail page', () => {
   });
 
   test('lets user delete the view', async ({ page, appUri, moxy }) => {
+    const { log: deleteLog } = moxy.setZetkinApiMock(
+      '/orgs/1/people/views/1',
+      'delete',
+      undefined,
+      204
+    );
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
     moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
@@ -44,39 +51,14 @@ test.describe('View detail page', () => {
       'get',
       AllMembersColumns
     );
-    moxy.setZetkinApiMock('/orgs/1/people/views/1', 'delete', undefined, 204);
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
 
     await page.goto(appUri + '/organize/1/people/lists/1');
 
-    // Wait for navigation after deleting
-    await Promise.all([
-      (async () => {
-        // Check that the request to delete was made successfully
-        await page.waitForResponse(
-          (res) =>
-            res.request().method() === 'DELETE' &&
-            res
-              .request()
-              .url()
-              .includes(`/orgs/1/people/views/${AllMembers.id}`)
-        );
+    await deleteView(page);
 
-        const deleteViewRequest = moxy
-          .log()
-          .find(
-            (mock) =>
-              mock.method === 'DELETE' &&
-              mock.path === `/v1/orgs/1/people/views/${AllMembers.id}`
-          );
-        expect(deleteViewRequest).toBeTruthy();
-      })(),
-      page.waitForNavigation(),
-      deleteView(page),
-    ]);
+    await expect.poll(() => deleteLog().length).toBe(1);
 
-    // Check navigates back to views list
-    await expect(page.url()).toEqual(appUri + `/organize/${KPD.id}/people`);
+    await expect(page).toHaveURL(appUri + `/organize/${KPD.id}/people`);
   });
 
   test('shows error snackbar if error deleting view', async ({

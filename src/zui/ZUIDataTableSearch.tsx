@@ -61,7 +61,8 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
 
   useEffect(() => {
     if (open) {
-      setTimeout(() => textFieldInputRef.current?.focus(), 50);
+      const timerId = setTimeout(() => textFieldInputRef.current?.focus(), 50);
+      return () => clearTimeout(timerId);
     }
   }, [open]);
 

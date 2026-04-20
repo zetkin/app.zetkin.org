@@ -250,12 +250,17 @@ const areaAssignmentSlice = createSlice({
     },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
+      const updateStategy = (itemToUpdate: RemoteItem<ZetkinLocation>) =>
+        ({
+          ...itemToUpdate.data,
+          ...location,
+        } as ZetkinLocation);
 
       Object.values(state.locationsByAssignmentId).forEach((list) => {
-        remoteItemUpdated(list, location);
+        remoteItemUpdated(list, location, updateStategy);
       });
       Object.values(state.locationsByAssignmentIdAndAreaId).forEach((list) => {
-        remoteItemUpdated(list, location);
+        remoteItemUpdated(list, location, updateStategy);
       });
     },
     locationsLoad: (state, action: PayloadAction<string>) => {
@@ -281,9 +286,7 @@ const areaAssignmentSlice = createSlice({
 
       const [assignmentIdStr] = key.split(':');
       const assignmentId = Number(assignmentIdStr);
-      state.locationsByAssignmentId[assignmentId] = remoteListLoad(
-        state.locationsByAssignmentId[assignmentId]
-      );
+      state.locationsByAssignmentId[assignmentId] = remoteListLoaded(locations);
     },
     metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
       const [assignmentId, metric] = action.payload;
