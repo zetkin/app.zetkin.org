@@ -60,6 +60,10 @@ export default makeMessages('feat.emails', {
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
         },
+        theme: {
+          themeTitle: m<{ themeId: number }>('Theme {themeId}'),
+          title: m('Theme'),
+        },
       },
     },
     tools: {
@@ -240,6 +244,41 @@ export default makeMessages('feat.emails', {
     ),
     unlockButton: m('Unlock'),
     viewButton: m('View target group'),
+  },
+  themes: {
+    themeCard: {
+      delete: m('Delete'),
+      edit: m('Edit'),
+      title: m<{ themeId: number }>('Theme {themeId}'),
+    },
+    themeEditor: {
+      editTitle: m('Edit'),
+      jsonError: m('Invalid JSON'),
+      previewTitle: m('Preview'),
+      saveButton: m('Save'),
+      tabs: {
+        block: m('Block'),
+        css: m('CSS'),
+        frame: m('Frame'),
+      },
+      title: m<{ themeId: number }>('Theme {themeId}'),
+    },
+    themePreview: {
+      button: m('I am a button.'),
+      heading: {
+        1: m('I am a heading 1'),
+        2: m('I am a heading 2'),
+        3: m('I am a heading 3'),
+      },
+      paragraph: {
+        1: m('I am a paragraph with '),
+        2: m(', '),
+        3: m(' text and an '),
+        bold: m('bold'),
+        italic: m('italic'),
+        link: m('external link'),
+      },
+    },
   },
   unsubscribePage: {
     consent: m('I understand'),

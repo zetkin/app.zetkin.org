@@ -171,6 +171,13 @@ export type EmailTheme = {
   css?: string;
   frame_mjml: MJMLJsonObject | null;
   id: number;
+  org_id?: number;
+};
+
+export type EmailThemePatchBody = {
+  block_attributes?: EmailTheme['block_attributes'];
+  css?: EmailTheme['css'];
+  frame_mjml?: EmailTheme['frame_mjml'];
 };
 
 export type ZetkinEmailRecipient = {
