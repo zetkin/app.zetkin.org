@@ -1,4 +1,4 @@
-import { Box } from '@mui/system';
+import { Box, lighten } from '@mui/system';
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
@@ -67,6 +67,7 @@ const CurrentTimeLineMarker = ({
 }: {
   currentTime: dayjs.Dayjs;
 }) => {
+  const theme = useTheme();
   const topOffset =
     (currentTime.hour() +
       currentTime.minute() / 60 +
@@ -78,13 +79,13 @@ const CurrentTimeLineMarker = ({
         top: `${topOffset}px`,
       }}
       sx={{
-        backgroundColor: '#FA4274',
+        backgroundColor: lighten(theme.palette.primary.main, 0.4),
         height: '2px',
         mixBlendMode: 'multiply',
         opacity: 0.5,
         position: 'absolute',
         translate: '0 -50%',
-        width: 'calc((100% + 7px) * 7)',
+        width: 'calc((100% + 7px) * 7 - 1px)',
         zIndex: 1000,
       }}
     />
