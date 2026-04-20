@@ -44,8 +44,8 @@ const UnfinishedCallsList: FC<{
   const { abandonUnfinishedCall, switchToUnfinishedCall } =
     useCallMutations(orgId);
 
-  const currentCall = useCurrentCall();
-  const unfinishedCalls = useUnfinishedCalls();
+  const currentCall = useCurrentCall(orgId);
+  const unfinishedCalls = useUnfinishedCalls(orgId);
 
   const unfinishedExceptCurrentCall = unfinishedCalls.filter((call) =>
     currentCall ? currentCall.id != call.id : true
@@ -107,7 +107,7 @@ const FinishedCallsList: FC<{
 }> = ({ onCall, orgId, searchString }) => {
   const messages = useMessages(messageIds);
   const { switchToPreviousCall } = useCallMutations(orgId);
-  const { loading, finishedCalls } = useFinishedCalls();
+  const { loading, finishedCalls } = useFinishedCalls(orgId);
 
   const fuse = useMemo(() => {
     return new Fuse(finishedCalls, {

@@ -50,7 +50,7 @@ export default function useAreaAssignmentMutations(
       await apiClient.delete(
         `/api2/orgs/${orgId}/area_assignments/${areaAssId}`
       );
-      dispatch(areaAssignmentDeleted(areaAssId));
+      dispatch(areaAssignmentDeleted([orgId, areaAssId]));
     },
     deleteMetric: async (metricId: number) => {
       await apiClient.delete(
@@ -77,7 +77,7 @@ export default function useAreaAssignmentMutations(
         ZetkinAreaAssignmentPatchbody
       >(`/api2/orgs/${orgId}/area_assignments/${areaAssId}`, data);
 
-      dispatch(areaAssignmentUpdated(updated));
+      dispatch(areaAssignmentUpdated([orgId, updated]));
     },
     updateMetric: async (metricId: number, data: ZetkinMetricPatchBody) => {
       const updated = await apiClient.patch<

@@ -7,11 +7,11 @@ import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 export default function useAreas(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const list = useAppSelector((state) => state.areas.areaList);
+  const list = useAppSelector((state) => state.areas.areasByOrgId[orgId]);
 
   return loadListIfNecessary(list, dispatch, {
-    actionOnLoad: () => areasLoad(),
-    actionOnSuccess: (data) => areasLoaded(data),
+    actionOnLoad: () => areasLoad(orgId),
+    actionOnSuccess: (data) => areasLoaded([orgId, data]),
     loader: async () =>
       fetchAllPaginated<Zetkin2Area>((page) =>
         apiClient.get(`/api2/orgs/${orgId}/areas?size=100&page=${page}`)

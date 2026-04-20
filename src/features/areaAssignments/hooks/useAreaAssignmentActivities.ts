@@ -20,7 +20,7 @@ export default function useAreaAssignmentActivities(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const list = useAppSelector(
-    (state) => state.areaAssignments.areaAssignmentList
+    (state) => state.areaAssignments.areaAssignmentsByOrgId[orgId]
   );
 
   const hasAreaAssignments = useFeature(AREAS);
@@ -29,8 +29,8 @@ export default function useAreaAssignmentActivities(
   }
 
   const future = loadListIfNecessary(list, dispatch, {
-    actionOnLoad: () => areaAssignmentsLoad(),
-    actionOnSuccess: (data) => areaAssignmentsLoaded(data),
+    actionOnLoad: () => areaAssignmentsLoad(orgId),
+    actionOnSuccess: (data) => areaAssignmentsLoaded([orgId, data]),
     loader: () =>
       apiClient.get<ZetkinAreaAssignment[]>(
         `/api2/orgs/${orgId}/area_assignments`
