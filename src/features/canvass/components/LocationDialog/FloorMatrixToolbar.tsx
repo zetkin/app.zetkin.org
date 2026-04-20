@@ -47,8 +47,8 @@ const FloorMatrixToolbar: FC<Props> = ({
   const mode = draftFloors
     ? 'edit'
     : selectedHouseholdIds
-    ? 'select'
-    : 'browse';
+      ? 'select'
+      : 'browse';
 
   return (
     <Box

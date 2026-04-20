@@ -2,16 +2,16 @@ import UndoIcon from '@mui/icons-material/Undo';
 import {
   Box,
   FormControl,
+  FormHelperText,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers-pro';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { FC } from 'react';
 
-import { Msg, useMessages } from 'core/i18n';
 import globalMessageIds from 'core/i18n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import { makeNaiveDateString } from 'utils/dateUtils';
@@ -26,6 +26,8 @@ import messageIds from 'zui/l10n/messageIds';
 import PersonLngLatFieldInput from 'zui/ZUICreatePerson/PersonLngLatFieldInput';
 import useCustomFields from '../../hooks/useCustomFields';
 import EditPersonField from './EditPersonField';
+import { Msg, useMessages } from 'core/i18n';
+import profileMessageIds from 'features/profile/l10n/messageIds';
 
 enum GENDERS {
   FEMALE = 'f',
@@ -53,9 +55,16 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
 }) => {
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
+  const profileMessages = useMessages(profileMessageIds);
 
   return (
-    <Box display="flex" flexDirection="column" gap={2} paddingTop={1}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap={2}
+      paddingRight={1}
+      paddingTop={1}
+    >
       <Box display="flex" gap={2}>
         <EditPersonField
           error={invalidFields.includes(NATIVE_PERSON_FIELDS.FIRST_NAME)}
@@ -182,20 +191,26 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         const fieldValue = fieldValues[field.slug];
 
         if (field.type === CUSTOM_FIELD_TYPE.JSON) {
-          return;
+          return null;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
           return (
-            <Box display="flex">
+            <Box key={field.slug} display="flex">
               <DatePicker
                 key={field.slug}
                 disabled={!isFieldWritable}
-                format="DD-MM-YYYY"
                 label={field.title}
-                onChange={(date: Dayjs | null) => {
+                onChange={(date) => {
                   if (date) {
                     const dateStr = makeNaiveDateString(date.utc().toDate());
                     onChange(field.slug, dateStr);
                   }
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: !isFieldWritable
+                      ? profileMessages.customFields.notEditable()
+                      : '',
+                  },
                 }}
                 sx={{ width: '100%' }}
                 value={fieldValue ? dayjs(fieldValue.toString()) : null}
@@ -215,6 +230,11 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               error={invalidFields.includes(field.slug)}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
+              helperText={
+                !isFieldWritable
+                  ? profileMessages.customFields.notEditable()
+                  : ''
+              }
               isURLField
               label={field.title}
               onChange={(field, newValue) => {
@@ -230,8 +250,13 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           field.enum_choices
         ) {
           return (
-            <Box alignItems="flex-start" display="flex" flex={1}>
-              <FormControl fullWidth>
+            <Box
+              key={field.slug}
+              alignItems="flex-start"
+              display="flex"
+              flex={1}
+            >
+              <FormControl disabled={!isFieldWritable} fullWidth>
                 <InputLabel>{field.title}</InputLabel>
                 <Select
                   key={field.slug}
@@ -256,6 +281,11 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                     </MenuItem>
                   ))}
                 </Select>
+                {!isFieldWritable && (
+                  <FormHelperText>
+                    <Msg id={profileMessageIds.customFields.notEditable} />
+                  </FormHelperText>
+                )}
               </FormControl>
             </Box>
           );
@@ -280,6 +310,11 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               disabled={!isFieldWritable}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
+              helperText={
+                !isFieldWritable
+                  ? profileMessages.customFields.notEditable()
+                  : ''
+              }
               label={field.title}
               onChange={(field, newValue) => onChange(field, newValue)}
               onReset={() => onReset(field.slug)}

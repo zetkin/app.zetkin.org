@@ -17,7 +17,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "paths": {"*": ["./src/*"]},
+    "paths": { "*": ["./src/*"] },
     "incremental": true,
     "plugins": [
       {

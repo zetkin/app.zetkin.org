@@ -4,6 +4,7 @@ import {
   FC,
   HTMLAttributes,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -89,10 +90,35 @@ const ListboxComponent = React.forwardRef<
   const itemData: ItemData = [];
   const optionIndexMap = React.useMemo(() => new Map<string, number>(), []);
 
-  (children as ItemData).forEach((item) => {
-    if ('group' in item && item.group.trim() !== '') {
-      itemData.push(item);
+  const addGroupHeader = (
+    groupItem: {
+      children: React.ReactNode;
+      group: string;
+      key: number;
+    },
+    index: number
+  ) => {
+    const isPinnedGroup = groupItem.group.trim() === 'pinned';
+    const isEmptyGroup = groupItem.group.trim() === '';
+    const isFirstElement = index === 0;
+
+    if (isPinnedGroup) {
+      return;
     }
+
+    if (isEmptyGroup && isFirstElement) {
+      return;
+    }
+
+    itemData.push(groupItem);
+  };
+
+  (children as ItemData).forEach((item, index) => {
+    const isGroupItem = 'group' in item;
+    if (isGroupItem) {
+      addGroupHeader(item, index);
+    }
+
     if ('children' in item && Array.isArray(item.children)) {
       itemData.push(...item.children);
     }
@@ -119,8 +145,8 @@ const ListboxComponent = React.forwardRef<
   const itemSize = smUp ? 36 : 48;
 
   const getChildSize = (child: ItemData[number]) => {
-    if (Object.prototype.hasOwnProperty.call(child, 'group')) {
-      return 48;
+    if ('group' in child) {
+      return child.group === '' ? 24 : 48;
     }
     return itemSize;
   };
@@ -178,11 +204,12 @@ type Item = {
 };
 
 type Props = {
+  clearable?: boolean;
   items: Item[];
   minWidth?: string;
   onChange?: (
     event: React.SyntheticEvent & { target: { value: string } },
-    value: AutocompleteValue<Item, false, true, false>,
+    value: AutocompleteValue<Item, false, boolean, false>,
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<Item>
   ) => void;
@@ -212,15 +239,6 @@ const StyledAutocomplete: FC<Props> = (props) => {
 
           return ret;
         })
-        .map((item) => {
-          if (item.group === 'pinned') {
-            return {
-              id: item.id,
-              label: item.label,
-            };
-          }
-          return item;
-        })
         .map((item) => ({
           ...item,
           label: item.label.trim(),
@@ -228,15 +246,24 @@ const StyledAutocomplete: FC<Props> = (props) => {
     [props.items]
   );
 
-  const valueItem = useMemo(
-    () =>
-      props.value === undefined
-        ? props.items.length === 0
-          ? undefined
-          : props.items[0]
-        : options.find((item) => item.id === props.value),
-    [props.value, options, props.items]
-  );
+  const valueItem = useMemo(() => {
+    if (props.value !== undefined) {
+      const matchingValue = options.find((item) => item.id === props.value);
+      if (matchingValue) {
+        return matchingValue;
+      }
+    }
+
+    if (props.clearable) {
+      return null;
+    }
+
+    if (props.items.length === 0) {
+      return undefined;
+    }
+
+    return props.items[0];
+  }, [props.value, props.clearable, props.items, options]);
 
   // Use react-window v2's useListRef hook for imperative API access
   const internalListRef = useListRef(null);
@@ -262,12 +289,18 @@ const StyledAutocomplete: FC<Props> = (props) => {
     }
   };
 
-  const [inputValue, setInputValue] = useState(valueItem?.label);
+  const [inputValue, setInputValue] = useState(valueItem?.label ?? '');
+
+  useEffect(() => {
+    if (valueItem) {
+      setInputValue(valueItem.label);
+    }
+  }, [valueItem]);
 
   const onChange = useCallback(
     (
       event: React.SyntheticEvent,
-      value: AutocompleteValue<Item, false, true, false>,
+      value: AutocompleteValue<Item, false, boolean, false>,
       reason: AutocompleteChangeReason,
       details?: AutocompleteChangeDetails<Item>
     ) => {
@@ -287,13 +320,14 @@ const StyledAutocomplete: FC<Props> = (props) => {
     [props]
   );
 
-  if (!valueItem) {
+  if (valueItem === undefined) {
     return null;
   }
 
   return (
     <Autocomplete
-      disableClearable={true}
+      clearIcon={null}
+      disableClearable={!props.clearable}
       disableListWrap
       groupBy={(option) => option.group ?? ''}
       inputValue={inputValue}
@@ -344,7 +378,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         } as SlotProps<
           ComponentType<HTMLAttributes<HTMLUListElement>>,
           unknown,
-          AutocompleteOwnerState<Item, false, true, false, 'div'>
+          AutocompleteOwnerState<Item, false, boolean, false, 'div'>
         >,
         popper: {
           placement: 'bottom-start',
@@ -404,6 +438,10 @@ const StyledAutocomplete: FC<Props> = (props) => {
         '& .MuiSvgIcon-root:hover': {
           color: 'rgba(0, 0, 0, 0.54)',
         },
+        '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root':
+          {
+            padding: 0,
+          },
         display: 'inline-block',
         minWidth: props.minWidth,
         verticalAlign: 'bottom',
