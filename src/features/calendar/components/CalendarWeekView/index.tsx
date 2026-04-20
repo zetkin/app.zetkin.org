@@ -9,7 +9,6 @@ import {
   Menu,
   MenuItem,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -33,12 +32,12 @@ dayjs.extend(isoWeek);
 
 const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '60px';
+
 const CurrentTimeCircleMarker = ({
   currentTime,
 }: {
   currentTime: dayjs.Dayjs;
 }) => {
-  const theme = useTheme();
   const topOffset =
     (currentTime.hour() +
       currentTime.minute() / 60 +
@@ -46,28 +45,26 @@ const CurrentTimeCircleMarker = ({
     HOUR_HEIGHT;
   return (
     <Box
-      style={{
-        top: `${topOffset}px`,
-      }}
-      sx={{
+      sx={(theme) => ({
         backgroundColor: theme.palette.primary.main,
         border: '2px solid white',
         borderRadius: '100%',
         height: '14px',
         position: 'absolute',
+        top: `${topOffset}px`,
         translate: '-30% -50%',
         width: '14px',
         zIndex: 1000,
-      }}
+      })}
     />
   );
 };
+
 const CurrentTimeLineMarker = ({
   currentTime,
 }: {
   currentTime: dayjs.Dayjs;
 }) => {
-  const theme = useTheme();
   const topOffset =
     (currentTime.hour() +
       currentTime.minute() / 60 +
@@ -75,19 +72,17 @@ const CurrentTimeLineMarker = ({
     HOUR_HEIGHT;
   return (
     <Box
-      style={{
-        top: `${topOffset}px`,
-      }}
-      sx={{
+      sx={(theme) => ({
         backgroundColor: lighten(theme.palette.primary.main, 0.4),
         height: '2px',
         mixBlendMode: 'multiply',
         opacity: 0.5,
         position: 'absolute',
+        top: `${topOffset}px`,
         translate: '0 -50%',
         width: 'calc((100% + 7px) * 7 - 1px)',
         zIndex: 1000,
-      }}
+      })}
     />
   );
 };
@@ -97,7 +92,6 @@ export interface CalendarWeekViewProps {
   onClickDay: (date: Date) => void;
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
-  const theme = useTheme();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
@@ -218,7 +212,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 height={`${HOUR_HEIGHT}px`}
                 justifyContent="flex-end"
               >
-                <Typography color={theme.palette.grey[500]} variant="caption">
+                <Typography color="textDisabled" variant="caption">
                   <FormattedTime hour="numeric" minute="numeric" value={time} />
                 </Typography>
               </Box>
@@ -267,10 +261,10 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 }}
                 flexGrow={1}
                 height={`${HOUR_HEIGHT * 24}px`}
-                sx={{
+                sx={(theme) => ({
                   backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}px)`,
                   overflow: 'hidden', // Will prevent the ghostElement to expand the size of the calender, showing vertical scrollbar and whitespace underneath calender #issue-#1614
-                }}
+                })}
               >
                 <EventDayLane
                   onCreate={(startTime, endTime) => {
