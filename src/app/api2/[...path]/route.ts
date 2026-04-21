@@ -18,12 +18,21 @@ export const PATCH = proxy;
 export const PUT = proxy;
 export const DELETE = proxy;
 
-async function safeJson(response: Response): Promise<any> {
+async function safeJson<T = unknown>(response: Response): Promise<T | null> {
   try {
-    return await response.json();
+    return (await response.json()) as T;
   } catch {
     return null;
   }
+}
+
+function hasInvalidTokenError(payload: unknown): boolean {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+
+  const error = (payload as { error?: unknown }).error;
+  return typeof error === 'string' && error.includes('invalid_token');
 }
 
 async function proxy(
@@ -81,7 +90,7 @@ async function proxy(
   let payload = await safeJson(zetkinResponse);
 
   if (zetkinResponse.status === 401) {
-    if (payload?.error?.includes('invalid_token')) {
+    if (hasInvalidTokenError(payload)) {
       if (session.tokenData?.refresh_token) {
         const refreshData = new URLSearchParams({
           grant_type: 'refresh_token',

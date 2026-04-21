@@ -42,7 +42,7 @@ if (typeof HTMLCanvasElement !== 'undefined') {
         'moveTo',
         'lineTo',
         'stroke',
-        'fill',
+        'fill'
       ];
 
       type MockCanvasContext = Pick<
