@@ -248,7 +248,10 @@ const StyledAutocomplete: FC<Props> = (props) => {
 
   const valueItem = useMemo(() => {
     if (props.value !== undefined) {
-      return options.find((item) => item.id === props.value);
+      const matchingValue = options.find((item) => item.id === props.value);
+      if (matchingValue) {
+        return matchingValue;
+      }
     }
 
     if (props.clearable) {

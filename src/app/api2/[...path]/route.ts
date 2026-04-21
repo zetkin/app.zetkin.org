@@ -18,6 +18,14 @@ export const PATCH = proxy;
 export const PUT = proxy;
 export const DELETE = proxy;
 
+async function safeJson(response: Response): Promise<any> {
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
 async function proxy(
   request: NextRequest,
   context: Context
@@ -70,10 +78,10 @@ async function proxy(
   }
 
   let zetkinResponse: Response = await makeZetkinApiRequest();
+  let payload = await safeJson(zetkinResponse);
 
   if (zetkinResponse.status === 401) {
-    const errorPayload = await zetkinResponse.json();
-    if (errorPayload.error?.includes('invalid_token')) {
+    if (payload?.error?.includes('invalid_token')) {
       if (session.tokenData?.refresh_token) {
         const refreshData = new URLSearchParams({
           grant_type: 'refresh_token',
@@ -91,12 +99,11 @@ async function proxy(
           method: 'POST',
         });
 
-        const payload = await refreshResponse.json();
-
-        session.tokenData = payload;
+        session.tokenData = await refreshResponse.json();
         await session.save();
 
         zetkinResponse = await makeZetkinApiRequest();
+        payload = await safeJson(zetkinResponse);
       }
     }
   }
@@ -104,8 +111,6 @@ async function proxy(
   if (zetkinResponse.status === 204) {
     return new NextResponse(null, { status: 204 });
   } else {
-    const zetkinPayload = await zetkinResponse.json();
-
-    return NextResponse.json(zetkinPayload, { status: zetkinResponse.status });
+    return NextResponse.json(payload, { status: zetkinResponse.status });
   }
 }

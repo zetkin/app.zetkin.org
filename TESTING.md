@@ -37,3 +37,8 @@ import { render, fireEvent } from 'test-utils';
 ```
 
 The `react-intl` setup in tests does not render the text in the components and instead **renders the i18n string id**. When attempting to target strings in tests, search for the id that you expect, not the translated text.
+
+## Further Reading
+
+- [Jest Testing](docs/testing/jest.md) - Unit test patterns and conventions
+- [Playwright Testing](docs/testing/playwright.md) - Integration test patterns and conventions

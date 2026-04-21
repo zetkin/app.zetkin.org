@@ -51,6 +51,7 @@ const LazyActivitiesBox = ({
     });
 
     observer.observe(boxRef.current);
+    return () => observer.disconnect();
   }, [boxRef]);
 
   return inView ? (

@@ -45,14 +45,9 @@ test.describe('Journey instance details page', () => {
 
       await page.goto(appUri + '/organize/1/journeys/1/1');
 
-      await Promise.all([
-        // Wait for request to resolve
-        page.waitForResponse(
-          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
-        ),
-        // Click close instance button
-        reopenButton.click(),
-      ]);
+      await reopenButton.click();
+
+      await expect.poll(() => patchInstanceMock.log().length).toBe(1);
 
       await openStatus.waitFor({ state: 'visible' });
 

@@ -115,6 +115,7 @@ const PersonLngLatMap: FC<Props> = ({
           if (isLngLatValue(fieldValue)) {
             return (
               <Marker
+                key={field.slug}
                 anchor="bottom"
                 draggable={false}
                 latitude={fieldValue.lat}

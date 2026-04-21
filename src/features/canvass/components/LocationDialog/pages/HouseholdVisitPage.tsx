@@ -9,7 +9,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { Undo } from '@mui/icons-material';
+import { Check, Close, Undo } from '@mui/icons-material';
 import { FC, useEffect, useState } from 'react';
 
 import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
@@ -202,6 +202,12 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                         key={option.value.toString()}
                         value={option.value}
                       >
+                        {metric.defines_success && option.value === 'yes' && (
+                          <Check sx={{ marginRight: 1 }} />
+                        )}
+                        {metric.defines_success && option.value === 'no' && (
+                          <Close sx={{ marginRight: 1 }} />
+                        )}
                         {option.label}
                       </ToggleButton>
                     ))}
