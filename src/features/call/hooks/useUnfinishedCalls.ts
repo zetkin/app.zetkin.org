@@ -11,10 +11,9 @@ export default function useUnfinishedCalls(): UnfinishedCall[] {
     actionOnLoad: () => unfinishedCallsLoad(),
     actionOnSuccess: (data) => unfinishedCallsLoaded(data),
     loader: () => {
-      return apiClient.get<
-        UnfinishedCall[]
-      >(`/api/users/me/outgoing_calls?p=0&pp=200&filter=state==0
-        `);
+      return apiClient.get<UnfinishedCall[]>(
+        '/api/users/me/outgoing_calls?p=0&pp=200&filter=state===0'
+      );
     },
   });
 }

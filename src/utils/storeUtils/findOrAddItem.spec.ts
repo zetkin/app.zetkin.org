@@ -29,6 +29,16 @@ describe('findOrAddItem', () => {
     expect(result.id === existingId).toBeTruthy();
   });
 
+  it('Treats number and string IDs with same value as same item', () => {
+    const numericId = 123;
+    const list = remoteList([{ id: numericId, value: 'Existing value' }]);
+
+    const result = findOrAddItem(list, '123');
+
+    expect(list.items).toHaveLength(1);
+    expect(result.id).toBe(numericId);
+  });
+
   it('Sets loaded field to recent time for a created item', () => {
     const list = remoteList();
     const testDate = new Date('2020-01-01');

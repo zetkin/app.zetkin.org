@@ -91,8 +91,9 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
               return cell ? cell.d || cell.w || cell.v : undefined;
             });
 
-            // Only include if there are non-null values in the row
-            if (rowValues.find((v) => v !== null)) {
+            const rowHasValues = rowValues.some((v) => !!v);
+
+            if (rowHasValues) {
               table.rows.push({
                 data: rowValues.flat(),
               });
