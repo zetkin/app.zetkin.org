@@ -73,6 +73,15 @@ const breadcrumbs = async (
   }
 };
 
+function unwrapEnvelope<T>(value: unknown): T | null {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+
+  const maybeEnvelope = value as { data?: unknown };
+  return (maybeEnvelope.data ?? value) as T;
+}
+
 async function fetchElements(
   basePath: string,
   fieldName: string,
@@ -81,52 +90,59 @@ async function fetchElements(
   apiFetch: ApiFetch
 ): Promise<BreadcrumbElement[]> {
   if (fieldName === 'orgId') {
-    const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
+    const orgRes = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
+    const org = unwrapEnvelope<{ title?: string }>(orgRes);
     return [
       {
         href: basePath + '/' + fieldValue + '/projects',
-        label: org.data.title,
+        label: org?.title ?? '…',
       },
     ];
   } else if (fieldName === 'personId') {
-    const person = await apiFetch(`/orgs/${orgId}/people/${fieldValue}`).then(
-      (res) => res.json()
-    );
+    const personRes = await apiFetch(
+      `/orgs/${orgId}/people/${fieldValue}`
+    ).then((res) => res.json());
+    const person =
+      unwrapEnvelope<{ first_name?: string; last_name?: string }>(personRes);
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: `${person.data.first_name} ${person.data.last_name}`,
+        label: `${person?.first_name ?? ''} ${person?.last_name ?? ''}`.trim(),
       },
     ];
   } else if (fieldName === 'campId') {
     // check if the value is a numeric ID, as `fieldValue` could also be passed as 'standalone' or 'shared'
     if (isInteger(fieldValue)) {
-      const campaign = await apiFetch(
+      const campaignRes = await apiFetch(
         `/orgs/${orgId}/campaigns/${fieldValue}`
       ).then((res) => res.json());
+      const campaign = unwrapEnvelope<{ title?: string }>(campaignRes);
       return [
         {
           href: basePath + '/' + fieldValue,
-          label: campaign.data.title,
+          label: campaign?.title ?? '…',
         },
       ];
     }
   } else if (fieldName === 'taskId') {
-    const task = await apiFetch(`/orgs/${orgId}/tasks/${fieldValue}`).then(
+    const taskRes = await apiFetch(`/orgs/${orgId}/tasks/${fieldValue}`).then(
       (res) => res.json()
     );
+    const task = unwrapEnvelope<{ title?: string }>(taskRes);
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: task.data.title,
+        label: task?.title ?? '…',
       },
     ];
   } else if (fieldName === 'viewId') {
-    const view = await apiFetch(
+    const viewRes = await apiFetch(
       `/orgs/${orgId}/people/views/${fieldValue}`
     ).then((res) => res.json());
+    const view =
+      unwrapEnvelope<{ folder?: { id?: number }; title?: string }>(viewRes);
 
-    const folderId = view.data?.folder?.id;
+    const folderId = view?.folder?.id;
     const folderElements = folderId
       ? await fetchFolders(folderId, basePath, orgId, apiFetch)
       : [];
@@ -135,60 +151,74 @@ async function fetchElements(
       ...folderElements,
       {
         href: basePath + '/' + fieldValue,
-        label: view.data.title,
+        label: view?.title ?? '…',
       },
     ];
   } else if (fieldName === 'instanceId') {
-    const journeyInstance = await apiFetch(
+    const journeyInstanceRes = await apiFetch(
       `/orgs/${orgId}/journey_instances/${fieldValue}`
     ).then((res) => res.json());
+    const journeyInstance = unwrapEnvelope<{
+      id?: number | string;
+      journey?: { title?: string };
+      title?: string;
+    }>(journeyInstanceRes);
+
+    const labelTitle =
+      journeyInstance?.title ?? journeyInstance?.journey?.title ?? '';
+    const labelId = journeyInstance?.id ?? fieldValue;
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: `${
-          journeyInstance.data.title || journeyInstance.data.journey.title
-        } #${journeyInstance.data.id}`,
+        label: `${labelTitle} #${labelId}`.trim(),
       },
     ];
   } else if (fieldName === 'journeyId') {
-    const journey = await apiFetch(
+    const journeyRes = await apiFetch(
       `/orgs/${orgId}/journeys/${fieldValue}`
     ).then((res) => res.json());
+    const journey = unwrapEnvelope<{ title?: string }>(journeyRes);
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: journey.data.title,
+        label: journey?.title ?? '…',
       },
     ];
   } else if (fieldName === 'callAssId') {
-    const assignment = await apiFetch(
+    const assignmentRes = await apiFetch(
       `/orgs/${orgId}/call_assignments/${fieldValue}`
     ).then((res) => res.json());
+    const assignment = unwrapEnvelope<{ title?: string }>(assignmentRes);
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: assignment.data.title,
+        label: assignment?.title ?? '…',
       },
     ];
   } else if (fieldName === 'surveyId') {
-    const survey = await apiFetch(`/orgs/${orgId}/surveys/${fieldValue}`).then(
-      (res) => res.json()
-    );
+    const surveyRes = await apiFetch(
+      `/orgs/${orgId}/surveys/${fieldValue}`
+    ).then((res) => res.json());
+    const survey = unwrapEnvelope<{ title?: string }>(surveyRes);
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: survey.data.title,
+        label: survey?.title ?? '…',
       },
     ];
   } else if (fieldName === 'eventId') {
-    const event = await apiFetch(`/orgs/${orgId}/actions/${fieldValue}`).then(
-      (res) => res.json()
-    );
-    if (event.data.title || event.data.activity?.title) {
+    const eventRes = await apiFetch(
+      `/orgs/${orgId}/actions/${fieldValue}`
+    ).then((res) => res.json());
+    const event =
+      unwrapEnvelope<{ activity?: { title?: string }; title?: string }>(
+        eventRes
+      );
+    if (event?.title || event?.activity?.title) {
       return [
         {
           href: basePath + '/' + fieldValue,
-          label: event.data.title || event.data.activity?.title,
+          label: event?.title || event?.activity?.title || '…',
         },
       ];
     } else {
@@ -209,13 +239,14 @@ async function fetchElements(
     );
     return folderElements;
   } else if (fieldName === 'emailId') {
-    const email = await apiFetch(`/orgs/${orgId}/emails/${fieldValue}`).then(
+    const emailRes = await apiFetch(`/orgs/${orgId}/emails/${fieldValue}`).then(
       (res) => res.json()
     );
+    const email = unwrapEnvelope<{ title?: string }>(emailRes);
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: email.data.title,
+        label: email?.title ?? '…',
       },
     ];
   }

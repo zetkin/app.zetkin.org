@@ -9,9 +9,14 @@ export function findOrAddItem<DataType extends RemoteData>(
   list: RemoteList<DataType>,
   id: number | string
 ): RemoteItem<DataType> {
-  const existingItem = list.items.find(
-    (item) => item.id.toString() === id.toString()
-  );
+  const existingItem = list.items.find((item) => {
+    const itemId = item.id;
+    return (
+      itemId !== undefined &&
+      itemId !== null &&
+      itemId.toString() === id.toString()
+    );
+  });
   if (existingItem) {
     return existingItem;
   } else {

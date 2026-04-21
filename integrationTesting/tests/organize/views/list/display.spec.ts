@@ -32,6 +32,7 @@ test.describe('Views list page', () => {
     appUri,
     moxy,
   }) => {
+    // getServerSideProps verifies that the user may access views
     moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [
       AllMembers,
@@ -46,9 +47,32 @@ test.describe('Views list page', () => {
       },
     ]);
 
+    // ViewBrowser loads items via Next API endpoint /api/views/tree
+    let treeCalls = 0;
+    await page.route(/\/api\/views\/tree\?orgId=1\b/, async (route) => {
+      treeCalls += 1;
+      await route.fulfill({
+        json: {
+          data: {
+            folders: [],
+            views: [
+              AllMembers,
+              {
+                created: '2021-11-21T12:59:19',
+                id: 2,
+                owner: { id: 1, name: 'Rosa Luxemburg' },
+                title: 'Second View',
+              },
+            ],
+          },
+        },
+      });
+    });
+
     const rows = page.locator('.MuiDataGrid-row');
 
     await page.goto(appUri + '/organize/1/people');
+    await expect.poll(() => treeCalls).toBeGreaterThan(0);
     await rows.first().waitFor({ state: 'visible' });
 
     const numRows = await rows.count();

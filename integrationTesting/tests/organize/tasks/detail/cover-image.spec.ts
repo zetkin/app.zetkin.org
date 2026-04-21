@@ -77,11 +77,9 @@ test.describe('Task detail page', () => {
 
     await page.locator('data-testid=TaskPreviewSection-section').waitFor();
 
-    expect(
-      await page
-        .locator('data-testid=TaskPreviewSection-section >> img')
-        .isVisible()
-    ).toBeTruthy();
+    await expect(
+      page.locator('data-testid=TaskPreviewSection-section >> img')
+    ).toBeVisible();
   });
 
   test('lets user reset cover image', async ({
