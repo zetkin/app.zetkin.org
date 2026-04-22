@@ -25,7 +25,7 @@ import {
   CUSTOM_FIELD_TYPE,
   ZetkinAppliedTag,
   ZetkinCreatePerson,
-  ZetkinCustomFieldValue,
+  ZetkinLngLatFieldValue,
 } from 'utils/types/zetkin';
 import messageIds from 'zui/l10n/messageIds';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
@@ -289,8 +289,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 field={field.slug}
                 label={field.title}
                 onChange={onChange}
-                required={false}
-                value={fieldValue as ZetkinCustomFieldValue}
+                value={fieldValue as unknown as ZetkinLngLatFieldValue}
               />
             );
           } else {

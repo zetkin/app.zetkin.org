@@ -3,27 +3,23 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { Box, BoxProps } from '@mui/material';
 import Map, { Marker } from '@vis.gl/react-maplibre';
 import { LngLatBounds, Map as MapType } from 'maplibre-gl';
-import { FC, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { isLngLatValue } from 'utils/mapUtils';
-import {
-  CUSTOM_FIELD_TYPE,
-  ZetkinCustomField,
-  ZetkinPerson,
-} from 'utils/types/zetkin';
+import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 import ZUIMapControls from 'zui/ZUIMapControls';
 
 type Props = {
-  customFields: ZetkinCustomField[];
   height?: BoxProps['height'];
+  lngLatFields: ZetkinCustomField[];
   person: ZetkinPerson;
   width?: BoxProps['width'];
 };
 
 const PersonLngLatMap: FC<Props> = ({
-  customFields,
+  lngLatFields,
   height = '100%',
   person,
   width = '100%',
@@ -31,25 +27,27 @@ const PersonLngLatMap: FC<Props> = ({
   const env = useEnv();
   const [map, setMap] = useState<MapType | null>(null);
 
-  const lngLatFields = customFields.filter(
-    (field) => field.type == CUSTOM_FIELD_TYPE.LNGLAT
-  );
-  const lngLatFieldsWithValues = lngLatFields.filter(
-    (field) => !!person[field.slug]
-  );
-
-  if (lngLatFieldsWithValues.length == 0) {
-    return null;
-  }
-
-  const firstField = lngLatFieldsWithValues[0];
+  const firstField = lngLatFields[0];
   const firstValue = person[firstField.slug];
 
-  const bounds = isLngLatValue(firstValue)
-    ? new LngLatBounds(firstValue, firstValue)
-    : undefined;
+  const bounds = useMemo(() => {
+    return isLngLatValue(firstValue)
+      ? new LngLatBounds(firstValue, firstValue)
+      : undefined;
+  }, [firstValue]);
+
+  useEffect(() => {
+    if (bounds) {
+      map?.fitBounds(bounds, {
+        animate: true,
+        maxZoom: 13,
+        speed: 2,
+      });
+    }
+  }, [bounds, map, firstValue]);
+
   if (bounds) {
-    lngLatFieldsWithValues.forEach((field) => {
+    lngLatFields.forEach((field) => {
       const value = person[field.slug];
       if (isLngLatValue(value)) {
         bounds.extend(value);
@@ -98,7 +96,7 @@ const PersonLngLatMap: FC<Props> = ({
           width: '100%',
         }}
       >
-        {lngLatFieldsWithValues.map((field) => {
+        {lngLatFields.map((field) => {
           const fieldValue = person[field.slug];
 
           if (isLngLatValue(fieldValue)) {
