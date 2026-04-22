@@ -14,7 +14,7 @@ interface PersonFieldInputProps {
   field: keyof ZetkinCreatePerson;
   helperText?: string;
   label?: string;
-  onChange: (field: string, newValue: string) => void;
+  onChange?: (field: string, newValue: string) => void;
   required?: boolean;
   isURLField?: boolean;
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
@@ -51,14 +51,11 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
       }
       inputRef={inputRef}
       label={
-        label
-          ? label
-          : globalMessages.personFields[
-              field as keyof ZetkinPersonNativeFields
-            ]()
+        label ??
+        globalMessages.personFields[field as keyof ZetkinPersonNativeFields]()
       }
-      onBlur={(e) => onChange(field, e.target.value.trim())}
-      onChange={(e) => onChange(field, e.target.value)}
+      onBlur={(e) => onChange?.(field, e.target.value.trim())}
+      onChange={(e) => onChange?.(field, e.target.value)}
       required={required}
       sx={style}
       value={value}
