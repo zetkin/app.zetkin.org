@@ -98,7 +98,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
   );
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
   const focusWeekStartDay =
     dayjs(focusDate).isoWeekday() == 7
@@ -116,9 +116,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   );
 
   const eventsByDate = useWeekCalendarEvents({
-    campaignId: campId,
     dates: dayDates,
     orgId,
+    projectId: projectId,
   });
 
   const [currentTime, setCurrentTime] = useState<dayjs.Dayjs>(dayjs());
@@ -369,7 +369,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                               setGhostAnchorEl(null);
                               await createEvent({
                                 activity_id: null,
-                                campaign_id: campId,
+                                campaign_id: projectId,
                                 end_time: pendingEvent[1].toISOString(),
                                 location_id: null,
                                 start_time: pendingEvent[0].toISOString(),

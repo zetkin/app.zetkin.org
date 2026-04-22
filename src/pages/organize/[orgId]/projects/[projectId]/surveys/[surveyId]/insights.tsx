@@ -1,0 +1,111 @@
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { Box, Grid } from '@mui/material';
+
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import EmptyOverview from 'features/surveys/components/EmptyOverview';
+import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
+import { PageWithLayout } from 'utils/types';
+import { scaffold } from 'utils/next';
+import ResponseStatsCards from 'features/surveys/components/ResponseStatsCards';
+import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
+import useServerSide from 'core/useServerSide';
+import useSurvey from 'features/surveys/hooks/useSurvey';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import { ZetkinSurvey } from 'utils/types/zetkin';
+
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async (ctx) => {
+    const { orgId, projectId, surveyId } = ctx.params!;
+    try {
+      const client = new BackendApiClient(ctx.req.headers);
+
+      const data = await client.get<ZetkinSurvey>(
+        `/api/orgs/${orgId}/surveys/${surveyId}`
+      );
+      const actualProject = getSurveyCampId(
+        data,
+        parseInt(orgId as string)
+      ).toString();
+
+      if (actualProject !== projectId) {
+        return { notFound: true };
+      }
+    } catch (error) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        orgId,
+        projectId,
+        surveyId,
+      },
+    };
+  },
+  {
+    authLevelRequired: 2,
+    localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
+  }
+);
+
+interface InsightsPageProps {
+  projectId: string;
+  orgId: string;
+  surveyId: string;
+}
+
+const InsightsPage: PageWithLayout<InsightsPageProps> = ({
+  projectId,
+  orgId,
+  surveyId,
+}) => {
+  const onServer = useServerSide();
+  const { data: survey } = useSurvey(parseInt(orgId), parseInt(surveyId));
+  const { surveyIsEmpty } = useSurveyElements(
+    parseInt(orgId),
+    parseInt(surveyId)
+  );
+
+  if (onServer || !survey) {
+    return null;
+  }
+
+  return (
+    <>
+      <Head>
+        <title>{survey?.title}</title>
+      </Head>
+      <Box>
+        {surveyIsEmpty ? (
+          <EmptyOverview
+            orgId={orgId}
+            projectId={projectId}
+            surveyId={surveyId}
+          />
+        ) : (
+          <Grid container spacing={2}>
+            <ResponseStatsCards
+              orgId={parseInt(orgId)}
+              surveyId={parseInt(surveyId)}
+            />
+          </Grid>
+        )}
+      </Box>
+    </>
+  );
+};
+
+InsightsPage.getLayout = function getLayout(page, props) {
+  return (
+    <SurveyLayout
+      orgId={props.orgId}
+      projectId={props.projectId}
+      surveyId={props.surveyId}
+    >
+      {page}
+    </SurveyLayout>
+  );
+};
+
+export default InsightsPage;
