@@ -72,7 +72,7 @@ export default function useTagConfig(
       const assignedTags = map?.tags
         .map((tag) => tags.find((t) => t.id == tag.id))
         .filter(notEmpty)
-        .map((tag) => ({ ...tag, value: null }));
+        .map((tag) => ({ ...tag, score: map.score, value: null }));
       return assignedTags || [];
     }
     return [];
