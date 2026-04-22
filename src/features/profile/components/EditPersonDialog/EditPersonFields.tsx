@@ -20,6 +20,7 @@ import formatUrl from 'utils/formatUrl';
 import {
   CUSTOM_FIELD_TYPE,
   ZetkinCreatePerson,
+  ZetkinLngLatFieldValue,
   ZetkinPerson,
 } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
@@ -282,6 +283,32 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                 )}
               </FormControl>
             </Box>
+          );
+        } else if (field.type === CUSTOM_FIELD_TYPE.LNGLAT) {
+          const hasChanges = field.slug in fieldsToUpdate;
+
+          let value = null;
+          if (hasChanges) {
+            if (field.slug) {
+              value = fieldsToUpdate[
+                field.slug
+              ] as unknown as ZetkinLngLatFieldValue;
+            }
+          } else if (fieldValue) {
+            value = fieldValue as unknown as ZetkinLngLatFieldValue;
+          }
+
+          return (
+            <PersonLngLatFieldInput
+              key={field.slug}
+              error={invalidFields.includes(field.slug)}
+              field={field.slug}
+              hasChanges={field.slug in fieldsToUpdate}
+              label={field.title}
+              onChange={onChange}
+              onReset={() => onReset(field.slug)}
+              value={value}
+            />
           );
         } else {
           return (
