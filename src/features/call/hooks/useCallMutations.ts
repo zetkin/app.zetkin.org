@@ -28,13 +28,13 @@ export default function useCallMutations(orgId: number) {
       await apiClient.delete(
         `/api/orgs/${assignment.organization.id}/calls/${callId}`
       );
-      dispatch(unfinishedCallAbandoned(callId));
+      dispatch(unfinishedCallAbandoned([orgId, callId]));
     }
   };
 
   const quitCurrentCall = async (callId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
-    dispatch(quitCall(callId));
+    dispatch(quitCall([orgId, callId]));
   };
 
   const skipCurrentCall = async (
@@ -48,14 +48,14 @@ export default function useCallMutations(orgId: number) {
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
         {}
       );
-      dispatch(callSkippedLoaded([skippedCallId, newCall]));
+      dispatch(callSkippedLoaded([orgId, skippedCallId, newCall]));
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Error skipping call');
       const serialized = {
         message: error.message,
         name: error.name,
       };
-      dispatch(allocateCallError(serialized));
+      dispatch(allocateCallError([orgId, serialized]));
       return error;
     }
   };
@@ -78,7 +78,7 @@ export default function useCallMutations(orgId: number) {
           target_id: targetId,
         }
       );
-      dispatch(allocatePreviousCall(newCall));
+      dispatch(allocatePreviousCall([orgId, newCall]));
     }
   };
 

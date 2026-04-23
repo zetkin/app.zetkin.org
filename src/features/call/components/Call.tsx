@@ -36,11 +36,10 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
   >(null);
   const [skipCallModalOpen, setSkipCallModalOpen] = useState(false);
 
-  const call = useCurrentCall();
-
+  const call = useCurrentCall(assignment.organization.id);
   const { abandonUnfinishedCall, skipCurrentCall, switchToUnfinishedCall } =
     useCallMutations(assignment.organization.id);
-  const unfinishedCalls = useUnfinishedCalls();
+  const unfinishedCalls = useUnfinishedCalls(assignment.organization.id);
 
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]

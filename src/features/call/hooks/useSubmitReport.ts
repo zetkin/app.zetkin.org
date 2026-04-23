@@ -42,7 +42,7 @@ export default function useSubmitReport(orgId: number) {
       submissions,
     });
     if (result.kind == 'success') {
-      dispatch(reportSubmitted(result.updatedCall));
+      dispatch(reportSubmitted([orgId, result.updatedCall]));
     } else {
       dispatch(setReportSubmissionError(result));
     }

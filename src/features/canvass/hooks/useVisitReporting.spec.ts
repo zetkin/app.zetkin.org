@@ -14,6 +14,7 @@ import mockLocationVisit from 'utils/testing/mocks/mockLocationVisit';
 import { ZetkinLocation } from 'features/areaAssignments/types';
 import submitHouseholdVisits from '../rpc/submitHouseholdVisits';
 
+const ORG_ID = 1;
 const ASSIGNMENT_ID = 11;
 const LOCATION_ID = 101;
 const HOUSEHOLD_ID = 1001;
@@ -29,6 +30,8 @@ describe('useVisitReporting()', () => {
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID] =
+        remoteList();
       initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
         remoteList();
       initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
@@ -36,7 +39,7 @@ describe('useVisitReporting()', () => {
       };
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] =
         remoteListLoaded([]);
-      initialState.areaAssignments.areaAssignmentList.items.push(
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID].items.push(
         remoteItem(ASSIGNMENT_ID, {
           data: mockAreaAssignment({
             id: ASSIGNMENT_ID,
@@ -212,6 +215,8 @@ describe('useVisitReporting()', () => {
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID] =
+        remoteList();
       initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
         remoteList();
       initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
@@ -219,7 +224,7 @@ describe('useVisitReporting()', () => {
       };
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] =
         remoteListLoaded([]);
-      initialState.areaAssignments.areaAssignmentList.items.push(
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID].items.push(
         remoteItem(ASSIGNMENT_ID, {
           data: mockAreaAssignment({
             id: ASSIGNMENT_ID,
@@ -732,10 +737,12 @@ describe('useVisitReporting()', () => {
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID] =
+        remoteList();
       initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
         [LOCATION_ID]: remoteListLoaded([]),
       };
-      initialState.areaAssignments.areaAssignmentList.items.push(
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID].items.push(
         remoteItem(ASSIGNMENT_ID, {
           data: mockAreaAssignment({
             id: ASSIGNMENT_ID,
@@ -874,10 +881,11 @@ describe('useVisitReporting()', () => {
 
   describe('Household-level reportHouseholdVisits()', () => {
     let initialState: RootState;
-    const ORG_ID = 1;
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID] =
+        remoteList();
       initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
         [LOCATION_ID]: remoteListLoaded([]),
       };
@@ -886,7 +894,7 @@ describe('useVisitReporting()', () => {
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
         new Date().toISOString();
-      initialState.areaAssignments.areaAssignmentList.items.push(
+      initialState.areaAssignments.areaAssignmentsByOrgId[ORG_ID].items.push(
         remoteItem(ASSIGNMENT_ID, {
           data: mockAreaAssignment({
             id: ASSIGNMENT_ID,

@@ -7,15 +7,15 @@ export default function useAreaAssignment(orgId: number, areaAssId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const areaAssignmenList = useAppSelector(
-    (state) => state.areaAssignments.areaAssignmentList.items
+    (state) => state.areaAssignments.areaAssignmentsByOrgId[orgId]?.items ?? []
   );
   const areaAssignmentItem = areaAssignmenList.find(
     (item) => item.id == areaAssId
   );
 
   return loadItemIfNecessary(areaAssignmentItem, dispatch, {
-    actionOnLoad: () => areaAssignmentLoad(areaAssId),
-    actionOnSuccess: (data) => areaAssignmentLoaded(data),
+    actionOnLoad: () => areaAssignmentLoad([orgId, areaAssId]),
+    actionOnSuccess: (data) => areaAssignmentLoaded([orgId, data]),
     loader: () =>
       apiClient.get<ZetkinAreaAssignment>(
         `/api2/orgs/${orgId}/area_assignments/${areaAssId}`

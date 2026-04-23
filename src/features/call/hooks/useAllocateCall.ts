@@ -31,7 +31,7 @@ export default function useAllocateCall(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
         {}
       );
-      dispatch(newCallAllocated(call));
+      dispatch(newCallAllocated([orgId, call]));
     } catch (e) {
       const queueError =
         e instanceof Error ? e : new Error('Empty queue error');
@@ -39,7 +39,7 @@ export default function useAllocateCall(
         message: queueError.message,
         name: queueError.name,
       };
-      dispatch(allocateCallError(serialized));
+      dispatch(allocateCallError([orgId, serialized]));
       return queueError;
     }
   };

@@ -4,7 +4,7 @@ import { remoteItem, remoteList } from 'utils/storeUtils';
 export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
     areaAssignments: {
-      areaAssignmentList: remoteList(),
+      areaAssignmentsByOrgId: {},
       areaGraphByAssignmentId: {},
       areaStatsByAssignmentId: {},
       areasByAssignmentId: {},
@@ -15,7 +15,7 @@ export default function mockState(overrides?: RootState) {
       statsByAreaAssId: {},
     },
     areas: {
-      areaList: remoteList(),
+      areasByOrgId: {},
       tagsByAreaId: {},
     },
     breadcrumbs: {
@@ -23,12 +23,12 @@ export default function mockState(overrides?: RootState) {
     },
     call: {
       activeLaneIndex: 0,
-      finishedCalls: remoteList(),
+      finishedCallsByOrgId: {},
       lanes: [],
       myAssignmentsList: remoteList(),
       queueError: null,
-      unfinishedCalls: remoteList(),
-      upcomingEventsList: remoteList(),
+      unfinishedCallsByOrgId: {},
+      upcomingEventsByOrgId: {},
     },
     callAssignments: {
       assignmentList: remoteList(),

@@ -43,7 +43,7 @@ export default function useFilteredActivities(orgId: number) {
     (state) =>
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
-  const target = useCurrentCall()?.target ?? null;
+  const target = useCurrentCall(orgId)?.target ?? null;
 
   const today = new Date();
   const activeSurveys = surveys.filter(
