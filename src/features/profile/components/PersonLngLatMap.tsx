@@ -1,40 +1,25 @@
-import { FC, useState } from 'react';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
 import { Box, BoxProps } from '@mui/material';
 import Map, { Marker } from '@vis.gl/react-maplibre';
 import { LngLatBounds, Map as MapType } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { FC, useEffect, useMemo, useState } from 'react';
 
-import {
-  CUSTOM_FIELD_TYPE,
-  ZetkinCustomField,
-  ZetkinCustomFieldValue,
-  ZetkinLngLatFieldValue,
-  ZetkinPerson,
-} from 'utils/types/zetkin';
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
+import { isLngLatValue } from 'utils/mapUtils';
+import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 import ZUIMapControls from 'zui/ZUIMapControls';
 
 type Props = {
-  customFields: ZetkinCustomField[];
   height?: BoxProps['height'];
+  lngLatFields: ZetkinCustomField[];
   person: ZetkinPerson;
   width?: BoxProps['width'];
 };
 
-function isLngLatValue(
-  value: ZetkinCustomFieldValue
-): value is ZetkinLngLatFieldValue {
-  return (
-    value !== null &&
-    typeof value === 'object' &&
-    typeof value['lng'] === 'number' &&
-    typeof value['lat'] === 'number'
-  );
-}
-
 const PersonLngLatMap: FC<Props> = ({
-  customFields,
+  lngLatFields,
   height = '100%',
   person,
   width = '100%',
@@ -42,30 +27,44 @@ const PersonLngLatMap: FC<Props> = ({
   const env = useEnv();
   const [map, setMap] = useState<MapType | null>(null);
 
-  const lngLatFields = customFields.filter(
-    (field) => field.type === CUSTOM_FIELD_TYPE.LNGLAT
-  );
-  const lngLatFieldsWithValues = lngLatFields.filter(
-    (field) => !!person[field.slug]
-  );
-
-  if (lngLatFieldsWithValues.length === 0) {
-    return null;
-  }
-
-  const firstField = lngLatFieldsWithValues[0];
-  const firstValue = person[firstField.slug];
-
-  const bounds = isLngLatValue(firstValue)
-    ? new LngLatBounds(firstValue, firstValue)
-    : undefined;
-  if (bounds) {
-    lngLatFieldsWithValues.forEach((field) => {
+  const firstValue = useMemo(() => {
+    for (const field of lngLatFields) {
       const value = person[field.slug];
       if (isLngLatValue(value)) {
-        bounds.extend(value);
+        return value;
+      }
+    }
+    return null;
+  }, [lngLatFields, person]);
+
+  const bounds = useMemo(() => {
+    if (!firstValue) {
+      return undefined;
+    }
+
+    const b = new LngLatBounds(firstValue, firstValue);
+    lngLatFields.forEach((field) => {
+      const value = person[field.slug];
+      if (isLngLatValue(value)) {
+        b.extend(value);
       }
     });
+
+    return b;
+  }, [firstValue, lngLatFields, person]);
+
+  useEffect(() => {
+    if (bounds) {
+      map?.fitBounds(bounds, {
+        animate: true,
+        maxZoom: 13,
+        speed: 2,
+      });
+    }
+  }, [bounds, map]);
+
+  if (!bounds) {
+    return null;
   }
 
   return (
@@ -109,7 +108,7 @@ const PersonLngLatMap: FC<Props> = ({
           width: '100%',
         }}
       >
-        {lngLatFieldsWithValues.map((field) => {
+        {lngLatFields.map((field) => {
           const fieldValue = person[field.slug];
 
           if (isLngLatValue(fieldValue)) {
