@@ -375,8 +375,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           option === 'CREATE_NEW_LOCATION'
                             ? messages.eventOverviewCard.createLocation()
                             : option === 'NO_PHYSICAL_LOCATION'
-                            ? messages.eventOverviewCard.noLocation()
-                            : option.title
+                              ? messages.eventOverviewCard.noLocation()
+                              : option.title
                         }
                         onChange={(ev, option) => {
                           if (option === 'CREATE_NEW_LOCATION') {

@@ -102,8 +102,9 @@ async function fetchElements(
     const personRes = await apiFetch(
       `/orgs/${orgId}/people/${fieldValue}`
     ).then((res) => res.json());
-    const person =
-      unwrapEnvelope<{ first_name?: string; last_name?: string }>(personRes);
+    const person = unwrapEnvelope<{ first_name?: string; last_name?: string }>(
+      personRes
+    );
     return [
       {
         href: basePath + '/' + fieldValue,
@@ -139,8 +140,9 @@ async function fetchElements(
     const viewRes = await apiFetch(
       `/orgs/${orgId}/people/views/${fieldValue}`
     ).then((res) => res.json());
-    const view =
-      unwrapEnvelope<{ folder?: { id?: number }; title?: string }>(viewRes);
+    const view = unwrapEnvelope<{ folder?: { id?: number }; title?: string }>(
+      viewRes
+    );
 
     const folderId = view?.folder?.id;
     const folderElements = folderId
@@ -210,10 +212,10 @@ async function fetchElements(
     const eventRes = await apiFetch(
       `/orgs/${orgId}/actions/${fieldValue}`
     ).then((res) => res.json());
-    const event =
-      unwrapEnvelope<{ activity?: { title?: string }; title?: string }>(
-        eventRes
-      );
+    const event = unwrapEnvelope<{
+      activity?: { title?: string };
+      title?: string;
+    }>(eventRes);
     if (event?.title || event?.activity?.title) {
       return [
         {

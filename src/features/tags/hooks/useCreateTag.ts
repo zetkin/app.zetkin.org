@@ -22,10 +22,10 @@ export default function useCreateTag(
       };
       dispatch(tagCreate());
       const tagFuture = await apiClient
-        .post<ZetkinTag, ZetkinTagPostBody>(
-          `/api/orgs/${orgId}/people/tags`,
-          tagWithNewGroup
-        )
+        .post<
+          ZetkinTag,
+          ZetkinTagPostBody
+        >(`/api/orgs/${orgId}/people/tags`, tagWithNewGroup)
         .then((data: ZetkinTag) => {
           dispatch(tagCreated(data));
           return data;
@@ -34,10 +34,10 @@ export default function useCreateTag(
     } else {
       dispatch(tagCreate());
       const tagFuture = await apiClient
-        .post<ZetkinTag, ZetkinTagPostBody>(
-          `/api/orgs/${orgId}/people/tags`,
-          tag
-        )
+        .post<
+          ZetkinTag,
+          ZetkinTagPostBody
+        >(`/api/orgs/${orgId}/people/tags`, tag)
         .then((data: ZetkinTag) => {
           dispatch(tagCreated(data));
           return data;
