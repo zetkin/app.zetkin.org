@@ -9,7 +9,7 @@ export default function useEventLocation(
 ): ZetkinLocation | null {
   const apiClient = useApiClient();
   const locationItem = useAppSelector((state) =>
-    state.events.locationList.items.find((item) => item.id == locationId)
+    state.events.locationList.items.find((item) => item.id === locationId)
   );
   const dispatch = useAppDispatch();
 

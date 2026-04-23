@@ -9,7 +9,7 @@ interface TimelineGenericProps {
 }
 
 function messageIdFromType(type: UPDATE_TYPES): AnyMessage | null {
-  if (type == UPDATE_TYPES.JOURNEYINSTANCE_OPEN) {
+  if (type === UPDATE_TYPES.JOURNEYINSTANCE_OPEN) {
     return messageIds.updates.journeyinstance.open;
   }
 

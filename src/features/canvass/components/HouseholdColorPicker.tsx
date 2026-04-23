@@ -55,7 +55,7 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
         renderValue={(value: HouseholdColor) => {
           return (
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              {value != 'clear' && (
+              {value !== 'clear' && (
                 <Box
                   sx={{
                     backgroundColor: value,
@@ -66,7 +66,7 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
                 />
               )}
               <Typography>
-                {value == 'clear'
+                {value === 'clear'
                   ? messages.households.colorPicker.noColor()
                   : messages.households.colorPicker.colorNames[
                       hexColorToHouseholdColor[value]

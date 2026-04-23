@@ -17,7 +17,7 @@ export default function useCampaigns(
   );
   const campaignsList = useAppSelector((state) => state.campaigns.campaignList);
 
-  if (fromOrgIds.length == 0) {
+  if (fromOrgIds.length === 0) {
     fromOrgIds = [mainOrgId];
   }
 

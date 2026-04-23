@@ -4,21 +4,31 @@ import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
 import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMembers/rows';
+import AllCustomFields from '../../../../mockData/orgs/KPD/people/views/AllMembers/fields';
 import KPD from '../../../../mockData/orgs/KPD';
 import NewView from '../../../../mockData/orgs/KPD/people/views/NewView';
+import NewViewColumns from '../../../../mockData/orgs/KPD/people/views/NewView/columns';
 
 test.describe('View detail page', () => {
   test.beforeEach(({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
-    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers, NewView]);
+    moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
     moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/columns',
       'get',
       AllMembersColumns
+    );
+
+    // Mocks for NewView, which jump menu navigates to
+    moxy.setZetkinApiMock('/orgs/1/people/views/2', 'get', NewView);
+    moxy.setZetkinApiMock('/orgs/1/people/views/2/rows', 'get', []);
+    moxy.setZetkinApiMock(
+      '/orgs/1/people/views/2/columns',
+      'get',
+      NewViewColumns
     );
   });
 
@@ -27,6 +37,11 @@ test.describe('View detail page', () => {
   });
 
   test('jumps between views using jump menu', async ({ page, appUri }) => {
+    await page.route(/\/api\/views\/tree\?orgId=1\b/, async (route) => {
+      await route.fulfill({
+        json: { data: { folders: [], views: [AllMembers, NewView] } },
+      });
+    });
     await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Click to open the jump menu

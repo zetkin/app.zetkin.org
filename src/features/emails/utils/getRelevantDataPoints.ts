@@ -23,7 +23,7 @@ export default function getRelevantDataPoints(
 ): GetRelevantDataPoints {
   const [serieId, indexStr] = inputPoint.id.split('.');
   const index = parseInt(indexStr);
-  if (serieId == 'main') {
+  if (serieId === 'main') {
     const mainPoint = main.values[index];
     const mainDate = new Date(mainPoint.date);
     const mainOffset = mainDate.getTime() - main.startDate.getTime();

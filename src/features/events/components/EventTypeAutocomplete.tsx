@@ -74,9 +74,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
       const newEventType = types.find((item) => item.title === createdType);
-      setText(newEventType ? newEventType!.title : uncategorizedMsg);
+      setText(newEventType ? newEventType.title : uncategorizedMsg);
       if (newEventType) {
-        onChangeNewOption(newEventType!.id);
+        onChangeNewOption(newEventType.id);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,7 +148,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           });
           return inputValue ? filteredResult : options;
         }}
-        getOptionLabel={(option) => option.title!}
+        getOptionLabel={(option) => option.title}
         isOptionEqualToValue={(option, value) => option.title === value.title}
         onBlur={() => {
           // show 'uncategorized' in textField when blurring
@@ -163,17 +163,17 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         }}
         onChange={(_, value) => {
           setText(value.title);
-          if (value.id == 'CREATE') {
-            createType(value.title!);
-            setCreatedType(value.title!);
+          if (value.id === 'CREATE') {
+            createType(value.title);
+            setCreatedType(value.title);
             return;
           }
           onChange(
-            value.id == 'UNCATEGORIZED'
+            value.id === 'UNCATEGORIZED'
               ? null
               : {
                   id: value.id,
-                  title: value.title!,
+                  title: value.title,
                 }
           );
         }}
@@ -203,7 +203,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         renderOption={(props, option) => {
           return (
             <Box key={option.id}>
-              {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
+              {option.id !== 'CREATE' && option.id !== 'UNCATEGORIZED' && (
                 <li {...props} style={{ justifyContent: 'space-between' }}>
                   {option.title}
                   <DeleteOutline
@@ -215,7 +215,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                             deleteType(option.id);
                             //If the current event has the deleted event type,
                             //set the current event's type to null
-                            if (value && option.id == value.id) {
+                            if (value && option.id === value.id) {
                               onChange(null);
                             }
                           }
@@ -237,13 +237,13 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                   />
                 </li>
               )}
-              {option.id == 'UNCATEGORIZED' && (
+              {option.id === 'UNCATEGORIZED' && (
                 <li {...props}>{uncategorizedMsg}</li>
               )}
-              {option.id == 'CREATE' && (
+              {option.id === 'CREATE' && (
                 <li {...props}>
                   <Add sx={{ marginRight: 1 }} />
-                  {messages.type.createType({ type: option.title! })}
+                  {messages.type.createType({ type: option.title })}
                 </li>
               )}
             </Box>

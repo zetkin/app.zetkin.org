@@ -114,13 +114,13 @@ const Preview = () => {
             {currentSheet.columns
               .toSorted((col1, col2) => {
                 if (
-                  col1.kind == ColumnKind.ID_FIELD &&
-                  col1.idField == importID
+                  col1.kind === ColumnKind.ID_FIELD &&
+                  col1.idField === importID
                 ) {
                   return -1;
                 } else if (
-                  col2.kind == ColumnKind.ID_FIELD &&
-                  col2.idField == importID
+                  col2.kind === ColumnKind.ID_FIELD &&
+                  col2.idField === importID
                 ) {
                   return +1;
                 } else {
@@ -137,7 +137,7 @@ const Preview = () => {
                     return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
                   }
 
-                  if (column.kind == ColumnKind.ID_FIELD) {
+                  if (column.kind === ColumnKind.ID_FIELD) {
                     const fieldValue = fields?.[column.idField];
                     return (
                       <PreviewGrid
@@ -150,7 +150,7 @@ const Preview = () => {
                             ? messages.configuration.preview.noValue()
                             : ''
                         }
-                        isImportID={importID == column.idField}
+                        isImportID={importID === column.idField}
                         rowValue={fieldValue}
                       />
                     );

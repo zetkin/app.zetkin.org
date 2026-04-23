@@ -13,7 +13,7 @@ interface CallAssignmentStatusChipProps {
 const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
   state,
 }) => {
-  if (state == CallAssignmentState.UNKNOWN) {
+  if (state === CallAssignmentState.UNKNOWN) {
     return null;
   }
 

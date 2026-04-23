@@ -239,7 +239,7 @@ export default function getFilterComponents(
     filterTypeIcon = (
       <AccountCircleOutlined color="secondary" fontSize="small" />
     );
-  } else if (filter.type == FILTER_TYPE.JOINFORM) {
+  } else if (filter.type === FILTER_TYPE.JOINFORM) {
     displayFilter = (
       <DisplayJoinForm
         filter={filter as SmartSearchFilterWithId<JoinFormFilterConfig>}
@@ -247,7 +247,7 @@ export default function getFilterComponents(
     );
     filterTypeIcon = <DoorFrontOutlined color="secondary" fontSize="small" />;
   } else if (
-    filter.type == FILTER_TYPE.ALL &&
+    filter.type === FILTER_TYPE.ALL &&
     'organizations' in filter.config
   ) {
     displayFilter = (
@@ -256,7 +256,7 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <GroupWorkOutlined color="secondary" fontSize="small" />;
-  } else if (filter.type == FILTER_TYPE.AREA) {
+  } else if (filter.type === FILTER_TYPE.AREA) {
     displayFilter = (
       <DisplayInArea
         filter={filter as SmartSearchFilterWithId<AreaFilterConfig>}

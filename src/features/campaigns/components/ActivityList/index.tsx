@@ -90,7 +90,7 @@ const Activities = ({
               <CallAssignmentListItem caId={activity.data.id} orgId={orgId} />
             </LazyActivitiesBox>
           );
-        } else if (activity.kind == ACTIVITIES.AREA_ASSIGNMENT) {
+        } else if (activity.kind === ACTIVITIES.AREA_ASSIGNMENT) {
           return (
             <LazyActivitiesBox
               key={`areaassignment-${activity.data.id}`}
@@ -109,7 +109,7 @@ const Activities = ({
               key={`event-${activity.events[0].id}`}
               index={index}
             >
-              {activity.kind == CLUSTER_TYPE.SINGLE ? (
+              {activity.kind === CLUSTER_TYPE.SINGLE ? (
                 <EventListItem cluster={activity} />
               ) : (
                 <EventClusterListItem cluster={activity} />

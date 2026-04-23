@@ -38,7 +38,8 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
 
   const writableCustomFields =
     customFields.data?.filter(
-      (field) => field.organization.id == orgId || field.org_write == 'suborgs'
+      (field) =>
+        field.organization.id === orgId || field.org_write === 'suborgs'
     ) ?? [];
 
   if (!joinForm) {
@@ -47,13 +48,13 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
 
   function slugToLabel(slug: string): string {
     const isNativeField = nativePersonFields.some(
-      (nativeSlug) => nativeSlug == slug
+      (nativeSlug) => nativeSlug === slug
     );
     if (isNativeField) {
       const typedSlug = slug as (typeof nativePersonFields)[number];
       return globalMessages.personFields[typedSlug]();
     } else {
-      const field = customFields.data?.find((field) => field.slug == slug);
+      const field = customFields.data?.find((field) => field.slug === slug);
       return field?.title ?? '';
     }
   }
@@ -171,7 +172,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={joinForm.org_access == 'suborgs'}
+              checked={joinForm.org_access === 'suborgs'}
               onChange={(evt) =>
                 updateFormDebounced({
                   org_access: evt.target.checked ? 'suborgs' : 'sameorg',

@@ -9,7 +9,7 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
   let children = [] as TreeItemData[];
   const flatOrgData = orgData.map((org) => {
-    if (org.children && org.children.length) {
+    if (org.children?.length) {
       children = [...children, ...org.children];
     }
     return org;
@@ -38,13 +38,13 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   function onSwitchOrg() {
     setRecentOrganizationIds([
       orgId,
-      ...recentOrganizationIds.filter((id) => id != orgId),
+      ...recentOrganizationIds.filter((id) => id !== orgId),
     ]);
   }
 
   const recentOrgs = recentOrganizationIds
     .map((id) => flatOrgData.find((org) => org.id === id))
-    .filter((org) => org?.id != orgId);
+    .filter((org) => org?.id !== orgId);
 
   const recentOrgsFuse = useMemo(() => {
     return new Fuse(recentOrgs, {
@@ -77,12 +77,13 @@ function useOrgSwitcher(orgId: number, searchString: string) {
   }, [searchString]);
 
   const showLoadingState = treeDataList.isLoading;
-  const showEmptyState = searchString.length > 0 && filteredAllOrgs.length == 0;
+  const showEmptyState =
+    searchString.length > 0 && filteredAllOrgs.length === 0;
   const showOrgTree = orgData.length > 0 && !showEmptyState;
   const hasMatchesInRecentOrgs =
     searchString.length > 0 && filteredRecentOrgs.length > 0;
   const hasRecentOrgs =
-    searchString.length == 0 &&
+    searchString.length === 0 &&
     recentOrgs.length > 0 &&
     flatOrgData.length >= 5 &&
     !showEmptyState;

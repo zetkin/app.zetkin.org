@@ -53,7 +53,7 @@ export default function useEventsFromDateRange(
   });
 
   return events
-    .filter((event) => !campId || event.campaign?.id == campId)
+    .filter((event) => !campId || event.campaign?.id === campId)
     .map((event) => ({
       data: event,
       kind: ACTIVITIES.EVENT,

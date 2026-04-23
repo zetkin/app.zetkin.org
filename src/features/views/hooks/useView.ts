@@ -12,7 +12,7 @@ export default function useView(
   const dispatch = useAppDispatch();
   const views = useAppSelector((state) => state.views);
   const item = views.viewsByOrgId[orgId]?.items.find(
-    (item) => item.id == viewId
+    (item) => item.id === viewId
   );
 
   return loadItemIfNecessary(item, dispatch, {

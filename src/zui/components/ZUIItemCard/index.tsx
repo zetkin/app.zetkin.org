@@ -109,11 +109,11 @@ type ItemCard = CardWithoutActions | CardWithActions;
 const isPersonAvatarCard = (
   itemCard: ItemCard
 ): itemCard is PersonAvatarCard => {
-  return 'avatar' in itemCard && typeof itemCard.avatar == 'object';
+  return 'avatar' in itemCard && typeof itemCard.avatar === 'object';
 };
 
 const isMiscAvatarCard = (itemCard: ItemCard): itemCard is MiscAvatarCard => {
-  return 'avatar' in itemCard && typeof itemCard.avatar == 'string';
+  return 'avatar' in itemCard && typeof itemCard.avatar === 'string';
 };
 
 const isIconCard = (itemCard: ItemCard): itemCard is IconCard => {
@@ -146,7 +146,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
 
   const content = props.content;
   const hasContent = !!content;
-  const hasStringContent = hasContent && typeof content == 'string';
+  const hasStringContent = hasContent && typeof content === 'string';
   const hasArrayContent = hasContent && Array.isArray(content);
 
   const hasImage = hasImageElement || hasImageSrc;
@@ -221,7 +221,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
           {hasArrayContent && (
             <Stack spacing="0.5rem">
               {content.map((c) => {
-                if (typeof c == 'string') {
+                if (typeof c === 'string') {
                   return (
                     <ZUIText key={c} color="secondary" variant="bodySmRegular">
                       {c}

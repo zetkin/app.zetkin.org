@@ -54,9 +54,9 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   );
 
   const showErrorMessage =
-    resultError == 'conflictError' ||
-    resultError == 'invalidParameter' ||
-    resultError == 'unknownError';
+    resultError === 'conflictError' ||
+    resultError === 'invalidParameter' ||
+    resultError === 'unknownError';
 
   return (
     <ResponsiveAccountSection

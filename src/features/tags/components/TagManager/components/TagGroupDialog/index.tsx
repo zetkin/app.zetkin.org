@@ -28,7 +28,7 @@ const TagGroupDialog: React.FunctionComponent<TagGroupProps> = ({
   const messages = useMessages(messageIds);
 
   const [title, setTitle] = useState(group?.title ?? '');
-  const titleEdited = title != group?.title;
+  const titleEdited = title !== group?.title;
 
   const closeAndClear = () => {
     setTitle('');

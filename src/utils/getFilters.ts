@@ -1,6 +1,6 @@
 import type { NextApiRequest } from 'next';
 
-const OPERATORS = ['==', '>=', '<=', '>', '<', '!=', '*='];
+const OPERATORS = ['===', '>=', '<=', '>', '<', '!==', '*='];
 
 const getFilters = (
   req: NextApiRequest

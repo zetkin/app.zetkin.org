@@ -29,7 +29,7 @@ const DurationHoursMins: FC<DurationHoursMinsProps> = ({ end, start }) => {
       </Typography>
     );
   } else {
-    if (diffMinute % 60 == 0) {
+    if (diffMinute % 60 === 0) {
       return (
         <Typography>
           {messages.eventShiftModal.hours({
@@ -240,7 +240,7 @@ const EventShiftTime: FC<EventShiftTimeProps> = ({
                   no: index + 1,
                 })}
                 onChange={(newShiftStart) => {
-                  if (newShiftStart && newShiftStart.isValid()) {
+                  if (newShiftStart?.isValid()) {
                     onEventShiftsChange([
                       ...eventShifts.slice(0, index),
                       dayjs(newShiftStart),

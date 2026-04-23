@@ -39,7 +39,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       HouseholdWithColor,
       HouseholdPatchBody
     >(`/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`, {
-      color: color != undefined ? (color as HouseholdColor) : undefined,
+      color: color !== undefined ? (color as HouseholdColor) : undefined,
       level,
     });
 

@@ -84,7 +84,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
               }
             />
             {sub.elements.map((elem) => {
-              if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
+              if (elem.type === ELEM_TYPE.OPEN_QUESTION) {
                 return (
                   <Question
                     key={elem.id}
@@ -96,14 +96,14 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                     </ResponseItem>
                   </Question>
                 );
-              } else if (elem.type == ELEM_TYPE.OPTIONS) {
+              } else if (elem.type === ELEM_TYPE.OPTIONS) {
                 return (
                   <Question
                     key={elem.id}
                     hidden={elem.hidden}
                     question={elem.question}
                   >
-                    {elem.selectedOptions.length == 0 && '-'}
+                    {elem.selectedOptions.length === 0 && '-'}
                     {elem.selectedOptions.map((option) => (
                       <ResponseItem key={option.id} icon={<Check />}>
                         {option.text}
@@ -111,7 +111,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                     ))}
                   </Question>
                 );
-              } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
+              } else if (elem.type === ELEM_TYPE.TEXT_BLOCK) {
                 return (
                   <Box
                     key={elem.id}

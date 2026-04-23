@@ -28,7 +28,7 @@ export default async function getServerMessages<MapType extends MessageMap>(
           return fmt.format(values);
         }) as HookedMessageFunc<typeof val>;
       } else {
-        output[key] = makeFunctions(val) as UseMessagesMap<typeof val>;
+        output[key] = makeFunctions(val);
       }
     });
 

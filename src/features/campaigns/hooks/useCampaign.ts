@@ -26,7 +26,7 @@ export default function useCampaign(
   const campaignsSlice = useAppSelector((state) => state.campaigns);
   const campaignItems = campaignsSlice.campaignList.items;
 
-  const campaignItem = campaignItems.find((item) => item.id == campId);
+  const campaignItem = campaignItems.find((item) => item.id === campId);
 
   const campaignFuture = loadItemIfNecessary(campaignItem, dispatch, {
     actionOnLoad: () => campaignLoad(campId),

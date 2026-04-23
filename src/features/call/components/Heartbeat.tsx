@@ -16,7 +16,7 @@ const Heartbeat: FC = () => {
       try {
         await apiClient.get('/api/heartbeat');
       } catch (e) {
-        if (e instanceof ApiClientError && e.status == 401) {
+        if (e instanceof ApiClientError && e.status === 401) {
           location.href = '/login?redirect=/call';
         }
       }

@@ -63,7 +63,7 @@ const Mapping: FC<MappingProps> = ({
                 clearConfiguration={clearConfiguration}
                 columnIndex={index}
                 fieldOptions={fieldOptions}
-                isBeingConfigured={columnIndexBeingConfigured == index}
+                isBeingConfigured={columnIndexBeingConfigured === index}
                 onChange={(column) => updateColumn(index, column)}
                 onConfigureStart={() => onConfigureStart(index)}
                 optionAlreadySelected={optionAlreadySelected}

@@ -99,7 +99,7 @@ export default function useHydratedSurveySubmission(
   const elements: HydratedElement[] = [];
 
   surveyElements.forEach((elem) => {
-    if (elem.type == ELEMENT_TYPE.TEXT) {
+    if (elem.type === ELEMENT_TYPE.TEXT) {
       elements.push({
         header: elem.text_block.header,
         id: elem.id,
@@ -109,14 +109,14 @@ export default function useHydratedSurveySubmission(
     } else {
       const question = elem.question;
       const response = submission.responses?.find(
-        (res) => res.question_id == elem.id
+        (res) => res.question_id === elem.id
       );
       if (!response) {
         return;
       }
 
       if (
-        question.response_type == RESPONSE_TYPE.TEXT &&
+        question.response_type === RESPONSE_TYPE.TEXT &&
         'response' in response
       ) {
         elements.push({
@@ -128,7 +128,7 @@ export default function useHydratedSurveySubmission(
           type: ELEM_TYPE.OPEN_QUESTION,
         });
       } else if (
-        question.response_type == RESPONSE_TYPE.OPTIONS &&
+        question.response_type === RESPONSE_TYPE.OPTIONS &&
         'options' in response
       ) {
         const hydratedResponse: HydratedQuestionWithOptions = {
@@ -142,7 +142,7 @@ export default function useHydratedSurveySubmission(
 
         response.options.forEach((optionId) => {
           const option = question.options?.find(
-            (option) => option.id == optionId
+            (option) => option.id === optionId
           );
           if (option) {
             hydratedResponse.selectedOptions.push({

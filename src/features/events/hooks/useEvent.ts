@@ -12,9 +12,9 @@ export default function useEvent(
   const dispatch = useAppDispatch();
   const eventList = useAppSelector((state) => state.events.eventList);
 
-  const item = eventList.items.find((item) => item.id == id);
+  const item = eventList.items.find((item) => item.id === id);
 
-  if (item && item.deleted) {
+  if (item?.deleted) {
     return null;
   }
 

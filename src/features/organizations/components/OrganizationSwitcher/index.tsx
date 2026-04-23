@@ -114,7 +114,7 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
             {searchString.length > 0 &&
               ` (${messages.sidebar.filtered().toLocaleUpperCase()})`}
           </Typography>
-          {searchString.length == 0 && (
+          {searchString.length === 0 && (
             <OrganizationTree
               onSwitchOrg={onSwitchOrg}
               orgId={orgId}

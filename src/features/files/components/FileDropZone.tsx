@@ -27,7 +27,7 @@ const FileDropZone: FC<Props> = ({ children, onUploadComplete, orgId }) => {
   });
 
   const activeFileUploads = fileUploads.filter(
-    (upload) => upload.state == FileUploadState.UPLOADING
+    (upload) => upload.state === FileUploadState.UPLOADING
   );
   const isUploading = activeFileUploads.length > 0;
 

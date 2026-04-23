@@ -34,7 +34,7 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
   const { orgId } = useNumericRouteParams();
 
   const render = (renderable: Renderable): ReactNode => {
-    if (typeof renderable == 'function') {
+    if (typeof renderable === 'function') {
       return renderable(hovered);
     }
     return renderable;
@@ -69,17 +69,14 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
           {canEdit && (
             <IconButton
               data-testid="QueryOverview-editFilterButton"
-              onClick={() => onClickEdit && onClickEdit()}
+              onClick={() => onClickEdit?.()}
               size="small"
             >
               <Edit fontSize="small" />
             </IconButton>
           )}
           {canDelete && (
-            <IconButton
-              onClick={() => onClickDelete && onClickDelete()}
-              size="small"
-            >
+            <IconButton onClick={() => onClickDelete?.()} size="small">
               <Delete fontSize="small" />
             </IconButton>
           )}

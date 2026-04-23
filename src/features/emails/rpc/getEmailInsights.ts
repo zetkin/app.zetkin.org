@@ -59,7 +59,7 @@ async function handle(params: Params, apiClient: IApiClient) {
       const openDate = new Date(recipient.opened || 0);
 
       const diff = openDate.getTime() - dateOfLastPoint.getTime();
-      const isLast = index == sortedOpens.length - 1;
+      const isLast = index === sortedOpens.length - 1;
 
       if (diff > minPointDiff || isLast) {
         dateOfLastPoint = new Date(openDate);
@@ -89,13 +89,13 @@ async function handle(params: Params, apiClient: IApiClient) {
   );
   traverser.traverse({
     handleBlock(block) {
-      if (block.kind == BlockKind.BUTTON) {
+      if (block.kind === BlockKind.BUTTON) {
         linkTextByTag[block.data.tag] = block.data.text;
       }
       return block;
     },
     handleInline(node) {
-      if (node.kind == InlineNodeKind.LINK) {
+      if (node.kind === InlineNodeKind.LINK) {
         linkTextByTag[node.tag] = inlineNodesToHtml(node.content);
       }
       return node;

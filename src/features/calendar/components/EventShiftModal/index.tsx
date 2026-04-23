@@ -154,7 +154,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               eventTitle={eventTitle}
               locationId={locationId}
               onEventDateChange={(newDate) => {
-                if (newDate && newDate.isValid()) {
+                if (newDate?.isValid()) {
                   setInvalidDate(false);
                   setEventDate(newDate);
                 } else {
@@ -189,13 +189,13 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               eventStartTime={eventStartTime}
               invalidShiftTimes={invalidShiftTimes}
               onEventEndTimeChange={(newEndTime) => {
-                if (newEndTime && newEndTime.isValid()) {
+                if (newEndTime?.isValid()) {
                   setEventEndTime(newEndTime);
                 }
               }}
               onEventShiftsChange={(newShifts) => setEventShifts(newShifts)}
               onEventStartTimeChange={(newStartTime) => {
-                if (newStartTime && newStartTime.isValid()) {
+                if (newStartTime?.isValid()) {
                   setEventStartTime(newStartTime);
                 }
               }}

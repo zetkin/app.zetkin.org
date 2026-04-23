@@ -162,7 +162,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 mr={1}
                                 variant="h6"
                               >
-                                {metric.type == 'bool' ? (
+                                {metric.type === 'bool' ? (
                                   <Typography color="secondary" mr={1}>
                                     <SwitchLeft />
                                   </Typography>
@@ -245,7 +245,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 metrics.filter(
                                   (metric) => metric.type === 'bool'
                                 ).length <= 1 &&
-                                metric.type == 'bool' && (
+                                metric.type === 'bool' && (
                                   <Tooltip
                                     title={messages.report.card.tooltip()}
                                   >
@@ -366,8 +366,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       {metrics
                         .filter(
                           (metric) =>
-                            metric.type == 'bool' &&
-                            metric.id != metricBeingDeleted?.id
+                            metric.type === 'bool' &&
+                            metric.id !== metricBeingDeleted?.id
                         )
                         .map((metric) => (
                           <Box

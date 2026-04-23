@@ -38,9 +38,9 @@ const ZUITooltip: FC<ZUITooltipProps> = ({
   label,
 }) => {
   const getPlacement = () => {
-    if (placement == 'end') {
+    if (placement === 'end') {
       return 'right';
-    } else if (placement == 'start') {
+    } else if (placement === 'start') {
       return 'left';
     } else {
       return placement;

@@ -33,7 +33,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const path = usePathname();
 
   const lastSegment = path?.split('/')[3] ?? 'home';
-  const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
+  const showSuborgsTab = lastSegment === 'suborgs' || subOrgs.length > 0;
 
   const navBarItems = [
     {

@@ -58,7 +58,7 @@ const AvatarBackground: FC<AvatarBackgroundProps> = ({
 
       <g
         clipPath={
-          variant == 'circular'
+          variant === 'circular'
             ? `url(#${uniqueName(size + 'circleClip')})`
             : `url(#${uniqueName(size + 'squareClip')})`
         }

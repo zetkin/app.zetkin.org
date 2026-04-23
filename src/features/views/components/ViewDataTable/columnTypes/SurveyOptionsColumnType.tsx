@@ -163,7 +163,7 @@ const Cell: FC<{
         submissions={cell.map((sub, index) => ({
           id: sub.submission_id,
           matchingContent:
-            index == cell.length - 1
+            index === cell.length - 1
               ? sub.selected.map((s) => (
                   <Chip
                     key={s.id}

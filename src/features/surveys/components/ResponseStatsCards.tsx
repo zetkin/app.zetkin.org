@@ -323,9 +323,9 @@ const QuestionStatsBarPlot = ({
     ? questionStats.totalSelectedOptionsCount || questionStats.answerCount
     : 0;
   const percentFormatter = (value: number | null) =>
-    value == null ? '' : `${value}%`;
+    value === null ? '' : `${value}%`;
   const absoluteFormatter = (value: number | null) =>
-    value == null ? '' : value.toString();
+    value === null ? '' : value.toString();
   const showPercent = isOptions && displayMode === 'percent';
   const valueFormatter = showPercent ? percentFormatter : absoluteFormatter;
 
@@ -444,7 +444,7 @@ const QuestionStatsPie = ({
   const pieValueFormatter = (
     value: number | { value: number } | null
   ): string => {
-    if (value == null) {
+    if (value === null) {
       return '';
     }
 

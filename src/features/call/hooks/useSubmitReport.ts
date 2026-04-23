@@ -23,7 +23,7 @@ export default function useSubmitReport(orgId: number) {
     const state = calculateReportState(report);
     const reportData = {
       call_back_after:
-        state == CallState.CALL_BACK || state == CallState.NOT_AVAILABLE
+        state === CallState.CALL_BACK || state === CallState.NOT_AVAILABLE
           ? report.callBackAfter
           : null,
       message_to_organizer:
@@ -41,7 +41,7 @@ export default function useSubmitReport(orgId: number) {
       reportData,
       submissions,
     });
-    if (result.kind == 'success') {
+    if (result.kind === 'success') {
       dispatch(reportSubmitted(result.updatedCall));
     } else {
       dispatch(setReportSubmissionError(result));

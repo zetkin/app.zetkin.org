@@ -23,7 +23,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
   const getFieldTitle = useFieldTitle(orgId);
   const { skipUnknown } = useSheets();
 
-  if (problem.kind == ImportProblemKind.INVALID_FORMAT) {
+  if (problem.kind === ImportProblemKind.INVALID_FORMAT) {
     return (
       <ImportMessage
         onCheck={onCheck}
@@ -35,7 +35,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         })}
       />
     );
-  } else if (problem.kind == ImportProblemKind.MAJOR_CHANGE) {
+  } else if (problem.kind === ImportProblemKind.MAJOR_CHANGE) {
     return (
       <ImportMessage
         description={messages.preflight.messages.majorChange.description()}
@@ -48,7 +48,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         })}
       />
     );
-  } else if (problem.kind == ImportProblemKind.MISSING_ID_AND_NAME) {
+  } else if (problem.kind === ImportProblemKind.MISSING_ID_AND_NAME) {
     return (
       <ImportMessage
         description={messages.preflight.messages.missingIdAndName.description()}
@@ -59,7 +59,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.missingIdAndName.title()}
       />
     );
-  } else if (problem.kind == ImportProblemKind.NO_IMPACT) {
+  } else if (problem.kind === ImportProblemKind.NO_IMPACT) {
     return (
       <ImportMessage
         description={
@@ -73,7 +73,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.noImpact.title()}
       />
     );
-  } else if (problem.kind == ImportProblemKind.UNCONFIGURED_ID) {
+  } else if (problem.kind === ImportProblemKind.UNCONFIGURED_ID) {
     return (
       <ImportMessage
         description={messages.preflight.messages.unconfiguredId.description()}
@@ -83,7 +83,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.unconfiguredId.title()}
       />
     );
-  } else if (problem.kind == ImportProblemKind.UNCONFIGURED_ID_AND_NAME) {
+  } else if (problem.kind === ImportProblemKind.UNCONFIGURED_ID_AND_NAME) {
     return (
       <ImportMessage
         description={messages.preflight.messages.unconfiguredIdAndName.description()}
@@ -93,7 +93,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.unconfiguredIdAndName.title()}
       />
     );
-  } else if (problem.kind == ImportProblemKind.UNEXPECTED_ERROR) {
+  } else if (problem.kind === ImportProblemKind.UNEXPECTED_ERROR) {
     return (
       <ImportMessage
         description={messages.preflight.messages.unexpectedError.description()}
@@ -103,7 +103,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.unexpectedError.title()}
       />
     );
-  } else if (problem.kind == ImportProblemKind.UNKNOWN_PERSON) {
+  } else if (problem.kind === ImportProblemKind.UNKNOWN_PERSON) {
     return (
       <ImportMessage
         description={messages.preflight.messages.unknownPerson.description()}
@@ -114,7 +114,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.unknownPerson.title()}
       />
     );
-  } else if (problem.kind == ImportProblemKind.INVALID_ORG_COUNTRY) {
+  } else if (problem.kind === ImportProblemKind.INVALID_ORG_COUNTRY) {
     return (
       <ImportMessage
         description={messages.preflight.messages.invalidOrgCountry.description()}
@@ -126,7 +126,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         })}
       />
     );
-  } else if (problem.kind == ImportProblemKind.UNKNOWN_ERROR) {
+  } else if (problem.kind === ImportProblemKind.UNKNOWN_ERROR) {
     return (
       <ImportMessage
         description={messages.preflight.messages.unknownError.description()}

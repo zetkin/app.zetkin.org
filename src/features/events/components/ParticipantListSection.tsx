@@ -79,7 +79,7 @@ const Dropdown: FC<{
         labelId={'attendance-select-label'}
         onChange={(event) => {
           const selected = options.find(
-            (option) => option.value == event.target.value
+            (option) => option.value === event.target.value
           );
           selected?.callback();
         }}
@@ -234,10 +234,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
     },
     {
       disableColumnMenu: true,
-      field: type == 'signups' ? 'signups' : 'notified',
+      field: type === 'signups' ? 'signups' : 'notified',
       flex: 1,
       headerName:
-        type == 'signups'
+        type === 'signups'
           ? messages.eventParticipantsList.columnSignedUp()
           : messages.eventParticipantsList.columnNotified(),
       renderCell: (params) => {
@@ -266,7 +266,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       headerName: messages.eventParticipantsList.attendance(),
       minWidth: 300,
       renderCell: (params) => {
-        if (type == 'signups') {
+        if (type === 'signups') {
           return (
             <Buttons
               options={[
@@ -290,7 +290,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               ]}
             />
           );
-        } else if (event && type == 'booked') {
+        } else if (event && type === 'booked') {
           const eventStart = new Date(removeOffset(event.start_time));
           const anHourFromNow = new Date(
             new Date().setHours(new Date().getHours() + 1)
@@ -363,7 +363,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               />
             );
           }
-        } else if (type == 'cancelled') {
+        } else if (type === 'cancelled') {
           return (
             <Buttons
               options={[

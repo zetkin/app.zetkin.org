@@ -26,7 +26,7 @@ const useSmartSearch = (
   // correctly configure legacy queries to only have the All filter in the first position with op: 'add'
   const indexOfAllFilter = initialFilters.findLastIndex(
     (filter) =>
-      filter.type == FILTER_TYPE.ALL &&
+      filter.type === FILTER_TYPE.ALL &&
       (!('config' in filter) || !('organizations' in filter.config))
   );
 

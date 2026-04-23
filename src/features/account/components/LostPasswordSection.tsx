@@ -22,7 +22,7 @@ type LostPasswordSectionProps = {
 const wasSuccessful = (
   result: PasswordResetStatus
 ): result is PasswordSuccess => {
-  return result.success == true;
+  return result.success === true;
 };
 
 const LostPasswordSection: FC<LostPasswordSectionProps> = ({
@@ -87,7 +87,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
               <ZUIText variant="bodyMdRegular">
                 <Msg id={messageIds.lostPassword.description} />
               </ZUIText>
-              {emailError == 'unknownError' && (
+              {emailError === 'unknownError' && (
                 <ZUIAlert
                   appear
                   description={messages.lostPassword.errors.unknownError()}
@@ -97,9 +97,9 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
               )}
               <ZUITextField
                 disabled={alreadyLoggedIn}
-                error={emailError == 'invalidEmail'}
+                error={emailError === 'invalidEmail'}
                 helperText={
-                  emailError == 'invalidEmail'
+                  emailError === 'invalidEmail'
                     ? messages.lostPassword.errors.invalidEmail()
                     : ''
                 }

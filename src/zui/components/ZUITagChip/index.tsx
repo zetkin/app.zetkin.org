@@ -113,7 +113,7 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
 
   return (
     <Box
-      onClick={() => !disabled && onClick && onClick(tag)}
+      onClick={() => !disabled && onClick?.(tag)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       sx={{

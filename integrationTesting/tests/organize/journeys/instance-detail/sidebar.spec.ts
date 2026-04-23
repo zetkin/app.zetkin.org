@@ -132,7 +132,7 @@ test.describe('Journey instance detail page sidebar', () => {
     // Set up parallel tracks: update mock and click delete
     await Promise.all([
       (async () => {
-        await page.waitForRequest((req) => req.method() == 'DELETE');
+        await page.waitForRequest((req) => req.method() === 'DELETE');
         moxy.setZetkinApiMock(
           `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
           'get',
@@ -284,7 +284,7 @@ test.describe('Journey instance detail page sidebar', () => {
     // Set up parallel tracks: update mock and click delete
     await Promise.all([
       (async () => {
-        await page.waitForRequest((req) => req.method() == 'DELETE');
+        await page.waitForRequest((req) => req.method() === 'DELETE');
         moxy.setZetkinApiMock(
           `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
           'get',

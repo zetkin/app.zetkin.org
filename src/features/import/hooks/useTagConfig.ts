@@ -15,8 +15,8 @@ export default function useTagConfig(
   const tags = tagsFuture.data;
 
   const assignTag = (tag: { id: number }, value: CellData) => {
-    if (column.kind == ColumnKind.TAG && tags != null) {
-      const map = column.mapping.find((map) => map.value == value);
+    if (column.kind === ColumnKind.TAG && tags !== null) {
+      const map = column.mapping.find((map) => map.value === value);
 
       if (!map) {
         const newMap = {
@@ -33,7 +33,7 @@ export default function useTagConfig(
           ])
         );
       } else {
-        const filteredMapping = column.mapping.filter((m) => m.value != value);
+        const filteredMapping = column.mapping.filter((m) => m.value !== value);
         const updatedTags = map.tags.concat({
           id: tag.id,
         });
@@ -53,7 +53,7 @@ export default function useTagConfig(
   };
 
   const assignTags = (mapping: TagColumn['mapping']) => {
-    if (column.kind == ColumnKind.TAG) {
+    if (column.kind === ColumnKind.TAG) {
       dispatch(
         columnUpdate([
           columnIndex,
@@ -67,10 +67,10 @@ export default function useTagConfig(
   };
 
   const getAssignedTags = (value: CellData): ZetkinAppliedTag[] => {
-    if (column.kind == ColumnKind.TAG && tags != null) {
+    if (column.kind === ColumnKind.TAG && tags !== null) {
       const map = column.mapping.find((m) => m.value === value);
       const assignedTags = map?.tags
-        .map((tag) => tags.find((t) => t.id == tag.id))
+        .map((tag) => tags.find((t) => t.id === tag.id))
         .filter(notEmpty)
         .map((tag) => ({ ...tag, value: null }));
       return assignedTags || [];
@@ -79,13 +79,13 @@ export default function useTagConfig(
   };
 
   const unAssignTag = (tagId: number, value: CellData) => {
-    if (column.kind == ColumnKind.TAG) {
-      const map = column.mapping.find((map) => map.value == value);
+    if (column.kind === ColumnKind.TAG) {
+      const map = column.mapping.find((map) => map.value === value);
       if (map) {
-        const filteredMapping = column.mapping.filter((m) => m.value != value);
-        const updatedTags = map.tags.filter((t) => t.id != tagId);
+        const filteredMapping = column.mapping.filter((m) => m.value !== value);
+        const updatedTags = map.tags.filter((t) => t.id !== tagId);
 
-        if (updatedTags.length == 0) {
+        if (updatedTags.length === 0) {
           dispatch(
             columnUpdate([
               columnIndex,

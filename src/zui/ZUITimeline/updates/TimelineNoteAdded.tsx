@@ -25,7 +25,7 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
   const [noteText, setNoteText] = useState(update.details.note.text);
 
   const emailFiles: ZetkinFile[] = update.details.note.files.filter(
-    (file) => file.mime_type == 'message/rfc822'
+    (file) => file.mime_type === 'message/rfc822'
   );
   const miscFiles: ZetkinFile[] = update.details.note.files.filter(
     (file) => !emailFiles.includes(file)

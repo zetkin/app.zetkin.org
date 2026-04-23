@@ -17,8 +17,16 @@ test.describe('Views list page', () => {
     appUri,
     moxy,
   }) => {
+    // getServerSideProps verifies that the user may access views
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
     moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
+
+    // ViewBrowser loads items via Next API endpoint /api/views/tree
+    await page.route(/\/api\/views\/tree\?orgId=1\b/, async (route) => {
+      await route.fulfill({
+        json: { data: { folders: [], views: [AllMembers] } },
+      });
+    });
 
     await page.goto(appUri + '/organize/1/people');
 

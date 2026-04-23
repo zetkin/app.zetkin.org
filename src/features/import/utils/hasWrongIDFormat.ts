@@ -5,21 +5,22 @@ export default function hasWrongIDFormat(
   cellValues: CellData[],
   firstRowIsHeaders: boolean
 ) {
-  if (column.kind != ColumnKind.ID_FIELD) {
+  if (column.kind !== ColumnKind.ID_FIELD) {
     return false;
   }
 
   if (
-    column.idField == 'email' ||
-    column.idField == 'ext_id' ||
-    column.idField == null
+    column.idField === 'email' ||
+    column.idField === 'ext_id' ||
+    column.idField === null ||
+    column.idField === undefined
   ) {
     return false;
   }
 
   //idField must be "id"
   return cellValues.some((value, index) => {
-    if (firstRowIsHeaders && index == 0) {
+    if (firstRowIsHeaders && index === 0) {
       return false;
     }
 

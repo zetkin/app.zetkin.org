@@ -18,6 +18,23 @@ export const PATCH = proxy;
 export const PUT = proxy;
 export const DELETE = proxy;
 
+async function safeJson<T = unknown>(response: Response): Promise<T | null> {
+  try {
+    return (await response.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
+function hasInvalidTokenError(payload: unknown): boolean {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+
+  const error = (payload as { error?: unknown }).error;
+  return typeof error === 'string' && error.includes('invalid_token');
+}
+
 async function proxy(
   request: NextRequest,
   context: Context
@@ -50,7 +67,7 @@ async function proxy(
   };
 
   const requestContentType = request.headers.get('Content-Type');
-  if (requestContentType == 'application/json') {
+  if (requestContentType === 'application/json') {
     requestOptions.body = await request.text();
 
     if (requestContentType) {
@@ -70,10 +87,10 @@ async function proxy(
   }
 
   let zetkinResponse: Response = await makeZetkinApiRequest();
-  let payload = await zetkinResponse.json();
+  let payload = await safeJson(zetkinResponse);
 
-  if (zetkinResponse.status == 401) {
-    if (payload.error?.includes('invalid_token')) {
+  if (zetkinResponse.status === 401) {
+    if (hasInvalidTokenError(payload)) {
       if (session.tokenData?.refresh_token) {
         const refreshData = new URLSearchParams({
           grant_type: 'refresh_token',
@@ -95,12 +112,12 @@ async function proxy(
         await session.save();
 
         zetkinResponse = await makeZetkinApiRequest();
-        payload = zetkinResponse.json();
+        payload = await safeJson(zetkinResponse);
       }
     }
   }
 
-  if (zetkinResponse.status == 204) {
+  if (zetkinResponse.status === 204) {
     return new NextResponse(null, { status: 204 });
   } else {
     return NextResponse.json(payload, { status: zetkinResponse.status });

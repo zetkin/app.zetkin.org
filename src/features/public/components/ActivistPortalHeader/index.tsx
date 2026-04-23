@@ -41,7 +41,7 @@ const ActivistPortalHeader: FC<Props> = ({
   const router = useRouter();
 
   const memberships = useUserMemberships();
-  const isOfficial = memberships.find((membership) => membership.role != null);
+  const isOfficial = memberships.find((membership) => membership.role !== null);
 
   const menuItems: MenuItem[] = useMemo(
     () => [
@@ -137,7 +137,7 @@ const ActivistPortalHeader: FC<Props> = ({
             }}
           >
             <Box>
-              {typeof title == 'string' ? (
+              {typeof title === 'string' ? (
                 <ZUIText variant="headingLg">{title}</ZUIText>
               ) : (
                 title
@@ -148,7 +148,7 @@ const ActivistPortalHeader: FC<Props> = ({
         )}
         {subtitle && (
           <Box>
-            {typeof subtitle == 'string' ? (
+            {typeof subtitle === 'string' ? (
               <ZUIText renderLineBreaks={true}>{subtitle}</ZUIText>
             ) : (
               subtitle

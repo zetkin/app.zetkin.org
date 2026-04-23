@@ -72,7 +72,7 @@ export default class FetchApiClient implements IApiClient {
 
   async put<DataType = void>(
     path: string,
-    data?: Partial<DataType> | undefined
+    data?: Partial<DataType>
   ): Promise<DataType> {
     const options: RequestInit = {
       method: 'PUT',

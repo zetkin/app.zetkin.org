@@ -38,9 +38,7 @@ export const getRows = ({
       );
     } else {
       const fuse = new Fuse(journeyInstances, options);
-      return fuse
-        .search(quickSearch)
-        .map((fuseResult) => fuseResult.item) as ZetkinJourneyInstance[];
+      return fuse.search(quickSearch).map((fuseResult) => fuseResult.item);
     }
   } else {
     return journeyInstances;

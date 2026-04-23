@@ -21,7 +21,7 @@ export default function useCallMutations(orgId: number) {
     callId: number
   ) => {
     const assignment = assignments.find(
-      (assignment) => assignment.id == assignmentId
+      (assignment) => assignment.id === assignmentId
     );
 
     if (assignment) {
@@ -65,7 +65,7 @@ export default function useCallMutations(orgId: number) {
     targetId: number
   ) => {
     const assignment = assignments.find(
-      (assignment) => assignment.id == assignmentId
+      (assignment) => assignment.id === assignmentId
     );
 
     if (assignment) {

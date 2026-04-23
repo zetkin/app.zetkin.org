@@ -14,19 +14,18 @@ export default function useFinishedCalls() {
 
   const loadFinishedCalls = async () => {
     dispatch(finishedCallsLoad());
-    if (finishedCalls.length == 0) {
+    if (finishedCalls.length === 0) {
       setLoading(true);
     }
-    const newLoadedFinishedCalls = await apiClient.get<
-      FinishedCall[]
-    >(`/api/users/me/outgoing_calls?p=${pageNumber}&pp=20&filter=state!=0
-         `);
+    const newLoadedFinishedCalls = await apiClient.get<FinishedCall[]>(
+      `/api/users/me/outgoing_calls?p=${pageNumber}&pp=20&filter=state!==0`
+    );
 
     const loadedFinishedCalls = [...finishedCalls, ...newLoadedFinishedCalls];
     dispatch(finishedCallsLoaded(loadedFinishedCalls));
     setFinishedCalls(loadedFinishedCalls);
 
-    if (newLoadedFinishedCalls.length == 0) {
+    if (newLoadedFinishedCalls.length === 0) {
       setLoading(false);
     }
   };

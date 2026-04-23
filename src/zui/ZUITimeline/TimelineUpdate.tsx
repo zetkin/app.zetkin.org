@@ -29,7 +29,7 @@ function isWildcardType<T extends ZetkinUpdate>(
   const updateAction = update.type.split('.')[1];
   for (const type of types) {
     const typeAction = type.split('.')[1];
-    if (typeAction == updateAction) {
+    if (typeAction === updateAction) {
       return true;
     }
   }
@@ -55,7 +55,7 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({
     return <TimelineNoteAdded onEditNote={onEditNote} update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CLOSE) {
     return <TimelineJourneyClose update={update} />;
-  } else if (update.type == UPDATE_TYPES.JOURNEYINSTANCE_CONVERT) {
+  } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CONVERT) {
     return <TimelineJourneyConvert update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATE) {
     return <TimelineJourneyInstance update={update} />;
