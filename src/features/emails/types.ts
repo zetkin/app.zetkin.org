@@ -174,11 +174,9 @@ export type EmailTheme = {
   org_id?: number;
 };
 
-export type EmailThemePatchBody = {
-  block_attributes?: EmailTheme['block_attributes'];
-  css?: EmailTheme['css'];
-  frame_mjml?: EmailTheme['frame_mjml'];
-};
+export type EmailThemePatchBody = Partial<
+  Pick<EmailTheme, 'block_attributes' | 'css' | 'frame_mjml'>
+>;
 
 export type ZetkinEmailRecipient = {
   delivered: string | null;
