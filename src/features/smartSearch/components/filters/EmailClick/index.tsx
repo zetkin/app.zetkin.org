@@ -60,7 +60,10 @@ const EmailClick = ({
       operator: 'clicked',
     });
   const linkList = useEmailLinks(orgId, filter.config?.email).data || [];
-  const linkListSorted = linkList.sort((l1, l2) => {
+  const linkListFilteredByUniqueURL = linkList.filter(
+      (link, index, self) => self.findIndex((l) => l.url === link.url) === index
+  );
+  const linkListSorted = linkListFilteredByUniqueURL.sort((l1, l2) => {
     return l1.url.localeCompare(l2.url);
   });
 
@@ -225,11 +228,11 @@ const EmailClick = ({
                         value.map((link) => link.id)
                       )
                     }
-                    options={linkList.map((link) => ({
+                    options={linkListFilteredByUniqueURL.map((link) => ({
                       id: link.id,
                       title: link.url.split('://')[1],
                     }))}
-                    value={linkList
+                    value={linkListFilteredByUniqueURL
                       .filter(
                         (link) =>
                           filter.config.links?.includes(link.id) || false
