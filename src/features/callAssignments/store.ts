@@ -133,8 +133,8 @@ const callAssignmentsSlice = createSlice({
       }
 
       if (caItem) {
-        caItem.mutating = caItem.mutating.filter((attr) =>
-          mutating.includes(attr)
+        caItem.mutating = caItem.mutating.filter(
+          (attr) => !mutating.includes(attr)
         );
       }
 
@@ -170,8 +170,8 @@ const callAssignmentsSlice = createSlice({
       const callItem = state.callList.items.find((item) => item.id == call.id);
 
       if (callItem) {
-        callItem.mutating = callItem.mutating.filter((attr) =>
-          mutating.includes(attr)
+        callItem.mutating = callItem.mutating.filter(
+          (attr) => !mutating.includes(attr)
         );
       }
 

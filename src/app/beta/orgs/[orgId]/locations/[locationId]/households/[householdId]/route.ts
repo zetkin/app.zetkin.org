@@ -46,6 +46,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const payload = await request.json();
   const { color, ...zetkinPayload } = payload;
+  let notNullColor = color;
 
   if (color) {
     await HouseholdColorModel.findOneAndUpdate(
@@ -55,6 +56,11 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       },
       { new: true, upsert: true }
     );
+  } else {
+    const householdColorModel = await HouseholdColorModel.findOne({
+      householdId: params.householdId,
+    });
+    notNullColor = (householdColorModel?.color ?? 'clear') as HouseholdColor;
   }
 
   const headers: IncomingHttpHeaders = {};
@@ -73,7 +79,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const householdWithColor: HouseholdWithColor = {
     ...household,
-    color: color ?? null,
+    color: notNullColor,
   };
 
   return NextResponse.json({
