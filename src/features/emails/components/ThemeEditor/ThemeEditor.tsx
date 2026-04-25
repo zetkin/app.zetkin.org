@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -64,20 +64,22 @@ const ThemeEditor: React.FC<EditTabProps> = ({
     isLoading,
   } = useEmailTheme(orgId, themeId);
 
-  const sectionValue = theme
-    ? parseField(theme[editingSection], editingSection)
-    : '';
+  const sectionValue = useMemo(() => {
+    return theme ? parseField(theme[editingSection], editingSection) : '';
+  }, [theme, editingSection]);
+
   const [localValue, setLocalValue] = useState(sectionValue);
-  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     setLocalValue(sectionValue);
-    setDirty(false);
-  }, [sectionValue, themeId]);
+  }, [sectionValue]);
+
+  const isDirty = useMemo(() => {
+    return localValue !== sectionValue;
+  }, [localValue, sectionValue]);
 
   const handleChange = (newValue: string) => {
     setLocalValue(newValue);
-    setDirty(true);
   };
 
   const handleSave = async () => {
@@ -85,18 +87,19 @@ const ThemeEditor: React.FC<EditTabProps> = ({
       [editingSection]: serializeField(localValue, editingSection),
     };
     await updateEmailTheme(patch as EmailTheme);
-    setDirty(false);
   };
 
-  let jsonError = false;
-  if (editingSection !== 'css' && localValue) {
-    try {
-      JSON.parse(localValue as string);
-      jsonError = false;
-    } catch {
-      jsonError = true;
+  const jsonError = useMemo(() => {
+    if (editingSection !== 'css' && localValue) {
+      try {
+        JSON.parse(localValue as string);
+        return false;
+      } catch {
+        return true;
+      }
     }
-  }
+    return false;
+  }, [localValue, editingSection]);
 
   if (isLoading || mutating.includes(editingSection)) {
     return <CircularProgress />;
@@ -121,7 +124,7 @@ const ThemeEditor: React.FC<EditTabProps> = ({
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
         <Button
           color="primary"
-          disabled={!dirty || jsonError}
+          disabled={!isDirty || jsonError}
           onClick={handleSave}
           variant="contained"
         >
