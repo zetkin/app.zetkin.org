@@ -6,6 +6,7 @@ export default async function previewEmailThemeHtml(
   theme: EmailTheme
 ): Promise<string> {
   const contentObj = JSON.parse(content) as EmailContent;
+  // use dynamic import of 'mjml2html' to allow client-side rendering of the theme
   const { default: mjml2html } = await import('mjml-browser');
   const converter = new EmailMJMLConverter();
   const mjml = converter.convertContentToMjml(contentObj, theme);
