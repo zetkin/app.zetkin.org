@@ -44,9 +44,8 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
           <Msg id={messageIds.themes.overview.description} />
         </Typography>
         <Button
-          color="primary"
           onClick={() => {
-            createEmailTheme().then();
+            createEmailTheme();
           }}
           variant="contained"
         >
