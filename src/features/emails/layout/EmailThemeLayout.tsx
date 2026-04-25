@@ -23,7 +23,7 @@ const EmailThemeLayout: FunctionComponent<SettingsLayoutProps> = ({
         { href: `/frame`, label: messages.themes.themeEditor.tabs.frame() },
         { href: `/css`, label: messages.themes.themeEditor.tabs.css() },
         {
-          href: `/block_attributes`,
+          href: `/blockAttributes`,
           label: messages.themes.themeEditor.tabs.block(),
         },
       ]}
