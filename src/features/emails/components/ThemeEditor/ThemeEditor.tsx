@@ -10,11 +10,7 @@ import { MJMLJsonObject } from 'mjml-core';
 
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUITextField from 'zui/components/ZUITextField';
-import {
-  BlockAttributes,
-  EmailTheme,
-  EmailThemePatchBody,
-} from 'features/emails/types';
+import { BlockAttributes, EmailThemePatchBody } from 'features/emails/types';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
 
@@ -86,7 +82,7 @@ const ThemeEditor: React.FC<EditTabProps> = ({
     const patch: EmailThemePatchBody = {
       [editingSection]: serializeField(localValue, editingSection),
     };
-    await updateEmailTheme(patch as EmailTheme);
+    await updateEmailTheme(patch);
   };
 
   const jsonError = useMemo(() => {

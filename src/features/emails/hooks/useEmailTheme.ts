@@ -1,4 +1,4 @@
-import { EmailTheme } from 'features/emails/types';
+import { EmailTheme, EmailThemePatchBody } from 'features/emails/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
   themeDeleted,
@@ -13,7 +13,7 @@ import { futureToObject } from 'core/caching/futures';
 interface UseCreateEmailThemeReturn {
   data: EmailTheme | null;
   deleteEmailTheme: (themeId: number) => Promise<void>;
-  updateEmailTheme: (data: EmailTheme) => Promise<EmailTheme>;
+  updateEmailTheme: (data: EmailThemePatchBody) => Promise<EmailTheme>;
   isLoading: boolean;
   mutating: string[];
 }
@@ -39,9 +39,9 @@ export default function useEmailTheme(
     dispatch(themeDeleted(themeId));
   };
 
-  const updateEmailTheme = async (data: EmailTheme) => {
+  const updateEmailTheme = async (data: EmailThemePatchBody) => {
     const mutating = Object.keys(data);
-    dispatch(themeUpdate([data.id, mutating]));
+    dispatch(themeUpdate([themeId, mutating]));
     return await apiClient
       .patch<EmailTheme>(`/api/orgs/${orgId}/email_themes/${themeId}`, data)
       .then((theme: EmailTheme) => {
