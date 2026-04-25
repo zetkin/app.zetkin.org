@@ -266,17 +266,17 @@ export default makeMessages('feat.emails', {
     themePreview: {
       button: m('I am a button.'),
       heading: {
-        1: m('I am a heading 1'),
-        2: m('I am a heading 2'),
-        3: m('I am a heading 3'),
+        paragraphPart1: m('I am a heading 1'),
+        paragraphPart2: m('I am a heading 2'),
+        paragraphPart3: m('I am a heading 3'),
       },
       paragraph: {
-        1: m('I am a paragraph with '),
-        2: m(', '),
-        3: m(' text and an '),
         bold: m('bold'),
         italic: m('italic'),
         link: m('external link'),
+        paragraphPart1: m('I am a paragraph with '),
+        paragraphPart2: m(', '),
+        paragraphPart3: m(' text and an '),
       },
     },
   },

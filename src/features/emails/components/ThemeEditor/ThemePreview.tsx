@@ -21,7 +21,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
       "data": {
         "content": [
           { "kind": "string", "value": "` +
-    messages.themes.themePreview.heading['1']() +
+    messages.themes.themePreview.heading.paragraphPart1() +
     `" }
         ],
         "level": 1
@@ -32,7 +32,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
       "data": {
         "content": [
           { "kind": "string", "value": "` +
-    messages.themes.themePreview.heading['2']() +
+    messages.themes.themePreview.heading.paragraphPart2() +
     `" }
         ],
         "level": 2
@@ -43,7 +43,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
       "data": {
         "content": [
           { "kind": "string", "value": "` +
-    messages.themes.themePreview.heading['1']() +
+    messages.themes.themePreview.heading.paragraphPart1() +
     `" }
         ],
         "level": 3
@@ -54,7 +54,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
       "data": {
         "content": [
           { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph['1']() +
+    messages.themes.themePreview.paragraph.paragraphPart1() +
     `" },
           {
             "kind": "bold",
@@ -65,7 +65,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
             ]
           },
           { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph['2']() +
+    messages.themes.themePreview.paragraph.paragraphPart2() +
     `" },
           {
             "kind": "italic",
@@ -76,7 +76,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
             ]
           },
           { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph['3']() +
+    messages.themes.themePreview.paragraph.paragraphPart3() +
     `" },
           {
             "kind": "link",
