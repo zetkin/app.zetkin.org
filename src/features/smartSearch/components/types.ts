@@ -20,6 +20,7 @@ export enum FILTER_TYPE {
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
+  EVENT_PARTICIPATION = 'action_participation',
   JOINFORM = 'joinform',
   JOURNEY = 'journey_subjects',
   MOST_ACTIVE = 'most_active',
@@ -300,6 +301,13 @@ export interface CampaignParticipationConfig {
   before?: string;
 }
 
+export interface EventParticipationConfig {
+  action: number;
+  state: 'booked' | 'signed_up';
+  status?: 'attended' | 'cancelled' | 'noshow';
+  organizations?: FilterConfigOrgOptions;
+}
+
 export interface SubQueryFilterConfig {
   query_id: number;
   operator?: IN_OPERATOR;
@@ -363,6 +371,7 @@ export type AnyFilterConfig =
   | CallBlockedFilterConfig
   | CallHistoryFilterConfig
   | CampaignParticipationConfig
+  | EventParticipationConfig
   | DefaultFilterConfig
   | EmailBlacklistFilterConfig
   | JoinFormFilterConfig
