@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { MJMLJsonObject, MJMLJsonSelfClosingTag } from 'mjml-core';
+import { MJMLJsonObject } from 'mjml-core';
 
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -27,25 +27,25 @@ interface EditTabProps {
 const parseField = (
   section: string | MJMLJsonObject | BlockAttributes | null | undefined,
   editingSection: EditTabProps['editingSection']
-) => {
+): string => {
   if (section === null || section === undefined) {
     return '';
   }
   if (editingSection === 'css') {
-    return section || '';
+    return (section as string) || '';
   }
   return JSON.stringify(section, null, 2);
 };
 
 const serializeField = (
-  value: string | MJMLJsonSelfClosingTag | BlockAttributes,
+  value: string,
   editingSection: EditTabProps['editingSection']
 ) => {
   if (editingSection === 'css') {
     return value;
   }
   try {
-    return JSON.parse(value as string);
+    return JSON.parse(value);
   } catch {
     return value;
   }
@@ -92,7 +92,7 @@ const ThemeEditor: React.FC<EditTabProps> = ({
   const jsonError = useMemo(() => {
     if (editingSection !== 'css' && localValue) {
       try {
-        JSON.parse(localValue as string);
+        JSON.parse(localValue);
         return false;
       } catch {
         return true;
@@ -119,7 +119,7 @@ const ThemeEditor: React.FC<EditTabProps> = ({
         maxRows={20}
         multiline
         onChange={handleChange}
-        value={localValue as string}
+        value={localValue}
       />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
         <Button
