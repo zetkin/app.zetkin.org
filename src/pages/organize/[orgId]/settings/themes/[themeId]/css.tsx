@@ -58,6 +58,9 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
               {messages.themes.themeEditor.helpDialog.content.css.part3()}
             </Link>
             {messages.themes.themeEditor.helpDialog.content.css.part4()}
+            <br />
+            <br />
+            {messages.themes.themeEditor.helpDialog.content.css.part5()}
           </>
         }
         orgId={orgId}

@@ -279,6 +279,9 @@ export default makeMessages('feat.emails', {
             ),
             part3: m('here'),
             part4: m('.'),
+            part5: m(
+              'This parameter is stored as a string, not as a JSON object and the keys should not be quoted.'
+            ),
           },
           frame: {
             part1: m(
