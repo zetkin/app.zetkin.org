@@ -24,8 +24,7 @@ export default function useEmailTheme(
 ): UseCreateEmailThemeReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const themeItems = useAppSelector((state) => state.emails.themeList.items);
-  const themeItem = themeItems.find((item) => item.id == themeId);
+  const themeItem = useAppSelector((state) => state.emails.themesById[themeId]);
 
   const themeFuture = loadItemIfNecessary(themeItem, dispatch, {
     actionOnLoad: () => themeLoad(themeId),
@@ -36,7 +35,7 @@ export default function useEmailTheme(
 
   const deleteEmailTheme = async (themeId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/email_themes/${themeId}`);
-    dispatch(themeDeleted(themeId));
+    dispatch(themeDeleted([orgId, themeId]));
   };
 
   const updateEmailTheme = async (data: EmailThemePatchBody) => {
@@ -45,7 +44,7 @@ export default function useEmailTheme(
     return await apiClient
       .patch<EmailTheme>(`/api/orgs/${orgId}/email_themes/${themeId}`, data)
       .then((theme: EmailTheme) => {
-        dispatch(themeUpdated([theme, mutating]));
+        dispatch(themeUpdated([orgId, theme, mutating]));
         return theme;
       });
   };

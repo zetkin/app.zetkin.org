@@ -157,7 +157,7 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: themeCreated,
   effect: (action) => {
-    const [emailTheme, orgId] = action.payload;
+    const [orgId, emailTheme] = action.payload;
     Router.push(`/organize/${orgId}/settings/themes/${emailTheme.id}/frame`);
   },
 });
