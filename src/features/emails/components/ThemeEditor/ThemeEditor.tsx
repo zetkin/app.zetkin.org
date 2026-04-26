@@ -3,10 +3,16 @@ import {
   Box,
   Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
   Stack,
   Typography,
 } from '@mui/material';
 import { MJMLJsonObject } from 'mjml-core';
+import { QuestionMark } from '@mui/icons-material';
 
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -18,6 +24,7 @@ interface EditTabProps {
   orgId: number;
   themeId: number;
   editingSection: 'frame_mjml' | 'css' | 'block_attributes';
+  helpBlock?: React.ReactNode;
 }
 
 const parseField = (
@@ -51,6 +58,7 @@ const ThemeEditor: React.FC<EditTabProps> = ({
   orgId,
   themeId,
   editingSection,
+  helpBlock,
 }) => {
   const messages = useMessages(messageIds);
   const {
@@ -65,6 +73,7 @@ const ThemeEditor: React.FC<EditTabProps> = ({
   }, [theme, editingSection]);
 
   const [localValue, setLocalValue] = useState(sectionValue);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   useEffect(() => {
     setLocalValue(sectionValue);
@@ -118,6 +127,15 @@ const ThemeEditor: React.FC<EditTabProps> = ({
         value={localValue}
       />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+        {helpBlock && (
+          <IconButton
+            aria-label="help"
+            onClick={() => setHelpOpen(true)}
+            size="small"
+          >
+            <QuestionMark fontSize="small" />
+          </IconButton>
+        )}
         <Button
           color="primary"
           disabled={!isDirty || jsonError}
@@ -127,6 +145,22 @@ const ThemeEditor: React.FC<EditTabProps> = ({
           {messages.themes.themeEditor.saveButton()}
         </Button>
       </Box>
+      {/* Help Dialog */}
+      <Dialog onClose={() => setHelpOpen(false)} open={helpOpen}>
+        <DialogTitle>
+          {messages.themes.themeEditor.helpDialog.title()}
+        </DialogTitle>
+        <DialogContent>
+          <Typography component="div" variant="body1">
+            {helpBlock}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setHelpOpen(false)}>
+            {messages.themes.themeEditor.helpDialog.closeButton()}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 };
