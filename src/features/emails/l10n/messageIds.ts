@@ -248,6 +248,9 @@ export default makeMessages('feat.emails', {
   themes: {
     themeCard: {
       delete: m('Delete'),
+      deleteWarning: m<{ themeId: number }>(
+        'Are you sure you want to delete theme {themeId}? It cannot be undone.'
+      ),
       edit: m('Edit'),
       title: m<{ themeId: number }>('Theme {themeId}'),
     },
