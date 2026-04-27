@@ -1,12 +1,6 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.areaAssignments', {
-  assignees: {
-    columns: {
-      areas: m('Areas'),
-      name: m('Name'),
-    },
-  },
   default: {
     title: m('Untitled area assignment'),
   },
@@ -42,7 +36,6 @@ export default makeMessages('feat.areaAssignments', {
       ),
     },
     tabs: {
-      assignees: m('Assignees'),
       instructions: m('Instructions'),
       map: m('Map'),
       overview: m('Overview'),
@@ -76,7 +69,6 @@ export default makeMessages('feat.areaAssignments', {
       },
       description: m('Define what areas you see on the map'),
       header: m('Filters'),
-      title: m('Add filters to decide what areas you see on the map'),
       ungroupedTags: m('Ungrouped tags'),
     },
     findArea: {
@@ -88,38 +80,7 @@ export default makeMessages('feat.areaAssignments', {
         label: m('Area color'),
         options: {
           assignees: m('Assignees'),
-          hidden: m('Hidden'),
-          households: m('Households'),
           outlined: m('Outlined'),
-          progress: m('Progress'),
-        },
-      },
-      center: {
-        label: m('Area markers'),
-        options: {
-          assignees: m('Assignees'),
-          hidden: m('Hidden'),
-          households: m('Households & locations'),
-          progress: m('Progress'),
-        },
-      },
-      markers: {
-        label: m('Location markers'),
-        options: {
-          altDescriptions: {
-            areaMarkerAssignee: m('Center area assignees'),
-            areaMarkerAssignmentProgreess: m('Center area progress'),
-            areaMarkerHidden: m('Center area hidden'),
-            areaMarkerHouseholds: m('Center area households'),
-            locationDot: m('Dot option'),
-            locationHidden: m('Hide option'),
-            locationHouseholds: m('Households option'),
-            locationProgress: m('Progress option'),
-          },
-          dot: m('Point'),
-          hidden: m('Hidden'),
-          households: m('Households'),
-          progress: m('Progress'),
         },
       },
       title: m('Data visualization'),
@@ -137,12 +98,6 @@ export default makeMessages('feat.areaAssignments', {
         successful: m('Successful visits'),
       },
       statsTitle: m('Progress'),
-      unassignedVisits: {
-        description: m(
-          'This graph shows visits made outside the assigned areas'
-        ),
-        title: m('Unassigned visits'),
-      },
     },
   },
   report: {
@@ -165,8 +120,6 @@ export default makeMessages('feat.areaAssignments', {
       ),
     },
     delete: {
-      cancel: m('Cancel'),
-      confirm: m('Confirm'),
       deleteWarningText: m<{ title: string }>(
         'If you want to delete {title} you need to pick another choice question to be the question that defines if the visit was successful'
       ),
