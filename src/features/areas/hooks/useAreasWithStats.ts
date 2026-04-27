@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 
 import { Zetkin2Area, ZetkinAreaStats } from 'features/areas/types';
+import { futureToObject } from 'core/caching/futures';
 import useAreaStats from './useAreaStats';
 
 export const MIN_FETCH_ZOOM = 10;
@@ -10,7 +11,7 @@ export default function useAreasWithStats(
   areasInView: Zetkin2Area[],
   zoomLevel: number
 ) {
-  const { getAreaStats } = useAreaStats();
+  const { allAreaStats, getAreaStats } = useAreaStats();
 
   // Fetch stats for the areas in view
   useEffect(() => {
@@ -32,13 +33,16 @@ export default function useAreasWithStats(
       features: allAreas.map((area) => {
         return {
           geometry: area.boundary,
-          properties: { id: area.id, stats: getAreaStats(area.id) },
+          properties: {
+            id: area.id,
+            stats: futureToObject(allAreaStats[area.id]).data ?? null,
+          },
           type: 'Feature',
         };
       }),
       type: 'FeatureCollection',
     };
-  }, [allAreas, getAreaStats]);
+  }, [allAreas, allAreaStats]);
 
   return areasWithStatsGeojson;
 }
