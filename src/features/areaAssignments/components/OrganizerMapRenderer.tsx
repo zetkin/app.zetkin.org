@@ -101,6 +101,7 @@ function AssigneeOverlayMarker({
         } else if (index == 5) {
           return (
             <Box
+              key={`${userId}-${index}`}
               alignItems="center"
               bgcolor="white"
               borderRadius="100%"
