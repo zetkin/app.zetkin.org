@@ -60,6 +60,10 @@ export default makeMessages('feat.emails', {
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
         },
+        theme: {
+          themeTitle: m<{ themeId: number }>('Theme {themeId}'),
+          title: m('Theme'),
+        },
       },
     },
     tools: {
@@ -240,6 +244,85 @@ export default makeMessages('feat.emails', {
     ),
     unlockButton: m('Unlock'),
     viewButton: m('View target group'),
+  },
+  themes: {
+    themeCard: {
+      delete: m('Delete'),
+      deleteWarning: m<{ themeId: number }>(
+        'Are you sure you want to delete theme {themeId}? It cannot be undone.'
+      ),
+      edit: m('Edit'),
+      title: m<{ themeId: number }>('Theme {themeId}'),
+    },
+    themeEditor: {
+      editTitle: m('Edit'),
+      helpDialog: {
+        closeButton: m('Close'),
+        content: {
+          blockAttributes: {
+            part1: m(
+              'You can personalize the look and feel of your images and buttons.'
+            ),
+            part2: m('For buttons, you can use any of '),
+            part3: m('these'),
+            part4: m(' configuration options.'),
+            part5: m('For images, you can use any of '),
+            part6: m('these'),
+            part7: m(' configuration options.'),
+          },
+          css: {
+            part1: m(
+              'You can add custom CSS in that will be injected inside the MJML header when building your emails.'
+            ),
+            part2: m(
+              'For more information about CSS you can refer to the Mozilla documentation '
+            ),
+            part3: m('here'),
+            part4: m('.'),
+            part5: m(
+              'This parameter is stored as a string, not as a JSON object and the keys should not be quoted.'
+            ),
+          },
+          frame: {
+            part1: m(
+              'We use MJML, formatted in JSON to configure email templates.'
+            ),
+            part2: m('The documentation for MJML is accessible '),
+            part3: m('here'),
+            part4: m('.'),
+            part5: m(
+              'The email template has to be wrapped inside of an object of type `mj-wrapper`, and must contain exactly one child element with `"tagName": "placehodler"` to work properly.'
+            ),
+          },
+        },
+        title: m('How to configure'),
+      },
+      jsonError: m('Invalid JSON'),
+      previewTitle: m('Preview'),
+      saveButton: m('Save'),
+      tabs: {
+        block: m('Block'),
+        css: m('CSS'),
+        frame: m('Frame'),
+      },
+      title: m<{ themeId: number }>('Theme {themeId}'),
+    },
+    themePreview: {
+      button: m('I am a button.'),
+      heading: {
+        paragraphPart1: m('I am a heading 1'),
+        paragraphPart2: m('I am a heading 2'),
+        paragraphPart3: m('I am a heading 3'),
+      },
+      paragraph: {
+        bold: m('bold'),
+        italic: m('italic'),
+        link: m('external link'),
+        paragraphPart1: m('I am a paragraph with '),
+        paragraphPart2: m(', '),
+        paragraphPart3: m(' text and an '),
+      },
+    },
   },
   unsubscribePage: {
     consent: m('I understand'),

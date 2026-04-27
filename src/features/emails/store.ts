@@ -12,7 +12,8 @@ import { ZetkinEmail, ZetkinEmailConfig, ZetkinLink } from 'utils/types/zetkin';
 export interface EmailStoreSlice {
   configList: RemoteList<ZetkinEmailConfig>;
   emailList: RemoteList<ZetkinEmail>;
-  themeList: RemoteList<EmailTheme>;
+  themesById: Record<number, RemoteItem<EmailTheme>>;
+  themesByOrgId: Record<number, RemoteList<EmailTheme>>;
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
   statsById: Record<number, RemoteItem<ZetkinEmailStats>>;
   insightsByEmailId: Record<number, RemoteItem<EmailInsights>>;
@@ -24,7 +25,8 @@ const initialState: EmailStoreSlice = {
   insightsByEmailId: {},
   linksByEmailId: {},
   statsById: {},
-  themeList: remoteList(),
+  themesById: {},
+  themesByOrgId: {},
 };
 
 const emailsSlice = createSlice({
@@ -179,15 +181,94 @@ const emailsSlice = createSlice({
         }
       );
     },
-    themesLoad: (state) => {
-      state.themeList.isLoading = true;
+    themeCreate: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      if (!state.themesByOrgId[orgId]) {
+        state.themesByOrgId[orgId] = remoteList();
+      }
+      state.themesByOrgId[orgId].isLoading = true;
     },
-    themesLoaded: (state, action: PayloadAction<EmailTheme[]>) => {
-      const themes = action.payload;
+    themeCreated: (state, action: PayloadAction<[number, EmailTheme]>) => {
+      const [orgId, theme] = action.payload;
       const timestamp = new Date().toISOString();
-      state.themeList = remoteList(themes);
-      state.themeList.loaded = timestamp;
-      state.themeList.items.forEach((item) => (item.loaded = timestamp));
+      state.themesById[theme.id] = remoteItem(theme.id, {
+        data: theme,
+        loaded: timestamp,
+      });
+      if (state.themesByOrgId[orgId]) {
+        state.themesByOrgId[orgId].isLoading = false;
+        state.themesByOrgId[orgId].items.push(
+          remoteItem(theme.id, { data: theme })
+        );
+      }
+    },
+    themeDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [orgId, themeId] = action.payload;
+      const item = state.themesById[themeId];
+      if (item) {
+        item.deleted = true;
+      }
+      if (state.themesByOrgId[orgId]) {
+        state.themesByOrgId[orgId].isStale = true;
+      }
+    },
+    themeLoad: (state, action: PayloadAction<number>) => {
+      const themeId = action.payload;
+      const existing = state.themesById[themeId];
+      state.themesById[themeId] = remoteItem(themeId, {
+        data: existing?.data,
+        isLoading: true,
+      });
+    },
+    themeLoaded: (state, action: PayloadAction<EmailTheme>) => {
+      const theme = action.payload;
+      state.themesById[theme.id] = remoteItem(theme.id, {
+        data: theme,
+        loaded: new Date().toISOString(),
+      });
+    },
+    themeUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [themeId, mutating] = action.payload;
+      const item = state.themesById[themeId];
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    themeUpdated: (
+      state,
+      action: PayloadAction<[number, EmailTheme, string[]]>
+    ) => {
+      const [orgId, theme, mutating] = action.payload;
+      const item = state.themesById[theme.id];
+      if (item) {
+        item.mutating = item.mutating.filter(
+          (attr) => !mutating.includes(attr)
+        );
+        item.data = theme;
+        item.loaded = new Date().toISOString();
+      }
+      if (state.themesByOrgId[orgId]) {
+        state.themesByOrgId[orgId].isStale = true;
+      }
+    },
+    themesLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      if (!state.themesByOrgId[orgId]) {
+        state.themesByOrgId[orgId] = remoteList();
+      }
+      state.themesByOrgId[orgId].isLoading = true;
+    },
+    themesLoaded: (state, action: PayloadAction<[number, EmailTheme[]]>) => {
+      const [orgId, themes] = action.payload;
+      const timestamp = new Date().toISOString();
+      state.themesByOrgId[orgId] = remoteList(themes);
+      state.themesByOrgId[orgId].loaded = timestamp;
+      themes.forEach((theme) => {
+        state.themesById[theme.id] = remoteItem(theme.id, {
+          data: theme,
+          loaded: timestamp,
+        });
+      });
     },
   },
 });
@@ -209,6 +290,13 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
+  themeCreate,
+  themeCreated,
+  themeDeleted,
+  themeLoad,
+  themeLoaded,
+  themeUpdate,
+  themeUpdated,
   themesLoad,
   themesLoaded,
   statsLoad,

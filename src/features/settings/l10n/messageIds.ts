@@ -35,6 +35,7 @@ export default makeMessages('feat.settings', {
     },
     settingsLayout: {
       access: m('Access'),
+      themes: m('Themes'),
       title: m('Settings'),
     },
     tableButtons: {
@@ -49,5 +50,13 @@ export default makeMessages('feat.settings', {
       ),
     },
     you: m('You'),
+  },
+  themes: {
+    overview: {
+      addTheme: m('Create new theme'),
+      description: m(
+        'A theme sets the overall look and layout of your emails, from colours and fonts to spacing, buttons and content blocks.'
+      ),
+    },
   },
 });

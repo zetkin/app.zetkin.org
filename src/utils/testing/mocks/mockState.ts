@@ -66,7 +66,8 @@ export default function mockState(overrides?: RootState) {
       insightsByEmailId: {},
       linksByEmailId: {},
       statsById: {},
-      themeList: remoteList(),
+      themesById: {},
+      themesByOrgId: {},
     },
     events: {
       allEventsList: remoteList(),
