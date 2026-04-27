@@ -60,7 +60,10 @@ const EmailClick = ({
       operator: 'clicked',
     });
   const linkList = useEmailLinks(orgId, filter.config?.email).data || [];
-  const linkListSorted = linkList.sort((l1, l2) => {
+  const linkListFilteredByUniqueURL = linkList.filter(
+    (link, index, self) => self.findIndex((l) => l.url === link.url) === index
+  );
+  const linkListSorted = linkListFilteredByUniqueURL.sort((l1, l2) => {
     return l1.url.localeCompare(l2.url);
   });
 
@@ -186,14 +189,17 @@ const EmailClick = ({
                         <Tooltip key={`link-${link.id}`} title={link.url}>
                           <Chip
                             label={link.url.split('://')[1]}
-                            onDelete={() =>
+                            onDelete={() => {
+                              const idsToRemove = linkList
+                                .filter((l) => l.url === link.url)
+                                .map((l) => l.id);
                               setValueToKey(
                                 'links',
                                 filter.config.links!.filter(
-                                  (linkId) => linkId !== link.id
+                                  (linkId) => !idsToRemove.includes(linkId)
                                 )
-                              )
-                            }
+                              );
+                            }}
                             sx={{
                               margin: '3px',
                               maxWidth: '200px',
@@ -219,17 +225,25 @@ const EmailClick = ({
                         <Msg id={messageIds.misc.noOptionsInvalidEmail} />
                       )
                     }
-                    onChange={(_, value) =>
-                      setValueToKey(
-                        'links',
-                        value.map((link) => link.id)
-                      )
-                    }
-                    options={linkList.map((link) => ({
+                    onChange={(_, value) => {
+                      const selectedUrls = new Set(
+                        value.map(
+                          (selected) =>
+                            linkListFilteredByUniqueURL.find(
+                              (l) => l.id === selected.id
+                            )?.url
+                        )
+                      );
+                      const allIds = linkList
+                        .filter((link) => selectedUrls.has(link.url))
+                        .map((link) => link.id);
+                      setValueToKey('links', allIds);
+                    }}
+                    options={linkListFilteredByUniqueURL.map((link) => ({
                       id: link.id,
                       title: link.url.split('://')[1],
                     }))}
-                    value={linkList
+                    value={linkListFilteredByUniqueURL
                       .filter(
                         (link) =>
                           filter.config.links?.includes(link.id) || false
