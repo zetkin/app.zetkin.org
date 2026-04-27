@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import Image from 'next/image';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, Typography } from '@mui/material';
 
 import messageIds from 'features/files/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -57,51 +57,109 @@ const FilePreview: FC<Props> = ({ file, onBack, onSelect }) => {
           />
         </Typography>
       </Box>
-      <Grid container>
-        <Grid mx={2} size={{ lg: 1, md: 2, xs: 12 }}>
-          <Typography color="secondary" mt={1} textAlign="left" variant="h5">
-            Phone
-          </Typography>
-          <Image
-            alt={`${file.original_name}-phone`}
-            height="100"
-            src={file.url}
-            style={{
-              objectFit: 'cover',
+      <Divider />
+      <Typography mt={2} variant="h6">
+        <Msg id={messageIds.libraryDialog.preview.previewsSection} />
+      </Typography>
+      <Typography color="secondary" variant="body2">
+        <Msg id={messageIds.libraryDialog.preview.cropWarning} />
+      </Typography>
+      <Grid container my={2}>
+        <Grid mr={2} size={{ lg: 1, md: 2, xs: 6 }}>
+          <TransparentGridBackground
+            interactive={false}
+            sx={{
+              height: 90,
+              maxWidth: '100px',
+              overflow: 'hidden',
+              position: 'relative',
             }}
-            unoptimized
-            width="100"
-          />
+          >
+            <Image
+              alt={`${file.original_name}-square`}
+              height="100"
+              src={file.url}
+              style={{
+                height: '100%',
+                objectFit: 'cover',
+                width: '100%',
+              }}
+              unoptimized
+              width="100"
+            />
+          </TransparentGridBackground>
+          <Typography
+            color="secondary"
+            mt={1}
+            textAlign="center"
+            variant="body2"
+          >
+            <Msg id={messageIds.libraryDialog.preview.cropSquare} />
+          </Typography>
         </Grid>
-        <Grid mx={2} size={{ lg: 4, md: 4, xs: 12 }}>
-          <Typography color="secondary" mt={1} textAlign="left" variant="h5">
-            Tablet
-          </Typography>
-          <Image
-            alt={`${file.original_name}-phone`}
-            height="150"
-            src={file.url}
-            style={{
-              objectFit: 'cover',
+        <Grid mr={2} size={{ lg: 2, md: 3, xs: 8 }}>
+          <TransparentGridBackground
+            interactive={false}
+            sx={{
+              height: 90,
+              maxWidth: '300px',
+              overflow: 'hidden',
+              position: 'relative',
             }}
-            unoptimized
-            width="350"
-          />
+          >
+            <Image
+              alt={`${file.original_name}-landscape`}
+              height="100"
+              src={file.url}
+              style={{
+                height: '100%',
+                objectFit: 'cover',
+                width: '100%',
+              }}
+              unoptimized
+              width="350"
+            />
+          </TransparentGridBackground>
+          <Typography
+            color="secondary"
+            mt={1}
+            textAlign="center"
+            variant="body2"
+          >
+            <Msg id={messageIds.libraryDialog.preview.cropLandscape} />
+          </Typography>
         </Grid>
-        <Grid mx={2} size={{ lg: 5, md: 8, xs: 12 }}>
-          <Typography color="secondary" mt={1} textAlign="left" variant="h5">
-            Desktop
-          </Typography>
-          <Image
-            alt={`${file.original_name}-phone`}
-            height="100"
-            src={file.url}
-            style={{
-              objectFit: 'cover',
+        <Grid size={{ lg: 8, md: 10, xs: 12 }}>
+          <TransparentGridBackground
+            interactive={false}
+            sx={{
+              height: 90,
+              maxWidth: '100%',
+              overflow: 'hidden',
+              position: 'relative',
             }}
-            unoptimized
-            width="550"
-          />
+          >
+            <Image
+              alt={`${file.original_name}-wide`}
+              height="100"
+              src={file.url}
+              style={{
+                height: '100%',
+                objectFit: 'cover',
+                width: '100%',
+              }}
+              unoptimized
+              width="850"
+            />
+          </TransparentGridBackground>
+          <Typography
+            color="secondary"
+            mt={1}
+            textAlign="center"
+            variant="body2"
+          >
+            <Msg id={messageIds.libraryDialog.preview.cropWide} />
+          </Typography>
         </Grid>
       </Grid>
       <Box display="flex" gap={1} justifyContent="flex-end">

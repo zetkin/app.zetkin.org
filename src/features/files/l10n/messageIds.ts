@@ -14,6 +14,13 @@ export default makeMessages('feat.files', {
   libraryDialog: {
     preview: {
       backButton: m('Back to library'),
+      cropLandscape: m('Landscape crop'),
+      cropSquare: m('Square crop'),
+      cropWarning: m(
+        'In some cases Zetkin will crop your image in roughly these ratios when displaying it.'
+      ),
+      cropWide: m('Wide crop'),
+      previewsSection: m('Previews'),
       useButton: m('Use'),
     },
     title: m('Library'),
