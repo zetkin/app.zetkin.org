@@ -19,6 +19,7 @@ export default function useAreasInView(
     (theMap: MapType) => {
       const bounds = theMap.getBounds();
       if (bounds) {
+        // Makes a polygon with verteces at each of the four corners of the map
         const boundingPolygon = polygon([
           [
             [bounds._ne.lng, bounds._ne.lat],
