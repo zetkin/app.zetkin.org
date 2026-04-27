@@ -53,9 +53,8 @@ type OrganizerMapProps = {
 };
 
 export type MapStyle = {
-  area: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
-  location: 'dot' | 'households' | 'progress' | 'hide';
-  overlay: 'assignees' | 'households' | 'progress' | 'hide';
+  area: 'assignees' | 'outlined';
+  overlay: 'assignees';
 };
 
 type SettingName = 'layers' | 'filters' | 'select';
@@ -74,7 +73,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     `mapStyle-${areaAssId}`,
     {
       area: 'assignees',
-      location: 'dot',
       overlay: 'assignees',
     }
   );
@@ -373,7 +371,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             areaStats={areaStats}
             areaStyle={mapStyle.area}
             locations={locations}
-            locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {
               startTransition(() => {
                 setSelectedId(newId);
