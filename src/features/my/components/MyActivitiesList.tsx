@@ -45,7 +45,10 @@ const MyActivitiesList: FC = () => {
               onClick={() => setFilteredKinds([])}
             />
           )}
-          {kinds.map((kind) => {
+          {[
+            ...kinds.filter((kind) => filteredKinds.includes(kind)),
+            ...kinds.filter((kind) => !filteredKinds.includes(kind)),
+          ].map((kind) => {
             const active = filteredKinds.includes(kind);
             return (
               <ZUIFilterButton
