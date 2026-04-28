@@ -1,3 +1,9 @@
+## Contribution checklist
+
+- [ ] I have made sure that formatting, linting and type checks pass locally
+
+- [ ] I have not included any changes outside the scope of the task I'm working on
+
 ## Description
 
 This PR…
@@ -19,9 +25,9 @@ Did you use AI to create the code in this PR?
 
 If yes - how?
 
-## Notes to reviewer
+## Instructions for reviewer
 
-[Add instructions for testing]
+[Add instructions for how the reviewer tests that what you've built works, for example "Go to /my and click..." ]
 
 ## Related issues
 
