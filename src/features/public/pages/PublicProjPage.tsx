@@ -92,56 +92,65 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
 
   const filters = [
     {
-      active: dateFilterState == 'today',
+      active: dateFilterState === 'today',
       key: 'today',
       label: messages.publicProjectPage.eventList.filterButtonLabels.today(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'today',
+            dateFilterState: dateFilterState === 'today' ? null : 'today',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'tomorrow',
+      active: dateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.publicProjectPage.eventList.filterButtonLabels.tomorrow(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'tomorrow',
+            dateFilterState: dateFilterState === 'tomorrow' ? null : 'tomorrow',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'thisWeek',
+      active: dateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.publicProjectPage.eventList.filterButtonLabels.thisWeek(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'thisWeek',
+            dateFilterState: dateFilterState === 'thisWeek' ? null : 'thisWeek',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'custom',
+      active: dateFilterState === 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerContent('calendar');
+        if (dateFilterState === 'custom') {
+          dispatch(
+            filtersUpdated({
+              customDatesToFilterBy: [null, null],
+              dateFilterState: null,
+            })
+          );
+        } else {
+          setDrawerContent('calendar');
+        }
       },
     },
     ...(eventTypeFilter.shouldShowFilter
@@ -150,7 +159,17 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: eventTypeFilter.filterButtonLabel,
-            onClick: () => setDrawerContent('eventTypes'),
+            onClick: () => {
+              if (eventTypeFilter.isFiltered) {
+                dispatch(
+                  filtersUpdated({
+                    eventTypesToFilterBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('eventTypes');
+              }
+            },
           },
         ]
       : []),
@@ -267,7 +286,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {filteredEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -336,7 +355,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       ))}
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'calendar'}
+        open={drawerContent === 'calendar'}
       >
         <Box
           alignItems="center"
@@ -400,7 +419,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'eventTypes'}
+        open={drawerContent === 'eventTypes'}
       >
         <List>
           {eventTypeFilter.eventTypeLabels.map((eventType) => (
