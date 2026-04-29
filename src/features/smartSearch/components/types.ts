@@ -161,7 +161,7 @@ export interface EmailBlacklistFilterConfig {
 export interface EmailClickFilterConfig {
   after?: string;
   before?: string;
-  project?: number;
+  campaign?: number;
   email?: number;
   operator: 'clicked' | 'not_clicked';
   organizations?: FilterConfigOrgOptions;
@@ -171,7 +171,7 @@ export interface EmailHistoryFilterConfig {
   organizations?: FilterConfigOrgOptions;
   after?: string;
   before?: string;
-  project?: number;
+  campaign?: number;
   email?: number;
   operator: 'sent' | 'not_sent' | 'opened' | 'not_opened';
 }
@@ -293,7 +293,7 @@ export interface ProjectParticipationConfig {
   status?: 'attended' | 'cancelled' | 'noshow';
   operator: 'in' | 'notin';
   organizations?: FilterConfigOrgOptions;
-  project?: number;
+  campaign?: number;
   activity?: number;
   location?: number;
   after?: string;
@@ -342,13 +342,13 @@ export type TaskTimeFrame =
   | TaskTimeFrameBetween;
 
 export interface TaskFilterConfig {
+  campaign?: number;
   task?: number;
   type?: TASK_TYPE;
   assigned?: TaskTimeFrame;
   completed?: TaskTimeFrame;
   ignored?: TaskTimeFrame;
   organizations?: FilterConfigOrgOptions;
-  project?: number;
   time_estimate?: {
     max?: number;
     min?: number;

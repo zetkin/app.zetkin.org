@@ -5,7 +5,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useEventType from 'features/events/hooks/useEventType';
 
-const localMessageIds = messageIds.filters.campaignParticipation;
+const localMessageIds = messageIds.filters.projectParticipation;
 
 interface UnderlinedActivityTitleProps {
   activityId: number;

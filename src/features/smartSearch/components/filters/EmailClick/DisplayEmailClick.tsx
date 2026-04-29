@@ -29,7 +29,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
   const projects = useProjects(orgId).data || [];
 
   const { config } = filter;
-  const { operator, project: projectId, email: emailId, links } = config;
+  const { operator, campaign: projectId, email: emailId, links } = config;
   const linkList = useEmailLinks(orgId, filter.config?.email).data;
 
   const op = filter.op || OPERATION.ADD;
@@ -53,7 +53,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
           <UnderlinedMsg
             id={
               localMessageIds.linkScopeSelect[
-                filter.config.project
+                filter.config.campaign
                   ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
                   : filter.config.email && !filter.config.links
                     ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL

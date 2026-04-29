@@ -118,7 +118,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const eventsByDate = useWeekCalendarEvents({
     dates: dayDates,
     orgId,
-    projectId: projectId,
+    projectId,
   });
 
   const [currentTime, setCurrentTime] = useState<dayjs.Dayjs>(dayjs());

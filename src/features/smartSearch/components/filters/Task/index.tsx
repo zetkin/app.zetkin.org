@@ -95,7 +95,7 @@ const Task = ({
       // When specifying a task we don't want to specify a project
       setConfig({
         ...filter.config,
-        project: undefined,
+        campaign: undefined,
         task: +taskValue,
       });
     }
@@ -103,11 +103,11 @@ const Task = ({
 
   const handleProjectSelectChange = (projectValue: string) => {
     if (projectValue === ANY_PROJECT) {
-      setConfig({ ...filter.config, project: undefined });
+      setConfig({ ...filter.config, campaign: undefined });
     } else {
       setConfig({
         ...filter.config,
-        project: +projectValue,
+        campaign: +projectValue,
         task: undefined,
       });
     }
@@ -181,7 +181,7 @@ const Task = ({
                     })),
                   ]}
                   onChange={(e) => handleProjectSelectChange(e.target.value)}
-                  value={filter.config.project || ANY_PROJECT}
+                  value={filter.config.campaign || ANY_PROJECT}
                 />
               </>
             ) : null,

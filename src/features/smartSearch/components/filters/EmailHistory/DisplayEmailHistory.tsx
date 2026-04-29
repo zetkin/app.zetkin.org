@@ -28,7 +28,7 @@ const DisplayEmailHistory = ({
   const projects = useProjects(orgId).data || [];
 
   const { config } = filter;
-  const { operator, project: projectId, email: emailId } = config;
+  const { operator, campaign: projectId, email: emailId } = config;
 
   const op = filter.op || OPERATION.ADD;
   const emailTitle = emails?.find((item) => item.id === emailId)?.title;
@@ -47,7 +47,7 @@ const DisplayEmailHistory = ({
         emailScopeSelect: (
           <UnderlinedMsg
             id={
-              filter.config.project
+              filter.config.campaign
                 ? localMessageIds.emailScopeSelect.project
                 : filter.config.email
                   ? localMessageIds.emailScopeSelect.email

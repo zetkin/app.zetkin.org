@@ -13,7 +13,7 @@ import UnderlinedLocationTitle from './UnderlinedLocationTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import { useNumericRouteParams } from 'core/hooks';
 
-const localMessageIds = messageIds.filters.campaignParticipation;
+const localMessageIds = messageIds.filters.projectParticipation;
 
 interface DisplayProjectParticipationProps {
   filter: SmartSearchFilterWithId<ProjectParticipationConfig>;
@@ -28,7 +28,7 @@ const DisplayProjectParticipation = ({
     operator,
     state,
     status,
-    project: projectId,
+    campaign: projectId,
     activity: activityId,
     location: locationId,
   } = config;
@@ -40,7 +40,7 @@ const DisplayProjectParticipation = ({
 
   return (
     <Msg
-      id={messageIds.filters.campaignParticipation.inputString}
+      id={messageIds.filters.projectParticipation.inputString}
       values={{
         activitySelect: activityId ? (
           <UnderlinedActivityTitle activityId={activityId} orgId={orgId} />

@@ -2193,7 +2193,7 @@ feat:
       title: Edit task
     form:
       fields:
-        project: Campaign
+        project: Project
         deadline: Completion Deadline
         expires: Expiration Date
         instructions: Instructions

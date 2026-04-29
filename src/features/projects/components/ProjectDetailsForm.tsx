@@ -15,7 +15,7 @@ interface ProjectDetailsFormProps {
 const ProjectDetailsForm = ({
   onSubmit,
   onCancel,
-  project: project,
+  project,
 }: ProjectDetailsFormProps): JSX.Element => {
   const messages = useMessages(messageIds);
 

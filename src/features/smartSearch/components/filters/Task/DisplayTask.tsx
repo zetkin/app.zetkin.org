@@ -51,10 +51,10 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
         projectSelect: config.task ? null : (
           <>
             <Msg id={localMessageIds.projectSelect.in} />
-            {config.project && !config.task ? (
+            {config.campaign && !config.task ? (
               <UnderlinedProjectTitle
                 orgId={orgId}
-                projectId={config.project}
+                projectId={config.campaign}
               />
             ) : (
               <UnderlinedMsg id={localMessageIds.projectSelect.any} />

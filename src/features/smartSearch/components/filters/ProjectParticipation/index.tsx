@@ -21,7 +21,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
-const localMessageIds = messageIds.filters.campaignParticipation;
+const localMessageIds = messageIds.filters.projectParticipation;
 
 const DEFAULT_VALUE = 'any';
 
@@ -99,17 +99,17 @@ const ProjectParticipation = ({
       state,
       status,
       operator,
-      project,
+      campaign: project,
       activity,
       location,
       organizations,
     } = filter.config;
     setConfig({
       activity,
+      campaign: project,
       location,
       operator,
       organizations,
-      project,
       state,
       status,
       ...range,
@@ -118,9 +118,9 @@ const ProjectParticipation = ({
 
   const handleProjectSelectChange = (campValue: string) => {
     if (campValue === DEFAULT_VALUE) {
-      setConfig(removeKey(filter.config, 'project'));
+      setConfig(removeKey(filter.config, 'campaign'));
     } else {
-      setConfig({ ...filter.config, project: +campValue });
+      setConfig({ ...filter.config, campaign: +campValue });
     }
   };
 
@@ -275,7 +275,7 @@ const ProjectParticipation = ({
                 onChange={(e) => {
                   handleProjectSelectChange(e.target.value);
                 }}
-                value={filter.config.project || DEFAULT_VALUE}
+                value={filter.config.campaign || DEFAULT_VALUE}
               />
             ),
             statusSelect: (

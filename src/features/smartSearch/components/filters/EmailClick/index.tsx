@@ -65,7 +65,7 @@ const EmailClick = ({
   });
 
   const [linkSelectScope, setLinkSelectScope] = useState<LINK_SELECT_SCOPE>(
-    filter.config.project
+    filter.config.campaign
       ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
       : filter.config.email && !filter.config.links
         ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
@@ -112,7 +112,7 @@ const EmailClick = ({
     <FilterForm
       disableSubmit={
         (linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT &&
-          !filter.config.project) ||
+          !filter.config.campaign) ||
         (linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL &&
           !filter.config.email) ||
         (linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS &&
@@ -158,7 +158,7 @@ const EmailClick = ({
             linkScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  removeKey(['project', 'email', 'links']);
+                  removeKey(['campaign', 'email', 'links']);
                   setLinkSelectScope(e.target.value as LINK_SELECT_SCOPE);
                 }}
                 value={linkSelectScope}
@@ -260,8 +260,8 @@ const EmailClick = ({
                     id: project.id,
                     label: project.title,
                   }))}
-                  onChange={(e) => setValueToKey('project', +e.target.value)}
-                  value={filter.config.project}
+                  onChange={(e) => setValueToKey('campaign', +e.target.value)}
+                  value={filter.config.campaign}
                 />
               ) : null,
             timeFrame: (

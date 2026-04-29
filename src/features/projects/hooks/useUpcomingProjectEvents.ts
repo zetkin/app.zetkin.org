@@ -13,12 +13,12 @@ export default function useUpcomingProjectEvents(
   const eventsByProjectId = useAppSelector(
     (state) => state.events.eventsByProjectId
   );
-  const ProjectEvents = eventsByProjectId[projectId];
+  const projectEvents = eventsByProjectId[projectId];
 
   const now = new Date();
   const today = now.toISOString().slice(0, 10);
 
-  const futureProjectEvents = useRemoteList(ProjectEvents, {
+  const futureProjectEvents = useRemoteList(projectEvents, {
     actionOnLoad: () => projectEventsLoad(projectId),
     actionOnSuccess: (data) => projectEventsLoaded([projectId, data]),
     loader: () =>

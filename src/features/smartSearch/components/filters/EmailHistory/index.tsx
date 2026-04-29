@@ -60,7 +60,7 @@ const EmailHistory = ({
     });
   const [emailSelectScope, setEmailSelectScope] =
     useState<EmailSelectScopeType>(
-      filter.config.project ? 'project' : filter.config.email ? 'email' : 'any'
+      filter.config.campaign ? 'project' : filter.config.email ? 'email' : 'any'
     );
 
   const setValueToKey = (
@@ -98,7 +98,7 @@ const EmailHistory = ({
   return (
     <FilterForm
       disableSubmit={
-        (emailSelectScope === 'project' && !filter.config.project) ||
+        (emailSelectScope === 'project' && !filter.config.campaign) ||
         (emailSelectScope === 'email' && !filter.config.email)
       }
       enableOrgSelect
@@ -129,7 +129,7 @@ const EmailHistory = ({
             emailScopeSelect: (
               <StyledSelect
                 onChange={(e) => {
-                  removeKey(['email', 'project']);
+                  removeKey(['email', 'campaign']);
                   setEmailSelectScope(e.target.value as EmailSelectScopeType);
                 }}
                 value={emailSelectScope}
@@ -182,8 +182,8 @@ const EmailHistory = ({
                     id: project.id,
                     label: project.title,
                   }))}
-                  onChange={(e) => setValueToKey('project', +e.target.value)}
-                  value={filter.config.project}
+                  onChange={(e) => setValueToKey('campaign', +e.target.value)}
+                  value={filter.config.campaign}
                 />
               ) : null,
             timeFrame: (

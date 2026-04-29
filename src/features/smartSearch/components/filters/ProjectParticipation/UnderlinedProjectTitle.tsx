@@ -5,7 +5,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useProject from 'features/projects/hooks/useProject';
 
-const localMessageIds = messageIds.filters.campaignParticipation;
+const localMessageIds = messageIds.filters.projectParticipation;
 
 interface UnderlinedProjectTitleProps {
   projectId: number;
@@ -16,7 +16,7 @@ const UnderlinedProjectTitle: FC<UnderlinedProjectTitleProps> = ({
   projectId: projectId,
   orgId,
 }) => {
-  const { projectFuture: projectFuture } = useProject(orgId, projectId);
+  const { projectFuture } = useProject(orgId, projectId);
   const project = projectFuture.data;
 
   if (!project) {

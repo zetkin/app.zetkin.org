@@ -55,7 +55,7 @@ const Calendar = () => {
       {
         pathname: undefined,
         query: {
-          ...(projectId && { projectId: projectId }),
+          ...(projectId && { projectId }),
           focusDate: focusedDate,
           orgId: orgId,
           timeScale: timeScale,

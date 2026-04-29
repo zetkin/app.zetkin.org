@@ -53,7 +53,7 @@ export default function useDayCalendarEvents(
       const nextLastDateStr = await apiClient.rpc(getNextEventDay, {
         afterDate: afterDate.toISOString(),
         orgId,
-        projectId: projectId,
+        projectId,
       });
 
       setNextLastDate(nextLastDateStr ? new Date(nextLastDateStr) : null);

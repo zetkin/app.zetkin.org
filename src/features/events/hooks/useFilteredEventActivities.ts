@@ -117,7 +117,7 @@ export default function useFilteredEventActivities(
         'data.title',
         'data.activity.title',
         'data.location.title',
-        'data.project.title',
+        'data.campaign.title',
       ],
       threshold: 0.2,
     });
@@ -129,7 +129,7 @@ export default function useFilteredEventActivities(
             { $path: ['data', 'title'], $val: token },
             { $path: ['data', 'activity', 'title'], $val: token },
             { $path: ['data', 'location', 'title'], $val: token },
-            { $path: ['data', 'project', 'title'], $val: token },
+            { $path: ['data', 'campaign', 'title'], $val: token },
           ],
         })),
       })

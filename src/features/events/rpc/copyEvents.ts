@@ -8,6 +8,7 @@ const paramsSchema = z.object({
   events: z.array(
     z.object({
       activity_id: z.union([z.optional(z.number()), z.null()]),
+      campaign_id: z.optional(z.number()),
       cancelled: z.union([z.string(), z.null()]),
       contact_id: z.union([z.optional(z.number()), z.null()]),
       cover_file_id: z.union([z.optional(z.number()), z.null()]),
@@ -17,7 +18,6 @@ const paramsSchema = z.object({
       num_participants_available: z.number(),
       num_participants_required: z.number(),
       organization_id: z.optional(z.number()),
-      project_id: z.optional(z.number()),
       start_time: z.string(),
       title: z.optional(z.string().or(z.null())),
       url: z.optional(z.string()),
@@ -42,10 +42,10 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const createdEvents: ZetkinEvent[] = [];
 
   for (const event of events) {
-    const { project_id: project_id, ...data } = event;
+    const { campaign_id, ...data } = event;
     const updatedEvent = await apiClient.post<ZetkinEvent>(
       `/api/orgs/${orgId}/${
-        project_id ? `campaigns/${project_id}/` : ''
+        campaign_id ? `campaigns/${campaign_id}/` : ''
       }actions`,
       data
     );

@@ -5,7 +5,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useEventLocation from 'features/events/hooks/useEventLocation';
 
-const localMessageIds = messageIds.filters.campaignParticipation;
+const localMessageIds = messageIds.filters.projectParticipation;
 
 interface UnderlinedLocationTitleProps {
   locationId: number;

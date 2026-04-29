@@ -267,56 +267,6 @@ export default makeMessages('feat.smartSearch', {
         minTimes: number;
       }>('at least {input} {minTimes, plural, one {time} other {times}}'),
     },
-    campaignParticipation: {
-      activitySelect: {
-        activity: m<{ activity: ReactElement | string }>('type "{activity}"'),
-        any: m('any type'),
-      },
-      bookedSelect: {
-        booked: m('been booked'),
-        signed_up: m('signed up'),
-      },
-      examples: {
-        one: m(
-          "Add people who have signed up and showed up for events in any project of any type at location 'Dorfplatz' at any point in time"
-        ),
-        two: m(
-          "Remove people who have not been booked no matter their attendance for events in any project of type 'Put up posters' at any location before today."
-        ),
-      },
-      haveSelect: {
-        in: m('have'),
-        notin: m('have not'),
-      },
-      inputString: m<{
-        activitySelect: ReactElement;
-        addRemoveSelect: ReactElement;
-        bookedSelect: ReactElement;
-        haveSelect: ReactElement;
-        locationSelect: ReactElement;
-        projectSelect: ReactElement;
-        statusSelect: ReactElement;
-        timeFrame: ReactElement;
-      }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {projectSelect} of {activitySelect} at {locationSelect} {timeFrame}'
-      ),
-      locationSelect: {
-        any: m('any location'),
-        location: m<{ location: ReactElement | string }>(
-          'location "{location}"'
-        ),
-      },
-      projectSelect: {
-        any: m('any project'),
-        project: m<{ project: ReactElement | string }>('project "{project}"'),
-      },
-      statusSelect: {
-        any: m('no matter their attendance'),
-        attended: m('and showed up'),
-        cancelled: m('and cancelled'),
-        noshow: m('and did not show up'),
-      },
-    },
     emailBlacklist: {
       inputString: m<{
         addRemoveSelect: ReactElement;
@@ -601,6 +551,56 @@ export default makeMessages('feat.smartSearch', {
       }>('{addRemoveSelect} people who are {inSelect} the list {viewSelect}.'),
       viewSelect: {
         none: m("This organization doesn't have any lists yet"),
+      },
+    },
+    projectParticipation: {
+      activitySelect: {
+        activity: m<{ activity: ReactElement | string }>('type "{activity}"'),
+        any: m('any type'),
+      },
+      bookedSelect: {
+        booked: m('been booked'),
+        signed_up: m('signed up'),
+      },
+      examples: {
+        one: m(
+          "Add people who have signed up and showed up for events in any project of any type at location 'Dorfplatz' at any point in time"
+        ),
+        two: m(
+          "Remove people who have not been booked no matter their attendance for events in any project of type 'Put up posters' at any location before today."
+        ),
+      },
+      haveSelect: {
+        in: m('have'),
+        notin: m('have not'),
+      },
+      inputString: m<{
+        activitySelect: ReactElement;
+        addRemoveSelect: ReactElement;
+        bookedSelect: ReactElement;
+        haveSelect: ReactElement;
+        locationSelect: ReactElement;
+        projectSelect: ReactElement;
+        statusSelect: ReactElement;
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {projectSelect} of {activitySelect} at {locationSelect} {timeFrame}'
+      ),
+      locationSelect: {
+        any: m('any location'),
+        location: m<{ location: ReactElement | string }>(
+          'location "{location}"'
+        ),
+      },
+      projectSelect: {
+        any: m('any project'),
+        project: m<{ project: ReactElement | string }>('project "{project}"'),
+      },
+      statusSelect: {
+        any: m('no matter their attendance'),
+        attended: m('and showed up'),
+        cancelled: m('and cancelled'),
+        noshow: m('and did not show up'),
       },
     },
     random: {
