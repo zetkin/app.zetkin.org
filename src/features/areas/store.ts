@@ -13,12 +13,12 @@ import { Zetkin2Area } from './types';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
-  areaList: RemoteList<Zetkin2Area>;
+  areasByOrgId: Record<number, RemoteList<Zetkin2Area>>;
   tagsByAreaId: Record<string, RemoteList<ZetkinAppliedTag>>;
 }
 
 const initialState: AreasStoreSlice = {
-  areaList: remoteList(),
+  areasByOrgId: {},
   tagsByAreaId: {},
 };
 
@@ -28,30 +28,46 @@ const areasSlice = createSlice({
   reducers: {
     areaCreated: (state, action: PayloadAction<Zetkin2Area>) => {
       const area = action.payload;
-      remoteItemUpdated(state.areaList, area);
+      const orgId = area.organization_id;
+      if (!state.areasByOrgId[orgId]) {
+        state.areasByOrgId[orgId] = remoteList();
+      }
+      remoteItemUpdated(state.areasByOrgId[orgId], area);
     },
-    areaDeleted: (state, action: PayloadAction<number>) => {
-      const deletedId = action.payload;
-      remoteItemDeleted(state.areaList, deletedId);
+    areaDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [orgId, deletedId] = action.payload;
+      if (state.areasByOrgId[orgId]) {
+        remoteItemDeleted(state.areasByOrgId[orgId], deletedId);
+      }
     },
-    areaLoad: (state, action: PayloadAction<string>) => {
-      const areaId = action.payload;
-      remoteItemLoad(state.areaList, areaId);
+    areaLoad: (state, action: PayloadAction<[number, string]>) => {
+      const [orgId, areaId] = action.payload;
+      if (!state.areasByOrgId[orgId]) {
+        state.areasByOrgId[orgId] = remoteList();
+      }
+      remoteItemLoad(state.areasByOrgId[orgId], areaId);
     },
-    areaLoaded: (state, action: PayloadAction<Zetkin2Area>) => {
-      const area = action.payload;
-      remoteItemUpdated(state.areaList, area);
+    areaLoaded: (state, action: PayloadAction<[number, Zetkin2Area]>) => {
+      const [orgId, area] = action.payload;
+      if (!state.areasByOrgId[orgId]) {
+        state.areasByOrgId[orgId] = remoteList();
+      }
+      remoteItemUpdated(state.areasByOrgId[orgId], area);
     },
-    areaUpdated: (state, action: PayloadAction<Zetkin2Area>) => {
-      const area = action.payload;
-      remoteItemUpdated(state.areaList, area);
+    areaUpdated: (state, action: PayloadAction<[number, Zetkin2Area]>) => {
+      const [orgId, area] = action.payload;
+      if (!state.areasByOrgId[orgId]) {
+        state.areasByOrgId[orgId] = remoteList();
+      }
+      remoteItemUpdated(state.areasByOrgId[orgId], area);
     },
-    areasLoad: (state) => {
-      state.areaList = remoteListLoad(state.areaList);
+    areasLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      state.areasByOrgId[orgId] = remoteListLoad(state.areasByOrgId[orgId]);
     },
-    areasLoaded: (state, action: PayloadAction<Zetkin2Area[]>) => {
-      const areas = action.payload;
-      state.areaList = remoteListLoaded(areas);
+    areasLoaded: (state, action: PayloadAction<[number, Zetkin2Area[]]>) => {
+      const [orgId, areas] = action.payload;
+      state.areasByOrgId[orgId] = remoteListLoaded(areas);
     },
   },
 });

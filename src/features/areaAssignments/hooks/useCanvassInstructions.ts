@@ -14,7 +14,8 @@ export default function useAreaAssignmentInstructions(
   const areaAssignmentsSlice = useAppSelector(
     (state: RootState) => state.areaAssignments
   );
-  const canvassAssignmentItems = areaAssignmentsSlice.areaAssignmentList.items;
+  const canvassAssignmentItems =
+    areaAssignmentsSlice.areaAssignmentsByOrgId[orgId]?.items ?? [];
   const key = `canvassInstructions-${areaAssId}`;
   //Used to force re-render
   const [pointlessState, setPointlessState] = useState(0);

@@ -5,13 +5,15 @@ import useRemoteList from 'core/hooks/useRemoteList';
 
 export default function useUpcomingEvents(orgId: number): ZetkinEvent[] {
   const apiClient = useApiClient();
-  const list = useAppSelector((state) => state.call.upcomingEventsList);
+  const list = useAppSelector(
+    (state) => state.call.upcomingEventsByOrgId[orgId]
+  );
 
   const todaysDate = new Date().toISOString().split('T')[0];
 
   return useRemoteList(list, {
-    actionOnLoad: () => eventsLoad(),
-    actionOnSuccess: (data) => eventsLoaded(data),
+    actionOnLoad: () => eventsLoad(orgId),
+    actionOnSuccess: (data) => eventsLoaded([orgId, data]),
     loader: async () => {
       const filterParam = encodeURIComponent(`start_time>${todaysDate}`);
       const url = `/api/orgs/${orgId}/actions?filter=${filterParam}`;
