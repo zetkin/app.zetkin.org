@@ -21,7 +21,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
-const localMessageIds = messageIds.filters.campaignParticipation;
+const localMessageIds = messageIds.filters.projectParticipation;
 
 const DEFAULT_VALUE = 'any';
 

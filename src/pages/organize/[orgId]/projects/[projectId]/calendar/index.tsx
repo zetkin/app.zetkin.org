@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 const ProjectCalendarPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const { orgId, projectId } = useNumericRouteParams();
-  const { projectFuture: projectFuture } = useProject(orgId, projectId);
+  const { projectFuture } = useProject(orgId, projectId);
   const project = projectFuture.data;
 
   const isOnServer = useServerSide();

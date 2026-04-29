@@ -29,7 +29,7 @@ test.describe('Projects list page ', () => {
 
     const projectCards = page.locator('data-testid=project-card');
 
-    await page.goto(appUri + '/organize/1/campaigns');
+    await page.goto(appUri + '/organize/1/projects');
     await projectCards.first().waitFor({ state: 'visible' });
 
     const numProjectCards = await projectCards.count();

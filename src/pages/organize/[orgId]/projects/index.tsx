@@ -199,7 +199,7 @@ const AllProjectsSummaryPage: PageWithLayout = () => {
     <LoadingBoundary
       futures={{
         activityOverviewFuture,
-        projectsFuture: projectsFuture,
+        projectsFuture,
         surveysFuture,
       }}
     >

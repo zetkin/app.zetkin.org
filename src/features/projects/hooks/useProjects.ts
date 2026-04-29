@@ -1,7 +1,7 @@
 import { generateRandomColor } from 'utils/colorUtils';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
-import { ZetkinProject as ZetkinProject } from 'utils/types/zetkin';
+import { ZetkinProject } from 'utils/types/zetkin';
 import { projectsLoad, projectsLoaded } from '../store';
 import { futureToObject, IFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';

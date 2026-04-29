@@ -52,7 +52,7 @@ interface ProjectActionButtonsProps {
 const ProjectActionButtons: React.FunctionComponent<
   ProjectActionButtonsProps
 > = ({ project }) => {
-  const campaginMessages = useMessages(projectMessageIds);
+  const projectMessages = useMessages(projectMessageIds);
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
   const { orgId, projectId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
@@ -107,31 +107,31 @@ const ProjectActionButtons: React.FunctionComponent<
   const menuItems = [
     {
       icon: <Event />,
-      label: campaginMessages.createButton.createEvent(),
+      label: projectMessages.createButton.createEvent(),
       onClick: handleCreateEvent,
     },
     {
       icon: <SplitscreenOutlined />,
-      label: campaginMessages.createButton.createMultiShiftEvent(),
+      label: projectMessages.createButton.createMultiShiftEvent(),
       onClick: () => {
         setShiftModalDates(getDefaultEventDates());
       },
     },
     {
       icon: <HeadsetMic />,
-      label: campaginMessages.createButton.createCallAssignment(),
+      label: projectMessages.createButton.createCallAssignment(),
       onClick: () =>
         createCallAssignment({
-          title: campaginMessages.form.createCallAssignment.newCallAssignment(),
+          title: projectMessages.form.createCallAssignment.newCallAssignment(),
         }),
     },
     {
       icon: <AssignmentOutlined />,
-      label: campaginMessages.createButton.createSurvey(),
+      label: projectMessages.createButton.createSurvey(),
       onClick: () =>
         createSurvey({
           signature: 'require_signature',
-          title: campaginMessages.form.createSurvey.newSurvey(),
+          title: projectMessages.form.createSurvey.newSurvey(),
         }),
     },
   ];
@@ -139,7 +139,7 @@ const ProjectActionButtons: React.FunctionComponent<
   if (hasTasks) {
     menuItems.push({
       icon: <CheckBoxOutlined />,
-      label: campaginMessages.createButton.createTask(),
+      label: projectMessages.createButton.createTask(),
       onClick: () => setCreateTaskDialogOpen(true),
     });
   }
@@ -147,7 +147,7 @@ const ProjectActionButtons: React.FunctionComponent<
   if (hasAreaAssignments) {
     menuItems.push({
       icon: <Map />,
-      label: campaginMessages.createButton.createAreaAssignment(),
+      label: projectMessages.createButton.createAreaAssignment(),
       onClick: () =>
         createAreaAssignment({
           instructions: '',
@@ -171,13 +171,13 @@ const ProjectActionButtons: React.FunctionComponent<
   if (configs.length && themes.length > 0) {
     menuItems.push({
       icon: <EmailOutlined />,
-      label: campaginMessages.createButton.createEmail(),
+      label: projectMessages.createButton.createEmail(),
       onClick: () =>
         createEmail({
           campaign_id: projectId,
           config_id: configs[0].id,
           theme_id: themes[0].id,
-          title: campaginMessages.form.createEmail.newEmail(),
+          title: projectMessages.form.createEmail.newEmail(),
         }),
     });
   }
@@ -197,7 +197,7 @@ const ProjectActionButtons: React.FunctionComponent<
       <Box>
         <ZUIButtonMenu
           items={menuItems}
-          label={campaginMessages.createButton.createActivity()}
+          label={projectMessages.createButton.createActivity()}
         />
       </Box>
       <Box>
@@ -239,8 +239,8 @@ const ProjectActionButtons: React.FunctionComponent<
               onSelect: () => {
                 showConfirmDialog({
                   onSubmit: deleteProject,
-                  title: campaginMessages.form.deleteProject.title(),
-                  warningText: campaginMessages.form.deleteProject.warning(),
+                  title: projectMessages.form.deleteProject.title(),
+                  warningText: projectMessages.form.deleteProject.warning(),
                 });
               },
             },
@@ -275,7 +275,7 @@ const ProjectActionButtons: React.FunctionComponent<
       <ZUIDialog
         onClose={() => setEditProjectDialogOpen(false)}
         open={editProjectDialogOpen}
-        title={campaginMessages.form.edit()}
+        title={projectMessages.form.edit()}
       >
         <ProjectDetailsForm
           onCancel={() => setEditProjectDialogOpen(false)}
@@ -291,7 +291,7 @@ const ProjectActionButtons: React.FunctionComponent<
           setCreateTaskDialogOpen(false);
         }}
         open={createTaskDialogOpen}
-        title={campaginMessages.form.createTask.title()}
+        title={projectMessages.form.createTask.title()}
       >
         <CreateTaskDialogContent
           closeDialog={() => {

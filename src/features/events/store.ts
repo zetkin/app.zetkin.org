@@ -764,13 +764,13 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
         state.eventsByProjectId[project.id] = remoteList();
       }
 
-      const eventByCampIdItem = state.eventsByProjectId[project.id].items.find(
-        (item) => item.id == event.id
-      );
+      const eventByProjectIdItem = state.eventsByProjectId[
+        project.id
+      ].items.find((item) => item.id == event.id);
 
-      if (eventByCampIdItem) {
-        eventByCampIdItem.data = { ...eventByCampIdItem.data, ...event };
-        eventByCampIdItem.mutating = [];
+      if (eventByProjectIdItem) {
+        eventByProjectIdItem.data = { ...eventByProjectIdItem.data, ...event };
+        eventByProjectIdItem.mutating = [];
       } else {
         state.eventsByProjectId[project.id].items.push(
           remoteItem(event.id, { data: event })
@@ -798,12 +798,13 @@ function updateAvailParticipantToState(
   }
 
   if (event.campaign) {
-    const eventByCampIdItem = state.eventsByProjectId[
+    const eventByProjectIdItem = state.eventsByProjectId[
       event.campaign.id
     ].items.find((item) => item.id === event.id);
 
-    if (eventByCampIdItem?.data) {
-      eventByCampIdItem.data.num_participants_available = numAvailParticipants;
+    if (eventByProjectIdItem?.data) {
+      eventByProjectIdItem.data.num_participants_available =
+        numAvailParticipants;
     }
   }
 

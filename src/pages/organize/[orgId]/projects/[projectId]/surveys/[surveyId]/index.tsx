@@ -4,7 +4,7 @@ import { Box, Grid } from '@mui/material';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
-import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
+import { getSurveyProjectId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       const data = await client.get<ZetkinSurvey>(
         `/api/orgs/${orgId}/surveys/${surveyId}`
       );
-      const actualProject = getSurveyCampId(
+      const actualProject = getSurveyProjectId(
         data,
         parseInt(orgId as string)
       ).toString();

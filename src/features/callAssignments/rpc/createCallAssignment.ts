@@ -14,13 +14,7 @@ import {
 
 const paramsSchema = z.object({
   callAssignment: z.object({
-    cooldown: z.optional(z.number()),
-    description: z.optional(z.string()),
-    disable_caller_notes: z.optional(z.boolean()),
-    end_date: z.optional(z.string().nullable()),
-    expose_target_details: z.optional(z.boolean()),
-    instructions: z.optional(z.string()),
-    project: z.union([
+    campaign: z.union([
       z.object({
         id: z.number(),
         title: z.string(),
@@ -28,6 +22,12 @@ const paramsSchema = z.object({
       z.null(),
       z.undefined(),
     ]),
+    cooldown: z.optional(z.number()),
+    description: z.optional(z.string()),
+    disable_caller_notes: z.optional(z.boolean()),
+    end_date: z.optional(z.string().nullable()),
+    expose_target_details: z.optional(z.boolean()),
+    instructions: z.optional(z.string()),
     start_date: z.optional(z.string().nullable()),
     title: z.optional(z.string()),
   }),

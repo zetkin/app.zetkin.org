@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
+import { getSurveyProjectId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionWarningAlert from 'features/surveys/components/SubmissionWarningAlert';
@@ -52,7 +52,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   const submissionsFuture = useSurveySubmissions(parsedOrg, parseInt(surveyId));
 
   const projectId =
-    getSurveyCampId(surveyFuture?.data, parsedOrg) || 'standalone';
+    getSurveyProjectId(surveyFuture?.data, parsedOrg) || 'standalone';
 
   const router = useRouter();
   const isShared = projectId === 'shared';

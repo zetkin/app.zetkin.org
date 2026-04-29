@@ -13,7 +13,7 @@ const mockEventData: ZetkinEvent = {
   },
   campaign: {
     id: 1,
-    title: 'My campaign',
+    title: 'My project',
   },
   cancelled: null,
   contact: null,
