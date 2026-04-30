@@ -14,7 +14,7 @@ export default function useTagGroupMutations(
   const dispatch = useAppDispatch();
 
   const updateTagGroup = async (tagGroup: ZetkinTagGroupPatchBody) => {
-    dispatch(tagGroupUpdate([tagGroup.id, Object.keys(tagGroup)]));
+    dispatch(tagGroupUpdate([[orgId, tagGroup.id], Object.keys(tagGroup)]));
 
     const updatedTagGroup = await apiClient.patch<
       ZetkinTagGroup,
@@ -24,7 +24,7 @@ export default function useTagGroupMutations(
       title: tagGroup.title,
     });
 
-    dispatch(tagGroupUpdated(updatedTagGroup));
+    dispatch(tagGroupUpdated([[orgId], updatedTagGroup]));
 
     return updatedTagGroup;
   };

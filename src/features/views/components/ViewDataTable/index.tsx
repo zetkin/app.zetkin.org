@@ -73,6 +73,7 @@ import useViewMutations from 'features/views/hooks/useViewMutations';
 import oldTheme from 'theme';
 import useViewBulkActions from 'features/views/hooks/useViewBulkActions';
 import { dayOfMonthOperator, monthOperator } from './customFilters/date';
+import useRemoteListMapping from 'utils/hooks/useRemoteListMapping';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -177,9 +178,24 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const { orgId } = useNumericRouteParams();
+
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
-  const tagListState = useAppSelector((state) => state.tags.tagList);
+  const tagIndex = useAppSelector((state) => state.tags.orgTags[orgId]);
+  const tagsById = useAppSelector((state) => state.tags.tagsById);
+  const tagMapper = useCallback(
+    (tags: number[]) =>
+      tags
+        .map((tagId) => tagsById[tagId])
+        .filter((tag) => !!tag)
+        .filter((tag) => !tag.deleted)
+        .map((tag) => tag.data)
+        .filter((tag) => !!tag),
+    [tagsById]
+  );
+  const tagListState = useRemoteListMapping(tagIndex, tagMapper);
+
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
   const [columnToCreate, setColumnToCreate] =
@@ -207,7 +223,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [, accessLevel] = useAccessLevel();
 
   const [quickSearch, setQuickSearch] = useState('');
-  const { orgId } = useNumericRouteParams();
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);

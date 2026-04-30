@@ -57,8 +57,8 @@ export default class PersonTagColumnType implements IColumnType {
       const tagItem = tagListState.items.find((item) => item.id == tagId);
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
-        actionOnLoad: () => tagLoad(tagId),
-        actionOnSuccess: (tag) => tagLoaded(tag),
+        actionOnLoad: () => tagLoad([orgId, tagId]),
+        actionOnSuccess: (tag) => tagLoaded([[orgId], tag]),
         loader: () =>
           apiClient.get<ZetkinTag>(`/api/orgs/${orgId}/people/tags/${tagId}`),
       });

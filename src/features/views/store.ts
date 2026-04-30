@@ -63,11 +63,11 @@ const viewsSlice = createSlice({
         });
       })
       .addCase(tagAssigned, (state, action) => {
-        const [personId, tag] = action.payload;
+        const [[, personId], tag] = action.payload;
         setTagOnRelevantRows(state, personId, tag.id, tag);
       })
       .addCase(tagUnassigned, (state, action) => {
-        const [personId, tagId] = action.payload;
+        const [, personId, tagId] = action.payload;
         setTagOnRelevantRows(state, personId, tagId, null);
       })
       .addCase(callUpdated, (state, action) => {
