@@ -18,6 +18,18 @@ const AreaStats: FC<Props> = ({ areaId }) => {
     return null;
   }
 
+  const percentVisited = stats.count_locations
+    ? Math.round(
+        (stats.count_unique_locations_visited / stats.count_locations) * 100
+      ) / 100
+    : 0;
+
+  const percentSuccessfulVisits =
+    stats.sum_visits > 0
+      ? Math.round((stats.sum_successful_visits / stats.sum_visits) * 100) / 100
+      : // If no visits
+        0;
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Box
@@ -66,23 +78,16 @@ const AreaStats: FC<Props> = ({ areaId }) => {
         </Box>
         <Box>
           <Typography color="primary" variant="h5">
-            {Math.round(
-              (stats.count_unique_locations_visited / stats.count_locations) *
-                100
-            ) / 100}
-            %
+            {percentVisited}%
           </Typography>
           <Typography>
             <Msg id={messageIds.areas.assignmentStats.percentVisited} />
           </Typography>
         </Box>
-        {stats.sum_successful_visits > 0 && (
+        {percentSuccessfulVisits > 0 && (
           <Box>
             <Typography color="primary" variant="h5">
-              {Math.round(
-                (stats.sum_successful_visits / stats.sum_visits) * 100
-              ) / 100}
-              %
+              {percentSuccessfulVisits}%
             </Typography>
             <Typography>
               <Msg
