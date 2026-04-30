@@ -49,7 +49,7 @@ const search = async (
   try {
     const results = await Promise.all([
       makeSearchRequest(SEARCH_DATA_TYPE.PERSON, query, apiFetch),
-      makeSearchRequest(SEARCH_DATA_TYPE.CAMPAIGN, query, apiFetch),
+      makeSearchRequest(SEARCH_DATA_TYPE.PROJECT, query, apiFetch),
       makeSearchRequest(SEARCH_DATA_TYPE.TASK, query, apiFetch),
       makeSearchRequest(SEARCH_DATA_TYPE.VIEW, query, apiFetch),
       makeSearchRequest(SEARCH_DATA_TYPE.CALL_ASSIGNMENT, query, apiFetch),

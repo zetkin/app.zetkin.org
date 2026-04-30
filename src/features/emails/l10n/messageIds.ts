@@ -125,10 +125,10 @@ export default makeMessages('feat.emails', {
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
   },
-  emailChangeCampaignDialog: {
+  emailChangeProjectDialog: {
     error: m('Error: Could not move the email to the selected project'),
-    success: m<{ campaignTitle: string; emailTitle: string }>(
-      'Email "{emailTitle}" moved to "{campaignTitle}"'
+    success: m<{ emailTitle: string; projectTitle: string }>(
+      'Email "{emailTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move email'),
   },

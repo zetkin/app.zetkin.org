@@ -31,8 +31,8 @@ const paramsSchema = z.object({
     start_date: z.optional(z.string().nullable()),
     title: z.optional(z.string()),
   }),
-  campId: z.number(),
   orgId: z.number(),
+  projectId: z.number(),
 });
 
 type Params = z.input<typeof paramsSchema>;
@@ -47,13 +47,13 @@ export const createCallAssignmentDef = {
 export default makeRPCDef<Params, Result>(createCallAssignmentDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
-  const { callAssignment, campId, orgId } = params;
+  const { callAssignment, projectId, orgId } = params;
 
   const assignment = await apiClient.post<
     ZetkinCallAssignment,
     ZetkinCallAssignmentPostBody
   >(
-    `/api/orgs/${orgId}/campaigns/${campId}/call_assignments`,
+    `/api/orgs/${orgId}/campaigns/${projectId}/call_assignments`,
     //goal_filters and target_filters are required by server when
     //making a POST to create call_assignment, so adding them here.
     { ...callAssignment, goal_filters: [], target_filters: [] }

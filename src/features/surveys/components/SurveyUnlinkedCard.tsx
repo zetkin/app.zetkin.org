@@ -9,13 +9,13 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
 
 type SurveyUnlinkedCardProps = {
-  campId: number | 'standalone' | 'shared';
   orgId: number;
+  projectId: number | 'standalone' | 'shared';
   surveyId: number;
 };
 
 const SurveyUnlinkedCard = ({
-  campId,
+  projectId: projectId,
   orgId,
   surveyId,
 }: SurveyUnlinkedCardProps) => {
@@ -41,7 +41,7 @@ const SurveyUnlinkedCard = ({
               subheader={messages.unlinkedCard.description()}
             >
               <NextLink
-                href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?filter=linked`}
+                href={`/organize/${orgId}/projects/${projectId}/surveys/${surveyId}/submissions?filter=linked`}
                 legacyBehavior
                 passHref
               >

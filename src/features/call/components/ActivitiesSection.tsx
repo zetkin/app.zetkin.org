@@ -32,7 +32,7 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
-import { ACTIVITIES } from 'features/campaigns/types';
+import { ACTIVITIES } from 'features/projects/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
@@ -234,30 +234,27 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const surveysWithCampaign = surveys.filter((survey) => !!survey.campaign);
-  const eventsWithCampaign = events.filter((event) => !!event.campaign);
+  const surveysWithProject = surveys.filter((survey) => !!survey.campaign);
+  const eventsWithProject = events.filter((event) => !!event.campaign);
 
-  const activitiesWithCampaign = [
-    ...surveysWithCampaign,
-    ...eventsWithCampaign,
-  ];
+  const activitiesWithProject = [...surveysWithProject, ...eventsWithProject];
 
   const projects: { id: 'noProject' | number; title: string }[] = [
     ...new Map(
-      eventsWithCampaign
+      eventsWithProject
         .map((event) => event.campaign)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
     ...new Map(
-      surveysWithCampaign
+      surveysWithProject
         .map((survey) => survey.campaign)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  if (activitiesWithCampaign.length != surveys.length + events.length) {
+  if (activitiesWithProject.length != surveys.length + events.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
 
@@ -510,14 +507,14 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   ];
 
   useEffect(() => {
-    const campaign = assignment.campaign;
-    const campaignHasActivities =
-      !!campaign && projectIdsWithActivities.includes(campaign.id);
+    const project = assignment.campaign;
+    const projectHasActivities =
+      !!project && projectIdsWithActivities.includes(project.id);
 
-    if (campaignHasActivities) {
+    if (projectHasActivities) {
       dispatch(
         filtersUpdated({
-          projectIdsToFilterActivitiesBy: [campaign.id],
+          projectIdsToFilterActivitiesBy: [project.id],
         })
       );
     }
