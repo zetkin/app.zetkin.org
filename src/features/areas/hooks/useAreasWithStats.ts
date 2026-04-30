@@ -35,7 +35,9 @@ export default function useAreasWithStats(
           geometry: area.boundary,
           properties: {
             id: area.id,
-            stats: futureToObject(allAreaStats[area.id]).data ?? null,
+            stats: allAreaStats[area.id]
+              ? futureToObject(allAreaStats[area.id]).data
+              : null,
           },
           type: 'Feature',
         };
