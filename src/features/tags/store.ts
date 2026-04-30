@@ -13,9 +13,9 @@ import {
   remoteListLoaded,
 } from 'utils/storeUtils/remoteListUtils';
 import {
+  remoteItem,
   RemoteItem,
   remoteItemDeleted,
-  remoteItemLoad,
   remoteItemLoaded,
   remoteItemUpdate,
   remoteItemUpdated,
@@ -185,10 +185,10 @@ const tagsSlice = createSlice({
       );
     },
     tagLoad: (state, action: PayloadAction<[OrgId, TagId]>) => {
-      const [orgId, tagId] = action.payload;
+      const [, tagId] = action.payload;
 
-      state.orgTags[orgId] ||= remoteListCreated();
-      remoteItemLoad(state.orgTags[orgId], tagId);
+      state.tagsById[tagId] = remoteItem(tagId);
+      state.tagsById[tagId].isLoading = true;
     },
     tagLoaded: (state, action: PayloadAction<[[OrgId], ZetkinTag]>) => {
       const [[orgId], tag] = action.payload;
