@@ -13,7 +13,6 @@ export default function usePersonTags(orgId: number, personId: number) {
     (state) => state.tags.personTags[`${orgId}-${personId}`]
   );
   const tags = useAppSelector((state) => state.tags.tagsById);
-  const groups = useAppSelector((state) => state.tags.groupsById);
 
   const tagMapper = useCallback(
     ({ id, value }: { id: number; value: number | string | null }) => {
@@ -25,11 +24,10 @@ export default function usePersonTags(orgId: number, personId: number) {
 
       return <ZetkinAppliedTag>{
         ...tag.data,
-        group: tag.data.group && groups[tag.data.group.id],
         value,
       };
     },
-    [tags, groups]
+    [tags]
   );
   const tagList = useRemoteListMapping(tagIndex, tagMapper);
 

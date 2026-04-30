@@ -70,9 +70,6 @@ const tagsSlice = createSlice({
 
       tags.forEach((tag) => {
         state.tagsById[tag.id] = remoteItemLoaded(tag);
-        if (tag.group) {
-          state.groupsById[tag.group.id] = remoteItemLoaded(tag.group);
-        }
       });
 
       state.personTags[key] = remoteListLoaded(
