@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 
 import { Zetkin2Area, ZetkinAreaStats } from 'features/areas/types';
-import { futureToObject } from 'core/caching/futures';
 import useAreaStats from './useAreaStats';
 
 export const MIN_FETCH_ZOOM = 10;
@@ -35,9 +34,7 @@ export default function useAreasWithStats(
           geometry: area.boundary,
           properties: {
             id: area.id,
-            stats: allAreaStats[area.id]
-              ? futureToObject(allAreaStats[area.id]).data
-              : null,
+            stats: allAreaStats[area.id]?.data || null,
           },
           type: 'Feature',
         };
