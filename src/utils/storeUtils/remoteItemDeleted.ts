@@ -1,4 +1,4 @@
-import { RemoteData, RemoteList } from 'utils/storeUtils';
+import { getItemId, Id, RemoteData, RemoteList } from 'utils/storeUtils';
 
 /**
  * When recieving response from backend that a remote item has been deleted, this method should be used to update the redux store (cache).
@@ -9,11 +9,11 @@ import { RemoteData, RemoteList } from 'utils/storeUtils';
  * @param deletedId ID of RemoteItem to be deleted.
  * @returns true if item was found and succesfully set to deleted.
  */
-export function remoteItemDeleted<DataType extends RemoteData>(
+export function remoteItemDeleted<DataType extends RemoteData | Id>(
   list: RemoteList<DataType>,
   deletedId: number | string
 ): boolean {
-  const existingItem = list.items.find((item) => item.id == deletedId);
+  const existingItem = list.items.find((item) => getItemId(item) == deletedId);
   if (existingItem) {
     existingItem.deleted = true;
     return true;

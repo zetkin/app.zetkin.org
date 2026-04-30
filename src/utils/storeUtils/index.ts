@@ -1,5 +1,7 @@
+export type Id = number | string;
+
 export interface RemoteData {
-  id: number | string;
+  id: Id;
 }
 
 /**
@@ -112,7 +114,7 @@ export interface RemoteList<DataType> {
   items: RemoteItem<DataType>[];
 }
 
-export function remoteItem<DataType extends RemoteData>(
+export function remoteItem<DataType extends RemoteData | Id>(
   id: number | string,
   item?: Partial<Omit<RemoteItem<DataType>, 'id'>>
 ): RemoteItem<DataType> {
@@ -128,14 +130,35 @@ export function remoteItem<DataType extends RemoteData>(
   };
 }
 
-export function remoteList<DataType extends RemoteData>(
+export function remoteItemLoaded<DataType extends RemoteData | Id>(
+  item: DataType
+): RemoteItem<DataType> {
+  return {
+    data: item,
+    deleted: false,
+    error: null,
+    id: getItemId(item),
+    isLoading: false,
+    isStale: false,
+    loaded: new Date().toISOString(),
+    mutating: [],
+  };
+}
+
+export function getItemId<DataType extends RemoteData | Id>(
+  item: DataType
+): Id {
+  return typeof item === 'object' ? item.id : item;
+}
+
+export function remoteList<DataType extends RemoteData | Id>(
   items: DataType[] = []
 ): RemoteList<DataType> {
   return {
     error: null,
     isLoading: false,
     isStale: false,
-    items: items.map((item) => remoteItem(item.id, { data: item })),
+    items: items.map((item) => remoteItem(getItemId(item), { data: item })),
     loaded: null,
   };
 }
