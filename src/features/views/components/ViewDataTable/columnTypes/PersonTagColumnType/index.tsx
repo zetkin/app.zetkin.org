@@ -25,8 +25,9 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { AppDispatch } from 'core/store';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
 import { tagLoad, tagLoaded } from 'features/tags/store';
-import { RemoteList } from 'utils/storeUtils';
+import { RemoteItem } from 'utils/storeUtils';
 import ZUITagChip from 'zui/components/ZUITagChip';
+import { SafeRecord } from 'utils/types';
 
 type PersonTagViewCell = null | {
   value?: string;
@@ -44,17 +45,17 @@ export default class PersonTagColumnType implements IColumnType {
       apiClient: IApiClient;
       dispatch: AppDispatch;
       orgId: number;
-      tagListState: RemoteList<ZetkinTag>;
+      tagState?: SafeRecord<number, RemoteItem<ZetkinTag>>;
     }
   ): Omit<GridColDef, 'field'> {
-    const { apiClient, dispatch, orgId, tagListState } = optionalParams;
+    const { apiClient, dispatch, orgId, tagState } = optionalParams;
 
     const tagId = column.config.tag_id;
 
     let tag: ZetkinTag | null = null;
 
     if (!accessLevel) {
-      const tagItem = tagListState.items.find((item) => item.id == tagId);
+      const tagItem = tagState?.[tagId];
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
         actionOnLoad: () => tagLoad([orgId, tagId]),
