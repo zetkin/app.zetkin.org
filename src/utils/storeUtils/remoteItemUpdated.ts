@@ -1,4 +1,10 @@
-import { RemoteData, RemoteItem, RemoteList } from 'utils/storeUtils';
+import {
+  getItemId,
+  Id,
+  RemoteData,
+  RemoteItem,
+  RemoteList,
+} from 'utils/storeUtils';
 import { findOrAddItem } from './findOrAddItem';
 
 /**
@@ -10,12 +16,12 @@ import { findOrAddItem } from './findOrAddItem';
  * @param updatedData Data of item being updated. Contains an ID of the item.
  * @returns the updated or created RemoteItem
  */
-export function remoteItemUpdated<DataType extends RemoteData>(
+export function remoteItemUpdated<DataType extends RemoteData | Id>(
   list: RemoteList<DataType>,
   updatedData: DataType,
   updateStategy?: (itemToUpdate: RemoteItem<DataType>) => DataType
 ): RemoteItem<DataType> {
-  const item = findOrAddItem(list, updatedData.id);
+  const item = findOrAddItem(list, getItemId(updatedData));
   item.data = updateStategy ? updateStategy(item) : updatedData;
   item.mutating = [];
   item.isLoading = false;
