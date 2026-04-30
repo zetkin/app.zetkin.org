@@ -22,7 +22,7 @@ export default function useTagMutations(orgId: number): UseTagMutationsReturn {
         group: undefined,
         group_id: newGroup.id,
       };
-      dispatch(tagUpdate([tag.id, Object.keys(tagWithNewGroup)]));
+      dispatch(tagUpdate([[orgId, tag.id], Object.keys(tagWithNewGroup)]));
       // eslint-disable-next-line
       const { id, ...resourceWithoutId } = tagWithNewGroup;
       const tagFuture = await apiClient
@@ -31,13 +31,13 @@ export default function useTagMutations(orgId: number): UseTagMutationsReturn {
           Omit<ZetkinTagPatchBody, 'id'>
         >(`/api/orgs/${orgId}/people/tags/${tag.id}`, resourceWithoutId)
         .then((data: ZetkinTag) => {
-          dispatch(tagUpdated(data));
+          dispatch(tagUpdated([[orgId], data]));
           return data;
         });
       return tagFuture;
     } else {
       // Add tag with existing or no group
-      dispatch(tagUpdate([tag.id, Object.keys(tag)]));
+      dispatch(tagUpdate([[orgId, tag.id], Object.keys(tag)]));
       const tagFuture = await apiClient
         .patch<ZetkinTag, Omit<ZetkinTagPatchBody, 'id'>>(
           `/api/orgs/${orgId}/people/tags/${tag.id}`,
@@ -49,7 +49,7 @@ export default function useTagMutations(orgId: number): UseTagMutationsReturn {
           }
         )
         .then((data) => {
-          dispatch(tagUpdated(data));
+          dispatch(tagUpdated([[orgId], data]));
           return data;
         });
 

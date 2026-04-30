@@ -10,13 +10,11 @@ interface UseTagReturn {
 export default function useTag(orgId: number, tagId: number): UseTagReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const tags = useAppSelector((state) => state.tags);
+  const tag = useAppSelector((state) => state.tags.tagsById[tagId]);
 
-  const item = tags.tagList.items.find((item) => item.id == tagId);
-
-  const tagFuture = loadItemIfNecessary(item, dispatch, {
-    actionOnLoad: () => tagLoad(tagId),
-    actionOnSuccess: (tag) => tagLoaded(tag),
+  const tagFuture = loadItemIfNecessary(tag, dispatch, {
+    actionOnLoad: () => tagLoad([orgId, tagId]),
+    actionOnSuccess: (tag) => tagLoaded([[orgId], tag]),
     loader: () =>
       apiClient.get<ZetkinTag>(`/api/orgs/${orgId}/people/tags/${tagId}`),
   });

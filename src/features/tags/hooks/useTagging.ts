@@ -25,14 +25,14 @@ export default function useTagging(orgId: number): UseTaggingReturn {
       `/api/orgs/${orgId}/people/${personId}/tags/${tagId}`,
       data
     );
-    dispatch(tagAssigned([personId, tag]));
+    dispatch(tagAssigned([[orgId, personId], tag]));
   };
 
   const removeFromPerson = async (personId: number, tagId: number) => {
     await apiClient.delete(
       `/api/orgs/${orgId}/people/${personId}/tags/${tagId}`
     );
-    dispatch(tagUnassigned([personId, tagId]));
+    dispatch(tagUnassigned([orgId, personId, tagId]));
   };
 
   return {
