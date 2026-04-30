@@ -13,13 +13,15 @@ export default function useTagGroups(orgId: number) {
   const tagGroupIndex = useAppSelector((state) => state.tags.tagGroups[orgId]);
   const groupsById = useAppSelector((state) => state.tags.groupsById);
   const tagGroupMapper = useCallback(
-    (groups: number[]) =>
-      groups
-        .map((groupId) => groupsById[groupId])
-        .filter((group) => !!group)
-        .filter((group) => !group.deleted)
-        .map((group) => group.data)
-        .filter((group) => !!group),
+    (groupId: number) => {
+      const group = groupsById[groupId];
+
+      if (group?.deleted) {
+        return null;
+      }
+
+      return group?.data ?? null;
+    },
     [groupsById]
   );
   const tagGroupsList = useRemoteListMapping(tagGroupIndex, tagGroupMapper);

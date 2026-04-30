@@ -16,19 +16,19 @@ export default function usePersonTags(orgId: number, personId: number) {
   const groups = useAppSelector((state) => state.tags.groupsById);
 
   const tagMapper = useCallback(
-    (personTags: { id: number; value: number | string | null }[]) =>
-      personTags
-        .map(
-          ({ id, value }) =>
-            tags[id]?.data &&
-            !tags[id]?.deleted &&
-            <ZetkinAppliedTag>{
-              ...tags[id].data,
-              group: tags[id].data.group && groups[tags[id].data.group.id],
-              value,
-            }
-        )
-        .filter((tag) => !!tag),
+    ({ id, value }: { id: number; value: number | string | null }) => {
+      const tag = tags[id];
+
+      if (!tag || !tag.data || tag.deleted) {
+        return null;
+      }
+
+      return <ZetkinAppliedTag>{
+        ...tag.data,
+        group: tag.data.group && groups[tag.data.group.id],
+        value,
+      };
+    },
     [tags, groups]
   );
   const tagList = useRemoteListMapping(tagIndex, tagMapper);

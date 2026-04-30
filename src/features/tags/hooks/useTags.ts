@@ -14,13 +14,13 @@ export default function useTags(orgId: number): IFuture<ZetkinTag[]> {
   const tagIndex = useAppSelector((state) => state.tags.orgTags[orgId]);
   const tagsById = useAppSelector((state) => state.tags.tagsById);
   const tagMapper = useCallback(
-    (tags: number[]) =>
-      tags
-        .map((tagId) => tagsById[tagId])
-        .filter((tagItem) => !!tagItem)
-        .filter((tagItem) => !tagItem.deleted)
-        .map((tagItem) => tagItem.data)
-        .filter((tag) => !!tag),
+    (tagId: number) => {
+      const tag = tagsById[tagId];
+      if (tag?.deleted) {
+        return null;
+      }
+      return tag?.data ?? null;
+    },
     [tagsById]
   );
   const tagListState = useRemoteListMapping(tagIndex, tagMapper);
