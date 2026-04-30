@@ -59,7 +59,7 @@ const tagsSlice = createSlice({
       const [orgId, personId] = action.payload;
       const key = `${orgId}-${personId}` as const;
 
-      state.personTags[key] = remoteListLoad(state.personTags[key] ?? null);
+      state.personTags[key] = remoteListLoad(state.personTags[key]);
     },
     personTagsLoaded: (
       state,
