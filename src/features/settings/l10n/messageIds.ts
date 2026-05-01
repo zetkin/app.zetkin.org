@@ -35,7 +35,6 @@ export default makeMessages('feat.settings', {
     },
     settingsLayout: {
       access: m('Access'),
-      themes: m('Themes'),
       title: m('Settings'),
     },
     tableButtons: {
