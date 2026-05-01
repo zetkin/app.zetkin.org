@@ -256,47 +256,6 @@ export default makeMessages('feat.emails', {
     },
     themeEditor: {
       editTitle: m('Edit'),
-      helpDialog: {
-        closeButton: m('Close'),
-        content: {
-          blockAttributes: {
-            part1: m(
-              'You can personalize the look and feel of your images and buttons.'
-            ),
-            part2: m('For buttons, you can use any of '),
-            part3: m('these'),
-            part4: m(' configuration options.'),
-            part5: m('For images, you can use any of '),
-            part6: m('these'),
-            part7: m(' configuration options.'),
-          },
-          css: {
-            part1: m(
-              'You can add custom CSS in that will be injected inside the MJML header when building your emails.'
-            ),
-            part2: m(
-              'For more information about CSS you can refer to the Mozilla documentation '
-            ),
-            part3: m('here'),
-            part4: m('.'),
-            part5: m(
-              'This parameter is stored as a string, not as a JSON object and the keys should not be quoted.'
-            ),
-          },
-          frame: {
-            part1: m(
-              'We use MJML, formatted in JSON to configure email templates.'
-            ),
-            part2: m('The documentation for MJML is accessible '),
-            part3: m('here'),
-            part4: m('.'),
-            part5: m(
-              'The email template has to be wrapped inside of an object of type `mj-wrapper`, and must contain exactly one child element with `"tagName": "placehodler"` to work properly.'
-            ),
-          },
-        },
-        title: m('How to configure'),
-      },
       jsonError: m('Invalid JSON'),
       previewTitle: m('Preview'),
       saveButton: m('Save'),

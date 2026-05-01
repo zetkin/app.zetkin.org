@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { CircularProgress, Link, Stack } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 import React from 'react';
 
 import { scaffold } from 'utils/next';
@@ -10,8 +10,6 @@ import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ThemeEditor from 'features/emails/components/ThemeEditor/ThemeEditor';
 import ThemePreview from 'features/emails/components/ThemeEditor/ThemePreview';
-import { useMessages } from 'core/i18n';
-import messageIds from 'features/emails/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -31,7 +29,6 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
   const onServer = useServerSide();
   const { orgId, themeId } = useNumericRouteParams();
   const { isLoading, data } = useEmailTheme(orgId, themeId);
-  const messages = useMessages(messageIds);
 
   if (onServer) {
     return null;
@@ -44,33 +41,6 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
     <Stack direction="row" display="flex" gap={2} sx={{ height: '100vh' }}>
       <ThemeEditor
         editingSection="block_attributes"
-        helpBlock={
-          <>
-            {messages.themes.themeEditor.helpDialog.content.blockAttributes.part1()}
-            <br />
-            <br />
-            {messages.themes.themeEditor.helpDialog.content.blockAttributes.part2()}
-            <Link
-              href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button"
-              rel="noreferrer"
-              target="_blank"
-            >
-              {messages.themes.themeEditor.helpDialog.content.blockAttributes.part3()}
-            </Link>
-            {messages.themes.themeEditor.helpDialog.content.blockAttributes.part4()}
-            <br />
-            <br />
-            {messages.themes.themeEditor.helpDialog.content.blockAttributes.part5()}
-            <Link
-              href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img"
-              rel="noreferrer"
-              target="_blank"
-            >
-              {messages.themes.themeEditor.helpDialog.content.blockAttributes.part6()}
-            </Link>
-            {messages.themes.themeEditor.helpDialog.content.blockAttributes.part7()}
-          </>
-        }
         orgId={orgId}
         themeId={themeId}
       />
