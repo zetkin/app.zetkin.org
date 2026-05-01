@@ -12,9 +12,20 @@ export default function usePreviewEmailTheme(): string {
       "kind": "header",
       "data": {
         "content": [
-          { "kind": "string", "value": "` +
+          { 
+            "kind": "string",
+            "value": "` +
     messages.themes.themePreview.heading.paragraphPart1() +
-    `" }
+    `"
+          },
+          {
+            "kind": "variable",
+            "name": "target.first_name"
+          },
+          {
+            "kind": "string",
+            "value": ", "
+          }
         ],
         "level": 1
       }
@@ -23,73 +34,14 @@ export default function usePreviewEmailTheme(): string {
       "kind": "header",
       "data": {
         "content": [
-          { "kind": "string", "value": "` +
+          {
+            "kind": "string",
+            "value": "` +
     messages.themes.themePreview.heading.paragraphPart2() +
-    `" }
+    `"
+          }
         ],
         "level": 2
-      }
-    },
-    {
-      "kind": "header",
-      "data": {
-        "content": [
-          { "kind": "string", "value": "` +
-    messages.themes.themePreview.heading.paragraphPart1() +
-    `" }
-        ],
-        "level": 3
-      }
-    },
-    {
-      "kind": "paragraph",
-      "data": {
-        "content": [
-          { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph.paragraphPart1() +
-    `" },
-          {
-            "kind": "bold",
-            "content": [
-              { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph.bold() +
-    `" }
-            ]
-          },
-          { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph.paragraphPart2() +
-    `" },
-          {
-            "kind": "italic",
-            "content": [
-              { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph.italic() +
-    `" }
-            ]
-          },
-          { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph.paragraphPart3() +
-    `" },
-          {
-            "kind": "link",
-            "content": [
-              { "kind": "string", "value": "` +
-    messages.themes.themePreview.paragraph.link() +
-    `" }
-            ],
-            "href": "https://zetkin.org/",
-            "tag": "sjf8dtwj"
-          },
-          { "kind": "string", "value": "." }
-        ]
-      }
-    },
-    {
-      "kind": "image",
-      "data": {
-        "alt": "logo-zetkin.png",
-        "fileId": 2,
-        "src": "http://files.dev.zetkin.org/1/61a0fe34-247c-4c8c-9514-6bf7f9e3d578.png"
       }
     },
     {
@@ -100,6 +52,153 @@ export default function usePreviewEmailTheme(): string {
         "text": "` +
     messages.themes.themePreview.button() +
     `"
+      }
+    },
+    {
+      "kind": "header",
+      "data": {
+        "content": [
+          { "kind": "string", "value": "` +
+    messages.themes.themePreview.heading.paragraphPart3() +
+    `" }
+        ],
+        "level": 3
+      }
+    },
+    {
+      "kind": "paragraph",
+      "data": {
+        "content": [
+          {
+            "kind": "string",
+            "value": "` +
+    messages.themes.themePreview.paragraph.paragraph1() +
+    `"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "paragraph",
+      "data": {
+        "content": [
+          {
+            "kind": "string",
+            "value": "` +
+    messages.themes.themePreview.paragraph.paragraph2() +
+    `"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "paragraph",
+      "data": {
+        "content": [
+          {
+            "kind": "bold",
+            "content": [
+              {
+                "kind": "string",
+                "value": "` +
+    messages.themes.themePreview.paragraph.paragraph3() +
+    `"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "paragraph",
+      "data": {
+        "content": [
+          {
+            "kind": "bold",
+            "content": [
+              {
+                "kind": "string",
+                "value": "I. "
+              }
+            ]
+          },
+          {
+            "kind": "italic",
+            "content": [
+              {
+                "kind": "string",
+                "value": "` +
+    messages.themes.themePreview.paragraph.paragraph4() +
+    `"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "paragraph",
+      "data": {
+        "content": [
+          {
+            "kind": "bold",
+            "content": [
+              {
+                "kind": "string",
+                "value": "II. "
+              }
+            ]
+          },
+          {
+            "kind": "italic",
+            "content": [
+              {
+                "kind": "string",
+                "value": "` +
+    messages.themes.themePreview.paragraph.paragraph5() +
+    `"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "paragraph",
+      "data": {
+        "content": [
+          {
+            "kind": "string",
+            "value": "` +
+    messages.themes.themePreview.paragraph.paragraph6() +
+    `"
+          },
+          {
+            "kind": "link",
+            "content": [
+              {
+                "kind": "string",
+                "value": "` +
+    messages.themes.themePreview.paragraph.paragraph7() +
+    `"
+              }
+            ],
+            "href": "https://www.gutenberg.org/files/31193/31193-h/31193-h.htm",
+            "tag": "communistManifesto"
+          },
+          {
+            "kind": "string",
+            "value": "."
+          }
+        ]
+      }
+    },
+    {
+      "kind": "image",
+      "data": {
+        "alt": "cover.jpg",
+        "fileId": 3,
+        "src": "http://files.dev.zetkin.org/1/d4f3ffbf-3757-4873-841c-6615e2b85768.jpg"
       }
     }
   ]
