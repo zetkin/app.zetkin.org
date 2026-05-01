@@ -4,20 +4,21 @@ import { fieldCreate, fieldCreated } from 'features/profile/store';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 
 type UseCreateFieldsReturn = {
-  createField: () => void;
+  createField: (title: string) => void;
 };
 
 export default function useCreateField(orgId: number): UseCreateFieldsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const createField = async () => {
+  const createField = async (title: string) => {
     dispatch(fieldCreate());
+
     const field = await apiClient.post<ZetkinCustomField>(
       `/api/orgs/${orgId}/people/fields/`,
       {
-        slug: 'farahs_test_14',
-        title: 'Farahs Field',
+        slug: title.toLowerCase().replace(/\s+/g, '_'),
+        title,
         type: 'text' as CUSTOM_FIELD_TYPE,
       }
     );
