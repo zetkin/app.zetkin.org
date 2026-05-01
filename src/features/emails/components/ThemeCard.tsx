@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
-import ThemePreview from 'features/emails/components/ThemeEditor/ThemePreview';
 import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
 
 interface ThemeCardProps {
@@ -14,20 +13,17 @@ interface ThemeCardProps {
 
 const ThemeCard: React.FC<ThemeCardProps> = (props) => {
   const messages = useMessages(messageIds);
-  const { deleteEmailTheme, data } = useEmailTheme(props.orgId, props.themeId);
+  const { deleteEmailTheme } = useEmailTheme(props.orgId, props.themeId);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   return (
     <>
-      <Card
-        sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}
-      >
+      <Card sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
         <Stack
           alignItems="center"
           direction="row"
           justifyContent="space-between"
           spacing={2}
-          sx={{ mb: 2 }}
         >
           <Typography variant="h6">
             {messages.themes.themeCard.title({ themeId: props.themeId })}
@@ -48,9 +44,6 @@ const ThemeCard: React.FC<ThemeCardProps> = (props) => {
               {messages.themes.themeCard.delete()}
             </Button>
           </Stack>
-        </Stack>
-        <Stack sx={{ flex: 1, minHeight: 0 }}>
-          <ThemePreview theme={data} />
         </Stack>
       </Card>
       <ZUIConfirmDialog
