@@ -1,0 +1,10 @@
+# Zetkin security contacts and policy
+
+# Our security contact channels
+Contact: mailto:info@zetkin.org
+
+# Link to our vulnerability disclosure policy
+Policy: https://github.com/zetkin/app.zetkin.org/blob/main/SECURITY.md
+
+# Languages that our team speaks and understands
+Preferred-Languages: en-US
