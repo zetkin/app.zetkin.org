@@ -82,6 +82,52 @@ class MoveExtension extends PlainExtension {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
+  moveBlockToIndex(fromIndex: number, toIndex: number): CommandFunction {
+    return (props: CommandFunctionProps) => {
+      try {
+        const { dispatch, state, tr } = props;
+        const { doc } = state;
+
+        if (
+          fromIndex < 0 ||
+          fromIndex >= doc.childCount ||
+          toIndex < 0 ||
+          toIndex >= doc.childCount ||
+          fromIndex === toIndex
+        ) {
+          return false;
+        }
+
+        const node = doc.child(fromIndex);
+        let pos = 0;
+        for (let i = 0; i < fromIndex; i++) {
+          pos += doc.child(i).nodeSize;
+        }
+        const fromPos = pos;
+        const toPos = fromPos + node.nodeSize;
+
+        tr.delete(fromPos, toPos);
+
+        let insertPos = 0;
+        const targetIndex = toIndex > fromIndex ? toIndex : toIndex;
+        for (let i = 0; i < targetIndex; i++) {
+          insertPos += tr.doc.child(i).nodeSize;
+        }
+
+        tr.insert(insertPos, node);
+        tr.setSelection(NodeSelection.create(tr.doc, insertPos));
+
+        dispatch?.(tr);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
   moveBlockUp(): CommandFunction {
     return (props) => {
       try {

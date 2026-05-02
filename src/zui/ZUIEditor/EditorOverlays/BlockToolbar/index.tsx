@@ -16,6 +16,7 @@ import BulletListToolbar from './toolbars/BulletListToolbar';
 
 type BlockToolbarProps = {
   blockAttributes: Attrs;
+  blockIndex: number;
   blockType: BlockType;
   curBlockY: number;
   enableBold: boolean;
@@ -23,11 +24,14 @@ type BlockToolbarProps = {
   enableLink: boolean;
   enableStrikethrough: boolean;
   enableVariable: boolean;
+  onDragEnd: () => void;
+  onDragStart: (index: number) => void;
   range: FromToProps;
 };
 
 const BlockToolbar: FC<BlockToolbarProps> = ({
   blockAttributes,
+  blockIndex,
   blockType,
   curBlockY,
   enableLink,
@@ -35,6 +39,8 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   enableVariable,
   enableItalic,
   enableBold,
+  onDragEnd,
+  onDragStart,
   range,
 }) => {
   const messages = useMessages(messageIds);
@@ -52,33 +58,62 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
       >
         {blockType == 'paragraph' && (
           <ParagraphToolbar
+            blockIndex={blockIndex}
             enableBold={enableBold}
             enableItalic={enableItalic}
             enableLink={enableLink}
             enableStrikethrough={enableStrikethrough}
             enableVariable={enableVariable}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
             range={range}
           />
         )}
         {blockType == 'heading' && (
           <HeadingToolbar
+            blockIndex={blockIndex}
             enableVariable={enableVariable}
             headingLevel={blockAttributes.level}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
             range={range}
           />
         )}
         {blockType == 'zbutton' && (
           <BlockToolbarBase
+            blockIndex={blockIndex}
             icon={<Crop75 />}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
             range={range}
             title={messages.editor.blockLabels.zbutton()}
           />
         )}
         {blockType == 'zimage' && (
-          <ImageToolbar fileId={blockAttributes.fileId} range={range} />
+          <ImageToolbar
+            blockIndex={blockIndex}
+            fileId={blockAttributes.fileId}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
+            range={range}
+          />
         )}
-        {blockType == 'orderedList' && <OrderedListToolbar range={range} />}
-        {blockType == 'bulletList' && <BulletListToolbar range={range} />}
+        {blockType == 'orderedList' && (
+          <OrderedListToolbar
+            blockIndex={blockIndex}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
+            range={range}
+          />
+        )}
+        {blockType == 'bulletList' && (
+          <BulletListToolbar
+            blockIndex={blockIndex}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
+            range={range}
+          />
+        )}
       </Box>
     </Box>
   );

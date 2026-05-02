@@ -13,20 +13,27 @@ import { useCommands } from '@remirror/react';
 
 import MoveUpButton from '../buttons/MoveUpButton';
 import MoveDownButton from '../buttons/MoveDownButton';
+import DragHandle from '../buttons/DragHandle';
 import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 
 type BlockToolbarBaseProps = {
+  blockIndex: number;
   conversions?: { label: string; onClick: () => void }[];
   icon: JSX.Element;
+  onDragEnd: () => void;
+  onDragStart: (index: number) => void;
   range: FromToProps;
   title: string;
   tools?: JSX.Element;
 };
 
 const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
+  blockIndex,
   conversions,
   icon,
+  onDragEnd,
+  onDragStart,
   range,
   title,
   tools,
@@ -38,6 +45,19 @@ const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
     <Paper
       elevation={1}
       onMouseDown={(e) => {
+        let node: EventTarget | Element | null = e.target;
+        while (node) {
+          if (!(node instanceof Element)) {
+            break;
+          }
+
+          if (node.getAttribute('data-button-type') === 'dnd') {
+            return;
+          }
+
+          node = node.parentElement;
+        }
+
         e.preventDefault();
       }}
     >
@@ -47,6 +67,11 @@ const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
             <MoveUpButton />
             <MoveDownButton />
           </Box>
+          <DragHandle
+            blockIndex={blockIndex}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
+          />
           <Box alignItems="center" display="flex" gap={1} marginX={0.5}>
             {icon}
             <Typography fontSize="14px">{title}</Typography>

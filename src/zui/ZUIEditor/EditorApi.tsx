@@ -29,7 +29,7 @@ const getBlockPos = (state: EditorState, blockIndex: number): number | null => {
 export const EditorApi: FC<{
   editorApiRef: MutableRefObject<ZUIEditorApi | null>;
 }> = ({ editorApiRef }) => {
-  const { focus, moveBlockDown, moveBlockUp, setContent } = useCommands();
+  const { focus, moveBlockToIndex, setContent } = useCommands();
   const state = useEditorState();
 
   useEffect(() => {
@@ -47,9 +47,7 @@ export const EditorApi: FC<{
         focus();
       },
       moveBlock: (fromRemirrorIndex, toRemirrorIndex) => {
-        const diff = toRemirrorIndex - fromRemirrorIndex;
-
-        if (diff === 0) {
+        if (toRemirrorIndex === fromRemirrorIndex) {
           return;
         }
 
@@ -59,15 +57,7 @@ export const EditorApi: FC<{
         }
         focus(pos);
 
-        if (diff > 0) {
-          for (let i = 0; i < diff; i++) {
-            moveBlockDown();
-          }
-        } else {
-          for (let i = 0; i < Math.abs(diff); i++) {
-            moveBlockUp();
-          }
-        }
+        moveBlockToIndex(fromRemirrorIndex, toRemirrorIndex);
       },
       setSelectedBlockIndex: (remirrorIndex) => {
         const pos = getBlockPos(state, remirrorIndex);
@@ -77,7 +67,7 @@ export const EditorApi: FC<{
         focus(pos);
       },
     };
-  }, [editorApiRef, focus, moveBlockDown, moveBlockUp, setContent, state]);
+  }, [editorApiRef, focus, moveBlockToIndex, setContent, state]);
 
   return null;
 };

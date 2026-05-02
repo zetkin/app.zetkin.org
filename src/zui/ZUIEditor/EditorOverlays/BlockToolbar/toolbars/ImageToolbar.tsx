@@ -10,11 +10,20 @@ import { useNumericRouteParams } from 'core/hooks';
 import useFile from 'features/files/hooks/useFile';
 
 type ImageToolbarProps = {
+  blockIndex: number;
   fileId: number | null;
+  onDragEnd: () => void;
+  onDragStart: (index: number) => void;
   range: FromToProps;
 };
 
-const ImageToolbar: FC<ImageToolbarProps> = ({ fileId, range }) => {
+const ImageToolbar: FC<ImageToolbarProps> = ({
+  blockIndex,
+  fileId,
+  onDragEnd,
+  onDragStart,
+  range,
+}) => {
   const { orgId } = useNumericRouteParams();
 
   const messages = useMessages(messageIds);
@@ -24,7 +33,10 @@ const ImageToolbar: FC<ImageToolbarProps> = ({ fileId, range }) => {
 
   return (
     <BlockToolbarBase
+      blockIndex={blockIndex}
       icon={<ImageIcon />}
+      onDragEnd={onDragEnd}
+      onDragStart={onDragStart}
       range={range}
       title={messages.editor.blockLabels.zimage()}
       tools={<Typography color="secondary">{fileName}</Typography>}

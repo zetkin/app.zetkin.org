@@ -1,4 +1,5 @@
 import {
+  useCommands,
   useEditorEvent,
   useEditorState,
   useEditorView,
@@ -10,6 +11,7 @@ import { Box, lighten, Typography, useTheme } from '@mui/material';
 import { FromToProps, isNodeSelection, RemirrorJSON } from 'remirror';
 import { ErrorOutline } from '@mui/icons-material';
 import { Attrs } from '@remirror/pm/model';
+import { useDrop } from 'react-dnd';
 
 import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
@@ -24,6 +26,7 @@ import editorBlockProblems, {
 import { areDOMRectRecordsEqual } from 'zui/ZUIEditor/utils/domRects';
 
 export type BlockDividerData = {
+  blockIndex: number;
   pos: number;
   y: number;
 };
@@ -38,10 +41,65 @@ export type BlockType =
 
 type BlockData = {
   attributes: Attrs;
+  index: number;
   node: ProsemirrorNode;
   range: FromToProps;
   rect: DOMRect;
   type: BlockType;
+};
+
+interface DragItem {
+  blockIndex: number;
+  type: string;
+}
+
+const DropZone: FC<{
+  index: number;
+  isDragging: boolean;
+  onDrop: (item: DragItem) => void;
+  onHover: (item: DragItem, index: number) => void;
+  y: number;
+}> = ({ index, isDragging, onDrop, onHover, y }) => {
+  const [{ isOver }, drop] = useDrop<DragItem, void, { isOver: boolean }>({
+    accept: 'EDITOR_BLOCK',
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+    drop: (item) => {
+      onDrop(item);
+    },
+    hover: (item) => {
+      onHover(item, index);
+    },
+  });
+
+  const dropZoneOffset = 8;
+  const dropZoneHeight = isOver ? 30 : 15;
+
+  if (!isDragging) {
+    return null;
+  }
+
+  return (
+    <Box
+      ref={(node: HTMLDivElement | null) => {
+        if (node) {
+          drop(node);
+        }
+      }}
+      sx={{
+        backgroundColor: isOver ? 'primary.main' : 'red',
+        height: `${dropZoneHeight}px`,
+        left: 0,
+        opacity: isOver ? 0.7 : 0.3,
+        position: 'absolute',
+        right: 0,
+        top: `${y + dropZoneOffset - dropZoneHeight / 2}px`,
+        transition: 'all 0.15s ease',
+        zIndex: 10,
+      }}
+    />
+  );
 };
 
 type Props = {
@@ -85,6 +143,19 @@ const EditorOverlays: FC<Props> = ({
     y: -Infinity,
   });
   const [currentBlock, setCurrentBlock] = useState<BlockData | null>(null);
+  const [draggingBlockIndex, setDraggingBlockIndex] = useState<number | null>(
+    null
+  );
+  const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
+
+  const handleDragStart = useCallback((index: number) => {
+    setDraggingBlockIndex(index);
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setDraggingBlockIndex(null);
+    setDropTargetIndex(null);
+  }, []);
 
   const editorRect = view.dom.getBoundingClientRect();
 
@@ -173,6 +244,7 @@ const EditorOverlays: FC<Props> = ({
       onSelectBlock?.(index);
       setCurrentBlock({
         attributes: node.attrs,
+        index,
         node: node,
         range: {
           from: posBefore,
@@ -243,7 +315,8 @@ const EditorOverlays: FC<Props> = ({
     }
 
     const containerRect = view.dom.getBoundingClientRect();
-    const dividers: BlockDividerData[] = [{ pos: 0, y: 8 }];
+    let blockIndex = 0;
+    const dividers: BlockDividerData[] = [{ blockIndex: -1, pos: 0, y: 8 }];
 
     state.doc.descendants((node, pos) => {
       const elem = view.nodeDOM(pos);
@@ -253,10 +326,13 @@ const EditorOverlays: FC<Props> = ({
       ) {
         const rect = elem.getBoundingClientRect();
         dividers.push({
+          blockIndex,
           pos: pos + node.nodeSize,
           y: rect.bottom - containerRect.top,
         });
       }
+
+      blockIndex++;
       return false;
     });
 
@@ -286,6 +362,39 @@ const EditorOverlays: FC<Props> = ({
     mouseIsInsideEditor;
 
   const showSelectedBlockOutline = focused && editable && !!currentBlock;
+
+  const { moveBlockToIndex } = useCommands();
+
+  const handleDrop = useCallback(
+    (item: DragItem) => {
+      if (dropTargetIndex === null) {
+        setDraggingBlockIndex(null);
+        setDropTargetIndex(null);
+        return;
+      }
+
+      const fromIndex = item.blockIndex;
+      const toIndex = dropTargetIndex + 1;
+
+      if (fromIndex !== toIndex) {
+        moveBlockToIndex(fromIndex, toIndex);
+      }
+
+      setDraggingBlockIndex(null);
+      setDropTargetIndex(null);
+    },
+    [dropTargetIndex, moveBlockToIndex]
+  );
+
+  const handleDropTargetChanged = useCallback(
+    (item: DragItem, targetIndex: number) => {
+      const fromIndex = item.blockIndex;
+      const adjustedTargetIndex =
+        fromIndex < targetIndex ? targetIndex - 1 : targetIndex;
+      setDropTargetIndex(adjustedTargetIndex);
+    },
+    []
+  );
 
   return (
     <>
@@ -348,9 +457,10 @@ const EditorOverlays: FC<Props> = ({
           />
         </Box>
       )}
-      {showBlockToolbar && (
+      {showBlockToolbar && currentBlock && (
         <BlockToolbar
           blockAttributes={currentBlock.attributes}
+          blockIndex={currentBlock.index}
           blockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
           enableBold={enableBold}
@@ -358,9 +468,29 @@ const EditorOverlays: FC<Props> = ({
           enableLink={enableLink}
           enableStrikethrough={enableStrikethrough}
           enableVariable={enableVariable}
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
           range={currentBlock.range}
         />
       )}
+      <Box data-hello={'hello'} sx={{ position: 'relative' }}>
+        {blockDividers.map((divider) => {
+          return (
+            draggingBlockIndex !== null &&
+            divider.blockIndex !== draggingBlockIndex &&
+            divider.blockIndex !== draggingBlockIndex - 1 && (
+              <DropZone
+                key={divider.blockIndex}
+                index={divider.blockIndex}
+                isDragging={draggingBlockIndex !== null}
+                onDrop={handleDrop}
+                onHover={handleDropTargetChanged}
+                y={divider.y}
+              />
+            )
+          );
+        })}
+      </Box>
       {showBlockInsert && (
         <BlockInsert blockDividers={blockDividers} mouseY={mousePosition.y} />
       )}

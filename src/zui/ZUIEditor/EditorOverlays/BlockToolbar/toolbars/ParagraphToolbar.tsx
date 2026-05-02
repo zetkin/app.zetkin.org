@@ -14,20 +14,26 @@ import VariableToolButton from '../buttons/VariableToolButton';
 import StrikethroughToolButton from 'zui/ZUIEditor/EditorOverlays/BlockToolbar/buttons/StrikethroughToolButton';
 
 type ParagraphToolbarProps = {
+  blockIndex: number;
   enableBold: boolean;
   enableItalic: boolean;
   enableLink: boolean;
   enableStrikethrough: boolean;
   enableVariable: boolean;
+  onDragEnd: () => void;
+  onDragStart: (index: number) => void;
   range: FromToProps;
 };
 
 const ParagraphToolbar: FC<ParagraphToolbarProps> = ({
+  blockIndex,
   enableBold,
   enableItalic,
   enableLink,
   enableStrikethrough,
   enableVariable,
+  onDragEnd,
+  onDragStart,
   range,
 }) => {
   const messages = useMessages(messageIds);
@@ -35,6 +41,7 @@ const ParagraphToolbar: FC<ParagraphToolbarProps> = ({
 
   return (
     <BlockToolbarBase
+      blockIndex={blockIndex}
       conversions={[
         {
           label: messages.editor.toolbar.conversions.heading(),
@@ -42,6 +49,8 @@ const ParagraphToolbar: FC<ParagraphToolbarProps> = ({
         },
       ]}
       icon={<Notes />}
+      onDragEnd={onDragEnd}
+      onDragStart={onDragStart}
       range={range}
       title={messages.editor.blockLabels.paragraph()}
       tools={

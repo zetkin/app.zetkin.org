@@ -10,14 +10,20 @@ import VariableToolButton from '../buttons/VariableToolButton';
 import { Msg, useMessages } from 'core/i18n';
 
 type HeadingToolbarProps = {
+  blockIndex: number;
   enableVariable: boolean;
   headingLevel: number;
+  onDragEnd: () => void;
+  onDragStart: (index: number) => void;
   range: FromToProps;
 };
 
 const HeadingToolbar: FC<HeadingToolbarProps> = ({
+  blockIndex,
   enableVariable,
   headingLevel,
+  onDragEnd,
+  onDragStart,
   range,
 }) => {
   const messages = useMessages(messageIds);
@@ -27,6 +33,7 @@ const HeadingToolbar: FC<HeadingToolbarProps> = ({
 
   return (
     <BlockToolbarBase
+      blockIndex={blockIndex}
       conversions={[
         {
           label: messages.editor.toolbar.conversions.paragraph(),
@@ -34,6 +41,8 @@ const HeadingToolbar: FC<HeadingToolbarProps> = ({
         },
       ]}
       icon={<Title />}
+      onDragEnd={onDragEnd}
+      onDragStart={onDragStart}
       range={range}
       title={messages.editor.blockLabels.heading()}
       tools={
