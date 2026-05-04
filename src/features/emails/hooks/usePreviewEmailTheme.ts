@@ -1,8 +1,11 @@
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import useUser from 'core/hooks/useUser';
 
 export default function usePreviewEmailTheme(): string {
   const messages = useMessages(messageIds);
+  const user = useUser();
+  const userName = user?.first_name ? ' ' + user?.first_name : '';
 
   return (
     `
@@ -16,11 +19,8 @@ export default function usePreviewEmailTheme(): string {
             "kind": "string",
             "value": "` +
     messages.themes.themePreview.heading.paragraphPart1() +
+    userName +
     `"
-          },
-          {
-            "kind": "variable",
-            "name": "target.first_name"
           },
           {
             "kind": "string",
