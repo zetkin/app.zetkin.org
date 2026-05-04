@@ -35,7 +35,7 @@ const Areas: FC<Props> = ({
         if (zoomLevel > MIN_FETCH_ZOOM && area.properties.stats) {
           return (
             <Marker
-              key={area.id}
+              key={area.properties.id}
               anchor="top-left"
               latitude={center.geometry.coordinates[1]}
               longitude={center.geometry.coordinates[0]}

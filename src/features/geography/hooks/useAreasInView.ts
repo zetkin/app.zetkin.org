@@ -45,6 +45,10 @@ export default function useAreasInView(
   useEffect(() => {
     map?.on('load', () => getAreasInView(map));
     map?.on('move', () => debouncedUpdateBounds(map));
+    return () => {
+      map?.off('load', () => getAreasInView(map));
+      map?.off('move', () => debouncedUpdateBounds(map));
+    };
   }, [map, getAreasInView, debouncedUpdateBounds]);
 
   return areasInView;
