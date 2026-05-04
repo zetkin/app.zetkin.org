@@ -1,133 +1,139 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Stack,
-  Typography,
-} from '@mui/material';
-import { MJMLJsonObject } from 'mjml-core';
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Tab } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-import useEmailTheme from 'features/emails/hooks/useEmailTheme';
-import ZUITextField from 'zui/components/ZUITextField';
-import { BlockAttributes, EmailThemePatchBody } from 'features/emails/types';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
+import ThemeEditField, { parseField, serializeField } from './ThemeEditField';
+import { EmailThemePatchBody } from 'features/emails/types';
+import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 
-interface EditTabProps {
+interface ThemeEditorProps {
   orgId: number;
   themeId: number;
-  editingSection: 'frame_mjml' | 'css' | 'block_attributes';
 }
 
-const parseField = (
-  section: string | MJMLJsonObject | BlockAttributes | null | undefined,
-  editingSection: EditTabProps['editingSection']
-): string => {
-  if (section === null || section === undefined) {
-    return '';
-  }
-  if (editingSection === 'css') {
-    return (section as string) || '';
-  }
-  return JSON.stringify(section, null, 2);
-};
+type ThemeSection = keyof EmailThemePatchBody;
 
-const serializeField = (
-  value: string,
-  editingSection: EditTabProps['editingSection']
-) => {
-  if (editingSection === 'css') {
-    return value;
-  }
-  try {
-    return JSON.parse(value);
-  } catch {
-    return value;
-  }
-};
-
-const ThemeEditor: React.FC<EditTabProps> = ({
-  orgId,
-  themeId,
-  editingSection,
-}) => {
+const ThemeEditor: React.FC<ThemeEditorProps> = ({ orgId, themeId }) => {
   const messages = useMessages(messageIds);
+  const [activeTab, setActiveTab] = useState<ThemeSection>('frame_mjml');
+
   const {
     data: theme,
     updateEmailTheme,
     mutating,
-    isLoading,
   } = useEmailTheme(orgId, themeId);
 
-  const sectionValue = useMemo(() => {
-    return theme ? parseField(theme[editingSection], editingSection) : '';
-  }, [theme, editingSection]);
-
-  const [localValue, setLocalValue] = useState(sectionValue);
+  const [localValues, setLocalValues] = useState<Record<ThemeSection, string>>({
+    block_attributes: '',
+    css: '',
+    frame_mjml: '',
+  });
 
   useEffect(() => {
-    setLocalValue(sectionValue);
-  }, [sectionValue]);
+    if (theme) {
+      setLocalValues({
+        block_attributes: parseField(
+          theme.block_attributes,
+          'block_attributes'
+        ),
+        css: parseField(theme.css, 'css'),
+        frame_mjml: parseField(theme.frame_mjml, 'frame_mjml'),
+      });
+    }
+  }, [theme]);
 
-  const isDirty = useMemo(() => {
-    return localValue !== sectionValue;
-  }, [localValue, sectionValue]);
+  const isDirty = theme
+    ? localValues.frame_mjml !== parseField(theme.frame_mjml, 'frame_mjml') ||
+      localValues.css !== parseField(theme.css, 'css') ||
+      localValues.block_attributes !==
+        parseField(theme.block_attributes, 'block_attributes')
+    : false;
 
-  const handleChange = (newValue: string) => {
-    setLocalValue(newValue);
-  };
+  const hasJsonError = (() => {
+    try {
+      if (localValues.frame_mjml) {
+        JSON.parse(localValues.frame_mjml);
+      }
+      if (localValues.block_attributes) {
+        JSON.parse(localValues.block_attributes);
+      }
+      return false;
+    } catch {
+      return true;
+    }
+  })();
 
-  const handleSave = async () => {
+  const handleSaveAll = async () => {
     const patch: EmailThemePatchBody = {
-      [editingSection]: serializeField(localValue, editingSection),
+      block_attributes: serializeField(
+        localValues.block_attributes,
+        'block_attributes'
+      ),
+      css: serializeField(localValues.css, 'css'),
+      frame_mjml: serializeField(localValues.frame_mjml, 'frame_mjml'),
     };
     await updateEmailTheme(patch);
   };
 
-  const jsonError = useMemo(() => {
-    if (editingSection !== 'css' && localValue) {
-      try {
-        JSON.parse(localValue);
-        return false;
-      } catch {
-        return true;
-      }
-    }
-    return false;
-  }, [localValue, editingSection]);
-
-  if (isLoading || mutating.includes(editingSection)) {
-    return <CircularProgress />;
-  }
-
   return (
-    <Stack gap={2} sx={{ flex: 1, minWidth: '0' }}>
-      <Typography variant="h5">
-        {messages.themes.themeEditor.editTitle()}
-      </Typography>
-      <ZUITextField
-        error={jsonError}
-        fullWidth
-        helperText={
-          jsonError ? messages.themes.themeEditor.jsonError() : undefined
-        }
-        maxRows={20}
-        multiline
-        onChange={handleChange}
-        value={localValue}
-      />
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-        <Button
-          color="primary"
-          disabled={!isDirty || jsonError}
-          onClick={handleSave}
-          variant="contained"
+    <Box
+      sx={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%' }}
+    >
+      <TabContext value={activeTab}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            borderBottom: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            justifyContent: 'space-between',
+            pr: 2,
+          }}
         >
-          {messages.themes.themeEditor.saveButton()}
-        </Button>
-      </Box>
-    </Stack>
+          <TabList onChange={(e, val) => setActiveTab(val as ThemeSection)}>
+            <Tab
+              label={messages.themes.themeEditor.tabs.frame()}
+              value="frame_mjml"
+            />
+            <Tab label={messages.themes.themeEditor.tabs.css()} value="css" />
+            <Tab
+              label={messages.themes.themeEditor.tabs.block()}
+              value="block_attributes"
+            />
+          </TabList>
+
+          <Button
+            color="primary"
+            disabled={!isDirty || hasJsonError || mutating.length > 0}
+            onClick={handleSaveAll}
+            size="small"
+            variant="contained"
+          >
+            {messages.themes.themeEditor.saveButton()}
+          </Button>
+        </Box>
+
+        {(['frame_mjml', 'css', 'block_attributes'] as ThemeSection[]).map(
+          (section) => (
+            <TabPanel
+              key={section}
+              sx={{ flex: 1, overflowY: 'auto', p: 2 }}
+              value={section}
+            >
+              <ThemeEditField
+                editingSection={section}
+                onChange={(newVal) =>
+                  setLocalValues((prev) => ({ ...prev, [section]: newVal }))
+                }
+                value={localValues[section]}
+              />
+            </TabPanel>
+          )
+        )}
+      </TabContext>
+    </Box>
   );
 };
 

@@ -30,7 +30,7 @@ const ThemeCard: React.FC<ThemeCardProps> = (props) => {
           </Typography>
           <Stack direction="row" spacing={1}>
             <Button
-              href={`/organize/${props.orgId}/settings/themes/${props.themeId}/frame`}
+              href={`/organize/${props.orgId}/settings/themes/${props.themeId}`}
               size="small"
               variant="outlined"
             >

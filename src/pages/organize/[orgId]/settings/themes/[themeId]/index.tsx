@@ -39,11 +39,7 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
 
   return (
     <Stack direction="row" display="flex" gap={2} sx={{ height: '100vh' }}>
-      <ThemeEditor
-        editingSection="block_attributes"
-        orgId={orgId}
-        themeId={themeId}
-      />
+      <ThemeEditor orgId={orgId} themeId={themeId} />
       <ThemePreview theme={data} />
     </Stack>
   );

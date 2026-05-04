@@ -255,7 +255,6 @@ export default makeMessages('feat.emails', {
       title: m<{ themeId: number }>('Theme {themeId}'),
     },
     themeEditor: {
-      editTitle: m('Edit'),
       jsonError: m('Invalid JSON'),
       previewTitle: m('Preview'),
       saveButton: m('Save'),

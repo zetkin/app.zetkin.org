@@ -6,12 +6,12 @@ import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import useServerSide from 'core/useServerSide';
 import { useNumericRouteParams } from 'core/hooks';
-import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import ThemeCard from 'features/emails/components/ThemeCard';
 import useCreateEmailTheme from 'features/emails/hooks/useCreateEmailTheme';
+import SimpleLayout from 'utils/layout/SimpleLayout';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -66,7 +66,11 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
 };
 
 ThemesSettingsPage.getLayout = function getLayout(page) {
-  return <SettingsLayout>{page}</SettingsLayout>;
+  return (
+    <SimpleLayout title={<Msg id={messageIds.themes.overview.title} />}>
+      {page}
+    </SimpleLayout>
+  );
 };
 
 export default ThemesSettingsPage;
