@@ -20,13 +20,14 @@ const AreaStats: FC<Props> = ({ areaId }) => {
 
   const percentVisited = stats.count_locations
     ? Math.round(
-        (stats.count_unique_locations_visited / stats.count_locations) * 100
+        (stats.count_unique_locations_visited / stats.count_locations) * 10000
       ) / 100
     : 0;
 
   const percentSuccessfulVisits =
     stats.sum_visits > 0
-      ? Math.round((stats.sum_successful_visits / stats.sum_visits) * 100) / 100
+      ? Math.round((stats.sum_successful_visits / stats.sum_visits) * 10000) /
+        100
       : // If no visits
         0;
 
