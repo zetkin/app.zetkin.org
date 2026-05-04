@@ -133,7 +133,7 @@ function getPeopleInView(
   }
 
   const personColumnIndices = cols
-    .filter((col) => col.type == COLUMN_TYPE.LOCAL_PERSON)
+    .filter((col) => col.type === COLUMN_TYPE.LOCAL_PERSON)
     .map((col) => cols.indexOf(col));
 
   const peopleInView: ZetkinPerson[] = [];
@@ -151,7 +151,7 @@ function getPeopleInView(
       }
 
       const person = cell as ZetkinPerson;
-      if (peopleInView.some((existing) => existing.id == person.id)) {
+      if (peopleInView.some((existing) => existing.id === person.id)) {
         // Skip people that are already in the list
         return;
       }

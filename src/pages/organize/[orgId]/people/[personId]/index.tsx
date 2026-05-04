@@ -88,14 +88,14 @@ const PersonProfilePage: PageWithLayout = () => {
           <ZUIFuture future={fieldsFuture}>
             {(fields) => {
               const lngLatFields = fields.filter(
-                (field) => field.type == CUSTOM_FIELD_TYPE.LNGLAT
+                (field) => field.type === CUSTOM_FIELD_TYPE.LNGLAT
               );
 
               const lngLatFieldsWithValues = lngLatFields.filter(
                 (field) => !!person[field.slug]
               );
 
-              if (lngLatFieldsWithValues.length == 0) {
+              if (lngLatFieldsWithValues.length === 0) {
                 return null;
               }
 

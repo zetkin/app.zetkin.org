@@ -80,7 +80,9 @@ export function loadListIfNecessary<
     return loadList(
       dispatch,
       hooks,
-      remoteList?.items.map((item) => item.data).filter((item) => item != null)
+      remoteList?.items
+        .filter((item) => !!item?.data)
+        .map((item) => item.data) as DataType[]
     );
   }
 

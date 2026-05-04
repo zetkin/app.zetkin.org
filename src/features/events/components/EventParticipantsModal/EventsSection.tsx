@@ -19,7 +19,7 @@ const EventsSection: FC<Props> = ({ events, onSelect, selectedEvent }) => {
           eventId={event.id}
           onSelect={() => onSelect(event)}
           orgId={event.organization.id}
-          selected={event == selectedEvent}
+          selected={event === selectedEvent}
         />
       ))}
     </Box>

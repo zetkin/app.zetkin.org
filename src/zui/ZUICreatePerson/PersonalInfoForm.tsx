@@ -236,7 +236,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 isURLField
                 label={field.title}
                 onChange={(field, value) => {
-                  const formattedUrl = formatUrl(value as string);
+                  const formattedUrl = formatUrl(value);
                   onChange(field, formattedUrl ?? value);
                 }}
                 value={fieldValue || ''}

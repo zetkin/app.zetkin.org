@@ -58,8 +58,7 @@ const ChoiceCategories = ({
                 if (!choice) {
                   return;
                 }
-                const alreadyInView =
-                  choice.alreadyInView && choice.alreadyInView(existingColumns);
+                const alreadyInView = choice.alreadyInView?.(existingColumns);
                 return (
                   <Grid key={filteredKey} size={{ lg: 4, sm: 6, xs: 12 }}>
                     <ColumnChoiceCard

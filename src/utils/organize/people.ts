@@ -61,6 +61,6 @@ const findRole = (
   orgs: Partial<ZetkinMembership>[],
   org: PersonOrganization
 ) => {
-  const connection = orgs.find((conn) => conn.organization?.id == org.id);
+  const connection = orgs.find((conn) => conn.organization?.id === org.id);
   return (connection?.role ?? null) as 'organizer' | 'admin' | null;
 };

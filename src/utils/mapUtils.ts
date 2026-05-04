@@ -20,11 +20,11 @@ export function isLngLatValue(
   value: unknown
 ): value is { lat: number; lng: number } {
   return (
-    value != null &&
-    typeof value == 'object' &&
+    value !== null &&
+    typeof value === 'object' &&
     'lng' in value &&
     'lat' in value &&
-    typeof value['lng'] == 'number' &&
-    typeof value['lat'] == 'number'
+    typeof value['lng'] === 'number' &&
+    typeof value['lat'] === 'number'
   );
 }

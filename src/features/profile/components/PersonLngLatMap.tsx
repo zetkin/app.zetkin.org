@@ -27,14 +27,31 @@ const PersonLngLatMap: FC<Props> = ({
   const env = useEnv();
   const [map, setMap] = useState<MapType | null>(null);
 
-  const firstField = lngLatFields[0];
-  const firstValue = person[firstField.slug];
+  const firstValue = useMemo(() => {
+    for (const field of lngLatFields) {
+      const value = person[field.slug];
+      if (isLngLatValue(value)) {
+        return value;
+      }
+    }
+    return null;
+  }, [lngLatFields, person]);
 
   const bounds = useMemo(() => {
-    return isLngLatValue(firstValue)
-      ? new LngLatBounds(firstValue, firstValue)
-      : undefined;
-  }, [firstValue]);
+    if (!firstValue) {
+      return undefined;
+    }
+
+    const b = new LngLatBounds(firstValue, firstValue);
+    lngLatFields.forEach((field) => {
+      const value = person[field.slug];
+      if (isLngLatValue(value)) {
+        b.extend(value);
+      }
+    });
+
+    return b;
+  }, [firstValue, lngLatFields, person]);
 
   useEffect(() => {
     if (bounds) {
@@ -44,15 +61,10 @@ const PersonLngLatMap: FC<Props> = ({
         speed: 2,
       });
     }
-  }, [bounds, map, firstValue]);
+  }, [bounds, map]);
 
-  if (bounds) {
-    lngLatFields.forEach((field) => {
-      const value = person[field.slug];
-      if (isLngLatValue(value)) {
-        bounds.extend(value);
-      }
-    });
+  if (!bounds) {
+    return null;
   }
 
   return (

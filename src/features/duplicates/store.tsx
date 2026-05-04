@@ -56,7 +56,7 @@ const potentialDuplicatesSlice = createSlice({
         (item) => item.id === potentialDuplicate.id
       );
 
-      if (item && item.data) {
+      if (item?.data) {
         item.data = potentialDuplicate;
       }
     },

@@ -16,11 +16,11 @@ export default function useTaskStats(
   const dispatch = useAppDispatch();
   const tasks = useAppSelector((state) => state.tasks);
 
-  const item = tasks.statsById[taskId!];
+  const item = tasks.statsById[taskId];
 
   const taskStatsFuture = loadItemIfNecessary(item, dispatch, {
-    actionOnLoad: () => statsLoad(taskId!),
-    actionOnSuccess: (data) => statsLoaded([taskId!, data]),
+    actionOnLoad: () => statsLoad(taskId),
+    actionOnSuccess: (data) => statsLoaded([taskId, data]),
     loader: () => apiClient.rpc(getStats, { orgId, taskId }),
   });
 

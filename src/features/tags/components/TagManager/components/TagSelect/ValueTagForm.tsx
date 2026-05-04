@@ -15,7 +15,7 @@ const ValueTagForm: React.FC<{
   tag: ZetkinTag;
 }> = ({ inputValue, onCancel, onChange, onSubmit, tag }) => {
   useEffect(() => {
-    if (inputValue == '') {
+    if (inputValue === '') {
       onChange(null);
     } else {
       onChange(inputValue);
@@ -49,7 +49,7 @@ const ValueTagForm: React.FC<{
       </Box>
       <ZUISubmitCancelButtons
         onCancel={onCancel}
-        submitDisabled={inputValue.trim().length == 0}
+        submitDisabled={inputValue.trim().length === 0}
       />
     </form>
   );

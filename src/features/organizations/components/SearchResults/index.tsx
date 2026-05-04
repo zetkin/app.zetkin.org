@@ -17,21 +17,23 @@ const SearchResults = ({
 }: SearchResultsProps) => {
   const theme = useTheme();
 
-  function findAncestors(node: TreeItemData | null): TreeItemData[] {
-    if (node === null) {
+  function findAncestors(
+    node: TreeItemData | null | undefined
+  ): TreeItemData[] {
+    if (!node) {
       return [];
     }
 
     const ancestors: TreeItemData[] = [];
 
-    const getParent = (childOrg: TreeItemData) => {
+    const getParent = (childOrg: TreeItemData): TreeItemData | undefined => {
       return flatOrgData.find((org) => {
-        return org.id == childOrg.parent?.id;
+        return org.id === childOrg.parent?.id;
       });
     };
 
     let parent = getParent(node);
-    while (parent != null) {
+    while (parent !== undefined) {
       ancestors.push(parent);
       parent = getParent(parent);
     }

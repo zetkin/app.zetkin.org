@@ -39,11 +39,11 @@ export default function useFilteredEvents({
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
-    if (!dateFilterState || dateFilterState == 'custom') {
+    if (!dateFilterState || dateFilterState === 'custom') {
       return customDatesToFilterBy;
-    } else if (dateFilterState == 'today') {
+    } else if (dateFilterState === 'today') {
       return [today, null];
-    } else if (dateFilterState == 'tomorrow') {
+    } else if (dateFilterState === 'tomorrow') {
       return [today.add(1, 'day'), null];
     } else {
       //dateFilterState is 'thisWeek'
@@ -55,7 +55,7 @@ export default function useFilteredEvents({
     return events.map<ZetkinEventWithStatus>((event) => ({
       ...event,
       status:
-        myEvents.find((userEvent) => userEvent.id == event.id)?.status || null,
+        myEvents.find((userEvent) => userEvent.id === event.id)?.status || null,
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [events]);
@@ -68,7 +68,7 @@ export default function useFilteredEvents({
 
   const filteredEvents = allEvents
     .filter((event) => {
-      if (orgIdsToFilterBy.length == 0) {
+      if (orgIdsToFilterBy.length === 0) {
         return true;
       }
       return orgIdsToFilterBy.includes(event.organization.id);
@@ -76,7 +76,7 @@ export default function useFilteredEvents({
     .filter((event) => {
       if (
         !dateFilterState ||
-        (dateFilterState == 'custom' && !customDatesToFilterBy[0])
+        (dateFilterState === 'custom' && !customDatesToFilterBy[0])
       ) {
         return true;
       }

@@ -16,8 +16,8 @@ describe('findOrAddItem', () => {
     const list = remoteList();
     const result = findOrAddItem(list, newId);
 
-    expect(list.items.find((item) => item.id == newId)).toBeTruthy();
-    expect(result.id == newId).toBeTruthy();
+    expect(list.items.find((item) => item.id === newId)).toBeTruthy();
+    expect(result.id === newId).toBeTruthy();
   });
 
   it('Fetches an existing item', () => {
@@ -25,8 +25,18 @@ describe('findOrAddItem', () => {
 
     const result = findOrAddItem(list, existingId);
 
-    expect(list.items.find((item) => item.id == existingId)).toBeTruthy();
-    expect(result.id == existingId).toBeTruthy();
+    expect(list.items.find((item) => item.id === existingId)).toBeTruthy();
+    expect(result.id === existingId).toBeTruthy();
+  });
+
+  it('Treats number and string IDs with same value as same item', () => {
+    const numericId = 123;
+    const list = remoteList([{ id: numericId, value: 'Existing value' }]);
+
+    const result = findOrAddItem(list, '123');
+
+    expect(list.items).toHaveLength(1);
+    expect(result.id).toBe(numericId);
   });
 
   it('Sets loaded field to recent time for a created item', () => {

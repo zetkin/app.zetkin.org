@@ -18,7 +18,7 @@ const MAIN_MIN_WIDTH = 0.05;
 const isAllFilterWithOrgConfig = (
   filter: ZetkinSmartSearchFilter<AnyFilterConfig>
 ): filter is ZetkinSmartSearchFilter<AllInSuborgFilterConfig> => {
-  return filter.type == FILTER_TYPE.ALL && 'organizations' in filter.config;
+  return filter.type === FILTER_TYPE.ALL && 'organizations' in filter.config;
 };
 
 export default function makeSankeySegments(
@@ -43,7 +43,7 @@ export default function makeSankeySegments(
 
   const allFilterWithNoOrgConfig =
     firstElement &&
-    firstElement.filter.type == FILTER_TYPE.ALL &&
+    firstElement.filter.type === FILTER_TYPE.ALL &&
     !('organizations' in firstElement.filter.config);
 
   const allFilterWithThisOrgInConfig =
@@ -83,7 +83,7 @@ export default function makeSankeySegments(
     // this loop starts.
     const prevSeg = segments[index];
 
-    const prevIsEmpty = prevSeg.kind == SEGMENT_KIND.EMPTY;
+    const prevIsEmpty = prevSeg.kind === SEGMENT_KIND.EMPTY;
 
     const stats: SankeySegmentStats = {
       change,
@@ -93,7 +93,7 @@ export default function makeSankeySegments(
     };
 
     if (prevIsEmpty) {
-      if (filter.op == OPERATION.SUB) {
+      if (filter.op === OPERATION.SUB) {
         segments.push({
           kind: SEGMENT_KIND.EMPTY,
         });
@@ -102,7 +102,7 @@ export default function makeSankeySegments(
           kind: SEGMENT_KIND.PSEUDO_ADD,
           main: null,
           side: {
-            style: change == 0 ? SEGMENT_STYLE.STROKE : SEGMENT_STYLE.FILL,
+            style: change === 0 ? SEGMENT_STYLE.STROKE : SEGMENT_STYLE.FILL,
             width: change / maxPeople,
           },
           stats,
@@ -143,7 +143,7 @@ export default function makeSankeySegments(
         stats,
       });
     } else {
-      if (filter.op == OPERATION.ADD) {
+      if (filter.op === OPERATION.ADD) {
         segments.push({
           kind: SEGMENT_KIND.PSEUDO_ADD,
           main: {
@@ -176,7 +176,7 @@ export default function makeSankeySegments(
   });
 
   const last = segments[segments.length - 1];
-  if (last.kind == SEGMENT_KIND.EMPTY) {
+  if (last.kind === SEGMENT_KIND.EMPTY) {
     // If the stats are all empty, end with empty
     segments.push({
       kind: SEGMENT_KIND.EMPTY,

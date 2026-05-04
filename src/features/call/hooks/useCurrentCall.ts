@@ -7,7 +7,7 @@ export default function useCurrentCall(): UnfinishedCall | null {
   const currentCallId = activeLane.currentCallId;
 
   const currentCall = state.unfinishedCalls.items.find(
-    (item) => item.id == currentCallId
+    (item) => item.id === currentCallId
   );
 
   return currentCall?.data ?? null;

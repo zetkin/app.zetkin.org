@@ -48,7 +48,7 @@ const AllInSuborg: FC<Props> = ({
 
   let initialScope: 'any' | 'single' | 'multiple' = 'any';
   if (organizationsConfigIsArray) {
-    if (organizationsConfig.length == 1) {
+    if (organizationsConfig.length === 1) {
       initialScope = 'single';
     } else {
       initialScope = 'multiple';
@@ -60,7 +60,7 @@ const AllInSuborg: FC<Props> = ({
   );
 
   const activeSuborgs = suborgs
-    .filter((suborg) => suborg.id != orgId)
+    .filter((suborg) => suborg.id !== orgId)
     .filter((suborg) => suborg.is_active)
     .sort((a, b) => a.title.localeCompare(b.title));
 
@@ -90,7 +90,7 @@ const AllInSuborg: FC<Props> = ({
 
         setConfig({
           ...filter.config,
-          organizations: newValue == 'any' ? 'suborgs' : [],
+          organizations: newValue === 'any' ? 'suborgs' : [],
         });
       }}
       value={scope}
@@ -136,7 +136,7 @@ const AllInSuborg: FC<Props> = ({
                 setConfig({
                   ...filter.config,
                   organizations: organizationsConfig.filter(
-                    (id) => id != suborg.id
+                    (id) => id !== suborg.id
                   ),
                 });
               }
@@ -150,7 +150,7 @@ const AllInSuborg: FC<Props> = ({
         organizationsConfig.length < activeSuborgs.length && (
           <StyledItemSelect
             getOptionDisabled={(item) =>
-              selectedSuborgs.some((s) => s.id == item.id) || false
+              selectedSuborgs.some((s) => s.id === item.id) || false
             }
             onChange={(_, items) => {
               const ids = items.map((item) => item.id);
@@ -184,7 +184,7 @@ const AllInSuborg: FC<Props> = ({
         </>
       )}
       renderSentence={() => {
-        if (scope == 'any') {
+        if (scope === 'any') {
           return (
             <Msg
               id={messageIds.filters.allInSuborg.inputString.any}
@@ -194,7 +194,7 @@ const AllInSuborg: FC<Props> = ({
               }}
             />
           );
-        } else if (scope == 'single') {
+        } else if (scope === 'single') {
           return (
             <Msg
               id={messageIds.filters.allInSuborg.inputString.single}

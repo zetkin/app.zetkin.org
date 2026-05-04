@@ -28,9 +28,7 @@ const SearchResults = ({
         if (!searchResult) {
           return;
         }
-        const alreadyInView =
-          searchResult.alreadyInView &&
-          searchResult.alreadyInView(existingColumns);
+        const alreadyInView = searchResult.alreadyInView?.(existingColumns);
         return (
           <Grid key={searchResult.key} size={{ lg: 4, sm: 6, xs: 12 }}>
             <ColumnChoiceCard

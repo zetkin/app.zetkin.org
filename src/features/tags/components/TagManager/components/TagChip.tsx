@@ -11,7 +11,7 @@ type TagChipSize = 'small' | 'medium' | 'large';
 const isValueTag = (
   tag: ZetkinAppliedTag | ZetkinTag
 ): tag is ZetkinAppliedTag => {
-  return tag.value_type == 'text';
+  return tag.value_type === 'text';
 };
 
 const TagChip: React.FunctionComponent<{
@@ -76,7 +76,7 @@ const TagChip: React.FunctionComponent<{
 
   return (
     <Box
-      onClick={() => !disabled && onClick && onClick(tag)}
+      onClick={() => !disabled && onClick?.(tag)}
       sx={{
         '& > span': { maxWidth: '100%' },
         '&:hover': {

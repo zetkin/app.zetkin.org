@@ -13,7 +13,7 @@ export default function useAbsoluteUrl(path = '') {
     protocol: '',
   };
 
-  if (typeof location == 'undefined') {
+  if (typeof location === 'undefined') {
     // On server
     draft.protocol = stringToBool(process.env.ZETKIN_USE_TLS)
       ? 'https:'

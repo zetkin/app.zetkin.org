@@ -39,7 +39,7 @@ const OfficialList: FC<OfficialListProps> = ({
     return a.profile.name.localeCompare(b.profile.name);
   });
 
-  if (sortedOfficialList.length == 0) {
+  if (sortedOfficialList.length === 0) {
     return (
       <Box
         sx={{

@@ -147,7 +147,7 @@ const Random = ({
                       }}
                       SelectProps={{
                         renderValue: function getLabel(value) {
-                          return value == QUANTITY.PERCENT ? (
+                          return value === QUANTITY.PERCENT ? (
                             <Msg
                               id={
                                 messageIds.quantity.quantitySelectLabel.percent

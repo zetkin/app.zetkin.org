@@ -22,7 +22,7 @@ const TaskStatusSubtitle = ({
           <Msg
             id={messageIds.assignees.completedStates.completed}
             values={{
-              time: <ZUIRelativeTime datetime={task.completed as string} />,
+              time: <ZUIRelativeTime datetime={task.completed} />,
             }}
           />
         </Box>

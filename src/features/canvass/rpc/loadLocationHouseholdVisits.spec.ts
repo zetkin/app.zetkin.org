@@ -75,21 +75,17 @@ describe('loadLocationHouseholdVisits RPC', () => {
     // Households pages (2) + 120 visit calls
     expect(get).toHaveBeenCalled();
     const locationCalls = get.mock.calls.filter((args) =>
-      (args[0] as string).includes('/locations/')
+      args[0].includes('/locations/')
     );
     const householdPageCalls = locationCalls.length;
     // Derive effective page size from the first households request
-    const firstHouseholdsUrl = new URL(
-      'http://test' + (locationCalls[0][0] as string)
-    );
+    const firstHouseholdsUrl = new URL('http://test' + locationCalls[0][0]);
     const effectiveSize = parseInt(
       firstHouseholdsUrl.searchParams.get('size') || pageSize.toString(),
       10
     );
     const visitCalls = get.mock.calls.filter(
-      (args) =>
-        (args[0] as string).includes('/households/') &&
-        (args[0] as string).includes('/visits')
+      (args) => args[0].includes('/households/') && args[0].includes('/visits')
     ).length;
     expect(householdPageCalls).toBeGreaterThanOrEqual(
       Math.ceil(totalHouseholds / effectiveSize)

@@ -30,7 +30,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<void> {
   for (const op of ops) {
     const { eventId, kind, personId } = op;
     try {
-      if (kind == 'add') {
+      if (kind === 'add') {
         await apiClient.put(
           `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`
         );

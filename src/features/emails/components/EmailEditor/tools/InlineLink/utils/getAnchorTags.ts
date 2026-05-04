@@ -2,8 +2,8 @@ export default function getAnchorTags(range: Range): HTMLAnchorElement[] {
   const anchors: HTMLAnchorElement[] = [];
 
   const ancestor = range.commonAncestorContainer;
-  if (ancestor.nodeType == Node.TEXT_NODE) {
-    if (ancestor.parentElement?.tagName == 'A') {
+  if (ancestor.nodeType === Node.TEXT_NODE) {
+    if (ancestor.parentElement?.tagName === 'A') {
       return [ancestor.parentElement as HTMLAnchorElement];
     }
 
@@ -11,7 +11,7 @@ export default function getAnchorTags(range: Range): HTMLAnchorElement[] {
   }
 
   const container = ancestor as HTMLElement;
-  if (container.tagName == 'A') {
+  if (container.tagName === 'A') {
     return [container as HTMLAnchorElement];
   }
 

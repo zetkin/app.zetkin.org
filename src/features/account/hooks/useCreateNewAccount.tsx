@@ -23,10 +23,10 @@ export function useCreateNewAccount(): Return {
       return { success: true };
     } catch (err) {
       if (err instanceof ApiClientError) {
-        if (err.status == 409) {
+        if (err.status === 409) {
           return { errorCode: 'conflictError', success: false };
         }
-        if (err.status == 400) {
+        if (err.status === 400) {
           return {
             errorCode: 'invalidParameter',
             success: false,

@@ -23,7 +23,7 @@ const StatusCardItem = ({ action, title, value }: StatusCardItemProps) => {
           </Typography>
           <ZUIAnimatedNumber value={value || 0}>
             {(animatedValue) => {
-              const output = value != undefined ? animatedValue : '-';
+              const output = value !== undefined ? animatedValue : '-';
               return <Typography variant="h3">{output}</Typography>;
             }}
           </ZUIAnimatedNumber>

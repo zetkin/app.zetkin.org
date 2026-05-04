@@ -29,6 +29,10 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx', 'src/**/*.js'],
       parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: ['./tsconfig.json'],
+        tsconfigRootDir: __dirname,
+      },
       env: {
         browser: true,
         node: true,
@@ -42,6 +46,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/prefer-optional-chain': 'error',
         '@typescript-eslint/no-unused-vars': [
           'error',
           {
@@ -56,6 +61,8 @@ module.exports = {
           },
         ],
         curly: 'error',
+        eqeqeq: ['error', 'always'],
+        'no-eq-null': 'error',
         'import/order': [
           'error',
           {

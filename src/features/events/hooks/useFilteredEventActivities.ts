@@ -28,28 +28,28 @@ export default function useFilteredEventActivities(
       const state = getEventState(event);
 
       if (
-        state == EventState.CANCELLED &&
+        state === EventState.CANCELLED &&
         !filterState.selectedStates.includes(STATE_FILTER_OPTIONS.CANCELLED)
       ) {
         return false;
       }
 
       if (
-        state == EventState.DRAFT &&
+        state === EventState.DRAFT &&
         !filterState.selectedStates.includes(STATE_FILTER_OPTIONS.DRAFT)
       ) {
         return false;
       }
 
       if (
-        (state == EventState.OPEN || state == EventState.ENDED) &&
+        (state === EventState.OPEN || state === EventState.ENDED) &&
         !filterState.selectedStates.includes(STATE_FILTER_OPTIONS.PUBLISHED)
       ) {
         return false;
       }
 
       if (
-        state == EventState.SCHEDULED &&
+        state === EventState.SCHEDULED &&
         !filterState.selectedStates.includes(STATE_FILTER_OPTIONS.SCHEDULED)
       ) {
         return false;

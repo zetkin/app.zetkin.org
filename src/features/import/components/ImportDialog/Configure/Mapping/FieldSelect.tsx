@@ -53,27 +53,27 @@ const FieldSelect: FC<FieldSelectProps> = ({
   ].sort((a, b) => a.label.localeCompare(b.label));
 
   const getValue = () => {
-    if (column.originalColumn.kind == ColumnKind.FIELD) {
+    if (column.originalColumn.kind === ColumnKind.FIELD) {
       return `field:${column.originalColumn.field}`;
     }
 
-    if (column.originalColumn.kind == ColumnKind.DATE) {
+    if (column.originalColumn.kind === ColumnKind.DATE) {
       return `date:${column.originalColumn.field}`;
     }
 
-    if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+    if (column.originalColumn.kind === ColumnKind.ID_FIELD) {
       return column.originalColumn.idField || '';
     }
 
-    if (column.originalColumn.kind == ColumnKind.ENUM) {
+    if (column.originalColumn.kind === ColumnKind.ENUM) {
       return `enum:${column.originalColumn.field}`;
     }
 
-    if (column.originalColumn.kind == ColumnKind.GENDER) {
+    if (column.originalColumn.kind === ColumnKind.GENDER) {
       return `field:gender`;
     }
 
-    if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
+    if (column.originalColumn.kind !== ColumnKind.UNKNOWN) {
       return column.originalColumn.kind.toString();
     }
 
@@ -111,7 +111,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
           >
             {label}
           </ListItemText>
-          {importID == value && open && (
+          {importID === value && open && (
             <BadgeOutlined color="secondary" fontSize="small" />
           )}
         </Box>
@@ -131,15 +131,15 @@ const FieldSelect: FC<FieldSelectProps> = ({
             kind: ColumnKind.UNKNOWN,
             selected: false,
           });
-        } else if (event.target.value == 'ext_id') {
+        } else if (event.target.value === 'ext_id') {
           onChange({
             idField: 'ext_id',
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'id') {
-          if (importID && importID != 'id') {
+        } else if (event.target.value === 'id') {
+          if (importID && importID !== 'id') {
             showConfirmDialog({
               onSubmit: () => {
                 onChange({
@@ -171,28 +171,28 @@ const FieldSelect: FC<FieldSelectProps> = ({
             updateImportID('id');
             onConfigureStart();
           }
-        } else if (event.target.value == 'email') {
+        } else if (event.target.value === 'email') {
           onChange({
             idField: 'email',
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'org') {
+        } else if (event.target.value === 'org') {
           onChange({
             kind: ColumnKind.ORGANIZATION,
             mapping: [],
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'tag') {
+        } else if (event.target.value === 'tag') {
           onChange({
             kind: ColumnKind.TAG,
             mapping: [],
             selected: true,
           });
           onConfigureStart();
-        } else if (event.target.value == 'field:gender') {
+        } else if (event.target.value === 'field:gender') {
           onChange({
             field: event.target.value,
             kind: ColumnKind.GENDER,

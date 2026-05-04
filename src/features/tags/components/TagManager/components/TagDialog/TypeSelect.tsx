@@ -31,7 +31,7 @@ const TypeSelect: React.FC<{
         <RadioGroup
           onChange={(ev) =>
             onChange(
-              ev.target.value == 'none'
+              ev.target.value === 'none'
                 ? null
                 : (ev.target.value as ZetkinTag['value_type'])
             )

@@ -5,20 +5,26 @@ import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import KPD from '../../../../mockData/orgs/KPD';
 
 const deleteView = async (page: Page) => {
-  await page.click('main [data-testid=ZUIEllipsisMenu-menuActivator]');
+  await page
+    .locator('main [data-testid=ZUIEllipsisMenu-menuActivator]')
+    .first()
+    .click();
   await page.click(`data-testid=ZUIEllipsisMenu-item-delete-item`);
-  await page.click('button:text("Confirm")');
+  await page.click('data-testid=SubmitCancelButtons-submitButton');
 };
 
-const expectDeleteViewSuccess = (moxy: NextWorkerFixtures['moxy']) => {
-  const deleteViewRequest = moxy
-    .log()
-    .find(
-      (mock) =>
-        mock.method === 'DELETE' &&
-        mock.path === `/v1/orgs/1/people/views/${AllMembers.id}`
-    );
-  expect(deleteViewRequest).toBeTruthy();
+const expectDeleteViewSuccess = async (moxy: NextWorkerFixtures['moxy']) => {
+  await expect
+    .poll(() =>
+      moxy
+        .log()
+        .some(
+          (mock) =>
+            mock.method === 'DELETE' &&
+            mock.path.includes(`/orgs/1/people/views/${AllMembers.id}`)
+        )
+    )
+    .toBeTruthy();
 };
 
 test.describe('Views list page', () => {
@@ -32,10 +38,18 @@ test.describe('Views list page', () => {
   });
 
   test('lets user delete a view', async ({ page, appUri, moxy }) => {
+    // getServerSideProps verifies that the user may access views
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
     moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
+
+    // ViewBrowser loads items via Next API endpoint /api/views/tree
+    await page.route(/\/api\/views\/tree\?orgId=1\b/, async (route) => {
+      await route.fulfill({
+        json: { data: { folders: [], views: [AllMembers] } },
+      });
+    });
     moxy.setZetkinApiMock(
-      `/orgs/1/people/1/views/${AllMembers.id}`,
+      `/orgs/1/people/views/${AllMembers.id}`,
       'delete',
       undefined,
       204
@@ -43,7 +57,11 @@ test.describe('Views list page', () => {
 
     await page.goto(appUri + '/organize/1/people');
 
+    await page
+      .locator('main [data-testid=ZUIEllipsisMenu-menuActivator]')
+      .first()
+      .waitFor({ state: 'visible' });
     await deleteView(page);
-    expectDeleteViewSuccess(moxy);
+    await expectDeleteViewSuccess(moxy);
   });
 });

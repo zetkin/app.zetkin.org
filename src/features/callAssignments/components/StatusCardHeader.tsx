@@ -30,7 +30,7 @@ const StatusCardHeader = ({
           <Typography variant="h4">{title}</Typography>
           <Typography color="secondary">{subtitle}</Typography>
         </Box>
-        {value != undefined && (
+        {value !== undefined && (
           <ZUIAnimatedNumber value={value || 0}>
             {(animatedValue) => (
               <ZUINumberChip color={color} size="lg" value={animatedValue} />

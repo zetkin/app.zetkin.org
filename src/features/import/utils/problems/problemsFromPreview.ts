@@ -24,28 +24,28 @@ export default function problemsFromPreview(
 
   // Check problems from server
   preview.problems.forEach((previewProblem) => {
-    if (previewProblem.code == ImportPreviewProblemCode.UNKNOWN_OBJECT) {
-      if (previewProblem.field == 'data.id') {
+    if (previewProblem.code === ImportPreviewProblemCode.UNKNOWN_OBJECT) {
+      if (previewProblem.field === 'data.id') {
         accumulateProblem(
           ImportProblemKind.UNKNOWN_PERSON,
           previewProblem.index
         );
       }
     } else if (
-      previewProblem.code == ImportPreviewProblemCode.MISSING_ID_AND_NAME
+      previewProblem.code === ImportPreviewProblemCode.MISSING_ID_AND_NAME
     ) {
       accumulateProblem(
         ImportProblemKind.MISSING_ID_AND_NAME,
         previewProblem.index
       );
     } else if (
-      previewProblem.code == ImportPreviewProblemCode.UNEXPECTED_ERROR
+      previewProblem.code === ImportPreviewProblemCode.UNEXPECTED_ERROR
     ) {
       accumulateProblem(
         ImportProblemKind.UNEXPECTED_ERROR,
         previewProblem.index
       );
-    } else if (previewProblem.level == 'error') {
+    } else if (previewProblem.level === 'error') {
       // Unknown error (unknown warnings are ignored)
       accumulateProblem(ImportProblemKind.UNKNOWN_ERROR, previewProblem.index);
     }
@@ -74,7 +74,7 @@ export default function problemsFromPreview(
     summary.tagged.total +
     summary.updated.total;
 
-  if (problems.length == 0 && totalImpact == 0) {
+  if (problems.length === 0 && totalImpact === 0) {
     problems.push({
       kind: ImportProblemKind.NO_IMPACT,
     });

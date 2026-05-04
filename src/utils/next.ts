@@ -130,7 +130,7 @@ export const scaffold =
       authLevel = 0;
     }
 
-    if (ctx.user && apiSession && apiSession.factors) {
+    if (ctx.user && apiSession?.factors) {
       const hasEmailAuth = apiSession.factors.includes('email_password');
       const hasUnverifiedEmail = !ctx.user.email_is_verified;
       const unverifiedIsNotAllowed = !options?.allowUnverified;

@@ -20,7 +20,7 @@ export default function useEditPreviewBlock({
   const [autoFocusDefault, setAutoFocusDefault] = useState(true);
 
   const handleSwitchMode = (newMode: ZUIPreviewableMode) => {
-    if (newMode == ZUIPreviewableMode.EDITABLE) {
+    if (newMode === ZUIPreviewableMode.EDITABLE) {
       if (!readOnly) {
         // Only allow switching if we're not in read-only mode.
         setAutoFocusDefault(false);

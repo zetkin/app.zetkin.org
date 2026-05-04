@@ -41,7 +41,7 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
       arrow
       placement="top-start"
       title={
-        contactPerson == null
+        !contactPerson
           ? messages.participantSummaryCard.remindButtondisabledTooltip()
           : ''
       }
@@ -49,7 +49,7 @@ const RemindAllButton: FC<RemindAllButtonProps> = ({
       <Box>
         <Button
           disabled={
-            contactPerson == null ||
+            !contactPerson ||
             isRemindingParticipants ||
             numRemindedParticipants >= numAvailParticipants
           }

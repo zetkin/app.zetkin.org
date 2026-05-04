@@ -31,13 +31,13 @@ const DisplayInArea: FC<Props> = ({ filter }) => {
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         areaSelect: (
           <UnderlinedText
-            text={areas.find((e) => e.id == filter.config.area)?.title}
+            text={areas.find((e) => e.id === filter.config.area)?.title}
           />
         ),
         lnglatFieldSelect: (
           <UnderlinedText
             text={
-              customFields.find((e) => e.slug == filter.config.field)?.title
+              customFields.find((e) => e.slug === filter.config.field)?.title
             }
           />
         ),

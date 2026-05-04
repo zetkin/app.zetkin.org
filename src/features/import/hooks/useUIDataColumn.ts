@@ -42,7 +42,7 @@ export default function useUIDataColumn(
   }
 
   cellValuesSorted.forEach((value, idx) => {
-    if (firstRowIsHeaders && idx == 0) {
+    if (firstRowIsHeaders && idx === 0) {
       return;
     }
 
@@ -62,14 +62,16 @@ export default function useUIDataColumn(
 
   const valueInFirstRow = cellValues[0];
   const title =
-    firstRowIsHeaders && valueInFirstRow != null
+    firstRowIsHeaders &&
+    valueInFirstRow !== null &&
+    valueInFirstRow !== undefined
       ? valueInFirstRow.toString()
       : messages.configuration.mapping.defaultColumnHeader({
           columnIndex: columnIndex + 1,
         });
 
   let mappingResultsMessage = '';
-  if (column.kind == ColumnKind.TAG) {
+  if (column.kind === ColumnKind.TAG) {
     let tags: { id: number }[] = [];
     let numRows = 0;
     column.mapping.forEach((map) => {
@@ -86,12 +88,12 @@ export default function useUIDataColumn(
       numMappedTo: Array.from(new Set(tags)).length,
       numRows,
     });
-  } else if (column.kind == ColumnKind.ID_FIELD && column.idField) {
+  } else if (column.kind === ColumnKind.ID_FIELD && column.idField) {
     mappingResultsMessage = makeColumnValuesMessage(
       numberOfEmptyRows,
       uniqueValues
     );
-  } else if (column.kind == ColumnKind.ORGANIZATION) {
+  } else if (column.kind === ColumnKind.ORGANIZATION) {
     let orgs: number[] = [];
     let numPeople = 0;
     column.mapping.forEach((map) => {
@@ -111,7 +113,7 @@ export default function useUIDataColumn(
         numMappedTo: Array.from(new Set(orgs)).length,
         numPeople,
       });
-  } else if (column.kind == ColumnKind.DATE) {
+  } else if (column.kind === ColumnKind.DATE) {
     mappingResultsMessage = messages.configuration.mapping.finishedMappingDates(
       {
         dateFormat: column.dateFormat || '',

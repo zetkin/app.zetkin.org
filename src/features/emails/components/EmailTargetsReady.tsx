@@ -82,7 +82,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
           </ZUIAnimatedNumber>
         </Box>
       </Box>
-      {missingEmail > 0 && state != EmailState.SENT && (
+      {missingEmail > 0 && state !== EmailState.SENT && (
         <>
           <Divider />
           <Box padding={2}>

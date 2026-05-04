@@ -107,7 +107,7 @@ export const usePersonSelect: UsePersonSelect = ({
 
   if (isLoading) {
     searchLabel = messages.personSelect.searching();
-  } else if (results?.length == 0) {
+  } else if (results?.length === 0) {
     searchLabel = messages.personSelect.noResult();
   }
 
@@ -132,12 +132,12 @@ export const usePersonSelect: UsePersonSelect = ({
     }
   };
 
-  let personOptions = (results || []) as ZetkinPerson[];
+  let personOptions = results || [];
   if (
     selectedPerson &&
     !personOptions.some((o) => o.id === selectedPerson.id)
   ) {
-    personOptions = [selectedPerson as ZetkinPerson].concat(personOptions);
+    personOptions = [selectedPerson].concat(personOptions);
   }
 
   return {
@@ -146,7 +146,7 @@ export const usePersonSelect: UsePersonSelect = ({
       getOptionDisabled,
       getOptionLabel: (person: ZetkinPerson) => `${person.id}`,
       getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) =>
-        option?.id == value?.id,
+        option?.id === value?.id,
       getOptionValue: (person: ZetkinPerson) => person.id || null,
       inputRef,
       inputValue: searchFieldValue,

@@ -31,7 +31,7 @@ const JoinFormsPage: PageWithLayout<PageProps> = ({ orgId }) => {
   }
 
   const ownJoinForms = joinForms.filter(
-    (form) => form.organization.id == parseInt(orgId)
+    (form) => form.organization.id === parseInt(orgId)
   );
 
   return (

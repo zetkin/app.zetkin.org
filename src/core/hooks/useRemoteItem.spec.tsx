@@ -91,7 +91,7 @@ function setupWrapperComponent(initialItem?: RemoteItem<ItemObjectForTest>) {
       item: initialItem || null,
     },
     reducer: (state, anyAction) => {
-      if (anyAction.type == 'load') {
+      if (anyAction.type === 'load') {
         const action = anyAction as PayloadAction<number>;
         return {
           item: remoteItem<ItemObjectForTest>(action.payload, {
@@ -100,7 +100,7 @@ function setupWrapperComponent(initialItem?: RemoteItem<ItemObjectForTest>) {
             loaded: null,
           }),
         };
-      } else if (anyAction.type == 'loaded') {
+      } else if (anyAction.type === 'loaded') {
         const action = anyAction as PayloadAction<ItemObjectForTest>;
         return {
           item: remoteItem(action.payload.id, {

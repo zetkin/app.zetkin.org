@@ -14,7 +14,7 @@ export default function useDuplicates(orgId: number) {
     actionOnSuccess: (duplicates) => potentialDuplicatesLoaded(duplicates),
     loader: () =>
       apiClient.get(
-        `/api/orgs/${orgId}/people/duplicates?filter=status==pending`
+        `/api/orgs/${orgId}/people/duplicates?filter=status===pending`
       ),
   });
 }

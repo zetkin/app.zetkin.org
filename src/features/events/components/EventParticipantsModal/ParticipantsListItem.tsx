@@ -53,7 +53,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
         secondary={<SecondaryLabel participant={participant} />}
       />
       <ListItemSecondaryAction>
-        {participant.status == 'booked' && (
+        {participant.status === 'booked' && (
           <Button
             onClick={() => moveFrom(eventId, participant.person.id)}
             size="small"
@@ -62,7 +62,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             <Msg id={messageIds.participantsModal.participants.buttons.move} />
           </Button>
         )}
-        {participant.status == 'pending' && (
+        {participant.status === 'pending' && (
           <Button
             onClick={() => moveTo(eventId, participant.person.id)}
             size="small"
@@ -73,7 +73,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             />
           </Button>
         )}
-        {participant.status == 'added' && (
+        {participant.status === 'added' && (
           <Button
             onClick={() => moveFrom(eventId, participant.person.id)}
             size="small"
@@ -82,7 +82,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
             <Msg id={messageIds.participantsModal.participants.buttons.undo} />
           </Button>
         )}
-        {participant.status == 'removed' && (
+        {participant.status === 'removed' && (
           <Button
             onClick={() => moveTo(eventId, participant.person.id)}
             size="small"
@@ -101,7 +101,7 @@ const ParticipantsListItem: FC<Props> = ({ eventId, orgId, participant }) => {
 const SecondaryLabel: FC<{ participant: ParticipantWithPoolState }> = ({
   participant,
 }) => {
-  if (participant.status == 'booked') {
+  if (participant.status === 'booked') {
     return null;
   } else {
     const msgId =

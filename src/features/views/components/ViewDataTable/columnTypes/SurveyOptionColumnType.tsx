@@ -39,7 +39,7 @@ export default class SurveyOptionColumnType implements IColumnType<
       },
       sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
         const getPriority = (cell: SurveyOptionViewCell) => {
-          if (!cell || cell.length == 0) {
+          if (!cell || cell.length === 0) {
             return 1;
           }
 

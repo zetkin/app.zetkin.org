@@ -31,7 +31,7 @@ async function getAccessLevel(
   const memberships = await apiClient.get<ZetkinMembership[]>(
     `/api/users/me/memberships`
   );
-  const myMembership = memberships.find((mem) => mem.organization.id == orgId);
+  const myMembership = memberships.find((mem) => mem.organization.id === orgId);
 
   if (!myMembership) {
     // NOTE: Might be superuser
@@ -52,7 +52,7 @@ async function getAccessLevel(
     return null;
   }
   const accessObject = accessList.find(
-    (obj) => obj.person.id == myMembership.profile.id
+    (obj) => obj.person.id === myMembership.profile.id
   );
 
   return accessObject?.level ?? null;
@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     parseInt(viewId as string)
   );
 
-  if (accessLevel == null) {
+  if (accessLevel === null) {
     return {
       notFound: true,
     };
@@ -111,7 +111,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const viewFuture = useView(parsedOrgId, parsedViewId);
   const customFieldsFuture = useCustomFields(parsedOrgId);
-  const canConfigure = accessLevel == 'configure';
+  const canConfigure = accessLevel === 'configure';
 
   const onServer = useServerSide();
   if (onServer) {

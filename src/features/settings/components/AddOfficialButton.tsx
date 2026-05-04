@@ -91,7 +91,7 @@ const AddOfficialButton = ({
           <ZUIPersonSelect
             disabled
             getOptionDisabled={(option) =>
-              peopleToDisable.some((person) => person.profile.id == option.id)
+              peopleToDisable.some((person) => person.profile.id === option.id)
             }
             getOptionExtraLabel={(option) => {
               return getOptionExtraLabel(option.id);

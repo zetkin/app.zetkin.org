@@ -120,7 +120,7 @@ const EmailKPIChart: FC<Props> = ({
           padding={0.4}
           radialAxisStart={null}
           tooltip={(props) => {
-            if (props.bar.category == 'void') {
+            if (props.bar.category === 'void') {
               return null;
             }
 
@@ -134,7 +134,7 @@ const EmailKPIChart: FC<Props> = ({
                   </Typography>
                   <Typography
                     color={
-                      props.bar.category == 'main'
+                      props.bar.category === 'main'
                         ? theme.palette.primary.main
                         : theme.palette.secondary.main
                     }

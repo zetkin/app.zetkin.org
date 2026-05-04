@@ -7,7 +7,7 @@ export default function useJoinForm(orgId: number, formId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const item = useAppSelector((state) =>
-    state.joinForms.formList.items.find((item) => item.id == formId)
+    state.joinForms.formList.items.find((item) => item.id === formId)
   );
 
   return loadItemIfNecessary(item, dispatch, {

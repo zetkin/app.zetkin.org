@@ -26,7 +26,7 @@ export default async function submitJoinForm(
 
   joinFormInfo.fields.forEach((field) => {
     const value = inputFormData.get(field.s)?.toString() || '';
-    if (field.s == 'gender' && value == 'unspecified') {
+    if (field.s === 'gender' && value === 'unspecified') {
       outputFormData[field.s] = null;
     } else {
       outputFormData[field.s] = value;

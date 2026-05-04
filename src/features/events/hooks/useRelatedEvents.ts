@@ -20,7 +20,7 @@ export default function useRelatedEvents(
 
   const allEvents = allEventsInActivities
     .map((event) => event.data)
-    .filter((event) => orgId == event.organization.id);
+    .filter((event) => orgId === event.organization.id);
 
   if (allEvents.length === 0) {
     return new ResolvedFuture(relatedEvents);
@@ -30,12 +30,12 @@ export default function useRelatedEvents(
     if (event.id !== currentEvent.id) {
       //check if it's same start date or same end date and same location and activity
       if (
-        currentEvent.start_time == event.end_time ||
-        currentEvent.end_time == event.start_time
+        currentEvent.start_time === event.end_time ||
+        currentEvent.end_time === event.start_time
       ) {
         if (
-          event.activity?.id == currentEvent.activity?.id &&
-          event.location?.id == currentEvent.location?.id
+          event.activity?.id === currentEvent.activity?.id &&
+          event.location?.id === currentEvent.location?.id
         ) {
           relatedEvents.push(event);
         }
@@ -43,9 +43,9 @@ export default function useRelatedEvents(
 
       //check if event is exactly in parallel with same event type
       if (
-        currentEvent.start_time == event.start_time &&
-        currentEvent.end_time == event.end_time &&
-        event.activity?.id == currentEvent.activity?.id
+        currentEvent.start_time === event.start_time &&
+        currentEvent.end_time === event.end_time &&
+        event.activity?.id === currentEvent.activity?.id
       ) {
         relatedEvents.push(event);
       }

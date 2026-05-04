@@ -68,7 +68,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
     <TabbedLayout
       actionButtons={
         <Box>
-          {state == AreaAssignmentState.OPEN ? (
+          {state === AreaAssignmentState.OPEN ? (
             <Button onClick={endAssignment} variant="outlined">
               <Msg id={messageIds.layout.actions.end} />
             </Button>

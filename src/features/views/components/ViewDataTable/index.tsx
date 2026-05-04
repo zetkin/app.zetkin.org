@@ -423,7 +423,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       // The column index is offset by 2 compared to the API (avatar and checkbox)
       targetIndex -= 2;
       const columnId = colIdFromFieldName(field);
-      const origIndex = columns.findIndex((col) => col.id == columnId);
+      const origIndex = columns.findIndex((col) => col.id === columnId);
       const columnOrder = columns.map((col) => col.id);
 
       // Remove column and place it in new location
@@ -526,7 +526,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
           // Remove ID again after 2 seconds, unless the state has changed
           setTimeout(() => {
-            setAddedId((curState) => (curState == person.id ? 0 : curState));
+            setAddedId((curState) => (curState === person.id ? 0 : curState));
           }, 2000);
 
           // Scroll (jump) to row after short delay
@@ -583,7 +583,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     ]
   );
 
-  const empty = gridRows.length == 0;
+  const empty = gridRows.length === 0;
   const contentSource = view.content_query
     ? VIEW_CONTENT_SOURCE.DYNAMIC
     : VIEW_CONTENT_SOURCE.STATIC;
@@ -593,7 +593,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const getRowClassName = useCallback(
     (params: GridRowClassNameParams): string =>
-      params.id == addedId ? 'addedRow' : '',
+      params.id === addedId ? 'addedRow' : '',
     [addedId]
   );
 
@@ -611,7 +611,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       params: GridCellEditStartParams,
       event: MuiEvent<React.KeyboardEvent | React.MouseEvent>
     ) => {
-      if (params.reason == GridCellEditStartReasons.printableKeyDown) {
+      if (params.reason === GridCellEditStartReasons.printableKeyDown) {
         // Don't enter edit mode when the user just presses a printable character.
         // Doing so is the default DataGrid behaviour (as in spreadsheets) but it
         // means the user will overwrite the original value, which is rarely what
@@ -670,7 +670,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const processRowUpdate = useCallback(
     (after: Row, before: Row): Row => {
       const changedField = Object.keys(after).find(
-        (key) => after[key] != before[key]
+        (key) => after[key] !== before[key]
       );
       if (changedField) {
         const col = colFromFieldName(changedField, columns);
@@ -729,7 +729,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         disableRowSelectionOnClick={true}
         getRowClassName={getRowClassName}
         hideFooter={
-          disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC
+          disableAdd || empty || contentSource === VIEW_CONTENT_SOURCE.DYNAMIC
         }
         localeText={localeText}
         onCellEditStart={onCellEditStart}
@@ -777,8 +777,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           onSave={onSaveCreateColumn}
         />
       )}
-      {renderConfigDialog &&
-        renderConfigDialog(
+      {columnToConfigure &&
+        renderConfigDialog?.(
           columnToConfigure,
           onConfigureColumnCancel,
           onConfigureColumnSave
@@ -792,7 +792,7 @@ function colFromFieldName(
   columns: ZetkinViewColumn[]
 ): ZetkinViewColumn | undefined {
   const colId = parseInt(fieldName.slice(4));
-  return columns.find((col) => col.id == colId);
+  return columns.find((col) => col.id === colId);
 }
 
 export default ViewDataTable;

@@ -42,8 +42,8 @@ const importSlice = createSlice({
       const currentColumn = state.pendingFile.sheets[sheetIndex].columns[index];
 
       const currentColumnIsImportID =
-        currentColumn.kind == ColumnKind.ID_FIELD &&
-        state.importID == currentColumn.idField;
+        currentColumn.kind === ColumnKind.ID_FIELD &&
+        state.importID === currentColumn.idField;
 
       if (currentColumnIsImportID) {
         state.importID = null;
@@ -54,16 +54,16 @@ const importSlice = createSlice({
     importIDUpdate: (state, action: PayloadAction<ImportID | null>) => {
       const newImportID = action.payload;
 
-      const currentImportIDIsZetkinID = state.importID == 'id';
+      const currentImportIDIsZetkinID = state.importID === 'id';
 
       //If changing import ID from Zetkin ID,
       //deselect column that was Zetkin IDs
-      if (currentImportIDIsZetkinID && newImportID != 'id') {
+      if (currentImportIDIsZetkinID && newImportID !== 'id') {
         const sheetIndex = state.pendingFile.selectedSheetIndex;
         const sheet = state.pendingFile.sheets[sheetIndex];
 
         const indexOfIdColumn = sheet.columns.findIndex(
-          (col) => col.kind == ColumnKind.ID_FIELD && col.idField == 'id'
+          (col) => col.kind === ColumnKind.ID_FIELD && col.idField === 'id'
         );
 
         state.pendingFile.sheets[sheetIndex].columns[indexOfIdColumn] = {

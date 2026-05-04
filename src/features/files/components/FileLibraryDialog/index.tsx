@@ -45,7 +45,7 @@ const FileLibraryDialog: FC<Props> = ({
           <FilePreview
             file={selectedFile}
             onBack={() => setSelectedFile(null)}
-            onSelect={() => onSelectFile && onSelectFile(selectedFile)}
+            onSelect={() => onSelectFile?.(selectedFile)}
           />
         )}
         {!selectedFile && (
