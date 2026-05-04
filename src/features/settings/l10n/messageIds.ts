@@ -52,11 +52,9 @@ export default makeMessages('feat.settings', {
   },
   themes: {
     overview: {
-      addTheme: m('Create new theme'),
       description: m(
         'A theme sets the overall look and layout of your emails, from colours and fonts to spacing, buttons and content blocks.'
       ),
-      title: m('Themes'),
     },
   },
 });

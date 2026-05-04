@@ -246,6 +246,7 @@ export default makeMessages('feat.emails', {
     viewButton: m('View target group'),
   },
   themes: {
+    addTheme: m('Create new theme'),
     themeCard: {
       delete: m('Delete'),
       deleteWarning: m<{ themeId: number }>(
@@ -290,6 +291,7 @@ export default makeMessages('feat.emails', {
         paragraph7: m('here'),
       },
     },
+    title: m('Themes'),
   },
   unsubscribePage: {
     consent: m('I understand'),

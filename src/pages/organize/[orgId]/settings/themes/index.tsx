@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 
 import { scaffold } from 'utils/next';
@@ -10,8 +10,7 @@ import { Msg } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import ThemeCard from 'features/emails/components/ThemeCard';
-import useCreateEmailTheme from 'features/emails/hooks/useCreateEmailTheme';
-import SimpleLayout from 'utils/layout/SimpleLayout';
+import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -30,7 +29,6 @@ interface ThemesSettingsPageProps {
 const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const { createEmailTheme } = useCreateEmailTheme(orgId);
   const themes = useEmailThemes(orgId).data || [];
 
   if (onServer) {
@@ -43,14 +41,6 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
         <Typography>
           <Msg id={messageIds.themes.overview.description} />
         </Typography>
-        <Button
-          onClick={() => {
-            createEmailTheme();
-          }}
-          variant="contained"
-        >
-          <Msg id={messageIds.themes.overview.addTheme} />
-        </Button>
       </Box>
       <Grid container spacing={2}>
         {themes.map((theme) => (
@@ -66,11 +56,7 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
 };
 
 ThemesSettingsPage.getLayout = function getLayout(page) {
-  return (
-    <SimpleLayout title={<Msg id={messageIds.themes.overview.title} />}>
-      {page}
-    </SimpleLayout>
-  );
+  return <EmailThemeLayout>{page}</EmailThemeLayout>;
 };
 
 export default ThemesSettingsPage;
