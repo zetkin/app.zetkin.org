@@ -218,6 +218,13 @@ async function fetchElements(
         label: email.data.title,
       },
     ];
+  } else if (fieldName == 'themeId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue + '/frame',
+        label: `${fieldValue}`,
+      },
+    ];
   }
 
   return [];

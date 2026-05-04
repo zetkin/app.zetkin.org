@@ -7,11 +7,13 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 export default function useEmailThemes(orgId: number): IFuture<EmailTheme[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const themeList = useAppSelector((store) => store.emails.themeList);
+  const themeList = useAppSelector(
+    (store) => store.emails.themesByOrgId[orgId]
+  );
 
   return loadListIfNecessary(themeList, dispatch, {
-    actionOnLoad: () => themesLoad(),
-    actionOnSuccess: (themes) => themesLoaded(themes),
+    actionOnLoad: () => themesLoad(orgId),
+    actionOnSuccess: (themes) => themesLoaded([orgId, themes]),
     loader: () => apiClient.get(`/api/orgs/${orgId}/email_themes`),
   });
 }

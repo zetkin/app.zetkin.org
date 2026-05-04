@@ -60,6 +60,10 @@ export default makeMessages('feat.emails', {
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
         },
+        theme: {
+          themeTitle: m<{ themeId: number }>('Theme {themeId}'),
+          title: m('Theme'),
+        },
       },
     },
     tools: {
@@ -240,6 +244,54 @@ export default makeMessages('feat.emails', {
     ),
     unlockButton: m('Unlock'),
     viewButton: m('View target group'),
+  },
+  themes: {
+    addTheme: m('Create new theme'),
+    themeCard: {
+      delete: m('Delete'),
+      deleteWarning: m<{ themeId: number }>(
+        'Are you sure you want to delete theme {themeId}? It cannot be undone.'
+      ),
+      edit: m('Edit'),
+      title: m<{ themeId: number }>('Theme {themeId}'),
+    },
+    themeEditor: {
+      jsonError: m('Invalid JSON'),
+      previewTitle: m('Preview'),
+      saveButton: m('Save'),
+      tabs: {
+        block: m('Block'),
+        css: m('CSS'),
+        frame: m('Frame'),
+      },
+      title: m<{ themeId: number }>('Theme {themeId}'),
+    },
+    themePreview: {
+      button: m('Register here'),
+      heading: {
+        paragraphPart1: m('Hello'),
+        paragraphPart2: m('We are pleased to invite you to a panel on May 1st'),
+        paragraphPart3: m('Here is what to expect:'),
+      },
+      paragraph: {
+        paragraph1: m(
+          'A specter is haunting Europe—the specter of Communism. All the powers of old Europe have entered into a holy alliance to exorcise this specter; Pope and Czar, Metternich and Guizot, French radicals and German police spies.'
+        ),
+        paragraph2: m(
+          'Where is the party in opposition that has not been decried as Communistic by its opponents in power? Where the opposition that has not hurled back the branding reproach of Communism, against the more advanced opposition parties, as well as against its reactionary adversaries?'
+        ),
+        paragraph3: m('Two things result from this fact:'),
+        paragraph4: m(
+          'Communism is already acknowledged by all European powers to be in itself a power.'
+        ),
+        paragraph5: m(
+          'It is high time that Communists should openly, in the face of the whole world, publish their views, their aims, their tendencies, and meet this nursery tale of the Specter of Communism with a Manifesto of the party itself.'
+        ),
+        paragraph6: m('To read the full manifesto, click '),
+        paragraph7: m('here'),
+      },
+    },
+    title: m('Themes'),
   },
   unsubscribePage: {
     consent: m('I understand'),
