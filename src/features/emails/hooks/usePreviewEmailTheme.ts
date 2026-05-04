@@ -1,6 +1,7 @@
 import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useUser from 'core/hooks/useUser';
+import { base64ImageForPreview } from 'features/emails/utils/rendering/previewImageBase64';
 
 export default function usePreviewEmailTheme(): string {
   const messages = useMessages(messageIds);
@@ -196,9 +197,11 @@ export default function usePreviewEmailTheme(): string {
     {
       "kind": "image",
       "data": {
-        "alt": "cover.jpg",
-        "fileId": 3,
-        "src": "http://files.dev.zetkin.org/1/d4f3ffbf-3757-4873-841c-6615e2b85768.jpg"
+        "alt": "Preview image",
+        "fileId": 0,
+        "src": "` +
+    base64ImageForPreview +
+    `"
       }
     }
   ]
