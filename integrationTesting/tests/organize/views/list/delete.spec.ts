@@ -24,7 +24,7 @@ const expectDeleteViewSuccess = async (moxy: NextWorkerFixtures['moxy']) => {
             mock.path.includes(`/orgs/1/people/views/${AllMembers.id}`)
         )
     )
-    .toBe(true);
+    .toBeTruthy();
 };
 
 test.describe('Views list page', () => {
