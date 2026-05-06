@@ -35,6 +35,13 @@ export default makeMessages('feat.call', {
   },
   activities: {
     description: m<{ name: string }>('Acting as {name}'),
+    empty: m('No activities'),
+    events: {
+      alreadyBooked: m<{ name: string }>('{name} is already signed up.'),
+      noLocation: m('No physical location'),
+      signUp: m('Sign up'),
+      undoSignUp: m('Undo sign-up'),
+    },
     filters: {
       basic: {
         alreadyIn: m('Already in'),
@@ -57,11 +64,29 @@ export default makeMessages('feat.call', {
         '{numProjects, plural, =0{Context} =1{1 project} other{# projects}}'
       ),
     },
+    noBookings: m<{ name: string }>(
+      '{name} is not booked or signed up for any events.'
+    ),
     projects: {
       wihoutProjectLabel: m('No project'),
     },
-
+    survey: {
+      backButton: m('Back to activities'),
+      cancelButton: m('Cancel'),
+      clearButton: m('Clear responses'),
+      confirmClearSurvey: m<{ title: string }>(
+        'Do you want to remove the responses for {title}?'
+      ),
+      editButton: m('Edit'),
+      fillOutButton: m('Fill out'),
+      inProgress: m('Survey in progress'),
+    },
     title: m('Activities'),
+    untitled: {
+      event: m('Untitled event'),
+      project: m('Untitled project'),
+      survey: m('Untitled survey'),
+    },
   },
   callAlert: {
     description: m('No more calls left in queue'),

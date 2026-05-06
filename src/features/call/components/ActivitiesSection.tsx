@@ -38,7 +38,7 @@ import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
 import ZUISection from 'zui/components/ZUISection';
 import messageIds from '../l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 
 type Filter = {
   active: boolean;
@@ -126,7 +126,9 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Chair} size="large" />
-          <ZUIText color="secondary">No activities</ZUIText>
+          <ZUIText color="secondary">
+            <Msg id={messageIds.activities.empty} />
+          </ZUIText>
         </Box>
       )}
       {showNoSignups && (
@@ -140,7 +142,12 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Hotel} size="large" />
-          <ZUIText color="secondary">{`${target?.first_name} is not booked or signed up for any events.`}</ZUIText>
+          <ZUIText color="secondary">
+            <Msg
+              id={messageIds.activities.noBookings}
+              values={{ name: target.first_name }}
+            />
+          </ZUIText>
         </Box>
       )}
       {activities.map((activity) => {

@@ -9,6 +9,8 @@ import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import ZUIModal from 'zui/components/ZUIModal';
 import { surveySubmissionDeleted } from '../store';
+import messageIds from '../l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 type SurveyCardProps = {
   onSelectSurvey: (surveyId: number) => void;
@@ -16,6 +18,7 @@ type SurveyCardProps = {
 };
 
 const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
+  const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const [clearModalOpen, setClearModalOpen] = useState(false);
   const responseBySurveyId = useAppSelector(
@@ -40,7 +43,11 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
         actions={[
           <Fragment key={survey.id}>
             <ZUIButton
-              label={hasMeaningfulContent ? 'Edit responses' : 'Fill out'}
+              label={
+                hasMeaningfulContent
+                  ? messages.activities.survey.editButton()
+                  : messages.activities.survey.fillOutButton()
+              }
               onClick={() => onSelectSurvey(survey.id)}
               variant="primary"
             />
@@ -48,7 +55,7 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
               //TODO: Create ZUI Component for Survey in progress label
               <>
                 <ZUIButton
-                  label={'Clear responses'}
+                  label={messages.activities.survey.clearButton()}
                   onClick={() => setClearModalOpen(true)}
                   variant="secondary"
                 />
@@ -66,7 +73,7 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
                   })}
                 >
                   <ZUIText color="inherit" variant="bodySmRegular">
-                    {'Survey in progress'}
+                    <Msg id={messageIds.activities.survey.inProgress} />
                   </ZUIText>
                 </Box>
               </>
@@ -78,30 +85,32 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
           {
             Icon: GroupWorkOutlined,
             labels: [
-              survey.campaign?.title ?? 'Untitled project',
+              survey.campaign?.title ?? messages.activities.untitled.project(),
               survey.organization.title,
             ],
           },
         ]}
-        title={survey.title ?? 'Untitled Survey'}
+        title={survey.title ?? messages.activities.untitled.survey()}
       />
       <ZUIModal
         open={clearModalOpen}
         primaryButton={{
-          label: 'Clear responses',
+          label: messages.activities.survey.clearButton(),
           onClick: () => {
             dispatch(surveySubmissionDeleted(survey.id));
             setClearModalOpen(false);
           },
         }}
         secondaryButton={{
-          label: 'Cancel',
+          label: messages.activities.survey.cancelButton(),
           onClick: () => {
             setClearModalOpen(false);
           },
         }}
         size="small"
-        title={`Do you want to remove the responses for ${survey.title} ?`}
+        title={messages.activities.survey.confirmClearSurvey({
+          title: survey.title ?? messages.activities.untitled.survey(),
+        })}
       />
     </>
   );
