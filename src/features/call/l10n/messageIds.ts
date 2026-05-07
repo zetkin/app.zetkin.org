@@ -379,7 +379,13 @@ export default makeMessages('feat.call', {
       success: m<{ name: string }>('You talked to {name}'),
       wrongNumber: m<{ name: string }>('We had the wrong number for ${name}'),
     },
-    error: {
+    previousCallMissingError: {
+      description: m(
+        'The report was submitted and you can keep calling as normal'
+      ),
+      title: m('Could not load previous call'),
+    },
+    reportSubmissionError: {
       description: m(
         'The call is now among your unfinished calls and you can go back and try submitting the report again.'
       ),
