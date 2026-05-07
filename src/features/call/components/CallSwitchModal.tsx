@@ -276,7 +276,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
-          minHeight: 400,
+          height: 400,
           overflowX: 'hidden',
           paddingRight: 1,
           paddingTop: 2,
