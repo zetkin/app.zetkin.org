@@ -531,25 +531,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target?.id]);
 
-  useEffect(() => {
-    if (step == LaneStep.REPORT) {
-      dispatch(
-        filtersUpdated({
-          customDatesToFilterEventsBy: [null, null],
-          eventDateFilterState: null,
-          filterState: {
-            alreadyIn: false,
-            events: false,
-            surveys: false,
-            thisCall: true,
-          },
-          projectIdsToFilterActivitiesBy: [],
-        })
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
-
   return (
     <>
       <Box sx={{ height: '100%', width: '100%' }}>

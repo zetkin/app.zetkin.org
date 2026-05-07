@@ -453,9 +453,18 @@ const CallSlice = createSlice({
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
+      const activeLane = state.lanes[state.activeLaneIndex];
+      activeLane.step = step;
 
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.step = step;
+      if (step == LaneStep.REPORT) {
+        activeLane.filters = {
+          ...emptyFilters,
+          filterState: {
+            ...emptyFilters.filterState,
+            thisCall: true,
+          },
+        };
+      }
     },
     updatePendingOrgLog: (state, action: PayloadAction<string>) => {
       const lane = state.lanes[state.activeLaneIndex];
