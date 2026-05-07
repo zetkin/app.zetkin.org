@@ -386,7 +386,7 @@ export default makeMessages('feat.call', {
       title: m('Something went wrong when the report was being submitted.'),
     },
     title: {
-      success: m('Done!'),
+      success: m('Call done!'),
     },
     unfinishedCallsMessage: m(
       'But, before you move on: you have unfinished calls, deal with them!'
