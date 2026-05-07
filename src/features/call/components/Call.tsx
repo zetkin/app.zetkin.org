@@ -22,7 +22,7 @@ import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 
-const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
+const Call: FC<{ onResetAfterError: () => void }> = ({ onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
@@ -116,14 +116,14 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
         primaryButton={{
           label: messages.unexpectedError.reloadButton(),
           onClick: () => {
-            clearCallLanes();
+            onResetAfterError();
             router.push(`/call/${assignment.id}`);
           },
         }}
         secondaryButton={{
           label: messages.unexpectedError.backToMyZetkinButton(),
           onClick: () => {
-            clearCallLanes();
+            onResetAfterError();
             router.push('/my');
           },
         }}

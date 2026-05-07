@@ -69,7 +69,7 @@ const CallPage: FC = () => {
           </Box>
         }
       >
-        {canInitialize && <Call clearCallLanes={() => clearCallLanes()} />}
+        {canInitialize && <Call onResetAfterError={() => clearCallLanes()} />}
       </ErrorBoundary>
     </main>
   );
