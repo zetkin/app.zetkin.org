@@ -81,6 +81,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
       info={[
         {
           Icon: GroupWorkOutlined,
+          key: 'project',
           labels: [
             event.campaign?.title ?? messages.activities.untitled.project(),
             event.organization.title,
@@ -88,6 +89,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
         },
         {
           Icon: WatchLaterOutlined,
+          key: 'time',
           labels: [
             timeSpanToString(
               new Date(removeOffset(event.start_time)),
@@ -98,6 +100,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
         },
         {
           Icon: LocationOnOutlined,
+          key: 'location',
           labels: [
             event.location?.title ?? messages.activities.events.noLocation(),
           ],
