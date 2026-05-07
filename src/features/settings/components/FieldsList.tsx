@@ -21,6 +21,18 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const { removeField } = useFieldMutations(orgId);
   const [title, setTitle] = useState('');
   const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
+  const [enumInput, setEnumInput] = useState('');
+
+  const parseEnumChoices = (input: string) => {
+    return input
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .map((label) => ({
+        key: label.toLowerCase().replace(/\s+/g, '_'),
+        label,
+      }));
+  };
 
   if (onServer) {
     return null;
@@ -55,8 +67,34 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
           ))}
         </TextField>
       </Box>
+
+      {type === CUSTOM_FIELD_TYPE.ENUM && (
+        <Box>
+          <TextField
+            fullWidth
+            id="filled-basic"
+            label="Enum values (comma separated)"
+            onChange={(event) => setEnumInput(event.target.value)}
+            value={enumInput}
+            variant="filled"
+          />
+        </Box>
+      )}
+
       <Box>
-        <Button onClick={() => createField(title)}>Create Field</Button>
+        <Button
+          onClick={() =>
+            createField(
+              title,
+              type,
+              type === CUSTOM_FIELD_TYPE.ENUM
+                ? parseEnumChoices(enumInput)
+                : undefined
+            )
+          }
+        >
+          Create Field
+        </Button>
       </Box>
       <Box display="flex" flexDirection="column" gap={1}>
         {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
@@ -68,8 +106,14 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
       </Box>
       <Box display="flex" flexDirection="column" gap={1} mt={2}>
         {customFields.map((field) => (
-          <Box key={field.slug} display="flex" gap={1}>
+          <Box key={field.slug} display="flex" flexDirection="column" gap={1}>
             <Typography>{field.title}</Typography>
+
+            {field.type === CUSTOM_FIELD_TYPE.ENUM &&
+              field.enum_choices?.map((choice) => (
+                <Typography key={choice.key}>- {choice.label}</Typography>
+              ))}
+
             <Button onClick={() => removeField(field.id)}>remove</Button>
           </Box>
         ))}
