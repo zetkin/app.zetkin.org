@@ -39,8 +39,8 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
 
   return (
     <Stack direction="row" display="flex" gap={2} sx={{ height: '100vh' }}>
-      <ThemeEditor orgId={orgId} themeId={themeId} />
       <ThemePreview theme={data} />
+      <ThemeEditor orgId={orgId} themeId={themeId} />
     </Stack>
   );
 };
