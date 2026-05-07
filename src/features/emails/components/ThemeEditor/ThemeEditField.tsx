@@ -68,6 +68,7 @@ const ThemeEditField: React.FC<ThemeEditFieldProps> = ({
           jsonError ? messages.themes.themeEditor.jsonError() : undefined
         }
         maxRows={20}
+        monospaced={true}
         multiline
         onChange={onChange}
         value={value}
