@@ -21,7 +21,11 @@ If yes - how?
 
 ## Instructions for reviewer
 
-[Add instructions for how the reviewer tests that what you've built works, for example "Go to /my and click..." ]
+Add instructions for how the reviewer tests that what you've built works.
+
+- Url to where in the app you can interact with it (for example: "Go to /organize/1/people/lists/2")
+- Notes on what to do (for example: "Add a tag column, then click in an empty cell.")
+- Notes about other potential things that could be of value to the reviewer (for example: "Have not tested it in Chrome!")
 
 ## Related issues
 
