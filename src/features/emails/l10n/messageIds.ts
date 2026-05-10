@@ -265,6 +265,10 @@ export default makeMessages('feat.emails', {
         frame: m('Frame'),
       },
       title: m<{ themeId: number }>('Theme {themeId}'),
+      unsavedChangesConfirm: m('Leave without saving'),
+      unsavedChangesWarning: m(
+        'You have unsaved changes, are you sure you want to leave?'
+      ),
     },
     themePreview: {
       button: m('Register here'),

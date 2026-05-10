@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { useRouter } from 'next/router';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -9,6 +10,7 @@ import ThemeEditField, {
 } from 'features/emails/components/ThemeEditor/ThemeEditField';
 import { EmailThemePatchBody } from 'features/emails/types';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
+import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
 
 interface ThemeEditorProps {
   orgId: number;
@@ -29,6 +31,9 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<ThemeSection>('frame_mjml');
+  const router = useRouter();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmUrl, setConfirmUrl] = useState<null | string>(null);
 
   const {
     data: theme,
@@ -55,56 +60,102 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
     await updateEmailTheme(patch);
   };
 
-  return (
-    <Box
-      sx={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%' }}
-    >
-      <TabContext value={activeTab}>
-        <Box
-          sx={{
-            alignItems: 'center',
-            borderBottom: 1,
-            borderColor: 'divider',
-            display: 'flex',
-            justifyContent: 'space-between',
-            pr: 2,
-          }}
-        >
-          <TabList onChange={(e, val) => setActiveTab(val as ThemeSection)}>
-            <Tab
-              label={messages.themes.themeEditor.tabs.frame()}
-              value="frame_mjml"
-            />
-            <Tab label={messages.themes.themeEditor.tabs.css()} value="css" />
-            <Tab
-              label={messages.themes.themeEditor.tabs.block()}
-              value="block_attributes"
-            />
-          </TabList>
+  const bypassUnsavedChanges = useRef(false);
 
-          <Button
-            color="primary"
-            disabled={!isDirty || mutating.length > 0}
-            onClick={handleSaveAll}
-            size="small"
-            variant="contained"
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      if (!isDirty || bypassUnsavedChanges.current) {
+        return;
+      }
+
+      setConfirmOpen(true);
+      setConfirmUrl(url);
+
+      router.events.emit(
+        'routeChangeError',
+        new Error('Route canceled'),
+        router.asPath,
+        { shallow: false }
+      );
+      throw 'Route canceled';
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [isDirty, router]);
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          height: '100%',
+        }}
+      >
+        <TabContext value={activeTab}>
+          <Box
+            sx={{
+              alignItems: 'center',
+              borderBottom: 1,
+              borderColor: 'divider',
+              display: 'flex',
+              justifyContent: 'space-between',
+              pr: 2,
+            }}
           >
-            {messages.themes.themeEditor.saveButton()}
-          </Button>
-        </Box>
-        {Object.keys(localValues).map((section) => (
-          <TabPanel key={section} sx={{ flex: 1, p: 2 }} value={section}>
-            <ThemeEditField
-              editingSection={section as ThemeSection}
-              onChange={(newVal) =>
-                setLocalValues((prev) => ({ ...prev, [section]: newVal }))
-              }
-              value={localValues[section as ThemeSection]}
-            />
-          </TabPanel>
-        ))}
-      </TabContext>
-    </Box>
+            <TabList onChange={(e, val) => setActiveTab(val as ThemeSection)}>
+              <Tab
+                label={messages.themes.themeEditor.tabs.frame()}
+                value="frame_mjml"
+              />
+              <Tab label={messages.themes.themeEditor.tabs.css()} value="css" />
+              <Tab
+                label={messages.themes.themeEditor.tabs.block()}
+                value="block_attributes"
+              />
+            </TabList>
+
+            <Button
+              color="primary"
+              disabled={!isDirty || mutating.length > 0}
+              onClick={handleSaveAll}
+              size="small"
+              variant="contained"
+            >
+              {messages.themes.themeEditor.saveButton()}
+            </Button>
+          </Box>
+          {Object.keys(localValues).map((section) => (
+            <TabPanel key={section} sx={{ flex: 1, p: 2 }} value={section}>
+              <ThemeEditField
+                editingSection={section as ThemeSection}
+                onChange={(newVal) =>
+                  setLocalValues((prev) => ({ ...prev, [section]: newVal }))
+                }
+                value={localValues[section as ThemeSection]}
+              />
+            </TabPanel>
+          ))}
+        </TabContext>
+      </Box>
+      <ZUIConfirmDialog
+        onCancel={() => setConfirmOpen(false)}
+        onSubmit={async () => {
+          if (confirmUrl) {
+            bypassUnsavedChanges.current = true;
+            await router.push(confirmUrl);
+          }
+        }}
+        open={confirmOpen}
+        submitText={messages.themes.themeEditor.unsavedChangesConfirm()}
+        warningText={messages.themes.themeEditor.unsavedChangesWarning()}
+      />
+    </>
   );
 };
 

@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 import { Stack } from '@mui/material';
-import { MJMLJsonObject } from 'mjml-core';
 
 import ZUITextField from 'zui/components/ZUITextField';
-import { BlockAttributes, EmailThemePatchBody } from 'features/emails/types';
+import { EmailThemePatchBody } from 'features/emails/types';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
 
@@ -12,19 +11,6 @@ interface ThemeEditFieldProps {
   value: string;
   onChange: (value: string) => void;
 }
-
-export const parseField = (
-  section: string | MJMLJsonObject | BlockAttributes | null | undefined,
-  editingSection: keyof EmailThemePatchBody
-): string => {
-  if (section === null || section === undefined) {
-    return '';
-  }
-  if (editingSection === 'css') {
-    return (section as string) || '';
-  }
-  return JSON.stringify(section, null, 2);
-};
 
 export const serializeField = (
   value: string,
