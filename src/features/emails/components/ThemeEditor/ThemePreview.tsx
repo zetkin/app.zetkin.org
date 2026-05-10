@@ -21,10 +21,19 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
     if (!theme) {
       return;
     }
-    previewEmailThemeHtml(content, theme).then((html) => {
-      setPreviewHtml(html);
-    });
-  });
+
+    const update = async () => {
+      try {
+        const html = await previewEmailThemeHtml(content, theme);
+        setPreviewHtml(html);
+      } catch (e) {
+        // Ignore render errors while user is mid-typing
+      }
+    };
+
+    const timer = setTimeout(update, 200);
+    return () => clearTimeout(timer);
+  }, [theme, content]);
 
   return (
     <Stack sx={{ flex: 1, height: '100%', minWidth: '0' }}>

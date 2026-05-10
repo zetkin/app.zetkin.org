@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { CircularProgress, Stack } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -28,7 +28,39 @@ interface ThemePageProps {
 const ThemePage: PageWithLayout<ThemePageProps> = () => {
   const onServer = useServerSide();
   const { orgId, themeId } = useNumericRouteParams();
-  const { isLoading, data } = useEmailTheme(orgId, themeId);
+  const { isLoading, data: theme } = useEmailTheme(orgId, themeId);
+
+  const [localValues, setLocalValues] = useState<Record<string, string>>({
+    block_attributes: '',
+    css: '',
+    frame_mjml: '',
+  });
+
+  useEffect(() => {
+    if (theme) {
+      setLocalValues({
+        block_attributes: JSON.stringify(theme.block_attributes, null, 2),
+        css: theme.css || '',
+        frame_mjml: JSON.stringify(theme.frame_mjml, null, 2),
+      });
+    }
+  }, [theme]);
+
+  const liveTheme = useMemo(() => {
+    if (!theme) {
+      return null;
+    }
+    try {
+      return {
+        ...theme,
+        block_attributes: JSON.parse(localValues.block_attributes),
+        css: localValues.css,
+        frame_mjml: JSON.parse(localValues.frame_mjml),
+      };
+    } catch {
+      return theme;
+    }
+  }, [theme, localValues]);
 
   if (onServer) {
     return null;
@@ -39,8 +71,13 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
 
   return (
     <Stack direction="row" display="flex" gap={2} sx={{ height: '100vh' }}>
-      <ThemePreview theme={data} />
-      <ThemeEditor orgId={orgId} themeId={themeId} />
+      <ThemePreview theme={liveTheme} />
+      <ThemeEditor
+        localValues={localValues}
+        orgId={orgId}
+        setLocalValues={setLocalValues}
+        themeId={themeId}
+      />
     </Stack>
   );
 };
