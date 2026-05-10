@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, Tab } from '@mui/material';
+import { Alert, Box, Button, Snackbar, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { useRouter } from 'next/router';
 
@@ -34,6 +34,7 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmUrl, setConfirmUrl] = useState<null | string>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     data: theme,
@@ -49,6 +50,8 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
     : false;
 
   const handleSaveAll = async () => {
+    setError(null);
+
     const patch: EmailThemePatchBody = {
       block_attributes: serializeField(
         localValues.block_attributes,
@@ -57,7 +60,12 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
       css: serializeField(localValues.css, 'css'),
       frame_mjml: serializeField(localValues.frame_mjml, 'frame_mjml'),
     };
-    await updateEmailTheme(patch);
+
+    const result = await updateEmailTheme(patch);
+
+    if (typeof result === 'string') {
+      setError(result);
+    }
   };
 
   const bypassUnsavedChanges = useRef(false);
@@ -89,6 +97,16 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
 
   return (
     <>
+      {error && (
+        <Snackbar
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          open={!!error}
+        >
+          <Alert onClose={() => setError(null)} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      )}
       <Box
         sx={{
           display: 'flex',
