@@ -1,6 +1,7 @@
 import { EmailTheme, EmailThemePatchBody } from 'features/emails/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
+  themeCreated,
   themeDeleted,
   themeLoad,
   themeLoaded,
@@ -14,6 +15,7 @@ import { ApiClientError } from 'core/api/errors';
 interface UseCreateEmailThemeReturn {
   data: EmailTheme | null;
   deleteEmailTheme: (themeId: number) => Promise<void>;
+  duplicateEmailTheme: () => Promise<EmailTheme | undefined>;
   updateEmailTheme: (data: EmailThemePatchBody) => Promise<EmailTheme | string>;
   isLoading: boolean;
   mutating: string[];
@@ -39,6 +41,24 @@ export default function useEmailTheme(
     dispatch(themeDeleted([orgId, themeId]));
   };
 
+  const duplicateEmailTheme = async () => {
+    const oldTheme = themeFuture.data;
+    if (!oldTheme) {
+      return;
+    }
+
+    const newTheme = await apiClient.post<EmailTheme>(
+      `/api/orgs/${orgId}/email_themes`,
+      {
+        block_attributes: oldTheme.block_attributes,
+        css: oldTheme.css,
+        frame_mjml: oldTheme.frame_mjml,
+      }
+    );
+    dispatch(themeCreated([orgId, newTheme]));
+    return newTheme;
+  };
+
   const updateEmailTheme = async (data: EmailThemePatchBody) => {
     const mutating = Object.keys(data);
     dispatch(themeUpdate([themeId, mutating]));
@@ -59,6 +79,7 @@ export default function useEmailTheme(
   return {
     ...futureToObject(themeFuture),
     deleteEmailTheme,
+    duplicateEmailTheme,
     mutating: themeItem?.mutating || [],
     updateEmailTheme,
   };

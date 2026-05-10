@@ -247,11 +247,13 @@ export default makeMessages('feat.emails', {
   },
   themes: {
     addTheme: m('Create new theme'),
+    duplicateTheme: m('Duplicate theme'),
     themeCard: {
       delete: m('Delete'),
       deleteWarning: m<{ themeId: number }>(
         'Are you sure you want to delete theme {themeId}? It cannot be undone.'
       ),
+      duplicate: m('Duplicate'),
       edit: m('Edit'),
       title: m<{ themeId: number }>('Theme {themeId}'),
     },

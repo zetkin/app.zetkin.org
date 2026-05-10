@@ -1,10 +1,17 @@
 import { Button, Card, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { ContentCopy, Delete } from '@mui/icons-material';
 
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+
+enum THEME_MENU_ITEMS {
+  DUPLICATE_THEME = 'duplicateTheme',
+  DELETE_THEME = 'deleteTheme',
+}
 
 interface ThemeCardProps {
   orgId: number;
@@ -13,7 +20,10 @@ interface ThemeCardProps {
 
 const ThemeCard: React.FC<ThemeCardProps> = (props) => {
   const messages = useMessages(messageIds);
-  const { deleteEmailTheme } = useEmailTheme(props.orgId, props.themeId);
+  const { deleteEmailTheme, duplicateEmailTheme } = useEmailTheme(
+    props.orgId,
+    props.themeId
+  );
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   return (
@@ -36,13 +46,30 @@ const ThemeCard: React.FC<ThemeCardProps> = (props) => {
             >
               {messages.themes.themeCard.edit()}
             </Button>
-            <Button
-              color="error"
-              onClick={() => setConfirmOpen(true)}
-              size="small"
-            >
-              {messages.themes.themeCard.delete()}
-            </Button>
+            <ZUIEllipsisMenu
+              items={[
+                {
+                  id: THEME_MENU_ITEMS.DUPLICATE_THEME,
+                  label: (
+                    <>
+                      <ContentCopy />
+                      <Msg id={messageIds.themes.themeCard.duplicate} />
+                    </>
+                  ),
+                  onSelect: () => duplicateEmailTheme(),
+                },
+                {
+                  id: THEME_MENU_ITEMS.DELETE_THEME,
+                  label: (
+                    <>
+                      <Delete />
+                      <Msg id={messageIds.themes.themeCard.delete} />
+                    </>
+                  ),
+                  onSelect: () => setConfirmOpen(true),
+                },
+              ]}
+            />
           </Stack>
         </Stack>
       </Card>
