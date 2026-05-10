@@ -50,7 +50,7 @@ const ThemeEditField: React.FC<ThemeEditFieldProps> = ({
       gap={2}
       sx={{
         '& .MuiFormControl-root': { height: '100%' },
-        '& .MuiInputBase-input': { height: '100% !important' },
+        '& .MuiInputBase-input': { height: '100% !important', overflow: 'auto !important' },
         '& .MuiInputBase-root': { height: '100%' },
         height: '100%',
       }}
