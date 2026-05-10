@@ -20,7 +20,11 @@ const EmailThemeLayout: FunctionComponent<EmailThemeLayoutProps> = ({
     : messages.themes.title();
 
   return (
-    <SimpleLayout actionButtons={<ThemesActionButtons />} title={title}>
+    <SimpleLayout
+      actionButtons={<ThemesActionButtons />}
+      fixedHeight={!!themeId}
+      title={title}
+    >
       {children}
     </SimpleLayout>
   );

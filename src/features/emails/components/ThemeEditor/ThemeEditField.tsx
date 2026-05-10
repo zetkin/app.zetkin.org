@@ -60,14 +60,22 @@ const ThemeEditField: React.FC<ThemeEditFieldProps> = ({
   }, [value, editingSection]);
 
   return (
-    <Stack gap={2}>
+    <Stack
+      gap={2}
+      sx={{
+        '& .MuiFormControl-root': { height: '100%' },
+        '& .MuiInputBase-input': { height: '100% !important' },
+        '& .MuiInputBase-root': { height: '100%' },
+        height: '100%',
+      }}
+    >
       <ZUITextField
         error={jsonError}
         fullWidth
         helperText={
           jsonError ? messages.themes.themeEditor.jsonError() : undefined
         }
-        maxRows={20}
+        maxRows={0}
         monospaced={true}
         multiline
         onChange={onChange}
