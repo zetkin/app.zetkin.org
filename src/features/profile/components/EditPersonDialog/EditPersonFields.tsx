@@ -203,6 +203,8 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                   if (date) {
                     const dateStr = makeNaiveDateString(date.utc().toDate());
                     onChange(field.slug, dateStr);
+                  } else {
+                    onChange(field.slug, null);
                   }
                 }}
                 slotProps={{
