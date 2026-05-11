@@ -21,6 +21,7 @@ import emailsSlice, {
   emailCreated,
   EmailStoreSlice,
   themeCreated,
+  themeDeleted,
 } from 'features/emails/store';
 import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import filesSlice, { FilesStoreSlice } from 'features/files/store';
@@ -159,6 +160,14 @@ listenerMiddleware.startListening({
   effect: (action) => {
     const [orgId, emailTheme] = action.payload;
     Router.push(`/organize/${orgId}/settings/themes/${emailTheme.id}`);
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: themeDeleted,
+  effect: (action) => {
+    const [orgId] = action.payload;
+    Router.push(`/organize/${orgId}/settings/themes`);
   },
 });
 

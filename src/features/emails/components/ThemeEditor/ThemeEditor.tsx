@@ -11,6 +11,7 @@ import ThemeEditField, {
 import { EmailThemePatchBody } from 'features/emails/types';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
+import ThemeActionsEllipsisMenu from 'features/emails/components/ThemeActionsEllipsisMenu';
 
 interface ThemeEditorProps {
   orgId: number;
@@ -138,15 +139,18 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
               />
             </TabList>
 
-            <Button
-              color="primary"
-              disabled={!isDirty || mutating.length > 0}
-              onClick={handleSaveAll}
-              size="small"
-              variant="contained"
-            >
-              {messages.themes.themeEditor.saveButton()}
-            </Button>
+            <Box>
+              <Button
+                color="primary"
+                disabled={!isDirty || mutating.length > 0}
+                onClick={handleSaveAll}
+                size="small"
+                variant="contained"
+              >
+                {messages.themes.themeEditor.saveButton()}
+              </Button>
+              <ThemeActionsEllipsisMenu orgId={orgId} themeId={themeId} />
+            </Box>
           </Box>
           {Object.keys(localValues).map((section) => (
             <TabPanel key={section} sx={{ flex: 1, p: 2 }} value={section}>
