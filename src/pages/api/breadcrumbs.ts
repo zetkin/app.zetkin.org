@@ -221,8 +221,8 @@ async function fetchElements(
   } else if (fieldName == 'themeId') {
     return [
       {
-        href: basePath + '/' + fieldValue + '/frame',
-        label: `${fieldValue}`,
+        href: basePath + '/' + fieldValue,
+        label: `Theme ${fieldValue}`,
       },
     ];
   }
