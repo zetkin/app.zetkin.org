@@ -10,6 +10,7 @@ const DEFAULT_FILTERS: ACTIVITIES[] = [
   ACTIVITIES.SURVEY,
   ACTIVITIES.TASK,
   ACTIVITIES.EMAIL,
+  ACTIVITIES.EVENT,
 ];
 
 export default function useActivityFilters(
