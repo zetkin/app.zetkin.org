@@ -32,7 +32,7 @@ export interface TagsStoreSlice {
   tagsById: SafeRecord<TagId, RemoteItem<ZetkinTag>>;
   groupsById: SafeRecord<TagGroupId, RemoteItem<ZetkinTagGroup>>;
 
-  orgTags: SafeRecord<OrgId, RemoteList<ZetkinTag['id']>>;
+  orgTags: SafeRecord<OrgId, RemoteList<TagId>>;
   personTags: SafeRecord<
     `${OrgId}-${PersonId}`,
     RemoteList<{
