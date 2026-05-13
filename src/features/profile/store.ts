@@ -4,6 +4,8 @@ import { PersonOrganization } from 'utils/organize/people';
 import {
   RemoteItem,
   remoteItem,
+  remoteItemUpdate,
+  remoteItemUpdated,
   RemoteList,
   remoteList,
 } from 'utils/storeUtils';
@@ -51,6 +53,14 @@ const profilesSlice = createSlice({
       state.fieldsList.items = state.fieldsList.items.filter(
         (item) => item.id !== fieldId
       );
+    },
+    fieldUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [fieldId, mutating] = action.payload;
+      remoteItemUpdate(state.fieldsList, fieldId, mutating);
+    },
+    fieldUpdated: (state, action: PayloadAction<ZetkinCustomField>) => {
+      const field = action.payload;
+      remoteItemUpdated(state.fieldsList, field);
     },
     fieldsLoad: (state) => {
       state.fieldsList.isLoading = true;
@@ -198,6 +208,8 @@ export default profilesSlice;
 export const {
   fieldCreate,
   fieldCreated,
+  fieldUpdate,
+  fieldUpdated,
   fieldRemoved,
   fieldsLoad,
   fieldsLoaded,

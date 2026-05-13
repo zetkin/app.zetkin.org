@@ -18,10 +18,16 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const onServer = useServerSide();
   const customFields = useCustomFields(orgId).data ?? [];
   const { createField } = useCreateField(orgId);
-  const { removeField } = useFieldMutations(orgId);
+  const { updateField: updateField, removeField } = useFieldMutations(orgId);
   const [title, setTitle] = useState('');
   const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
   const [enumInput, setEnumInput] = useState('');
+  const [updatedFieldId, setUpdatedFieldId] = useState<number | null>(null);
+  const [updatedTitle, setUpdatedTitle] = useState('');
+  const [updatedType, setUpdatedType] = useState<CUSTOM_FIELD_TYPE>(
+    CUSTOM_FIELD_TYPE.TEXT
+  );
+  const [updatedEnumInput, setUpdatedEnumInput] = useState('');
 
   const parseEnumChoices = (input: string) => {
     return input
@@ -44,6 +50,17 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
         <TextField
           id="filled-basic"
           label="title"
+          onChange={(event) => {
+            setTitle(event.target.value);
+          }}
+          value={title}
+          variant="filled"
+        />
+      </Box>
+      <Box>
+        <TextField
+          id="filled-basic"
+          label="slug"
           onChange={(event) => {
             setTitle(event.target.value);
           }}
@@ -113,6 +130,77 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
               field.enum_choices?.map((choice) => (
                 <Typography key={choice.key}>- {choice.label}</Typography>
               ))}
+
+            <Button
+              onClick={() => {
+                setUpdatedFieldId(field.id);
+                setUpdatedTitle(field.title);
+                setUpdatedType(field.type);
+
+                if (field.enum_choices) {
+                  setUpdatedEnumInput(
+                    field.enum_choices.map((choice) => choice.label).join(', ')
+                  );
+                }
+              }}
+            >
+              Edit Field
+            </Button>
+
+            {updatedFieldId === field.id && (
+              <Box display="flex" flexDirection="column" gap={1}>
+                <TextField
+                  label="Title"
+                  onChange={(event) => setUpdatedTitle(event.target.value)}
+                  value={updatedTitle}
+                />
+
+                <TextField
+                  label="Type"
+                  onChange={(event) =>
+                    setUpdatedType(event.target.value as CUSTOM_FIELD_TYPE)
+                  }
+                  select
+                  value={updatedType}
+                >
+                  {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                {updatedType === CUSTOM_FIELD_TYPE.ENUM && (
+                  <TextField
+                    label="Enum values (comma separated)"
+                    onChange={(event) =>
+                      setUpdatedEnumInput(event.target.value)
+                    }
+                    value={updatedEnumInput}
+                  />
+                )}
+
+                <Button
+                  onClick={() => {
+                    updateField(
+                      {
+                        enum_choices:
+                          updatedType === CUSTOM_FIELD_TYPE.ENUM
+                            ? parseEnumChoices(updatedEnumInput)
+                            : undefined,
+                        title: updatedTitle,
+                        type: updatedType,
+                      },
+                      field.id
+                    );
+
+                    setUpdatedFieldId(null);
+                  }}
+                >
+                  Save
+                </Button>
+              </Box>
+            )}
 
             <Button onClick={() => removeField(field.id)}>remove</Button>
           </Box>
