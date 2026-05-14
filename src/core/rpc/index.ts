@@ -34,6 +34,7 @@ import { duplicateSurveyDef } from 'features/surveys/rpc/duplicateSurvey';
 import { loadPersonFieldsDef } from 'features/duplicates/rpc/loadPersonFields';
 import { getSurveyResponseStatsDef } from 'features/surveys/rpc/getSurveyResponseStats';
 import { getPublicOrganizationsDef } from 'features/public/rpc/organizations';
+import { addParticipantsDef } from 'features/events/rpc/addParticipants';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -73,6 +74,7 @@ export function createRPCRouter() {
   rpcRouter.register(getSuborgWithStatsDef);
   rpcRouter.register(loadPersonFieldsDef);
   rpcRouter.register(getPublicOrganizationsDef);
+  rpcRouter.register(addParticipantsDef);
 
   return rpcRouter;
 }

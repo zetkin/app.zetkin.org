@@ -29,7 +29,12 @@ import useFeature from 'utils/featureFlags/useFeature';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['feat.profile', 'feat.journeys', 'feat.tags', 'feat.breadcrumbs'],
+  localeScope: [
+    'feat.profile',
+    'feat.journeys',
+    'feat.tags',
+    'feat.breadcrumbs',
+  ],
 };
 
 export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (

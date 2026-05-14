@@ -269,10 +269,8 @@ export const scaffold =
     // Determine locale: NEXT_LOCALE cookie (set by middleware) > user.lang > Accept-Language
     const cookieLocale = contextFromNext.req.cookies?.NEXT_LOCALE;
     const detectedLang =
-      cookieLocale ||
-      ctx.user?.lang ||
-      getBrowserLanguage(contextFromNext.req);
-    const lang = LOCALES.includes(detectedLang as typeof LOCALES[number])
+      cookieLocale || ctx.user?.lang || getBrowserLanguage(contextFromNext.req);
+    const lang = LOCALES.includes(detectedLang as (typeof LOCALES)[number])
       ? detectedLang
       : DEFAULT_LOCALE;
 
@@ -283,7 +281,7 @@ export const scaffold =
     if (!options?.localeScope) {
       throw new Error(
         'localeScope is required in scaffold options. ' +
-          'Declare the message namespaces this page needs, e.g. [\'feat.campaigns\'].'
+          "Declare the message namespaces this page needs, e.g. ['feat.campaigns']."
       );
     }
     const messages = filterByScope(allMessages as Record<string, unknown>, [

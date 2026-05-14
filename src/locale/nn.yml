@@ -454,9 +454,9 @@ feat:
       title: En uventet feil oppsto.
     header:
       primaryButton:
-        undefined: Ring
+        start: Ring
       secondaryButton:
-        undefined: Avslutt
+        start: Avslutt
     instructions:
       noInstructions: Dette ringeoppdraget har ingen veiledning
       title: Veiledning
@@ -1665,7 +1665,7 @@ feat:
             Zetkin, for eksempel medlemsregisteret.
           field:
             email: E-post
-            undefined: Medlemsnummer
+            ext_id: Medlemsnummer
           importCheckboxDescription: Dette feltet blir brukt til å finne folk som finnes i
             Zetkin fra før, verdiene burde være unike.
           importCheckboxLabel: Bruk {importID} som import ID
@@ -1761,7 +1761,7 @@ feat:
           unknown: Ukjent
         ids:
           email: E-post
-          undefined: Medlemsnummer
+          ext_id: Medlemsnummer
         next: Neste
         noOrg: Ingen organisasjon
         noTags: Ingen etiketter

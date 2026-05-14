@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest, test } from '@jest/globals';
 import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 
@@ -12,11 +13,10 @@ jest.mock('next/dist/client/router', () =>
 );
 
 describe('<TagDialog />', () => {
-  let onSubmit: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;
+  const onSubmit = jest.fn((tag: NewTag | EditTag) => tag);
   const deleteTagCallback = jest.fn((tagId: number) => tagId);
 
   beforeEach(() => {
-    onSubmit = jest.fn((tag: NewTag | EditTag) => tag);
     singletonRouter.query = {
       orgId: '1',
     };

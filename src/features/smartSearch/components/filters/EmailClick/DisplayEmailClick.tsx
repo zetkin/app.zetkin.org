@@ -56,10 +56,10 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
                 filter.config.campaign
                   ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
                   : filter.config.email && !filter.config.links
-                  ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
-                  : filter.config.email && filter.config.links
-                  ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
-                  : LINK_SELECT_SCOPE.ANY_LINK
+                    ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
+                    : filter.config.email && filter.config.links
+                      ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
+                      : LINK_SELECT_SCOPE.ANY_LINK
               ]
             }
           />

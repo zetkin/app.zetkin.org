@@ -55,8 +55,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             TILESERVER: process.env.TILESERVER,
             ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
             ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
-            ZETKIN_PRIVACY_POLICY_LINK:
-              process.env.ZETKIN_PRIVACY_POLICY_LINK,
+            ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
           }}
           headers={headersObject}
           lang={locale}

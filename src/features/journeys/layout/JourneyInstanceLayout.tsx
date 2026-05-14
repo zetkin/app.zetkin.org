@@ -175,11 +175,14 @@ const JourneyInstanceLayout: React.FunctionComponent<
                 {journeyInstance.next_milestone.deadline && (
                   <>
                     {': '}
-                    {format.dateTime(new Date(journeyInstance.next_milestone.deadline), {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    })}
+                    {format.dateTime(
+                      new Date(journeyInstance.next_milestone.deadline),
+                      {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      }
+                    )}
                   </>
                 )}
               </Typography>

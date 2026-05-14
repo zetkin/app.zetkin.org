@@ -27,9 +27,10 @@ type LocalPersonViewCell = null | ZetkinPerson;
 const makeName = (cell: { first_name: string; last_name: string }) =>
   `${cell.first_name} ${cell.last_name}`;
 
-export default class LocalPersonColumnType
-  implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
-{
+export default class LocalPersonColumnType implements IColumnType<
+  LocalPersonViewColumn,
+  LocalPersonViewCell
+> {
   cellToString(cell: LocalPersonViewCell): string {
     return cell ? makeName(cell) : '';
   }

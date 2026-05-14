@@ -92,10 +92,9 @@ test.describe('Tag manager', () => {
       .locator('data-testid=TagManager-TagSelect-searchField')
       .type('Revolutionary');
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PUT'),
-      page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
-    ]);
+    await page.locator('data-testid=SubmitCancelButtons-submitButton').click();
+
+    await expect.poll(() => putTagLog().length).toBe(1);
 
     // Expect to have made request to put tag
     expect(putTagLog()[0].data).toEqual({

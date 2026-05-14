@@ -152,7 +152,10 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 justifyContent="flex-end"
               >
                 <Typography color={theme.palette.grey[500]} variant="caption">
-                  {format.dateTime(new Date(time), { hour: 'numeric', minute: 'numeric' })}
+                  {format.dateTime(new Date(time), {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  })}
                 </Typography>
               </Box>
             );

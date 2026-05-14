@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { Household } from '../types';
 import getAreaData from './getAreaData';
 

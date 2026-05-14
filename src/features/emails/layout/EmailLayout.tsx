@@ -34,7 +34,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
   const emailStatsFuture = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   const organization = useOrganization(orgId).data;
-  const themes = useEmailThemes(orgId).data || [];
+  const themes = useEmailThemes(orgId);
 
   if (!email || !organization) {
     return null;
@@ -121,7 +121,13 @@ const EmailLayout: FC<EmailLayoutProps> = ({
       >
         {children}
       </TabbedLayout>
-      <Dialog open={themes.length == 0}>
+      <Dialog
+        open={
+          !themes.isLoading &&
+          !themes.error &&
+          (!themes.data || themes.data.length === 0)
+        }
+      >
         <Box
           alignItems="center"
           display="flex"

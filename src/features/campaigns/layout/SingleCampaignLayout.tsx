@@ -46,10 +46,13 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
           <Box>
             {firstEvent && lastEvent ? (
               <>
-                {format.dateTime(new Date(removeOffset(firstEvent.start_time)), {
-                  day: '2-digit',
-                  month: 'long',
-                })}
+                {format.dateTime(
+                  new Date(removeOffset(firstEvent.start_time)),
+                  {
+                    day: '2-digit',
+                    month: 'long',
+                  }
+                )}
                 {` - `}
                 {format.dateTime(new Date(removeOffset(lastEvent.end_time)), {
                   day: '2-digit',

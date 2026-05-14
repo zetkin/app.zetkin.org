@@ -22,9 +22,10 @@ const getValue = (cell: SimpleData, column: PersonFieldViewColumn) => {
   }
 };
 
-export default class PersonFieldColumnType
-  implements IColumnType<ZetkinViewColumn, SimpleData>
-{
+export default class PersonFieldColumnType implements IColumnType<
+  ZetkinViewColumn,
+  SimpleData
+> {
   cellToString(cell: SimpleData, column: PersonFieldViewColumn): string {
     return getValue(cell, column);
   }

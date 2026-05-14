@@ -18,9 +18,10 @@ export type SurveyResponseViewCell = {
   text: string | null;
 }[];
 
-export default class SurveyResponseColumnType
-  implements IColumnType<SurveyResponseViewColumn, SurveyResponseViewCell>
-{
+export default class SurveyResponseColumnType implements IColumnType<
+  SurveyResponseViewColumn,
+  SurveyResponseViewCell
+> {
   cellToString(cell: SurveyResponseViewCell): string {
     return cell?.length && cell[0].text ? cell[0].text : '';
   }

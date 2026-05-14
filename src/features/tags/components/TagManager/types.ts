@@ -10,12 +10,14 @@ export type TagWithNewGroup<Tag> = Tag & { group?: NewTagGroup };
 export type NewTag = ZetkinTagPostBody | TagWithNewGroup<ZetkinTagPostBody>;
 export type EditTag = ZetkinTagPatchBody | TagWithNewGroup<ZetkinTagPatchBody>;
 
-export interface ZetkinTagGroupPostBody
-  extends Partial<Omit<ZetkinTagGroup, 'id'>> {
+export interface ZetkinTagGroupPostBody extends Partial<
+  Omit<ZetkinTagGroup, 'id'>
+> {
   title: string;
 }
-export interface ZetkinTagGroupPatchBody
-  extends Partial<Omit<ZetkinTagGroup, 'organization'>> {
+export interface ZetkinTagGroupPatchBody extends Partial<
+  Omit<ZetkinTagGroup, 'organization'>
+> {
   id: number;
   title: string;
 }

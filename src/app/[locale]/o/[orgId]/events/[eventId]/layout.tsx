@@ -35,9 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const t = await getTranslations();
 
     const baseTitle =
-      event.title ||
-      event.activity?.title ||
-      t('feat.events.common.noTitle');
+      event.title || event.activity?.title || t('feat.events.common.noTitle');
 
     const baseTags = getSeoTags(
       `${baseTitle} | ${event.organization.title}`,

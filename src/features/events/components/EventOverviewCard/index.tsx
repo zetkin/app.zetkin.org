@@ -38,6 +38,7 @@ import {
   makeNaiveDateString,
   makeNaiveTimeString,
   removeOffset,
+  getDayTimeInMinutes,
 } from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinFile, ZetkinLocation } from 'utils/types/zetkin';
 
@@ -70,6 +71,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   );
   const naiveEnd = `${endDate}T${endTime}`;
   const naiveStart = `${startDate}T${startTime}`;
+
+  const [singleDayEventsTimeSpan, setTimeSpan] = useState(
+    getDayTimeInMinutes(naiveEnd) - getDayTimeInMinutes(naiveStart)
+  );
 
   const [wantsToShowEndDate, setWantsToShowEndDate] = useState(false);
   const mustShowEndDate = dayjs(endDate).isAfter(dayjs(startDate), 'day');
@@ -114,6 +119,24 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
 
   const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
 
+  const adjustEndTime = () => {
+    let newEndTime = dayjs(naiveStart).add(
+      Math.abs(singleDayEventsTimeSpan) || 1,
+      'minutes'
+    );
+
+    const endTimeInMinutes = getDayTimeInMinutes(newEndTime);
+    const startTimeInMinutes = getDayTimeInMinutes(naiveStart);
+    setTimeSpan(endTimeInMinutes - startTimeInMinutes);
+
+    if (endTimeInMinutes < startTimeInMinutes) {
+      newEndTime = dayjs().set('hour', 23).set('minute', 59);
+    }
+
+    const endTimeString = makeNaiveTimeString(newEndTime.utc().toDate());
+    setEndTime(endTimeString);
+  };
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -151,8 +174,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                               newStartDate.utc().toDate()
                             );
                             setStartDate(startDateString);
-                            if (newStartDate > dayjs(endDate) || !showEndDate) {
+                            if (
+                              newStartDate >= dayjs(endDate) ||
+                              !showEndDate
+                            ) {
                               setEndDate(startDateString);
+                              adjustEndTime();
                             }
                           }
                         }}
@@ -191,6 +218,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                             setStartTime(startTimeString);
                           }
                         }}
+                        onSelectedSectionsChange={(newField) => {
+                          if (
+                            newField === null &&
+                            dayjs(naiveStart).diff(naiveEnd, 'day') === 0
+                          ) {
+                            adjustEndTime();
+                          }
+                        }}
                         slotProps={{
                           textField: {
                             InputProps: {
@@ -203,7 +238,15 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     );
                   }}
                   renderPreview={() => {
-                    return <>{format.dateTime(new Date(naiveStart), { hour: 'numeric', hour12: false, minute: 'numeric' })}</>;
+                    return (
+                      <>
+                        {format.dateTime(new Date(naiveStart), {
+                          hour: 'numeric',
+                          hour12: false,
+                          minute: 'numeric',
+                        })}
+                      </>
+                    );
                   }}
                   value={naiveStart}
                 />
@@ -250,6 +293,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                                   )
                                 ) {
                                   setWantsToShowEndDate(false);
+                                  adjustEndTime();
                                 }
                               }
                             }}
@@ -276,19 +320,30 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     return (
                       <TimeField
                         ampm={false}
-                        disableIgnoringDatePartForTimeValidation={true}
                         format="HH:mm"
                         fullWidth
                         inputRef={params.ref}
                         label={messages.eventOverviewCard.endTime()}
-                        minTime={dayjs(naiveStart).add(1, 'min')}
                         onChange={(newEndTime) => {
                           if (newEndTime) {
-                            if (newEndTime >= dayjs(naiveStart).add(1, 'min')) {
-                              const endTimeString = makeNaiveTimeString(
-                                newEndTime.utc().toDate()
+                            const endTimeString = makeNaiveTimeString(
+                              newEndTime.utc().toDate()
+                            );
+                            setEndTime(endTimeString);
+                          }
+                        }}
+                        onSelectedSectionsChange={(newField) => {
+                          if (
+                            newField === null &&
+                            dayjs(naiveStart).diff(naiveEnd, 'day') === 0
+                          ) {
+                            if (dayjs(naiveEnd) <= dayjs(naiveStart)) {
+                              adjustEndTime();
+                            } else {
+                              setTimeSpan(
+                                getDayTimeInMinutes(naiveEnd) -
+                                  getDayTimeInMinutes(naiveStart)
                               );
-                              setEndTime(endTimeString);
                             }
                           }
                         }}
@@ -305,7 +360,15 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     );
                   }}
                   renderPreview={() => {
-                    return <>{format.dateTime(new Date(naiveEnd), { hour: 'numeric', hour12: false, minute: 'numeric' })}</>;
+                    return (
+                      <>
+                        {format.dateTime(new Date(naiveEnd), {
+                          hour: 'numeric',
+                          hour12: false,
+                          minute: 'numeric',
+                        })}
+                      </>
+                    );
                   }}
                   value={naiveEnd}
                 />
@@ -329,8 +392,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           option === 'CREATE_NEW_LOCATION'
                             ? messages.eventOverviewCard.createLocation()
                             : option === 'NO_PHYSICAL_LOCATION'
-                            ? messages.eventOverviewCard.noLocation()
-                            : option.title
+                              ? messages.eventOverviewCard.noLocation()
+                              : option.title
                         }
                         onChange={(ev, option) => {
                           if (option === 'CREATE_NEW_LOCATION') {

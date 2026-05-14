@@ -29,8 +29,9 @@ export interface ZetkinCampaign {
   published: boolean;
 }
 
-export interface ZetkinCampaignPostBody
-  extends Partial<Omit<ZetkinCampaign, 'organization' | 'manager'>> {
+export interface ZetkinCampaignPostBody extends Partial<
+  Omit<ZetkinCampaign, 'organization' | 'manager'>
+> {
   title: string;
   manager_id?: number;
 }
@@ -247,8 +248,7 @@ export type ZetkinCallAssignmentPartial = Partial<
   Omit<ZetkinCallAssignment, 'organization'>
 >;
 
-export interface ZetkinCallAssignmentPostBody
-  extends ZetkinCallAssignmentPartial {
+export interface ZetkinCallAssignmentPostBody extends ZetkinCallAssignmentPartial {
   goal_filters: [];
   target_filters: [];
 }
@@ -270,8 +270,9 @@ export interface ZetkinSurvey {
   signature: 'require_signature' | 'allow_anonymous' | 'force_anonymous';
 }
 
-export interface ZetkinSurveyPostBody
-  extends Partial<Omit<ZetkinSurvey, 'organization' | 'id'>> {
+export interface ZetkinSurveyPostBody extends Partial<
+  Omit<ZetkinSurvey, 'organization' | 'id'>
+> {
   title: string;
 }
 
@@ -406,8 +407,9 @@ export interface ZetkinSurveySubmission {
   responses?: ZetkinSurveyQuestionResponse[]; // TODO: Lying! Segregate with/without responses
 }
 
-export interface ZetkinSurveySubmissionPatchBody
-  extends Partial<Omit<ZetkinTag, 'organization' | 'respondent' | 'survey'>> {
+export interface ZetkinSurveySubmissionPatchBody extends Partial<
+  Omit<ZetkinTag, 'organization' | 'respondent' | 'survey'>
+> {
   respondent_id: number | null;
 }
 
@@ -449,14 +451,16 @@ export interface ZetkinTag {
 
 export type ZetkinAppliedTag = ZetkinTag & { value: string | number | null };
 
-export interface ZetkinTagPostBody
-  extends Partial<Omit<ZetkinTag, 'id' | 'group' | 'organization'>> {
+export interface ZetkinTagPostBody extends Partial<
+  Omit<ZetkinTag, 'id' | 'group' | 'organization'>
+> {
   title: string;
   group_id?: number | null;
 }
 
-export interface ZetkinTagPatchBody
-  extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
+export interface ZetkinTagPatchBody extends Partial<
+  Omit<ZetkinTag, 'group' | 'organization'>
+> {
   id: number;
   group_id?: number | null;
 }

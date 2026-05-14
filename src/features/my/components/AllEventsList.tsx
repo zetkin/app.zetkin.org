@@ -70,7 +70,7 @@ const AllEventsList: FC = () => {
     if (rangeParam) {
       return rangeParam.split(',').map((d) => (d ? dayjs(d) : null)) as [
         Dayjs | null,
-        Dayjs | null
+        Dayjs | null,
       ];
     }
     return [null, null];

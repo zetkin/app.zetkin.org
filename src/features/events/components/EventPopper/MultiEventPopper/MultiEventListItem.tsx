@@ -31,14 +31,20 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   const messages = useMessages(messageIds);
   const state = useEventState(event.organization.id, event.id);
   const timeSpan = `${format.dateTime(
-    new Date(removeOffset(
-      'originalStartTime' in event ? event.originalStartTime : event.start_time
-    )),
+    new Date(
+      removeOffset(
+        'originalStartTime' in event
+          ? event.originalStartTime
+          : event.start_time
+      )
+    ),
     { hour: 'numeric', minute: 'numeric' }
   )}-${format.dateTime(
-    new Date(removeOffset(
-      'originalEndTime' in event ? event.originalEndTime : event.end_time
-    )),
+    new Date(
+      removeOffset(
+        'originalEndTime' in event ? event.originalEndTime : event.end_time
+      )
+    ),
     { hour: 'numeric', minute: 'numeric' }
   )}`;
 

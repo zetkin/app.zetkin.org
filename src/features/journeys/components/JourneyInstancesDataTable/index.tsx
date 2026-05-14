@@ -32,7 +32,12 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   const [quickSearch, setQuickSearch] = useState('');
   const rows = getRows({ journeyInstances, quickSearch });
 
-  const rawColumns = getColumns(messages, journeyInstances, tagColumnsData, format);
+  const rawColumns = getColumns(
+    messages,
+    journeyInstances,
+    tagColumnsData,
+    format
+  );
   const { columns, setColumnOrder, setColumnWidth } =
     useConfigurableDataGridColumns(storageKey, rawColumns);
 

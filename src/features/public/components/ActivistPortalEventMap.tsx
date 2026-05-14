@@ -71,17 +71,23 @@ export const ActivistPortalEventMap: FC<{
         events
           .map((event) => event.location)
           .filter(notEmpty)
-          .reduce((acc, location) => {
-            const key = `${location.lat},${location.lng}`;
-            if (!acc[key]) {
-              acc[key] = {
-                count: 0,
-                ...location,
-              };
-            }
-            acc[key].count += 1;
-            return acc;
-          }, {} as Record<string, { count: number; id: number; lat: Latitude; lng: Longitude }>)
+          .reduce(
+            (acc, location) => {
+              const key = `${location.lat},${location.lng}`;
+              if (!acc[key]) {
+                acc[key] = {
+                  count: 0,
+                  ...location,
+                };
+              }
+              acc[key].count += 1;
+              return acc;
+            },
+            {} as Record<
+              string,
+              { count: number; id: number; lat: Latitude; lng: Longitude }
+            >
+          )
       ),
     [events]
   );

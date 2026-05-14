@@ -15,6 +15,10 @@ on:
         description: 'The name of the script that runs the test.'
         required: true
         type: string
+      upload-name:
+        description: 'The name of the artifact to upload.'
+        required: false
+        type: string
       upload-path:
         description: 'The path of a folder to upload.'
         required: false
@@ -59,8 +63,15 @@ jobs:
       - name: Test
         run: npm run ${{ inputs.test-script }}
 
+      - name: Validate upload inputs
+        if: inputs.upload-name && !inputs.upload-path
+        run: |
+          echo "upload-name requires upload-path" >&2
+          exit 1
+
       - uses: actions/upload-artifact@v4
         if: always() && inputs.upload-path
         with:
+          name: ${{ inputs.upload-name || 'artifact' }}
           path: ${{ inputs.upload-path }}
           retention-days: 30

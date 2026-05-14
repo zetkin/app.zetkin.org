@@ -1,6 +1,4 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
-  preset: 'ts-jest',
   setupFiles: ['<rootDir>/src/utils/testing/setup.ts'],
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: [
@@ -9,6 +7,10 @@ module.exports = {
   ],
   transform: {
     '^.+\\.tsx?$': ['babel-jest', { configFile: './.babelrc.jest.json' }],
+    '^.+\\.m?jsx?$': ['babel-jest', { configFile: './.babelrc.jest.json' }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(next-intl|use-intl|@formatjs|intl-messageformat)/)',
+  ],
   moduleDirectories: ['node_modules', 'src'],
 };

@@ -38,9 +38,7 @@ const ZUIRelativeTime: React.FunctionComponent<ZUIRelativeTimeProps> = ({
         <ZUIDateTime convertToLocal={convertToLocal} datetime={datetime} />
       }
     >
-      <span>
-        {format.relativeTime(effectiveDate)}
-      </span>
+      <span>{format.relativeTime(effectiveDate)}</span>
     </Tooltip>
   );
 };

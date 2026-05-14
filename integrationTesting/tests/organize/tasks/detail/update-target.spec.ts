@@ -47,14 +47,23 @@ test.describe('Task detail page', async () => {
     await page.click('data-testid=StartsWith-select-all');
     await page.click('data-testid=FilterForm-saveButton');
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/1/people/queries/${SpeakToFriend.target.id}`
-      ),
-      page.click('data-testid=QueryOverview-saveButton'),
-    ]);
+    await page.click('data-testid=QueryOverview-saveButton');
 
     // Check body of request
+    await expect
+      .poll(
+        () =>
+          moxy
+            .log()
+            .filter(
+              (req) =>
+                req.method === 'PATCH' &&
+                req.path ===
+                  `/v1/orgs/1/people/queries/${SpeakToFriend.target.id}`
+            ).length
+      )
+      .toBeGreaterThan(0);
+
     const patchRequest = moxy
       .log()
       .find(

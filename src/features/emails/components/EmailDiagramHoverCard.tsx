@@ -98,7 +98,10 @@ const EmailDiagramHoverCard: FC<Props> = ({
             >
               <Box>
                 <Typography variant="body2">
-                  {format.dateTime(new Date(secondaryPoint.date), { day: 'numeric', month: 'short' })}
+                  {format.dateTime(new Date(secondaryPoint.date), {
+                    day: 'numeric',
+                    month: 'short',
+                  })}
                 </Typography>
                 <Typography variant="body2">
                   <Msg

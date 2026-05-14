@@ -38,10 +38,7 @@ export function injectTranslator<MapType extends MessageMap>(
         return values ? t(val._id, values) : t(val._id);
       };
     } else {
-      output[key] = injectTranslator(
-        val,
-        t
-      ) as UseMessagesMap<typeof val>;
+      output[key] = injectTranslator(val, t) as UseMessagesMap<typeof val>;
     }
   });
 

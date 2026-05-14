@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import clusterEventsForWeekCalender from './clusterEventsForWeekCalender';
 import { ZetkinEvent } from 'utils/types/zetkin';

@@ -35,7 +35,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   const event = useEvent(orgId, eventId)?.data;
   const participantStatus = useParticipantStatus(orgId, eventId);
   const {
-    numAllSignedParticipants,
+    numSignedUpParticipants,
     numAvailParticipants,
     numCancelledParticipants,
     numConfirmedParticipants,
@@ -149,7 +149,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
             <Typography color={'secondary'}>
               {messages.participantSummaryCard.pending()}
             </Typography>
-            <Typography variant="h4">{numAllSignedParticipants}</Typography>
+            <Typography variant="h4">{numSignedUpParticipants}</Typography>
           </Box>
           {eventHasStarted ? (
             <Box display="flex" flexDirection="column">

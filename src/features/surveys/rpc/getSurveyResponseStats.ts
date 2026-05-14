@@ -252,7 +252,7 @@ async function handle(
 
   const [survey, submissions]: [
     ZetkinSurveyExtended,
-    ZetkinSurveySubmission[]
+    ZetkinSurveySubmission[],
   ] = await Promise.all([
     apiClient.get<ZetkinSurveyExtended>(
       `/api/orgs/${orgId}/surveys/${surveyId}`

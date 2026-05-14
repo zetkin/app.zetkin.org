@@ -50,7 +50,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       (nativeSlug) => nativeSlug == slug
     );
     if (isNativeField) {
-      const typedSlug = slug as typeof nativePersonFields[number];
+      const typedSlug = slug as (typeof nativePersonFields)[number];
       return globalMessages.personFields[typedSlug]();
     } else {
       const field = customFields.data?.find((field) => field.slug == slug);

@@ -4,6 +4,7 @@ import { FormEvent, useEffect } from 'react';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
 import TimeFrame from '../TimeFrame';
@@ -45,9 +46,6 @@ const PersonField = ({
   const filteredFields = fields.filter(
     (f) => f.type !== CUSTOM_FIELD_TYPE.JSON
   );
-  const filteredFieldsSorted = filteredFields.sort((ff1, ff2) => {
-    return ff1.title.localeCompare(ff2.title);
-  });
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<Partial<PersonFieldFilterConfig>>(initialFilter);
@@ -120,16 +118,14 @@ const PersonField = ({
 
   function getFieldInput(type?: CUSTOM_FIELD_TYPE | null): JSX.Element {
     const fieldSelect = selectedField ? (
-      <StyledSelect
+      <StyledAutocomplete
+        items={filteredFields.map((f) => ({
+          id: f.slug,
+          label: f.title,
+        }))}
         onChange={(e) => handleFieldChange(e.target.value)}
-        value={selectedField?.slug}
-      >
-        {filteredFieldsSorted.map((f) => (
-          <MenuItem key={f.slug} value={f.slug}>
-            {f.title}
-          </MenuItem>
-        ))}
-      </StyledSelect>
+        value={filter.config.field}
+      />
     ) : (
       <StyledSelect
         SelectProps={{

@@ -33,9 +33,7 @@ function UnderlinedMsg<Values extends ValueRecord>({
 }: UnderlinedMsgProps<Values>): JSX.Element {
   const t = useTranslations();
 
-  const str = values
-    ? t(id._id, values as TranslationValues)
-    : t(id._id);
+  const str = values ? t(id._id, values as TranslationValues) : t(id._id);
 
   return <UnderlinedText text={str} />;
 }

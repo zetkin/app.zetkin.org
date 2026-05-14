@@ -28,9 +28,9 @@ const fetchSubOrgsByRootOrgs = (rootOrgIds: number[], apiClient: IApiClient) =>
   Promise.all(
     rootOrgIds.map((orgId) =>
       apiClient
-        .get<ZetkinSubOrganization[]>(
-          `/api/orgs/${orgId}/sub_organizations?recursive`
-        )
+        .get<
+          ZetkinSubOrganization[]
+        >(`/api/orgs/${orgId}/sub_organizations?recursive`)
         .catch(() => [] as ZetkinSubOrganization[])
     )
   );

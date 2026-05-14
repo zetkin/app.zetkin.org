@@ -85,7 +85,7 @@ export default makeMessages('feat.import', {
         ),
         field: {
           email: m('Email'),
-          ['ext_id']: m('External ID'),
+          ext_id: m('External ID'),
           id: m('Zetkin ID'),
         },
         importCheckboxDescription: m(

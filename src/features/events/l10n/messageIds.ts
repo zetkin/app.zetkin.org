@@ -110,6 +110,7 @@ export default makeMessages('feat.events', {
     backToEvents: m('Back to event list'),
     backToLocations: m('Back to locations'),
     backToShifts: m('Back to shift list'),
+    bookAll: m('Book all'),
     booked: m('Booked'),
     cancel: m('Cancel'),
     cancelWarning: m(

@@ -33,13 +33,9 @@ export default function useEventsFromDateRange(
     const apiEndDate = new Date(endDate);
     apiEndDate.setDate(apiEndDate.getDate() + 1);
     const promise = apiClient
-      .get<ZetkinEvent[]>(
-        `/api/orgs/${orgId}/actions?filter=start_time>${startDate
-          .toISOString()
-          .slice(0, 10)}&filter=end_time<${apiEndDate
-          .toISOString()
-          .slice(0, 10)}`
-      )
+      .get<
+        ZetkinEvent[]
+      >(`/api/orgs/${orgId}/actions?filter=start_time>${startDate.toISOString().slice(0, 10)}&filter=end_time<${apiEndDate.toISOString().slice(0, 10)}`)
       .then((events) => {
         dispatch(eventRangeLoaded([events, dateRange]));
       });

@@ -447,8 +447,9 @@ export default makeMessages('feat.smartSearch', {
       numPeople: m<{
         numPeople: number;
       }>('{numPeople, plural, one {person} other {people}}'),
-      numPeopleSelect:
-        m<{ numPeopleSelect: ReactElement | number }>('{numPeopleSelect}'),
+      numPeopleSelect: m<{ numPeopleSelect: ReactElement | number }>(
+        '{numPeopleSelect}'
+      ),
     },
     official: {
       examples: {

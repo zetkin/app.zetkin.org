@@ -367,9 +367,9 @@ feat:
       title: Ett oväntat fel inträffade.
     header:
       primaryButton:
-        undefined: Avsluta & rapportera
+        call: Avsluta & rapportera
       secondaryButton:
-        undefined: Avsluta
+        start: Avsluta
     instructions:
       title: Instruktioner
     report:
@@ -1505,7 +1505,7 @@ feat:
             för att hitta och identifiera personer i Zetkin.
           field:
             email: E-post
-            undefined: Externt ID
+            ext_id: Externt ID
             id: Zetkin ID
           importID: Import ID
           skipRowDescription: Inga nya personer kommer att skapas
@@ -1594,7 +1594,7 @@ feat:
           unknown: Okänt
         ids:
           email: E-post
-          undefined: Externt ID
+          ext_id: Externt ID
           id: Zetkin ID
         next: Nästa
         noOrg: Ingen organisation

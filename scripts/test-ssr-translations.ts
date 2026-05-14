@@ -59,10 +59,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
   },
 };
 
-async function fetchPage(
-  path: string,
-  lang: string
-): Promise<string> {
+async function fetchPage(path: string, lang: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const req = http.get(
       `${BASE}${path}`,
@@ -135,7 +132,11 @@ async function runTests() {
   for (const lang of ['en', 'sv', 'de', 'da', 'nn']) {
     const html = await fetchPage('/register', lang);
     const langMatch = html.match(/lang="([^"]+)"/);
-    assert(langMatch?.[1] === lang, `lang="${lang}"`, `got "${langMatch?.[1]}"`);
+    assert(
+      langMatch?.[1] === lang,
+      `lang="${lang}"`,
+      `got "${langMatch?.[1]}"`
+    );
   }
 
   // Test: No locale prefix in URLs

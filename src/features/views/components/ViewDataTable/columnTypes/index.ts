@@ -22,7 +22,7 @@ import { ZetkinCustomField, ZetkinTag } from 'utils/types/zetkin';
 
 export interface IColumnType<
   ColumnType = ZetkinViewColumn,
-  CellType = unknown
+  CellType = unknown,
 > {
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(

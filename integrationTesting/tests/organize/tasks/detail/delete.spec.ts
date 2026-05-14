@@ -33,13 +33,10 @@ test.describe('Task detail pagee', async () => {
       await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
       await page.click('data-testid=ZUIEllipsisMenu-item-deleteTask');
 
-      await Promise.all([
-        page.waitForNavigation(),
-        page.click('button:text("Confirm")'),
-      ]);
+      await page.click('button:text("Confirm")');
 
-      expect(page.url()).toEqual(appUri + '/organize/1/projects/1');
-      expect(log().length).toEqual(1);
+      await expect(page).toHaveURL(appUri + '/organize/1/projects/1');
+      await expect.poll(() => log().length).toBe(1);
     });
   });
 });

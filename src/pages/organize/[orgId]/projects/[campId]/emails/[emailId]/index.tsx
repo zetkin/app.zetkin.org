@@ -23,7 +23,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: ['feat.emails', 'feat.organizations', 'feat.campaigns', 'feat.breadcrumbs'],
+    localeScope: [
+      'feat.emails',
+      'feat.organizations',
+      'feat.campaigns',
+      'feat.breadcrumbs',
+    ],
   }
 );
 
@@ -36,8 +41,13 @@ const EmailPage: PageWithLayout = () => {
     updateEmail,
     updateTargets,
   } = useEmail(orgId, emailId);
-  const { numBlocked, numTargetMatches, readyTargets, lockedReadyTargets } =
-    useEmailStats(orgId, emailId);
+  const {
+    numBlocked,
+    numTargetMatches,
+    readyTargets,
+    lockedReadyTargets,
+    numSent,
+  } = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
 
   const onServer = useServerSide();
@@ -86,6 +96,7 @@ const EmailPage: PageWithLayout = () => {
             <EmailTargetsReady
               lockedReadyTargets={lockedReadyTargets}
               missingEmail={numBlocked.noEmail}
+              numSent={numSent}
               readyTargets={readyTargets}
               state={emailState}
             />

@@ -21,16 +21,19 @@ import { ZetkinLocation } from 'features/areaAssignments/types';
 
 const OrganizerMap = dynamic(
   () =>
-    import(
-      '../../../../../../../features/areaAssignments/components/OrganizerMap'
-    ),
+    import('../../../../../../../features/areaAssignments/components/OrganizerMap'),
   { ssr: false }
 );
 
 const scaffoldOptions = {
   authLevelRequired: 2,
   featuresRequired: [AREAS],
-  localeScope: ['feat.areaAssignments', 'feat.areas', 'feat.campaigns', 'feat.breadcrumbs'],
+  localeScope: [
+    'feat.areaAssignments',
+    'feat.areas',
+    'feat.campaigns',
+    'feat.breadcrumbs',
+  ],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

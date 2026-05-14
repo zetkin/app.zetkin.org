@@ -87,8 +87,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                     document.cookie = `NEXT_LOCALE=${selectedLanguage};path=/;max-age=31536000`;
                   } else {
                     // "auto" mode: remove cookie so middleware uses Accept-Language
-                    document.cookie =
-                      'NEXT_LOCALE=;path=/;max-age=0';
+                    document.cookie = 'NEXT_LOCALE=;path=/;max-age=0';
                   }
                   location.reload();
                 }}

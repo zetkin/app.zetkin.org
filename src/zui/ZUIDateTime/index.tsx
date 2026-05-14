@@ -17,7 +17,11 @@ const ZUIDateTime: React.FunctionComponent<ZUIDateTimeProps> = ({
 
   return (
     <>
-      {format.dateTime(dateValue, { day: 'numeric', month: 'long', year: 'numeric' })}{' '}
+      {format.dateTime(dateValue, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })}{' '}
       {format.dateTime(dateValue, { hour: 'numeric', minute: 'numeric' })}
     </>
   );
