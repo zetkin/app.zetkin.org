@@ -67,7 +67,7 @@ export default function useCreateEmailTheme(
   const dispatch = useDispatch();
 
   const createEmailTheme = async () => {
-    dispatch(themeCreate(orgId));
+    dispatch(themeCreate());
     const theme = await apiClient.post<EmailTheme>(
       `/api/orgs/${orgId}/email_themes`,
       {
@@ -76,7 +76,7 @@ export default function useCreateEmailTheme(
         frame_mjml: defaultFrameMjml,
       }
     );
-    dispatch(themeCreated([orgId, theme]));
+    dispatch(themeCreated([theme, orgId]));
     return theme;
   };
 

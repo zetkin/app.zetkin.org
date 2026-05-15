@@ -27,7 +27,8 @@ export default function useEmailTheme(
 ): UseCreateEmailThemeReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const themeItem = useAppSelector((state) => state.emails.themesById[themeId]);
+  const themeItems = useAppSelector((state) => state.emails.themeList.items);
+  const themeItem = themeItems.find((item) => item.id == themeId);
 
   const themeFuture = loadItemIfNecessary(themeItem, dispatch, {
     actionOnLoad: () => themeLoad(themeId),
@@ -38,7 +39,7 @@ export default function useEmailTheme(
 
   const deleteEmailTheme = async (themeId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/email_themes/${themeId}`);
-    dispatch(themeDeleted([orgId, themeId]));
+    dispatch(themeDeleted(themeId));
   };
 
   const duplicateEmailTheme = async () => {
@@ -55,7 +56,7 @@ export default function useEmailTheme(
         frame_mjml: oldTheme.frame_mjml,
       }
     );
-    dispatch(themeCreated([orgId, newTheme]));
+    dispatch(themeCreated([newTheme, orgId]));
     return newTheme;
   };
 
@@ -66,7 +67,7 @@ export default function useEmailTheme(
       return await apiClient
         .patch<EmailTheme>(`/api/orgs/${orgId}/email_themes/${themeId}`, data)
         .then((theme: EmailTheme) => {
-          dispatch(themeUpdated([orgId, theme, mutating]));
+          dispatch(themeUpdated([theme, mutating]));
           return theme;
         });
     } catch (e) {
