@@ -31,8 +31,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
       }
     };
 
-    const timer = setTimeout(update, 200);
-    return () => clearTimeout(timer);
+    update();
   }, [theme, content]);
 
   return (
