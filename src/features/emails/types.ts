@@ -178,6 +178,8 @@ export type EmailThemePatchBody = Partial<
   Pick<EmailTheme, 'block_attributes' | 'css' | 'frame_mjml'>
 >;
 
+export type ThemeSection = keyof EmailThemePatchBody;
+
 export type ZetkinEmailRecipient = {
   delivered: string | null;
   email: {

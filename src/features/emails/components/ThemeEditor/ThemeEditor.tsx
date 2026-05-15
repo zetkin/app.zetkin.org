@@ -8,7 +8,7 @@ import messageIds from 'features/emails/l10n/messageIds';
 import ThemeEditField, {
   serializeField,
 } from 'features/emails/components/ThemeEditor/ThemeEditField';
-import { EmailThemePatchBody } from 'features/emails/types';
+import { EmailThemePatchBody, ThemeSection } from 'features/emails/types';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
 import ThemeActionsEllipsisMenu from 'features/emails/components/ThemeActionsEllipsisMenu';
@@ -21,8 +21,6 @@ interface ThemeEditorProps {
     React.SetStateAction<Record<ThemeSection, string>>
   >;
 }
-
-type ThemeSection = keyof EmailThemePatchBody;
 
 const ThemeEditor: React.FC<ThemeEditorProps> = ({
   orgId,

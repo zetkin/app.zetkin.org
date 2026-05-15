@@ -10,6 +10,7 @@ import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ThemeEditor from 'features/emails/components/ThemeEditor/ThemeEditor';
 import ThemePreview from 'features/emails/components/ThemeEditor/ThemePreview';
+import { ThemeSection } from 'features/emails/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -30,7 +31,7 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
   const { orgId, themeId } = useNumericRouteParams();
   const { isLoading, data: theme } = useEmailTheme(orgId, themeId);
 
-  const [localValues, setLocalValues] = useState<Record<string, string>>({
+  const [localValues, setLocalValues] = useState<Record<ThemeSection, string>>({
     block_attributes: '',
     css: '',
     frame_mjml: '',
