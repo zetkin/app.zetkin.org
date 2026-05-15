@@ -76,8 +76,8 @@ test.describe('Journey instance notes', () => {
       {}
     );
 
-    await page.click('[data-slate-editor=true]');
-    await page.type('[data-slate-editor=true]', newNote.text);
+    await page.click('.ProseMirror.remirror-editor');
+    await page.type('.ProseMirror.remirror-editor', newNote.text);
 
     await page.click('[data-testid=TimelineAddNote-submitButton]');
 
@@ -85,7 +85,7 @@ test.describe('Journey instance notes', () => {
 
     expect(notePostMock.log()[0].data).toEqual({
       file_ids: [],
-      text: `${newNote.text}\n`,
+      text: `${newNote.text}`,
     });
   });
 
@@ -107,7 +107,9 @@ test.describe('Journey instance notes', () => {
     );
 
     // Click input
-    await page.click('[data-slate-editor=true]:below(:text("added a note"))');
+    await page.click(
+      '.ProseMirror.remirror-editor:below(:text("added a note"))'
+    );
     // Delete existing text
     for (let i = 0; i < NoteUpdate.details.note.text.length; i++) {
       // Delete forwards and backwards in case caret
@@ -116,7 +118,7 @@ test.describe('Journey instance notes', () => {
       await page.keyboard.press('Backspace');
     }
     await page.type(
-      '[data-slate-editor=true]:below(:text("added a note"))',
+      '.ProseMirror.remirror-editor:below(:text("added a note"))',
       newNote.text
     );
 
@@ -127,7 +129,7 @@ test.describe('Journey instance notes', () => {
     await expect.poll(() => notePatchMock.log().length).toBe(1);
 
     expect(notePatchMock.log()[0].data).toEqual({
-      text: `${newNote.text}\n`,
+      text: `${newNote.text}`,
     });
   });
 });

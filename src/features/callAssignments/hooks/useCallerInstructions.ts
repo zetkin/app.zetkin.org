@@ -31,9 +31,6 @@ export default function useCallerInstructions(
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
   const { data: callAssignment } = useCallAssignment(orgId, assignmentId);
 
-  //Used to force re-render
-  const [pointlessState, setPointlessState] = useState(0);
-
   const getInstructions = () => {
     const lsInstructions = localStorage.getItem(key);
 
@@ -46,20 +43,22 @@ export default function useCallerInstructions(
     return lsInstructions || '';
   };
 
+  const [instructions, setInstructionsInner] = useState(() =>
+    getInstructions()
+  );
+
   const revert = () => {
     if (!callAssignment) {
       return;
     }
 
     localStorage.setItem(key, callAssignment?.instructions);
-    //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
-    setPointlessState(pointlessState + 1);
+    setInstructionsInner(callAssignment?.instructions);
   };
 
   const setInstructions = (instructions: string): void => {
     localStorage.setItem(key, instructions);
-    //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
-    setPointlessState(pointlessState + 1);
+    setInstructionsInner(instructions);
   };
 
   const save = (): IFuture<CallAssignmentData> => {
@@ -116,7 +115,6 @@ export default function useCallerInstructions(
   };
 
   const saving = isSaving();
-  const instructions = getInstructions();
   const unsavedChanges = hasUnsavedChanges();
 
   return {

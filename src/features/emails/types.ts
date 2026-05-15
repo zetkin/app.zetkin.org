@@ -1,5 +1,7 @@
 import { MJMLJsonObject } from 'mjml-core';
 
+import { EmailVariable } from 'zui/ZUIEditor/types';
+
 export enum BLOCK_TYPES {
   BUTTON = 'button',
   HEADER = 'header',
@@ -30,7 +32,7 @@ export type StringNode = {
 
 export type VariableNode = {
   kind: InlineNodeKind.VARIABLE;
-  name: string;
+  name: EmailVariable;
 };
 
 export type LinkNode = {
@@ -104,13 +106,6 @@ export type EmailContentBlock =
 export type EmailContent = {
   blocks: EmailContentBlock[];
 };
-
-export enum BlockProblem {
-  INVALID_BUTTON_URL = 'invalidButtonURL',
-  DEFAULT_BUTTON_TEXT = 'defaultButtonText',
-  BUTTON_TEXT_MISSING = 'buttonTextMissing',
-  INVALID_LINK_URL = 'invalidLinkURL',
-}
 
 export enum DeliveryProblem {
   EMPTY = 'empty',
@@ -231,3 +226,5 @@ export type ZetkinEmailStats = {
   num_sent: number;
   num_target_matches: number;
 };
+
+export type MarkNode = StringNode | BoldNode | ItalicNode | LinkNode;

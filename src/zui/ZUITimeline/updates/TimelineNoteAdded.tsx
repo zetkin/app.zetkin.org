@@ -11,7 +11,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
-import ZUITextEditor from '../../ZUITextEditor';
+import ZUIMarkdownEditor from '../../ZUIMarkdownEditor';
 import { ZetkinFile, ZetkinNote } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
 
@@ -63,7 +63,7 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
             setEditing(false);
           }}
         >
-          <ZUITextEditor
+          <ZUIMarkdownEditor
             clear={0}
             fileUploads={[]}
             initialValue={noteText}

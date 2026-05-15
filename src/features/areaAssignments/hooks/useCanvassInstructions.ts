@@ -16,8 +16,6 @@ export default function useAreaAssignmentInstructions(
   );
   const canvassAssignmentItems = areaAssignmentsSlice.areaAssignmentList.items;
   const key = `canvassInstructions-${areaAssId}`;
-  //Used to force re-render
-  const [pointlessState, setPointlessState] = useState(0);
 
   const getInstructions = () => {
     const lsInstructions = localStorage.getItem(key);
@@ -56,7 +54,7 @@ export default function useAreaAssignmentInstructions(
     return canvassAssignment?.instructions === '';
   };
 
-  const instructions = getInstructions();
+  const [instructions, setInstructions] = useState(() => getInstructions());
   const saving = isSaving();
   const unsavedChanges = hasUnsavedChanges();
 
@@ -72,8 +70,7 @@ export default function useAreaAssignmentInstructions(
       }
 
       localStorage.setItem(key, canvassAssignment?.instructions);
-      //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
-      setPointlessState(pointlessState + 1);
+      setInstructions(canvassAssignment?.instructions);
     },
     save: () => {
       const lsInstructions = localStorage.getItem(key) || '';
@@ -85,8 +82,7 @@ export default function useAreaAssignmentInstructions(
     },
     setInstructions: (instructions: string): void => {
       localStorage.setItem(key, instructions);
-      //TODO: remove this ugly ass forced re-render by making ZUITextEditor better
-      setPointlessState(pointlessState + 1);
+      setInstructions(instructions);
     },
   };
 }

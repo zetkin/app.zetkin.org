@@ -91,6 +91,7 @@ export default function mockState(overrides?: RootState) {
       userEventList: remoteList(),
     },
     files: {
+      fileByFileId: {},
       fileList: remoteList(),
     },
     import: {
