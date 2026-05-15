@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Box, Button, Snackbar, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { useRouter } from 'next/router';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -12,6 +11,7 @@ import { EmailThemePatchBody, ThemeSection } from 'features/emails/types';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
 import ThemeActionsEllipsisMenu from 'features/emails/components/ThemeActionsEllipsisMenu';
+import { useUnsavedChanges } from 'core/hooks/useUnsavedChanges';
 
 interface ThemeEditorProps {
   orgId: number;
@@ -28,9 +28,6 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<ThemeSection>('frame_mjml');
-  const router = useRouter();
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [confirmUrl, setConfirmUrl] = useState<null | string>(null);
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -45,6 +42,8 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
       localValues.block_attributes !==
         JSON.stringify(theme.block_attributes, null, 2)
     : false;
+
+  const { confirmOpen, onCancel, onConfirm } = useUnsavedChanges(isDirty);
 
   const handleSaveAll = async () => {
     setError(null);
@@ -64,33 +63,6 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
       setError(result);
     }
   };
-
-  const bypassUnsavedChanges = useRef(false);
-
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      if (!isDirty || bypassUnsavedChanges.current) {
-        return;
-      }
-
-      setConfirmOpen(true);
-      setConfirmUrl(url);
-
-      router.events.emit(
-        'routeChangeError',
-        new Error('Route canceled'),
-        router.asPath,
-        { shallow: false }
-      );
-      throw 'Route canceled';
-    };
-
-    router.events.on('routeChangeStart', handleRouteChange);
-
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
-  }, [isDirty, router]);
 
   return (
     <>
@@ -148,25 +120,20 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
               <ThemeActionsEllipsisMenu orgId={orgId} themeId={themeId} />
             </Box>
           </Box>
-          {Object.keys(localValues).map((section) => (
+          {(Object.keys(localValues) as ThemeSection[]).map((section) => (
             <TabPanel key={section} sx={{ flex: 1, p: 2 }} value={section}>
               <ThemeEditField
-                editingSection={section as ThemeSection}
-                onChange={(newVal) => onChange(section as ThemeSection, newVal)}
-                value={localValues[section as ThemeSection]}
+                editingSection={section}
+                onChange={(newVal) => onChange(section, newVal)}
+                value={localValues[section]}
               />
             </TabPanel>
           ))}
         </TabContext>
       </Box>
       <ZUIConfirmDialog
-        onCancel={() => setConfirmOpen(false)}
-        onSubmit={async () => {
-          if (confirmUrl) {
-            bypassUnsavedChanges.current = true;
-            await router.push(confirmUrl);
-          }
-        }}
+        onCancel={onCancel}
+        onSubmit={onConfirm}
         open={confirmOpen}
         submitText={messages.themes.themeEditor.unsavedChangesConfirm()}
         warningText={messages.themes.themeEditor.unsavedChangesWarning()}
