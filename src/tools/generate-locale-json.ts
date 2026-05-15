@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Build script: Convert YAML locale files to static JSON files.
  *

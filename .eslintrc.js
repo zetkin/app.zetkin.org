@@ -134,12 +134,5 @@ module.exports = {
         '@typescript-eslint/no-floating-promises': ['error'],
       },
     },
-    {
-      files: ['scripts/**/*.ts'],
-      rules: {
-        'no-console': 'off',
-        'sort-keys': 'off',
-      },
-    },
   ],
 };
