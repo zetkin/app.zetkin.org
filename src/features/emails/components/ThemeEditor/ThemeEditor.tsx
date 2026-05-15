@@ -17,16 +17,14 @@ interface ThemeEditorProps {
   orgId: number;
   themeId: number;
   localValues: Record<ThemeSection, string>;
-  setLocalValues: React.Dispatch<
-    React.SetStateAction<Record<ThemeSection, string>>
-  >;
+  onChange: (section: ThemeSection, newValue: string) => void;
 }
 
 const ThemeEditor: React.FC<ThemeEditorProps> = ({
   orgId,
   themeId,
   localValues,
-  setLocalValues,
+  onChange,
 }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<ThemeSection>('frame_mjml');
@@ -154,9 +152,7 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
             <TabPanel key={section} sx={{ flex: 1, p: 2 }} value={section}>
               <ThemeEditField
                 editingSection={section as ThemeSection}
-                onChange={(newVal) =>
-                  setLocalValues((prev) => ({ ...prev, [section]: newVal }))
-                }
+                onChange={(newVal) => onChange(section as ThemeSection, newVal)}
                 value={localValues[section as ThemeSection]}
               />
             </TabPanel>

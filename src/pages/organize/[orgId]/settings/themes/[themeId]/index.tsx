@@ -59,8 +59,10 @@ const ThemePageContent = ({
       <ThemePreview theme={liveTheme} />
       <ThemeEditor
         localValues={localValues}
+        onChange={(section, newValue) => {
+          setLocalValues((prev) => ({ ...prev, [section]: newValue }));
+        }}
         orgId={orgId}
-        setLocalValues={setLocalValues}
         themeId={themeId}
       />
     </Stack>
