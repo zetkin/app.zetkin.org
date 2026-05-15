@@ -14,10 +14,9 @@ export default function useFinishedCalls() {
 
   const loadPage = async (pageNumber: number) => {
     dispatch(finishedCallsLoad());
-    const newLoadedFinishedCalls = await apiClient.get<
-      FinishedCall[]
-    >(`/api/users/me/outgoing_calls?p=${pageNumber}&pp=20&filter=state!=0
-         `);
+    const newLoadedFinishedCalls = await apiClient.get<FinishedCall[]>(
+      `/api/users/me/outgoing_calls?p=${pageNumber}&pp=20&filter=state!=0`
+    );
 
     allLoadedCalls = [...allLoadedCalls, ...newLoadedFinishedCalls];
     dispatch(finishedCallsLoaded(allLoadedCalls));
