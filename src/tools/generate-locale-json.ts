@@ -13,8 +13,8 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'yaml';
 
-const LOCALE_SRC = path.resolve(__dirname, '../src/locale');
-const LOCALE_OUT = path.resolve(__dirname, '../src/locale/compiled');
+const LOCALE_SRC = path.resolve(__dirname, '../locale');
+const LOCALE_OUT = path.resolve(__dirname, '../locale/compiled');
 
 type MessageList = Record<string, string>;
 type MessageDB = Record<string, MessageList>;

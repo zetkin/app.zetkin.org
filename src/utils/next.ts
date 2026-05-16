@@ -266,6 +266,13 @@ export const scaffold =
 
     const result = (await wrapped(ctx)) || {};
 
+    // Skip message loading for redirect/notFound results — they don't render
+    // a page, so localeScope isn't relevant. This also means redirect-only
+    // pages don't need to declare localeScope in their scaffold options.
+    if (!hasProps(result)) {
+      return result as GetServerSidePropsResult<ScaffoldedProps>;
+    }
+
     // Determine locale: NEXT_LOCALE cookie (set by middleware) > user.lang > Accept-Language
     const cookieLocale = contextFromNext.req.cookies?.NEXT_LOCALE;
     const detectedLang =
@@ -291,30 +298,27 @@ export const scaffold =
       'zui',
     ]);
 
-    if (hasProps(result)) {
-      result.props = {
-        ...result.props,
-        envVars: omitUndefined({
-          FEAT_AREAS: process.env.FEAT_AREAS,
-          FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
-          FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
-          FEAT_TASKS: process.env.FEAT_TASKS,
-          FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
-          INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
-          INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
-          MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
-          MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
-          TILESERVER:
-            process.env.TILESERVER || 'https://tile.openstreetmap.org',
-          ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
-          ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
-          ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
-        }),
-        lang,
-        messages,
-        user: ctx.user,
-      };
-    }
+    result.props = {
+      ...result.props,
+      envVars: omitUndefined({
+        FEAT_AREAS: process.env.FEAT_AREAS,
+        FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
+        FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
+        FEAT_TASKS: process.env.FEAT_TASKS,
+        FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
+        INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
+        INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+        MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
+        MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+        TILESERVER: process.env.TILESERVER || 'https://tile.openstreetmap.org',
+        ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+        ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
+        ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
+      }),
+      lang,
+      messages,
+      user: ctx.user,
+    };
 
     return result as GetServerSidePropsResult<ScaffoldedProps>;
   };
