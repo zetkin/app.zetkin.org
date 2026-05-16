@@ -12,6 +12,7 @@ import {
   ZetkinSurveySubmission,
   ZetkinSurveySubmissionPatchBody,
 } from 'utils/types/zetkin';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 type UseSurveySubmissionResponderReturn = {
   setRespondentId: (id: number | null) => void;
@@ -33,7 +34,8 @@ export default function useSurveySubmission(
   );
 
   const future = loadItemIfNecessary(submissionItem, dispatch, {
-    actionOnError: (err) => submissionError([submissionId, err]),
+    actionOnError: (err) =>
+      submissionError([submissionId, serializeError(err)]),
     actionOnLoad: () => submissionLoad(submissionId),
     actionOnSuccess: (data) => submissionLoaded(data),
     loader: () =>

@@ -18,6 +18,7 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 type HydratedQuestionBase = {
   description: string | null;
@@ -94,7 +95,8 @@ export default function useHydratedSurveySubmission(
     number,
     [number, ZetkinSurveyExtended]
   >(survey, dispatch, {
-    actionOnError: (err) => extendedSurveyError([surveyId, err]),
+    actionOnError: (err) =>
+      extendedSurveyError([surveyId, serializeError(err)]),
     actionOnLoad: () => extendedSurveyLoad(surveyId),
     actionOnSuccess: (survey) => extendedSurveyLoaded([surveyId, survey]),
     loader: async () => {

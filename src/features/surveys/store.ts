@@ -19,7 +19,6 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats';
-import { serializeError } from 'utils/storeUtils/serializeError';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export interface SurveysStoreSlice {
@@ -232,12 +231,12 @@ const surveysSlice = createSlice({
             newOrder.default.indexOf(el1.data?.id ?? 0)
         );
     },
-    extendedSurveyError: (state, action: PayloadAction<[number, unknown]>) => {
+    extendedSurveyError: (state, action: PayloadAction<[number, string]>) => {
       const [surveyId, err] = action.payload;
       if (!state.extendedSurveyBySurveyId[surveyId]) {
         state.extendedSurveyBySurveyId[surveyId] = remoteItem(surveyId);
       }
-      state.extendedSurveyBySurveyId[surveyId].error = serializeError(err);
+      state.extendedSurveyBySurveyId[surveyId].error = err;
     },
     extendedSurveyLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
@@ -295,10 +294,10 @@ const surveysSlice = createSlice({
       state.statsBySurveyId[surveyId].loaded = new Date().toISOString();
       state.statsBySurveyId[surveyId].isStale = false;
     },
-    submissionError: (state, action: PayloadAction<[number, unknown]>) => {
+    submissionError: (state, action: PayloadAction<[number, string]>) => {
       const [submissionId, err] = action.payload;
       const submission = findOrAddItem(state.submissionList, submissionId);
-      submission.error = serializeError(err);
+      submission.error = err;
     },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
