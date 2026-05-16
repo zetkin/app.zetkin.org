@@ -16,6 +16,7 @@ type UseFieldsMutationReturn = {
   updateField: (
     data: {
       enum_choices?: EnumChoice[];
+      slug?: string;
       title?: string;
       type?: CUSTOM_FIELD_TYPE;
     },
@@ -37,6 +38,7 @@ export default function useFieldMutations(
   const updateField = async (
     data: {
       enum_choices?: EnumChoice[];
+      slug?: string;
       title?: string;
       type?: CUSTOM_FIELD_TYPE;
     },
