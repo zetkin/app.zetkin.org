@@ -51,113 +51,144 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
       <Box sx={{ alignItems: 'flex-start', display: 'flex', gap: 3 }}>
         {/* LEFT SIDE*/}
         <Box sx={{ flex: 1 }}>
-          <Box display="flex" flexDirection="column" gap={1}>
-            {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
-              <Box key={key} display="flex" gap={1}>
-                <Box>{key}</Box>
-                <Box>{value}</Box>
-              </Box>
-            ))}
+          <Box
+            sx={{
+              borderBottom: '1px solid #e5e5e5',
+              display: 'grid',
+              fontWeight: 600,
+              gridTemplateColumns: '2fr 2fr 1fr 120px',
+              px: 1,
+              py: 1,
+            }}
+          >
+            <Box>Title</Box>
+            <Box>Slug</Box>
+            <Box>Type</Box>
+            <Box />
           </Box>
-          <Box display="flex" flexDirection="column" gap={1} mt={2}>
-            {customFields.map((field) => (
-              <Box
-                key={field.slug}
-                display="flex"
-                flexDirection="column"
-                gap={1}
-              >
-                <Typography>{field.title}</Typography>
 
-                {field.type === CUSTOM_FIELD_TYPE.ENUM &&
-                  field.enum_choices?.map((choice) => (
-                    <Typography key={choice.key}>- {choice.label}</Typography>
-                  ))}
+          <Box display="flex" flexDirection="column">
+            <Box sx={{ flex: 1 }}>
+              <Box display="flex" flexDirection="column" gap={1}>
+                {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
+                  <Box key={key} display="flex" gap={1}>
+                    <Box>{key}</Box>
+                    <Box>{value}</Box>
+                  </Box>
+                ))}
+              </Box>
 
-                <Button
-                  onClick={() => {
-                    setUpdatedFieldId(field.id);
-                    setUpdatedTitle(field.title);
-                    setUpdatedType(field.type);
-                    setUpdatedSlug(field.slug);
+              <Box display="flex" flexDirection="column" gap={1} mt={2}>
+                {customFields.map((field) => (
+                  <Box
+                    key={field.slug}
+                    display="flex"
+                    flexDirection="column"
+                    gap={1}
+                  >
+                    <Typography>{field.title}</Typography>
 
-                    if (field.enum_choices) {
-                      setUpdatedEnumInput(
-                        field.enum_choices
-                          .map((choice) => choice.label)
-                          .join(', ')
-                      );
-                    }
-                  }}
-                >
-                  Edit Field
-                </Button>
-
-                {updatedFieldId === field.id && (
-                  <Box display="flex" flexDirection="column" gap={1}>
-                    <TextField
-                      label="Title"
-                      onChange={(event) => setUpdatedTitle(event.target.value)}
-                      value={updatedTitle}
-                    />
-
-                    <TextField
-                      label="slug"
-                      onChange={(event) => setUpdatedSlug(event.target.value)}
-                      value={updatedSlug}
-                    />
-
-                    <TextField
-                      label="Type"
-                      onChange={(event) =>
-                        setUpdatedType(event.target.value as CUSTOM_FIELD_TYPE)
-                      }
-                      select
-                      value={updatedType}
-                    >
-                      {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
+                    {field.type === CUSTOM_FIELD_TYPE.ENUM &&
+                      field.enum_choices?.map((choice) => (
+                        <Typography key={choice.key}>
+                          - {choice.label}
+                        </Typography>
                       ))}
-                    </TextField>
-
-                    {updatedType === CUSTOM_FIELD_TYPE.ENUM && (
-                      <TextField
-                        label="Enum values (comma separated)"
-                        onChange={(event) =>
-                          setUpdatedEnumInput(event.target.value)
-                        }
-                        value={updatedEnumInput}
-                      />
-                    )}
 
                     <Button
                       onClick={() => {
-                        updateField(
-                          {
-                            enum_choices:
-                              updatedType === CUSTOM_FIELD_TYPE.ENUM
-                                ? parseEnumChoices(updatedEnumInput)
-                                : undefined,
-                            slug: updatedSlug,
-                            title: updatedTitle,
-                            type: updatedType,
-                          },
-                          field.id
-                        );
+                        setUpdatedFieldId(field.id);
+                        setUpdatedTitle(field.title);
+                        setUpdatedType(field.type);
+                        setUpdatedSlug(field.slug);
 
-                        setUpdatedFieldId(null);
+                        if (field.enum_choices) {
+                          setUpdatedEnumInput(
+                            field.enum_choices
+                              .map((choice) => choice.label)
+                              .join(', ')
+                          );
+                        }
                       }}
                     >
-                      Save
+                      Edit Field
+                    </Button>
+
+                    {updatedFieldId === field.id && (
+                      <Box display="flex" flexDirection="column" gap={1}>
+                        <TextField
+                          label="Title"
+                          onChange={(event) =>
+                            setUpdatedTitle(event.target.value)
+                          }
+                          value={updatedTitle}
+                        />
+
+                        <TextField
+                          label="slug"
+                          onChange={(event) =>
+                            setUpdatedSlug(event.target.value)
+                          }
+                          value={updatedSlug}
+                        />
+
+                        <TextField
+                          label="Type"
+                          onChange={(event) =>
+                            setUpdatedType(
+                              event.target.value as CUSTOM_FIELD_TYPE
+                            )
+                          }
+                          select
+                          value={updatedType}
+                        >
+                          {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                        {updatedType === CUSTOM_FIELD_TYPE.ENUM && (
+                          <TextField
+                            label="Enum values (comma separated)"
+                            onChange={(event) =>
+                              setUpdatedEnumInput(event.target.value)
+                            }
+                            value={updatedEnumInput}
+                          />
+                        )}
+
+                        <Button
+                          onClick={() => {
+                            updateField(
+                              {
+                                enum_choices:
+                                  updatedType === CUSTOM_FIELD_TYPE.ENUM
+                                    ? parseEnumChoices(updatedEnumInput)
+                                    : undefined,
+                                slug: updatedSlug,
+                                title: updatedTitle,
+                                type: updatedType,
+                              },
+                              field.id
+                            );
+
+                            setUpdatedFieldId(null);
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </Box>
+                    )}
+
+                    <Button onClick={() => removeField(field.id)}>
+                      remove
                     </Button>
                   </Box>
-                )}
-
-                <Button onClick={() => removeField(field.id)}>remove</Button>
+                ))}
               </Box>
-            ))}
+            </Box>
           </Box>
         </Box>
 
