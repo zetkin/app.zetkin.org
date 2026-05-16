@@ -289,6 +289,11 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                   </FormHelperText>
                 )}
               </FormControl>
+              {field.slug in fieldsToUpdate && (
+                <IconButton onClick={() => onReset(field.slug)}>
+                  <UndoIcon />
+                </IconButton>
+              )}
             </Box>
           );
         } else if (field.type === CUSTOM_FIELD_TYPE.LNGLAT) {
