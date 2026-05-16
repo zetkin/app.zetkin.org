@@ -20,6 +20,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const { createField } = useCreateField(orgId);
   const { updateField: updateField, removeField } = useFieldMutations(orgId);
   const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
   const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
   const [enumInput, setEnumInput] = useState('');
   const [updatedFieldId, setUpdatedFieldId] = useState<number | null>(null);
@@ -28,6 +29,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
     CUSTOM_FIELD_TYPE.TEXT
   );
   const [updatedEnumInput, setUpdatedEnumInput] = useState('');
+  const [updatedSlug, setUpdatedSlug] = useState('');
 
   const parseEnumChoices = (input: string) => {
     return input
@@ -62,9 +64,9 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
           id="filled-basic"
           label="slug"
           onChange={(event) => {
-            setTitle(event.target.value);
+            setSlug(event.target.value);
           }}
-          value={title}
+          value={slug}
           variant="filled"
         />
       </Box>
@@ -136,6 +138,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                 setUpdatedFieldId(field.id);
                 setUpdatedTitle(field.title);
                 setUpdatedType(field.type);
+                setUpdatedSlug(field.slug);
 
                 if (field.enum_choices) {
                   setUpdatedEnumInput(
@@ -153,6 +156,12 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                   label="Title"
                   onChange={(event) => setUpdatedTitle(event.target.value)}
                   value={updatedTitle}
+                />
+
+                <TextField
+                  label="slug"
+                  onChange={(event) => setUpdatedSlug(event.target.value)}
+                  value={updatedSlug}
                 />
 
                 <TextField
@@ -188,6 +197,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                           updatedType === CUSTOM_FIELD_TYPE.ENUM
                             ? parseEnumChoices(updatedEnumInput)
                             : undefined,
+                        slug: updatedSlug,
                         title: updatedTitle,
                         type: updatedType,
                       },
