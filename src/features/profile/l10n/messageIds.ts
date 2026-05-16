@@ -60,6 +60,9 @@ export default makeMessages('feat.profile', {
     noRole: m('No role'),
   },
   saveButton: m('Save'),
+  surveySubmissions: {
+    title: m('Survey Submissions'),
+  },
   tabs: {
     manage: m('Manage'),
     profile: m('Profile'),
