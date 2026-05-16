@@ -47,7 +47,7 @@ export default function useMonthCalendarEvents({
   const curDate = new Date(startDate);
   while (curDate.getTime() <= endDate.getTime()) {
     const activitiesOnCurrentDay =
-      datesWithActivities[dayjs(curDate).format('YYYY-MM-DD')]?.events || [];
+      datesWithActivities[dayjs(curDate).format('YYYY-MM-DD')] || [];
 
     const clusters: AnyClusteredEvent[] = [
       ...clusterEvents(activitiesOnCurrentDay),

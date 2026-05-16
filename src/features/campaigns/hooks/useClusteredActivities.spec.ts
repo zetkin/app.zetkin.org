@@ -52,7 +52,10 @@ const mockEventData: ZetkinEvent = {
   start_time: '1857-07-05T13:37:00.000Z',
 };
 
-function mockEvent(id: number, data: Partial<ZetkinEvent>): EventActivity {
+export function mockEvent(
+  id: number,
+  data: Partial<ZetkinEvent>
+): EventActivity {
   return {
     data: {
       ...mockEventData,
