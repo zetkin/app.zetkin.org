@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { NextIntlClientProvider } from 'next-intl';
 
+import ScopedIntlProvider from 'core/i18n/ScopedIntlProvider';
 import HomeLayout from 'features/my/layouts/HomeLayout';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import { getBrowserLanguage } from 'utils/locale';
@@ -55,10 +55,10 @@ export default async function MyHomeLayout({ children }: Props) {
   );
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <ScopedIntlProvider messages={messages}>
       <HomeThemeProvider>
         <HomeLayout title={homeTitle}>{children}</HomeLayout>
       </HomeThemeProvider>
-    </NextIntlClientProvider>
+    </ScopedIntlProvider>
   );
 }

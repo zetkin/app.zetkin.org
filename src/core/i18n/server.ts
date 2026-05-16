@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFileSync } from 'fs';
+import IntlMessageFormat from 'intl-messageformat';
 import path from 'path';
 
 import { HookedMessageFunc, UseMessagesMap } from './useMessages';
@@ -54,8 +55,16 @@ export default async function getServerMessages<MapType extends MessageMap>(
 
     Object.entries(map).forEach(([key, val]) => {
       if (isMessage(val)) {
-        output[key] = (() => {
-          return getNestedValue(localMessages, val._id) || val._defaultMessage;
+        output[key] = ((values?: Record<string, unknown>) => {
+          const pattern =
+            getNestedValue(localMessages, val._id) || val._defaultMessage;
+          // Fast path: no placeholders to interpolate — return the raw string.
+          if (!values || !pattern.includes('{')) {
+            return pattern;
+          }
+          return new IntlMessageFormat(pattern, lang).format(
+            values as Record<string, string | number | Date>
+          ) as string;
         }) as HookedMessageFunc<typeof val>;
       } else {
         output[key] = makeFunctions(val) as UseMessagesMap<typeof val>;

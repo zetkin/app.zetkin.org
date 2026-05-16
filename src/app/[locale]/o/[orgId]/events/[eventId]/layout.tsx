@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { NextIntlClientProvider } from 'next-intl';
 
+import ScopedIntlProvider from 'core/i18n/ScopedIntlProvider';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import PublicEventLayout from 'features/public/layouts/PublicEventLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -77,13 +77,13 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
     );
 
     return (
-      <NextIntlClientProvider messages={messages}>
+      <ScopedIntlProvider messages={messages}>
         <HomeThemeProvider>
           <PublicEventLayout eventId={event.id} orgId={event.organization.id}>
             {children}
           </PublicEventLayout>
         </HomeThemeProvider>
-      </NextIntlClientProvider>
+      </ScopedIntlProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {

@@ -2,8 +2,8 @@ import { FC, ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
 
+import ScopedIntlProvider from 'core/i18n/ScopedIntlProvider';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ApiClientError } from 'core/api/errors';
@@ -62,13 +62,13 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
     );
 
     return (
-      <NextIntlClientProvider messages={messages}>
+      <ScopedIntlProvider messages={messages}>
         <HomeThemeProvider>
           <PublicProjectLayout campaign={campaign}>
             {children}
           </PublicProjectLayout>
         </HomeThemeProvider>
-      </NextIntlClientProvider>
+      </ScopedIntlProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {

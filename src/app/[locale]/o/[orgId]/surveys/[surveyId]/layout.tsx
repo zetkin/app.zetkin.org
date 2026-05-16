@@ -4,8 +4,8 @@ import { headers } from 'next/headers';
 import { Metadata } from 'next';
 import { FC, ReactElement, ReactNode } from 'react';
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
 
+import ScopedIntlProvider from 'core/i18n/ScopedIntlProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import PublicSurveyLayout from 'features/public/layouts/PublicSurveyLayout';
@@ -75,11 +75,11 @@ const SurveyLayout: FC<Props> = async ({
   }
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <ScopedIntlProvider messages={messages}>
       <HomeThemeProvider>
         <PublicSurveyLayout survey={survey}>{children}</PublicSurveyLayout>
       </HomeThemeProvider>
-    </NextIntlClientProvider>
+    </ScopedIntlProvider>
   );
 };
 

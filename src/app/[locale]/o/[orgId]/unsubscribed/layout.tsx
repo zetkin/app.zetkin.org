@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { NextIntlClientProvider } from 'next-intl';
 
+import ScopedIntlProvider from 'core/i18n/ScopedIntlProvider';
 import { getFilteredMessages } from 'i18n/pickMessages';
 
 type Props = {
@@ -11,8 +11,8 @@ export default async function UnsubscribedLayout({ children }: Props) {
   const messages = await getFilteredMessages('feat.emails');
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <ScopedIntlProvider messages={messages}>
       {children}
-    </NextIntlClientProvider>
+    </ScopedIntlProvider>
   );
 }

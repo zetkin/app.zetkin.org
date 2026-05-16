@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { NextIntlClientProvider } from 'next-intl';
 
+import ScopedIntlProvider from 'core/i18n/ScopedIntlProvider';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import AccountLayout from 'features/account/layouts/AccountLayout';
 import { getFilteredMessages } from 'i18n/pickMessages';
@@ -13,10 +13,10 @@ export default async function RegisterLayout({ children }: Props) {
   const messages = await getFilteredMessages('feat.account');
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <ScopedIntlProvider messages={messages}>
       <HomeThemeProvider>
         <AccountLayout>{children}</AccountLayout>
       </HomeThemeProvider>
-    </NextIntlClientProvider>
+    </ScopedIntlProvider>
   );
 }
