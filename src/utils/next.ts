@@ -11,6 +11,7 @@ import {
 import { AppSession } from './types';
 import { getBrowserLanguage } from './locale';
 import { LOCALES, DEFAULT_LOCALE } from 'i18n/config';
+import { filterByScope } from 'i18n/filterMessages';
 import getUserMemberships from './getUserMemberships';
 import requiredEnvVar from './requiredEnvVar';
 import { stringToBool } from './stringUtils';
@@ -40,39 +41,6 @@ function loadCompiledMessages(locale: string): Record<string, unknown> {
     compiledMessageCache[locale] = JSON.parse(readFileSync(filePath, 'utf8'));
   }
   return compiledMessageCache[locale];
-}
-
-/**
- * Filter a nested messages object to only include keys matching the given
- * scope prefixes. E.g. scopes ['feat.campaigns', 'zui'] returns only
- * { feat: { campaigns: {...} }, zui: {...} }.
- */
-function filterByScope(
-  messages: Record<string, unknown>,
-  scopes: string[]
-): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  for (const scope of scopes) {
-    const parts = scope.split('.');
-    let src: Record<string, unknown> = messages;
-    let dest: Record<string, unknown> = result;
-
-    for (let i = 0; i < parts.length; i++) {
-      if (!src || typeof src !== 'object' || !(parts[i] in src)) {
-        break;
-      }
-      if (i === parts.length - 1) {
-        dest[parts[i]] = src[parts[i]];
-      } else {
-        if (!dest[parts[i]] || typeof dest[parts[i]] !== 'object') {
-          dest[parts[i]] = {};
-        }
-        dest = dest[parts[i]] as Record<string, unknown>;
-        src = src[parts[i]] as Record<string, unknown>;
-      }
-    }
-  }
-  return result;
 }
 
 type RegularProps = {
