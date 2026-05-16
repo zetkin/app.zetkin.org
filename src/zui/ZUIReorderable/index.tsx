@@ -336,14 +336,14 @@ const ZUIReorderableItem: FC<{
             zIndex: shown ? 10 : undefined,
           }}
         >
-          {widgets.map(({ widget, shown }) => {
+          {widgets.map(({ widget, shown }, idx) => {
             if (!shown && !centerWidgets) {
               return null;
             }
 
             if (!shown) {
               return (
-                <IconButton>
+                <IconButton key={`${widget}-${idx}`}>
                   <SvgIcon />
                 </IconButton>
               );
@@ -352,6 +352,7 @@ const ZUIReorderableItem: FC<{
             if (widget == ZUIReorderableWidget.DRAG) {
               return (
                 <IconButton
+                  key={`${widget}-${idx}`}
                   onMouseDown={(ev) => {
                     if (!shown) {
                       return;
@@ -367,13 +368,19 @@ const ZUIReorderableItem: FC<{
               );
             } else if (widget == ZUIReorderableWidget.MOVE_DOWN) {
               return (
-                <IconButton onClick={() => shown && onClickDown()}>
+                <IconButton
+                  key={`${widget}-${idx}`}
+                  onClick={() => shown && onClickDown()}
+                >
                   <KeyboardArrowDown />
                 </IconButton>
               );
             } else if (widget == ZUIReorderableWidget.MOVE_UP) {
               return (
-                <IconButton onClick={() => shown && onClickUp()}>
+                <IconButton
+                  key={`${widget}-${idx}`}
+                  onClick={() => shown && onClickUp()}
+                >
                   <KeyboardArrowUp />
                 </IconButton>
               );
