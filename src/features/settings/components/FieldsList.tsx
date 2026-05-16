@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
 
@@ -163,67 +163,84 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
 
         {/* RIGHT SIDE*/}
         <Box sx={{ width: 360 }}>
-          <TextField
-            id="filled-basic"
-            label="title"
-            onChange={(event) => {
-              setTitle(event.target.value);
+          <Paper
+            elevation={0}
+            sx={{
+              backgroundColor: '#fff',
+              border: '1px solid #e5e5e5',
+              borderRadius: 2,
+              p: 3,
             }}
-            value={title}
-            variant="filled"
-          />
-
-          <TextField
-            id="filled-basic"
-            label="slug"
-            onChange={(event) => {
-              setSlug(event.target.value);
-            }}
-            value={slug}
-            variant="filled"
-          />
-
-          <TextField
-            id="filled-basic"
-            label="type"
-            onChange={(event) =>
-              setType(event.target.value as CUSTOM_FIELD_TYPE)
-            }
-            select
-            value={type}
-            variant="filled"
           >
-            {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </TextField>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <TextField
+                fullWidth
+                id="filled-basic"
+                label="Title"
+                onChange={(event) => {
+                  setTitle(event.target.value);
+                }}
+                sx={{ backgroundColor: '#f9f9f9' }}
+                value={title}
+              />
 
-          {type === CUSTOM_FIELD_TYPE.ENUM && (
-            <TextField
-              fullWidth
-              id="filled-basic"
-              label="Enum values (comma separated)"
-              onChange={(event) => setEnumInput(event.target.value)}
-              value={enumInput}
-              variant="filled"
-            />
-          )}
+              <TextField
+                fullWidth
+                id="filled-basic"
+                label="Slug"
+                onChange={(event) => {
+                  setSlug(event.target.value);
+                }}
+                sx={{ backgroundColor: '#f9f9f9' }}
+                value={slug}
+              />
 
-          <Button
-            onClick={() =>
-              createField(
-                title,
-                type,
-                type === CUSTOM_FIELD_TYPE.ENUM
-                  ? parseEnumChoices(enumInput)
-                  : undefined
-              )
-            }
-          >
-            Create Field
-          </Button>
+              <TextField
+                fullWidth
+                id="filled-basic"
+                label="Type"
+                onChange={(event) =>
+                  setType(event.target.value as CUSTOM_FIELD_TYPE)
+                }
+                select
+                sx={{ backgroundColor: '#f9f9f9' }}
+                value={type}
+              >
+                {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              {type === CUSTOM_FIELD_TYPE.ENUM && (
+                <TextField
+                  fullWidth
+                  id="filled-basic"
+                  label="Options (comma separated list)"
+                  onChange={(event) => setEnumInput(event.target.value)}
+                  sx={{ backgroundColor: '#f9f9f9' }}
+                  value={enumInput}
+                />
+              )}
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                <Button
+                  onClick={() =>
+                    createField(
+                      title,
+                      type,
+                      type === CUSTOM_FIELD_TYPE.ENUM
+                        ? parseEnumChoices(enumInput)
+                        : undefined
+                    )
+                  }
+                  variant="outlined"
+                >
+                  Create Field
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
         </Box>
       </Box>
     </Box>
