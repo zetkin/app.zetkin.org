@@ -11,6 +11,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useIntl } from 'react-intl';
 import {
   CalendarMonthOutlined,
+  Close,
   Chair,
   Clear,
   GroupWork,
@@ -171,10 +172,12 @@ const Activities: FC<ActivitiesProps> = ({
         </Box>
       )}
       <ZUITextField
+        endIcon={Close}
         fullWidth
         onChange={(newValue) => {
           setSearchString(newValue);
         }}
+        onEndIconClick={() => setSearchString('')}
         startIcon={Search}
         value={searchString}
       />
