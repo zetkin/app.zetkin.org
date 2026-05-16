@@ -1,6 +1,7 @@
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { futureToObject, IFuture } from 'core/caching/futures';
 import {
+  submissionError,
   submissionLoad,
   submissionLoaded,
   surveySubmissionUpdate,
@@ -32,6 +33,7 @@ export default function useSurveySubmission(
   );
 
   const future = loadItemIfNecessary(submissionItem, dispatch, {
+    actionOnError: (err) => submissionError([submissionId, err]),
     actionOnLoad: () => submissionLoad(submissionId),
     actionOnSuccess: (data) => submissionLoaded(data),
     loader: () =>

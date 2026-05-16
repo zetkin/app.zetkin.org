@@ -1,8 +1,11 @@
 import { FC } from 'react';
-import { Skeleton } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
+import { ErrorOutlined } from '@mui/icons-material';
 
 import { IFuture } from 'core/caching/futures';
 import { isEmptyData } from 'zui/ZUIFutures';
+import Msg from 'core/i18n/Msg';
+import messageIds from 'zui/l10n/messageIds';
 
 type ZUIFutureBuilderFunc<DataType> = (
   data: DataType,
@@ -18,6 +21,11 @@ export interface ZUIFutureProps<DataType> {
    * The component to render when the data is loaded.
    */
   children: JSX.Element | null | ZUIFutureBuilderFunc<DataType>;
+
+  /**
+   * What to render if fetching data has failed.
+   */
+  errorIndicator?: React.ReactElement;
 
   /**
    * IFuture object representing the aysnchronous operation that rendering is waiting for.
@@ -81,6 +89,7 @@ export interface ZUIFutureProps<DataType> {
 function ZUIFuture<DataType>(props: ZUIFutureProps<DataType>): ReturnType<FC> {
   const {
     children,
+    errorIndicator,
     future,
     ignoreDataWhileLoading = false,
     skeleton = (
@@ -104,8 +113,24 @@ function ZUIFuture<DataType>(props: ZUIFutureProps<DataType>): ReturnType<FC> {
   } else if (future.isLoading) {
     return skeleton;
   } else {
-    // TODO: Handle errors somehow?
-    return null;
+    return (
+      errorIndicator || (
+        <Box
+          alignItems="center"
+          data-testid="error-indicator"
+          display="flex"
+          flexDirection="column"
+          justifyItems="center"
+          padding={3}
+          width="100%"
+        >
+          <ErrorOutlined color="error" fontSize="large" />
+          <Typography variant="body1">
+            <Msg id={messageIds.futures.errorLoading} />
+          </Typography>
+        </Box>
+      )
+    );
   }
 }
 
