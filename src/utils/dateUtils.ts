@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 import { ZetkinEvent } from 'utils/types/zetkin';
 
@@ -45,21 +45,6 @@ export const removeOffset = (datetime: string): string => {
 };
 
 /**
- * Plugin for dayjs which overrides default `dayjs.toJson()` method to return an ISO
- * datetime string which uses the local time.
- *
- * Default behaviour returns an ISO datetime string in UTC time.
- */
-export const LocalTimeToJsonPlugin = (
-  options: never,
-  dayjsClass: typeof Dayjs
-): void => {
-  dayjsClass.prototype.toJSON = function () {
-    return this.format('YYYY-MM-DDTHH:mm:ss');
-  };
-};
-
-/**
  * @param date
  * @returns string in YYYY-MM-DD format
  */
@@ -81,28 +66,8 @@ export function makeNaiveTimeString(date: Date): string {
     .padStart(2, '0')}`;
 }
 
-/**
- * Takes an ISO datestring and returns a boolean that says if the date is in the futre or not.
- * @param datestring
- * @returns boolean
- */
-export function isInFuture(datestring: string): boolean {
-  const now = new Date();
-  const date = new Date(datestring);
-
-  return date > now;
-}
-
 export function isSameDate(first: Date, second: Date): boolean {
   return dayjs(first).isSame(dayjs(second), 'day');
-}
-
-export function isValidDate(date: Date): boolean {
-  if (date && !isNaN(date.getTime())) {
-    return true;
-  } else {
-    return false;
-  }
 }
 
 export function dateIsAfter(first: Date, second: Date): boolean {

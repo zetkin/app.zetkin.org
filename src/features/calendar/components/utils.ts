@@ -36,49 +36,6 @@ const makeIsoDateString = (date: Date): string | null => {
   }
 };
 
-export const getFutureDays = (
-  activitiesHashMap: Record<string, DaySummary>,
-  targetDate: Date
-): [string, DaySummary][] => {
-  return Object.entries(activitiesHashMap).filter(([dateString]) => {
-    const activityDay = dayjs(dateString);
-    return (
-      activityDay.isSame(targetDate, 'day') || activityDay.isAfter(targetDate)
-    );
-  });
-};
-
-export const getPreviousDay = (
-  activities: Record<string, DaySummary>,
-  target: Date
-): [Date, DaySummary] | null => {
-  const dates = Object.keys(activities).map(
-    (dateString) => new Date(dateString)
-  );
-  const datesBeforeTarget = dates.filter(
-    (date) => !dayjs(date).isSame(target, 'day') && dayjs(date).isBefore(target)
-  );
-
-  const closestDateBeforeTarget = datesBeforeTarget.reduce(
-    (previousClosestDate: Date | undefined, date) => {
-      if (dayjs(date).isAfter(previousClosestDate)) {
-        return date;
-      }
-      return previousClosestDate;
-    },
-    datesBeforeTarget[0]
-  );
-
-  const closestDateIsoString =
-    closestDateBeforeTarget && makeIsoDateString(closestDateBeforeTarget);
-
-  if (closestDateIsoString) {
-    return [closestDateBeforeTarget, activities[closestDateIsoString]];
-  }
-
-  return null;
-};
-
 export interface DaySummary {
   endingActivities: NonEventActivity[];
   events: EventActivity[] | never[];
