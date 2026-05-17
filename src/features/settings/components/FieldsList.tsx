@@ -69,16 +69,25 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
 
           <Box display="flex" flexDirection="column">
             <Box sx={{ flex: 1 }}>
-              <Box display="flex" flexDirection="column" gap={1}>
+              <Box display="flex" flexDirection="column" gap={1} mt={2}>
                 {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
-                  <Box key={key} display="flex" gap={1}>
-                    <Box>{key}</Box>
-                    <Box>{value}</Box>
+                  <Box key={value} sx={{ borderBottom: '1px solid #e5e5e5' }}>
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        display: 'grid',
+                        gridTemplateColumns: '2fr 2fr 1fr auto',
+                        px: 1,
+                        py: 1.5,
+                      }}
+                    >
+                      <Box>{key}</Box>
+                      <Box>{value}</Box>
+                      <Box />
+                      <Box />
+                    </Box>
                   </Box>
                 ))}
-              </Box>
-
-              <Box display="flex" flexDirection="column" gap={1} mt={2}>
                 {customFields.map((field) => (
                   <Box
                     key={field.slug}
