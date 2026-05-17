@@ -4,7 +4,7 @@ import { DialingMode } from './betaTypes';
 
 type DialingModeModelType = {
   callAssId: number;
-  mode: DialingMode | DialingMode.MANUAL;
+  mode: DialingMode;
 };
 
 const dialingModeSchema = new mongoose.Schema<DialingModeModelType>({
@@ -13,5 +13,5 @@ const dialingModeSchema = new mongoose.Schema<DialingModeModelType>({
 });
 
 export const DialingModeModel: mongoose.Model<DialingModeModelType> =
-  mongoose.models.HouseholdColor ||
+  mongoose.models.DialingMode ||
   mongoose.model<DialingModeModelType>('DialingMode', dialingModeSchema);

@@ -187,8 +187,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
                   <Phone />
                   <Typography marginLeft={1}>
                     <Msg
-                      id={messageIds.stats.dialingMode}
-                      values={{ dialingMode: 'Manual' }}
+                      id={messageIds.stats.dialing_mode}
+                      values={{ dialing_mode: callAssignment.dialing_mode }}
                     />
                   </Typography>
                 </>

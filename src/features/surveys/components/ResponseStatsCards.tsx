@@ -674,7 +674,7 @@ const TextResponseWordCloud = ({
           disableAnimation: () => () => {},
         },
         svgRef: svgRef,
-      } as ChartPluginOptions<UseChartProExportSignature>),
+      }) as ChartPluginOptions<UseChartProExportSignature>,
     []
   );
 

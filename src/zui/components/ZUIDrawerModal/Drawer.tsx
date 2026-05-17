@@ -74,21 +74,21 @@ const Drawer: FC<Props> = ({
               {children}
             </Box>
           </Box>
-        </Slide>
-        <Fade in={open} timeout={300}>
-          <Box
-            onClick={onClose}
-            sx={{
-              backgroundColor: 'rgba(255,255,255,0.5)',
-              height: '100%',
-              width: '100%',
-              zIndex: 0,
-            }}
-          >
-            <ModalBackground height="100%" seed={seed.current} width="100%" />
-          </Box>
-        </Fade>
-      </>
+        </Box>
+      </Slide>
+      <Fade in={open} timeout={300}>
+        <Box
+          onClick={onClose}
+          sx={{
+            backgroundColor: 'rgba(255,255,255,0.5)',
+            height: '100%',
+            width: '100%',
+            zIndex: 0,
+          }}
+        >
+          <ModalBackground height="100%" seed={seed.current} width="100%" />
+        </Box>
+      </Fade>
     </Modal>
   );
 };

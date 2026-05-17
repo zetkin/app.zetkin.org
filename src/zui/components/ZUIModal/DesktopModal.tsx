@@ -25,7 +25,6 @@ const DesktopModal: FC<ZUIModalProps> = ({
   size = 'auto',
   title,
 }) => {
-<<<<<<< HEAD
   const seed = useRef(0);
   useEffect(() => {
     seed.current = Math.random();
@@ -79,15 +78,12 @@ const DesktopModal: FC<ZUIModalProps> = ({
           </Box>
         </Fade>
       </>
-=======
+    </Modal>
+  );
   const paperRef = usePreventKeyboardPropagation(open, allowPropagation);
 
   return (
-    <Modal
-      disableRestoreFocus
-      onClose={onClose}
-      open={open}
-    >
+    <Modal disableRestoreFocus onClose={onClose} open={open}>
       <>
         <Fade in={open} timeout={300}>
           <Paper

@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
+import { IncomingHttpHeaders } from 'http';
 
-import { DialingMode } from 'features/callAssignments/betaTypes';
 import { DialingModeModel } from 'features/callAssignments/models';
+import { DialingMode } from 'features/callAssignments/betaTypes';
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
 type RouteMeta = {
   params: {
@@ -14,30 +17,49 @@ type RouteMeta = {
 export async function GET(request: NextRequest, { params }: RouteMeta) {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
-  const dialingModeModel = await DialingModeModel.findOne({
-    callAssId: params.callAssId,
+  const headers: IncomingHttpHeaders = {};
+  request.headers.forEach((value, key) => (headers[key] = value));
+  const apiClient = new BackendApiClient(headers);
+
+  const [assignment, dialingModeModel] = await Promise.all([
+    apiClient.get<ZetkinCallAssignment>(
+      `/api/orgs/${params.orgId}/call_assignments/${params.callAssId}`
+    ),
+    DialingModeModel.findOne({ callAssId: params.callAssId }),
+  ]);
+
+  return NextResponse.json({
+    data: {
+      ...assignment,
+      dialing_mode: (dialingModeModel?.mode ?? 'manual') as DialingMode,
+    },
   });
-
-  const dialingMode: DialingMode = (dialingModeModel?.mode ??
-    'manual') as DialingMode;
-
-  return NextResponse.json({ data: dialingMode });
 }
 
-export async function POST(request: NextRequest, { params }: RouteMeta) {
+export async function PATCH(request: NextRequest, { params }: RouteMeta) {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
   const payload = await request.json();
 
-  const dialingModeModel = await DialingModeModel.findOneAndUpdate(
+  await DialingModeModel.findOneAndUpdate(
     { callAssId: params.callAssId },
     {
-      mode: payload.dialingMode,
+      mode: payload.dialing_mode,
     },
     { new: true, upsert: true }
   );
+  const headers: IncomingHttpHeaders = {};
+  request.headers.forEach((value, key) => (headers[key] = value));
+  const apiClient = new BackendApiClient(headers);
+
+  const assignment = await apiClient.get<ZetkinCallAssignment>(
+    `/api/orgs/${params.orgId}/call_assignments/${params.callAssId}`
+  );
 
   return NextResponse.json({
-    data: dialingModeModel?.mode,
+    data: {
+      ...assignment,
+      dialing_mode: payload.dialing_mode as DialingMode,
+    },
   });
 }

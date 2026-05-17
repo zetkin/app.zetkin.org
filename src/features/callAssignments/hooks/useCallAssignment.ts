@@ -12,6 +12,7 @@ import {
 } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
+import { DialingMode } from '../betaTypes';
 
 interface UseCallAssignmentReturn {
   data: ZetkinCallAssignment | null;
@@ -25,6 +26,7 @@ interface UseCallAssignmentReturn {
   updateCallAssignment: (
     data: CallAssignmentPatchBody
   ) => Promise<CallAssignmentData>;
+  updateDialingMode: (mode: DialingMode) => void;
   deleteAssignment: () => void;
 }
 
@@ -44,7 +46,7 @@ export default function useCallAssignment(
     actionOnSuccess: (data) => callAssignmentLoaded(data),
     loader: () =>
       apiClient.get<ZetkinCallAssignment>(
-        `/api/orgs/${orgId}/call_assignments/${assignmentId}`
+        `/beta/orgs/${orgId}/callAssignments/${assignmentId}`
       ),
   });
 
@@ -110,6 +112,21 @@ export default function useCallAssignment(
     );
     dispatch(callAssignmentUpdated([callAssignmentData, mutatingAttributes]));
     return callAssignmentData;
+  };
+
+  const updateDialingMode = (mode: DialingMode) => {
+    if (callAssignment) {
+      dispatch(callAssignmentUpdate([assignmentId, ['dialing_mode']]));
+      fetch(`/beta/orgs/${orgId}/callAssignments/${callAssignment.id}`, {
+        body: JSON.stringify({ dialing_mode: mode }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PATCH',
+      })
+        .then((res) => res.json())
+        .then((data: { data: ZetkinCallAssignment }) =>
+          dispatch(callAssignmentUpdated([data.data, ['dialing_mode']]))
+        );
+    }
   };
 
   const start = () => {
@@ -198,6 +215,7 @@ export default function useCallAssignment(
     isTargeted,
     start,
     updateCallAssignment,
+    updateDialingMode,
     updateGoal,
     updateTargets,
   };
