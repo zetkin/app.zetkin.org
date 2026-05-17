@@ -132,7 +132,7 @@
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.0.6",
     "@types/validator": "^13.6.3",
-    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.46.2",
     "@vueless/storybook-dark-mode": "^9.0.10",
     "babel-loader": "^8.2.2",
@@ -160,8 +160,7 @@
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
-    "typedoc": "^0.28.14",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "engines": {
     "node": ">=22"
@@ -180,6 +179,9 @@
   "overrides": {
     "redux": "^5.0.0",
     "jsdom": "25.0.1",
-    "parse5": "7.3.0"
+    "parse5": "7.3.0",
+    "react-intl": {
+      "typescript": "^6.0.0"
+    }
   }
 }
