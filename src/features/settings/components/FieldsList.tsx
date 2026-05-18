@@ -56,7 +56,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
               borderBottom: '1px solid #e5e5e5',
               display: 'grid',
               fontWeight: 600,
-              gridTemplateColumns: '2fr 2fr 1fr 120px',
+              gridTemplateColumns: '2fr 2fr 1fr auto',
               px: 1,
               py: 1,
             }}
@@ -81,8 +81,8 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                         py: 1.5,
                       }}
                     >
-                      <Box>{key}</Box>
                       <Box>{value}</Box>
+                      <Box>{key}</Box>
                       <Box />
                       <Box />
                     </Box>
@@ -149,7 +149,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                         />
 
                         <TextField
-                          label="Type"
+                          label="Field Type"
                           onChange={(event) =>
                             setUpdatedType(
                               event.target.value as CUSTOM_FIELD_TYPE
@@ -303,7 +303,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                   size="small"
                   variant="outlined"
                 >
-                  Create New Field
+                  Create Field
                 </Button>
               </Box>
             </Box>
