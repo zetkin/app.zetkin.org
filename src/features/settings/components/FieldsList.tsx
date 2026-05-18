@@ -331,15 +331,22 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
               )}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
                 <Button
-                  onClick={() =>
-                    createField(
-                      title,
-                      type,
-                      type === CUSTOM_FIELD_TYPE.ENUM
-                        ? parseEnumChoices(enumInput)
-                        : undefined
-                    )
-                  }
+                  onClick={() => {
+                    {
+                      createField(
+                        title,
+                        type,
+                        type === CUSTOM_FIELD_TYPE.ENUM
+                          ? parseEnumChoices(enumInput)
+                          : undefined
+                      );
+
+                      setEnumInput('');
+                      setTitle('');
+                      setType(CUSTOM_FIELD_TYPE.TEXT);
+                      setSlug('');
+                    }
+                  }}
                   size="small"
                   variant="outlined"
                 >
