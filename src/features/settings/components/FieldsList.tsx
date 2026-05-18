@@ -8,7 +8,11 @@ import useServerSide from 'core/useServerSide';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useFieldMutations from '../hooks/useFieldMutations';
 import useCreateField from '../hooks/useCreateField';
-import { CUSTOM_FIELD_TYPE, EnumChoice } from 'utils/types/zetkin';
+import {
+  CUSTOM_FIELD_TYPE,
+  EnumChoice,
+  ZetkinCustomField,
+} from 'utils/types/zetkin';
 
 type FieldsListProps = {
   orgId: number;
@@ -40,6 +44,34 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
         key: label.toLowerCase().replace(/\s+/g, '_'),
         label,
       }));
+  };
+
+  const handleFieldPayload = (
+    field: ZetkinCustomField
+  ): {
+    enum_choices?: EnumChoice[];
+    slug?: string;
+    title?: string;
+    type?: CUSTOM_FIELD_TYPE;
+  } => {
+    const enumChoices =
+      updatedType === CUSTOM_FIELD_TYPE.ENUM
+        ? parseEnumChoices(updatedEnumInput)
+        : undefined;
+
+    const originalEnumInput =
+      field.enum_choices?.map((choice) => choice.label).join(', ') ?? '';
+
+    return {
+      enum_choices:
+        updatedEnumInput !== originalEnumInput ? enumChoices : undefined,
+
+      slug: updatedSlug !== field.slug ? updatedSlug : undefined,
+
+      title: updatedTitle !== field.title ? updatedTitle : undefined,
+
+      type: updatedType !== field.type ? updatedType : undefined,
+    };
   };
 
   if (onServer) {
@@ -167,7 +199,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
 
                         {updatedType === CUSTOM_FIELD_TYPE.ENUM && (
                           <TextField
-                            label="Enum values (comma separated)"
+                            label="Options (comma separated)"
                             onChange={(event) =>
                               setUpdatedEnumInput(event.target.value)
                             }
@@ -197,40 +229,13 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
 
                             <Button
                               onClick={() => {
-                                const payload: {
-                                  enum_choices?: EnumChoice[];
-                                  slug?: string;
-                                  title?: string;
-                                  type?: CUSTOM_FIELD_TYPE;
-                                } = {};
+                                const payload = handleFieldPayload(field);
 
-                                if (updatedTitle !== field.title) {
-                                  payload.title = updatedTitle;
-                                }
-
-                                if (updatedSlug !== field.slug) {
-                                  payload.slug = updatedSlug;
-                                }
-
-                                if (updatedType !== field.type) {
-                                  payload.type = updatedType;
-                                }
-
-                                if (updatedType === CUSTOM_FIELD_TYPE.ENUM) {
-                                  const enumChoices =
-                                    parseEnumChoices(updatedEnumInput);
-
-                                  const originalEnumInput =
-                                    field.enum_choices
-                                      ?.map((choice) => choice.label)
-                                      .join(', ') ?? '';
-
-                                  if (updatedEnumInput !== originalEnumInput) {
-                                    payload.enum_choices = enumChoices;
-                                  }
-                                }
-
-                                if (Object.keys(payload).length === 0) {
+                                if (
+                                  Object.values(payload).every(
+                                    (value) => value === undefined
+                                  )
+                                ) {
                                   setUpdatedFieldId(null);
                                   return;
                                 }
