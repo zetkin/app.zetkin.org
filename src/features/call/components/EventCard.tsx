@@ -17,6 +17,8 @@ import ZUIText from 'zui/components/ZUIText';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinCallTarget } from '../types';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
+import messageIds from '../l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 type EventCardProps = {
   event: ZetkinEvent;
@@ -24,6 +26,7 @@ type EventCardProps = {
 };
 
 const EventCard: FC<EventCardProps> = ({ event, target }) => {
+  const messages = useMessages(messageIds);
   const intl = useIntl();
   const { signUp, undoSignup } = useEventCallActions(
     event.organization.id,
@@ -46,14 +49,21 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
         isTargetBooked
           ? [
               <ZUIText key={event.id}>
-                {`${target.first_name} is already booked.`}{' '}
+                <Msg
+                  id={messageIds.activities.events.alreadyBooked}
+                  values={{ name: target.first_name }}
+                />
               </ZUIText>,
             ]
           : [
               <>
                 <ZUIButton
                   key={event.id}
-                  label={isSignedUp ? 'Undo sign up' : 'Sign up'}
+                  label={
+                    isSignedUp
+                      ? messages.activities.events.undoSignUp()
+                      : messages.activities.events.signUp()
+                  }
                   onClick={() => (isSignedUp ? undoSignup() : signUp())}
                   variant="primary"
                 />
@@ -71,13 +81,15 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
       info={[
         {
           Icon: GroupWorkOutlined,
+          key: 'project',
           labels: [
-            event.campaign?.title ?? 'Untitled project',
+            event.campaign?.title ?? messages.activities.untitled.project(),
             event.organization.title,
           ],
         },
         {
           Icon: WatchLaterOutlined,
+          key: 'time',
           labels: [
             timeSpanToString(
               new Date(removeOffset(event.start_time)),
@@ -88,10 +100,17 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
         },
         {
           Icon: LocationOnOutlined,
-          labels: [event.location?.title ?? 'No location'],
+          key: 'location',
+          labels: [
+            event.location?.title ?? messages.activities.events.noLocation(),
+          ],
         },
       ]}
-      title={event.title || event.activity?.title || 'Untitled event'}
+      title={
+        event.title ||
+        event.activity?.title ||
+        messages.activities.untitled.event()
+      }
     />
   );
 };
