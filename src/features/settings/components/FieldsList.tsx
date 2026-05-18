@@ -8,7 +8,7 @@ import useServerSide from 'core/useServerSide';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useFieldMutations from '../hooks/useFieldMutations';
 import useCreateField from '../hooks/useCreateField';
-import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
+import { CUSTOM_FIELD_TYPE, EnumChoice } from 'utils/types/zetkin';
 
 type FieldsListProps = {
   orgId: number;
@@ -197,18 +197,45 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
 
                             <Button
                               onClick={() => {
-                                updateField(
-                                  {
-                                    enum_choices:
-                                      updatedType === CUSTOM_FIELD_TYPE.ENUM
-                                        ? parseEnumChoices(updatedEnumInput)
-                                        : undefined,
-                                    slug: updatedSlug,
-                                    title: updatedTitle,
-                                    type: updatedType,
-                                  },
-                                  field.id
-                                );
+                                const payload: {
+                                  enum_choices?: EnumChoice[];
+                                  slug?: string;
+                                  title?: string;
+                                  type?: CUSTOM_FIELD_TYPE;
+                                } = {};
+
+                                if (updatedTitle !== field.title) {
+                                  payload.title = updatedTitle;
+                                }
+
+                                if (updatedSlug !== field.slug) {
+                                  payload.slug = updatedSlug;
+                                }
+
+                                if (updatedType !== field.type) {
+                                  payload.type = updatedType;
+                                }
+
+                                if (updatedType === CUSTOM_FIELD_TYPE.ENUM) {
+                                  const enumChoices =
+                                    parseEnumChoices(updatedEnumInput);
+
+                                  const originalEnumInput =
+                                    field.enum_choices
+                                      ?.map((choice) => choice.label)
+                                      .join(', ') ?? '';
+
+                                  if (updatedEnumInput !== originalEnumInput) {
+                                    payload.enum_choices = enumChoices;
+                                  }
+                                }
+
+                                if (Object.keys(payload).length === 0) {
+                                  setUpdatedFieldId(null);
+                                  return;
+                                }
+
+                                updateField(payload, field.id);
                                 setUpdatedFieldId(null);
                               }}
                               size="small"

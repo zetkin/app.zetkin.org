@@ -44,7 +44,7 @@ export default function useFieldMutations(
     },
     fieldId: number
   ) => {
-    dispatch(fieldUpdate([fieldId, ['title', 'type']]));
+    dispatch(fieldUpdate([fieldId, ['enum_choices', 'slug', 'title', 'type']]));
 
     const field = await apiClient.patch<ZetkinCustomField>(
       `/api/orgs/${orgId}/people/fields/${fieldId}/`,
