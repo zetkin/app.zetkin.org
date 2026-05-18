@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 import range from 'utils/range';
 import shouldLoad from 'core/caching/shouldLoad';
@@ -6,6 +7,8 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+
+dayjs.extend(utc);
 
 export default function useEventsFromDateRange(
   startDate: Date,
