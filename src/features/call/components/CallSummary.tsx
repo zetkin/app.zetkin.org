@@ -44,7 +44,10 @@ const CallSummary: FC<Props> = ({
   );
 
   const hasUnfinishedCalls = unfinishedCalls.length > 0;
-  const hasError = !!reportSubmissionError;
+  const hasReportSubmissionError = !!reportSubmissionError;
+  const hasPreviousCallMissingError =
+    !hasReportSubmissionError && !previousCall;
+  const noErrors = !hasReportSubmissionError && !hasPreviousCallMissingError;
 
   return (
     <Box
@@ -63,20 +66,35 @@ const CallSummary: FC<Props> = ({
           gap: 2,
         }}
       >
-        {hasError && (
+        {hasReportSubmissionError && (
           <>
             <Box sx={{ paddingY: 2 }}>
               <ZUIIcon color="error" icon={Close} size="large" />
             </Box>
             <ZUIText variant="headingLg">
-              <Msg id={messageIds.summary.error.title} />
+              <Msg id={messageIds.summary.reportSubmissionError.title} />
             </ZUIText>
             <ZUIText variant="headingSm">
-              <Msg id={messageIds.summary.error.description} />
+              <Msg id={messageIds.summary.reportSubmissionError.description} />
             </ZUIText>
           </>
         )}
-        {!hasError && (
+        {hasPreviousCallMissingError && (
+          <>
+            <Box sx={{ paddingY: 2 }}>
+              <ZUIIcon color="error" icon={Close} size="large" />
+            </Box>
+            <ZUIText variant="headingLg">
+              <Msg id={messageIds.summary.previousCallMissingError.title} />
+            </ZUIText>
+            <ZUIText variant="headingSm">
+              <Msg
+                id={messageIds.summary.previousCallMissingError.description}
+              />
+            </ZUIText>
+          </>
+        )}
+        {noErrors && (
           <Box
             sx={{
               alignItems: 'center',
@@ -90,16 +108,17 @@ const CallSummary: FC<Props> = ({
               <Msg id={messageIds.summary.title.success} />
             </ZUIText>
             <ZUIText color="secondary" variant="headingSm">
-              {hasUnfinishedCalls ? (
+              {hasUnfinishedCalls && (
                 <Msg id={messageIds.summary.unfinishedCallsMessage} />
-              ) : (
+              )}
+              {!hasUnfinishedCalls && previousCall && (
                 <Msg
                   id={
                     messageIds.summary.callSummary[
                       callStateToString[reportState]
                     ]
                   }
-                  values={{ name: previousCall?.target.name || '' }}
+                  values={{ name: previousCall.target.name }}
                 />
               )}
             </ZUIText>

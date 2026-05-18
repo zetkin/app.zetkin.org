@@ -1,7 +1,7 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinSurveyApiSubmission } from 'utils/types/zetkin';
 import submitSurveysRpc from '../rpc/submitSurveysAndUpdateCall';
-import { reportSubmitted, setReportSubmissionError } from '../store';
+import { reportSubmitted, reportSubmissionErrorAdded } from '../store';
 import { CallState, Report } from '../types';
 import calculateReportState from '../components/Report/utils/calculateReportState';
 
@@ -44,7 +44,7 @@ export default function useSubmitReport(orgId: number) {
     if (result.kind == 'success') {
       dispatch(reportSubmitted(result.updatedCall));
     } else {
-      dispatch(setReportSubmissionError(result));
+      dispatch(reportSubmissionErrorAdded(result));
     }
   };
 }
