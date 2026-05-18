@@ -9,18 +9,22 @@ import { AppSession } from 'utils/types';
 
 const protectedRoutes = ['/my', '/call'];
 
-// Pages Router routes — skip next-intl rewriting for these
-const pagesRouterPrefixes = ['/organize', '/login', '/logout', '/legacy'];
+// Pages Router routes: skip next-intl rewriting for these.
+const pagesRouterRoutes = ['/', '/organize', '/login', '/logout', '/legacy'];
 
 const intlMiddleware = createIntlMiddleware(routing);
+
+function matchesRoute(path: string, route: string) {
+  return path == route || path.startsWith(`${route}/`);
+}
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Auth check for protected routes
-  const isProtectedRoute = !!protectedRoutes.find((route) => {
-    return path.startsWith(route);
-  });
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    matchesRoute(path, route)
+  );
 
   const cookieStore = cookies();
 
@@ -39,8 +43,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // Skip next-intl rewriting for Pages Router routes
-  const isPagesRoute = pagesRouterPrefixes.some((prefix) =>
-    path.startsWith(prefix)
+  const isPagesRoute = pagesRouterRoutes.some((route) =>
+    matchesRoute(path, route)
   );
 
   if (isPagesRoute) {

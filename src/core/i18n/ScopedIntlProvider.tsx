@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, ReactNode } from 'react';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider, useLocale } from 'next-intl';
 
 type ScopedIntlProviderProps = {
   children: ReactNode;
@@ -20,22 +20,27 @@ type ScopedIntlProviderProps = {
 const ScopedIntlProvider: FC<ScopedIntlProviderProps> = ({
   children,
   messages,
-}) => (
-  <NextIntlClientProvider
-    messages={messages}
-    onError={(error) => {
-      // Skip during static prerendering when the messages payload is empty.
-      const hasMessages = messages && Object.keys(messages).length > 0;
-      if (hasMessages && error.code === 'MISSING_MESSAGE') {
-        throw new Error(
-          `Missing translation: ${error.message}. ` +
-            'Add the correct namespace to localeScope.'
-        );
-      }
-    }}
-  >
-    {children}
-  </NextIntlClientProvider>
-);
+}) => {
+  const locale = useLocale();
+
+  return (
+    <NextIntlClientProvider
+      locale={locale}
+      messages={messages}
+      onError={(error) => {
+        // Skip during static prerendering when the messages payload is empty.
+        const hasMessages = messages && Object.keys(messages).length > 0;
+        if (hasMessages && error.code === 'MISSING_MESSAGE') {
+          throw new Error(
+            `Missing translation: ${error.message}. ` +
+              'Add the correct namespace to localeScope.'
+          );
+        }
+      }}
+    >
+      {children}
+    </NextIntlClientProvider>
+  );
+};
 
 export default ScopedIntlProvider;
