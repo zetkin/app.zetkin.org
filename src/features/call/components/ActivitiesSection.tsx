@@ -97,6 +97,10 @@ const Activities: FC<ActivitiesProps> = ({
     [activities, searchString]
   );
 
+  useEffect(() => {
+    setSearchString('');
+  }, [target]);
+
   if (!target) {
     return null;
   }
