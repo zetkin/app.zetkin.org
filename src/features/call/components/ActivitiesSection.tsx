@@ -17,6 +17,7 @@ import {
   Hotel,
 } from '@mui/icons-material';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
+import { partition } from 'lodash';
 
 import EventCard from './EventCard';
 import { LaneStep, ZetkinCallTarget } from '../types';
@@ -98,22 +99,16 @@ const Activities: FC<ActivitiesProps> = ({
             onClick={() => onClearFilters()}
           />
         )}
-        {baseFilters.map((filter) => (
-          <ZUIFilterButton
-            key={filter.key}
-            active={filter.active}
-            label={filter.label}
-            onClick={filter.onClick}
-          />
-        ))}
-        {eventFilters.map((filter) => (
-          <ZUIFilterButton
-            key={filter.key}
-            active={filter.active}
-            label={filter.label}
-            onClick={filter.onClick}
-          />
-        ))}
+        {partition([...baseFilters, ...eventFilters], (filter) => filter.active)
+          .flat()
+          .map((filter) => (
+            <ZUIFilterButton
+              key={filter.key}
+              active={filter.active}
+              label={filter.label}
+              onClick={filter.onClick}
+            />
+          ))}
       </Box>
       {showNoActivities && (
         <Box
