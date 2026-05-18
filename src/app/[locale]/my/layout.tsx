@@ -48,7 +48,11 @@ type Props = {
 
 export default async function MyHomeLayout({ children }: Props) {
   const homeTitle = process.env.HOME_TITLE;
-  const messages = await getFilteredMessages('feat.home');
+  const messages = await getFilteredMessages(
+    'feat.events',
+    'feat.home',
+    'feat.organizations'
+  );
 
   return (
     <ScopedIntlProvider messages={messages}>

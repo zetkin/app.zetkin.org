@@ -53,6 +53,7 @@ const OrgLayout: FC<Props> = async ({ children, params }) => {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
   const messages = await getFilteredMessages(
+    'feat.events',
     'feat.organizations',
     'feat.home',
     'feat.joinForms'

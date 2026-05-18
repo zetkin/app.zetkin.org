@@ -24,7 +24,7 @@ import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['feat.journeys', 'feat.breadcrumbs'],
+  localeScope: ['feat.journeys', 'feat.breadcrumbs', 'feat.tags'],
 };
 
 export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =

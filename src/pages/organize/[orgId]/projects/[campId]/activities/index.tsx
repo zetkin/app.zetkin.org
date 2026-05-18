@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: ['feat.campaigns', 'feat.breadcrumbs'],
+    localeScope: ['feat.campaigns', 'feat.events', 'feat.breadcrumbs'],
   }
 );
 

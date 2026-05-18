@@ -52,6 +52,7 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
   const apiClient = new BackendApiClient(headersObject);
   const messages = await getFilteredMessages(
     'feat.campaigns',
+    'feat.home',
     'feat.organizations',
     'feat.events'
   );

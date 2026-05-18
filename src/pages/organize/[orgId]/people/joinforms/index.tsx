@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     };
   },
   {
-    localeScope: ['feat.joinForms', 'feat.breadcrumbs'],
+    localeScope: ['feat.joinForms', 'feat.breadcrumbs', 'feat.views'],
   }
 );
 

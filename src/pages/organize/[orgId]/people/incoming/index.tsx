@@ -32,7 +32,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     };
   },
   {
-    localeScope: ['feat.import', 'feat.breadcrumbs'],
+    localeScope: [
+      'feat.import',
+      'feat.breadcrumbs',
+      'feat.joinForms',
+      'feat.views',
+    ],
   }
 );
 

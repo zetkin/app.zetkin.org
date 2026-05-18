@@ -27,7 +27,7 @@ import {
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['feat.journeys', 'feat.breadcrumbs'],
+  localeScope: ['feat.journeys', 'feat.breadcrumbs', 'feat.tags'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

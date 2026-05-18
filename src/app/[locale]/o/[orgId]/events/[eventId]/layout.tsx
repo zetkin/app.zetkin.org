@@ -67,6 +67,7 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
   const apiClient = new BackendApiClient(headersObject);
   const messages = await getFilteredMessages(
     'feat.events',
+    'feat.home',
     'feat.organizations',
     'feat.campaigns'
   );

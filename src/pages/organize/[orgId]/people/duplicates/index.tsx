@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     };
   },
   {
-    localeScope: ['feat.duplicates', 'feat.breadcrumbs'],
+    localeScope: ['feat.duplicates', 'feat.breadcrumbs', 'feat.views'],
   }
 );
 
