@@ -795,6 +795,7 @@ feat:
       createCallAssignment: Call assignment
       createEmail: Email
       createEvent: Event
+      createMultiShiftEvent: Multi-shift event
       createSurvey: Survey
       createTask: Task
     events: Events
@@ -1404,6 +1405,7 @@ feat:
       backToEvents: Back to event list
       backToLocations: Back to locations
       backToShifts: Back to shift list
+      bookAll: Book all
       booked: Booked
       cancel: Cancel
       cancelWarning: If you do, remember to notify all participants and sign-ups that
@@ -1444,6 +1446,7 @@ feat:
       description: Description
       draft: Draft
       end: End
+      error: Could not create multi-shift event. Please try again.
       event: Event
       eventDuration: Event duration
       header: Create multi-shift event
@@ -1467,6 +1470,9 @@ feat:
       shiftsHeader: Shifts
       showMoreSettingsButton: More settings
       start: Start
+      successDraft: "{no, plural, one {Created 1 draft event} other {Created # draft
+        events}}"
+      successPublish: "{no, plural, one {Published 1 shift} other {Published # shifts}}"
       type: Type
     eventStatus:
       cancelled: Cancelled
@@ -1619,6 +1625,12 @@ feat:
     libraryDialog:
       preview:
         backButton: Back to library
+        cropLandscape: Landscape crop
+        cropSquare: Square crop
+        cropWarning: In some cases Zetkin will crop your image in roughly these ratios
+          when displaying it.
+        cropWide: Wide crop
+        previewsSection: Previews
         useButton: Use
       title: Library
     searching:
@@ -2272,6 +2284,8 @@ feat:
       headline: Dig deeper
       showButton: Show all events
   profile:
+    customFields:
+      notEditable: This field cannot be edited by your organization
     delete:
       button: Delete person
       confirm: Are you sure you want to delete {name} from {org}, and all related
@@ -2351,6 +2365,7 @@ feat:
           name: Name
         description: Administrators have full access to creating, editing and deleting
           any type of content.
+        empty: You have not added any administrators yet.
         roleInheritance: Administrator in
         title: Administrators
       organizers:
@@ -2359,6 +2374,7 @@ feat:
           name: Name
         description: Organizers have enough privileges to do things like organizing
           campaigns and managing existing call assignments.
+        empty: You have not added any organizers yet.
         roleInheritance: Organizer in
         title: Organizers
       settingsLayout:
@@ -3019,6 +3035,9 @@ feat:
         toPdf: Export to pdf
         toPng: Export to png
       optionsFields:
+        displayInsights:
+          absoluteCount: Amount
+          percentCount: Percent
         subheader: In total, there were {answerCount, plural, =1 {1 answer} other {#
           answers}} and {totalSelectedOptionsCount, plural, =1 {1 selected
           option} other {# selected options}}.
@@ -3030,6 +3049,9 @@ feat:
           respondent} other {# respondents}} did. This may make the pie chart
           misleading.
       textFields:
+        copyResponse:
+          copy: Copy to clipboard
+          wasCopied: Copied!
         subheader: In total, there were {answerCount, plural, =1 {1 answer} other {#
           answers}}, {totalWordCount, plural, =1 {1 word} other {# words}} and
           {totalUniqueWordCount, plural, =1 {1 unique word} other {# unique
@@ -3101,6 +3123,8 @@ feat:
       cancel: Don't add
       description: The person you have just linked does not have an email address
         while the survey response does. Would you like to add it the person?
+      new: New
+      old: Old
       title: Add email address
     surveyDialogDifferentEmail:
       description: The person you have just linked to has a different email to the one
@@ -3802,6 +3826,15 @@ zui:
       m: Male
       o: Other
       unknown: Unknown
+    location:
+      dialog:
+        clearButton: Clear location
+        doneButton: Done
+        helperText: Latitude and longitude coordinates
+        mapInfo: Click and drag to pan the map. Pinch or scroll to zoom. Click or tap to
+          select map location.
+      helperText: Latitude and longitude coordinates
+      mapIconTooltip: Edit in map
     showAllFields: Show all fields
     submitLabel:
       add: Create & add
