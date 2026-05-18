@@ -21,8 +21,9 @@ test.describe('SSR translations on public pages', () => {
       page,
       appUri,
     }) => {
-      await page.goto(appUri + '/nonexistent-page');
+      const response = await page.goto(appUri + '/nonexistent-page');
 
+      expect(response?.status()).toBe(404);
       await expect(page.locator('html')).toHaveAttribute('lang', 'de');
       await expect(
         page.getByText('zurück zur Startseite').first()
@@ -37,8 +38,9 @@ test.describe('SSR translations on public pages', () => {
       page,
       appUri,
     }) => {
-      await page.goto(appUri + '/nonexistent-page');
+      const response = await page.goto(appUri + '/nonexistent-page');
 
+      expect(response?.status()).toBe(404);
       await expect(page.locator('html')).toHaveAttribute('lang', 'sv');
       await expect(
         page.getByText('Tillbaka till startsidan').first()
@@ -60,8 +62,9 @@ test.describe('SSR translations on public pages', () => {
         },
       ]);
 
-      await page.goto(appUri + '/nonexistent-page');
+      const response = await page.goto(appUri + '/nonexistent-page');
 
+      expect(response?.status()).toBe(404);
       await expect(page.locator('html')).toHaveAttribute('lang', 'sv');
       await expect(
         page.getByText('Tillbaka till startsidan').first()
@@ -85,7 +88,8 @@ test.describe('SSR translations on public pages', () => {
           value: 'de',
         },
       ]);
-      await page.goto(appUri + '/nonexistent-page');
+      const response = await page.goto(appUri + '/nonexistent-page');
+      expect(response?.status()).toBe(404);
       await expect(page.locator('html')).toHaveAttribute('lang', 'de');
       await expect(
         page.getByText('zurück zur Startseite').first()
@@ -99,7 +103,8 @@ test.describe('SSR translations on public pages', () => {
           value: 'sv',
         },
       ]);
-      await page.reload();
+      const reloaded = await page.reload();
+      expect(reloaded?.status()).toBe(404);
       await expect(page.locator('html')).toHaveAttribute('lang', 'sv');
       await expect(
         page.getByText('Tillbaka till startsidan').first()
