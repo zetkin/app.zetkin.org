@@ -309,7 +309,7 @@ const AllEventsList: FC = () => {
             onClick: () => {
               if (orgIdsToFilterBy?.length > 0) {
                 setFilters({
-                  orgs: [],
+                  orgs: null,
                 });
               } else {
                 setDrawerContent('orgs');
@@ -327,7 +327,7 @@ const AllEventsList: FC = () => {
             onClick: () => {
               if (eventTypeFilter.isFiltered) {
                 setFilters({
-                  types: [],
+                  types: null,
                 });
               } else {
                 setDrawerContent('eventTypes');
