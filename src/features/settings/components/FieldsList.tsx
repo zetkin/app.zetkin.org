@@ -13,6 +13,8 @@ import {
   EnumChoice,
   ZetkinCustomField,
 } from 'utils/types/zetkin';
+import useMessages from 'core/i18n/useMessages';
+import globalMessageIds from 'core/i18n/messageIds';
 
 type FieldsListProps = {
   orgId: number;
@@ -21,6 +23,7 @@ type FieldsListProps = {
 const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const onServer = useServerSide();
   const customFields = useCustomFields(orgId).data ?? [];
+  const globalMessages = useMessages(globalMessageIds);
   const { createField } = useCreateField(orgId);
   const { updateField: updateField, removeField } = useFieldMutations(orgId);
   const [title, setTitle] = useState('');
@@ -102,24 +105,29 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
           <Box display="flex" flexDirection="column">
             <Box sx={{ flex: 1 }}>
               <Box display="flex" flexDirection="column" gap={1} mt={2}>
-                {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => (
-                  <Box key={value} sx={{ borderBottom: '1px solid #e5e5e5' }}>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'grid',
-                        gridTemplateColumns: '2fr 2fr 1fr auto',
-                        px: 1,
-                        py: 1.5,
-                      }}
-                    >
-                      <Box>{value}</Box>
-                      <Box>{key}</Box>
-                      <Box />
-                      <Box />
+                {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => {
+                  const slug = value as NATIVE_PERSON_FIELDS;
+
+                  return (
+                    <Box key={value} sx={{ borderBottom: '1px solid #e5e5e5' }}>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'grid',
+                          gridTemplateColumns: '2fr 2fr 1fr auto',
+                          px: 1,
+                          py: 1.5,
+                        }}
+                      >
+                        <Box>{globalMessages.personFields[slug]()}</Box>
+                        <Box>{key.toLowerCase()}</Box>
+                        <Box>text</Box>
+                        <Box />
+                        <Box />
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
+                  );
+                })}
                 {customFields.map((field) => (
                   <Box
                     key={field.slug}
