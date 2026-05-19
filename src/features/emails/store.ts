@@ -190,8 +190,8 @@ const emailsSlice = createSlice({
         remoteItem(theme.id, { data: themeWithOrgId })
       );
     },
-    themeDeleted: (state, action: PayloadAction<number>) => {
-      const themeId = action.payload;
+    themeDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [themeId] = action.payload;
       const item = state.themeList.items.find((item) => item.id === themeId);
       if (item) {
         item.deleted = true;

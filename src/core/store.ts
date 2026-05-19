@@ -166,7 +166,7 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: themeDeleted,
   effect: (action) => {
-    const orgId = action.payload;
+    const [orgId] = action.payload;
     Router.push(`/organize/${orgId}/settings/themes`);
   },
 });

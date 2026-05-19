@@ -39,7 +39,7 @@ export default function useEmailTheme(
 
   const deleteEmailTheme = async (themeId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/email_themes/${themeId}`);
-    dispatch(themeDeleted(themeId));
+    dispatch(themeDeleted([orgId, themeId]));
   };
 
   const duplicateEmailTheme = async () => {
