@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.home', {
@@ -47,6 +49,9 @@ export default makeMessages('feat.home', {
   },
   footer: {
     privacyPolicy: m('Privacy policy'),
+  },
+  ics: {
+    joinEvent: m<{ eventLink: ReactElement }>('Join event here: {eventLink}'),
   },
   newLandingPageAlert: {
     description: m(
