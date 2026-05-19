@@ -252,12 +252,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           field.enum_choices
         ) {
           return (
-            <Box
-              key={field.slug}
-              alignItems="flex-start"
-              display="flex"
-              flex={1}
-            >
+            <Box key={field.slug} display="flex">
               <FormControl disabled={!isFieldWritable} fullWidth>
                 <InputLabel>{field.title}</InputLabel>
                 <Select
