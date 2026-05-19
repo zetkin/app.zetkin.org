@@ -311,6 +311,9 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                 label="Title"
                 onChange={(event) => {
                   setTitle(event.target.value);
+                  setSlug(
+                    event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+                  );
                 }}
                 sx={{ backgroundColor: '#f9f9f9' }}
                 value={title}
@@ -321,7 +324,9 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                 id="filled-basic"
                 label="Slug"
                 onChange={(event) => {
-                  setSlug(event.target.value);
+                  setSlug(
+                    event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+                  );
                 }}
                 sx={{ backgroundColor: '#f9f9f9' }}
                 value={slug}
