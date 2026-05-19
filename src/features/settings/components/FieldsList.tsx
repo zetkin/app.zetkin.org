@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, MenuItem, Paper, TextField } from '@mui/material';
+import { Button, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
 
@@ -87,11 +87,23 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
         {/* LEFT SIDE*/}
         <Box sx={{ flex: 1 }}>
           <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            sx={{
+              marginBottom: '15px',
+            }}
+          >
+            <Typography component="h1" variant="h4">
+              Fields
+            </Typography>
+          </Box>
+          <Box
             sx={{
               borderBottom: '1px solid #e5e5e5',
               display: 'grid',
               fontWeight: 600,
-              gridTemplateColumns: '2fr 2fr 1fr auto',
+              gridTemplateColumns: '2fr 2fr 1fr 1fr',
               px: 1,
               py: 1,
             }}
@@ -114,7 +126,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                         sx={{
                           alignItems: 'center',
                           display: 'grid',
-                          gridTemplateColumns: '2fr 2fr 1fr auto',
+                          gridTemplateColumns: '2fr 2fr 1fr 1fr',
                           px: 1,
                           py: 1.5,
                         }}
@@ -122,8 +134,6 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                         <Box>{globalMessages.personFields[slug]()}</Box>
                         <Box>{key.toLowerCase()}</Box>
                         <Box>text</Box>
-                        <Box />
-                        <Box />
                       </Box>
                     </Box>
                   );
@@ -137,7 +147,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                       sx={{
                         alignItems: 'center',
                         display: 'grid',
-                        gridTemplateColumns: '2fr 2fr 1fr auto',
+                        gridTemplateColumns: '2fr 2fr 1fr 1fr',
                         px: 1,
                         py: 1.5,
                       }}
@@ -147,26 +157,30 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
                       <Box>{field.type}</Box>
 
                       {updatedFieldId !== field.id && (
-                        <Button
-                          onClick={() => {
-                            setUpdatedFieldId(field.id);
-                            setUpdatedTitle(field.title);
-                            setUpdatedType(field.type);
-                            setUpdatedSlug(field.slug);
-
-                            if (field.enum_choices) {
-                              setUpdatedEnumInput(
-                                field.enum_choices
-                                  .map((choice) => choice.label)
-                                  .join(', ')
-                              );
-                            }
-                          }}
-                          size="small"
-                          variant="outlined"
+                        <Box
+                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
                         >
-                          Edit
-                        </Button>
+                          <Button
+                            onClick={() => {
+                              setUpdatedFieldId(field.id);
+                              setUpdatedTitle(field.title);
+                              setUpdatedType(field.type);
+                              setUpdatedSlug(field.slug);
+
+                              if (field.enum_choices) {
+                                setUpdatedEnumInput(
+                                  field.enum_choices
+                                    .map((choice) => choice.label)
+                                    .join(', ')
+                                );
+                              }
+                            }}
+                            size="small"
+                            variant="outlined"
+                          >
+                            Edit
+                          </Button>
+                        </Box>
                       )}
                     </Box>
 
@@ -269,6 +283,18 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
 
         {/* RIGHT SIDE*/}
         <Box sx={{ width: 360 }}>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            sx={{
+              marginBottom: '15px',
+            }}
+          >
+            <Typography component="h1" variant="h4">
+              Create New Field
+            </Typography>
+          </Box>
           <Paper
             elevation={0}
             sx={{
