@@ -60,11 +60,8 @@ const BrowserDragLayer: FC = () => {
             boxShadow: dragProps.canDrop
               ? '0 6px 6px rgba(0,0,0,0.2)'
               : '0 14px 14px rgba(0,0,0,0.2)',
-            display: 'inline-block',
-            fontSize: oldTheme.typography.body2.fontSize,
             left: currentOffset.x,
             padding: 1,
-            maxWidth: 'calc(100vw - 24px)',
             pointerEvents: 'none',
             position: 'absolute',
             top: currentOffset.y,
@@ -73,34 +70,11 @@ const BrowserDragLayer: FC = () => {
               : 'scale(1.1) rotate(5deg)',
             transition: 'transform 200ms, box-shadow 200ms',
             whiteSpace: 'nowrap',
-            width: 'fit-content',
           }}
         >
-          <Box alignItems="center" display="flex" gap={1} maxWidth="100%">
-            <Box
-              sx={{
-                '& .MuiSvgIcon-root': {
-                  fontSize: 18,
-                },
-                alignItems: 'center',
-                display: 'flex',
-                flexShrink: 0,
-                lineHeight: 0,
-              }}
-            >
-              <BrowserItemIcon item={item} />
-            </Box>
-            <Box
-              sx={{
-                lineHeight: 1.15,
-                minWidth: 0,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {item.title}
-            </Box>
+          <Box display="flex" gap={2}>
+            <BrowserItemIcon item={item} />
+            {item.title}
           </Box>
         </Paper>
       </Box>
