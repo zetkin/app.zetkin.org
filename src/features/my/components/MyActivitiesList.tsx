@@ -2,7 +2,7 @@
 
 import { FC, useState } from 'react';
 import { Box, Fade } from '@mui/material';
-import { GroupWorkOutlined, Hotel } from '@mui/icons-material';
+import { GroupWorkOutlined, Hotel, Clear } from '@mui/icons-material';
 
 import { Msg, useMessages } from 'core/i18n';
 import MyActivityListItem from 'features/my/components/MyActivityListItem';
@@ -37,7 +37,18 @@ const MyActivitiesList: FC = () => {
     <Box display="flex" flexDirection="column" gap={1} m={1}>
       {kinds.length > 1 && (
         <Box display="flex" gap={1}>
-          {kinds.map((kind) => {
+          {filteredKinds.length > 0 && (
+            <ZUIFilterButton
+              active={true}
+              circular
+              label={Clear}
+              onClick={() => setFilteredKinds([])}
+            />
+          )}
+          {[
+            ...kinds.filter((kind) => filteredKinds.includes(kind)),
+            ...kinds.filter((kind) => !filteredKinds.includes(kind)),
+          ].map((kind) => {
             const active = filteredKinds.includes(kind);
             return (
               <ZUIFilterButton
