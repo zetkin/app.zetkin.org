@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
 
@@ -7,7 +7,6 @@ import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useServerSide from 'core/useServerSide';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useFieldMutations from '../hooks/useFieldMutations';
-import useCreateField from '../hooks/useCreateField';
 import {
   CUSTOM_FIELD_TYPE,
   EnumChoice,
@@ -15,6 +14,8 @@ import {
 } from 'utils/types/zetkin';
 import useMessages from 'core/i18n/useMessages';
 import globalMessageIds from 'core/i18n/messageIds';
+import Msg from 'core/i18n/Msg';
+import messageIds from 'features/settings/l10n/messageIds';
 
 type FieldsListProps = {
   orgId: number;
@@ -24,12 +25,7 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const onServer = useServerSide();
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
-  const { createField } = useCreateField(orgId);
   const { updateField: updateField, removeField } = useFieldMutations(orgId);
-  const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
-  const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
-  const [enumInput, setEnumInput] = useState('');
   const [updatedFieldId, setUpdatedFieldId] = useState<number | null>(null);
   const [updatedTitle, setUpdatedTitle] = useState('');
   const [updatedType, setUpdatedType] = useState<CUSTOM_FIELD_TYPE>(
@@ -68,11 +64,8 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
     return {
       enum_choices:
         updatedEnumInput !== originalEnumInput ? enumChoices : undefined,
-
       slug: updatedSlug !== field.slug ? updatedSlug : undefined,
-
       title: updatedTitle !== field.title ? updatedTitle : undefined,
-
       type: updatedType !== field.type ? updatedType : undefined,
     };
   };
@@ -82,311 +75,185 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   }
 
   return (
-    <Box sx={{ backgroundColor: '#f7f7f7', minHeight: '100vh', p: 4 }}>
-      <Box sx={{ alignItems: 'flex-start', display: 'flex', gap: 3 }}>
-        {/* LEFT SIDE*/}
-        <Box sx={{ flex: 1 }}>
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="space-between"
-            sx={{
-              marginBottom: '15px',
-            }}
-          >
-            <Typography component="h1" variant="h4">
-              Fields
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              borderBottom: '1px solid #e5e5e5',
-              display: 'grid',
-              fontWeight: 600,
-              gridTemplateColumns: '2fr 2fr 1fr 1fr',
-              px: 1,
-              py: 1,
-            }}
-          >
-            <Box>Title</Box>
-            <Box>Slug</Box>
-            <Box>Type</Box>
-            <Box />
-          </Box>
+    <Box>
+      <Typography
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        sx={{
+          flex: 1,
+          marginBottom: '15px',
+        }}
+        variant="h4"
+      >
+        <Msg id={messageIds.fields.fieldsTitle} />
+      </Typography>
+      <Box
+        sx={{
+          borderBottom: '1px solid #e5e5e5',
+          display: 'grid',
+          fontWeight: 600,
+          gridTemplateColumns: '2fr 2fr 1fr 1fr',
+          px: 1,
+          py: 1,
+        }}
+      >
+        <Box>Title</Box>
+        <Box>Slug</Box>
+        <Box>Type</Box>
+      </Box>
 
-          <Box display="flex" flexDirection="column">
-            <Box sx={{ flex: 1 }}>
-              <Box display="flex" flexDirection="column" gap={1} mt={2}>
-                {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => {
-                  const slug = value as NATIVE_PERSON_FIELDS;
+      <Box display="flex" flexDirection="column" gap={1} mt={2}>
+        {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => {
+          const slug = value as NATIVE_PERSON_FIELDS;
 
-                  return (
-                    <Box key={value} sx={{ borderBottom: '1px solid #e5e5e5' }}>
-                      <Box
-                        sx={{
-                          alignItems: 'center',
-                          display: 'grid',
-                          gridTemplateColumns: '2fr 2fr 1fr 1fr',
-                          px: 1,
-                          py: 1.5,
-                        }}
-                      >
-                        <Box>{globalMessages.personFields[slug]()}</Box>
-                        <Box>{key.toLowerCase()}</Box>
-                        <Box>text</Box>
-                      </Box>
-                    </Box>
-                  );
-                })}
-                {customFields.map((field) => (
-                  <Box
-                    key={field.slug}
-                    sx={{ borderBottom: '1px solid #e5e5e5' }}
+          return (
+            <Box
+              key={value}
+              sx={{
+                alignItems: 'center',
+                borderBottom: '1px solid #e5e5e5',
+                display: 'grid',
+                gridTemplateColumns: '2fr 2fr 1fr 1fr',
+                px: 1,
+                py: 1.5,
+              }}
+            >
+              <Box>{globalMessages.personFields[slug]()}</Box>
+              <Box>{key.toLowerCase()}</Box>
+              <Box>text</Box>
+            </Box>
+          );
+        })}
+
+        {customFields.map((field) => (
+          <Box key={field.slug}>
+            <Box
+              sx={{
+                alignItems: 'center',
+                borderBottom: '1px solid #e5e5e5',
+                display: 'grid',
+                gridTemplateColumns: '2fr 2fr 1fr 1fr',
+                px: 1,
+                py: 1.5,
+              }}
+            >
+              <Box>{field.title}</Box>
+              <Box>{field.slug}</Box>
+              <Box>{field.type}</Box>
+
+              {updatedFieldId !== field.id && (
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    onClick={() => {
+                      setUpdatedFieldId(field.id);
+                      setUpdatedTitle(field.title);
+                      setUpdatedType(field.type);
+                      setUpdatedSlug(field.slug);
+
+                      if (field.enum_choices) {
+                        setUpdatedEnumInput(
+                          field.enum_choices
+                            .map((choice) => choice.label)
+                            .join(', ')
+                        );
+                      }
+                    }}
+                    size="small"
+                    variant="outlined"
                   >
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'grid',
-                        gridTemplateColumns: '2fr 2fr 1fr 1fr',
-                        px: 1,
-                        py: 1.5,
-                      }}
-                    >
-                      <Box>{field.title}</Box>
-                      <Box>{field.slug}</Box>
-                      <Box>{field.type}</Box>
-
-                      {updatedFieldId !== field.id && (
-                        <Box
-                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                        >
-                          <Button
-                            onClick={() => {
-                              setUpdatedFieldId(field.id);
-                              setUpdatedTitle(field.title);
-                              setUpdatedType(field.type);
-                              setUpdatedSlug(field.slug);
-
-                              if (field.enum_choices) {
-                                setUpdatedEnumInput(
-                                  field.enum_choices
-                                    .map((choice) => choice.label)
-                                    .join(', ')
-                                );
-                              }
-                            }}
-                            size="small"
-                            variant="outlined"
-                          >
-                            Edit
-                          </Button>
-                        </Box>
-                      )}
-                    </Box>
-
-                    {updatedFieldId === field.id && (
-                      <Box display="flex" flexDirection="column" gap={1}>
-                        <TextField
-                          label="Title"
-                          onChange={(event) =>
-                            setUpdatedTitle(event.target.value)
-                          }
-                          value={updatedTitle}
-                        />
-
-                        <TextField
-                          label="slug"
-                          onChange={(event) =>
-                            setUpdatedSlug(event.target.value)
-                          }
-                          value={updatedSlug}
-                        />
-
-                        <TextField
-                          label="Field Type"
-                          onChange={(event) =>
-                            setUpdatedType(
-                              event.target.value as CUSTOM_FIELD_TYPE
-                            )
-                          }
-                          select
-                          value={updatedType}
-                        >
-                          {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-
-                        {updatedType === CUSTOM_FIELD_TYPE.ENUM && (
-                          <TextField
-                            label="Options (comma separated)"
-                            onChange={(event) =>
-                              setUpdatedEnumInput(event.target.value)
-                            }
-                            value={updatedEnumInput}
-                          />
-                        )}
-
-                        <Box display="flex" mt={1}>
-                          <Button
-                            onClick={() => removeField(field.id)}
-                            size="small"
-                            variant="outlined"
-                          >
-                            Delete Field
-                          </Button>
-
-                          <Box display="flex" gap={1} ml="auto">
-                            <Button
-                              onClick={() => {
-                                setUpdatedFieldId(null);
-                              }}
-                              size="small"
-                              variant="outlined"
-                            >
-                              Cancel
-                            </Button>
-
-                            <Button
-                              onClick={() => {
-                                const payload = handleFieldPayload(field);
-
-                                if (
-                                  Object.values(payload).every(
-                                    (value) => value === undefined
-                                  )
-                                ) {
-                                  setUpdatedFieldId(null);
-                                  return;
-                                }
-
-                                updateField(payload, field.id);
-                                setUpdatedFieldId(null);
-                              }}
-                              size="small"
-                              variant="contained"
-                            >
-                              Save
-                            </Button>
-                          </Box>
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* RIGHT SIDE*/}
-        <Box sx={{ width: 360 }}>
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="space-between"
-            sx={{
-              marginBottom: '15px',
-            }}
-          >
-            <Typography component="h1" variant="h4">
-              Create New Field
-            </Typography>
-          </Box>
-          <Paper
-            elevation={0}
-            sx={{
-              backgroundColor: '#fff',
-              border: '1px solid #e5e5e5',
-              borderRadius: 2,
-              p: 3,
-            }}
-          >
-            <Box display="flex" flexDirection="column" gap={2}>
-              <TextField
-                fullWidth
-                id="filled-basic"
-                label="Title"
-                onChange={(event) => {
-                  setTitle(event.target.value);
-                  setSlug(
-                    event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
-                  );
-                }}
-                sx={{ backgroundColor: '#f9f9f9' }}
-                value={title}
-              />
-
-              <TextField
-                fullWidth
-                id="filled-basic"
-                label="Slug"
-                onChange={(event) => {
-                  setSlug(
-                    event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
-                  );
-                }}
-                sx={{ backgroundColor: '#f9f9f9' }}
-                value={slug}
-              />
-
-              <TextField
-                fullWidth
-                id="filled-basic"
-                label="Type"
-                onChange={(event) =>
-                  setType(event.target.value as CUSTOM_FIELD_TYPE)
-                }
-                select
-                sx={{ backgroundColor: '#f9f9f9' }}
-                value={type}
-              >
-                {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
-
-              {type === CUSTOM_FIELD_TYPE.ENUM && (
-                <TextField
-                  fullWidth
-                  id="filled-basic"
-                  label="Options (comma separated list)"
-                  onChange={(event) => setEnumInput(event.target.value)}
-                  sx={{ backgroundColor: '#f9f9f9' }}
-                  value={enumInput}
-                />
+                    Edit
+                  </Button>
+                </Box>
               )}
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                <Button
-                  onClick={() => {
-                    {
-                      createField(
-                        title,
-                        type,
-                        type === CUSTOM_FIELD_TYPE.ENUM
-                          ? parseEnumChoices(enumInput)
-                          : undefined
-                      );
-
-                      setEnumInput('');
-                      setTitle('');
-                      setType(CUSTOM_FIELD_TYPE.TEXT);
-                      setSlug('');
-                    }
-                  }}
-                  size="small"
-                  variant="outlined"
-                >
-                  Create Field
-                </Button>
-              </Box>
             </Box>
-          </Paper>
-        </Box>
+
+            {updatedFieldId === field.id && (
+              <Box display="flex" flexDirection="column" gap={1}>
+                <TextField
+                  label="Title"
+                  onChange={(event) => setUpdatedTitle(event.target.value)}
+                  value={updatedTitle}
+                />
+
+                <TextField
+                  label="Slug"
+                  onChange={(event) => setUpdatedSlug(event.target.value)}
+                  value={updatedSlug}
+                />
+
+                <TextField
+                  label="Field Type"
+                  onChange={(event) =>
+                    setUpdatedType(event.target.value as CUSTOM_FIELD_TYPE)
+                  }
+                  select
+                  value={updatedType}
+                >
+                  {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                {updatedType === CUSTOM_FIELD_TYPE.ENUM && (
+                  <TextField
+                    label="Options (comma separated)"
+                    onChange={(event) =>
+                      setUpdatedEnumInput(event.target.value)
+                    }
+                    value={updatedEnumInput}
+                  />
+                )}
+
+                <Box display="flex" mt={1}>
+                  <Button
+                    onClick={() => removeField(field.id)}
+                    size="small"
+                    variant="outlined"
+                  >
+                    Delete Field
+                  </Button>
+
+                  <Box display="flex" gap={1} ml="auto">
+                    <Button
+                      onClick={() => {
+                        setUpdatedFieldId(null);
+                      }}
+                      size="small"
+                      variant="outlined"
+                    >
+                      Cancel
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        const payload = handleFieldPayload(field);
+
+                        if (
+                          Object.values(payload).every(
+                            (value) => value === undefined
+                          )
+                        ) {
+                          setUpdatedFieldId(null);
+                          return;
+                        }
+
+                        updateField(payload, field.id);
+                        setUpdatedFieldId(null);
+                      }}
+                      size="small"
+                      variant="contained"
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            )}
+          </Box>
+        ))}
       </Box>
     </Box>
   );
