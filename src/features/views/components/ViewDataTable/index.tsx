@@ -62,7 +62,6 @@ import ViewDataTableFooter, {
 } from 'features/views/components/ViewDataTable/ViewDataTableFooter';
 import ViewDataTableToolbar from './ViewDataTableToolbar';
 import {
-  ZetkinCustomField,
   ZetkinPerson,
   ZetkinViewColumn,
   ZetkinViewRow,
@@ -207,12 +206,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const [quickSearch, setQuickSearch] = useState('');
   const { orgId } = useNumericRouteParams();
-  const [customFields, setCustomFields] = useState<ZetkinCustomField[]>([]);
-  const {
-    data: customFieldData,
-    error: customFieldError,
-    isLoading: customIsLoading,
-  } = useCustomFields(orgId);
+  const { data: customFields } = useCustomFields(orgId);
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -232,18 +226,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [showSnackbar]
   );
-
-  useEffect(() => {
-    if (!customIsLoading && !customFields && customFieldData) {
-      setCustomFields(customFieldData);
-    }
-  }, [customFieldData, customIsLoading, customFields]);
-
-  useEffect(() => {
-    if (customFieldError) {
-      showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
-    }
-  }, [customFieldError, customIsLoading, showError]);
 
   const updateColumn = useCallback(
     async (id: number, data: Omit<Partial<ZetkinViewColumn>, 'id'>) => {
