@@ -191,7 +191,7 @@ const emailsSlice = createSlice({
       );
     },
     themeDeleted: (state, action: PayloadAction<[number, number]>) => {
-      const [themeId] = action.payload;
+      const [, themeId] = action.payload;
       const item = state.themeList.items.find((item) => item.id === themeId);
       if (item) {
         item.deleted = true;
