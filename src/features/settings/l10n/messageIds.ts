@@ -2,7 +2,8 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
   fields: {
-    title: m('Fields'),
+    createNewFieldTitle: m('Create new field'),
+    fieldsTitle: m('Fields'),
   },
   officials: {
     addPerson: {
