@@ -1,10 +1,9 @@
-import { Box, Button, Card, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import AreaCard from 'features/areaAssignments/components/AreaCard';
 import { AREAS } from 'utils/featureFlags';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import { PageWithLayout } from 'utils/types';
@@ -13,9 +12,6 @@ import { scaffold } from 'utils/next';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import ZUIFutures from 'zui/ZUIFutures';
-import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignmentAreaStats';
-import useAssignmentAreaGraph from 'features/areaAssignments/hooks/useAssignmentAreaGraph';
-import { ZetkinAssignmentAreaStatsItem } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areaAssignments/l10n/messageIds';
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
@@ -45,8 +41,6 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
   const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const statsFuture = useAreaAssignmentStats(parseInt(orgId), areaAssId);
-  const areasStats = useAssignmentAreaStats(parseInt(orgId), areaAssId);
-  const dataGraph = useAssignmentAreaGraph(parseInt(orgId), areaAssId);
   const router = useRouter();
 
   const numAreas = new Set(
@@ -89,122 +83,43 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                 </Card>
               )}
               {numAreas > 0 && (
-                <>
-                  <Card>
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      marginLeft={1}
-                      maxHeight={40}
-                      p={1}
-                    >
-                      <Typography variant="h5">
-                        <Msg id={messageIds.overview.progress.statsTitle} />
-                      </Typography>
-                    </Box>
-                    <Divider />
-                    <Box display="flex" width="100%">
-                      <NumberCard
-                        firstNumber={stats.num_successful_visits}
-                        message={messages.overview.progress.headers.successful()}
-                        secondNumber={stats.num_visits}
-                      />
-                      {stats.num_households_visited != null && (
-                        <>
-                          <Divider flexItem orientation="vertical" />
-                          <NumberCard
-                            firstNumber={stats.num_households_visited}
-                            message={messages.overview.progress.headers.households()}
-                            secondNumber={stats.num_households}
-                          />
-                        </>
-                      )}
-                      <Divider flexItem orientation="vertical" />
-                      <NumberCard
-                        firstNumber={stats.num_locations_visited}
-                        message={messages.overview.progress.headers.locations()}
-                        secondNumber={stats.num_locations}
-                      />
-                    </Box>
-                  </Card>
-                  <Grid container spacing={2}>
-                    <ZUIFutures futures={{ areasStats, dataGraph }}>
-                      {({ data: { areasStats, dataGraph } }) => {
-                        const filteredAreas = dataGraph
-                          .map((area) => {
-                            return areasStats.stats.filter(
-                              (item) => item.area_id === area.area_id
-                            );
-                          })
-                          .flat();
-
-                        const sortedAreas = filteredAreas
-                          .map((area) => {
-                            const successfulVisitsTotal =
-                              dataGraph
-                                .find((graph) => graph.area_id === area.area_id)
-                                ?.data.reduce(
-                                  (sum, item) => sum + item.successfulVisits,
-                                  0
-                                ) || 0;
-
-                            return {
-                              area,
-                              successfulVisitsTotal,
-                            };
-                          })
-                          .sort(
-                            (a, b) =>
-                              b.successfulVisitsTotal - a.successfulVisitsTotal
-                          )
-                          .map(({ area }) => area);
-
-                        const maxHouseholdVisits = Math.max(
-                          ...dataGraph.flatMap((areaCard) =>
-                            areaCard.data.map(
-                              (graphData) => graphData.householdVisits
-                            )
-                          )
-                        );
-
-                        const noAreaData = dataGraph.find(
-                          (graph) => !graph.area_id
-                        );
-                        if (noAreaData && noAreaData.data.length > 0) {
-                          const latestEntry = [...noAreaData.data].sort(
-                            (a, b) =>
-                              new Date(b.date).getTime() -
-                              new Date(a.date).getTime()
-                          )[0];
-
-                          const num_successful_visited_households =
-                            latestEntry.successfulVisits;
-
-                          const num_visited_households =
-                            latestEntry.householdVisits;
-
-                          const noArea: ZetkinAssignmentAreaStatsItem = {
-                            area_id: null,
-                            num_households: 0,
-                            num_locations: 0,
-                            num_successful_visited_households,
-                            num_visited_households,
-                            num_visited_locations: 0,
-                          };
-                          sortedAreas.push(noArea);
-                        }
-                        return (
-                          <AreaCard
-                            areas={sortedAreas}
-                            assignment={assignment}
-                            data={dataGraph}
-                            maxVisitedHouseholds={maxHouseholdVisits}
-                          />
-                        );
-                      }}
-                    </ZUIFutures>
-                  </Grid>
-                </>
+                <Card>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    marginLeft={1}
+                    maxHeight={40}
+                    p={1}
+                  >
+                    <Typography variant="h5">
+                      <Msg id={messageIds.overview.progress.statsTitle} />
+                    </Typography>
+                  </Box>
+                  <Divider />
+                  <Box display="flex" width="100%">
+                    <NumberCard
+                      firstNumber={stats.num_successful_visits}
+                      message={messages.overview.progress.headers.successful()}
+                      secondNumber={stats.num_visits}
+                    />
+                    {stats.num_households_visited != null && (
+                      <>
+                        <Divider flexItem orientation="vertical" />
+                        <NumberCard
+                          firstNumber={stats.num_households_visited}
+                          message={messages.overview.progress.headers.households()}
+                          secondNumber={stats.num_households}
+                        />
+                      </>
+                    )}
+                    <Divider flexItem orientation="vertical" />
+                    <NumberCard
+                      firstNumber={stats.num_locations_visited}
+                      message={messages.overview.progress.headers.locations()}
+                      secondNumber={stats.num_locations}
+                    />
+                  </Box>
+                </Card>
               )}
             </Box>
           );
