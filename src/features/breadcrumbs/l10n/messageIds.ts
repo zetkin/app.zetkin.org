@@ -39,6 +39,7 @@ export default makeMessages('feat.breadcrumbs', {
     surveys: m('Surveys'),
     tags: m('Tags'),
     tasks: m('Tasks'),
+    themes: m('Themes'),
     untitledEvent: m('Untitled event'),
     views: m('Lists'),
   },
