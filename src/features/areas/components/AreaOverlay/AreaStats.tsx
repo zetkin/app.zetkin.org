@@ -40,20 +40,20 @@ const AreaStats: FC<Props> = ({ areaId }) => {
           <Msg id={messageIds.areas.areaDetails.title} />
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ width: '50%' }}>
-            <Typography color="primary" variant="h5">
-              {stats.count_locations}
-            </Typography>
-            <Typography>
-              <Msg id={messageIds.areas.areaDetails.locations} />
-            </Typography>
-          </Box>
-          <Box sx={{ width: '50%' }}>
-            <Typography color="primary" variant="h5">
+          <Box sx={{ flex: 1 }}>
+            <Typography color="primary" variant="h4">
               {stats.count_households}
             </Typography>
             <Typography>
               <Msg id={messageIds.areas.areaDetails.households} />
+            </Typography>
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <Typography color="primary" variant="h4">
+              {stats.count_locations}
+            </Typography>
+            <Typography>
+              <Msg id={messageIds.areas.areaDetails.locations} />
             </Typography>
           </Box>
         </Box>
@@ -63,14 +63,14 @@ const AreaStats: FC<Props> = ({ areaId }) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 1,
+          gap: 2,
         }}
       >
         <Typography variant="h6">
           <Msg id={messageIds.areas.assignmentStats.title} />
         </Typography>
         <Box>
-          <Typography color="primary" variant="h5">
+          <Typography color="primary" variant="h4">
             {stats.sum_successful_visits}
           </Typography>
           <Typography>
@@ -78,7 +78,7 @@ const AreaStats: FC<Props> = ({ areaId }) => {
           </Typography>
         </Box>
         <Box>
-          <Typography color="primary" variant="h5">
+          <Typography color="primary" variant="h4">
             {percentVisited}%
           </Typography>
           <Typography>
@@ -87,7 +87,7 @@ const AreaStats: FC<Props> = ({ areaId }) => {
         </Box>
         {percentSuccessfulVisits > 0 && (
           <Box>
-            <Typography color="primary" variant="h5">
+            <Typography color="primary" variant="h4">
               {percentSuccessfulVisits}%
             </Typography>
             <Typography>
