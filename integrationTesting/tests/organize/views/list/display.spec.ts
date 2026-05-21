@@ -46,7 +46,7 @@ test.describe('Views list page', () => {
       },
     ]);
 
-    const rows = page.locator('.MuiDataGrid-row');
+    const rows = page.locator('[data-testid=view-browser-row]');
 
     await page.goto(appUri + '/organize/1/people');
     await rows.first().waitFor({ state: 'visible' });

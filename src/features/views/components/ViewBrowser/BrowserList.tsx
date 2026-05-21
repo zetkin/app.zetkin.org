@@ -184,6 +184,7 @@ function Row({
   return (
     <BrowserRow enableDragAndDrop={enableDragAndDrop} item={row.item}>
       <Box
+        data-testid={'view-browser-row'}
         style={style}
         sx={{
           '&:hover': {
