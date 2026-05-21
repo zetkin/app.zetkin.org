@@ -138,7 +138,9 @@ const ActivistPortalHeader: FC<Props> = ({
           >
             <Box>
               {typeof title == 'string' ? (
-                <ZUIText variant="headingLg">{title}</ZUIText>
+                <ZUIText component="h1" variant="headingLg">
+                  {title}
+                </ZUIText>
               ) : (
                 title
               )}

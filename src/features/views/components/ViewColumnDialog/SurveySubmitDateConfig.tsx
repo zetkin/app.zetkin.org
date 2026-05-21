@@ -1,16 +1,12 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material';
+import { FormControl, Typography } from '@mui/material';
+import { SyntheticEvent, useState } from 'react';
 
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/views/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveys from 'features/surveys/hooks/useSurveys';
+import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
 interface SurveySubmitDateConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -22,37 +18,53 @@ const SurveySubmitDateConfig = ({
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const surveys = useSurveys(orgId).data || [];
+  const [surveyId, setSurveyId] = useState<number | undefined>();
+
+  const onSurveyChange = (
+    ev: SyntheticEvent & { target: { value: string } }
+  ) => {
+    if (!ev.target.value) {
+      return;
+    }
+    const surveyId = +ev.target.value;
+    setSurveyId(surveyId);
+    onOutputConfigured([
+      {
+        config: {
+          survey_id: surveyId,
+        },
+        title: surveys?.find((survey) => survey.id === surveyId)?.title || '',
+        type: COLUMN_TYPE.SURVEY_SUBMITTED,
+      },
+    ]);
+  };
 
   return !surveys || surveys.length > 0 ? (
     <FormControl sx={{ width: 300 }}>
-      <InputLabel>
-        {messages.columnDialog.editor.fieldLabels.survey()}
-      </InputLabel>
-      <Select
-        onChange={(evt) => {
-          if (!evt.target.value) {
-            return;
-          }
-          const surveyId = evt.target.value as number;
-          onOutputConfigured([
+      <StyledAutocomplete
+        clearable={true}
+        items={surveys.map((survey) => ({
+          group: survey.campaign?.title,
+          id: survey.id,
+          label: survey.title,
+        }))}
+        label={messages.columnDialog.editor.fieldLabels.survey()}
+        onChange={onSurveyChange}
+        sx={{
+          '& .MuiInputBase-input': {
+            textOverflow: 'ellipsis',
+          },
+          '& .MuiInputBase-root .MuiInputBase-input': {
+            fontSize: 'inherit',
+          },
+          '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot':
             {
-              config: {
-                survey_id: surveyId,
-              },
-              title:
-                surveys?.find((survey) => survey.id === surveyId)?.title || '',
-              type: COLUMN_TYPE.SURVEY_SUBMITTED,
+              paddingRight: '24px',
             },
-          ]);
+          width: '100%',
         }}
-        variant="standard"
-      >
-        {surveys?.map((survey) => (
-          <MenuItem key={survey.id} value={survey.id}>
-            {survey.title}
-          </MenuItem>
-        ))}
-      </Select>
+        value={surveyId}
+      />
     </FormControl>
   ) : (
     <Typography>

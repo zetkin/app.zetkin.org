@@ -8,7 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import EditPersonFields from './EditPersonFields';
 import messageIds from '../../l10n/messageIds';
@@ -43,6 +43,9 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
   } = useEditPerson(person, orgId);
   const [fieldValues, setFieldValues] = useState(person);
   const willUpdateValueMessage = hasUpdatedValues && !hasInvalidFields;
+  useEffect(() => {
+    setFieldValues(person);
+  }, [person]);
 
   return (
     <Dialog
