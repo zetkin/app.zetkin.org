@@ -15,7 +15,7 @@ export default async function previewEmailThemeHtml(
     return '';
   }
 
-  const output = mjml2html(mjml);
+  const output = await mjml2html(mjml);
 
   return output.html;
 }

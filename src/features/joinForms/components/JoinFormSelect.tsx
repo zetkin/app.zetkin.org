@@ -1,11 +1,5 @@
-import { FC } from 'react';
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from '@mui/material';
+import { FC, useState } from 'react';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -23,20 +17,24 @@ const JoinFormSelect: FC<Props> = ({
   forms = [],
   onFormSelect = () => {},
 }) => {
+  const [value, setValue] = useState<number | 'all'>(formId || 'all');
   const messages = useMessages(messageIds);
-
-  const onChange = (event: SelectChangeEvent<number>) => {
-    if (event.target.value === 'all') {
-      onFormSelect(undefined);
-    } else {
-      onFormSelect(forms.find((f) => f.id === event.target.value)!);
-    }
-  };
 
   return (
     <FormControl sx={{ minWidth: 200 }}>
       <InputLabel>{messages.forms()}</InputLabel>
-      <Select label={messages.forms()} onChange={onChange} value={formId}>
+      <Select
+        label={messages.forms()}
+        onChange={(ev) => {
+          setValue(ev.target.value);
+          if (ev.target.value === 'all') {
+            onFormSelect(undefined);
+          } else {
+            onFormSelect(forms.find((f) => f.id === ev.target.value)!);
+          }
+        }}
+        value={value}
+      >
         <MenuItem selected={!formId} value="all">
           {messages.submissionPane.allForms()}
         </MenuItem>

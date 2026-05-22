@@ -32,7 +32,7 @@ export default async function Page({ params }: PageProps) {
       `/api/orgs/${orgId}/emails/${emailId}`
     );
 
-    const emailHtml = renderEmailHtml(email, {
+    const emailHtml = await renderEmailHtml(email, {
       'target.first_name': messages.varDefaults.target(),
       'target.full_name': messages.varDefaults.target(),
       'target.last_name': messages.varDefaults.target(),

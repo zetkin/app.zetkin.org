@@ -94,8 +94,8 @@ describe('renderEmailHtml', () => {
       'target.first_name': 'friend',
     });
 
-    // The expected output is HTML as returned by MJML
-    const expected = mjml2html({
+    // HTML as returned by MJML
+    const parseResults = await mjml2html({
       tagName: 'mjml',
       attributes: {},
       children: [
@@ -144,9 +144,9 @@ describe('renderEmailHtml', () => {
           ],
         },
       ],
-    }).html;
+    });
 
-    expect(output).toEqual(expected);
+    expect(output).toEqual(parseResults.html);
   });
 
   it('returns MJML-rendered HTML for email with frame', async () => {
@@ -236,7 +236,7 @@ describe('renderEmailHtml', () => {
     const output = renderEmailHtml(email, {});
 
     // The expected output is HTML as returned by MJML
-    const expected = mjml2html({
+    const parseResults = await mjml2html({
       tagName: 'mjml',
       attributes: {},
       children: [
@@ -306,9 +306,9 @@ describe('renderEmailHtml', () => {
           ],
         },
       ],
-    }).html;
+    });
 
-    expect(output).toEqual(expected);
+    expect(output).toEqual(parseResults.html);
   });
 
   it('sanitizes user inputs', async () => {

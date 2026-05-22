@@ -5,10 +5,10 @@ import EmailMJMLConverter from './EmailMJMLConverter';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { EmailContent, InlineNodeKind } from 'features/emails/types';
 
-export default function renderEmailHtml(
+export default async function renderEmailHtml(
   email: ZetkinEmail,
   variableValues: Record<string, string>
-): string {
+) {
   const { theme, content } = email;
 
   if (!content) {
@@ -38,7 +38,7 @@ export default function renderEmailHtml(
     return '';
   }
 
-  const output = mjml2html(mjml);
+  const output = await mjml2html(mjml);
 
   return output.html;
 }
