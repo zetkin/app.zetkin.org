@@ -7,27 +7,27 @@ import useCreateField from '../hooks/useCreateField';
 import Msg from 'core/i18n/Msg';
 import messageIds from 'features/settings/l10n/messageIds';
 
+export const parseEnumChoices = (input: string) => {
+  return input
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((label) => ({
+      key: label.toLowerCase().replace(/\s+/g, '_'),
+      label,
+    }));
+};
+
 type FieldsListProps = {
   orgId: number;
 };
 
 const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
-  const { createField } = useCreateField(orgId);
+  const createField = useCreateField(orgId);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
   const [enumInput, setEnumInput] = useState('');
-
-  const parseEnumChoices = (input: string) => {
-    return input
-      .split(',')
-      .map((item) => item.trim())
-      .filter(Boolean)
-      .map((label) => ({
-        key: label.toLowerCase().replace(/\s+/g, '_'),
-        label,
-      }));
-  };
 
   return (
     <Box sx={{ width: 360 }}>
@@ -64,7 +64,6 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
             }}
             value={title}
           />
-
           <TextField
             fullWidth
             id="filled-basic"
@@ -76,7 +75,6 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
             }}
             value={slug}
           />
-
           <TextField
             fullWidth
             id="filled-basic"
@@ -93,7 +91,6 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
               </MenuItem>
             ))}
           </TextField>
-
           {type === CUSTOM_FIELD_TYPE.ENUM && (
             <TextField
               fullWidth
@@ -107,14 +104,15 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
             <Button
               onClick={() => {
                 {
-                  createField(
+                  createField({
+                    enum_choices:
+                      type === CUSTOM_FIELD_TYPE.ENUM
+                        ? parseEnumChoices(enumInput)
+                        : undefined,
+                    slug,
                     title,
                     type,
-                    type === CUSTOM_FIELD_TYPE.ENUM
-                      ? parseEnumChoices(enumInput)
-                      : undefined
-                  );
-
+                  });
                   setEnumInput('');
                   setTitle('');
                   setType(CUSTOM_FIELD_TYPE.TEXT);

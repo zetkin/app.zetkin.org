@@ -5,23 +5,12 @@ import {
   fieldUpdate,
   fieldUpdated,
 } from 'features/profile/store';
-import {
-  CUSTOM_FIELD_TYPE,
-  EnumChoice,
-  ZetkinCustomField,
-} from 'utils/types/zetkin';
+import { ZetkinCustomField } from 'utils/types/zetkin';
+import { CustomFieldPatchBody } from '../types';
 
 type UseFieldsMutationReturn = {
   removeField: (fieldId: number) => void;
-  updateField: (
-    data: {
-      enum_choices?: EnumChoice[];
-      slug?: string;
-      title?: string;
-      type?: CUSTOM_FIELD_TYPE;
-    },
-    fieldId: number
-  ) => void;
+  updateField: (fieldId: number, data: CustomFieldPatchBody) => void;
 };
 
 export default function useFieldMutations(
@@ -35,16 +24,8 @@ export default function useFieldMutations(
     dispatch(fieldRemoved(fieldId));
   };
 
-  const updateField = async (
-    data: {
-      enum_choices?: EnumChoice[];
-      slug?: string;
-      title?: string;
-      type?: CUSTOM_FIELD_TYPE;
-    },
-    fieldId: number
-  ) => {
-    dispatch(fieldUpdate([fieldId, ['enum_choices', 'slug', 'title', 'type']]));
+  const updateField = async (fieldId: number, data: CustomFieldPatchBody) => {
+    dispatch(fieldUpdate([fieldId, Object.keys(data)]));
 
     const field = await apiClient.patch<ZetkinCustomField>(
       `/api/orgs/${orgId}/people/fields/${fieldId}/`,
@@ -53,5 +34,5 @@ export default function useFieldMutations(
     dispatch(fieldUpdated(field));
   };
 
-  return { removeField, updateField: updateField };
+  return { removeField, updateField };
 }
