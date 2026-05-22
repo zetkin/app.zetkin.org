@@ -33,7 +33,7 @@ test.describe('Views list page', () => {
     moxy,
   }) => {
     moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [
+    const viewsRequest = moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [
       AllMembers,
       {
         created: '2021-11-21T12:59:19',
@@ -49,6 +49,11 @@ test.describe('Views list page', () => {
     const rows = page.locator('[data-testid=view-browser-row]');
 
     await page.goto(appUri + '/organize/1/people');
+
+    await expect.poll(() => viewsRequest.log().length).toBe(1);
+
+    await expect(rows.locator('.MuiSkeleton-root')).toHaveCount(0);
+
     await rows.first().waitFor({ state: 'visible' });
 
     const numRows = await rows.count();
