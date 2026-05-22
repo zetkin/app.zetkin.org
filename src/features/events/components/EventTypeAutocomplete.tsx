@@ -215,7 +215,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                             deleteType(option.id);
                             //If the current event has the deleted event type,
                             //set the current event's type to null
-                            if (value && option.id === value.id) {
+                            if (option.id === value?.id) {
                               onChange(null);
                             }
                           }

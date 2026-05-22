@@ -38,29 +38,24 @@ const Configuration: FC<ConfigurationProps> = ({
       flexDirection="column"
       height="100%"
     >
-      {uiDataColumn && uiDataColumn.originalColumn.kind === ColumnKind.TAG && (
+      {uiDataColumn?.originalColumn.kind === ColumnKind.TAG && (
         <TagConfig uiDataColumn={uiDataColumn as UIDataColumn<TagColumn>} />
       )}
-      {uiDataColumn &&
-        uiDataColumn.originalColumn.kind === ColumnKind.ID_FIELD && (
-          <IdConfig
-            uiDataColumn={uiDataColumn as UIDataColumn<IDFieldColumn>}
-          />
-        )}
-      {uiDataColumn &&
-        uiDataColumn.originalColumn.kind === ColumnKind.ORGANIZATION && (
-          <OrgConfig uiDataColumn={uiDataColumn as UIDataColumn<OrgColumn>} />
-        )}
-      {uiDataColumn &&
-        uiDataColumn.originalColumn.kind === ColumnKind.GENDER && (
-          <GenderConfig
-            uiDataColumn={uiDataColumn as UIDataColumn<GenderColumn>}
-          />
-        )}
-      {uiDataColumn && uiDataColumn.originalColumn.kind === ColumnKind.DATE && (
+      {uiDataColumn?.originalColumn.kind === ColumnKind.ID_FIELD && (
+        <IdConfig uiDataColumn={uiDataColumn as UIDataColumn<IDFieldColumn>} />
+      )}
+      {uiDataColumn?.originalColumn.kind === ColumnKind.ORGANIZATION && (
+        <OrgConfig uiDataColumn={uiDataColumn as UIDataColumn<OrgColumn>} />
+      )}
+      {uiDataColumn?.originalColumn.kind === ColumnKind.GENDER && (
+        <GenderConfig
+          uiDataColumn={uiDataColumn as UIDataColumn<GenderColumn>}
+        />
+      )}
+      {uiDataColumn?.originalColumn.kind === ColumnKind.DATE && (
         <DateConfig uiDataColumn={uiDataColumn as UIDataColumn<DateColumn>} />
       )}
-      {uiDataColumn && uiDataColumn.originalColumn.kind === ColumnKind.ENUM && (
+      {uiDataColumn?.originalColumn.kind === ColumnKind.ENUM && (
         <EnumConfig uiDataColumn={uiDataColumn as UIDataColumn<EnumColumn>} />
       )}
     </Box>

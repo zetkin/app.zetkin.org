@@ -28,7 +28,7 @@ export const getTimeFrameWithConfig = (config: {
   before?: string;
 }): TimeFrameConfig => {
   const { after, before } = config;
-  if (after && after.slice(0, 1) === '-') {
+  if (after?.startsWith('-')) {
     return {
       numDays: +after.substring(1, after.length - 1),
       timeFrame: TIME_FRAME.LAST_FEW_DAYS,

@@ -4,41 +4,44 @@ export default function compareTags(
   tag0: ZetkinAppliedTag | null,
   tag1: ZetkinAppliedTag | null
 ): number {
+  const title0 = tag0?.title;
+  const title1 = tag1?.title;
+
   //only compare titles if they are not null
-  if (tag0 && tag0.title && tag1 && tag1.title) {
-    const titleComparison = tag0.title.localeCompare(tag1.title);
+  if (title0 && title1) {
+    const titleComparison = title0.localeCompare(title1);
     if (titleComparison !== 0) {
       return titleComparison;
     }
-  } else if (tag0 && tag0.title) {
+  } else if (title0) {
     return -1;
-  } else if (tag1 && tag1.title) {
+  } else if (title1) {
     return 1;
   }
 
   // If 'title' properties are equal, proceed to compare 'value' properties
-  if (tag0 && tag0.value !== null && tag0.value !== undefined) {
-    if (tag1 && tag1.value !== null && tag1.value !== undefined) {
-      if (typeof tag0.value === 'string' && typeof tag1.value === 'string') {
-        if (isNaN(Number(tag0.value)) && isNaN(Number(tag1.value))) {
-          return tag0.value.localeCompare(tag1.value);
+  const value0 = tag0?.value;
+  const value1 = tag1?.value;
+
+  if (value0 !== null && value0 !== undefined) {
+    if (value1 !== null && value1 !== undefined) {
+      if (typeof value0 === 'string' && typeof value1 === 'string') {
+        if (isNaN(Number(value0)) && isNaN(Number(value1))) {
+          return value0.localeCompare(value1);
         }
-        if (!isNaN(Number(tag0.value)) && !isNaN(Number(tag1.value))) {
-          return parseInt(tag0.value) - parseInt(tag1.value);
+        if (!isNaN(Number(value0)) && !isNaN(Number(value1))) {
+          return parseInt(value0) - parseInt(value1);
         }
-        if (isNaN(Number(tag0.value))) {
+        if (isNaN(Number(value0))) {
           return 1;
         }
-        if (isNaN(Number(tag1.value))) {
+        if (isNaN(Number(value1))) {
           return -1;
         } else {
-          return tag0.value.localeCompare(tag1.value);
+          return value0.localeCompare(value1);
         }
-      } else if (
-        typeof tag0.value === 'number' &&
-        typeof tag1.value === 'number'
-      ) {
-        return tag0.value - tag1.value;
+      } else if (typeof value0 === 'number' && typeof value1 === 'number') {
+        return value0 - value1;
       }
     } else {
       // tag1 has a null 'value' property, so tag0 comes before tag1

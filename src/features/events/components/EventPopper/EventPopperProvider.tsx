@@ -32,6 +32,8 @@ export const EventPopperProvider: FC<EventPopperPropviderProps> = ({
     top: number;
   }>();
   const [cluster, setCluster] = useState<AnyClusteredEvent | null>(null);
+  const singleCluster = cluster?.kind === CLUSTER_TYPE.SINGLE ? cluster : null;
+  const multiCluster = cluster?.kind !== CLUSTER_TYPE.SINGLE ? cluster : null;
 
   return (
     <EventPopperContext.Provider
@@ -52,19 +54,19 @@ export const EventPopperProvider: FC<EventPopperPropviderProps> = ({
         },
       }}
     >
-      {cluster && cluster.kind === CLUSTER_TYPE.SINGLE && (
+      {singleCluster && (
         <SingleEventPopper
           anchorPosition={singleAnchorPosition}
-          event={cluster.events[0]}
+          event={singleCluster.events[0]}
           onClickAway={() => setSingleAnchorPosition(undefined)}
           open={!!singleAnchorPosition}
         />
       )}
-      {cluster && cluster.kind !== CLUSTER_TYPE.SINGLE && (
+      {multiCluster && (
         <MultiEventPopper
           anchorPosition={multiAnchorPosition}
-          clusterType={cluster.kind}
-          events={cluster.events}
+          clusterType={multiCluster.kind}
+          events={multiCluster.events}
           onClickAway={() => setMultiAnchorPosition(undefined)}
           open={!!multiAnchorPosition}
         />
