@@ -211,6 +211,30 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             value={time}
           />
         </Box>
+        <ZUIButton
+          disabled={!dateIsValid}
+          endIcon={dateIsValid && !isMobile ? LooksOneOutlined : undefined}
+          label={
+            dateIsValid
+              ? messages.report.steps.callBack.question.callBackButtonLabel({
+                  date:
+                    time.value === 'any' ? (
+                      <ZUIDate datetime={callBackAfter} />
+                    ) : (
+                      <ZUIDateTime datetime={callBackAfter} />
+                    ),
+                })
+              : messages.report.steps.callBack.question.invalidDateButtonLabel()
+          }
+          onClick={() => {
+            onReportUpdate({
+              ...report,
+              callBackAfter,
+              step: 'organizerAction',
+            });
+          }}
+          variant="secondary"
+        />
         <Box
           sx={{
             alignItems: isMobile ? 'flex-start' : 'center',
@@ -245,30 +269,6 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             />
           </Box>
         </Box>
-        <ZUIButton
-          disabled={!dateIsValid}
-          endIcon={dateIsValid && !isMobile ? LooksOneOutlined : undefined}
-          label={
-            dateIsValid
-              ? messages.report.steps.callBack.question.callBackButtonLabel({
-                  date:
-                    time.value === 'any' ? (
-                      <ZUIDate datetime={callBackAfter} />
-                    ) : (
-                      <ZUIDateTime datetime={callBackAfter} />
-                    ),
-                })
-              : messages.report.steps.callBack.question.invalidDateButtonLabel()
-          }
-          onClick={() => {
-            onReportUpdate({
-              ...report,
-              callBackAfter,
-              step: 'organizerAction',
-            });
-          }}
-          variant="secondary"
-        />
       </Stack>
     </StepBase>
   );

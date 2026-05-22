@@ -126,7 +126,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'today',
+            dateFilterState: dateFilterState === 'today' ? null : 'today',
           })
         );
       },
@@ -139,7 +139,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'tomorrow',
+            dateFilterState: dateFilterState === 'tomorrow' ? null : 'tomorrow',
           })
         );
       },
@@ -152,7 +152,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'thisWeek',
+            dateFilterState: dateFilterState === 'thisWeek' ? null : 'thisWeek',
           })
         );
       },
@@ -168,18 +168,37 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerContent('calendar');
+        if (dateFilterState === 'custom') {
+          dispatch(
+            filtersUpdated({
+              customDatesToFilterBy: [null, null],
+              dateFilterState: null,
+            })
+          );
+        } else {
+          setDrawerContent('calendar');
+        }
       },
     },
     ...(moreThanOneOrgHasEvents
       ? [
           {
-            active: !!orgIdsToFilterBy.length,
+            active: orgIdsToFilterBy?.length > 0,
             key: 'orgs',
             label: messages.allEventsList.filterButtonLabels.organizations({
               numOrgs: orgIdsToFilterBy.length,
             }),
-            onClick: () => setDrawerContent('orgs'),
+            onClick: () => {
+              if (orgIdsToFilterBy?.length > 0) {
+                dispatch(
+                  filtersUpdated({
+                    orgIdsToFilterBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('orgs');
+              }
+            },
           },
         ]
       : []),
@@ -189,7 +208,17 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: eventTypeFilter.filterButtonLabel,
-            onClick: () => setDrawerContent('eventTypes'),
+            onClick: () => {
+              if (eventTypeFilter.isFiltered) {
+                dispatch(
+                  filtersUpdated({
+                    eventTypesToFilterBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('eventTypes');
+              }
+            },
           },
         ]
       : []),

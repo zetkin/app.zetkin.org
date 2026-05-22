@@ -17,6 +17,7 @@ import {
   Hotel,
 } from '@mui/icons-material';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
+import { partition } from 'lodash';
 
 import EventCard from './EventCard';
 import { LaneStep, ZetkinCallTarget } from '../types';
@@ -38,7 +39,7 @@ import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
 import ZUISection from 'zui/components/ZUISection';
 import messageIds from '../l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 
 type Filter = {
   active: boolean;
@@ -98,22 +99,16 @@ const Activities: FC<ActivitiesProps> = ({
             onClick={() => onClearFilters()}
           />
         )}
-        {baseFilters.map((filter) => (
-          <ZUIFilterButton
-            key={filter.key}
-            active={filter.active}
-            label={filter.label}
-            onClick={filter.onClick}
-          />
-        ))}
-        {eventFilters.map((filter) => (
-          <ZUIFilterButton
-            key={filter.key}
-            active={filter.active}
-            label={filter.label}
-            onClick={filter.onClick}
-          />
-        ))}
+        {partition([...baseFilters, ...eventFilters], (filter) => filter.active)
+          .flat()
+          .map((filter) => (
+            <ZUIFilterButton
+              key={filter.key}
+              active={filter.active}
+              label={filter.label}
+              onClick={filter.onClick}
+            />
+          ))}
       </Box>
       {showNoActivities && (
         <Box
@@ -126,7 +121,9 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Chair} size="large" />
-          <ZUIText color="secondary">No activities</ZUIText>
+          <ZUIText color="secondary">
+            <Msg id={messageIds.activities.empty} />
+          </ZUIText>
         </Box>
       )}
       {showNoSignups && (
@@ -140,7 +137,12 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Hotel} size="large" />
-          <ZUIText color="secondary">{`${target?.first_name} is not booked or signed up for any events.`}</ZUIText>
+          <ZUIText color="secondary">
+            <Msg
+              id={messageIds.activities.noBookings}
+              values={{ name: target.first_name }}
+            />
+          </ZUIText>
         </Box>
       )}
       {activities.map((activity) => {
@@ -524,25 +526,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target?.id]);
-
-  useEffect(() => {
-    if (step === LaneStep.REPORT) {
-      dispatch(
-        filtersUpdated({
-          customDatesToFilterEventsBy: [null, null],
-          eventDateFilterState: null,
-          filterState: {
-            alreadyIn: false,
-            events: false,
-            surveys: false,
-            thisCall: true,
-          },
-          projectIdsToFilterActivitiesBy: [],
-        })
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
 
   return (
     <>

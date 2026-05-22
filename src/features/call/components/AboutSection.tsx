@@ -28,7 +28,9 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
             <Box alignItems="center" display="flex" gap={1}>
               <ZUIIcon color="secondary" icon={Phone} size="small" />
               <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
-                <ZUIText>{call.target.phone}</ZUIText>
+                <ZUIText sx={{ fontFamily: 'monospace' }}>
+                  {call.target.phone}
+                </ZUIText>
               </Box>
             </Box>
           )}
@@ -36,7 +38,9 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
             <Box alignItems="center" display="flex" gap={1}>
               <ZUIIcon color="secondary" icon={Phone} size="small" />
               <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
-                <ZUIText>{call.target.alt_phone}</ZUIText>
+                <ZUIText sx={{ fontFamily: 'monospace' }}>
+                  {call.target.alt_phone}
+                </ZUIText>
               </Box>
             </Box>
           )}

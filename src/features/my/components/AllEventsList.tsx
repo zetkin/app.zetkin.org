@@ -250,7 +250,7 @@ const AllEventsList: FC = () => {
       label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
         setFilters({
-          date: 'today',
+          date: dateFilterState === 'today' ? null : 'today',
           range: null,
         });
       },
@@ -261,7 +261,7 @@ const AllEventsList: FC = () => {
       label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
         setFilters({
-          date: 'tomorrow',
+          date: dateFilterState === 'tomorrow' ? null : 'tomorrow',
           range: null,
         });
       },
@@ -272,7 +272,7 @@ const AllEventsList: FC = () => {
       label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
         setFilters({
-          date: 'thisWeek',
+          date: dateFilterState === 'thisWeek' ? null : 'thisWeek',
           range: null,
         });
       },
@@ -288,18 +288,33 @@ const AllEventsList: FC = () => {
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerContent('calendar');
+        if (dateFilterState === 'custom') {
+          setFilters({
+            date: null,
+            range: null,
+          });
+        } else {
+          setDrawerContent('calendar');
+        }
       },
     },
     ...(moreThanOneOrgHasEvents
       ? [
           {
-            active: !!orgIdsToFilterBy.length,
+            active: orgIdsToFilterBy?.length > 0,
             key: 'orgs',
             label: messages.allEventsList.filterButtonLabels.organizations({
               numOrgs: orgIdsToFilterBy.length,
             }),
-            onClick: () => setDrawerContent('orgs'),
+            onClick: () => {
+              if (orgIdsToFilterBy?.length > 0) {
+                setFilters({
+                  orgs: null,
+                });
+              } else {
+                setDrawerContent('orgs');
+              }
+            },
           },
         ]
       : []),
@@ -309,7 +324,15 @@ const AllEventsList: FC = () => {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: eventTypeFilter.filterButtonLabel,
-            onClick: () => setDrawerContent('eventTypes'),
+            onClick: () => {
+              if (eventTypeFilter.isFiltered) {
+                setFilters({
+                  types: null,
+                });
+              } else {
+                setDrawerContent('eventTypes');
+              }
+            },
           },
         ]
       : []),

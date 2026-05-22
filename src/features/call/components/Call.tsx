@@ -2,7 +2,6 @@
 
 import { Alert, Box, Slide, Snackbar } from '@mui/material';
 import { FC, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { LaneStep } from '../types';
@@ -22,13 +21,16 @@ import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 
-const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
+type Props = {
+  onResetAfterError: (urlToNavigateTo: string) => void;
+};
+
+const Call: FC<Props> = ({ onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
   const allUserAssignments = useMyAssignments();
-  const router = useRouter();
 
   const [callLogOpen, setCallLogOpen] = useState(false);
   const [assignmentSwitchedTo, setAssignmentSwitchedTo] = useState<
@@ -116,17 +118,11 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
         }
         primaryButton={{
           label: messages.unexpectedError.reloadButton(),
-          onClick: () => {
-            clearCallLanes();
-            router.push(`/call/${assignment.id}`);
-          },
+          onClick: () => onResetAfterError(`/call/${assignment.id}`),
         }}
         secondaryButton={{
           label: messages.unexpectedError.backToMyZetkinButton(),
-          onClick: () => {
-            clearCallLanes();
-            router.push('/my');
-          },
+          onClick: () => onResetAfterError('/my'),
         }}
         title={messages.unexpectedError.title()}
       >

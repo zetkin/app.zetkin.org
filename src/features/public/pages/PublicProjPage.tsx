@@ -99,7 +99,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'today',
+            dateFilterState: dateFilterState === 'today' ? null : 'today',
           })
         );
       },
@@ -112,7 +112,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'tomorrow',
+            dateFilterState: dateFilterState === 'tomorrow' ? null : 'tomorrow',
           })
         );
       },
@@ -125,7 +125,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'thisWeek',
+            dateFilterState: dateFilterState === 'thisWeek' ? null : 'thisWeek',
           })
         );
       },
@@ -141,7 +141,16 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerContent('calendar');
+        if (dateFilterState === 'custom') {
+          dispatch(
+            filtersUpdated({
+              customDatesToFilterBy: [null, null],
+              dateFilterState: null,
+            })
+          );
+        } else {
+          setDrawerContent('calendar');
+        }
       },
     },
     ...(eventTypeFilter.shouldShowFilter
@@ -150,7 +159,17 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: eventTypeFilter.filterButtonLabel,
-            onClick: () => setDrawerContent('eventTypes'),
+            onClick: () => {
+              if (eventTypeFilter.isFiltered) {
+                dispatch(
+                  filtersUpdated({
+                    eventTypesToFilterBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('eventTypes');
+              }
+            },
           },
         ]
       : []),

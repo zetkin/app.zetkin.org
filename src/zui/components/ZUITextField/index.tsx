@@ -76,6 +76,11 @@ type ZUITextFieldProps = {
   maxRows?: number;
 
   /**
+   * If the font used in the box should be monospaced
+   */
+  monospaced?: boolean;
+
+  /**
    * If the textfield is for mutli line input.
    */
   multiline?: boolean;
@@ -142,6 +147,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   inputRef,
   label,
   maxRows = 5,
+  monospaced = false,
   multiline = false,
   name,
   onChange,
@@ -178,13 +184,17 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
       htmlInput: {
         'aria-describedby': ariaDescribedBy,
         sx: (theme) => ({
-          fontFamily: theme.typography.fontFamily,
-          fontSize: '1rem',
+          fontFamily: monospaced
+            ? 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+            : theme.typography.fontFamily,
+          fontSize: monospaced ? '0.875rem' : '1rem',
           fontWeight: 400,
-          letterSpacing: '1%',
-          lineHeight: '1.5rem',
+          letterSpacing: monospaced ? '0' : '1%',
+          lineHeight: monospaced ? '1.4rem' : '1.5rem',
+          overflowX: monospaced ? 'auto' : 'hidden',
           paddingX: '0.75rem',
           paddingY: size === 'medium' ? '0.594rem' : '',
+          whiteSpace: monospaced ? 'pre' : 'normal',
         }),
       },
       input: {

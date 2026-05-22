@@ -16,7 +16,7 @@ import Autocomplete, {
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ListSubheader from '@mui/material/ListSubheader';
 import Popper from '@mui/material/Popper';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, Theme, useTheme } from '@mui/material/styles';
 import {
   List,
   ListImperativeAPI,
@@ -29,7 +29,8 @@ import {
   AutocompleteChangeDetails,
   AutocompleteChangeReason,
   AutocompleteValue,
-} from '@mui/material/useAutocomplete/useAutocomplete';
+} from '@mui/material/useAutocomplete';
+import { SystemStyleObject } from '@mui/system';
 
 const LISTBOX_PADDING = 8; // px
 
@@ -206,6 +207,7 @@ type Item = {
 type Props = {
   clearable?: boolean;
   items: Item[];
+  label?: string;
   minWidth?: string;
   onChange?: (
     event: React.SyntheticEvent & { target: { value: string } },
@@ -213,6 +215,7 @@ type Props = {
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<Item>
   ) => void;
+  sx?: SystemStyleObject<Theme>;
   value?: string | number;
 };
 
@@ -349,7 +352,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
             position: 'relative',
           }}
         >
-          <TextField {...params} />
+          <TextField {...params} label={props.label} variant={'standard'} />
           <Typography
             sx={{
               fontSize: '34px',
@@ -387,56 +390,17 @@ const StyledAutocomplete: FC<Props> = (props) => {
       slots={{
         popper: StyledPopper,
       }}
-      sx={(theme) => ({
+      sx={{
+        '& .MuiAutocomplete-clearIndicator': {
+          display: 'none',
+        },
         '& .MuiFormControl-root': {
           verticalAlign: 'baseline',
         },
-        '& .MuiOutlinedInput-notchedOutline': {
-          border: 'none',
-          padding: 0,
-        },
-        '& .MuiOutlinedInput-root': {
-          border: 'none',
-          borderRadius: 0,
-          padding: 0,
-        },
-        '& .MuiOutlinedInput-root .MuiInputBase-input': {
+        '& .MuiInputBase-root .MuiInputBase-input': {
           fontSize: '34px',
           padding: 0,
           textOverflow: 'clip',
-        },
-        '& .MuiOutlinedInput-root.Mui-focused:after': {
-          borderBottom: `2px solid ${theme.palette.primary.main}`,
-          transform: 'scaleX(1) translateX(0)',
-        },
-        '& .MuiOutlinedInput-root:after': {
-          bottom: 0,
-          content: '""',
-          left: 0,
-          position: 'absolute',
-          right: 0,
-          transform: 'scaleX(0)',
-          transition: 'transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
-        },
-        '& .MuiOutlinedInput-root:before': {
-          borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
-          bottom: 0,
-          content: '""',
-          left: 0,
-          pointerEvents: 'none',
-          position: 'absolute',
-          right: 0,
-          transition:
-            'border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-        },
-        '& .MuiOutlinedInput-root:hover:before': {
-          borderBottom: `2px solid black`,
-        },
-        '& .MuiSvgIcon-root': {
-          color: 'rgba(0, 0, 0, 0.54)',
-        },
-        '& .MuiSvgIcon-root:hover': {
-          color: 'rgba(0, 0, 0, 0.54)',
         },
         '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root':
           {
@@ -446,7 +410,8 @@ const StyledAutocomplete: FC<Props> = (props) => {
         minWidth: props.minWidth,
         verticalAlign: 'bottom',
         width: 'fit-content',
-      })}
+        ...props.sx,
+      }}
       value={valueItem}
     />
   );

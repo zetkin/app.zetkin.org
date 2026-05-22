@@ -107,7 +107,7 @@ const FinishedCallsList: FC<{
 }> = ({ onCall, orgId, searchString }) => {
   const messages = useMessages(messageIds);
   const { switchToPreviousCall } = useCallMutations(orgId);
-  const { loading, finishedCalls } = useFinishedCalls();
+  const { isLoading, finishedCalls } = useFinishedCalls();
 
   const fuse = useMemo(() => {
     return new Fuse(finishedCalls, {
@@ -123,18 +123,10 @@ const FinishedCallsList: FC<{
   }, [finishedCalls]);
 
   const filteredFinishedCalls = useMemo(() => {
-    const calls = searchString
+    return searchString
       ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
       : finishedCalls;
-
-    return calls.toSorted((call1, call2) => {
-      const call1AllocationTime = new Date(call1.allocation_time);
-      const call2AllocationTime = new Date(call2.allocation_time);
-
-      return call2AllocationTime.getTime() - call1AllocationTime.getTime();
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [finishedCalls, searchString]);
+  }, [finishedCalls, fuse, searchString]);
 
   return (
     <>
@@ -231,7 +223,7 @@ const FinishedCallsList: FC<{
           <ZUIDivider />
         </Fragment>
       ))}
-      {loading && (
+      {isLoading && (
         <Box
           sx={{
             alignItems: 'center',
@@ -284,7 +276,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
-          minHeight: 400,
+          height: 400,
           overflowX: 'hidden',
           paddingRight: 1,
           paddingTop: 2,

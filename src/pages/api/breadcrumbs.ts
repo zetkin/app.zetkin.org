@@ -251,6 +251,13 @@ async function fetchElements(
         label: email?.title ?? '…',
       },
     ];
+  } else if (fieldName === 'themeId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: `Theme ${fieldValue}`,
+      },
+    ];
   }
 
   return [];

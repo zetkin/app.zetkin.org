@@ -286,11 +286,14 @@ const CallPanels: FC<Props> = ({
           left: lane.step === LaneStep.SUMMARY ? 'calc(100% / 4)' : '120%',
           position: 'relative',
           transition: lane.step !== LaneStep.CALL ? 'left 0.5s' : '',
-          visibility:
-            !call &&
-            (lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT)
-              ? 'hidden'
-              : undefined,
+          visibility: () => {
+            const noCurrentCall = !call;
+            const inCallOrReport =
+              lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT;
+            const hideSummary = noCurrentCall && inCallOrReport;
+
+            return hideSummary ? 'hidden' : undefined;
+          },
           width: lane.step === LaneStep.SUMMARY ? 1 / 2 : 1 / 3,
         }}
       >

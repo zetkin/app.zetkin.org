@@ -23,6 +23,7 @@ import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiS
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useFilteredActivities from '../hooks/useFilteredActivities';
+import notEmpty from 'utils/notEmpty';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -139,9 +140,13 @@ const CallHeader: FC<Props> = ({
               lastName={call.target.last_name}
             />
             <ZUIText variant="headingLg">{call.target.name}</ZUIText>
-            <ZUIText color="secondary" variant="headingLg">
+            <ZUIText
+              color="secondary"
+              sx={{ fontFamily: 'monospace' }}
+              variant="headingLg"
+            >
               {[call.target.phone, call.target.alt_phone]
-                .filter((number) => !!number)
+                .filter(notEmpty)
                 .join('/')}
             </ZUIText>
           </>
