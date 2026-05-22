@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
@@ -14,6 +14,7 @@ import Msg from 'core/i18n/Msg';
 import messageIds from 'features/settings/l10n/messageIds';
 import { CustomFieldPatchBody } from '../types';
 import { parseEnumChoices } from './NewFieldForm';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 type EditFieldFormProps = {
   field: ZetkinCustomField;
@@ -34,6 +35,8 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
   const initialEnumOptions =
     field.enum_choices?.map((choice) => choice.label).join(', ') || '';
   const [enumOptions, setEnumOptions] = useState(initialEnumOptions);
+
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
@@ -72,7 +75,18 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
         />
       )}
       <Box display="flex" mt={1}>
-        <Button onClick={() => onDelete()} size="small" variant="outlined">
+        <Button
+          onClick={() =>
+            showConfirmDialog({
+              onSubmit: () => onDelete(),
+              submitText: 'Delete ' + field.title,
+              title: 'Delete ' + field.title + '?',
+              warningText: 'Are you sure you want to delete ' + field.title,
+            })
+          }
+          size="small"
+          variant="outlined"
+        >
           Delete Field
         </Button>
         <Box display="flex" gap={1} ml="auto">
