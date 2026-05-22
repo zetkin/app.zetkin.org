@@ -1,42 +1,20 @@
 import { useAppDispatch } from 'core/hooks';
 import useApiClient from 'core/hooks/useApiClient';
 import { fieldCreate, fieldCreated } from 'features/profile/store';
-import {
-  CUSTOM_FIELD_TYPE,
-  EnumChoice,
-  ZetkinCustomField,
-} from 'utils/types/zetkin';
+import { ZetkinCustomField } from 'utils/types/zetkin';
+import { CustomFieldPostBody } from '../types';
 
-type UseCreateFieldsReturn = {
-  createField: (
-    title: string,
-    type: CUSTOM_FIELD_TYPE,
-    enumChoices?: EnumChoice[]
-  ) => void;
-};
-
-export default function useCreateField(orgId: number): UseCreateFieldsReturn {
+export default function useCreateField(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const createField = async (
-    title: string,
-    type: CUSTOM_FIELD_TYPE,
-    enumChoices?: EnumChoice[]
-  ) => {
+  return async (data: CustomFieldPostBody) => {
     dispatch(fieldCreate());
 
-    const field = await apiClient.post<ZetkinCustomField>(
-      `/api/orgs/${orgId}/people/fields/`,
-      {
-        enum_choices: enumChoices,
-        slug: title.toLowerCase().replace(/\s+/g, '_'),
-        title,
-        type: type,
-      }
+    const field = await apiClient.post<ZetkinCustomField, CustomFieldPostBody>(
+      `/api/orgs/${orgId}/people/fields`,
+      data
     );
     dispatch(fieldCreated(field));
   };
-
-  return { createField };
 }
