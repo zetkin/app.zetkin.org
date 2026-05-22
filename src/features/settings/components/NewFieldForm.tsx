@@ -1,3 +1,4 @@
+import slugify from 'slugify';
 import { Typography, Paper, TextField, MenuItem, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC, useState } from 'react';
@@ -13,7 +14,7 @@ export const parseEnumChoices = (input: string) => {
     .map((item) => item.trim())
     .filter(Boolean)
     .map((label) => ({
-      key: label.toLowerCase().replace(/\s+/g, '_'),
+      key: slugify(label, { lower: true, replacement: '_' }),
       label,
     }));
 };
@@ -59,7 +60,7 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
             onChange={(event) => {
               setTitle(event.target.value);
               setSlug(
-                event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+                slugify(event.target.value, { lower: true, replacement: '_' })
               );
             }}
             value={title}
@@ -70,7 +71,7 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
             label="Slug"
             onChange={(event) => {
               setSlug(
-                event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+                slugify(event.target.value, { lower: true, replacement: '_' })
               );
             }}
             value={slug}
