@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   GridColDef,
@@ -13,6 +13,7 @@ import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
+import ZUICreatePerson from 'zui/ZUICreatePerson';
 import {
   COLUMN_TYPE,
   LocalPersonViewColumn,
@@ -88,6 +89,7 @@ const EditCell: FC<{
   column: LocalPersonViewColumn;
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
+  const [createPersonOpen, setCreatePersonOpen] = useState<number>(-1);
   const api = useGridApiContext();
   const { orgId, viewId } = useRouter().query;
 
@@ -108,10 +110,26 @@ const EditCell: FC<{
     setCellValue(row.id, column.id, person?.id ?? null);
   };
 
+  if (createPersonOpen != -1) {
+    return (
+      <ZUICreatePerson
+        onClose={() => setCreatePersonOpen(-1)}
+        onSubmit={(_e, person) => {
+          if (createPersonOpen == -1) {
+            return;
+          }
+          updateCellValue(person);
+          setCreatePersonOpen(-1);
+        }}
+        open={createPersonOpen != -1}
+      />
+    );
+  }
+
   return (
     <ZUIPersonGridEditCell
       cell={cell}
-      onCreate={() => null}
+      onCreate={() => setCreatePersonOpen(row.id)}
       onUpdate={updateCellValue}
       removePersonLabel={messages.cells.localPerson.clearLabel()}
       restrictedMode={isRestrictedMode}
