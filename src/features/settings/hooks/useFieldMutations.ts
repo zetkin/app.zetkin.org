@@ -8,14 +8,7 @@ import {
 import { ZetkinCustomField } from 'utils/types/zetkin';
 import { CustomFieldPatchBody } from '../types';
 
-type UseFieldsMutationReturn = {
-  removeField: (fieldId: number) => void;
-  updateField: (fieldId: number, data: CustomFieldPatchBody) => void;
-};
-
-export default function useFieldMutations(
-  orgId: number
-): UseFieldsMutationReturn {
+export default function useFieldMutations(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
