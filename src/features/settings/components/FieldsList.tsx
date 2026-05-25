@@ -1,5 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { Button, MenuItem, TextField, Typography } from '@mui/material';
+import React, { Suspense, useContext, useState } from 'react';
+import {
+  Button,
+  MenuItem,
+  Skeleton,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
 
@@ -7,28 +13,34 @@ import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useServerSide from 'core/useServerSide';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useFieldMutations from '../hooks/useFieldMutations';
-import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import useMessages from 'core/i18n/useMessages';
 import globalMessageIds from 'core/i18n/messageIds';
 import Msg from 'core/i18n/Msg';
 import messageIds from 'features/settings/l10n/messageIds';
-import { CustomFieldPatchBody } from '../types';
 import { parseEnumChoices } from './NewFieldForm';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import useCustomField from '../hooks/useCustomField';
 
 type EditFieldFormProps = {
-  field: ZetkinCustomField;
+  fieldId: number;
   onCancel: () => void;
   onDelete: () => void;
-  onSubmit: (data: CustomFieldPatchBody) => void;
+  onSubmit: () => void;
+  orgId: number;
 };
 
 const EditFieldForm: FC<EditFieldFormProps> = ({
   onCancel,
   onDelete,
   onSubmit,
-  field,
+  orgId,
+  fieldId,
 }) => {
+  const field = useCustomField(orgId, fieldId);
+  const { updateField, removeField } = useFieldMutations(orgId);
+
+  const [updating, setUpdating] = useState(false);
   const [title, setTitle] = useState(field.title);
   const [slug, setSlug] = useState(field.slug);
   const [type, setType] = useState(field.type);
@@ -38,87 +50,110 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
 
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  const changesHaveBeenMade =
+    title !== field.title ||
+    slug !== field.slug ||
+    type !== field.type ||
+    enumOptions !== initialEnumOptions;
+
   return (
-    <Box display="flex" flexDirection="column" gap={1}>
-      <TextField
-        label="Title"
-        onChange={(event) => {
-          setTitle(event.target.value);
-          setSlug(event.target.value.toLowerCase().trim().replace(/\s+/g, '_'));
-        }}
-        value={title}
-      />
-      <TextField
-        label="Slug"
-        onChange={(event) =>
-          setSlug(event.target.value.toLowerCase().trim().replace(/\s+/g, '_'))
-        }
-        value={slug}
-      />
-      <TextField
-        label="Field Type"
-        onChange={(event) => setType(event.target.value as CUSTOM_FIELD_TYPE)}
-        select
-        value={type}
-      >
-        {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
-      {type === CUSTOM_FIELD_TYPE.ENUM && (
+    <form
+      onSubmit={async (ev) => {
+        ev.preventDefault();
+        setUpdating(true);
+        await updateField(fieldId, {
+          enum_choices:
+            enumOptions !== initialEnumOptions
+              ? parseEnumChoices(enumOptions)
+              : undefined,
+          slug: slug !== field.slug ? slug : undefined,
+          title: title !== field.title ? title : undefined,
+          type: type !== field.type ? type : undefined,
+        });
+        setUpdating(false);
+        onSubmit();
+      }}
+    >
+      <Box display="flex" flexDirection="column" gap={1}>
         <TextField
-          label="Options (comma separated)"
-          onChange={(event) => setEnumOptions(event.target.value)}
-          value={enumOptions}
+          label="Title"
+          onChange={(event) => {
+            setTitle(event.target.value);
+            setSlug(
+              event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+            );
+          }}
+          value={title}
         />
-      )}
-      <Box display="flex" mt={1}>
-        <Button
-          onClick={() =>
-            showConfirmDialog({
-              onSubmit: () => onDelete(),
-              submitText: 'Delete ' + field.title,
-              title: 'Delete ' + field.title + '?',
-              warningText: 'Are you sure you want to delete ' + field.title,
-            })
+        <TextField
+          label="Slug"
+          onChange={(event) =>
+            setSlug(
+              event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+            )
           }
-          size="small"
-          variant="outlined"
+          value={slug}
+        />
+        <TextField
+          label="Field Type"
+          onChange={(event) => setType(event.target.value as CUSTOM_FIELD_TYPE)}
+          select
+          value={type}
         >
-          Delete Field
-        </Button>
-        <Box display="flex" gap={1} ml="auto">
-          <Button
-            onClick={() => {
-              onCancel();
-            }}
-            size="small"
-            variant="outlined"
-          >
-            Cancel
-          </Button>
+          {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
+        {type === CUSTOM_FIELD_TYPE.ENUM && (
+          <TextField
+            label="Options (comma separated)"
+            onChange={(event) => setEnumOptions(event.target.value)}
+            value={enumOptions}
+          />
+        )}
+        <Box display="flex" mt={1}>
           <Button
             onClick={() =>
-              onSubmit({
-                enum_choices:
-                  enumOptions !== initialEnumOptions
-                    ? parseEnumChoices(enumOptions)
-                    : undefined,
-                slug: slug !== field.slug ? slug : undefined,
-                title: title !== field.title ? title : undefined,
-                type: type !== field.type ? type : undefined,
+              showConfirmDialog({
+                onSubmit: () => {
+                  removeField(fieldId);
+                  onDelete();
+                },
+                submitText: 'Delete ' + field.title,
+                title: 'Delete ' + field.title + '?',
+                warningText: 'Are you sure you want to delete ' + field.title,
               })
             }
             size="small"
-            variant="contained"
+            variant="outlined"
           >
-            Save
+            Delete Field
           </Button>
+          <Box display="flex" gap={1} ml="auto">
+            <Button
+              onClick={() => {
+                onCancel();
+              }}
+              size="small"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={!changesHaveBeenMade}
+              loading={updating}
+              size="small"
+              type="submit"
+              variant="contained"
+            >
+              Save
+            </Button>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </form>
   );
 };
 
@@ -130,7 +165,6 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
   const onServer = useServerSide();
   const customFields = useCustomFields(orgId).data ?? [];
   const globalMessages = useMessages(globalMessageIds);
-  const { updateField, removeField } = useFieldMutations(orgId);
   const [fieldBeingEdited, setFieldBeingEdited] = useState<number | null>(null);
 
   if (onServer) {
@@ -215,18 +249,19 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
               )}
             </Box>
             {fieldBeingEdited === field.id && (
-              <EditFieldForm
-                field={field}
-                onCancel={() => setFieldBeingEdited(null)}
-                onDelete={() => {
-                  removeField(field.id);
-                  setFieldBeingEdited(null);
-                }}
-                onSubmit={(data) => {
-                  updateField(field.id, data);
-                  setFieldBeingEdited(null);
-                }}
-              />
+              <Suspense fallback={<Skeleton />}>
+                <EditFieldForm
+                  fieldId={field.id}
+                  onCancel={() => setFieldBeingEdited(null)}
+                  onDelete={() => {
+                    setFieldBeingEdited(null);
+                  }}
+                  onSubmit={() => {
+                    setFieldBeingEdited(null);
+                  }}
+                  orgId={orgId}
+                />
+              </Suspense>
             )}
           </Box>
         ))}
