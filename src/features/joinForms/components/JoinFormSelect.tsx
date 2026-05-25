@@ -26,12 +26,12 @@ const JoinFormSelect: FC<Props> = ({
       <Select
         label={messages.forms()}
         onChange={(ev) => {
-          const value = ev.target.value;
-          setValue(value);
-          if (value === 'all') {
+          const val = ev.target.value;
+          setValue(val);
+          if (val === 'all') {
             onFormSelect(undefined);
           } else {
-            onFormSelect(forms.find((f) => f.id === value));
+            onFormSelect(forms.find((f) => f.id === val));
           }
         }}
         value={value}
