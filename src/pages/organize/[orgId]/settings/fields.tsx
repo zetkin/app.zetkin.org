@@ -35,13 +35,13 @@ const FieldsPage: PageWithLayout = () => {
     <Box sx={{ display: 'flex', gap: 2 }}>
       <Box sx={{ display: 'flex', flex: 2, flexDirection: 'column', gap: 2 }}>
         <Typography variant="h4">
-          <Msg id={messageIds.fields.fieldsTitle} />
+          <Msg id={messageIds.fields.list.title} />
         </Typography>
         <FieldsList orgId={orgId} />
       </Box>
       <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', gap: 2 }}>
         <Typography variant="h4">
-          <Msg id={messageIds.fields.createNewFieldTitle} />
+          <Msg id={messageIds.fields.create.title} />
         </Typography>
         <NewFieldForm orgId={orgId} />
       </Box>
