@@ -11,7 +11,7 @@ export default makeMessages('feat.settings', {
     },
     create: {
       createButton: m('Create'),
-      optionsInput: m('Options'),
+      optionsInput: m('Options (comma separated)'),
       slugInput: m('Slug'),
       title: m('Create new field'),
       titleInput: m('Title'),
@@ -28,7 +28,7 @@ export default makeMessages('feat.settings', {
     edit: {
       cancelButton: m('Cancel'),
       deleteButton: m('Delete field'),
-      optionsInput: m('Options'),
+      optionsInput: m('Options (comma separated)'),
       saveButton: m('Save'),
       slugInput: m('Slug'),
       title: m<{ fieldTitle: string }>('Editing {fieldTitle}'),
