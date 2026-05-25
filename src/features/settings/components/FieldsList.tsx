@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
+import slugify from 'slugify';
 
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
@@ -89,7 +90,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
             onChange={(event) => {
               setTitle(event.target.value);
               setSlug(
-                event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+                slugify(event.target.value, { lower: true, replacement: '_' })
               );
             }}
             value={title}
@@ -98,7 +99,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
             label={messages.fields.edit.slugInput()}
             onChange={(event) =>
               setSlug(
-                event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
+                slugify(event.target.value, { lower: true, replacement: '_' })
               )
             }
             value={slug}
