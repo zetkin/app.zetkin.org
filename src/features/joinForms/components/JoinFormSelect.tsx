@@ -28,7 +28,7 @@ const JoinFormSelect: FC<Props> = ({
       <Select
         label={messages.forms()}
         onChange={(ev) => {
-          const val = ev.target.value;
+          const val = ev.target.value as 'all' | number;
           setSelectValue(val);
           if (val === 'all') {
             onFormSelect(undefined);
