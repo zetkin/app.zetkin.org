@@ -17,7 +17,9 @@ const JoinFormSelect: FC<Props> = ({
   forms = [],
   onFormSelect = () => {},
 }) => {
-  const [value, setValue] = useState<number | 'all'>(formId || 'all');
+  const [selectValue, setSelectValue] = useState<number | 'all'>(
+    formId || 'all'
+  );
   const messages = useMessages(messageIds);
 
   return (
@@ -27,14 +29,14 @@ const JoinFormSelect: FC<Props> = ({
         label={messages.forms()}
         onChange={(ev) => {
           const val = ev.target.value;
-          setValue(val);
+          setSelectValue(val);
           if (val === 'all') {
             onFormSelect(undefined);
           } else {
             onFormSelect(forms.find((f) => f.id === val));
           }
         }}
-        value={value}
+        value={selectValue}
       >
         <MenuItem selected={!formId} value="all">
           {messages.submissionPane.allForms()}
