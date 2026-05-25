@@ -29,6 +29,18 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
   const [slug, setSlug] = useState('');
   const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
   const [enumInput, setEnumInput] = useState('');
+  const [creating, setCreating] = useState(false);
+
+  const isBasicFieldAndHasInfo =
+    type !== CUSTOM_FIELD_TYPE.ENUM && !!title && !!slug;
+  const isEnumFieldAndHasInfoAndOptions =
+    type == CUSTOM_FIELD_TYPE.ENUM &&
+    parseEnumChoices(enumInput).length > 1 &&
+    !!title &&
+    !!slug;
+
+  const canCreateNewField =
+    isBasicFieldAndHasInfo || isEnumFieldAndHasInfoAndOptions;
 
   return (
     <Box sx={{ width: 360 }}>
@@ -52,81 +64,82 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
           p: 3,
         }}
       >
-        <Box display="flex" flexDirection="column" gap={2}>
-          <TextField
-            fullWidth
-            id="filled-basic"
-            label="Title"
-            onChange={(event) => {
-              setTitle(event.target.value);
-              setSlug(
-                slugify(event.target.value, { lower: true, replacement: '_' })
-              );
-            }}
-            value={title}
-          />
-          <TextField
-            fullWidth
-            id="filled-basic"
-            label="Slug"
-            onChange={(event) => {
-              setSlug(
-                slugify(event.target.value, { lower: true, replacement: '_' })
-              );
-            }}
-            value={slug}
-          />
-          <TextField
-            fullWidth
-            id="filled-basic"
-            label="Field Type"
-            onChange={(event) =>
-              setType(event.target.value as CUSTOM_FIELD_TYPE)
-            }
-            select
-            value={type}
-          >
-            {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </TextField>
-          {type === CUSTOM_FIELD_TYPE.ENUM && (
+        <form
+          onSubmit={async (ev) => {
+            ev.preventDefault();
+            setCreating(true);
+            await createField({
+              enum_choices:
+                type === CUSTOM_FIELD_TYPE.ENUM
+                  ? parseEnumChoices(enumInput)
+                  : undefined,
+              slug,
+              title,
+              type,
+            });
+            setCreating(false);
+
+            setEnumInput('');
+            setTitle('');
+            setType(CUSTOM_FIELD_TYPE.TEXT);
+            setSlug('');
+          }}
+        >
+          <Box display="flex" flexDirection="column" gap={2}>
             <TextField
               fullWidth
-              id="filled-basic"
-              label="Options (comma separated list)"
-              onChange={(event) => setEnumInput(event.target.value)}
-              value={enumInput}
-            />
-          )}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-            <Button
-              onClick={() => {
-                {
-                  createField({
-                    enum_choices:
-                      type === CUSTOM_FIELD_TYPE.ENUM
-                        ? parseEnumChoices(enumInput)
-                        : undefined,
-                    slug,
-                    title,
-                    type,
-                  });
-                  setEnumInput('');
-                  setTitle('');
-                  setType(CUSTOM_FIELD_TYPE.TEXT);
-                  setSlug('');
-                }
+              label="Title"
+              onChange={(event) => {
+                setTitle(event.target.value);
+                setSlug(
+                  slugify(event.target.value, { lower: true, replacement: '_' })
+                );
               }}
-              size="small"
+              value={title}
+            />
+            <TextField
+              fullWidth
+              label="Slug"
+              onChange={(event) => {
+                setSlug(
+                  slugify(event.target.value, { lower: true, replacement: '_' })
+                );
+              }}
+              value={slug}
+            />
+            <TextField
+              fullWidth
+              label="Field Type"
+              onChange={(event) =>
+                setType(event.target.value as CUSTOM_FIELD_TYPE)
+              }
+              select
+              value={type}
+            >
+              {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+            {type === CUSTOM_FIELD_TYPE.ENUM && (
+              <TextField
+                fullWidth
+                label="Options (comma separated list)"
+                onChange={(event) => setEnumInput(event.target.value)}
+                value={enumInput}
+              />
+            )}
+            <Button
+              disabled={!canCreateNewField}
+              loading={creating}
+              type="submit"
               variant="outlined"
             >
               Create Field
             </Button>
           </Box>
-        </Box>
+        </form>
       </Paper>
     </Box>
   );
