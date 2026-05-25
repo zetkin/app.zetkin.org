@@ -1,6 +1,7 @@
 import React, { Fragment, Suspense, useContext, useState } from 'react';
 import {
   Button,
+  Collapse,
   Divider,
   MenuItem,
   Skeleton,
@@ -210,33 +211,7 @@ const FieldsList: FC<Props> = ({ orgId }) => {
         const showEditButton = field.organization.id === orgId;
         return (
           <Fragment key={field.slug}>
-            <Box sx={{ alignItems: 'center', display: 'flex', padding: 2 }}>
-              <Typography sx={{ flex: 1 }}>{field.title}</Typography>
-              <Typography color="secondary" sx={{ flex: 1 }}>
-                {field.slug}
-              </Typography>
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flex: 1,
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Typography color="secondary" sx={{ flex: 1 }}>
-                  {field.type}
-                </Typography>
-                {showEditButton && fieldBeingEdited !== field.id && (
-                  <Button
-                    onClick={() => setFieldBeingEdited(field.id)}
-                    variant="text"
-                  >
-                    Edit
-                  </Button>
-                )}
-              </Box>
-            </Box>
-            {fieldBeingEdited === field.id && (
+            <Collapse in={fieldBeingEdited === field.id}>
               <Suspense fallback={<Skeleton />}>
                 <EditFieldForm
                   fieldId={field.id}
@@ -250,6 +225,34 @@ const FieldsList: FC<Props> = ({ orgId }) => {
                   orgId={orgId}
                 />
               </Suspense>
+            </Collapse>
+            {fieldBeingEdited !== field.id && (
+              <Box sx={{ alignItems: 'center', display: 'flex', padding: 2 }}>
+                <Typography sx={{ flex: 1 }}>{field.title}</Typography>
+                <Typography color="secondary" sx={{ flex: 1 }}>
+                  {field.slug}
+                </Typography>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Typography color="secondary" sx={{ flex: 1 }}>
+                    {field.type}
+                  </Typography>
+                  {showEditButton && fieldBeingEdited !== field.id && (
+                    <Button
+                      onClick={() => setFieldBeingEdited(field.id)}
+                      variant="text"
+                    >
+                      Edit
+                    </Button>
+                  )}
+                </Box>
+              </Box>
             )}
             {index !== customFields.length - 1 && <Divider />}
           </Fragment>
