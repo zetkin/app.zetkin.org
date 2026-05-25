@@ -5,6 +5,8 @@ import { FC, useState } from 'react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import useCreateField from '../hooks/useCreateField';
+import messageIds from '../l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 export const parseEnumChoices = (input: string) => {
   return input
@@ -22,6 +24,7 @@ type Props = {
 };
 
 const NewFieldForm: FC<Props> = ({ orgId }) => {
+  const messages = useMessages(messageIds);
   const createField = useCreateField(orgId);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
@@ -81,7 +84,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
           >
             <TextField
               fullWidth
-              label="Title"
+              label={messages.fields.create.titleInput()}
               onChange={(event) => {
                 setTitle(event.target.value);
                 setSlug(
@@ -92,7 +95,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
             />
             <TextField
               fullWidth
-              label="Slug"
+              label={messages.fields.create.slugInput()}
               onChange={(event) => {
                 setSlug(
                   slugify(event.target.value, { lower: true, replacement: '_' })
@@ -102,7 +105,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
             />
             <TextField
               fullWidth
-              label="Field Type"
+              label={messages.fields.create.typeInput()}
               onChange={(event) =>
                 setType(event.target.value as CUSTOM_FIELD_TYPE)
               }
@@ -111,14 +114,14 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
             >
               {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
                 <MenuItem key={option} value={option}>
-                  {option}
+                  <Msg id={messageIds.fields.customFieldTypes[option]} />
                 </MenuItem>
               ))}
             </TextField>
             {type === CUSTOM_FIELD_TYPE.ENUM && (
               <TextField
                 fullWidth
-                label="Options (comma separated list)"
+                label={messages.fields.edit.optionsInput()}
                 onChange={(event) => setEnumInput(event.target.value)}
                 value={enumInput}
               />
@@ -129,7 +132,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
               type="submit"
               variant="outlined"
             >
-              Create
+              <Msg id={messageIds.fields.create.createButton} />
             </Button>
           </Box>
         </form>

@@ -2,8 +2,48 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
   fields: {
-    createNewFieldTitle: m('Create new field'),
-    fieldsTitle: m('Fields'),
+    confirmDeletion: {
+      confirmButton: m<{ fieldTitle: string }>('Yes, delete {fieldTitle}'),
+      title: m<{ fieldTitle: string }>('Delete {fieldTitle}?'),
+      warningText: m<{ fieldTitle: string }>(
+        'Are you sure you want to delete {fieldTitle}? This cannot be undone.'
+      ),
+    },
+    create: {
+      createButton: m('Create'),
+      optionsInput: m('Options'),
+      slugInput: m('Slug'),
+      title: m('Create new field'),
+      titleInput: m('Title'),
+      typeInput: m('Type'),
+    },
+    customFieldTypes: {
+      date: m('Date'),
+      enum: m('Options'),
+      json: m('JSON'),
+      lnglat: m('Longitude & latitude'),
+      text: m('Text'),
+      url: m('URL'),
+    },
+    edit: {
+      cancelButton: m('Cancel'),
+      deleteButton: m('Delete field'),
+      optionsInput: m('Options'),
+      saveButton: m('Save'),
+      slugInput: m('Slug'),
+      title: m<{ fieldTitle: string }>('Editing {fieldTitle}'),
+      titleInput: m('Title'),
+      typeInput: m('Type'),
+    },
+    list: {
+      editButton: m('Edit'),
+      headers: {
+        slug: m('Slug'),
+        title: m('Title'),
+        type: m('Type'),
+      },
+      title: m('Fields'),
+    },
   },
   officials: {
     addPerson: {

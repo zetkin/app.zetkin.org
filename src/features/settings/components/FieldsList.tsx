@@ -20,6 +20,8 @@ import globalMessageIds from 'core/i18n/messageIds';
 import { parseEnumChoices } from './NewFieldForm';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import useCustomField from '../hooks/useCustomField';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type EditFieldFormProps = {
   fieldId: number;
@@ -36,6 +38,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
   orgId,
   fieldId,
 }) => {
+  const messages = useMessages(messageIds);
   const field = useCustomField(orgId, fieldId);
   const { updateField, removeField } = useFieldMutations(orgId);
 
@@ -57,7 +60,12 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 2 }}>
-      <Typography variant="h6">Editing {field.title}</Typography>
+      <Typography variant="h6">
+        <Msg
+          id={messageIds.fields.edit.title}
+          values={{ fieldTitle: field.title }}
+        />
+      </Typography>
       <form
         onSubmit={async (ev) => {
           ev.preventDefault();
@@ -77,7 +85,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
-            label="Title"
+            label={messages.fields.edit.titleInput()}
             onChange={(event) => {
               setTitle(event.target.value);
               setSlug(
@@ -87,7 +95,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
             value={title}
           />
           <TextField
-            label="Slug"
+            label={messages.fields.edit.slugInput()}
             onChange={(event) =>
               setSlug(
                 event.target.value.toLowerCase().trim().replace(/\s+/g, '_')
@@ -96,7 +104,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
             value={slug}
           />
           <TextField
-            label="Field Type"
+            label={messages.fields.edit.typeInput()}
             onChange={(event) =>
               setType(event.target.value as CUSTOM_FIELD_TYPE)
             }
@@ -105,13 +113,13 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
           >
             {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
               <MenuItem key={option} value={option}>
-                {option}
+                <Msg id={messageIds.fields.customFieldTypes[option]} />
               </MenuItem>
             ))}
           </TextField>
           {type === CUSTOM_FIELD_TYPE.ENUM && (
             <TextField
-              label="Options (comma separated)"
+              label={messages.fields.edit.optionsInput()}
               onChange={(event) => setEnumOptions(event.target.value)}
               value={enumOptions}
             />
@@ -124,14 +132,20 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
                     removeField(fieldId);
                     onDelete();
                   },
-                  submitText: 'Delete ' + field.title,
-                  title: 'Delete ' + field.title + '?',
-                  warningText: 'Are you sure you want to delete ' + field.title,
+                  submitText: messages.fields.confirmDeletion.confirmButton({
+                    fieldTitle: field.title,
+                  }),
+                  title: messages.fields.confirmDeletion.title({
+                    fieldTitle: field.title,
+                  }),
+                  warningText: messages.fields.confirmDeletion.warningText({
+                    fieldTitle: field.title,
+                  }),
                 })
               }
               variant="outlined"
             >
-              Delete
+              <Msg id={messageIds.fields.edit.deleteButton} />
             </Button>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
@@ -140,7 +154,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
                 }}
                 variant="outlined"
               >
-                Cancel
+                <Msg id={messageIds.fields.edit.cancelButton} />
               </Button>
               <Button
                 disabled={!changesHaveBeenMade}
@@ -148,7 +162,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
                 type="submit"
                 variant="contained"
               >
-                Save
+                <Msg id={messageIds.fields.edit.saveButton} />
               </Button>
             </Box>
           </Box>
@@ -177,13 +191,13 @@ const FieldsList: FC<Props> = ({ orgId }) => {
     >
       <Box sx={{ display: 'flex', padding: 2 }}>
         <Typography sx={{ flex: 1 }} variant="h5">
-          Title
+          <Msg id={messageIds.fields.list.headers.title} />
         </Typography>
         <Typography sx={{ flex: 1 }} variant="h5">
-          Slug
+          <Msg id={messageIds.fields.list.headers.slug} />
         </Typography>
         <Typography sx={{ flex: 1 }} variant="h5">
-          Type
+          <Msg id={messageIds.fields.list.headers.type} />
         </Typography>
       </Box>
       <Divider />
@@ -200,7 +214,7 @@ const FieldsList: FC<Props> = ({ orgId }) => {
                 {key.toLowerCase()}
               </Typography>
               <Typography color="secondary" sx={{ flex: 1 }}>
-                text
+                <Msg id={messageIds.fields.customFieldTypes.text} />
               </Typography>
             </Box>
             <Divider />
@@ -241,14 +255,14 @@ const FieldsList: FC<Props> = ({ orgId }) => {
                   }}
                 >
                   <Typography color="secondary" sx={{ flex: 1 }}>
-                    {field.type}
+                    <Msg id={messageIds.fields.customFieldTypes[field.type]} />
                   </Typography>
                   {showEditButton && fieldBeingEdited !== field.id && (
                     <Button
                       onClick={() => setFieldBeingEdited(field.id)}
                       variant="text"
                     >
-                      Edit
+                      <Msg id={messageIds.fields.list.editButton} />
                     </Button>
                   )}
                 </Box>
