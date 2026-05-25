@@ -1,12 +1,10 @@
 import slugify from 'slugify';
-import { Typography, Paper, TextField, MenuItem, Button } from '@mui/material';
+import { TextField, MenuItem, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC, useState } from 'react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import useCreateField from '../hooks/useCreateField';
-import Msg from 'core/i18n/Msg';
-import messageIds from 'features/settings/l10n/messageIds';
 
 export const parseEnumChoices = (input: string) => {
   return input
@@ -19,11 +17,11 @@ export const parseEnumChoices = (input: string) => {
     }));
 };
 
-type FieldsListProps = {
+type Props = {
   orgId: number;
 };
 
-const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
+const NewFieldForm: FC<Props> = ({ orgId }) => {
   const createField = useCreateField(orgId);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
@@ -43,27 +41,15 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
     isBasicFieldAndHasInfo || isEnumFieldAndHasInfoAndOptions;
 
   return (
-    <Box sx={{ width: 360 }}>
-      <Typography
-        alignItems="center"
-        display="flex"
-        justifyContent="space-between"
-        sx={{
-          marginBottom: '15px',
-        }}
-        variant="h4"
-      >
-        <Msg id={messageIds.fields.createNewFieldTitle} />
-      </Typography>
-      <Paper
-        elevation={0}
-        sx={{
-          backgroundColor: '#fff',
-          border: '1px solid #e5e5e5',
-          borderRadius: 2,
-          p: 3,
-        }}
-      >
+    <Box
+      sx={(theme) => ({
+        backgroundColor: theme.palette.common.white,
+        border: `1px solid ${theme.palette.grey[300]}`,
+        borderRadius: 1,
+        padding: 2,
+      })}
+    >
+      <Box sx={{}}>
         <form
           onSubmit={async (ev) => {
             ev.preventDefault();
@@ -85,7 +71,14 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
             setSlug('');
           }}
         >
-          <Box display="flex" flexDirection="column" gap={2}>
+          <Box
+            sx={{
+              alignItems: 'flex-end',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
+          >
             <TextField
               fullWidth
               label="Title"
@@ -136,11 +129,11 @@ const NewFieldForm: FC<FieldsListProps> = ({ orgId }) => {
               type="submit"
               variant="outlined"
             >
-              Create Field
+              Create
             </Button>
           </Box>
         </form>
-      </Paper>
+      </Box>
     </Box>
   );
 };
