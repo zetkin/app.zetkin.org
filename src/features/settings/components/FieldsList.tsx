@@ -221,50 +221,53 @@ const FieldsList: FC<FieldsListProps> = ({ orgId }) => {
             </Box>
           );
         })}
-        {customFields.map((field) => (
-          <Box key={field.slug}>
-            <Box
-              sx={{
-                alignItems: 'center',
-                borderBottom: '1px solid #e5e5e5',
-                display: 'grid',
-                gridTemplateColumns: '2fr 2fr 1fr 1fr',
-                px: 1,
-                py: 1.5,
-              }}
-            >
-              <Box>{field.title}</Box>
-              <Box>{field.slug}</Box>
-              <Box>{field.type}</Box>
-              {fieldBeingEdited !== field.id && (
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button
-                    onClick={() => setFieldBeingEdited(field.id)}
-                    size="small"
-                    variant="outlined"
-                  >
-                    Edit
-                  </Button>
-                </Box>
+        {customFields.map((field) => {
+          const showEditButton = field.organization.id === orgId;
+          return (
+            <Box key={field.slug}>
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  borderBottom: '1px solid #e5e5e5',
+                  display: 'grid',
+                  gridTemplateColumns: '2fr 2fr 1fr 1fr',
+                  px: 1,
+                  py: 1.5,
+                }}
+              >
+                <Box>{field.title}</Box>
+                <Box>{field.slug}</Box>
+                <Box>{field.type}</Box>
+                {showEditButton && fieldBeingEdited !== field.id && (
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      onClick={() => setFieldBeingEdited(field.id)}
+                      size="small"
+                      variant="outlined"
+                    >
+                      Edit
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+              {fieldBeingEdited === field.id && (
+                <Suspense fallback={<Skeleton />}>
+                  <EditFieldForm
+                    fieldId={field.id}
+                    onCancel={() => setFieldBeingEdited(null)}
+                    onDelete={() => {
+                      setFieldBeingEdited(null);
+                    }}
+                    onSubmit={() => {
+                      setFieldBeingEdited(null);
+                    }}
+                    orgId={orgId}
+                  />
+                </Suspense>
               )}
             </Box>
-            {fieldBeingEdited === field.id && (
-              <Suspense fallback={<Skeleton />}>
-                <EditFieldForm
-                  fieldId={field.id}
-                  onCancel={() => setFieldBeingEdited(null)}
-                  onDelete={() => {
-                    setFieldBeingEdited(null);
-                  }}
-                  onSubmit={() => {
-                    setFieldBeingEdited(null);
-                  }}
-                  orgId={orgId}
-                />
-              </Suspense>
-            )}
-          </Box>
-        ))}
+          );
+        })}
       </Box>
     </Box>
   );
