@@ -7,6 +7,8 @@ import useCreateField from '../hooks/useCreateField';
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import createSlug from '../utils/createSlug';
+import { AccessType } from '../types';
+import { getOrgReadWrite } from '../utils/orgReadWrite';
 
 export const parseEnumChoices = (input: string) => {
   return input
@@ -29,6 +31,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
+  const [access, setAccess] = useState<AccessType>(AccessType.ONLY_THIS_ORG);
   const [enumInput, setEnumInput] = useState('');
   const [creating, setCreating] = useState(false);
 
@@ -56,6 +59,9 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
         <form
           onSubmit={async (ev) => {
             ev.preventDefault();
+
+            const orgReadWrite = getOrgReadWrite(access);
+
             setCreating(true);
             await createField({
               enum_choices:
@@ -65,6 +71,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
               slug,
               title,
               type,
+              ...orgReadWrite,
             });
             setCreating(false);
 
@@ -72,6 +79,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
             setTitle('');
             setType(CUSTOM_FIELD_TYPE.TEXT);
             setSlug('');
+            setAccess(AccessType.ONLY_THIS_ORG);
           }}
         >
           <Box
@@ -124,6 +132,23 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
                 value={enumInput}
               />
             )}
+            <TextField
+              fullWidth
+              helperText={messages.fields.create.accessInputHelper()}
+              label={messages.fields.create.accessInput()}
+              onChange={(event) => {
+                const value = event.target.value as AccessType;
+                setAccess(value);
+              }}
+              select
+              value={access}
+            >
+              {Object.values(AccessType).map((option) => (
+                <MenuItem key={option} value={option}>
+                  <Msg id={messageIds.fields.accessTypes[option]} />
+                </MenuItem>
+              ))}
+            </TextField>
             <Button
               disabled={!canCreateNewField}
               loading={creating}

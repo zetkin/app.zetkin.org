@@ -2,6 +2,16 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
   fields: {
+    access: {
+      onlyThisOrg: m('Only this organization'),
+      suborgRead: m('Suborganizations can see'),
+      suborgReadAndWrite: m('Suborganizations can edit'),
+    },
+    accessTypes: {
+      onlyThisOrg: m('No'),
+      suborgRead: m('Yes, they can see the data'),
+      suborgReadAndWrite: m('Yes, they can both see and edit the data'),
+    },
     confirmDeletion: {
       confirmButton: m<{ fieldTitle: string }>('Yes, delete {fieldTitle}'),
       title: m<{ fieldTitle: string }>('Delete {fieldTitle}?'),
@@ -10,6 +20,10 @@ export default makeMessages('feat.settings', {
       ),
     },
     create: {
+      accessInput: m('Share with suborganizations?'),
+      accessInputHelper: m(
+        'Admins in this organization will always be able to both see and edit this data on people.'
+      ),
       createButton: m('Create'),
       optionsInput: m('Options (comma separated)'),
       slugInput: m('Slug'),
@@ -41,6 +55,7 @@ export default makeMessages('feat.settings', {
     list: {
       editButton: m('Edit'),
       headers: {
+        access: m('Access'),
         slug: m('Slug'),
         title: m('Title'),
         type: m('Type'),
