@@ -53,11 +53,22 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
 
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  const updatedTypeToEnum =
+    field.type !== CUSTOM_FIELD_TYPE.ENUM &&
+    type === CUSTOM_FIELD_TYPE.ENUM &&
+    enumOptions.split(',').length > 1;
+
+  const updatedEnumOptions =
+    field.type === CUSTOM_FIELD_TYPE.ENUM && enumOptions !== initialEnumOptions;
+
+  const updatedType = type !== CUSTOM_FIELD_TYPE.ENUM && field.type !== type;
+
   const changesHaveBeenMade =
     title !== field.title ||
     slug !== field.slug ||
-    type !== field.type ||
-    enumOptions !== initialEnumOptions;
+    updatedTypeToEnum ||
+    updatedEnumOptions ||
+    updatedType;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 2 }}>
