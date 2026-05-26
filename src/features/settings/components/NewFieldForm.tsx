@@ -1,4 +1,3 @@
-import slugify from 'slugify';
 import { TextField, MenuItem, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC, useState } from 'react';
@@ -7,6 +6,7 @@ import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import useCreateField from '../hooks/useCreateField';
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import createSlug from '../utils/createSlug';
 
 export const parseEnumChoices = (input: string) => {
   return input
@@ -14,7 +14,7 @@ export const parseEnumChoices = (input: string) => {
     .map((item) => item.trim())
     .filter(Boolean)
     .map((label) => ({
-      key: slugify(label, { lower: true, replacement: '_' }),
+      key: createSlug(label),
       label,
     }));
 };
@@ -87,20 +87,18 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
               label={messages.fields.create.titleInput()}
               onChange={(event) => {
                 setTitle(event.target.value);
-                setSlug(
-                  slugify(event.target.value, { lower: true, replacement: '_' })
-                );
+                setSlug(createSlug(event.target.value));
               }}
+              slotProps={{ htmlInput: { maxLength: 300 } }}
               value={title}
             />
             <TextField
               fullWidth
               label={messages.fields.create.slugInput()}
               onChange={(event) => {
-                setSlug(
-                  slugify(event.target.value, { lower: true, replacement: '_' })
-                );
+                setSlug(createSlug(event.target.value));
               }}
+              slotProps={{ htmlInput: { maxLength: 40 } }}
               value={slug}
             />
             <TextField
