@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC } from 'react';
-import slugify from 'slugify';
 
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
@@ -23,6 +22,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import useCustomField from '../hooks/useCustomField';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import createSlug from '../utils/createSlug';
 
 type EditFieldFormProps = {
   fieldId: number;
@@ -89,19 +89,15 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
             label={messages.fields.edit.titleInput()}
             onChange={(event) => {
               setTitle(event.target.value);
-              setSlug(
-                slugify(event.target.value, { lower: true, replacement: '_' })
-              );
+              setSlug(createSlug(event.target.value));
             }}
+            slotProps={{ htmlInput: { maxLength: 300 } }}
             value={title}
           />
           <TextField
             label={messages.fields.edit.slugInput()}
-            onChange={(event) =>
-              setSlug(
-                slugify(event.target.value, { lower: true, replacement: '_' })
-              )
-            }
+            onChange={(event) => setSlug(createSlug(event.target.value))}
+            slotProps={{ htmlInput: { maxLength: 40 } }}
             value={slug}
           />
           <TextField
