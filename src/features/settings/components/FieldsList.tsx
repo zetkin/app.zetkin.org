@@ -24,6 +24,8 @@ import useCustomField from '../hooks/useCustomField';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import createSlug from '../utils/createSlug';
+import { AccessType } from '../types';
+import { getAccessType, getOrgReadWrite } from '../utils/orgReadWrite';
 
 type EditFieldFormProps = {
   fieldId: number;
@@ -45,6 +47,9 @@ const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
     field.enum_choices?.map((choice) => choice.label).join(', ') || '';
   const [enumOptions, setEnumOptions] = useState(initialEnumOptions);
 
+  const initialAccess = getAccessType(field);
+  const [access, setAccess] = useState<AccessType>(initialAccess);
+
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const updatedTypeToEnum =
@@ -60,6 +65,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
   const changesHaveBeenMade =
     title !== field.title ||
     slug !== field.slug ||
+    access !== initialAccess ||
     updatedTypeToEnum ||
     updatedEnumOptions ||
     updatedType;
@@ -80,6 +86,10 @@ const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
       <form
         onSubmit={async (ev) => {
           ev.preventDefault();
+
+          const orgReadWrite =
+            initialAccess !== access ? getOrgReadWrite(access) : undefined;
+
           setUpdating(true);
           const error = await updateField(fieldId, {
             enum_choices: shouldSendEnumOptions
@@ -88,6 +98,7 @@ const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
             slug: slug !== field.slug ? slug : undefined,
             title: title !== field.title ? title : undefined,
             type: type !== field.type ? type : undefined,
+            ...orgReadWrite,
           });
           setUpdating(false);
 
@@ -138,6 +149,23 @@ const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
               value={enumOptions}
             />
           )}
+          <TextField
+            fullWidth
+            helperText={messages.fields.create.accessInputHelper()}
+            label={messages.fields.create.accessInput()}
+            onChange={(event) => {
+              const value = event.target.value as AccessType;
+              setAccess(value);
+            }}
+            select
+            value={access}
+          >
+            {Object.values(AccessType).map((option) => (
+              <MenuItem key={option} value={option}>
+                <Msg id={messageIds.fields.accessTypes[option]} />
+              </MenuItem>
+            ))}
+          </TextField>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button
@@ -225,6 +253,9 @@ const FieldsList: FC<Props> = ({ orgId }) => {
         <Typography sx={{ flex: 1 }} variant="h5">
           <Msg id={messageIds.fields.list.headers.type} />
         </Typography>
+        <Typography sx={{ flex: 1.5 }} variant="h5">
+          <Msg id={messageIds.fields.list.headers.access} />
+        </Typography>
       </Box>
       <Divider />
       {Object.entries(NATIVE_PERSON_FIELDS).map(([key, value]) => {
@@ -241,6 +272,9 @@ const FieldsList: FC<Props> = ({ orgId }) => {
               </Typography>
               <Typography color="secondary" sx={{ flex: 1 }}>
                 <Msg id={messageIds.fields.customFieldTypes.text} />
+              </Typography>
+              <Typography color="secondary" sx={{ flex: 1.5 }}>
+                <Msg id={messageIds.fields.access.suborgReadAndWrite} />
               </Typography>
             </Box>
             <Divider />
@@ -263,19 +297,22 @@ const FieldsList: FC<Props> = ({ orgId }) => {
             {fieldBeingEdited !== field.id && (
               <Box sx={{ alignItems: 'center', display: 'flex', padding: 2 }}>
                 <Typography sx={{ flex: 1 }}>{field.title}</Typography>
-                <Typography color="secondary" sx={{ flex: 1 }}>
+                <Typography color="secondary" noWrap sx={{ flex: 1 }}>
                   {field.slug}
+                </Typography>
+                <Typography color="secondary" sx={{ flex: 1 }}>
+                  <Msg id={messageIds.fields.customFieldTypes[field.type]} />
                 </Typography>
                 <Box
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    flex: 1,
+                    flex: 1.5,
                     justifyContent: 'space-between',
                   }}
                 >
-                  <Typography color="secondary" sx={{ flex: 1 }}>
-                    <Msg id={messageIds.fields.customFieldTypes[field.type]} />
+                  <Typography color="secondary">
+                    <Msg id={messageIds.fields.access[getAccessType(field)]} />
                   </Typography>
                   {showEditButton && fieldBeingEdited !== field.id && (
                     <Button

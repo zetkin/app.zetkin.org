@@ -8,3 +8,9 @@ export type CustomFieldPostBody = Pick<
 export type CustomFieldPatchBody = Partial<
   Omit<ZetkinCustomField, 'id' | 'organization'>
 >;
+
+export enum AccessType {
+  ONLY_THIS_ORG = 'onlyThisOrg',
+  SUBORG_READ = 'suborgRead',
+  SUBORG_READ_AND_WRITE = 'suborgReadAndWrite',
+}
