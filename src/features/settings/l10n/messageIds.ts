@@ -28,6 +28,9 @@ export default makeMessages('feat.settings', {
     edit: {
       cancelButton: m('Cancel'),
       deleteButton: m('Delete field'),
+      errorMessage: m(
+        'There was an unexpected error when updating this field. If it keeps failing, contact support.'
+      ),
       optionsInput: m('Options (comma separated)'),
       saveButton: m('Save'),
       slugInput: m('Slug'),
