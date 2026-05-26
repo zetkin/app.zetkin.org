@@ -5,10 +5,7 @@ import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import KPD from '../../../../mockData/orgs/KPD';
 
 const deleteView = async (page: Page) => {
-  await page
-    .locator('main [data-testid=ZUIEllipsisMenu-menuActivator]')
-    .first()
-    .click();
+  await page.click('main [data-testid=ZUIEllipsisMenu-menuActivator]');
   await page.click(`data-testid=ZUIEllipsisMenu-item-delete-item`);
   await page.click('data-testid=SubmitCancelButtons-submitButton');
 };
