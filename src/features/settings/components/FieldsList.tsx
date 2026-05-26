@@ -1,5 +1,6 @@
 import React, { Fragment, Suspense, useContext, useState } from 'react';
 import {
+  Alert,
   Button,
   Collapse,
   Divider,
@@ -26,22 +27,15 @@ import createSlug from '../utils/createSlug';
 
 type EditFieldFormProps = {
   fieldId: number;
-  onCancel: () => void;
-  onDelete: () => void;
-  onSubmit: () => void;
+  onClose: () => void;
   orgId: number;
 };
 
-const EditFieldForm: FC<EditFieldFormProps> = ({
-  onCancel,
-  onDelete,
-  onSubmit,
-  orgId,
-  fieldId,
-}) => {
+const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
   const messages = useMessages(messageIds);
   const field = useCustomField(orgId, fieldId);
-  const { updateField, removeField } = useFieldMutations(orgId);
+  const { clearFieldUpdateError, fieldUpdateError, updateField, removeField } =
+    useFieldMutations(orgId);
 
   const [updating, setUpdating] = useState(false);
   const [title, setTitle] = useState(field.title);
@@ -70,6 +64,11 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
     updatedEnumOptions ||
     updatedType;
 
+  const shouldSendEnumOptions =
+    (field.type === CUSTOM_FIELD_TYPE.ENUM ||
+      type === CUSTOM_FIELD_TYPE.ENUM) &&
+    enumOptions !== initialEnumOptions;
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 2 }}>
       <Typography variant="h6">
@@ -82,17 +81,19 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
         onSubmit={async (ev) => {
           ev.preventDefault();
           setUpdating(true);
-          await updateField(fieldId, {
-            enum_choices:
-              enumOptions !== initialEnumOptions
-                ? parseEnumChoices(enumOptions)
-                : undefined,
+          const error = await updateField(fieldId, {
+            enum_choices: shouldSendEnumOptions
+              ? parseEnumChoices(enumOptions)
+              : undefined,
             slug: slug !== field.slug ? slug : undefined,
             title: title !== field.title ? title : undefined,
             type: type !== field.type ? type : undefined,
           });
           setUpdating(false);
-          onSubmit();
+
+          if (!error) {
+            onClose();
+          }
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -113,9 +114,14 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
           />
           <TextField
             label={messages.fields.edit.typeInput()}
-            onChange={(event) =>
-              setType(event.target.value as CUSTOM_FIELD_TYPE)
-            }
+            onChange={(event) => {
+              const value = event.target.value as CUSTOM_FIELD_TYPE;
+              setType(value);
+
+              if (value !== CUSTOM_FIELD_TYPE.ENUM && !!enumOptions) {
+                setEnumOptions('');
+              }
+            }}
             select
             value={type}
           >
@@ -132,47 +138,59 @@ const EditFieldForm: FC<EditFieldFormProps> = ({
               value={enumOptions}
             />
           )}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
-              onClick={() =>
-                showConfirmDialog({
-                  onSubmit: () => {
-                    removeField(fieldId);
-                    onDelete();
-                  },
-                  submitText: messages.fields.confirmDeletion.confirmButton({
-                    fieldTitle: field.title,
-                  }),
-                  title: messages.fields.confirmDeletion.title({
-                    fieldTitle: field.title,
-                  }),
-                  warningText: messages.fields.confirmDeletion.warningText({
-                    fieldTitle: field.title,
-                  }),
-                })
-              }
-              variant="outlined"
-            >
-              <Msg id={messageIds.fields.edit.deleteButton} />
-            </Button>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button
-                onClick={() => {
-                  onCancel();
-                }}
+                onClick={() =>
+                  showConfirmDialog({
+                    onSubmit: () => {
+                      removeField(fieldId);
+                      onClose();
+                    },
+                    submitText: messages.fields.confirmDeletion.confirmButton({
+                      fieldTitle: field.title,
+                    }),
+                    title: messages.fields.confirmDeletion.title({
+                      fieldTitle: field.title,
+                    }),
+                    warningText: messages.fields.confirmDeletion.warningText({
+                      fieldTitle: field.title,
+                    }),
+                  })
+                }
                 variant="outlined"
               >
-                <Msg id={messageIds.fields.edit.cancelButton} />
+                <Msg id={messageIds.fields.edit.deleteButton} />
               </Button>
-              <Button
-                disabled={!changesHaveBeenMade}
-                loading={updating}
-                type="submit"
-                variant="contained"
-              >
-                <Msg id={messageIds.fields.edit.saveButton} />
-              </Button>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button
+                  onClick={() => {
+                    onClose();
+                  }}
+                  variant="outlined"
+                >
+                  <Msg id={messageIds.fields.edit.cancelButton} />
+                </Button>
+                <Button
+                  disabled={!changesHaveBeenMade}
+                  loading={updating}
+                  type="submit"
+                  variant="contained"
+                >
+                  <Msg id={messageIds.fields.edit.saveButton} />
+                </Button>
+              </Box>
             </Box>
+            {fieldUpdateError && (
+              <Alert
+                onClose={() => {
+                  clearFieldUpdateError();
+                }}
+                severity="error"
+              >
+                <Msg id={messageIds.fields.edit.errorMessage} />
+              </Alert>
+            )}
           </Box>
         </Box>
       </form>
@@ -237,13 +255,7 @@ const FieldsList: FC<Props> = ({ orgId }) => {
               <Suspense fallback={<Skeleton />}>
                 <EditFieldForm
                   fieldId={field.id}
-                  onCancel={() => setFieldBeingEdited(null)}
-                  onDelete={() => {
-                    setFieldBeingEdited(null);
-                  }}
-                  onSubmit={() => {
-                    setFieldBeingEdited(null);
-                  }}
+                  onClose={() => setFieldBeingEdited(null)}
                   orgId={orgId}
                 />
               </Suspense>

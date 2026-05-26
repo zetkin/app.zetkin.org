@@ -21,7 +21,13 @@ export type PersonOrgData = {
   subOrganizations: PersonOrganization[];
 };
 
+type SerializedError = {
+  message: string;
+  name: string;
+};
+
 export interface ProfilesStoreSlice {
+  fieldUpdateError: SerializedError | null;
   fieldsList: RemoteList<ZetkinCustomField>;
   orgsByPersonId: Record<number, RemoteItem<PersonOrgData>>;
   notesByPersonId: Record<number, RemoteList<ZetkinPersonNote>>;
@@ -29,6 +35,7 @@ export interface ProfilesStoreSlice {
 }
 
 const initialState: ProfilesStoreSlice = {
+  fieldUpdateError: null,
   fieldsList: remoteList(),
   notesByPersonId: {},
   orgsByPersonId: {},
@@ -79,9 +86,17 @@ const profilesSlice = createSlice({
       const [fieldId, mutating] = action.payload;
       remoteItemUpdate(state.fieldsList, fieldId, mutating);
     },
+    fieldUpdateErrorAdded: (state, action: PayloadAction<SerializedError>) => {
+      const error = action.payload;
+      state.fieldUpdateError = error;
+    },
+    fieldUpdateErrorRemoved: (state) => {
+      state.fieldUpdateError = null;
+    },
     fieldUpdated: (state, action: PayloadAction<ZetkinCustomField>) => {
       const field = action.payload;
       remoteItemUpdated(state.fieldsList, field);
+      state.fieldUpdateError = null;
     },
     fieldsLoad: (state) => {
       state.fieldsList.isLoading = true;
@@ -236,6 +251,8 @@ export const {
   fieldRemoved,
   fieldsLoad,
   fieldsLoaded,
+  fieldUpdateErrorAdded,
+  fieldUpdateErrorRemoved,
   personLoad,
   personLoaded,
   personNoteAdded,
