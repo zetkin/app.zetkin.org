@@ -7,8 +7,6 @@ This directory contains the project's agreed coding conventions. It serves as a 
 ### Current Rules
 
 - [`EQUALITY_OPERATOR.md`](./rules/EQUALITY_OPERATOR.md)
-- [`IMPORT_PATHS.md`](./rules/IMPORT_PATHS.md)
-- [`NULL_AND_TRUTHY_CHECKS.md`](./rules/NULL_AND_TRUTHY_CHECKS.md)
 - [`TEMPLATE.md`](./TEMPLATE.md) (for creating new rule files)
 
 ### In This Document
