@@ -244,10 +244,7 @@ const shouldBeRemoved = (node: NodeEntry<Ancestor>): boolean => {
       'children' in node[0].children[0] &&
       Object.prototype.hasOwnProperty.call(node[0].children[0], 'children')
     ) {
-      if (
-        node[0].children[0].children[0] &&
-        node[0].children[0].children[0].text === ''
-      ) {
+      if (node[0].children[0].children[0]?.text === '') {
         return true;
       }
     }

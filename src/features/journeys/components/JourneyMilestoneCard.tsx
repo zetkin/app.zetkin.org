@@ -101,7 +101,7 @@ const JourneyMilestoneCard = ({
                 clearButtonLabel: messages.instance.dueDateInputClear(),
               }}
               onChange={(newDeadline) => {
-                if (newDeadline && newDeadline.isValid()) {
+                if (newDeadline?.isValid()) {
                   const dateStr = newDeadline.format('YYYY-MM-DD');
                   updateMilestoneStatus({ deadline: dateStr });
                 } else if (!newDeadline) {

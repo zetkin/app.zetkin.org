@@ -52,7 +52,7 @@ export const EventPopperProvider: FC<EventPopperPropviderProps> = ({
         },
       }}
     >
-      {cluster && cluster.kind === CLUSTER_TYPE.SINGLE && (
+      {cluster?.kind === CLUSTER_TYPE.SINGLE && (
         <SingleEventPopper
           anchorPosition={singleAnchorPosition}
           event={cluster.events[0]}

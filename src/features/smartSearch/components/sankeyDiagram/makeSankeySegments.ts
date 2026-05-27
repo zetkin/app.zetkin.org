@@ -42,8 +42,7 @@ export default function makeSankeySegments(
   const firstElement = statsCopy[0];
 
   const allFilterWithNoOrgConfig =
-    firstElement &&
-    firstElement.filter.type == FILTER_TYPE.ALL &&
+    firstElement?.filter.type == FILTER_TYPE.ALL &&
     !('organizations' in firstElement.filter.config);
 
   const allFilterWithThisOrgInConfig =
