@@ -32,7 +32,13 @@ const FieldsPage: PageWithLayout = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', gap: 2 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: { lg: 'row', sm: 'column' },
+        gap: 2,
+      }}
+    >
       <Box sx={{ display: 'flex', flex: 2, flexDirection: 'column', gap: 2 }}>
         <Typography variant="h4">
           <Msg id={messageIds.fields.list.title} />
