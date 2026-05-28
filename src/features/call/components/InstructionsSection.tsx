@@ -35,14 +35,16 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
   );
 
   useEffect(() => {
+    let timerId: ReturnType<typeof setTimeout>;
     if (step == LaneStep.REPORT) {
       setSelectedTab('instructions');
-      setTimeout(() => {
+      timerId = setTimeout(() => {
         setSelectedTab('about');
       }, 600);
     } else {
       setSelectedTab('instructions');
     }
+    return () => clearTimeout(timerId);
   }, [step]);
 
   if (call && step == LaneStep.REPORT) {

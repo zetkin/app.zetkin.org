@@ -14,14 +14,14 @@ export const getNewDateWithOffset = (date: Date, offset: number): Date => {
 export const getFirstAndLastEvent = (
   campaignEvents: ZetkinEvent[]
 ): (ZetkinEvent | undefined)[] => {
-  const sortedCampaignEvents = campaignEvents.sort((a, b) =>
+  const sortedCampaignEvents = [...campaignEvents].sort((a, b) =>
     dayjs(a.start_time).diff(dayjs(b.start_time))
   );
   const firstEvent = sortedCampaignEvents.length
-    ? campaignEvents[0]
+    ? sortedCampaignEvents[0]
     : undefined;
   const lastEvent = firstEvent
-    ? campaignEvents[campaignEvents.length - 1]
+    ? sortedCampaignEvents[sortedCampaignEvents.length - 1]
     : undefined;
   return [firstEvent, lastEvent];
 };
@@ -106,11 +106,11 @@ export function isValidDate(date: Date): boolean {
 }
 
 export function dateIsAfter(first: Date, second: Date): boolean {
-  return first.toISOString().slice(0, 10) < second.toISOString().slice(0, 10);
+  return first.toISOString().slice(0, 10) > second.toISOString().slice(0, 10);
 }
 
 export function dateIsBefore(first: Date, second: Date): boolean {
-  return first.toISOString().slice(0, 10) > second.toISOString().slice(0, 10);
+  return first.toISOString().slice(0, 10) < second.toISOString().slice(0, 10);
 }
 
 export function getUTCDateWithoutTime(
@@ -134,4 +134,8 @@ export function getOffset(dateString: string) {
   const offsetRegex = /[+-]\d{2}:\d{2}$/;
   const offset = dateString.match(offsetRegex);
   return offset ? offset[0] : null;
+}
+
+export function getDayTimeInMinutes(dateString: string | dayjs.Dayjs) {
+  return dayjs(dateString).hour() * 60 + dayjs(dateString).minute();
 }

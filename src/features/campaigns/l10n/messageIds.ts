@@ -86,6 +86,7 @@ export default makeMessages('feat.campaigns', {
     createCallAssignment: m('Call assignment'),
     createEmail: m('Email'),
     createEvent: m('Event'),
+    createMultiShiftEvent: m('Multi-shift event'),
     createSurvey: m('Survey'),
     createTask: m('Task'),
   },

@@ -36,10 +36,11 @@ test.describe.skip('Views list page', () => {
 
     await page.goto(appUri + '/organize/1/people');
 
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click('data-testid=create-view-action-button'),
-    ]);
+    await page.click('data-testid=create-view-action-button');
+
+    await expect(page).toHaveURL(
+      appUri + `/organize/1/people/views/${NewView.id}`
+    );
 
     // Get POST requests for creating new view and columns
     const columnPostLogs = moxy
@@ -62,11 +63,6 @@ test.describe.skip('Views list page', () => {
     expect(viewPostLogs[0].data?.title).toEqual('New View');
     expect(columnPostLogs[0].data?.title).toEqual('First name');
     expect(columnPostLogs[1].data?.title).toEqual('Last name');
-
-    // Expect that user is navigated to new view's page
-    await expect(page.url()).toEqual(
-      appUri + `/organize/1/people/views/${NewView.id}`
-    );
   });
 
   test('shows an error dialog if there is an error creating the new view', async ({

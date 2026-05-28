@@ -21,8 +21,8 @@ export default function useParallelEvents(
 
       return (
         isSameDate(start, eventStart) ||
-        (dateIsBefore(start, eventStart) && dateIsAfter(start, eventEnd)) ||
-        (dateIsAfter(start, eventStart) && dateIsBefore(end, eventStart))
+        (dateIsAfter(start, eventStart) && dateIsBefore(start, eventEnd)) ||
+        (dateIsBefore(start, eventStart) && dateIsAfter(end, eventStart))
       );
     })
     .filter((event) => event.data.organization.id === orgId)

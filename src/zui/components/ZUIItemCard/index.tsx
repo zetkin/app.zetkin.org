@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, Fragment, PropsWithChildren } from 'react';
 import { Avatar, Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -228,7 +228,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
                     </ZUIText>
                   );
                 } else {
-                  return c;
+                  return <Fragment key={c.key}>{c}</Fragment>;
                 }
               })}
             </Stack>

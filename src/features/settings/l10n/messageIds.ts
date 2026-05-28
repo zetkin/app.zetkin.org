@@ -21,6 +21,7 @@ export default makeMessages('feat.settings', {
       description: m(
         'Administrators have full access to creating, editing and deleting any type of content.'
       ),
+      empty: m('You have not added any administrators yet.'),
       roleInheritance: m('Administrator in'),
       title: m('Administrators'),
     },
@@ -32,6 +33,7 @@ export default makeMessages('feat.settings', {
       description: m(
         'Organizers have enough privileges to do things like organizing campaigns and managing existing call assignments.'
       ),
+      empty: m('You have not added any organizers yet.'),
       roleInheritance: m('Organizer in'),
       title: m('Organizers'),
     },
@@ -52,5 +54,12 @@ export default makeMessages('feat.settings', {
       ),
     },
     you: m('You'),
+  },
+  themes: {
+    overview: {
+      description: m(
+        'A theme sets the overall look and layout of your emails, from colours and fonts to spacing, buttons and content blocks.'
+      ),
+    },
   },
 });

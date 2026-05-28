@@ -12,7 +12,7 @@ type Props = {
 };
 
 const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId }) => {
-  const { allEvents } = useFilteredCampaignEvents(orgId, campId);
+  const { filteredEvents } = useFilteredCampaignEvents(orgId, campId);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.organizations.filters);
   const path = usePathname();
@@ -33,7 +33,7 @@ const ActivistPortalCampaignEventsMap: FC<Props> = ({ campId, orgId }) => {
 
   return (
     <ActivistPortalEventMap
-      events={allEvents}
+      events={filteredEvents}
       locationFilter={filters.geojsonToFilterBy}
       setLocationFilter={onLocationFilterChange}
     />

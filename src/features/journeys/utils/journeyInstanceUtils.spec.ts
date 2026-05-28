@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { mockAppliedTag } from '../../../utils/testing/mocks/mockTag';
 import { ZetkinAppliedTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import {
