@@ -11,7 +11,8 @@ import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import EditLocationDialog from 'zui/ZUICreatePerson/EditLocationDialog';
 import { ZetkinLngLatFieldValue } from 'utils/types/zetkin';
 import messageIds from 'zui/l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
+import profileMessageIds from 'features/profile/l10n/messageIds';
 
 type PersonLngLatFieldInputProps = {
   disabled?: boolean;
@@ -35,6 +36,8 @@ const PersonLngLatFieldInput: FC<PersonLngLatFieldInputProps> = ({
   onReset,
 }) => {
   const messages = useMessages(messageIds);
+  const profileMessages = useMessages(profileMessageIds);
+
   const env = useEnv();
   const [mapOpen, setMapOpen] = useState(false);
 
@@ -53,38 +56,60 @@ const PersonLngLatFieldInput: FC<PersonLngLatFieldInputProps> = ({
         >
           <Box alignItems="flex-start" display="flex" flex={1}>
             {!hasValue && (
-              <Box
-                onClick={() => setMapOpen(true)}
-                sx={(theme) => ({
-                  ':hover': {
-                    border: `1px solid ${theme.palette.text.primary}`,
-                  },
-                  alignItems: 'center',
-                  //Hardcoding a hex value here to match MUI textfield border color
-                  border: '1px solid #c4c4c4',
-                  borderRadius: 1,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  //Hardcoding weird height here to match MUI textfield height
-                  height: '56px',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                })}
-              >
-                <Typography color="secondary" sx={{ paddingLeft: '14px' }}>
-                  {label}
-                </Typography>
-                <Tooltip
-                  arrow
-                  title={messages.createPerson.location.mapIconTooltip()}
+              <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+                <Box
+                  onClick={() => {
+                    if (!disabled) {
+                      setMapOpen(true);
+                    }
+                  }}
+                  sx={(theme) => ({
+                    ':hover': {
+                      border: !disabled
+                        ? `1px solid ${theme.palette.text.primary}`
+                        : '',
+                    },
+                    alignItems: 'center',
+                    //Hardcoding a hex value here to match MUI textfield border color
+                    border: '1px solid #c4c4c4',
+                    borderRadius: 1,
+                    cursor: !disabled ? 'pointer' : 'default',
+                    display: 'flex',
+                    //Hardcoding weird height here to match MUI textfield height
+                    height: '56px',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                  })}
                 >
-                  <IconButton
-                    disabled={disabled}
-                    onClick={() => setMapOpen(true)}
+                  <Typography
+                    color={!disabled ? 'secondary' : 'textDisabled'}
+                    sx={{ paddingLeft: '14px' }}
                   >
-                    <MapIcon />
-                  </IconButton>
-                </Tooltip>
+                    {label}
+                  </Typography>
+                  <Tooltip
+                    arrow
+                    title={messages.createPerson.location.mapIconTooltip()}
+                  >
+                    <IconButton
+                      disabled={disabled}
+                      onClick={() => {
+                        setMapOpen(true);
+                      }}
+                    >
+                      <MapIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+                {disabled && (
+                  <Box
+                    sx={{ lineHeight: 1, marginLeft: '14px', marginTop: '3px' }}
+                  >
+                    <Typography color="textDisabled" variant="caption">
+                      <Msg id={profileMessageIds.customFields.notEditable} />
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             )}
             {hasValue && (
@@ -93,7 +118,9 @@ const PersonLngLatFieldInput: FC<PersonLngLatFieldInputProps> = ({
                 error={error}
                 fullWidth
                 helperText={
-                  hasValue ? messages.createPerson.location.helperText() : ''
+                  !disabled
+                    ? messages.createPerson.location.helperText()
+                    : profileMessages.customFields.notEditable()
                 }
                 label={label}
                 onBlur={(e) => onChange(field, e.target.value.trim())}
