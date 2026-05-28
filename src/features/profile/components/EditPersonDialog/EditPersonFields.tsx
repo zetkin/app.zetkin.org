@@ -308,6 +308,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           return (
             <PersonLngLatFieldInput
               key={field.slug}
+              disabled={!isFieldWritable}
               error={invalidFields.includes(field.slug)}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}

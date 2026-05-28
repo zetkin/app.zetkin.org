@@ -128,9 +128,17 @@ const PersonLngLatFieldInput: FC<PersonLngLatFieldInputProps> = ({
             latitude={value.lat}
             longitude={value.lng}
             mapStyle={env.vars.MAPLIBRE_STYLE}
-            onClick={() => setMapOpen(true)}
+            onClick={() => {
+              if (!disabled) {
+                setMapOpen(true);
+              }
+            }}
             RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
-            style={{ cursor: 'pointer', height: 200, width: '100%' }}
+            style={{
+              cursor: !disabled ? 'pointer' : 'default',
+              height: 200,
+              width: '100%',
+            }}
             zoom={12}
           >
             <Marker
