@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -10,6 +10,7 @@ import messageIds from 'features/settings/l10n/messageIds';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import ThemeCard from 'features/settings/components/themes/ThemeCard';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
+import useCreateEmailTheme from 'features/settings/hooks/useCreateEmailTheme';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -29,16 +30,28 @@ const EmailSettingsPage: PageWithLayout<Props> = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const themes = useEmailThemes(orgId).data || [];
+  const createTheme = useCreateEmailTheme(orgId);
 
   if (onServer) {
     return null;
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Typography>
-        <Msg id={messageIds.email.themes.overview.title} />
-      </Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography variant="h4">
+          <Msg id={messageIds.email.themes.overview.title} />
+        </Typography>
+        <Button onClick={() => createTheme()} variant="contained">
+          <Msg id={messageIds.email.themes.addTheme} />
+        </Button>
+      </Box>
       <Typography>
         <Msg id={messageIds.email.themes.overview.description} />
       </Typography>
