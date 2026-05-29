@@ -8,7 +8,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
-import ThemeCard from 'features/emails/components/ThemeCard';
+import ThemeCard from 'features/settings/components/themes/ThemeCard';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 
 const scaffoldOptions = {
@@ -37,10 +37,10 @@ const EmailSettingsPage: PageWithLayout<Props> = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography>
-        <Msg id={messageIds.themes.overview.title} />
+        <Msg id={messageIds.email.themes.overview.title} />
       </Typography>
       <Typography>
-        <Msg id={messageIds.themes.overview.description} />
+        <Msg id={messageIds.email.themes.overview.description} />
       </Typography>
       <Grid container spacing={2}>
         {themes

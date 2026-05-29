@@ -14,18 +14,18 @@ import { FC } from 'react';
 
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
-import useFieldMutations from '../hooks/useFieldMutations';
+import useFieldMutations from '../../hooks/useFieldMutations';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import useMessages from 'core/i18n/useMessages';
 import globalMessageIds from 'core/i18n/messageIds';
-import { parseEnumChoices } from './NewFieldForm';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import useCustomField from '../hooks/useCustomField';
+import useCustomField from '../../hooks/useCustomField';
 import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
-import createSlug from '../utils/createSlug';
-import { AccessType } from '../types';
-import { getAccessType, getOrgReadWrite } from '../utils/orgReadWrite';
+import messageIds from '../../l10n/messageIds';
+import createSlug from '../../utils/createSlug';
+import { AccessType } from '../../types';
+import { getAccessType, getOrgReadWrite } from '../../utils/orgReadWrite';
+import { parseEnumChoices } from './NewFieldForm';
 
 type EditFieldFormProps = {
   fieldId: number;

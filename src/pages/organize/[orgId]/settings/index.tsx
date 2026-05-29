@@ -3,9 +3,9 @@ import { GetServerSideProps } from 'next';
 import { OpenInNew } from '@mui/icons-material';
 import { Box, Grid, Link, Skeleton, Typography } from '@mui/material';
 
-import AddOfficialButton from 'features/settings/components/AddOfficialButton';
+import AddOfficialButton from 'features/settings/components/officials/AddOfficialButton';
 import messageIds from 'features/settings/l10n/messageIds';
-import OfficialList from 'features/settings/components/OfficialList';
+import OfficialList from 'features/settings/components/officials/OfficialList';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';

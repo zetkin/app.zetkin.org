@@ -2,8 +2,8 @@ import { Button, Card, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 import { useMessages } from 'core/i18n';
-import messageIds from 'features/emails/l10n/messageIds';
-import ThemeActionsEllipsisMenu from 'features/emails/components/ThemeActionsEllipsisMenu';
+import messageIds from 'features/settings/l10n/messageIds';
+import ThemeActionsEllipsisMenu from './ThemeActionsEllipsisMenu';
 
 interface ThemeCardProps {
   orgId: number;
@@ -22,7 +22,7 @@ const ThemeCard: React.FC<ThemeCardProps> = (props) => {
         spacing={2}
       >
         <Typography variant="h6">
-          {messages.themes.themeCard.title({ themeId: props.themeId })}
+          {messages.email.themes.themeCard.title({ themeId: props.themeId })}
         </Typography>
         <Stack direction="row" spacing={1}>
           <Button
@@ -30,7 +30,7 @@ const ThemeCard: React.FC<ThemeCardProps> = (props) => {
             size="small"
             variant="outlined"
           >
-            {messages.themes.themeCard.edit()}
+            {messages.email.themes.themeCard.edit()}
           </Button>
           <ThemeActionsEllipsisMenu
             orgId={props.orgId}

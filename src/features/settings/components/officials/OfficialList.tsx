@@ -3,11 +3,11 @@ import { ArrowDownward, ArrowUpward, InfoOutline } from '@mui/icons-material';
 import { Box, Button, FormControl, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
-import messageIds from '../l10n/messageIds';
+import messageIds from '../../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useOfficialMemberships from 'features/organizations/hooks/useOfficialMemberships';
 import { useMessages } from 'core/i18n';
-import useOfficialMutations from '../hooks/useOfficialMutations';
+import useOfficialMutations from '../../hooks/useOfficialMutations';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ContentCopy, Delete } from '@mui/icons-material';
 
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/emails/l10n/messageIds';
+import messageIds from 'features/settings/l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
@@ -36,7 +36,7 @@ const ThemeActionsEllipsisMenu: React.FC<ThemeActionsEllipsisMenuProps> = (
             label: (
               <>
                 <ContentCopy />
-                <Msg id={messageIds.themes.themeCard.duplicate} />
+                <Msg id={messageIds.email.themes.themeCard.duplicate} />
               </>
             ),
             onSelect: () => duplicateEmailTheme(),
@@ -46,7 +46,7 @@ const ThemeActionsEllipsisMenu: React.FC<ThemeActionsEllipsisMenuProps> = (
             label: (
               <>
                 <Delete />
-                <Msg id={messageIds.themes.themeCard.delete} />
+                <Msg id={messageIds.email.themes.themeCard.delete} />
               </>
             ),
             onSelect: () => setConfirmOpen(true),
@@ -60,7 +60,7 @@ const ThemeActionsEllipsisMenu: React.FC<ThemeActionsEllipsisMenuProps> = (
           setConfirmOpen(false);
         }}
         open={confirmOpen}
-        warningText={messages.themes.themeCard.deleteWarning({
+        warningText={messages.email.themes.themeCard.deleteWarning({
           themeId: props.themeId,
         })}
       />

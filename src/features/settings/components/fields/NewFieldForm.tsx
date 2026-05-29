@@ -3,12 +3,12 @@ import { Box } from '@mui/system';
 import { FC, useState } from 'react';
 
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
-import useCreateField from '../hooks/useCreateField';
-import messageIds from '../l10n/messageIds';
+import useCreateField from '../../hooks/useCreateField';
+import messageIds from '../../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
-import createSlug from '../utils/createSlug';
-import { AccessType } from '../types';
-import { getOrgReadWrite } from '../utils/orgReadWrite';
+import createSlug from '../../utils/createSlug';
+import { AccessType } from '../../types';
+import { getOrgReadWrite } from '../../utils/orgReadWrite';
 
 export const parseEnumChoices = (input: string) => {
   return input

@@ -1,4 +1,4 @@
-import messageIds from 'features/emails/l10n/messageIds';
+import messageIds from 'features/settings/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useUser from 'core/hooks/useUser';
 
@@ -18,7 +18,7 @@ export default function usePreviewEmailTheme(): string {
           { 
             "kind": "string",
             "value": "` +
-    messages.themes.themePreview.heading.paragraphPart1() +
+    messages.email.themes.themePreview.heading.paragraphPart1() +
     userName +
     `"
           },
@@ -37,7 +37,7 @@ export default function usePreviewEmailTheme(): string {
           {
             "kind": "string",
             "value": "` +
-    messages.themes.themePreview.heading.paragraphPart2() +
+    messages.email.themes.themePreview.heading.paragraphPart2() +
     `"
           }
         ],
@@ -50,7 +50,7 @@ export default function usePreviewEmailTheme(): string {
         "href": "https://zetkin.org",
         "tag": "tja96d3p",
         "text": "` +
-    messages.themes.themePreview.button() +
+    messages.email.themes.themePreview.button() +
     `"
       }
     },
@@ -59,7 +59,7 @@ export default function usePreviewEmailTheme(): string {
       "data": {
         "content": [
           { "kind": "string", "value": "` +
-    messages.themes.themePreview.heading.paragraphPart3() +
+    messages.email.themes.themePreview.heading.paragraphPart3() +
     `" }
         ],
         "level": 3
@@ -72,7 +72,7 @@ export default function usePreviewEmailTheme(): string {
           {
             "kind": "string",
             "value": "` +
-    messages.themes.themePreview.paragraph.paragraph1() +
+    messages.email.themes.themePreview.paragraph.paragraph1() +
     `"
           }
         ]
@@ -85,7 +85,7 @@ export default function usePreviewEmailTheme(): string {
           {
             "kind": "string",
             "value": "` +
-    messages.themes.themePreview.paragraph.paragraph2() +
+    messages.email.themes.themePreview.paragraph.paragraph2() +
     `"
           }
         ]
@@ -101,7 +101,7 @@ export default function usePreviewEmailTheme(): string {
               {
                 "kind": "string",
                 "value": "` +
-    messages.themes.themePreview.paragraph.paragraph3() +
+    messages.email.themes.themePreview.paragraph.paragraph3() +
     `"
               }
             ]
@@ -128,7 +128,7 @@ export default function usePreviewEmailTheme(): string {
               {
                 "kind": "string",
                 "value": "` +
-    messages.themes.themePreview.paragraph.paragraph4() +
+    messages.email.themes.themePreview.paragraph.paragraph4() +
     `"
               }
             ]
@@ -155,7 +155,7 @@ export default function usePreviewEmailTheme(): string {
               {
                 "kind": "string",
                 "value": "` +
-    messages.themes.themePreview.paragraph.paragraph5() +
+    messages.email.themes.themePreview.paragraph.paragraph5() +
     `"
               }
             ]
@@ -170,7 +170,7 @@ export default function usePreviewEmailTheme(): string {
           {
             "kind": "string",
             "value": "` +
-    messages.themes.themePreview.paragraph.paragraph6() +
+    messages.email.themes.themePreview.paragraph.paragraph6() +
     `"
           },
           {
@@ -179,7 +179,7 @@ export default function usePreviewEmailTheme(): string {
               {
                 "kind": "string",
                 "value": "` +
-    messages.themes.themePreview.paragraph.paragraph7() +
+    messages.email.themes.themePreview.paragraph.paragraph7() +
     `"
               }
             ],

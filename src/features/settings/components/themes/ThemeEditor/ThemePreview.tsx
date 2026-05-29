@@ -3,10 +3,10 @@ import { CircularProgress, Stack, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { EmailTheme } from 'features/emails/types';
-import previewEmailThemeHtml from 'features/emails/utils/rendering/previewEmailThemeHtml';
-import messageIds from 'features/emails/l10n/messageIds';
+import previewEmailThemeHtml from 'features/settings/utils/previewEmailThemeHtml';
+import messageIds from 'features/settings/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import usePreviewEmailTheme from 'features/emails/hooks/usePreviewEmailTheme';
+import usePreviewEmailTheme from 'features/settings/hooks/usePreviewEmailTheme';
 
 interface ThemePreviewProps {
   theme: EmailTheme | null;
@@ -47,7 +47,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme }) => {
         }}
       >
         <Typography sx={{ fontWeight: 500 }} variant="subtitle1">
-          {messages.themes.themeEditor.previewTitle()}
+          {messages.email.themes.themeEditor.previewTitle()}
         </Typography>
       </Box>
 

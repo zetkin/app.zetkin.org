@@ -6,11 +6,11 @@ import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import useServerSide from 'core/useServerSide';
 import { useNumericRouteParams } from 'core/hooks';
-import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
-import ThemeEditor from 'features/emails/components/ThemeEditor/ThemeEditor';
-import ThemePreview from 'features/emails/components/ThemeEditor/ThemePreview';
+import ThemeEditor from 'features/settings/components/themes//ThemeEditor/ThemeEditor';
+import ThemePreview from 'features/settings/components/themes/ThemeEditor/ThemePreview';
 import { EmailTheme } from 'features/emails/types';
+import EmailThemeLayout from 'features/settings/layout/EmailThemeLayout';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

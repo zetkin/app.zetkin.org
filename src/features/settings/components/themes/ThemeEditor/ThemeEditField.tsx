@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import ZUITextField from 'zui/components/ZUITextField';
 import { EmailThemePatchBody } from 'features/emails/types';
 import { useMessages } from 'core/i18n';
-import messageIds from 'features/emails/l10n/messageIds';
+import messageIds from 'features/settings/l10n/messageIds';
 
 interface ThemeEditFieldProps {
   editingSection: keyof EmailThemePatchBody;
@@ -62,7 +62,7 @@ const ThemeEditField: React.FC<ThemeEditFieldProps> = ({
         error={jsonError}
         fullWidth
         helperText={
-          jsonError ? messages.themes.themeEditor.jsonError() : undefined
+          jsonError ? messages.email.themes.themeEditor.jsonError() : undefined
         }
         maxRows={0}
         monospaced={true}

@@ -3,14 +3,12 @@ import { Alert, Box, Button, Snackbar, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import { useMessages } from 'core/i18n';
-import messageIds from 'features/emails/l10n/messageIds';
-import ThemeEditField, {
-  serializeField,
-} from 'features/emails/components/ThemeEditor/ThemeEditField';
+import messageIds from 'features/settings/l10n/messageIds';
+import ThemeEditField, { serializeField } from './ThemeEditField';
 import { EmailThemePatchBody, ThemeSection } from 'features/emails/types';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
-import ThemeActionsEllipsisMenu from 'features/emails/components/ThemeActionsEllipsisMenu';
+import ThemeActionsEllipsisMenu from '../ThemeActionsEllipsisMenu';
 import { useUnsavedChanges } from 'core/hooks/useUnsavedChanges';
 
 interface ThemeEditorProps {
@@ -97,12 +95,15 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
           >
             <TabList onChange={(e, val) => setActiveTab(val as ThemeSection)}>
               <Tab
-                label={messages.themes.themeEditor.tabs.frame()}
+                label={messages.email.themes.themeEditor.tabs.frame()}
                 value="frame_mjml"
               />
-              <Tab label={messages.themes.themeEditor.tabs.css()} value="css" />
               <Tab
-                label={messages.themes.themeEditor.tabs.block()}
+                label={messages.email.themes.themeEditor.tabs.css()}
+                value="css"
+              />
+              <Tab
+                label={messages.email.themes.themeEditor.tabs.block()}
                 value="block_attributes"
               />
             </TabList>
@@ -115,7 +116,7 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
                 size="small"
                 variant="contained"
               >
-                {messages.themes.themeEditor.saveButton()}
+                {messages.email.themes.themeEditor.saveButton()}
               </Button>
               <ThemeActionsEllipsisMenu orgId={orgId} themeId={themeId} />
             </Box>
@@ -135,8 +136,8 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
         onCancel={onCancel}
         onSubmit={onConfirm}
         open={confirmOpen}
-        submitText={messages.themes.themeEditor.unsavedChangesConfirm()}
-        warningText={messages.themes.themeEditor.unsavedChangesWarning()}
+        submitText={messages.email.themes.themeEditor.unsavedChangesConfirm()}
+        warningText={messages.email.themes.themeEditor.unsavedChangesWarning()}
       />
     </>
   );
