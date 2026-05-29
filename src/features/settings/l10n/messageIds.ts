@@ -95,11 +95,7 @@ export default makeMessages('feat.settings', {
       roleInheritance: m('Organizer in'),
       title: m('Organizers'),
     },
-    settingsLayout: {
-      access: m('Access'),
-      fields: m('Fields'),
-      title: m('Settings'),
-    },
+
     tableButtons: {
       demote: m('Demote'),
       promote: m('Promote'),
@@ -113,11 +109,18 @@ export default makeMessages('feat.settings', {
     },
     you: m('You'),
   },
+  settingsLayout: {
+    access: m('Access'),
+    email: m('Email'),
+    fields: m('Fields'),
+    title: m('Settings'),
+  },
   themes: {
     overview: {
       description: m(
         'A theme sets the overall look and layout of your emails, from colours and fonts to spacing, buttons and content blocks.'
       ),
+      title: m('Themes'),
     },
   },
 });

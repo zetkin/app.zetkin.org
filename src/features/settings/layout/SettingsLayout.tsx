@@ -20,10 +20,11 @@ const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
       baseHref={`/organize/${orgId}/settings`}
       defaultTab="/"
       tabs={[
-        { href: `/`, label: messages.officials.settingsLayout.access() },
-        { href: `/fields`, label: messages.officials.settingsLayout.fields() },
+        { href: `/`, label: messages.settingsLayout.access() },
+        { href: `/fields`, label: messages.settingsLayout.fields() },
+        { href: '/email', label: messages.settingsLayout.email() },
       ]}
-      title={messages.officials.settingsLayout.title()}
+      title={messages.settingsLayout.title()}
     >
       {children}
     </TabbedLayout>

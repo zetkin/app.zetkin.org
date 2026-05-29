@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid, Typography } from '@mui/material';
-import { Stack } from '@mui/system';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -10,7 +9,7 @@ import { Msg } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import ThemeCard from 'features/emails/components/ThemeCard';
-import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
+import SettingsLayout from 'features/settings/layout/SettingsLayout';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,11 +21,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   };
 }, scaffoldOptions);
 
-interface ThemesSettingsPageProps {
+type Props = {
   orgId: string;
-}
+};
 
-const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
+const EmailSettingsPage: PageWithLayout<Props> = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const themes = useEmailThemes(orgId).data || [];
@@ -36,12 +35,13 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
   }
 
   return (
-    <Stack direction="column" display="flex" gap={2}>
-      <Box display="flex" justifyContent="space-between">
-        <Typography>
-          <Msg id={messageIds.themes.overview.description} />
-        </Typography>
-      </Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Typography>
+        <Msg id={messageIds.themes.overview.title} />
+      </Typography>
+      <Typography>
+        <Msg id={messageIds.themes.overview.description} />
+      </Typography>
       <Grid container spacing={2}>
         {themes
           .sort((a, b) => a.id - b.id)
@@ -53,12 +53,12 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
             </Grid>
           ))}
       </Grid>
-    </Stack>
+    </Box>
   );
 };
 
-ThemesSettingsPage.getLayout = function getLayout(page) {
-  return <EmailThemeLayout>{page}</EmailThemeLayout>;
+EmailSettingsPage.getLayout = function getLayout(page) {
+  return <SettingsLayout>{page}</SettingsLayout>;
 };
 
-export default ThemesSettingsPage;
+export default EmailSettingsPage;
