@@ -55,111 +55,109 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
         padding: 2,
       })}
     >
-      <Box sx={{}}>
-        <form
-          onSubmit={async (ev) => {
-            ev.preventDefault();
+      <form
+        onSubmit={async (ev) => {
+          ev.preventDefault();
 
-            const orgReadWrite = getOrgReadWrite(access);
+          const orgReadWrite = getOrgReadWrite(access);
 
-            setCreating(true);
-            await createField({
-              enum_choices:
-                type === CUSTOM_FIELD_TYPE.ENUM
-                  ? parseEnumChoices(enumInput)
-                  : undefined,
-              slug,
-              title,
-              type,
-              ...orgReadWrite,
-            });
-            setCreating(false);
+          setCreating(true);
+          await createField({
+            enum_choices:
+              type === CUSTOM_FIELD_TYPE.ENUM
+                ? parseEnumChoices(enumInput)
+                : undefined,
+            slug,
+            title,
+            type,
+            ...orgReadWrite,
+          });
+          setCreating(false);
 
-            setEnumInput('');
-            setTitle('');
-            setType(CUSTOM_FIELD_TYPE.TEXT);
-            setSlug('');
-            setAccess(AccessType.ONLY_THIS_ORG);
+          setEnumInput('');
+          setTitle('');
+          setType(CUSTOM_FIELD_TYPE.TEXT);
+          setSlug('');
+          setAccess(AccessType.ONLY_THIS_ORG);
+        }}
+      >
+        <Box
+          sx={{
+            alignItems: 'flex-end',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
           }}
         >
-          <Box
-            sx={{
-              alignItems: 'flex-end',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
+          <TextField
+            fullWidth
+            label={messages.fields.create.titleInput()}
+            onChange={(event) => {
+              setTitle(event.target.value);
+              setSlug(createSlug(event.target.value));
             }}
+            slotProps={{ htmlInput: { maxLength: 300 } }}
+            value={title}
+          />
+          <TextField
+            fullWidth
+            label={messages.fields.create.slugInput()}
+            onChange={(event) => {
+              setSlug(createSlug(event.target.value));
+            }}
+            slotProps={{ htmlInput: { maxLength: 40 } }}
+            value={slug}
+          />
+          <TextField
+            fullWidth
+            label={messages.fields.create.typeInput()}
+            onChange={(event) =>
+              setType(event.target.value as CUSTOM_FIELD_TYPE)
+            }
+            select
+            value={type}
           >
+            {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
+              <MenuItem key={option} value={option}>
+                <Msg id={messageIds.fields.customFieldTypes[option]} />
+              </MenuItem>
+            ))}
+          </TextField>
+          {type === CUSTOM_FIELD_TYPE.ENUM && (
             <TextField
               fullWidth
-              label={messages.fields.create.titleInput()}
-              onChange={(event) => {
-                setTitle(event.target.value);
-                setSlug(createSlug(event.target.value));
-              }}
-              slotProps={{ htmlInput: { maxLength: 300 } }}
-              value={title}
+              label={messages.fields.edit.optionsInput()}
+              onChange={(event) => setEnumInput(event.target.value)}
+              value={enumInput}
             />
-            <TextField
-              fullWidth
-              label={messages.fields.create.slugInput()}
-              onChange={(event) => {
-                setSlug(createSlug(event.target.value));
-              }}
-              slotProps={{ htmlInput: { maxLength: 40 } }}
-              value={slug}
-            />
-            <TextField
-              fullWidth
-              label={messages.fields.create.typeInput()}
-              onChange={(event) =>
-                setType(event.target.value as CUSTOM_FIELD_TYPE)
-              }
-              select
-              value={type}
-            >
-              {Object.values(CUSTOM_FIELD_TYPE).map((option) => (
-                <MenuItem key={option} value={option}>
-                  <Msg id={messageIds.fields.customFieldTypes[option]} />
-                </MenuItem>
-              ))}
-            </TextField>
-            {type === CUSTOM_FIELD_TYPE.ENUM && (
-              <TextField
-                fullWidth
-                label={messages.fields.edit.optionsInput()}
-                onChange={(event) => setEnumInput(event.target.value)}
-                value={enumInput}
-              />
-            )}
-            <TextField
-              fullWidth
-              helperText={messages.fields.create.accessInputHelper()}
-              label={messages.fields.create.accessInput()}
-              onChange={(event) => {
-                const value = event.target.value as AccessType;
-                setAccess(value);
-              }}
-              select
-              value={access}
-            >
-              {Object.values(AccessType).map((option) => (
-                <MenuItem key={option} value={option}>
-                  <Msg id={messageIds.fields.accessTypes[option]} />
-                </MenuItem>
-              ))}
-            </TextField>
-            <Button
-              disabled={!canCreateNewField}
-              loading={creating}
-              type="submit"
-              variant="outlined"
-            >
-              <Msg id={messageIds.fields.create.createButton} />
-            </Button>
-          </Box>
-        </form>
-      </Box>
+          )}
+          <TextField
+            fullWidth
+            helperText={messages.fields.create.accessInputHelper()}
+            label={messages.fields.create.accessInput()}
+            onChange={(event) => {
+              const value = event.target.value as AccessType;
+              setAccess(value);
+            }}
+            select
+            value={access}
+          >
+            {Object.values(AccessType).map((option) => (
+              <MenuItem key={option} value={option}>
+                <Msg id={messageIds.fields.accessTypes[option]} />
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button
+            disabled={!canCreateNewField}
+            loading={creating}
+            type="submit"
+            variant="outlined"
+          >
+            <Msg id={messageIds.fields.create.createButton} />
+          </Button>
+        </Box>
+      </form>
     </Box>
   );
 };
