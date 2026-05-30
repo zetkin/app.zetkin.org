@@ -19,10 +19,18 @@ import useCurrentAssignment from '../hooks/useCurrentAssignment';
 import useMyAssignments from '../hooks/useMyAssignments';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { CallStatus } from '../hooks/usePBX';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 
-const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
+type Props = {
+  callStatus: CallStatus;
+  clearCallLanes: () => void;
+  hangup: () => void;
+  invite: (destination: string) => Promise<void>;
+};
+
+const Call: FC<Props> = ({ callStatus, clearCallLanes, hangup, invite }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
@@ -84,7 +92,10 @@ const Call: FC<{ clearCallLanes: () => void }> = ({ clearCallLanes }) => {
         <CallHeader
           assignment={assignment}
           call={call}
+          callStatus={callStatus}
+          hangup={hangup}
           hasUnfinishedCalls={filteredUnfinishedCalls.length > 0}
+          invite={invite}
           lane={lane}
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
