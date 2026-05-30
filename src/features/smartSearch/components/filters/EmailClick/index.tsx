@@ -60,9 +60,9 @@ const EmailClick = ({
       operator: 'clicked',
     });
   const linkList = useEmailLinks(orgId, filter.config?.email).data || [];
-  const linkListFilteredByUniqueURL = linkList.filter(
-    (link, index, self) => self.findIndex((l) => l.url === link.url) === index
-  );
+  const linkListFilteredByUniqueURL = [
+    ...new Map(linkList.map(link => [link.url, link])).values()
+  ];
   const linkListSorted = linkListFilteredByUniqueURL.sort((l1, l2) => {
     return l1.url.localeCompare(l2.url);
   });
