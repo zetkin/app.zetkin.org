@@ -16,21 +16,21 @@ import JourneyInfoForm from './JourneyInfoForm';
 import useCreatePerson from 'features/profile/hooks/useCreatePerson';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinCreateJourney, ZetkinPerson } from 'utils/types/zetkin';
 import zuiMessages from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { TagToBeAdded } from 'features/profile/types';
 
-interface ZUICreatePersonProps {
-  initialValues?: ZetkinCreatePerson;
+interface ZUICreateJourneyProps {
+  initialValues?: ZetkinCreateJourney;
   onClose: () => void;
-  onSubmit?: (e: MouseEvent<HTMLButtonElement>, person: ZetkinPerson) => void;
+  onSubmit?: (e: MouseEvent<HTMLButtonElement>, journey: ZetkinPerson) => void;
   open: boolean;
   title?: string;
   submitLabel?: string;
 }
 
-const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
+const ZUICreateJourney: FC<ZUICreateJourneyProps> = ({
   initialValues,
   open,
   onClose,
@@ -42,10 +42,10 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data;
-  const createPerson = useCreatePerson(orgId);
+  const createJourney = useCreatePerson(orgId);
   const [tags, setTags] = useState<TagToBeAdded[]>([]);
 
-  const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({
+  const [journeyInfo, setJourneyInfo] = useState<ZetkinCreateJourney>({
     ...initialValues,
   });
   const messages = useMessages(zuiMessages);
@@ -56,6 +56,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
       fullWidth
       onClose={() => {
         onClose();
+        setJourneyInfo({});
         setTags([]);
       }}
       open={open}
@@ -75,11 +76,12 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
           </Box>
         ) : (
           <JourneyInfoForm
+            journeyInfo={journeyInfo}
             onChange={(field, value) => {
               if (value === '') {
-                const copied = { ...personalInfo };
+                const copied = { ...journeyInfo };
                 delete copied[field];
-                setPersonalInfo(copied);
+                setJourneyInfo(copied);
               } else {
                 if (field === 'tags' && value && typeof value !== 'string') {
                   const tag = value;
@@ -89,7 +91,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                       : [...prev, tag]
                   );
                 } else {
-                  setPersonalInfo((prev) => {
+                  setJourneyInfo((prev) => {
                     return { ...prev, [field]: value as string };
                   });
                 }
@@ -110,7 +112,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
               <Button
                 onClick={() => {
                   onClose();
-                  setPersonalInfo({});
+                  setJourneyInfo({});
                   setTags([]);
                 }}
                 sx={{ mr: 2 }}
@@ -119,14 +121,14 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 <Msg id={messageIds.createPerson.cancel} />
               </Button>
               <Button
-                disabled={personalInfo.name === undefined}
+                disabled={journeyInfo.name === undefined}
                 onClick={async (e) => {
-                  const person = await createPerson(personalInfo, tags);
+                  const journey = await createJourney(journeyInfo, tags);
                   if (onSubmit) {
-                    onSubmit(e, person);
+                    onSubmit(e, journey);
                   }
                   onClose();
-                  setPersonalInfo({});
+                  setJourneyInfo({});
                   setTags([]);
                 }}
                 variant="contained"
@@ -143,4 +145,4 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   );
 };
 
-export default ZUICreatePerson;
+export default ZUICreateJourney;

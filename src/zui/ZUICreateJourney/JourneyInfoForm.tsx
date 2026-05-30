@@ -8,7 +8,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useTags from 'features/tags/hooks/useTags';
-import { ZetkinAppliedTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinCreateJourney } from 'utils/types/zetkin';
 import messageIds from 'zui/l10n/messageIds';
 import JourneyFieldInput from './JourneyFieldInput';
 import { TagToBeAdded } from 'features/profile/types';
@@ -19,10 +19,15 @@ type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 
 interface JourneyInfoFormProps {
   onChange: (field: string, value: string | null | TagToBeAdded) => void;
+  journeyInfo: ZetkinCreateJourney;
   tags: TagToBeAdded[];
 }
 
-const JourneyInfoForm: FC<JourneyInfoFormProps> = ({ onChange, tags }) => {
+const JourneyInfoForm: FC<JourneyInfoFormProps> = ({
+  onChange,
+  journeyInfo,
+  tags,
+}) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
@@ -57,22 +62,24 @@ const JourneyInfoForm: FC<JourneyInfoFormProps> = ({ onChange, tags }) => {
         p: '0 40px 20px 0',
       }}
     >
-      <JourneyFieldInput
-        field={'name'}
-        onChange={(field, value) => onChange(field, value)}
-        value={''}
-      />
+      <Box display="flex" mt={1}>
+        <JourneyFieldInput
+          field={'name'}
+          onChange={(field, value) => onChange(field, value)}
+          value={journeyInfo.name}
+        />
+      </Box>
       {!!showAllClickedType && (
         <Box display="flex" flexDirection="column" gap={2}>
           <JourneyFieldInput
             field={'extra_name'}
             onChange={(field, value) => onChange(field, value)}
-            value={''}
+            value={journeyInfo.extra_name || ''}
           />
           <JourneyFieldInput
             field={'extra_info'}
             onChange={(field, value) => onChange(field, value)}
-            value={''}
+            value={journeyInfo.extra_info || ''}
           />
         </Box>
       )}
