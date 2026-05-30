@@ -1,21 +1,14 @@
-import { ExpandMore } from '@mui/icons-material';
-import { Box, Button } from '@mui/material';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import { FC, useEffect, useRef, useState } from 'react';
+import { Box } from '@mui/material';
+import { FC } from 'react';
 
 import { useNumericRouteParams } from 'core/hooks';
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinAppliedTag, ZetkinCreateJourney } from 'utils/types/zetkin';
 import messageIds from 'zui/l10n/messageIds';
 import JourneyFieldInput from './JourneyFieldInput';
 import { TagToBeAdded } from 'features/profile/types';
-
-dayjs.extend(utc);
-
-type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 
 interface JourneyInfoFormProps {
   onChange: (field: string, value: string | null | TagToBeAdded) => void;
@@ -30,9 +23,6 @@ const JourneyInfoForm: FC<JourneyInfoFormProps> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
-  const inputRef = useRef<HTMLInputElement>();
-  const [showAllClickedType, setShowAllClickedType] =
-    useState<ShowAllTriggeredType>(null);
 
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
@@ -44,12 +34,6 @@ const JourneyInfoForm: FC<JourneyInfoFormProps> = ({
       return acc;
     }, []) ?? [];
 
-  useEffect(() => {
-    if (showAllClickedType === 'keyboard') {
-      inputRef.current?.focus();
-    }
-  }, [showAllClickedType]);
-
   return (
     <Box
       display="flex"
@@ -57,46 +41,39 @@ const JourneyInfoForm: FC<JourneyInfoFormProps> = ({
       flexDirection="column"
       gap={2}
       sx={{
-        height: !showAllClickedType ? '' : '600px',
+        height: '',
         overflowY: 'auto',
         p: '0 40px 20px 0',
       }}
     >
       <Box display="flex" mt={1}>
         <JourneyFieldInput
-          field={'name'}
-          onChange={(field, value) => onChange(field, value)}
-          value={journeyInfo.name}
+          field={'title'}
+          onChange={(field, value) => {
+            onChange(field, value);
+            onChange('singular_label', value);
+          }}
+          required
+          value={journeyInfo.title || ''}
         />
       </Box>
-      {!!showAllClickedType && (
-        <Box display="flex" flexDirection="column" gap={2}>
+      <Box display="flex" mt={1}>
+        <Box mr={2} width="50%">
           <JourneyFieldInput
-            field={'extra_name'}
+            field={'plural_label'}
             onChange={(field, value) => onChange(field, value)}
-            value={journeyInfo.extra_name || ''}
-          />
-          <JourneyFieldInput
-            field={'extra_info'}
-            onChange={(field, value) => onChange(field, value)}
-            value={journeyInfo.extra_info || ''}
+            required
+            value={journeyInfo.plural_label || ''}
           />
         </Box>
-      )}
-      <Box display="flex" justifyContent="flex-end">
-        {!showAllClickedType && (
-          <Button
-            onClick={() => setShowAllClickedType('mouse')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setShowAllClickedType('keyboard');
-              }
-            }}
-            startIcon={<ExpandMore />}
-          >
-            <Msg id={messageIds.createPerson.showAllFields} />
-          </Button>
-        )}
+        <Box width="50%">
+          <JourneyFieldInput
+            field={'singular_label'}
+            onChange={(field, value) => onChange(field, value)}
+            required
+            value={journeyInfo.singular_label || ''}
+          />
+        </Box>
       </Box>
       <TagManagerSection
         assignedTags={selectedTags}

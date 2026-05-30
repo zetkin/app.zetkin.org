@@ -9,6 +9,11 @@ interface UseTaggingReturn {
     value?: ZetkinAppliedTag['value']
   ) => Promise<void>;
   removeFromPerson: (personId: number, tagId: number) => Promise<void>;
+  assignToJourney: (
+    journeyId: number,
+    tagId: number,
+    value?: ZetkinAppliedTag['value']
+  ) => Promise<void>;
 }
 
 export default function useTagging(orgId: number): UseTaggingReturn {
@@ -35,7 +40,21 @@ export default function useTagging(orgId: number): UseTaggingReturn {
     dispatch(tagUnassigned([personId, tagId]));
   };
 
+  const assignToJourney = async (
+    journeyId: number,
+    tagId: number,
+    value?: ZetkinAppliedTag['value']
+  ) => {
+    const data = value ? { value } : undefined;
+    const tag = await apiClient.put<ZetkinAppliedTag>(
+      `/api/orgs/${orgId}/journeys/${journeyId}/tags/${tagId}`,
+      data
+    );
+    dispatch(tagAssigned([journeyId, tag]));
+  };
+
   return {
+    assignToJourney,
     assignToPerson,
     removeFromPerson,
   };

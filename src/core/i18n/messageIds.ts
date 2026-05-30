@@ -13,9 +13,15 @@ export default makeMessages('glob', {
     unspecified: m('Unspecified'),
   },
   journeyField: {
-    extra_info: m('Extra Info'),
-    extra_name: m('Extra Name'),
-    name: m('Journey Name'),
+    closed: m('Closed'),
+    id: m('ID'),
+    open: m('Open'),
+    opening_note_template: m('Opening Note'),
+    organization: m('Organization'),
+    plural_label: m('Plural Label'),
+    singular_label: m('Singular Label'),
+    stats: m('Stats'),
+    title: m('Title'),
   },
   personFields: {
     alt_phone: m('Alternate Phone Number'),

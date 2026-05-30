@@ -3,11 +3,11 @@ import { FC, MutableRefObject } from 'react';
 
 import globalMessageIds from 'core/i18n/messageIds';
 import { useMessages } from 'core/i18n';
-import { ZetkinJourneyNativeFields } from 'utils/types/zetkin';
+import { ZetkinJourney } from 'utils/types/zetkin';
 
 interface JourneyFieldInputProps {
   disabled?: boolean;
-  field: keyof ZetkinJourneyNativeFields;
+  field: keyof ZetkinJourney;
   helperText?: string;
   label?: string;
   onChange?: (field: string, newValue: string) => void;
@@ -40,8 +40,7 @@ const JourneyFieldInput: FC<JourneyFieldInputProps> = ({
       helperText={helperText}
       inputRef={inputRef}
       label={
-        label ??
-        globalMessages.journeyField[field as keyof ZetkinJourneyNativeFields]()
+        label ?? globalMessages.journeyField[field as keyof ZetkinJourney]()
       }
       onBlur={(e) => onChange?.(field, e.target.value.trim())}
       onChange={(e) => onChange?.(field, e.target.value)}

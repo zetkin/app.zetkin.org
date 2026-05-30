@@ -13,10 +13,10 @@ import { FC, MouseEvent, useState } from 'react';
 import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import JourneyInfoForm from './JourneyInfoForm';
-import useCreatePerson from 'features/profile/hooks/useCreatePerson';
+import useCreateJourney from 'features/journeys/hooks/useCreateJourney';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinCreateJourney, ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinCreateJourney, ZetkinJourney } from 'utils/types/zetkin';
 import zuiMessages from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { TagToBeAdded } from 'features/profile/types';
@@ -24,7 +24,7 @@ import { TagToBeAdded } from 'features/profile/types';
 interface ZUICreateJourneyProps {
   initialValues?: ZetkinCreateJourney;
   onClose: () => void;
-  onSubmit?: (e: MouseEvent<HTMLButtonElement>, journey: ZetkinPerson) => void;
+  onSubmit?: (e: MouseEvent<HTMLButtonElement>, journey: ZetkinJourney) => void;
   open: boolean;
   title?: string;
   submitLabel?: string;
@@ -42,7 +42,7 @@ const ZUICreateJourney: FC<ZUICreateJourneyProps> = ({
   const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const customFields = useCustomFields(orgId).data;
-  const createJourney = useCreatePerson(orgId);
+  const createJourney = useCreateJourney(orgId);
   const [tags, setTags] = useState<TagToBeAdded[]>([]);
 
   const [journeyInfo, setJourneyInfo] = useState<ZetkinCreateJourney>({
@@ -121,7 +121,11 @@ const ZUICreateJourney: FC<ZUICreateJourneyProps> = ({
                 <Msg id={messageIds.createPerson.cancel} />
               </Button>
               <Button
-                disabled={journeyInfo.name === undefined}
+                disabled={
+                  journeyInfo.title === undefined ||
+                  journeyInfo.plural_label === undefined ||
+                  journeyInfo.singular_label === undefined
+                }
                 onClick={async (e) => {
                   const journey = await createJourney(journeyInfo, tags);
                   if (onSubmit) {
