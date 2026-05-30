@@ -604,3 +604,9 @@ export type ZetkinCreatePerson = Partial<
   Record<string, string | null>;
 
 export type ZetkinUpdatePerson = ZetkinCreatePerson;
+
+export interface ZetkinJourneyNativeFields {
+  name: string;
+  extra_name: string | null;
+  extra_info: string | null;
+}
