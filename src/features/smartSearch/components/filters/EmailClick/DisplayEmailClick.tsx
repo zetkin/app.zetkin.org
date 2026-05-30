@@ -67,24 +67,28 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
         linkSelect: links ? (
           <Box alignItems="start" display="inline-flex">
             :{' '}
-            {linkList
-              ?.filter((item) => filter.config.links?.includes(item.id))
-              .map((link) => {
-                return (
-                  <Tooltip key={`link-${link.id}`} title={link.url}>
-                    <Chip
-                      label={link.url.split('://')[1]}
-                      size="small"
-                      sx={{
-                        margin: '3px',
-                        maxWidth: '200px',
-                        textOverflow: 'ellipsis',
-                      }}
-                      variant="outlined"
-                    />
-                  </Tooltip>
-                );
-              })}
+            {[
+              ...new Map(
+                linkList
+                  ?.filter((item) => filter.config.links?.includes(item.id))
+                  .map((link) => [link.url, link]) ?? []
+              ).values(),
+            ].map((link) => {
+              return (
+                <Tooltip key={`link-${link.id}`} title={link.url}>
+                  <Chip
+                    label={link.url.split('://')[1]}
+                    size="small"
+                    sx={{
+                      margin: '3px',
+                      maxWidth: '200px',
+                      textOverflow: 'ellipsis',
+                    }}
+                    variant="outlined"
+                  />
+                </Tooltip>
+              );
+            })}
           </Box>
         ) : null,
         operatorSelect: (
