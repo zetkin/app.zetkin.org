@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  CircularProgress,
   Dialog,
   Divider,
   Typography,
@@ -14,12 +13,10 @@ import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import JourneyInfoForm from './JourneyInfoForm';
 import useCreateJourney from 'features/journeys/hooks/useCreateJourney';
-import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreateJourney, ZetkinJourney } from 'utils/types/zetkin';
 import zuiMessages from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import { TagToBeAdded } from 'features/profile/types';
 
 interface ZUICreateJourneyProps {
   initialValues?: ZetkinCreateJourney;
@@ -41,9 +38,7 @@ const ZUICreateJourney: FC<ZUICreateJourneyProps> = ({
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const customFields = useCustomFields(orgId).data;
   const createJourney = useCreateJourney(orgId);
-  const [tags, setTags] = useState<TagToBeAdded[]>([]);
 
   const [journeyInfo, setJourneyInfo] = useState<ZetkinCreateJourney>({
     ...initialValues,
@@ -57,49 +52,39 @@ const ZUICreateJourney: FC<ZUICreateJourneyProps> = ({
       onClose={() => {
         onClose();
         setJourneyInfo({});
-        setTags([]);
       }}
       open={open}
     >
       <Box sx={{ padding: '40px 0 40px 40px' }}>
         <Box display="flex">
           <Typography sx={{ ml: 0.5 }} variant="h5">
-            {title ?? messages.createPerson.title.default()}
+            {title ?? messages.createJourney.title()}
           </Typography>
         </Box>
-
-        {!customFields ? (
-          <Box
-            sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <JourneyInfoForm
-            journeyInfo={journeyInfo}
-            onChange={(field, value) => {
-              if (value === '') {
-                const copied = { ...journeyInfo };
-                delete copied[field];
-                setJourneyInfo(copied);
-              } else {
-                if (field === 'tags' && value && typeof value !== 'string') {
-                  const tag = value;
-                  setTags((prev) =>
-                    tags.find((item) => item.id === tag.id)
-                      ? tags.filter((item) => item.id !== tag.id)
-                      : [...prev, tag]
-                  );
-                } else {
-                  setJourneyInfo((prev) => {
-                    return { ...prev, [field]: value as string };
-                  });
-                }
+        <JourneyInfoForm
+          journeyInfo={journeyInfo}
+          onChange={(field, value) => {
+            if (value === '') {
+              const copied = { ...journeyInfo };
+              delete copied[field];
+              if (field === 'title') {
+                delete copied['singular_label'];
               }
-            }}
-            tags={tags}
-          />
-        )}
+              setJourneyInfo(copied);
+            } else {
+              setJourneyInfo((prev) => {
+                if (field === 'title') {
+                  return {
+                    ...prev,
+                    [field]: value as string,
+                    ['singular_label']: value as string,
+                  };
+                }
+                return { ...prev, [field]: value as string };
+              });
+            }
+          }}
+        />
         <Box sx={{ pr: 5 }}>
           <Divider />
           <Box
@@ -113,12 +98,11 @@ const ZUICreateJourney: FC<ZUICreateJourneyProps> = ({
                 onClick={() => {
                   onClose();
                   setJourneyInfo({});
-                  setTags([]);
                 }}
                 sx={{ mr: 2 }}
                 variant="text"
               >
-                <Msg id={messageIds.createPerson.cancel} />
+                <Msg id={messageIds.createJourney.cancel} />
               </Button>
               <Button
                 disabled={
@@ -127,18 +111,17 @@ const ZUICreateJourney: FC<ZUICreateJourneyProps> = ({
                   journeyInfo.singular_label === undefined
                 }
                 onClick={async (e) => {
-                  const journey = await createJourney(journeyInfo, tags);
+                  const journey = await createJourney(journeyInfo);
                   if (onSubmit) {
                     onSubmit(e, journey);
                   }
                   onClose();
                   setJourneyInfo({});
-                  setTags([]);
                 }}
                 variant="contained"
               >
                 {submitLabel ?? (
-                  <Msg id={messageIds.createPerson.submitLabel.default} />
+                  <Msg id={messageIds.createJourney.submitLabel} />
                 )}
               </Button>
             </Box>

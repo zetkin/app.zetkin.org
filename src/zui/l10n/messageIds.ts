@@ -32,6 +32,7 @@ export default makeMessages('zui', {
     copy: m('Copy'),
   },
   createJourney: {
+    cancel: m('Cancel'),
     submitLabel: m('Create'),
     title: m('Create Journey'),
   },

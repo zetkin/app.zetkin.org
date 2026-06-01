@@ -606,6 +606,6 @@ export type ZetkinCreatePerson = Partial<
 export type ZetkinUpdatePerson = ZetkinCreatePerson;
 
 export type ZetkinCreateJourney = Partial<
-  Omit<ZetkinJourney, 'id' | 'stats' | 'organization' | 'opening_note_template'>
+  Omit<ZetkinJourney, 'id' | 'stats' | 'organization'>
 > &
   Record<string, string | null>;

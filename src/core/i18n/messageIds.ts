@@ -16,7 +16,7 @@ export default makeMessages('glob', {
     closed: m('Closed'),
     id: m('ID'),
     open: m('Open'),
-    opening_note_template: m('Opening Note'),
+    opening_note_template: m('Default Opening Note'),
     organization: m('Organization'),
     plural_label: m('Plural Label'),
     singular_label: m('Singular Label'),
