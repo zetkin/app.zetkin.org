@@ -1,16 +1,18 @@
 import { GetServerSideProps } from 'next';
 import { CircularProgress, Stack } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import useServerSide from 'core/useServerSide';
-import { useNumericRouteParams } from 'core/hooks';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import ThemeEditor from 'features/settings/components/themes//ThemeEditor/ThemeEditor';
 import ThemePreview from 'features/settings/components/themes/ThemeEditor/ThemePreview';
 import { EmailTheme } from 'features/emails/types';
 import EmailThemeLayout from 'features/settings/layout/EmailThemeLayout';
+import useEmailThemeEditing from 'features/settings/hooks/useEmailThemeEditing';
+import { themeEditorValueChanged } from 'features/emails/store';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -35,11 +37,8 @@ const ThemePageContent = ({
   theme: EmailTheme;
   themeId: number;
 }) => {
-  const [localValues, setLocalValues] = useState<Record<string, string>>({
-    block_attributes: JSON.stringify(theme.block_attributes, null, 2),
-    css: theme.css || '',
-    frame_mjml: JSON.stringify(theme.frame_mjml, null, 2),
-  });
+  const { localValues } = useEmailThemeEditing(theme);
+  const dispatch = useAppDispatch();
 
   const liveTheme = useMemo(() => {
     try {
@@ -60,7 +59,7 @@ const ThemePageContent = ({
       <ThemeEditor
         localValues={localValues}
         onChange={(section, newValue) => {
-          setLocalValues((prev) => ({ ...prev, [section]: newValue }));
+          dispatch(themeEditorValueChanged([section, newValue]));
         }}
         orgId={orgId}
         themeId={themeId}

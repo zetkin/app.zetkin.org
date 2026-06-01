@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { Alert, Box, Button, Snackbar, Tab } from '@mui/material';
+import { Alert, Box, Snackbar, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
-import ThemeEditField, { serializeField } from './ThemeEditField';
-import { EmailThemePatchBody, ThemeSection } from 'features/emails/types';
-import useEmailTheme from 'features/emails/hooks/useEmailTheme';
-import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
+import ThemeEditField from './ThemeEditField';
+import { ThemeSection } from 'features/emails/types';
 import ThemeActionsEllipsisMenu from '../ThemeActionsEllipsisMenu';
-import { useUnsavedChanges } from 'core/hooks/useUnsavedChanges';
 
 interface ThemeEditorProps {
   orgId: number;
@@ -27,40 +24,6 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<ThemeSection>('frame_mjml');
   const [error, setError] = useState<string | null>(null);
-
-  const {
-    data: theme,
-    updateEmailTheme,
-    mutating,
-  } = useEmailTheme(orgId, themeId);
-
-  const isDirty = theme
-    ? localValues.frame_mjml !== JSON.stringify(theme.frame_mjml, null, 2) ||
-      localValues.css !== (theme.css || '') ||
-      localValues.block_attributes !==
-        JSON.stringify(theme.block_attributes, null, 2)
-    : false;
-
-  const { confirmOpen, onCancel, onConfirm } = useUnsavedChanges(isDirty);
-
-  const handleSaveAll = async () => {
-    setError(null);
-
-    const patch: EmailThemePatchBody = {
-      block_attributes: serializeField(
-        localValues.block_attributes,
-        'block_attributes'
-      ),
-      css: serializeField(localValues.css, 'css'),
-      frame_mjml: serializeField(localValues.frame_mjml, 'frame_mjml'),
-    };
-
-    const result = await updateEmailTheme(patch);
-
-    if (typeof result === 'string') {
-      setError(result);
-    }
-  };
 
   return (
     <>
@@ -109,15 +72,6 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
             </TabList>
 
             <Box>
-              <Button
-                color="primary"
-                disabled={!isDirty || mutating.length > 0}
-                onClick={handleSaveAll}
-                size="small"
-                variant="contained"
-              >
-                {messages.email.themes.themeEditor.saveButton()}
-              </Button>
               <ThemeActionsEllipsisMenu orgId={orgId} themeId={themeId} />
             </Box>
           </Box>
@@ -132,13 +86,6 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
           ))}
         </TabContext>
       </Box>
-      <ZUIConfirmDialog
-        onCancel={onCancel}
-        onSubmit={onConfirm}
-        open={confirmOpen}
-        submitText={messages.email.themes.themeEditor.unsavedChangesConfirm()}
-        warningText={messages.email.themes.themeEditor.unsavedChangesWarning()}
-      />
     </>
   );
 };

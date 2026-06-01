@@ -7,28 +7,21 @@ import {
   themeLoaded,
   themeUpdate,
   themeUpdated,
+  themeUpdateErrorAdded,
+  themeUpdateErrorRemoved,
 } from 'features/emails/store';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { futureToObject } from 'core/caching/futures';
 import { ApiClientError } from 'core/api/errors';
 
-interface UseCreateEmailThemeReturn {
-  data: EmailTheme | null;
-  deleteEmailTheme: (themeId: number) => Promise<void>;
-  duplicateEmailTheme: () => Promise<EmailTheme | undefined>;
-  updateEmailTheme: (data: EmailThemePatchBody) => Promise<EmailTheme | string>;
-  isLoading: boolean;
-  mutating: string[];
-}
-
-export default function useEmailTheme(
-  orgId: number,
-  themeId: number
-): UseCreateEmailThemeReturn {
+export default function useEmailTheme(orgId: number, themeId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const themeItems = useAppSelector((state) => state.emails.themeList.items);
   const themeItem = themeItems.find((item) => item.id == themeId);
+  const themeUpdateError = useAppSelector(
+    (state) => state.emails.themeUpdateError
+  );
 
   const themeFuture = loadItemIfNecessary(themeItem, dispatch, {
     actionOnLoad: () => themeLoad(themeId),
@@ -71,17 +64,28 @@ export default function useEmailTheme(
           return theme;
         });
     } catch (e) {
-      return e instanceof ApiClientError
-        ? e.errorDescription || 'Unknown error'
-        : 'Unknown error';
+      const updateError =
+        e instanceof ApiClientError ? e : new Error('Unknown error');
+      const serialized = {
+        message: updateError.message,
+        name: updateError.name,
+      };
+      dispatch(themeUpdateErrorAdded(serialized));
+      return updateError;
     }
+  };
+
+  const clearUpdateEmailThemeError = () => {
+    dispatch(themeUpdateErrorRemoved());
   };
 
   return {
     ...futureToObject(themeFuture),
+    clearUpdateEmailThemeError,
     deleteEmailTheme,
     duplicateEmailTheme,
     mutating: themeItem?.mutating || [],
+    themeUpdateError,
     updateEmailTheme,
   };
 }
