@@ -7,7 +7,7 @@ import { PageWithLayout } from 'utils/types';
 import useServerSide from 'core/useServerSide';
 import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
-import ThemeEditor from 'features/settings/components/themes//ThemeEditor/ThemeEditor';
+import ThemeEditor from 'features/settings/components/themes/ThemeEditor';
 import ThemePreview from 'features/settings/components/themes/ThemeEditor/ThemePreview';
 import { EmailTheme } from 'features/emails/types';
 import EmailThemeLayout from 'features/settings/layout/EmailThemeLayout';
