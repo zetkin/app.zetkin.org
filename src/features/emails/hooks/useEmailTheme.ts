@@ -22,6 +22,7 @@ export default function useEmailTheme(orgId: number, themeId: number) {
   const themeUpdateError = useAppSelector(
     (state) => state.emails.themeUpdateError
   );
+  const themeJsonError = useAppSelector((state) => state.emails.themeJsonError);
 
   const themeFuture = loadItemIfNecessary(themeItem, dispatch, {
     actionOnLoad: () => themeLoad(themeId),
@@ -85,6 +86,7 @@ export default function useEmailTheme(orgId: number, themeId: number) {
     deleteEmailTheme,
     duplicateEmailTheme,
     mutating: themeItem?.mutating || [],
+    themeJsonError,
     themeUpdateError,
     updateEmailTheme,
   };

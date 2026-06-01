@@ -22,6 +22,7 @@ export interface EmailStoreSlice {
   statsById: Record<number, RemoteItem<ZetkinEmailStats>>;
   insightsByEmailId: Record<number, RemoteItem<EmailInsights>>;
   themeUpdateError: SerializedError | null;
+  themeJsonError: Record<'block_attributes' | 'css' | 'frame_mjml', boolean>;
   themeEditorValue: Record<'block_attributes' | 'css' | 'frame_mjml', string>;
 }
 
@@ -32,6 +33,7 @@ const initialState: EmailStoreSlice = {
   linksByEmailId: {},
   statsById: {},
   themeEditorValue: { block_attributes: '', css: '', frame_mjml: '' },
+  themeJsonError: { block_attributes: false, css: false, frame_mjml: false },
   themeList: remoteList(),
   themeUpdateError: null,
 };
@@ -221,6 +223,15 @@ const emailsSlice = createSlice({
         ...state.themeEditorValue,
         [section]: newValue,
       };
+
+      if (section !== 'css') {
+        try {
+          JSON.parse(newValue);
+          state.themeJsonError[section] = false;
+        } catch {
+          state.themeJsonError[section] = true;
+        }
+      }
     },
     themeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;

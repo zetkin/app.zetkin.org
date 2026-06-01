@@ -28,16 +28,19 @@ const EmailThemeLayout: FunctionComponent<EmailThemeLayoutProps> = ({
     themeUpdateError,
     duplicateEmailTheme,
     deleteEmailTheme,
+    themeJsonError,
   } = useEmailTheme(orgId, themeId);
 
   const { localValues, hasUnsavedChanges } = useEmailThemeEditing(theme);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  const hasJsonError = Object.values(themeJsonError).some((value) => !!value);
+
   return (
     <SimpleLayout
       actionButtons={
         <Button
-          disabled={!hasUnsavedChanges()}
+          disabled={!hasUnsavedChanges() || hasJsonError}
           loading={mutating.length > 0}
           onClick={async () => {
             updateEmailTheme({
