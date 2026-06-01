@@ -4,6 +4,16 @@ export default makeMessages('feat.settings', {
   email: {
     themes: {
       addTheme: m('Create new theme'),
+      delete: {
+        action: m('Delete'),
+        confirmDialog: {
+          confirmButton: m<{ themeId: number }>('Yes, delete Theme {themeId}'),
+          title: m<{ themeId: number }>('Delete Theme {themeId}?'),
+          warningText: m<{ themeId: number }>(
+            'Are you sure you want to delete Theme {themeId}? It cannot be undone.'
+          ),
+        },
+      },
       duplicateTheme: m('Duplicate theme'),
       overview: {
         description: m(
@@ -12,10 +22,6 @@ export default makeMessages('feat.settings', {
         title: m('Themes'),
       },
       themeCard: {
-        delete: m('Delete'),
-        deleteWarning: m<{ themeId: number }>(
-          'Are you sure you want to delete theme {themeId}? It cannot be undone.'
-        ),
         duplicate: m('Duplicate'),
         edit: m('Edit'),
         title: m<{ themeId: number }>('Theme {themeId}'),
@@ -30,10 +36,6 @@ export default makeMessages('feat.settings', {
           frame: m('Frame'),
         },
         title: m<{ themeId: number }>('Theme {themeId}'),
-        unsavedChangesConfirm: m('Leave without saving'),
-        unsavedChangesWarning: m(
-          'You have unsaved changes, are you sure you want to leave?'
-        ),
       },
       themePreview: {
         button: m('Register here'),

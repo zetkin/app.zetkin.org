@@ -6,21 +6,13 @@ import { useMessages } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import ThemeEditField from './ThemeEditField';
 import { ThemeSection } from 'features/emails/types';
-import ThemeActionsEllipsisMenu from '../ThemeActionsEllipsisMenu';
 
 interface ThemeEditorProps {
-  orgId: number;
-  themeId: number;
   localValues: Record<ThemeSection, string>;
   onChange: (section: ThemeSection, newValue: string) => void;
 }
 
-const ThemeEditor: React.FC<ThemeEditorProps> = ({
-  orgId,
-  themeId,
-  localValues,
-  onChange,
-}) => {
+const ThemeEditor: React.FC<ThemeEditorProps> = ({ localValues, onChange }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<ThemeSection>('frame_mjml');
   const [error, setError] = useState<string | null>(null);
@@ -70,10 +62,6 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({
                 value="block_attributes"
               />
             </TabList>
-
-            <Box>
-              <ThemeActionsEllipsisMenu orgId={orgId} themeId={themeId} />
-            </Box>
           </Box>
           {(Object.keys(localValues) as ThemeSection[]).map((section) => (
             <TabPanel key={section} sx={{ flex: 1, p: 2 }} value={section}>

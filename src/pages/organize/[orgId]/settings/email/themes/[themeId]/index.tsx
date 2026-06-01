@@ -28,15 +28,7 @@ interface ThemePageProps {
   orgId: string;
 }
 
-const ThemePageContent = ({
-  theme,
-  orgId,
-  themeId,
-}: {
-  orgId: number;
-  theme: EmailTheme;
-  themeId: number;
-}) => {
+const ThemePageContent = ({ theme }: { theme: EmailTheme }) => {
   const { localValues } = useEmailThemeEditing(theme);
   const dispatch = useAppDispatch();
 
@@ -61,8 +53,6 @@ const ThemePageContent = ({
         onChange={(section, newValue) => {
           dispatch(themeEditorValueChanged([section, newValue]));
         }}
-        orgId={orgId}
-        themeId={themeId}
       />
     </Stack>
   );
@@ -81,7 +71,7 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
     return <CircularProgress />;
   }
 
-  return <ThemePageContent orgId={orgId} theme={theme} themeId={themeId} />;
+  return <ThemePageContent theme={theme} />;
 };
 
 ThemePage.getLayout = function getLayout(page) {
