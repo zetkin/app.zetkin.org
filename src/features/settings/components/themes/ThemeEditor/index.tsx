@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Badge, Box, Tab } from '@mui/material';
+import { Badge, Box, Tab, TextField } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import { ThemeSection } from 'features/emails/types';
-import ZUITextField from 'zui/components/ZUITextField';
 import useEmailTheme from 'features/emails/hooks/useEmailTheme';
 import { useNumericRouteParams } from 'core/hooks';
 
@@ -22,22 +21,19 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({ localValues, onChange }) => {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
+        borderLeft: `1px solid ${theme.palette.grey[300]}`,
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
-        height: '100%',
-      }}
+        padding: 0,
+      })}
     >
       <TabContext value={activeTab}>
         <Box
           sx={{
-            alignItems: 'center',
             borderBottom: 1,
             borderColor: 'divider',
-            display: 'flex',
-            justifyContent: 'space-between',
-            pr: 2,
           }}
         >
           <TabList onChange={(e, val) => setActiveTab(val as ThemeSection)}>
@@ -86,25 +82,49 @@ const ThemeEditor: React.FC<ThemeEditorProps> = ({ localValues, onChange }) => {
           </TabList>
         </Box>
         {(Object.keys(localValues) as ThemeSection[]).map((section) => (
-          <TabPanel key={section} sx={{ flex: 1, p: 2 }} value={section}>
+          <TabPanel key={section} sx={{ flex: 1, padding: 0 }} value={section}>
             <Box
               sx={{
                 '& .MuiFormControl-root': { height: '100%' },
                 '& .MuiInputBase-input': {
                   height: '100% !important',
-                  overflow: 'auto !important',
+                  overflowY: 'auto !important',
                 },
-                '& .MuiInputBase-root': { height: '100%' },
+                '& .MuiInputBase-root': {
+                  borderRadius: '0px',
+                  height: '100%',
+                  padding: 0,
+                },
                 height: '100%',
               }}
             >
-              <ZUITextField
+              <TextField
                 error={themeJsonError[section]}
                 fullWidth
                 maxRows={0}
-                monospaced={true}
                 multiline
-                onChange={(newVal) => onChange(section, newVal)}
+                onChange={(ev) => onChange(section, ev.target.value)}
+                slotProps={{
+                  htmlInput: {
+                    sx: {
+                      fontFamily:
+                        'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                      fontSize: '0.875rem',
+                      letterSpacing: '0',
+                      lineHeight: '1.4rem',
+                      whiteSpace: 'pre-line',
+                    },
+                  },
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: 'none',
+                    },
+                    paddingLeft: 1,
+                    paddingTop: 1,
+                  },
+                }}
                 value={localValues[section]}
               />
             </Box>

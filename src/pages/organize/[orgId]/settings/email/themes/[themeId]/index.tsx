@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { CircularProgress, Stack } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import React, { useMemo } from 'react';
 
 import { scaffold } from 'utils/next';
@@ -46,7 +46,13 @@ const ThemePageContent = ({ theme }: { theme: EmailTheme }) => {
   }, [theme, localValues]);
 
   return (
-    <Stack direction="row" display="flex" gap={2} sx={{ height: '100%' }}>
+    <Box
+      sx={(theme) => ({
+        borderTop: `1px solid ${theme.palette.grey[300]}`,
+        display: 'flex',
+        flexGrow: 1,
+      })}
+    >
       <ThemePreview theme={liveTheme} />
       <ThemeEditor
         localValues={localValues}
@@ -54,7 +60,7 @@ const ThemePageContent = ({ theme }: { theme: EmailTheme }) => {
           dispatch(themeEditorValueChanged([section, newValue]));
         }}
       />
-    </Stack>
+    </Box>
   );
 };
 
@@ -71,7 +77,11 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
     return <CircularProgress />;
   }
 
-  return <ThemePageContent theme={theme} />;
+  return (
+    <Box display="flex" flexDirection="column" height="100%">
+      <ThemePageContent theme={theme} />
+    </Box>
+  );
 };
 
 ThemePage.getLayout = function getLayout(page) {
