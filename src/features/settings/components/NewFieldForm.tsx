@@ -102,6 +102,7 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
           />
           <TextField
             fullWidth
+            helperText={messages.fields.create.slugInputHelper()}
             label={messages.fields.create.slugInput()}
             onChange={(event) => {
               setSlug(createSlug(event.target.value));
