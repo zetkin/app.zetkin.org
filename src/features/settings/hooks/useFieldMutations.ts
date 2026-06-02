@@ -27,7 +27,7 @@ export default function useFieldMutations(orgId: number) {
 
     try {
       const field = await apiClient.patch<ZetkinCustomField>(
-        `/api/orgs/${orgId}/people/fields/${fieldId}/`,
+        `/api/orgs/${orgId}/people/fields/${fieldId}`,
         data
       );
       dispatch(fieldUpdated(field));
