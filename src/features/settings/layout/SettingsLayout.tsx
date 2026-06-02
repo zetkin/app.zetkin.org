@@ -1,9 +1,11 @@
 import { FunctionComponent } from 'react';
-import { useRouter } from 'next/router';
 
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useMessages } from 'core/i18n';
+import { EMAIL_SETTINGS } from 'utils/featureFlags';
+import useFeature from 'utils/featureFlags/useFeature';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
@@ -12,8 +14,10 @@ interface SettingsLayoutProps {
 const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
   children,
 }) => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
+
+  const hasEmailSettingsFeautre = useFeature(EMAIL_SETTINGS, orgId);
 
   return (
     <TabbedLayout
@@ -22,7 +26,9 @@ const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
       tabs={[
         { href: `/`, label: messages.settingsLayout.access() },
         { href: `/fields`, label: messages.settingsLayout.fields() },
-        { href: '/email', label: messages.settingsLayout.email() },
+        ...(hasEmailSettingsFeautre
+          ? [{ href: '/email', label: messages.settingsLayout.email() }]
+          : []),
       ]}
       title={messages.settingsLayout.title()}
     >
