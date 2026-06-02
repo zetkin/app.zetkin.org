@@ -25,6 +25,9 @@ export default makeMessages('feat.settings', {
         'Admins in this organization will always be able to both see and edit this data on people.'
       ),
       createButton: m('Create'),
+      errorMessage: m(
+        'There was an unexpected error when creating the field, please try again. If it keeps failing, contact support.'
+      ),
       optionsInput: m('Options (comma separated)'),
       slugInput: m('Slug'),
       title: m('Create new field'),

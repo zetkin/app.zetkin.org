@@ -1,4 +1,4 @@
-import { TextField, MenuItem, Button } from '@mui/material';
+import { TextField, MenuItem, Button, Alert } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC, useState } from 'react';
 
@@ -27,7 +27,8 @@ type Props = {
 
 const NewFieldForm: FC<Props> = ({ orgId }) => {
   const messages = useMessages(messageIds);
-  const createField = useCreateField(orgId);
+  const { clearFieldCreateError, createField, fieldCreateError } =
+    useCreateField(orgId);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [type, setType] = useState<CUSTOM_FIELD_TYPE>(CUSTOM_FIELD_TYPE.TEXT);
@@ -158,6 +159,18 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
           </Button>
         </Box>
       </form>
+      {fieldCreateError && (
+        <Box sx={{ paddingTop: 1 }}>
+          <Alert
+            onClose={() => {
+              clearFieldCreateError();
+            }}
+            severity="error"
+          >
+            <Msg id={messageIds.fields.create.errorMessage} />
+          </Alert>
+        </Box>
+      )}
     </Box>
   );
 };

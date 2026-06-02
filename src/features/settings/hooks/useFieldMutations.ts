@@ -37,7 +37,7 @@ export default function useFieldMutations(orgId: number) {
         message: updateError.message,
         name: updateError.name,
       };
-      dispatch(fieldUpdateErrorAdded(serialized));
+      dispatch(fieldUpdateErrorAdded([fieldId, serialized]));
       return updateError;
     }
   };
