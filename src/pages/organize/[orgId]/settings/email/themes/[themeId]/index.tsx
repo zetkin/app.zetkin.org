@@ -13,6 +13,10 @@ import { EmailTheme } from 'features/emails/types';
 import EmailThemeLayout from 'features/settings/layout/EmailThemeLayout';
 import useEmailThemeEditing from 'features/settings/hooks/useEmailThemeEditing';
 import { themeEditorValueChanged } from 'features/emails/store';
+import { useUnsavedChanges } from 'features/settings/hooks/useUnsavedChanges';
+import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/settings/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -29,6 +33,7 @@ interface ThemePageProps {
 }
 
 const ThemePageContent = ({ theme }: { theme: EmailTheme }) => {
+  const messages = useMessages(messageIds);
   const { localValues } = useEmailThemeEditing(theme);
   const dispatch = useAppDispatch();
 
@@ -45,22 +50,40 @@ const ThemePageContent = ({ theme }: { theme: EmailTheme }) => {
     }
   }, [theme, localValues]);
 
+  const isUnsaved = theme
+    ? localValues.frame_mjml !== JSON.stringify(theme.frame_mjml, null, 2) ||
+      localValues.css !== (theme.css || '') ||
+      localValues.block_attributes !==
+        JSON.stringify(theme.block_attributes, null, 2)
+    : false;
+
+  const { confirmOpen, onCancel, onConfirm } = useUnsavedChanges(isUnsaved);
+
   return (
-    <Box
-      sx={(theme) => ({
-        borderTop: `1px solid ${theme.palette.grey[300]}`,
-        display: 'flex',
-        flexGrow: 1,
-      })}
-    >
-      <ThemePreview theme={liveTheme} />
-      <ThemeEditor
-        localValues={localValues}
-        onChange={(section, newValue) => {
-          dispatch(themeEditorValueChanged([section, newValue]));
-        }}
+    <>
+      <Box
+        sx={(theme) => ({
+          borderTop: `1px solid ${theme.palette.grey[300]}`,
+          display: 'flex',
+          flexGrow: 1,
+        })}
+      >
+        <ThemePreview theme={liveTheme} />
+        <ThemeEditor
+          localValues={localValues}
+          onChange={(section, newValue) =>
+            dispatch(themeEditorValueChanged([section, newValue]))
+          }
+        />
+      </Box>
+      <ZUIConfirmDialog
+        onCancel={onCancel}
+        onSubmit={onConfirm}
+        open={confirmOpen}
+        submitText={messages.email.themes.unsavedChanges.confirmLeaving()}
+        warningText={messages.email.themes.unsavedChanges.warning()}
       />
-    </Box>
+    </>
   );
 };
 

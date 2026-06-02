@@ -65,6 +65,10 @@ export default makeMessages('feat.settings', {
         },
       },
       title: m('Themes'),
+      unsavedChanges: {
+        confirmLeaving: m('Leave without saving'),
+        warning: m('You have unsaved changes, are you sure you want to leave?'),
+      },
     },
   },
   fields: {
