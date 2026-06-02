@@ -43,7 +43,7 @@ const EmailThemeLayout: FunctionComponent<EmailThemeLayoutProps> = ({
           disabled={!hasUnsavedChanges() || hasJsonError}
           loading={mutating.length > 0}
           onClick={async () => {
-            updateEmailTheme({
+            await updateEmailTheme({
               block_attributes: serializeField(
                 localValues.block_attributes,
                 'block_attributes'
