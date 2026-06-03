@@ -6,9 +6,9 @@ import { useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 import {
   CHART_HEIGHT,
-  ResponseStatsCard,
+  InsightsCard,
   UseChartProExportPublicApi,
-} from 'features/surveys/components/ResponseStatsCards';
+} from 'features/surveys/components/SurveyInsights/InsightsCard';
 import { TextResponseWordCloud } from 'features/surveys/components/SurveyInsights/TextResponseWordCloud';
 import { QuestionStatsBarPlot } from 'features/surveys/components/SurveyInsights/QuestionStatsBarPlot';
 import { TextResponseList } from 'features/surveys/components/SurveyInsights/TextResponseList';
@@ -37,7 +37,7 @@ export const TextStatsCard = ({
   const exportApi = useRef<UseChartProExportPublicApi>();
 
   return (
-    <ResponseStatsCard
+    <InsightsCard
       exportApi={exportApi}
       exportDisabled={tab === 'responses'}
       onTabChange={(selected) => setTab(selected)}
@@ -80,6 +80,6 @@ export const TextStatsCard = ({
           />
         )}
       </Box>
-    </ResponseStatsCard>
+    </InsightsCard>
   );
 };

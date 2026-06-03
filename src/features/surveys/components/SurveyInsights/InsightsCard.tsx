@@ -54,7 +54,7 @@ export interface UseChartProExportPublicApi {
   exportAsImage: (options?: ChartImageExportOptions) => Promise<void>;
 }
 
-export const ResponseStatsCard = ({
+export const InsightsCard = ({
   children,
   controls,
   exportApi,

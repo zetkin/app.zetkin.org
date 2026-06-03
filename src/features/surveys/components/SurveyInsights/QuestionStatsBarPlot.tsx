@@ -17,7 +17,7 @@ import {
   ChartWrapper,
   COLORS,
   UseChartProExportPublicApi,
-} from '../ResponseStatsCards';
+} from 'features/surveys/components/SurveyInsights/InsightsCard';
 
 export const QuestionStatsBarPlot = ({
   displayMode,

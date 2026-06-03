@@ -24,7 +24,7 @@ import {
   ChartWrapper,
   COLORS,
   UseChartProExportPublicApi,
-} from '../ResponseStatsCards';
+} from 'features/surveys/components/SurveyInsights/InsightsCard';
 
 interface WordData {
   text: string;

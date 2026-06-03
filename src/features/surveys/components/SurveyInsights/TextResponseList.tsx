@@ -27,7 +27,7 @@ import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import { useNumericRouteParams } from 'core/hooks';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
-import { TEXT_RESPONSE_CARD_HEIGHT } from 'features/surveys/components/ResponseStatsCards';
+import { TEXT_RESPONSE_CARD_HEIGHT } from 'features/surveys/components/SurveyInsights/InsightsCard';
 
 const TextResponseCard = ({
   questionId,

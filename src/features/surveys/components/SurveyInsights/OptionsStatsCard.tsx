@@ -5,9 +5,9 @@ import { DisplayMode, OptionsQuestionStats } from 'features/surveys/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 import {
-  ResponseStatsCard,
+  InsightsCard,
   UseChartProExportPublicApi,
-} from 'features/surveys/components/ResponseStatsCards';
+} from 'features/surveys/components/SurveyInsights/InsightsCard';
 import { QuestionStatsBarPlot } from 'features/surveys/components/SurveyInsights/QuestionStatsBarPlot';
 import { QuestionStatsPie } from 'features/surveys/components/SurveyInsights/QuestionStatsPie';
 
@@ -53,7 +53,7 @@ export const OptionsStatsCard = ({
   );
 
   return (
-    <ResponseStatsCard
+    <InsightsCard
       controls={displayToggle}
       exportApi={exportApi}
       exportDisabled={false}
@@ -86,6 +86,6 @@ export const OptionsStatsCard = ({
           questionStats={questionStats}
         />
       )}
-    </ResponseStatsCard>
+    </InsightsCard>
   );
 };
