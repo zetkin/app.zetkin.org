@@ -1,8 +1,7 @@
-import { Card, ListItem, ListItemText } from '@mui/material';
-import { useMemo } from 'react';
+import { Box, Button, Card, List, ListItem, ListItemText } from '@mui/material';
+import { useMemo, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
-import ZUIList from 'zui/ZUIList';
 import ZUISection from 'zui/ZUISection';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
@@ -11,6 +10,9 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { usePanes } from 'utils/panes';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import Msg from 'core/i18n/Msg';
+
+const initialItemCount = 4;
 
 const SurveySubmissionList: React.FunctionComponent<{
   orgId: number;
@@ -24,9 +26,19 @@ const SurveySubmissionList: React.FunctionComponent<{
     );
   }, [submissions]);
 
+  const [showMore, setShowMore] = useState(false);
+
+  const shownSubmissions = useMemo(
+    () =>
+      showMore
+        ? sortedSubmissions
+        : sortedSubmissions.slice(0, initialItemCount),
+    [sortedSubmissions, showMore]
+  );
+
   return (
-    <ZUIList initialLength={4} showMoreStep={sortedSubmissions.length - 4}>
-      {sortedSubmissions.map((submission, idx) => (
+    <List disablePadding>
+      {shownSubmissions.map((submission, idx) => (
         <ListItem
           key={idx}
           divider
@@ -53,7 +65,18 @@ const SurveySubmissionList: React.FunctionComponent<{
           />
         </ListItem>
       ))}
-    </ZUIList>
+
+      {sortedSubmissions.length > initialItemCount && !showMore && (
+        <Button fullWidth onClick={() => setShowMore(true)}>
+          <Box textAlign="center">
+            <Msg
+              id={messageIds.surveySubmissions.showMore}
+              values={{ numExtra: sortedSubmissions.length - initialItemCount }}
+            />
+          </Box>
+        </Button>
+      )}
+    </List>
   );
 };
 

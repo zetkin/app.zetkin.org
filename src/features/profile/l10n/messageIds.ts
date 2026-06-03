@@ -61,6 +61,7 @@ export default makeMessages('feat.profile', {
   },
   saveButton: m('Save'),
   surveySubmissions: {
+    showMore: m<{ numExtra: number }>('+ {numExtra} more'),
     title: m('Survey Submissions'),
   },
   tabs: {
