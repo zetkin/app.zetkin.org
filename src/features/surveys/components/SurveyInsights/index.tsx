@@ -37,7 +37,7 @@ type ResponseStatsChartCardProps = {
   surveyId: number;
 };
 
-const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
+const SurveyInsights: FC<ResponseStatsChartCardProps> = ({
   orgId,
   surveyId,
 }) => {
@@ -84,4 +84,4 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
   );
 };
 
-export default ResponseStatsCards;
+export default SurveyInsights;
