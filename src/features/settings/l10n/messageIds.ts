@@ -30,7 +30,9 @@ export default makeMessages('feat.settings', {
       ),
       optionsInput: m('Options (comma separated)'),
       slugInput: m('Slug'),
-      slugInputHelper: m('Slugs must be unique and only consist of a-z and _'),
+      slugInputHelper: m(
+        'Slugs must be unique and only consist of a-z, 0-9 and _'
+      ),
       title: m('Create new field'),
       titleInput: m('Title'),
       typeInput: m('Type'),
