@@ -285,7 +285,7 @@ const FieldsList: FC<Props> = ({ orgId }) => {
         const showEditButton = field.organization.id === orgId;
         return (
           <Fragment key={field.slug}>
-            <Collapse in={fieldBeingEdited === field.id}>
+            <Collapse in={fieldBeingEdited === field.id} unmountOnExit>
               <Suspense fallback={<Skeleton />}>
                 <EditFieldForm
                   fieldId={field.id}

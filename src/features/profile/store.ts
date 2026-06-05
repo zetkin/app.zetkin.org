@@ -12,6 +12,7 @@ import {
 } from 'utils/storeUtils';
 import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 import { ZetkinPersonNote } from './types';
+import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export type PersonOrgData = {
   id: string;
@@ -27,6 +28,7 @@ type SerializedError = {
 };
 
 export interface ProfilesStoreSlice {
+  fieldCreateError: SerializedError | null;
   fieldUpdateError: SerializedError | null;
   fieldsList: RemoteList<ZetkinCustomField>;
   orgsByPersonId: Record<number, RemoteItem<PersonOrgData>>;
@@ -35,6 +37,7 @@ export interface ProfilesStoreSlice {
 }
 
 const initialState: ProfilesStoreSlice = {
+  fieldCreateError: null,
   fieldUpdateError: null,
   fieldsList: remoteList(),
   notesByPersonId: {},
@@ -48,6 +51,14 @@ const profilesSlice = createSlice({
   reducers: {
     fieldCreate: (state) => {
       state.fieldsList.isLoading = true;
+    },
+    fieldCreateErrorAdded: (state, action: PayloadAction<SerializedError>) => {
+      const error = action.payload;
+      state.fieldsList.isLoading = false;
+      state.fieldCreateError = error;
+    },
+    fieldCreateErrorRemoved: (state) => {
+      state.fieldCreateError = null;
     },
     fieldCreated: (state, action: PayloadAction<ZetkinCustomField>) => {
       const field = action.payload;
@@ -86,9 +97,14 @@ const profilesSlice = createSlice({
       const [fieldId, mutating] = action.payload;
       remoteItemUpdate(state.fieldsList, fieldId, mutating);
     },
-    fieldUpdateErrorAdded: (state, action: PayloadAction<SerializedError>) => {
-      const error = action.payload;
+    fieldUpdateErrorAdded: (
+      state,
+      action: PayloadAction<[number, SerializedError]>
+    ) => {
+      const [fieldId, error] = action.payload;
       state.fieldUpdateError = error;
+      const item = findOrAddItem(state.fieldsList, fieldId);
+      item.mutating = [];
     },
     fieldUpdateErrorRemoved: (state) => {
       state.fieldUpdateError = null;
@@ -242,6 +258,8 @@ const profilesSlice = createSlice({
 
 export default profilesSlice;
 export const {
+  fieldCreateErrorAdded,
+  fieldCreateErrorRemoved,
   fieldCreate,
   fieldCreated,
   fieldLoad,

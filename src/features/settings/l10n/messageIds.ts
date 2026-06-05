@@ -95,8 +95,14 @@ export default makeMessages('feat.settings', {
         'Admins in this organization will always be able to both see and edit this data on people.'
       ),
       createButton: m('Create'),
+      errorMessage: m(
+        'There was an unexpected error when creating the field, please try again. If it keeps failing, contact support.'
+      ),
       optionsInput: m('Options (comma separated)'),
       slugInput: m('Slug'),
+      slugInputHelper: m(
+        'Slugs must be unique and only consist of a-z, 0-9 and _'
+      ),
       title: m('Create new field'),
       titleInput: m('Title'),
       typeInput: m('Type'),
@@ -112,9 +118,7 @@ export default makeMessages('feat.settings', {
     edit: {
       cancelButton: m('Cancel'),
       deleteButton: m('Delete field'),
-      errorMessage: m(
-        'There was an unexpected error when updating this field. If it keeps failing, contact support.'
-      ),
+      errorMessage: m('Field could not be updated.'),
       optionsInput: m('Options (comma separated)'),
       saveButton: m('Save'),
       slugInput: m('Slug'),

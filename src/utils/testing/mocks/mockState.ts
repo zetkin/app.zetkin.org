@@ -144,6 +144,7 @@ export default function mockState(overrides?: RootState) {
       userMembershipList: remoteList(),
     },
     profiles: {
+      fieldCreateError: null,
       fieldUpdateError: null,
       fieldsList: remoteList(),
       notesByPersonId: {},
