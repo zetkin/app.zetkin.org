@@ -151,6 +151,7 @@ export default function mockState(overrides?: RootState) {
       statsByFilterSpec: {},
     },
     surveys: {
+      autoLinkableSubmissionsBySurveyId: {},
       elementsBySurveyId: {},
       extendedSurveyBySurveyId: {},
       responseStatsBySurveyId: {},
