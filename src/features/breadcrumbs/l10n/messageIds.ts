@@ -16,6 +16,7 @@ export default makeMessages('feat.breadcrumbs', {
     duplicates: m('Duplicates'),
     emails: m('Emails'),
     events: m('Events'),
+    fields: m('Fields'),
     folders: m('Lists'),
     geography: m('Geography'),
     incoming: m('Incoming'),

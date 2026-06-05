@@ -294,7 +294,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         } else if (field.type === CUSTOM_FIELD_TYPE.LNGLAT) {
           const hasChanges = field.slug in fieldsToUpdate;
 
-          let value = null;
+          let value: ZetkinLngLatFieldValue | null = null;
           if (hasChanges) {
             if (field.slug) {
               value = fieldsToUpdate[
@@ -302,7 +302,14 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               ] as unknown as ZetkinLngLatFieldValue;
             }
           } else if (fieldValue) {
-            value = fieldValue as unknown as ZetkinLngLatFieldValue;
+            const fieldValueIsValidLngLat =
+              typeof fieldValue === 'object' &&
+              'lat' in fieldValue &&
+              'lng' in fieldValue;
+
+            if (fieldValueIsValidLngLat) {
+              value = fieldValue as unknown as ZetkinLngLatFieldValue;
+            }
           }
 
           return (
