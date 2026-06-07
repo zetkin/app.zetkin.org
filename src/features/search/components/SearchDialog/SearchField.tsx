@@ -57,7 +57,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
 
   useEffect(() => {
     // Focus when opening the component
-    if (input && input.current) {
+    if (input?.current) {
       input.current.focus();
     }
   }, [input]);

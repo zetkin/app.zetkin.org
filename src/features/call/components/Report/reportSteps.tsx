@@ -355,7 +355,7 @@ export const reportSteps: ReportStep[] = [
     },
     name: 'wrongNumber',
     renderQuestion: (report, onReportUpdate, target) => {
-      if (target && target.alt_phone && target.phone) {
+      if (target?.alt_phone && target.phone) {
         return (
           <WrongNumber
             key="wrongNumber"

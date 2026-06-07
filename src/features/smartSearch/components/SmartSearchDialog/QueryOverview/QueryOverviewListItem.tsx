@@ -69,17 +69,14 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
           {canEdit && (
             <IconButton
               data-testid="QueryOverview-editFilterButton"
-              onClick={() => onClickEdit && onClickEdit()}
+              onClick={() => onClickEdit?.()}
               size="small"
             >
               <Edit fontSize="small" />
             </IconButton>
           )}
           {canDelete && (
-            <IconButton
-              onClick={() => onClickDelete && onClickDelete()}
-              size="small"
-            >
+            <IconButton onClick={() => onClickDelete?.()} size="small">
               <Delete fontSize="small" />
             </IconButton>
           )}

@@ -186,20 +186,19 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
             </Collapse>
           </Slate>
         )}
-        {fileUploads &&
-          fileUploads.map((fileUpload) => {
-            return (
-              <ZetkinFileUploadChip
-                key={fileUpload.key}
-                fileUpload={fileUpload}
-                onDelete={() => {
-                  if (onCancelFile) {
-                    onCancelFile(fileUpload);
-                  }
-                }}
-              />
-            );
-          })}
+        {fileUploads?.map((fileUpload) => {
+          return (
+            <ZetkinFileUploadChip
+              key={fileUpload.key}
+              fileUpload={fileUpload}
+              onDelete={() => {
+                if (onCancelFile) {
+                  onCancelFile(fileUpload);
+                }
+              }}
+            />
+          );
+        })}
       </Box>
     </ClickAwayListener>
   );

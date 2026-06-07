@@ -24,8 +24,7 @@ const CollectDemographicsDetails: React.FunctionComponent<
     <TaskProperty
       title={messages.configs.collectDemographics.fields.demographic()}
       value={
-        taskConfig.fields &&
-        taskConfig.fields.length &&
+        taskConfig.fields?.length &&
         messages.configs.collectDemographics.fields.dempographicOptions[
           fieldMessages[taskConfig.fields[0]]
         ]()

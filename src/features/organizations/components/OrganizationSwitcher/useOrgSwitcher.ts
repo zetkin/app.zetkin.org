@@ -9,7 +9,7 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
   let children = [] as TreeItemData[];
   const flatOrgData = orgData.map((org) => {
-    if (org.children && org.children.length) {
+    if (org.children?.length) {
       children = [...children, ...org.children];
     }
     return org;

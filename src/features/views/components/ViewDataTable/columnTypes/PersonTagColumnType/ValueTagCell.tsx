@@ -11,7 +11,7 @@ interface CellContentProps {
 }
 
 const ValueTagCell: FC<CellContentProps> = ({ tag }) => {
-  const isEmpty = !tag.value || !tag.value.toString().trim().length;
+  const isEmpty = !tag.value?.toString().trim().length;
 
   return (
     <Box

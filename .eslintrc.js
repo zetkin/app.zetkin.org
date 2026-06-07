@@ -29,6 +29,10 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx', 'src/**/*.js'],
       parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: ['./tsconfig.json'],
+        tsconfigRootDir: __dirname,
+      },
       env: {
         browser: true,
         node: true,
@@ -55,6 +59,7 @@ module.exports = {
             interfaces: ['signature', 'method', 'constructor', 'field'],
           },
         ],
+        '@typescript-eslint/prefer-optional-chain': 'error',
         curly: 'error',
         'import/order': [
           'error',

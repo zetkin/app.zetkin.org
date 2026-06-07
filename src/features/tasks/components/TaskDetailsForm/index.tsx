@@ -245,12 +245,11 @@ const TaskDetailsForm = ({
         select
         value={campaignId ?? ''}
       >
-        {campaigns &&
-          campaigns.map((c) => (
-            <MenuItem key={c.id} value={c.id}>
-              {c.title}
-            </MenuItem>
-          ))}
+        {campaigns?.map((c) => (
+          <MenuItem key={c.id} value={c.id}>
+            {c.title}
+          </MenuItem>
+        ))}
       </TextField>
 
       <TextField
