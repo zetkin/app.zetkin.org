@@ -11,8 +11,6 @@ export default async function UnsubscribeLayout({ children }: Props) {
   const messages = await getFilteredMessages('feat.emails');
 
   return (
-    <ScopedIntlProvider messages={messages}>
-      {children}
-    </ScopedIntlProvider>
+    <ScopedIntlProvider messages={messages}>{children}</ScopedIntlProvider>
   );
 }
