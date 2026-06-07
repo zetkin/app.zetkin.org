@@ -95,6 +95,19 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   );
   const events = eventsByOrg.flat();
 
+  const campaignsByKey = new Map<string, Promise<ZetkinCampaign | null>>();
+  const getCampaign = (orgId: number, campaignId: number) => {
+    const key = `${orgId}-${campaignId}`;
+    let promise = campaignsByKey.get(key);
+    if (!promise) {
+      promise = apiClient
+        .get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campaignId}`)
+        .catch(() => null);
+      campaignsByKey.set(key, promise);
+    }
+    return promise;
+  };
+
   const filteredEvents = await Promise.all(
     events.map(async (event) => {
       let isPublished = false;
@@ -102,11 +115,10 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         isPublished = new Date(event.published) < new Date();
       }
       if (event.campaign && isPublished) {
-        const campaign = await apiClient
-          .get<ZetkinCampaign>(
-            `/api/orgs/${event.organization.id}/campaigns/${event.campaign.id}`
-          )
-          .catch(() => null);
+        const campaign = await getCampaign(
+          event.organization.id,
+          event.campaign.id
+        );
         isPublished =
           !!campaign &&
           !campaign.archived &&
