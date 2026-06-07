@@ -11,8 +11,6 @@ export default async function EmbedJoinFormLayout({ children }: Props) {
   const messages = await getFilteredMessages('feat.joinForms');
 
   return (
-    <ScopedIntlProvider messages={messages}>
-      {children}
-    </ScopedIntlProvider>
+    <ScopedIntlProvider messages={messages}>{children}</ScopedIntlProvider>
   );
 }

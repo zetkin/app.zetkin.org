@@ -264,6 +264,8 @@ export const scaffold =
       'core',
       'glob',
       'zui',
+      // Used by the search dialog, which can open on any organize page
+      'feat.search',
     ]);
 
     result.props = {

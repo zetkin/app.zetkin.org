@@ -119,67 +119,86 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
 
   const filters = [
     {
-      active: dateFilterState == 'today',
+      active: dateFilterState === 'today',
       key: 'today',
       label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'today',
+            dateFilterState: dateFilterState === 'today' ? null : 'today',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'tomorrow',
+      active: dateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'tomorrow',
+            dateFilterState: dateFilterState === 'tomorrow' ? null : 'tomorrow',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'thisWeek',
+      active: dateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'thisWeek',
+            dateFilterState: dateFilterState === 'thisWeek' ? null : 'thisWeek',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'custom',
+      active: dateFilterState === 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerContent('calendar');
+        if (dateFilterState === 'custom') {
+          dispatch(
+            filtersUpdated({
+              customDatesToFilterBy: [null, null],
+              dateFilterState: null,
+            })
+          );
+        } else {
+          setDrawerContent('calendar');
+        }
       },
     },
     ...(moreThanOneOrgHasEvents
       ? [
           {
-            active: !!orgIdsToFilterBy.length,
+            active: orgIdsToFilterBy?.length > 0,
             key: 'orgs',
             label: messages.allEventsList.filterButtonLabels.organizations({
               numOrgs: orgIdsToFilterBy.length,
             }),
-            onClick: () => setDrawerContent('orgs'),
+            onClick: () => {
+              if (orgIdsToFilterBy?.length > 0) {
+                dispatch(
+                  filtersUpdated({
+                    orgIdsToFilterBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('orgs');
+              }
+            },
           },
         ]
       : []),
@@ -189,7 +208,17 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: eventTypeFilter.filterButtonLabel,
-            onClick: () => setDrawerContent('eventTypes'),
+            onClick: () => {
+              if (eventTypeFilter.isFiltered) {
+                dispatch(
+                  filtersUpdated({
+                    eventTypesToFilterBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('eventTypes');
+              }
+            },
           },
         ]
       : []),

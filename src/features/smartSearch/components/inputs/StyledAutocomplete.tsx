@@ -29,7 +29,7 @@ import {
   AutocompleteChangeDetails,
   AutocompleteChangeReason,
   AutocompleteValue,
-} from '@mui/material/useAutocomplete/useAutocomplete';
+} from '@mui/material/useAutocomplete';
 import { SystemStyleObject } from '@mui/system';
 
 const LISTBOX_PADDING = 8; // px

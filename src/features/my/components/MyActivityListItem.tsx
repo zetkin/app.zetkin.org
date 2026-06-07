@@ -12,6 +12,7 @@ type Props = {
   image?: string;
   info: {
     Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
+    key: string;
     labels: ZUILabelText[];
   }[];
   title: string;
