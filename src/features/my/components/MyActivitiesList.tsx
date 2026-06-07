@@ -15,14 +15,21 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import AreaAssignmentListItem from 'features/public/components/AreaAssignmentListItem';
+import CenteredLoadingIndicator from 'features/my/components/CenteredLoadingIndicator';
 
 const MyActivitiesList: FC = () => {
-  const activities = useMyActivities();
+  const activitiesFuture = useMyActivities();
   const messages = useMessages(messageIds);
   type KindOfActivity = MyActivity['kind'];
 
   const [filteredKinds, setFilteredKinds] = useState<KindOfActivity[]>([]);
   const nextDelay = useIncrementalDelay();
+
+  if (activitiesFuture.isLoading) {
+    return <CenteredLoadingIndicator />;
+  }
+
+  const activities = activitiesFuture.data || [];
 
   const kinds = Array.from(
     new Set(activities.map((activity) => activity.kind))
