@@ -1,4 +1,4 @@
-import { useIntl } from 'react-intl';
+import { useTranslations, TranslationValues } from 'next-intl';
 
 import UnderlinedText from './UnderlinedText';
 import {
@@ -31,16 +31,9 @@ function UnderlinedMsg<Values extends ValueRecord>({
   id,
   values,
 }: UnderlinedMsgProps<Values>): JSX.Element {
-  const intl = useIntl();
+  const t = useTranslations();
 
-  const descriptor = {
-    defaultMessage: id._defaultMessage,
-    id: id._id,
-  };
-
-  const str = values
-    ? intl.formatMessage(descriptor, values)
-    : intl.formatMessage(descriptor);
+  const str = values ? t(id._id, values as TranslationValues) : t(id._id);
 
   return <UnderlinedText text={str} />;
 }

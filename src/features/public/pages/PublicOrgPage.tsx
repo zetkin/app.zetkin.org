@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
-import { useIntl } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 
@@ -48,7 +48,7 @@ type Props = {
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const router = useRouter();
   const isMobile = useIsMobile();
-  const intl = useIntl();
+  const format = useFormatter();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
   const organization = useOrganization(orgId).data;
@@ -86,12 +86,12 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
-      return intl.formatDate(start.toDate(), {
+      return format.dateTime(start.toDate(), {
         day: 'numeric',
         month: 'short',
       });
     } else {
-      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+      return format.dateTimeRange(start.toDate(), end.toDate(), {
         day: 'numeric',
         month: 'short',
       });

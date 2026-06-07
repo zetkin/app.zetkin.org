@@ -14,11 +14,16 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 
-export const getServerSideProps: GetServerSideProps = scaffold(async () => {
-  return {
-    props: {},
-  };
-});
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async () => {
+    return {
+      props: {},
+    };
+  },
+  {
+    localeScope: ['feat.duplicates', 'feat.breadcrumbs', 'feat.views'],
+  }
+);
 
 const DuplicatesPage: PageWithLayout = () => {
   const onServer = useServerSide();

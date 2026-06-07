@@ -8,7 +8,7 @@ import {
   Switch,
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { useIntl } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import {
   CalendarMonthOutlined,
   Chair,
@@ -182,7 +182,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   target,
 }) => {
   const messages = useMessages(messageIds);
-  const intl = useIntl();
+  const format = useFormatter();
   const dispatch = useAppDispatch();
   const { events, filteredActivities, filteredEvents, getDateRange, surveys } =
     useFilteredActivities(assignment.organization.id);
@@ -209,12 +209,12 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
-      return intl.formatDate(start.toDate(), {
+      return format.dateTime(start.toDate(), {
         day: 'numeric',
         month: 'short',
       });
     } else {
-      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+      return format.dateTimeRange(start.toDate(), end.toDate(), {
         day: 'numeric',
         month: 'short',
       });

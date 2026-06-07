@@ -1,4 +1,4 @@
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
@@ -15,6 +15,7 @@ export interface DayHeaderProps {
 }
 
 const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
+  const format = useFormatter();
   const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
 
   return (
@@ -31,7 +32,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       {/* Day string */}
       <Box alignItems="center" display="flex" justifyContent="flex-start">
         <Typography color={oldTheme.palette.grey[500]} variant="subtitle2">
-          <FormattedDate value={date} weekday="short" />
+          {format.dateTime(date, { weekday: 'short' })}
         </Typography>
       </Box>
       {/* Day number */}
@@ -50,7 +51,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
           }}
         >
           <Typography color={focused ? 'white' : 'inherit'} fontSize="1.2em">
-            <FormattedDate day="numeric" value={date} />
+            {format.dateTime(date, { day: 'numeric' })}
           </Typography>
         </Box>
       </Box>

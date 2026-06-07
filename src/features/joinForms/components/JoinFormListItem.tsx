@@ -104,7 +104,11 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
                   orgId: form.organization.id,
                 });
 
-                const url = `${location.protocol}//${location.host}/o/${form.organization.id}/embedjoinform/${data.data}`;
+                const formData = encodeURIComponent(data.data).replace(
+                  /\*/g,
+                  '%2A'
+                );
+                const url = `${location.protocol}//${location.host}/o/${form.organization.id}/embedjoinform/${formData}`;
                 navigator.clipboard.writeText(url);
 
                 showSnackbar(

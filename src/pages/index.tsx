@@ -16,7 +16,7 @@ import { ZetkinUser } from '../utils/types/zetkin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 const scaffoldOptions = {
-  localeScope: ['pages.my'],
+  localeScope: [],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -54,6 +54,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(
             } catch (error) {
               session.memberships = null;
             }
+          }
+
+          // Set NEXT_LOCALE cookie from user's language preference
+          if (context.user?.lang) {
+            res.setHeader(
+              'Set-Cookie',
+              `NEXT_LOCALE=${context.user.lang};Path=/;Max-Age=31536000`
+            );
           }
 
           if (session.redirAfterLogin) {

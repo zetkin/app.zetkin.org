@@ -1,4 +1,4 @@
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Forward, Delete } from '@mui/icons-material';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { useRouter } from 'next/router';
@@ -30,6 +30,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
   JourneyInstanceLayoutProps
 > = ({ children }) => {
   const messages = useMessages(messageIds);
+  const format = useFormatter();
   const { orgId, journeyId, instanceId } = useNumericRouteParams();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const router = useRouter();
@@ -174,12 +175,14 @@ const JourneyInstanceLayout: React.FunctionComponent<
                 {journeyInstance.next_milestone.deadline && (
                   <>
                     {': '}
-                    <FormattedDate
-                      day="numeric"
-                      month="long"
-                      value={journeyInstance.next_milestone.deadline}
-                      year="numeric"
-                    />
+                    {format.dateTime(
+                      new Date(journeyInstance.next_milestone.deadline),
+                      {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      }
+                    )}
                   </>
                 )}
               </Typography>

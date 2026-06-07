@@ -1,7 +1,7 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
-import { FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import MapIcon from '@mui/icons-material/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { TimeField } from '@mui/x-date-pickers-pro';
@@ -50,6 +50,7 @@ type EventOverviewCardProps = {
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
+  const format = useFormatter();
   const { updateEvent } = useEventMutations(orgId, data.id);
   const locations = useEventLocations(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
@@ -237,7 +238,15 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     );
                   }}
                   renderPreview={() => {
-                    return <FormattedTime hour12={false} value={naiveStart} />;
+                    return (
+                      <>
+                        {format.dateTime(new Date(naiveStart), {
+                          hour: 'numeric',
+                          hour12: false,
+                          minute: 'numeric',
+                        })}
+                      </>
+                    );
                   }}
                   value={naiveStart}
                 />
@@ -351,7 +360,15 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     );
                   }}
                   renderPreview={() => {
-                    return <FormattedTime hour12={false} value={naiveEnd} />;
+                    return (
+                      <>
+                        {format.dateTime(new Date(naiveEnd), {
+                          hour: 'numeric',
+                          hour12: false,
+                          minute: 'numeric',
+                        })}
+                      </>
+                    );
                   }}
                   value={naiveEnd}
                 />

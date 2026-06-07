@@ -14,6 +14,7 @@ import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  localeScope: ['feat.emails', 'feat.settings', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {

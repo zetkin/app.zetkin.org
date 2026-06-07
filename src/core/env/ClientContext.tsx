@@ -4,7 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
-import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, Suspense, useRef } from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
@@ -20,7 +19,6 @@ import 'dayjs/locale/nl';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
-import { MessageList } from 'utils/locale';
 import createStore, { Store } from 'core/store';
 import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
@@ -34,7 +32,6 @@ type ClientContextProps = {
   envVars: EnvVars;
   headers: Record<string, string>;
   lang: string;
-  messages: MessageList;
   user: ZetkinUser | null;
 };
 
@@ -43,7 +40,6 @@ const ClientContext: FC<ClientContextProps> = ({
   envVars,
   headers,
   lang,
-  messages,
   user,
 }) => {
   const onServer = typeof window == 'undefined';
@@ -81,26 +77,14 @@ const ClientContext: FC<ClientContextProps> = ({
                   adapterLocale={lang}
                   dateAdapter={AdapterDayjs}
                 >
-                  <IntlProvider
-                    defaultLocale="en"
-                    locale={lang}
-                    messages={messages}
-                  >
-                    <AppRouterCacheProvider>
-                      <ZUISnackbarProvider>
-                        <IntlProvider
-                          defaultLocale="en"
-                          locale={lang}
-                          messages={messages}
-                        >
-                          <ZUIConfirmDialogProvider>
-                            <CssBaseline />
-                            <Suspense>{children}</Suspense>
-                          </ZUIConfirmDialogProvider>
-                        </IntlProvider>
-                      </ZUISnackbarProvider>
-                    </AppRouterCacheProvider>
-                  </IntlProvider>
+                  <AppRouterCacheProvider>
+                    <ZUISnackbarProvider>
+                      <ZUIConfirmDialogProvider>
+                        <CssBaseline />
+                        <Suspense>{children}</Suspense>
+                      </ZUIConfirmDialogProvider>
+                    </ZUISnackbarProvider>
+                  </AppRouterCacheProvider>
                 </LocalizationProvider>
               </UserProvider>
             </EnvProvider>

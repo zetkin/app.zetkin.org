@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
@@ -31,11 +31,17 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: ['layout.organize.email', 'pages.organizeEmail'],
+    localeScope: [
+      'feat.emails',
+      'feat.organizations',
+      'feat.campaigns',
+      'feat.breadcrumbs',
+    ],
   }
 );
 
 const EmailPage: PageWithLayout = () => {
+  const format = useFormatter();
   const [secondaryEmailId, setSecondaryEmailId] = useState(0);
   const messages = useMessages(messageIds);
   const { orgId, emailId } = useNumericRouteParams();
@@ -101,9 +107,8 @@ const EmailPage: PageWithLayout = () => {
                     </Box>
                     <Box display="flex" gap={1}>
                       <Typography variant="body2">
-                        {option.published && (
-                          <FormattedDate value={option.published} />
-                        )}
+                        {option.published &&
+                          format.dateTime(new Date(option.published))}
                       </Typography>
                       <Typography variant="body2">
                         {option.campaign?.title}

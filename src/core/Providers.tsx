@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { IntlProvider } from 'react-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, Suspense, useRef } from 'react';
@@ -81,10 +81,21 @@ const Providers: FC<ProvidersProps> = ({
                   adapterLocale={lang}
                   dateAdapter={AdapterDayjs}
                 >
-                  <IntlProvider
-                    defaultLocale="en"
+                  <NextIntlClientProvider
                     locale={lang}
                     messages={messages}
+                    onError={(error) => {
+                      // Only throw if messages were provided (scoped).
+                      // During static prerendering, messages may be empty.
+                      const hasMessages =
+                        messages && Object.keys(messages).length > 0;
+                      if (hasMessages && error.code === 'MISSING_MESSAGE') {
+                        throw new Error(
+                          `Missing translation: ${error.originalMessage}. ` +
+                            'Add the correct namespace to localeScope.'
+                        );
+                      }
+                    }}
                   >
                     <ZUISnackbarProvider>
                       <ZUIConfirmDialogProvider>
@@ -95,7 +106,7 @@ const Providers: FC<ProvidersProps> = ({
                         </EventPopperProvider>
                       </ZUIConfirmDialogProvider>
                     </ZUISnackbarProvider>
-                  </IntlProvider>
+                  </NextIntlClientProvider>
                 </LocalizationProvider>
               </ThemeProvider>
             </CacheProvider>

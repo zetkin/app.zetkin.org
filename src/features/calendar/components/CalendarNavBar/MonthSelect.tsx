@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { MenuItem, Select } from '@mui/material';
 
 import range from 'utils/range';
@@ -10,6 +10,7 @@ export interface MonthSelectProps {
 }
 
 const MonthSelect = ({ focusDate, onChange }: MonthSelectProps) => {
+  const format = useFormatter();
   return (
     <Select
       disableUnderline
@@ -28,7 +29,7 @@ const MonthSelect = ({ focusDate, onChange }: MonthSelectProps) => {
         const month = dayjs().day(0).month(index).toDate();
         return (
           <MenuItem key={index} value={index}>
-            <FormattedDate month="long" value={month} />
+            {format.dateTime(month, { month: 'long' })}
           </MenuItem>
         );
       })}
