@@ -91,8 +91,11 @@ const Activities: FC<ActivitiesProps> = ({
   const filteredActivities = useMemo(
     () =>
       searchString
-        ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
-        : activities,
+        ? fuse
+            .search(searchString)
+            .map((fuseResult) => fuseResult.item)
+            .sort((a, b) => a.data.id - b.data.id)
+        : [...activities.sort((a, b) => a.data.id - b.data.id)],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [activities, searchString]
   );
