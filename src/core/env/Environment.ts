@@ -23,6 +23,7 @@ export type EnvVars = {
   FEAT_AREAS?: string;
   FEAT_BULK_DELETE?: string;
   FEAT_EMAIL_SETTINGS?: string;
+  FEAT_JOURNEYS_SETTINGS?: string;
   FEAT_OFFICIALS?: string;
   FEAT_TASKS?: string;
   FEAT_UNAUTH_EVENT_SIGNUP?: string;

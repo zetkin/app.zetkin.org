@@ -137,6 +137,29 @@ export default makeMessages('feat.settings', {
       title: m('Fields'),
     },
   },
+  journeys: {
+    card: {
+      duplicate: m('Duplicate'),
+      edit: m('Edit'),
+    },
+    delete: {
+      action: m('Delete'),
+      confirmDialog: {
+        confirmButton: m<{ title: string }>('Yes, delete Journey {title}'),
+        title: m<{ title: string }>('Delete Journey {title}?'),
+        warningText: m<{ title: string }>(
+          'Are you sure you want to delete Journey {title}? It cannot be undone.'
+        ),
+      },
+    },
+    overview: {
+      addJourney: m('Create journey'),
+      description: m(
+        'A journey allows you to streamline actions within your organization'
+      ),
+      title: m('Journeys'),
+    },
+  },
   officials: {
     addPerson: {
       addAdmin: m('Add administrator'),
@@ -187,6 +210,7 @@ export default makeMessages('feat.settings', {
     access: m('Access'),
     email: m('Email'),
     fields: m('Fields'),
+    journeys: m('Journeys'),
     title: m('Settings'),
   },
 });
