@@ -5,6 +5,7 @@ import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 import {
   ZetkinJourney,
   ZetkinJourneyInstance,
+  ZetkinJourneyMilestone,
   ZetkinJourneyMilestoneStatus,
 } from 'utils/types/zetkin';
 
@@ -23,6 +24,7 @@ export interface JourneysStoreSlice {
     number,
     RemoteList<ZetkinJourneyMilestoneStatus>
   >;
+  milestonesByJourneyId: Record<number, RemoteList<ZetkinJourneyMilestone>>;
   timelineUpdatesByInstanceId: Record<number, RemoteList<ZetkinUpdate>>;
 }
 
@@ -32,6 +34,7 @@ const initialJourneysState: JourneysStoreSlice = {
   journeyInstancesBySubjectId: {},
   journeyList: remoteList(),
   milestonesByInstanceId: {},
+  milestonesByJourneyId: {},
   timelineUpdatesByInstanceId: {},
 };
 
@@ -218,6 +221,20 @@ const journeysSlice = createSlice({
       state.journeyList.loaded = timestamp;
       state.journeyList.items.forEach((item) => (item.loaded = timestamp));
     },
+    milestoneCreate: (state, action: PayloadAction<number>) => {
+      const journeyId = action.payload;
+      state.milestonesByJourneyId[journeyId].isLoading = true;
+    },
+    milestoneCreated: (
+      state,
+      action: PayloadAction<[number, ZetkinJourneyMilestone]>
+    ) => {
+      const [journeyId, milestone] = action.payload;
+      state.milestonesByJourneyId[journeyId].isLoading = false;
+      state.milestonesByJourneyId[journeyId].items.push(
+        remoteItem(milestone.id, { data: milestone })
+      );
+    },
     milestonesLoad: (state, action: PayloadAction<number>) => {
       const instanceId = action.payload;
       if (!state.milestonesByInstanceId[instanceId]) {
@@ -285,6 +302,8 @@ export const {
   journeyLoaded,
   journeysLoad,
   journeysLoaded,
+  milestoneCreate,
+  milestoneCreated,
   milestonesLoad,
   milestonesLoaded,
   personJourneyInstancesLoad,

@@ -37,6 +37,7 @@ export default async function RootLayout({
               FEAT_AREAS: process.env.FEAT_AREAS,
               FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
               FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
+              FEAT_JOURNEYS_SETTINGS: process.env.FEAT_JOURNEYS_SETTINGS,
               FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
               FEAT_TASKS: process.env.FEAT_TASKS,
               FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,

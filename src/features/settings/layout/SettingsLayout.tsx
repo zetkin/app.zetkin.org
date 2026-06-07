@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useMessages } from 'core/i18n';
-import { EMAIL_SETTINGS } from 'utils/featureFlags';
+import { EMAIL_SETTINGS, JOURNEYS_SETTINGS } from 'utils/featureFlags';
 import useFeature from 'utils/featureFlags/useFeature';
 import { useNumericRouteParams } from 'core/hooks';
 
@@ -17,7 +17,8 @@ const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
 
-  const hasEmailSettingsFeautre = useFeature(EMAIL_SETTINGS, orgId);
+  const hasEmailSettingsFeature = useFeature(EMAIL_SETTINGS, orgId);
+  const hasJourneySettingsFeature = useFeature(JOURNEYS_SETTINGS, orgId);
 
   return (
     <TabbedLayout
@@ -26,8 +27,11 @@ const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
       tabs={[
         { href: `/`, label: messages.settingsLayout.access() },
         { href: `/fields`, label: messages.settingsLayout.fields() },
-        ...(hasEmailSettingsFeautre
+        ...(hasEmailSettingsFeature
           ? [{ href: '/email', label: messages.settingsLayout.email() }]
+          : []),
+        ...(hasJourneySettingsFeature
+          ? [{ href: '/journeys', label: messages.settingsLayout.journeys() }]
           : []),
       ]}
       title={messages.settingsLayout.title()}

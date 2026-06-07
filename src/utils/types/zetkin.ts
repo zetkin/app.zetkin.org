@@ -604,3 +604,8 @@ export type ZetkinCreatePerson = Partial<
   Record<string, string | null>;
 
 export type ZetkinUpdatePerson = ZetkinCreatePerson;
+
+export type ZetkinCreateJourney = Partial<
+  Omit<ZetkinJourney, 'id' | 'stats' | 'organization'>
+> &
+  Record<string, string | null>;
