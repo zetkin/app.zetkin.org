@@ -1,15 +1,49 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { readFileSync } from 'fs';
 import IntlMessageFormat from 'intl-messageformat';
+import path from 'path';
 
-import { getMessages } from 'utils/locale';
 import { HookedMessageFunc, UseMessagesMap } from './useMessages';
-import { Message, MessageMap, MessageValue } from './messages';
+import { Message, MessageMap } from './messages';
+
+// Cache compiled messages in memory
+const serverMessageCache: Record<string, Record<string, unknown>> = {};
+
+function getNestedValue(
+  obj: Record<string, unknown>,
+  dotPath: string
+): string | undefined {
+  const parts = dotPath.split('.');
+  let current: unknown = obj;
+  for (const part of parts) {
+    if (current == null || typeof current !== 'object') {
+      return undefined;
+    }
+    current = (current as Record<string, unknown>)[part];
+  }
+  return typeof current === 'string' ? current : undefined;
+}
 
 export default async function getServerMessages<MapType extends MessageMap>(
   lang: string,
   messageIds: MapType
 ): Promise<UseMessagesMap<MapType>> {
-  const localMessages = await getMessages(lang);
+  let localMessages: Record<string, unknown> = {};
+  try {
+    if (!serverMessageCache[lang]) {
+      const filePath = path.join(
+        process.cwd(),
+        'src',
+        'locale',
+        'compiled',
+        `${lang}.json`
+      );
+      serverMessageCache[lang] = JSON.parse(readFileSync(filePath, 'utf8'));
+    }
+    localMessages = serverMessageCache[lang];
+  } catch {
+    // Fall back to empty messages (will use defaultMessage)
+  }
 
   function makeFunctions<MapType extends MessageMap>(
     map: MapType
@@ -21,11 +55,16 @@ export default async function getServerMessages<MapType extends MessageMap>(
 
     Object.entries(map).forEach(([key, val]) => {
       if (isMessage(val)) {
-        output[key] = ((values?: Record<string, MessageValue>) => {
-          // TODO: Cache this compilation?
-          const msg = localMessages[val._id] || val._defaultMessage;
-          const fmt = new IntlMessageFormat(msg, [lang, 'en']);
-          return fmt.format(values);
+        output[key] = ((values?: Record<string, unknown>) => {
+          const pattern =
+            getNestedValue(localMessages, val._id) || val._defaultMessage;
+          // Fast path: no placeholders to interpolate — return the raw string.
+          if (!values || !pattern.includes('{')) {
+            return pattern;
+          }
+          return new IntlMessageFormat(pattern, lang).format(
+            values as Record<string, string | number | Date>
+          ) as string;
         }) as HookedMessageFunc<typeof val>;
       } else {
         output[key] = makeFunctions(val) as UseMessagesMap<typeof val>;

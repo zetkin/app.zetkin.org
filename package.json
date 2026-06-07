@@ -5,6 +5,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "analyze": "ANALYZE=true next build",
+    "prebuild": "ts-node src/tools/make-yaml.ts && npx tsx src/tools/generate-locale-json.ts",
     "build": "next build",
     "start": "next start -p 80",
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000 --turbo",
@@ -62,7 +63,7 @@
     "copy-to-clipboard": "^3.3.1",
     "dayjs": "^1.10.6",
     "fuse.js": "^6.5.3",
-    "intl-messageformat": "^10.3.1",
+    "intl-messageformat": "^11.2.6",
     "iron-session": "^8.0.1",
     "is-url": "^1.2.4",
     "isomorphic-dompurify": "^3.3.0",
@@ -78,6 +79,7 @@
     "mui-tel-input": "^9.0.1",
     "negotiator": "^0.6.2",
     "next": "14.2.35",
+    "next-intl": "^4.8.3",
     "node-xlsx": "^0.21.0",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",
@@ -90,7 +92,6 @@
     "react-dom": "18.3.1",
     "react-dropzone": "^14.2.1",
     "react-error-boundary": "^6.0.0",
-    "react-intl": "^7.1.14",
     "react-leaflet": "^4.2.1",
     "react-redux": "^9.2.0",
     "react-window": "^2.2.3",
@@ -113,6 +114,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
+    "@babel/plugin-transform-class-static-block": "^7.28.6",
     "@jest/globals": "^29.0.0",
     "@playwright/test": "~1.56.1",
     "@storybook/addon-docs": "9.1.19",
@@ -181,9 +183,6 @@
   "overrides": {
     "redux": "^5.0.0",
     "jsdom": "25.0.1",
-    "parse5": "7.3.0",
-    "react-intl": {
-      "typescript": "^6.0.0"
-    }
+    "parse5": "7.3.0"
   }
 }

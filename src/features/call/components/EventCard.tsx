@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useIntl } from 'react-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import {
   Event,
   GroupWorkOutlined,
@@ -27,7 +27,8 @@ type EventCardProps = {
 
 const EventCard: FC<EventCardProps> = ({ event, target }) => {
   const messages = useMessages(messageIds);
-  const intl = useIntl();
+  const t = useTranslations();
+  const format = useFormatter();
   const { signUp, undoSignup } = useEventCallActions(
     event.organization.id,
     event.id,
@@ -94,7 +95,8 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
             timeSpanToString(
               new Date(removeOffset(event.start_time)),
               new Date(removeOffset(event.end_time)),
-              intl
+              t,
+              format
             ),
           ],
         },

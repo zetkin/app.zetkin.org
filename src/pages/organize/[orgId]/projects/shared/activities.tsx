@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       },
     };
   },
-  { authLevelRequired: 2 }
+  { authLevelRequired: 2, localeScope: ['feat.campaigns', 'feat.breadcrumbs'] }
 );
 
 interface SharedActivitiesPageProps {

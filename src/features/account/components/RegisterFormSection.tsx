@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Box, Collapse } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { useLocale } from 'next-intl';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import isEmail from 'validator/lib/isEmail';
@@ -30,7 +30,7 @@ type RegisterFormSectionProps = {
 const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   const messages = useMessages(messageIds);
   const { loading, createNewAccount } = useCreateNewAccount();
-  const intl = useIntl();
+  const locale = useLocale();
 
   const [showExtraFields, setShowExtraFields] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -151,7 +151,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   phoneError ? messages.register.error.phoneError() : ''
                 }
                 label={messages.register.labels.mobile()}
-                langOfCountryName={intl.locale}
+                langOfCountryName={locale}
                 onChange={(value) => {
                   setPhoneError(!matchIsValidTel(value));
                   setFormData((prev) => ({ ...prev, phone: value }));

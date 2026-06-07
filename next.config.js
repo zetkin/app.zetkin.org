@@ -1,4 +1,6 @@
-module.exports = {
+const withNextIntl = require('next-intl/plugin')('./src/i18n/request.ts');
+
+module.exports = withNextIntl({
   /**
    * Block cross-origin requests during development.
    *
@@ -98,4 +100,4 @@ module.exports = {
       },
     ];
   },
-};
+});

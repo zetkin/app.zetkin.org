@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { MenuItem, Select } from '@mui/material';
 
 import range from 'utils/range';
@@ -10,6 +10,7 @@ export interface YearSelectProps {
 }
 
 const YearSelect = ({ focusDate, onChange }: YearSelectProps) => {
+  const format = useFormatter();
   const amountOfYears = 18;
   const startYear = focusDate.getFullYear() - 8;
 
@@ -31,7 +32,7 @@ const YearSelect = ({ focusDate, onChange }: YearSelectProps) => {
         const year = dayjs(focusDate).year(startYear + index);
         return (
           <MenuItem key={index} value={year.year()}>
-            <FormattedDate value={year.toDate()} year="numeric" />
+            {format.dateTime(year.toDate(), { year: 'numeric' })}
           </MenuItem>
         );
       })}

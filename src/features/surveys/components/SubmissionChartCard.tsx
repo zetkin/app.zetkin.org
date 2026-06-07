@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { linearGradientDef } from '@nivo/core';
 import { ResponsiveLine } from '@nivo/line';
 import { Box, Paper, Typography, useTheme } from '@mui/material';
@@ -22,6 +22,7 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const format = useFormatter();
   const statsFuture = useSurveyStats(orgId, surveyId);
 
   return (
@@ -122,7 +123,7 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
                       <Paper>
                         <Box p={1}>
                           <Typography variant="h6">
-                            <FormattedDate value={date} />
+                            {format.dateTime(date)}
                           </Typography>
                           <Typography variant="body2">
                             <Msg

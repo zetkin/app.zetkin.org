@@ -21,7 +21,7 @@ import CampaignDetailsForm from 'features/campaigns/components/CampaignDetailsFo
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.organizeCampaigns'],
+  localeScope: ['feat.campaigns', 'feat.events', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

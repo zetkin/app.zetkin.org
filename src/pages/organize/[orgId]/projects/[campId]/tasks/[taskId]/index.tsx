@@ -13,7 +13,12 @@ import { ZetkinTask } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.organizeCampaigns'],
+  localeScope: [
+    'feat.tasks',
+    'feat.files',
+    'feat.campaigns',
+    'feat.breadcrumbs',
+  ],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

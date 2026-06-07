@@ -53,3 +53,7 @@ tsconfig.tsbuildinfo
 public/docs
 public/storybook
 storybook-static/
+
+# generated locale files
+src/locale/compiled
+public/locale

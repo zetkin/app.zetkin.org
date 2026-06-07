@@ -22,11 +22,7 @@ import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: [
-    'layout.organize',
-    'pages.assignees',
-    'pages.organizeCampaigns',
-  ],
+  localeScope: ['feat.tasks', 'feat.campaigns', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

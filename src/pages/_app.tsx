@@ -36,7 +36,14 @@ declare global {
 }
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  const { envVars, lang, messages, ...restProps } = pageProps;
+  const {
+    envVars,
+    lang: rawLang,
+    messages: rawMessages,
+    ...restProps
+  } = pageProps;
+  const lang = rawLang || 'en';
+  const messages = rawMessages || {};
   const c = Component as PageWithLayout;
   const getLayout = c.getLayout || ((page) => page);
 

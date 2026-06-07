@@ -1,0 +1,86 @@
+'use server';
+
+import { headers } from 'next/headers';
+import { Metadata } from 'next';
+import { FC, ReactElement, ReactNode } from 'react';
+import { notFound } from 'next/navigation';
+
+import ScopedIntlProvider from 'core/i18n/ScopedIntlProvider';
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
+import PublicSurveyLayout from 'features/public/layouts/PublicSurveyLayout';
+import { ZetkinSurveyExtended } from 'utils/types/zetkin';
+import { ApiClientError } from 'core/api/errors';
+import { getSeoTags } from 'utils/seoTags';
+import { getFilteredMessages } from 'i18n/pickMessages';
+
+type Props = {
+  children: ReactNode;
+  params: {
+    orgId: string;
+    surveyId: string;
+  };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { orgId, surveyId } = params;
+  const apiClient = new BackendApiClient({});
+
+  let survey: ZetkinSurveyExtended;
+  try {
+    survey = await apiClient.get<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`
+    );
+  } catch (e) {
+    if (e instanceof ApiClientError && e.status === 404) {
+      notFound();
+    } else {
+      throw e;
+    }
+  }
+
+  return getSeoTags(
+    `${survey.title} | ${survey.organization.title}`,
+    survey.info_text,
+    `/o/${survey.organization.id}/surveys/${survey.id}`
+  );
+}
+
+const SurveyLayout: FC<Props> = async ({
+  children,
+  params,
+}): Promise<ReactElement> => {
+  const headersList = headers();
+  const headersEntries = headersList.entries();
+  const headersObject = Object.fromEntries(headersEntries);
+  const apiClient = new BackendApiClient(headersObject);
+  const messages = await getFilteredMessages(
+    'feat.surveys',
+    'feat.organizations'
+  );
+
+  const { orgId, surveyId } = params;
+
+  let survey: ZetkinSurveyExtended;
+  try {
+    survey = await apiClient.get<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`
+    );
+  } catch (e) {
+    if (e instanceof ApiClientError && e.status === 404) {
+      notFound();
+    } else {
+      throw e;
+    }
+  }
+
+  return (
+    <ScopedIntlProvider messages={messages}>
+      <HomeThemeProvider>
+        <PublicSurveyLayout survey={survey}>{children}</PublicSurveyLayout>
+      </HomeThemeProvider>
+    </ScopedIntlProvider>
+  );
+};
+
+export default SurveyLayout;

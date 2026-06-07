@@ -16,12 +16,10 @@ import { ZetkinCampaign } from 'utils/types/zetkin';
 const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: [
-    'layout.organize',
-    'misc.breadcrumbs',
-    'misc.calendar',
-    'misc.formDialog',
-    'misc.tasks',
-    'pages.organizeCampaigns',
+    'feat.campaigns',
+    'feat.calendar',
+    'feat.events',
+    'feat.breadcrumbs',
   ],
 };
 

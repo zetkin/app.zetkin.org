@@ -13,6 +13,8 @@ module.exports = {
     '!.prettierrc.js',
     'src/locale/*',
     'public/*',
+    'playwright-report/*',
+    'test-results/*',
   ],
   extends: [
     'eslint:recommended',

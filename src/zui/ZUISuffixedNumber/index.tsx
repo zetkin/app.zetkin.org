@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedNumber } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Tooltip } from '@mui/material';
 
 import { useMessages } from 'core/i18n';
@@ -11,10 +11,11 @@ type ZUISuffixedNumberProps = {
 
 const ZUISuffixedNumber: FC<ZUISuffixedNumberProps> = ({ number }) => {
   const messages = useMessages(messageIds.suffixedNumber);
+  const format = useFormatter();
 
   if (number > 9999) {
     return (
-      <Tooltip arrow title={<FormattedNumber value={number} />}>
+      <Tooltip arrow title={format.number(number)}>
         <span>{messages.thousands({ num: Math.round(number / 1000) })}</span>
       </Tooltip>
     );

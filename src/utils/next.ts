@@ -1,5 +1,7 @@
+import { readFileSync } from 'fs';
 import { getIronSession } from 'iron-session';
 import { ParsedUrlQuery } from 'querystring';
+import path from 'path';
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -7,7 +9,9 @@ import {
 } from 'next';
 
 import { AppSession } from './types';
-import { getBrowserLanguage, getMessages } from './locale';
+import { getBrowserLanguage } from './locale';
+import { LOCALES, DEFAULT_LOCALE } from 'i18n/config';
+import { filterByScope } from 'i18n/filterMessages';
 import getUserMemberships from './getUserMemberships';
 import requiredEnvVar from './requiredEnvVar';
 import { stringToBool } from './stringUtils';
@@ -22,6 +26,23 @@ import { omitUndefined } from './omitUndefined';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const Z = require('zetkin');
 
+// Cache compiled messages in memory — loaded once per locale per process
+const compiledMessageCache: Record<string, Record<string, unknown>> = {};
+
+function loadCompiledMessages(locale: string): Record<string, unknown> {
+  if (!compiledMessageCache[locale]) {
+    const filePath = path.join(
+      process.cwd(),
+      'src',
+      'locale',
+      'compiled',
+      `${locale}.json`
+    );
+    compiledMessageCache[locale] = JSON.parse(readFileSync(filePath, 'utf8'));
+  }
+  return compiledMessageCache[locale];
+}
+
 type RegularProps = {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   [key: string]: any;
@@ -30,7 +51,7 @@ type RegularProps = {
 export type ScaffoldedProps = RegularProps & {
   envVars: EnvVars;
   lang: string;
-  messages: Record<string, string>;
+  messages: Record<string, unknown>;
   user: ZetkinUser | null;
 };
 
@@ -54,7 +75,7 @@ interface ScaffoldOptions {
   allowNonOfficials?: boolean;
   allowUnverified?: boolean;
   featuresRequired?: string[];
-  localeScope?: string[];
+  localeScope: string[];
 }
 
 const hasProps = (result: any): result is ResultWithProps => {
@@ -213,39 +234,62 @@ export const scaffold =
 
     const result = (await wrapped(ctx)) || {};
 
-    // Figure out browser's preferred language
-    const lang = ctx.user?.lang || getBrowserLanguage(contextFromNext.req);
-
-    // TODO: Respect scope from options again
-    //const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
-    const localeScope: string[] = [];
-    const messages = await getMessages(lang, localeScope);
-
-    if (hasProps(result)) {
-      result.props = {
-        ...result.props,
-        envVars: omitUndefined({
-          FEAT_AREAS: process.env.FEAT_AREAS,
-          FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
-          FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
-          FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
-          FEAT_TASKS: process.env.FEAT_TASKS,
-          FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
-          INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
-          INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
-          MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
-          MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
-          TILESERVER:
-            process.env.TILESERVER || 'https://tile.openstreetmap.org',
-          ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
-          ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
-          ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
-        }),
-        lang,
-        messages,
-        user: ctx.user,
-      };
+    // Skip message loading for redirect/notFound results — they don't render
+    // a page, so localeScope isn't relevant. This also means redirect-only
+    // pages don't need to declare localeScope in their scaffold options.
+    if (!hasProps(result)) {
+      return result as GetServerSidePropsResult<ScaffoldedProps>;
     }
+
+    // Determine locale: NEXT_LOCALE cookie (set by middleware) > user.lang > Accept-Language
+    const cookieLocale = contextFromNext.req.cookies?.NEXT_LOCALE;
+    const detectedLang =
+      cookieLocale || ctx.user?.lang || getBrowserLanguage(contextFromNext.req);
+    const lang = LOCALES.includes(detectedLang as (typeof LOCALES)[number])
+      ? detectedLang
+      : DEFAULT_LOCALE;
+
+    // Load messages from compiled JSON, scoped to only what this page needs.
+    // Each page declares localeScope in its scaffold options (e.g. ['feat.campaigns']).
+    // We always include core, glob, and zui as shared base.
+    const allMessages = loadCompiledMessages(lang);
+    if (!options?.localeScope) {
+      throw new Error(
+        'localeScope is required in scaffold options. ' +
+          "Declare the message namespaces this page needs, e.g. ['feat.campaigns']."
+      );
+    }
+    const messages = filterByScope(allMessages as Record<string, unknown>, [
+      ...options.localeScope,
+      'core',
+      'glob',
+      'zui',
+      // Used by the search dialog, which can open on any organize page
+      'feat.search',
+    ]);
+
+    result.props = {
+      ...result.props,
+      envVars: omitUndefined({
+        FEAT_AREAS: process.env.FEAT_AREAS,
+        FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
+        FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
+        FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
+        FEAT_TASKS: process.env.FEAT_TASKS,
+        FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
+        INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
+        INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+        MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
+        MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+        TILESERVER: process.env.TILESERVER || 'https://tile.openstreetmap.org',
+        ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+        ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
+        ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
+      }),
+      lang,
+      messages,
+      user: ctx.user,
+    };
 
     return result as GetServerSidePropsResult<ScaffoldedProps>;
   };

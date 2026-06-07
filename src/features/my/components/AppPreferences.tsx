@@ -82,6 +82,13 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 label={messages.settings.appPreferences.lang.saveButton()}
                 onClick={async () => {
                   await updateUser({ lang: selectedLanguage });
+                  // Set NEXT_LOCALE cookie so middleware serves correct locale
+                  if (selectedLanguage) {
+                    document.cookie = `NEXT_LOCALE=${selectedLanguage};path=/;max-age=31536000`;
+                  } else {
+                    // "auto" mode: remove cookie so middleware uses Accept-Language
+                    document.cookie = 'NEXT_LOCALE=;path=/;max-age=0';
+                  }
                   location.reload();
                 }}
                 size="large"
