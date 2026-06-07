@@ -178,16 +178,18 @@ const Activities: FC<ActivitiesProps> = ({
           </ZUIText>
         </Box>
       )}
-      <ZUITextField
-        endIcon={Close}
-        fullWidth
-        onChange={(newValue) => {
-          setSearchString(newValue);
-        }}
-        onEndIconClick={() => setSearchString('')}
-        startIcon={Search}
-        value={searchString}
-      />
+      {activities.length !== 0 && (
+        <ZUITextField
+          endIcon={Close}
+          fullWidth
+          onChange={(newValue) => {
+            setSearchString(newValue);
+          }}
+          onEndIconClick={() => setSearchString('')}
+          startIcon={Search}
+          value={searchString}
+        />
+      )}
       {filteredActivities.map((activity) => {
         if (target && activity.kind == ACTIVITIES.EVENT) {
           return (
