@@ -132,6 +132,8 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
     },
     {
       active: dateFilterState === 'custom',
+      ariaLabel:
+        messages.publicProjectPage.eventList.filterButtonLabels.selectDate(),
       key: 'custom',
       label:
         dateFilterState === 'custom' && customDatesToFilterBy[0]
@@ -280,6 +282,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             <ZUIFilterButton
               key={filter.key}
               active={filter.active}
+              ariaLabel={filter.ariaLabel}
               label={filter.label}
               onClick={filter.onClick}
             />

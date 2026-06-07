@@ -279,6 +279,7 @@ const AllEventsList: FC = () => {
     },
     {
       active: dateFilterState === 'custom',
+      ariaLabel: messages.allEventsList.filterButtonLabels.selectDate(),
       key: 'custom',
       label:
         dateFilterState === 'custom' && customDatesToFilterBy[0]
@@ -375,6 +376,7 @@ const AllEventsList: FC = () => {
             <ZUIFilterButton
               key={filter.key}
               active={filter.active}
+              ariaLabel={filter.ariaLabel}
               label={filter.label}
               onClick={filter.onClick}
             />
