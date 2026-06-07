@@ -21,7 +21,7 @@ async function globalSetup() {
   if (process.env.SKIP_BUILD === '1') {
     console.log('skipping build: SKIP_BUILD is set');
   } else {
-    const { stderr } = await execPromisified('next build', {
+    const { stderr } = await execPromisified('npm run build', {
       cwd: path.join(__dirname, '..'),
     });
     if (stderr) {
