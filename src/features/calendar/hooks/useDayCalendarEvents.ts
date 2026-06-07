@@ -70,12 +70,8 @@ export default function useDayCalendarEvents(
   // and the useEffect() above will soon update the lastDate.
   const lastDateToLoad = lastDate > focusDate ? lastDate : focusDate;
 
-  const activities = useEventsFromDateRange(
-    focusDate,
-    lastDateToLoad,
-    orgId,
-    campId
-  );
+  const activities =
+    useEventsFromDateRange(focusDate, lastDateToLoad, orgId, campId).data || [];
   const filtered = useFilteredEventActivities(activities);
   const activitiesByDay = getActivitiesByDay(filtered);
 
