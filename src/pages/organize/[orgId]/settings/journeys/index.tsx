@@ -1,15 +1,17 @@
 import { GetServerSideProps } from 'next';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
+import { useState } from 'react';
 
+import JourneySettingsCard from 'features/settings/components/journeys/JourneySettingsCard';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useServerSide from 'core/useServerSide';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useJourneys from 'features/journeys/hooks/useJourneys';
-import JourneySettingsCard from 'features/journeys/components/JourneySettingsCard';
+import ZUICreateJourney from 'zui/ZUICreateJourney';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -29,6 +31,8 @@ const JourneysSettingsPage: PageWithLayout<Props> = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const journeys = useJourneys(orgId).data || [];
+  const [createJourneyOpen, setCreateJourneyOpen] = useState(false);
+  const messages = useMessages(messageIds);
 
   if (onServer) {
     return null;
@@ -46,6 +50,9 @@ const JourneysSettingsPage: PageWithLayout<Props> = () => {
         <Typography variant="h4">
           <Msg id={messageIds.journeys.overview.title} />
         </Typography>
+        <Button onClick={() => setCreateJourneyOpen(true)} variant="contained">
+          <Msg id={messageIds.journeys.overview.addJourney} />
+        </Button>
       </Box>
       <Typography>
         <Msg id={messageIds.journeys.overview.description} />
@@ -59,6 +66,12 @@ const JourneysSettingsPage: PageWithLayout<Props> = () => {
           </Grid>
         ))}
       </Grid>
+      <ZUICreateJourney
+        onClose={() => setCreateJourneyOpen(false)}
+        open={createJourneyOpen}
+        submitLabel={messages.journeys.create.submitLabel()}
+        title={messages.journeys.create.title()}
+      />
     </Box>
   );
 };

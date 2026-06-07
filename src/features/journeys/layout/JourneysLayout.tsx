@@ -1,4 +1,3 @@
-import JourneyActionButton from '../components/JourneyActionButton';
 import { useMessages } from 'core/i18n';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import messageIds from '../l10n/messageIds';
@@ -16,7 +15,6 @@ const JourneysLayout: React.FunctionComponent<JourneysLayoutProps> = ({
 
   return (
     <TabbedLayout
-      actionButtons={<JourneyActionButton />}
       baseHref={`/organize/${orgId}/journeys`}
       defaultTab="/overview"
       ellipsisMenuItems={[

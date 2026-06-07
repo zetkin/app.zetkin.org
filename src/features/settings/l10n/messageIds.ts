@@ -142,6 +142,11 @@ export default makeMessages('feat.settings', {
       duplicate: m('Duplicate'),
       edit: m('Edit'),
     },
+    create: {
+      cancel: m('Cancel'),
+      submitLabel: m('Create'),
+      title: m('Create Journey'),
+    },
     delete: {
       action: m('Delete'),
       confirmDialog: {
