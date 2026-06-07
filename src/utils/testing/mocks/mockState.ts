@@ -16,6 +16,7 @@ export default function mockState(overrides?: RootState) {
     },
     areas: {
       areaList: remoteList(),
+      assignmentStatsByAreaId: {},
       tagsByAreaId: {},
     },
     breadcrumbs: {
@@ -132,6 +133,8 @@ export default function mockState(overrides?: RootState) {
       userMembershipList: remoteList(),
     },
     profiles: {
+      fieldCreateError: null,
+      fieldUpdateError: null,
       fieldsList: remoteList(),
       notesByPersonId: {},
       orgsByPersonId: {},

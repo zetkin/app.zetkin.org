@@ -36,6 +36,7 @@ const AreaAssignmentListItem: FC<Props> = ({ assignment, href }) => {
       info={[
         {
           Icon: GroupWorkOutlined,
+          key: 'project',
           labels: [
             campaign.campaignFuture.data && {
               href: `/o/${campaign.campaignFuture.data.organization.id}/projects/${campaign.campaignFuture.data.id}`,

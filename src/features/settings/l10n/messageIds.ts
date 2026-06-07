@@ -1,6 +1,72 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
+  fields: {
+    access: {
+      onlyThisOrg: m('Only this organization'),
+      suborgRead: m('Suborganizations can see'),
+      suborgReadAndWrite: m('Suborganizations can edit'),
+    },
+    accessTypes: {
+      onlyThisOrg: m('No'),
+      suborgRead: m('Yes, they can see the data'),
+      suborgReadAndWrite: m('Yes, they can both see and edit the data'),
+    },
+    confirmDeletion: {
+      confirmButton: m<{ fieldTitle: string }>('Yes, delete {fieldTitle}'),
+      title: m<{ fieldTitle: string }>('Delete {fieldTitle}?'),
+      warningText: m<{ fieldTitle: string }>(
+        'Are you sure you want to delete {fieldTitle}? This cannot be undone.'
+      ),
+    },
+    create: {
+      accessInput: m('Share with suborganizations?'),
+      accessInputHelper: m(
+        'Admins in this organization will always be able to both see and edit this data on people.'
+      ),
+      createButton: m('Create'),
+      errorMessage: m(
+        'There was an unexpected error when creating the field, please try again. If it keeps failing, contact support.'
+      ),
+      optionsInput: m('Options (comma separated)'),
+      slugInput: m('Slug'),
+      slugInputHelper: m(
+        'Slugs must be unique and only consist of a-z, 0-9 and _'
+      ),
+      title: m('Create new field'),
+      titleInput: m('Title'),
+      typeInput: m('Type'),
+    },
+    customFieldTypes: {
+      date: m('Date'),
+      enum: m('Options'),
+      json: m('JSON'),
+      lnglat: m('Longitude & latitude'),
+      text: m('Text'),
+      url: m('URL'),
+    },
+    edit: {
+      cancelButton: m('Cancel'),
+      deleteButton: m('Delete field'),
+      errorMessage: m('Field could not be updated.'),
+      optionsInput: m('Options (comma separated)'),
+      saveButton: m('Save'),
+      slugInput: m('Slug'),
+      title: m<{ fieldTitle: string }>('Editing {fieldTitle}'),
+      titleInput: m('Title'),
+      typeInput: m('Type'),
+    },
+    list: {
+      editButton: m('Edit'),
+      headers: {
+        access: m('Access'),
+        slug: m('Slug'),
+        title: m('Title'),
+        type: m('Type'),
+      },
+      title: m('Fields'),
+    },
+  },
   officials: {
     addPerson: {
       addAdmin: m('Add administrator'),
@@ -35,6 +101,7 @@ export default makeMessages('feat.settings', {
     },
     settingsLayout: {
       access: m('Access'),
+      fields: m('Fields'),
       title: m('Settings'),
     },
     tableButtons: {
@@ -49,5 +116,12 @@ export default makeMessages('feat.settings', {
       ),
     },
     you: m('You'),
+  },
+  themes: {
+    overview: {
+      description: m(
+        'A theme sets the overall look and layout of your emails, from colours and fonts to spacing, buttons and content blocks.'
+      ),
+    },
   },
 });
