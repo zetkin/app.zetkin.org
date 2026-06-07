@@ -490,6 +490,18 @@ export const AUTHENTICATED_PAGE_ROUTES: SmokeRoute[] = [
   },
   { path: '/organize/1/settings', template: '/organize/[orgId]/settings' },
   {
+    path: '/organize/1/settings/fields',
+    template: '/organize/[orgId]/settings/fields',
+  },
+  {
+    path: '/organize/1/settings/themes',
+    template: '/organize/[orgId]/settings/themes',
+  },
+  {
+    path: '/organize/1/settings/themes/1',
+    template: '/organize/[orgId]/settings/themes/[themeId]',
+  },
+  {
     path: '/organize/1/suborgOverview',
     template: '/organize/[orgId]/suborgOverview',
   },
@@ -497,6 +509,21 @@ export const AUTHENTICATED_PAGE_ROUTES: SmokeRoute[] = [
   { path: '/verify', template: '/verify' },
   { path: '/verify/test-token', template: '/verify/[token]' },
 ];
+
+export async function mockBetaRouteHandlers(page: Page) {
+  // The /beta route handlers need MongoDB, which isn't available here or in CI
+  await page.route('**/beta/**', async (route) => {
+    if (route.request().method() === 'GET') {
+      await route.fulfill({
+        body: JSON.stringify({ data: [] }),
+        contentType: 'application/json',
+        status: 200,
+      });
+    } else {
+      await route.fallback();
+    }
+  });
+}
 
 export async function addSessionCookie(
   context: BrowserContext,
@@ -690,6 +717,10 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   });
   moxy.setZetkinApiMock('/orgs/1/emails/configs', 'get', [email.config]);
   moxy.setZetkinApiMock('/orgs/1/email_themes', 'get', []);
+  moxy.setZetkinApiMock('/orgs/1/email_themes/1', 'get', {
+    frame_mjml: null,
+    id: 1,
+  });
   moxy.setZetkinApiMock('/orgs/1/join_forms', 'get', [joinForm]);
   moxy.setZetkinApiMock('/orgs/1/join_forms/1', 'get', joinForm);
   moxy.setZetkinApiMock('/orgs/1/join_submissions', 'get', []);

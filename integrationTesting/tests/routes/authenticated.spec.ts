@@ -3,6 +3,7 @@ import {
   addSessionCookie,
   AUTHENTICATED_PAGE_ROUTES,
   expectRouteHealthy,
+  mockBetaRouteHandlers,
   routePath,
   setupFeatureFlags,
   setupSmokeApiMocks,
@@ -26,6 +27,7 @@ test.describe('authenticated route smoke tests', () => {
     login();
     setupSmokeApiMocks(moxy);
     await addSessionCookie(context, appUri);
+    await mockBetaRouteHandlers(page);
 
     for (const route of AUTHENTICATED_PAGE_ROUTES) {
       const path = await routePath(route);
