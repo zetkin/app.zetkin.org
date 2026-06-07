@@ -125,6 +125,7 @@ export default function mockState(overrides?: RootState) {
       journeyInstancesBySubjectId: {},
       journeyList: remoteList(),
       milestonesByInstanceId: {},
+      milestonesByJourneyId: {},
       timelineUpdatesByInstanceId: {},
     },
     organizations: {
