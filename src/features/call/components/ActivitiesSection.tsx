@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -11,13 +11,16 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useIntl } from 'react-intl';
 import {
   CalendarMonthOutlined,
+  Close,
   Chair,
   Clear,
   GroupWork,
   Hotel,
+  Search,
 } from '@mui/icons-material';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { partition } from 'lodash';
+import Fuse from 'fuse.js';
 
 import EventCard from './EventCard';
 import { LaneStep, ZetkinCallTarget } from '../types';
@@ -40,6 +43,7 @@ import Survey from './Survey';
 import ZUISection from 'zui/components/ZUISection';
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import ZUITextField from 'zui/components/ZUITextField';
 
 type Filter = {
   active: boolean;
@@ -71,6 +75,35 @@ const Activities: FC<ActivitiesProps> = ({
   showNoSignups,
   target,
 }) => {
+  const [searchString, setSearchString] = useState<string>('');
+  const fuse = useMemo(() => {
+    return new Fuse(activities, {
+      keys: [
+        'data.campaign.title',
+        'data.organization.title',
+        'data.location.title',
+        'data.title',
+        'data.activity.title',
+      ],
+      threshold: 0.4,
+    });
+  }, [activities]);
+  const filteredActivities = useMemo(
+    () =>
+      searchString
+        ? fuse
+            .search(searchString)
+            .map((fuseResult) => fuseResult.item)
+            .sort((a, b) => a.data.id - b.data.id)
+        : [...activities.sort((a, b) => a.data.id - b.data.id)],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activities, searchString]
+  );
+
+  useEffect(() => {
+    setSearchString('');
+  }, [target]);
+
   if (!target) {
     return null;
   }
@@ -145,7 +178,19 @@ const Activities: FC<ActivitiesProps> = ({
           </ZUIText>
         </Box>
       )}
-      {activities.map((activity) => {
+      {activities.length !== 0 && (
+        <ZUITextField
+          endIcon={Close}
+          fullWidth
+          onChange={(newValue) => {
+            setSearchString(newValue);
+          }}
+          onEndIconClick={() => setSearchString('')}
+          startIcon={Search}
+          value={searchString}
+        />
+      )}
+      {filteredActivities.map((activity) => {
         if (target && activity.kind == ACTIVITIES.EVENT) {
           return (
             <EventCard
