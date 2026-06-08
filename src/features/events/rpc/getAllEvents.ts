@@ -102,7 +102,10 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     if (!promise) {
       promise = apiClient
         .get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campaignId}`)
-        .catch(() => null);
+        .catch(() => null)
+        .finally(() => {
+          campaignsByKey.delete(key);
+        });
       campaignsByKey.set(key, promise);
     }
     return promise;
