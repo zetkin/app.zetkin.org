@@ -686,7 +686,7 @@ export const darkPalette: Omit<
   },
   primary: {
     contrastText: uiSwatches.basic.black,
-    dark: uiSwatches.basic.black,
+    dark: uiSwatches.grey[200],
     focus: alpha(uiSwatches.basic.white, 0.12),
     focusVisible: alpha(uiSwatches.basic.white, 0.3),
     hover: alpha(uiSwatches.basic.white, 0.04),
