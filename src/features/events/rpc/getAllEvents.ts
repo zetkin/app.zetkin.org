@@ -95,18 +95,18 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   );
   const events = eventsByOrg.flat();
 
-  const campaignsByKey = new Map<string, Promise<ZetkinCampaign | null>>();
+  const campaignQueries = new Map<string, Promise<ZetkinCampaign | null>>();
   const getCampaign = (orgId: number, campaignId: number) => {
     const key = `${orgId}-${campaignId}`;
-    let promise = campaignsByKey.get(key);
+    let promise = campaignQueries.get(key);
     if (!promise) {
       promise = apiClient
         .get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campaignId}`)
         .catch(() => null)
         .finally(() => {
-          campaignsByKey.delete(key);
+          campaignQueries.delete(key);
         });
-      campaignsByKey.set(key, promise);
+      campaignQueries.set(key, promise);
     }
     return promise;
   };
