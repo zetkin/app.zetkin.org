@@ -10,9 +10,6 @@ import {
 import IApiClient from 'core/api/client/IApiClient';
 import getEventState from '../utils/getEventState';
 import { EventState } from '../hooks/useEventState';
-import { mapWithConcurrency, withRetry } from 'utils/asyncUtils';
-
-const MAX_CONCURRENT_FETCHES = 5;
 
 const paramsSchema = z.object({});
 
@@ -88,67 +85,55 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   const now = new Date().toISOString();
 
-  const eventsByOrg = await mapWithConcurrency(
-    filteredMemberships,
-    MAX_CONCURRENT_FETCHES,
-    (membership) =>
-      withRetry(() =>
-        apiClient.get<ZetkinEvent[]>(
+  const eventsByOrg = await Promise.all(
+    filteredMemberships.map(
+      async (membership) =>
+        await apiClient.get<ZetkinEvent[]>(
           `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}&recursive`
         )
-      )
+    )
   );
   const events = eventsByOrg.flat();
 
-  const isPublishedByDate = (event: ZetkinEvent) =>
-    !!event.published && new Date(event.published) < new Date();
-
-  const campaignsToFetch = new Map<
-    string,
-    { campaignId: number; orgId: number }
-  >();
-  events.forEach((event) => {
-    if (event.campaign && isPublishedByDate(event)) {
-      const key = `${event.organization.id}-${event.campaign.id}`;
-      campaignsToFetch.set(key, {
-        campaignId: event.campaign.id,
-        orgId: event.organization.id,
-      });
+  const campaignsByKey = new Map<string, Promise<ZetkinCampaign | null>>();
+  const getCampaign = (orgId: number, campaignId: number) => {
+    const key = `${orgId}-${campaignId}`;
+    let promise = campaignsByKey.get(key);
+    if (!promise) {
+      promise = apiClient
+        .get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campaignId}`)
+        .catch(() => null);
+      campaignsByKey.set(key, promise);
     }
-  });
+    return promise;
+  };
 
-  const campaignEntries = Array.from(campaignsToFetch.entries());
-  const fetchedCampaigns = await mapWithConcurrency(
-    campaignEntries,
-    MAX_CONCURRENT_FETCHES,
-    ([, { orgId, campaignId }]) =>
-      withRetry(() =>
-        apiClient.get<ZetkinCampaign>(
-          `/api/orgs/${orgId}/campaigns/${campaignId}`
-        )
-      ).catch(() => null)
+  const filteredEvents = await Promise.all(
+    events.map(async (event) => {
+      let isPublished = false;
+      if (event.published) {
+        isPublished = new Date(event.published) < new Date();
+      }
+      if (event.campaign && isPublished) {
+        const campaign = await getCampaign(
+          event.organization.id,
+          event.campaign.id
+        );
+        isPublished =
+          !!campaign &&
+          !campaign.archived &&
+          campaign.published &&
+          campaign.visibility == 'open';
+      }
+      const state = getEventState(event);
+      return (
+        (state == EventState.OPEN || state == EventState.SCHEDULED) &&
+        isPublished
+      );
+    })
   );
-  const campaignsByKey = new Map<string, ZetkinCampaign | null>(
-    campaignEntries.map(([key], index) => [key, fetchedCampaigns[index]])
-  );
 
-  return events.filter((event) => {
-    let isPublished = isPublishedByDate(event);
-
-    if (event.campaign && isPublished) {
-      const campaign =
-        campaignsByKey.get(`${event.organization.id}-${event.campaign.id}`) ??
-        null;
-      isPublished =
-        !!campaign &&
-        !campaign.archived &&
-        campaign.published &&
-        campaign.visibility == 'open';
-    }
-
-    const state = getEventState(event);
-    return (
-      (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
-    );
+  return events.filter((event, i) => {
+    return filteredEvents[i];
   });
 }
