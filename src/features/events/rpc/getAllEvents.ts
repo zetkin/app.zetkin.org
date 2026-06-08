@@ -123,7 +123,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       const campaign = campaigns.find(
         (campaign) =>
           campaign?.organization.id === event.organization.id &&
-          campaign?.id === event.organization.id
+          campaign?.id === event.campaign?.id
       );
 
       isPublished =
