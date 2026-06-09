@@ -3,8 +3,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useState } from 'react';
 import { Box, Button, Popover } from '@mui/material';
 
-import messageIds from '../l10n/messageIds';
-import useOfficialMutations from '../hooks/useOfficialMutations';
+import messageIds from '../../l10n/messageIds';
+import useOfficialMutations from '../../hooks/useOfficialMutations';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';

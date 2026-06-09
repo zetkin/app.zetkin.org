@@ -4,10 +4,6 @@ import { EmailTheme } from 'features/emails/types';
 import { useApiClient } from 'core/hooks';
 import { themeCreate, themeCreated } from 'features/emails/store';
 
-interface UseCreateEmailThemeReturn {
-  createEmailTheme: () => Promise<EmailTheme>;
-}
-
 const defaultBlockAttributes = {
   button: {},
   image: {},
@@ -60,13 +56,11 @@ const defaultFrameMjml = {
 const defaultCss =
   'h1 {}\nh2 {}\nh3 {}\na:link {}\na:visited {}\na:hover {}\np {}\np b {}';
 
-export default function useCreateEmailTheme(
-  orgId: number
-): UseCreateEmailThemeReturn {
+export default function useCreateEmailTheme(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useDispatch();
 
-  const createEmailTheme = async () => {
+  return async () => {
     dispatch(themeCreate());
     const theme = await apiClient.post<EmailTheme>(
       `/api/orgs/${orgId}/email_themes`,
@@ -79,6 +73,4 @@ export default function useCreateEmailTheme(
     dispatch(themeCreated([theme, orgId]));
     return theme;
   };
-
-  return { createEmailTheme };
 }

@@ -1,9 +1,11 @@
 import { FunctionComponent } from 'react';
-import { useRouter } from 'next/router';
 
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useMessages } from 'core/i18n';
+import { EMAIL_SETTINGS } from 'utils/featureFlags';
+import useFeature from 'utils/featureFlags/useFeature';
+import { useNumericRouteParams } from 'core/hooks';
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
@@ -12,18 +14,23 @@ interface SettingsLayoutProps {
 const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
   children,
 }) => {
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
+
+  const hasEmailSettingsFeature = useFeature(EMAIL_SETTINGS, orgId);
 
   return (
     <TabbedLayout
       baseHref={`/organize/${orgId}/settings`}
       defaultTab="/"
       tabs={[
-        { href: `/`, label: messages.officials.settingsLayout.access() },
-        { href: `/fields`, label: messages.officials.settingsLayout.fields() },
+        { href: `/`, label: messages.settingsLayout.access() },
+        { href: `/fields`, label: messages.settingsLayout.fields() },
+        ...(hasEmailSettingsFeature
+          ? [{ href: '/email', label: messages.settingsLayout.email() }]
+          : []),
       ]}
-      title={messages.officials.settingsLayout.title()}
+      title={messages.settingsLayout.title()}
     >
       {children}
     </TabbedLayout>

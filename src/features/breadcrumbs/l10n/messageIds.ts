@@ -14,6 +14,7 @@ export default makeMessages('feat.breadcrumbs', {
     compose: m('Compose'),
     conversation: m('Conversation'),
     duplicates: m('Duplicates'),
+    email: m('Email'),
     emails: m('Emails'),
     events: m('Events'),
     fields: m('Fields'),

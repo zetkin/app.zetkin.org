@@ -159,7 +159,7 @@ listenerMiddleware.startListening({
   actionCreator: themeCreated,
   effect: (action) => {
     const [emailTheme, orgId] = action.payload;
-    Router.push(`/organize/${orgId}/settings/themes/${emailTheme.id}`);
+    Router.push(`/organize/${orgId}/settings/email/themes/${emailTheme.id}`);
   },
 });
 
@@ -167,7 +167,7 @@ listenerMiddleware.startListening({
   actionCreator: themeDeleted,
   effect: (action) => {
     const [orgId] = action.payload;
-    Router.push(`/organize/${orgId}/settings/themes`);
+    Router.push(`/organize/${orgId}/settings/email`);
   },
 });
 

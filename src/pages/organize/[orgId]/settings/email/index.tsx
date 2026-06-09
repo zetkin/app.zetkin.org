@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Box, Grid, Typography } from '@mui/material';
-import { Stack } from '@mui/system';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -9,8 +8,9 @@ import { useNumericRouteParams } from 'core/hooks';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
-import ThemeCard from 'features/emails/components/ThemeCard';
-import EmailThemeLayout from 'features/emails/layout/EmailThemeLayout';
+import ThemeCard from 'features/settings/components/themes/ThemeCard';
+import SettingsLayout from 'features/settings/layout/SettingsLayout';
+import useCreateEmailTheme from 'features/settings/hooks/useCreateEmailTheme';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -22,26 +22,39 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   };
 }, scaffoldOptions);
 
-interface ThemesSettingsPageProps {
+type Props = {
   orgId: string;
-}
+};
 
-const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
+const EmailSettingsPage: PageWithLayout<Props> = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const themes = useEmailThemes(orgId).data || [];
+  const createTheme = useCreateEmailTheme(orgId);
 
   if (onServer) {
     return null;
   }
 
   return (
-    <Stack direction="column" display="flex" gap={2}>
-      <Box display="flex" justifyContent="space-between">
-        <Typography>
-          <Msg id={messageIds.themes.overview.description} />
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography variant="h4">
+          <Msg id={messageIds.email.themes.overview.title} />
         </Typography>
+        <Button onClick={() => createTheme()} variant="contained">
+          <Msg id={messageIds.email.themes.addTheme} />
+        </Button>
       </Box>
+      <Typography>
+        <Msg id={messageIds.email.themes.overview.description} />
+      </Typography>
       <Grid container spacing={2}>
         {themes
           .sort((a, b) => a.id - b.id)
@@ -53,12 +66,12 @@ const ThemesSettingsPage: PageWithLayout<ThemesSettingsPageProps> = () => {
             </Grid>
           ))}
       </Grid>
-    </Stack>
+    </Box>
   );
 };
 
-ThemesSettingsPage.getLayout = function getLayout(page) {
-  return <EmailThemeLayout>{page}</EmailThemeLayout>;
+EmailSettingsPage.getLayout = function getLayout(page) {
+  return <SettingsLayout>{page}</SettingsLayout>;
 };
 
-export default ThemesSettingsPage;
+export default EmailSettingsPage;

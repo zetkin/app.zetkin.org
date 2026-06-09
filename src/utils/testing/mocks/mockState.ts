@@ -67,7 +67,18 @@ export default function mockState(overrides?: RootState) {
       insightsByEmailId: {},
       linksByEmailId: {},
       statsById: {},
+      themeEditorValue: {
+        block_attributes: '',
+        css: '',
+        frame_mjml: '',
+      },
+      themeJsonError: {
+        block_attributes: false,
+        css: false,
+        frame_mjml: false,
+      },
       themeList: remoteList(),
+      themeUpdateError: null,
     },
     events: {
       allEventsList: remoteList(),

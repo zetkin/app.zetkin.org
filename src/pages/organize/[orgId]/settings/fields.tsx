@@ -7,8 +7,8 @@ import { scaffold } from 'utils/next';
 import SettingsLayout from 'features/settings/layout/SettingsLayout';
 import useServerSide from 'core/useServerSide';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
-import FieldsList from 'features/settings/components/FieldsList';
-import NewFieldForm from 'features/settings/components/NewFieldForm';
+import FieldsList from 'features/settings/components/fields/FieldsList';
+import NewFieldForm from 'features/settings/components/fields/NewFieldForm';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/settings/l10n/messageIds';
 
