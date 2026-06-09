@@ -17,7 +17,7 @@ const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
 
-  const hasEmailSettingsFeautre = useFeature(EMAIL_SETTINGS, orgId);
+  const hasEmailSettingsFeature = useFeature(EMAIL_SETTINGS, orgId);
 
   return (
     <TabbedLayout
@@ -26,7 +26,7 @@ const SettingsLayout: FunctionComponent<SettingsLayoutProps> = ({
       tabs={[
         { href: `/`, label: messages.settingsLayout.access() },
         { href: `/fields`, label: messages.settingsLayout.fields() },
-        ...(hasEmailSettingsFeautre
+        ...(hasEmailSettingsFeature
           ? [{ href: '/email', label: messages.settingsLayout.email() }]
           : []),
       ]}
