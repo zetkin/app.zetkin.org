@@ -9,6 +9,7 @@ import {
 import { FC } from 'react';
 
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
 import ZUIText from 'zui/components/ZUIText';
@@ -95,17 +96,12 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
           }}
         >
           <ZUIText variant="bodyMdRegular">All emails</ZUIText>
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
-            <ZUIText color="secondary" variant="bodySmRegular">
-              Mute all
-            </ZUIText>
-            <NotificationsOff
-              sx={(theme) => ({
-                color: theme.palette.text.secondary,
-                fontSize: '1.25rem',
-              })}
-            />
-          </Box>
+          <ZUIButton
+            endIcon={NotificationsOff}
+            label="Mute all"
+            size="small"
+            variant="tertiary"
+          />
         </Box>
 
         <ZUIDivider />
@@ -137,17 +133,12 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                 >
                   {subscription.name}
                 </ZUIText>
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
-                  <ZUIText color="secondary" variant="bodySmRegular">
-                    {isActive ? 'Mute' : 'Allow'}
-                  </ZUIText>
-                  <NotificationsNone
-                    sx={(theme) => ({
-                      color: theme.palette.text.secondary,
-                      fontSize: '1.25rem',
-                    })}
-                  />
-                </Box>
+                <ZUIButton
+                  endIcon={NotificationsNone}
+                  label={isActive ? 'Mute' : 'Allow'}
+                  size="small"
+                  variant="tertiary"
+                />
               </Box>
               {index < MOCK_SUBSCRIPTIONS.length - 1 && <ZUIDivider />}
             </Box>
