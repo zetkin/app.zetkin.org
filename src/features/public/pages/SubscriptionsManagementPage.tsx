@@ -121,7 +121,7 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                         sx={(theme) => ({
                           color: isActive
                             ? theme.palette.text.primary
-                            : theme.palette.text.secondary,
+                            : theme.palette.text.disabled,
                           fontSize: '1.5rem',
                         })}
                       />
@@ -131,7 +131,11 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                       sx={{ pb: isLast ? 0 : 1, pt: 1 }}
                     >
                       <ZUIText
-                        color={isActive ? 'primary' : 'secondary'}
+                        sx={(theme) => ({
+                          color: isActive
+                            ? theme.palette.text.primary
+                            : theme.palette.text.disabled,
+                        })}
                         variant="bodyMdRegular"
                       >
                         {subscription.name}
