@@ -9,6 +9,7 @@ import {
 import { FC } from 'react';
 
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
@@ -72,21 +73,10 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
             <Box
               sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
             >
-              <Box
-                sx={(theme) => ({
-                  backgroundColor: theme.palette.swatches.blue[100],
-                  borderRadius: '0.25rem',
-                  color: theme.palette.swatches.blue[900],
-                  p: 2,
-                })}
-              >
-                <ZUIText color="inherit" variant="bodyMdRegular">
-                  After you unsubscribe you will no longer receive mass email.
-                  You may still receive reminders and other email sent
-                  specifically to you as part of work you do in the
-                  organization.
-                </ZUIText>
-              </Box>
+              <ZUIAlert
+                severity="info"
+                title="After you unsubscribe you will no longer receive mass email. You may still receive reminders and other email sent specifically to you as part of work you do in the organization."
+              />
 
               <Box
                 sx={{
