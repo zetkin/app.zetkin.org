@@ -106,17 +106,20 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
 
         <ZUIDivider />
 
-        {MOCK_SUBSCRIPTIONS.map((subscription, index) => {
-          const isActive = subscription.state === 'active';
-          return (
-            <Box key={subscription.id}>
+        <Box
+          sx={{
+            columnGap: 1.5,
+            display: 'grid',
+            gridTemplateColumns: 'auto 1fr auto',
+          }}
+        >
+          {MOCK_SUBSCRIPTIONS.flatMap((subscription, index, all) => {
+            const isActive = subscription.state === 'active';
+            const isLast = index === all.length - 1;
+            return [
               <Box
-                sx={{
-                  alignItems: 'flex-start',
-                  display: 'flex',
-                  gap: 1.5,
-                  py: 1.5,
-                }}
+                key={`icon-${subscription.id}`}
+                sx={{ alignSelf: 'start', display: 'flex', py: 1 }}
               >
                 <MailOutline
                   sx={(theme) => ({
@@ -126,24 +129,40 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                     fontSize: '1.5rem',
                   })}
                 />
+              </Box>,
+              <Box key={`name-${subscription.id}`} sx={{ py: 1 }}>
                 <ZUIText
                   color={isActive ? 'primary' : 'secondary'}
-                  sx={{ flexGrow: 1 }}
                   variant="bodyMdRegular"
                 >
                   {subscription.name}
                 </ZUIText>
+              </Box>,
+              <Box
+                key={`btn-${subscription.id}`}
+                sx={{ alignSelf: 'start', py: 1 }}
+              >
                 <ZUIButton
                   endIcon={NotificationsNone}
+                  fullWidth
                   label={isActive ? 'Mute' : 'Allow'}
                   size="small"
                   variant="tertiary"
                 />
-              </Box>
-              {index < MOCK_SUBSCRIPTIONS.length - 1 && <ZUIDivider />}
-            </Box>
-          );
-        })}
+              </Box>,
+              ...(!isLast
+                ? [
+                    <Box
+                      key={`divider-${subscription.id}`}
+                      sx={{ gridColumn: '1 / -1' }}
+                    >
+                      <ZUIDivider />
+                    </Box>,
+                  ]
+                : []),
+            ];
+          })}
+        </Box>
       </Box>
     </Box>
   );
