@@ -54,14 +54,24 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
       }}
     >
       <Box sx={{ maxWidth: 430, p: 3, width: '100%' }}>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1, mb: 2 }}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            mb: 2,
+            px: '1.25rem',
+          }}
+        >
           <ZUIOrgAvatar orgId={org.id} size="small" title={org.title} />
           <ZUIText variant="bodyMdSemiBold">{org.title}</ZUIText>
         </Box>
 
         <ZUISection
           renderContent={() => (
-            <>
+            <Box
+              sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+            >
               <Box
                 sx={(theme) => ({
                   backgroundColor: theme.palette.swatches.blue[100],
@@ -110,7 +120,12 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                   return [
                     <Box
                       key={`icon-${subscription.id}`}
-                      sx={{ alignSelf: 'start', display: 'flex', py: 1 }}
+                      sx={{
+                        alignSelf: 'start',
+                        display: 'flex',
+                        pb: isLast ? 0 : 1,
+                        pt: 1,
+                      }}
                     >
                       <MailOutline
                         sx={(theme) => ({
@@ -121,7 +136,10 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                         })}
                       />
                     </Box>,
-                    <Box key={`name-${subscription.id}`} sx={{ py: 1 }}>
+                    <Box
+                      key={`name-${subscription.id}`}
+                      sx={{ pb: isLast ? 0 : 1, pt: 1 }}
+                    >
                       <ZUIText
                         color={isActive ? 'primary' : 'secondary'}
                         variant="bodyMdRegular"
@@ -131,7 +149,7 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                     </Box>,
                     <Box
                       key={`btn-${subscription.id}`}
-                      sx={{ alignSelf: 'start', py: 1 }}
+                      sx={{ alignSelf: 'start', pb: isLast ? 0 : 1, pt: 1 }}
                     >
                       <ZUIButton
                         endIcon={NotificationsNone}
@@ -154,7 +172,7 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
                   ];
                 })}
               </Box>
-            </>
+            </Box>
           )}
           subtitle={MOCK_EMAIL}
           title="Channel settings"
