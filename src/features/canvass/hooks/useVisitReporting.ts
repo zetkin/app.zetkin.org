@@ -14,13 +14,13 @@ import {
   visitUpdated,
 } from '../store';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
-import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocationVisits from './useLocationVisits';
 import useUser from 'core/hooks/useUser';
 import summarizeMetrics from '../utils/summarizeMetrics';
 import { ZetkinLocation } from 'features/areaAssignments/types';
 import submitHouseholdVisits from '../rpc/submitHouseholdVisits';
 import useLocationHouseholdVisits from './useLocationHouseholdVisits';
+import useIndexedDB from './useIndexedDB';
 
 type VisitByHouseholdIdMap = Record<
   number,
@@ -59,7 +59,7 @@ export default function useVisitReporting(
   const apiVisits = useLocationHouseholdVisits(orgId, assignmentId, locationId);
   const user = useUser();
   const [lastVisitByHouseholdId, setLastVisitByHouseholdId] =
-    useLocalStorage<VisitByHouseholdIdMap>(
+    useIndexedDB<VisitByHouseholdIdMap>(
       `visitsInAssignmentAndLocation-${assignmentId}-${locationId}`,
       {}
     );
