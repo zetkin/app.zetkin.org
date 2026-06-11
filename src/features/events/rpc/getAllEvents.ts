@@ -101,20 +101,27 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       .reduce((campaignPromises, event) => {
         const orgId = event.organization.id;
         const campaignId = event.campaign?.id;
+
+        if (!campaignId) {
+          return campaignPromises;
+        }
+
         const key = `${orgId}-${campaignId}`;
         let promise = campaignPromises.get(key);
+
         if (!promise) {
           promise = apiClient
             .get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campaignId}`)
             .catch(() => null);
           campaignPromises.set(key, promise);
         }
+
         return campaignPromises;
       }, new Map<string, Promise<ZetkinCampaign | null>>())
       .values()
   );
 
-  const filteredEvents = events.map(async (event) => {
+  const filteredEvents = events.map((event) => {
     let isPublished = false;
     if (event.published) {
       isPublished = new Date(event.published) < new Date();
