@@ -9,7 +9,7 @@ type Props = {
   };
 };
 
-const SubscriptionsManagementLayout: FC<Props> = ({ children, params }) => {
+const SubscriptionsManagementLayout: FC<Props> = ({ children }) => {
   return <HomeThemeProvider>{children}</HomeThemeProvider>;
 };
 

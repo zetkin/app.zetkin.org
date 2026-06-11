@@ -39,3 +39,13 @@ export type ZetkinEventWithStatus = ZetkinEvent &
         status: 'booked';
       }
   );
+
+export type EmailChannel = {
+  id: number;
+  is_public: boolean;
+  organization_id: number;
+  sender_email: string;
+  sender_name: string;
+  subscription: 'subscribed' | 'blocked';
+  title: string;
+};

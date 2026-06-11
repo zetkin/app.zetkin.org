@@ -14,18 +14,11 @@ type PageProps = {
   };
 };
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
-
-  const jwt = searchParams.jwt;
-  //const validJwt = jwt.isValid();
-
-  /*  if (!jwt || !validJwt) {
-    return notFound();
-  } */
 
   try {
     const org = await apiClient.get<ZetkinOrganization>(

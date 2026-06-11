@@ -1,49 +1,25 @@
 'use client';
 
 import { Box } from '@mui/material';
-import {
-  MailOutline,
-  NotificationsNone,
-  NotificationsOff,
-} from '@mui/icons-material';
+import { MailOutline } from '@mui/icons-material';
 import { FC } from 'react';
 
 import { ZetkinOrganization } from 'utils/types/zetkin';
-import ZUIAlert from 'zui/components/ZUIAlert';
-import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
-
-// Placeholder data
-type SubscriptionState = 'active' | 'muted';
-
-type EmailSubscription = {
-  id: number;
-  name: string;
-  state: SubscriptionState;
-};
+import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
+import ZUISwitch from 'zui/components/ZUISwitch';
+import useEmailChannels from '../hooks/useEmailChannels';
 
 const MOCK_EMAIL = 'person@thirdpartyemailprovider.org';
-
-const MOCK_SUBSCRIPTIONS: EmailSubscription[] = [
-  { id: 1, name: 'United News - Newsletter', state: 'active' },
-  { id: 2, name: 'Pipe up! - Workplace issues monthly', state: 'muted' },
-  {
-    id: 3,
-    name: 'In the pipeline - Legislation being drafted',
-    state: 'muted',
-  },
-  { id: 4, name: 'Action group (private)', state: 'muted' },
-  { id: 5, name: 'Board (private)', state: 'muted' },
-];
 
 type Props = {
   org: ZetkinOrganization;
 };
 
 const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
+  const channels = useEmailChannels();
   return (
     <Box
       sx={{
@@ -64,112 +40,83 @@ const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
             px: '1.25rem',
           }}
         >
-          <ZUIOrgAvatar orgId={org.id} size="small" title={org.title} />
+          <ZUIOrgLogoAvatar orgId={org.id} />
           <ZUIText variant="bodyMdSemiBold">{org.title}</ZUIText>
         </Box>
 
         <ZUISection
-          renderContent={() => (
-            <Box
-              sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
-            >
-              <ZUIAlert
-                severity="info"
-                title="After you unsubscribe you will no longer receive mass email. You may still receive reminders and other email sent specifically to you as part of work you do in the organization."
-              />
-
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  py: 1,
-                }}
-              >
-                <ZUIText variant="bodyMdRegular">All emails</ZUIText>
-                <ZUIButton
-                  endIcon={NotificationsOff}
-                  label="Mute all"
-                  size="small"
-                  variant="tertiary"
-                />
-              </Box>
-
-              <ZUIDivider />
-
-              <Box
-                sx={{
-                  columnGap: 1.5,
-                  display: 'grid',
-                  gridTemplateColumns: 'auto 1fr auto',
-                }}
-              >
-                {MOCK_SUBSCRIPTIONS.flatMap((subscription, index, all) => {
-                  const isActive = subscription.state === 'active';
-                  const isLast = index === all.length - 1;
-                  return [
-                    <Box
-                      key={`icon-${subscription.id}`}
-                      sx={{
-                        alignSelf: 'start',
-                        display: 'flex',
-                        pb: isLast ? 0 : 1,
-                        pt: 1,
-                      }}
-                    >
-                      <MailOutline
-                        sx={(theme) => ({
-                          color: isActive
-                            ? theme.palette.text.primary
-                            : theme.palette.text.disabled,
-                          fontSize: '1.5rem',
-                        })}
-                      />
-                    </Box>,
-                    <Box
-                      key={`name-${subscription.id}`}
-                      sx={{ pb: isLast ? 0 : 1, pt: 1 }}
-                    >
-                      <ZUIText
-                        sx={(theme) => ({
-                          color: isActive
-                            ? theme.palette.text.primary
-                            : theme.palette.text.disabled,
-                        })}
-                        variant="bodyMdRegular"
-                      >
-                        {subscription.name}
-                      </ZUIText>
-                    </Box>,
-                    <Box
-                      key={`btn-${subscription.id}`}
-                      sx={{ alignSelf: 'start', pb: isLast ? 0 : 1, pt: 1 }}
-                    >
-                      <ZUIButton
-                        endIcon={NotificationsNone}
-                        fullWidth
-                        label={isActive ? 'Mute' : 'Allow'}
-                        size="small"
-                        variant="tertiary"
-                      />
-                    </Box>,
-                    ...(!isLast
-                      ? [
+          subSectionOrientation="vertical"
+          subSections={[
+            {
+              renderContent: () => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <Box>
+                    {channels.map((channel, index) => {
+                      const isActive = channel.subscription === 'subscribed';
+                      const isLast = index === channels.length - 1;
+                      return (
+                        <>
                           <Box
-                            key={`divider-${subscription.id}`}
-                            sx={{ gridColumn: '1 / -1' }}
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              paddingBottom: !isLast ? 1 : 0,
+                              paddingTop: index === 0 ? 0 : 1,
+                            }}
                           >
-                            <ZUIDivider />
-                          </Box>,
-                        ]
-                      : []),
-                  ];
-                })}
-              </Box>
-            </Box>
-          )}
+                            <Box
+                              sx={{
+                                alignItems: 'flex-start',
+                                display: 'flex',
+                                gap: 1,
+                              }}
+                            >
+                              <MailOutline
+                                sx={(theme) => ({
+                                  color: isActive
+                                    ? theme.palette.text.primary
+                                    : theme.palette.text.disabled,
+                                  fontSize: '1.5rem',
+                                })}
+                              />
+                              <ZUIText
+                                sx={(theme) => ({
+                                  color: isActive
+                                    ? theme.palette.text.primary
+                                    : theme.palette.text.disabled,
+                                })}
+                                variant="bodyMdSemiBold"
+                              >
+                                {channel.title}
+                              </ZUIText>
+                            </Box>
+                            <ZUISwitch
+                              checked={isActive}
+                              label={isActive ? 'On' : 'Off'}
+                              labelPlacement="start"
+                              onChange={() => null}
+                            />
+                          </Box>
+                          {!isLast && <ZUIDivider />}
+                        </>
+                      );
+                    })}
+                  </Box>
+                </Box>
+              ),
+              subtitle: 'Turn a channel off to stop receiving its emails.',
+              title: 'Channels',
+            },
+          ]}
           subtitle={MOCK_EMAIL}
-          title="Channel settings"
+          title={`Email settings`}
         />
       </Box>
     </Box>
