@@ -99,6 +99,10 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const campaigns = await Promise.all(
     events
       .reduce((campaignPromises, event) => {
+        if (!event.published || new Date(event.published) >= new Date()) {
+          return campaignPromises;
+        }
+
         const orgId = event.organization.id;
         const campaignId = event.campaign?.id;
 
