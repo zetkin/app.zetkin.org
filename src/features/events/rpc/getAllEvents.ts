@@ -93,33 +93,61 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         )
     )
   );
+
   const events = eventsByOrg.flat();
 
-  const filteredEvents = await Promise.all(
-    events.map(async (event) => {
-      let isPublished = false;
-      if (event.published) {
-        isPublished = new Date(event.published) < new Date();
-      }
-      if (event.campaign && isPublished) {
-        const campaign = await apiClient
-          .get<ZetkinCampaign>(
-            `/api/orgs/${event.organization.id}/campaigns/${event.campaign.id}`
-          )
-          .catch(() => null);
-        isPublished =
-          !!campaign &&
-          !campaign.archived &&
-          campaign.published &&
-          campaign.visibility == 'open';
-      }
-      const state = getEventState(event);
-      return (
-        (state == EventState.OPEN || state == EventState.SCHEDULED) &&
-        isPublished
-      );
-    })
+  const campaigns = await Promise.all(
+    events
+      .reduce((campaignPromises, event) => {
+        if (!event.published || new Date(event.published) >= new Date()) {
+          return campaignPromises;
+        }
+
+        const orgId = event.organization.id;
+        const campaignId = event.campaign?.id;
+
+        if (!campaignId) {
+          return campaignPromises;
+        }
+
+        const key = `${orgId}-${campaignId}`;
+        let promise = campaignPromises.get(key);
+
+        if (!promise) {
+          promise = apiClient
+            .get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campaignId}`)
+            .catch(() => null);
+          campaignPromises.set(key, promise);
+        }
+
+        return campaignPromises;
+      }, new Map<string, Promise<ZetkinCampaign | null>>())
+      .values()
   );
+
+  const filteredEvents = events.map((event) => {
+    let isPublished = false;
+    if (event.published) {
+      isPublished = new Date(event.published) < new Date();
+    }
+    if (event.campaign && isPublished) {
+      const campaign = campaigns.find(
+        (campaign) =>
+          campaign?.organization.id === event.organization.id &&
+          campaign?.id === event.campaign?.id
+      );
+
+      isPublished =
+        !!campaign &&
+        !campaign.archived &&
+        campaign.published &&
+        campaign.visibility == 'open';
+    }
+    const state = getEventState(event);
+    return (
+      (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
+    );
+  });
 
   return events.filter((event, i) => {
     return filteredEvents[i];
