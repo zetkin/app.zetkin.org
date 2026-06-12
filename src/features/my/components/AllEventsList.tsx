@@ -31,11 +31,13 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
+import CenteredLoadingIndicator from 'features/my/components/CenteredLoadingIndicator';
 
 const AllEventsList: FC = () => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
-  const allEvents = useAllEvents();
+  const allEventsFuture = useAllEvents();
+  const allEvents = allEventsFuture.data || [];
   const nextDelay = useIncrementalDelay();
 
   const searchParams = useSearchParams();
@@ -126,6 +128,10 @@ const AllEventsList: FC = () => {
     eventTypeLabelsToFilterBy: eventTypesToFilterBy,
     setEventTypeLabelsToFilterBy: (types: string[]) => setFilters({ types }),
   });
+
+  if (allEventsFuture.isLoading) {
+    return <CenteredLoadingIndicator />;
+  }
 
   const orgs = [
     ...new Map(
