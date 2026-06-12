@@ -53,6 +53,10 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     filters: {
+      action_participation: {
+        description: m('Who signed up or booked for particular events?'),
+        title: m('Participation in a particular event'),
+      },
       all: {
         description: m(
           'Find people based on what sub-organizations they are in.'
@@ -379,6 +383,28 @@ export default makeMessages('feat.smartSearch', {
         notSent: m('not been sent'),
         opened: m('opened'),
         sent: m('been sent'),
+      },
+    },
+    eventParticipation: {
+      bookedSelect: {
+        booked: m('been booked'),
+        signed_up: m('signed up'),
+      },
+      error: m('An error has occurred while loading events'),
+      example: m('Add people who have been booked and attended an event.'),
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        bookedSelect: ReactElement;
+        eventSelect: ReactElement;
+        statusSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have {bookedSelect} {statusSelect} for {eventSelect}'
+      ),
+      statusSelect: {
+        any: m('no matter their attendance'),
+        attended: m('and showed up'),
+        cancelled: m('and cancelled'),
+        noshow: m('and did not show up'),
       },
     },
     joinForm: {
