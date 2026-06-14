@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { get, set } from 'idb-keyval';
 
-export default function useIndexedDB<T>(
+export default function useIndexedDB<T extends object>(
   key: IDBValidKey,
   initialValue: T
 ): [T, (prevState: T) => void] {
