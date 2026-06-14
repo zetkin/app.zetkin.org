@@ -122,7 +122,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
         />
         <Collapse in={!collapsed} sx={{ flexShrink: 0 }}>
           <Tabs
-            aria-label="campaign tabs"
+            aria-label="project tabs"
             onChange={(_, selected) => selectTab(selected)}
             slotProps={{
               list: {

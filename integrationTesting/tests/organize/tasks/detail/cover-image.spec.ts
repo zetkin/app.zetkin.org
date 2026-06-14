@@ -3,8 +3,8 @@ import fs from 'fs/promises';
 
 import test from '../../../../fixtures/next';
 import KPD from '../../../../mockData/orgs/KPD';
-import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import SpeakToFriend from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures';
+import SpeakToFriend from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 import { ZetkinFile, ZetkinTask } from '../../../../../src/utils/types/zetkin';
 
 test.describe('Task detail page', () => {
