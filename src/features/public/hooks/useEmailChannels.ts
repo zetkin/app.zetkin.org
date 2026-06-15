@@ -1,6 +1,9 @@
 import { EmailChannel } from '../types';
 
 export default function useEmailChannels(): EmailChannel[] {
+  // set auth header on request to get email channels and toggle channels
+  //
+
   return [
     {
       id: 1,

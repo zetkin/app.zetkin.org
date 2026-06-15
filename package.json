@@ -66,6 +66,7 @@
     "iron-session": "^8.0.1",
     "is-url": "^1.2.4",
     "isomorphic-dompurify": "^3.3.0",
+    "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.3",
     "letterparser": "^0.0.8",
     "libphonenumber-js": "^1.10.51",

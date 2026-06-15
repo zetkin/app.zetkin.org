@@ -16,9 +16,10 @@ const MOCK_EMAIL = 'person@thirdpartyemailprovider.org';
 
 type Props = {
   org: ZetkinOrganization;
+  token: string;
 };
 
-const SubscriptionsManagementPage: FC<Props> = ({ org }) => {
+const SubscriptionsManagementPage: FC<Props> = ({ org, token }) => {
   const channels = useEmailChannels();
   return (
     <Box
