@@ -6,6 +6,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsManagementPage';
 import { EmailChannel } from 'features/public/types';
+import SubscriptionsTokenRequestPage from 'features/public/pages/SubscriptionsTokenRequestPage';
 
 type PageProps = {
   params: {
@@ -27,6 +28,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (!token) {
     //TODO: redirect to page to input email for new jwt
+    return <SubscriptionsTokenRequestPage />;
   } else {
     try {
       const decodedToken = jwtDecode(token);
@@ -35,7 +37,7 @@ export default async function Page({ params, searchParams }: PageProps) {
       const isExpired = !expirationTime || expirationTime < now.getTime();
 
       if (isExpired) {
-        //TODO: redirect to page to input email for new jwt
+        return <SubscriptionsTokenRequestPage />;
       } else {
         try {
           const org = await apiClient.get<ZetkinOrganization>(
