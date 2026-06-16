@@ -2,7 +2,7 @@
 
 import { Box } from '@mui/material';
 import { MailOutline } from '@mui/icons-material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUIDivider from 'zui/components/ZUIDivider';
@@ -10,17 +10,23 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUISwitch from 'zui/components/ZUISwitch';
-import useEmailChannels from '../hooks/useEmailChannels';
+import { EmailChannel } from '../types';
 
 const MOCK_EMAIL = 'person@thirdpartyemailprovider.org';
 
 type Props = {
+  initialChannels: EmailChannel[];
   org: ZetkinOrganization;
   token: string;
 };
 
-const SubscriptionsManagementPage: FC<Props> = ({ org, token }) => {
-  const channels = useEmailChannels();
+const SubscriptionsManagementPage: FC<Props> = ({
+  initialChannels,
+  org,
+  token,
+}) => {
+  const [channels, setChannels] = useState(initialChannels);
+
   return (
     <Box
       sx={{
@@ -102,7 +108,33 @@ const SubscriptionsManagementPage: FC<Props> = ({ org, token }) => {
                               checked={isActive}
                               label={isActive ? 'On' : 'Off'}
                               labelPlacement="start"
-                              onChange={() => null}
+                              onChange={async (newState) => {
+                                const patchRes = await fetch(
+                                  `/api2/orgs/${org.id}/channels/${channel.id}`,
+                                  // does this return the entire channel, with patched data?
+                                  {
+                                    body: JSON.stringify({
+                                      subscription: newState
+                                        ? 'subscribed'
+                                        : 'blocked',
+                                    }),
+                                    headers: new Headers({
+                                      Authorization: `Bearer ${token}`,
+                                      'Content-Type': 'application/json',
+                                    }),
+                                    method: 'patch',
+                                  }
+                                );
+                                const updatedChannel: EmailChannel =
+                                  await patchRes.json();
+                                // Find and replace channel
+                                setChannels([
+                                  ...channels.filter(
+                                    (chan) => chan.id === updatedChannel.id
+                                  ),
+                                  updatedChannel,
+                                ]);
+                              }}
                             />
                           </Box>
                           {!isLast && <ZUIDivider />}

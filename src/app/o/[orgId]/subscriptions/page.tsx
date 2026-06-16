@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsManagementPage';
+import { EmailChannel } from 'features/public/types';
 
 type PageProps = {
   params: {
@@ -16,6 +17,7 @@ type PageProps = {
 };
 
 export default async function Page({ params, searchParams }: PageProps) {
+  const { orgId } = params;
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -37,14 +39,25 @@ export default async function Page({ params, searchParams }: PageProps) {
       } else {
         try {
           const org = await apiClient.get<ZetkinOrganization>(
-            `/api/orgs/${params.orgId}`
+            `/api/orgs/${orgId}`
           );
 
-          //const channels = await apiClient.get<ZetkinEmailChannel[]>(`/api/WHATEVERURL`)
-
-          return <SubscriptionsManagementPage org={org} token={token} />;
+          const channelsReq = await fetch(`/api2/orgs/${orgId}/channels`, {
+            // What exactly should url be.
+            headers: new Headers({ Authorization: `Bearer ${token}` }),
+          });
+          if (!channelsReq.ok) {
+            throw new Error('Channels fetch failed');
+          }
+          const initialChannels: EmailChannel[] = await channelsReq.json();
+          return (
+            <SubscriptionsManagementPage
+              initialChannels={initialChannels}
+              org={org}
+              token={token}
+            />
+          );
         } catch (err) {
-          //Could not find org, so we 404
           return notFound();
         }
       }
