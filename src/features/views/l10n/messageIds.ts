@@ -331,11 +331,20 @@ export default makeMessages('feat.views', {
     ),
   },
   deleteRowsDialog: {
+    alert: m(
+      'This is a destructive action that cannot be undone! Read carefully and ensure you understand the consequences before proceeding.'
+    ),
+    cancelButton: m('Cancel'),
+    confirmButton: m('Delete people'),
+    confirmationInputLabel: m('Enter confirmation text'),
+    instruction: m<{ rootOrgSlug: ReactElement }>(
+      'To permanently delete these records, type {rootOrgSlug} into the textbox below and click delete.'
+    ),
+    tagetOrgWarning: m<{ rootOrgTitle: ReactElement }>(
+      'This will delete all records of these people in {rootOrgTitle} and all it’s child organizations.'
+    ),
     title: m<{ numPeople: number }>(
       'Delete all records of {numPeople, plural, =1 {one person} other {# persons}}'
-    ),
-    warning: m(
-      'If you confirm this action, all records of these people will be deleted from the entire organization.'
     ),
   },
   editViewTitleAlert: {
