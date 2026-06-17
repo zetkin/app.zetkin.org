@@ -37,7 +37,6 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   checked,
   disabled = false,
   label,
-  labelHidden = false,
   labelPlacement = 'end',
   onChange,
   size = 'medium',
@@ -48,7 +47,6 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
         checked={checked}
         onChange={(e, newCheckedState) => onChange(newCheckedState)}
         size={size}
-        slotProps={{ input: { 'aria-label': label } }}
       />
     }
     disabled={disabled}
@@ -56,7 +54,6 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
       <Typography
         sx={(theme) => ({
           color: disabled ? theme.palette.text.disabled : undefined,
-          visibility: labelHidden ? 'hidden' : undefined,
         })}
         variant="labelXlMedium"
       >

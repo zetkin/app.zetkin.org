@@ -73,6 +73,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
                             sx={{
                               alignItems: 'center',
                               display: 'flex',
+                              gap: 4,
                               justifyContent: 'space-between',
                               paddingBottom: !isLast ? 1 : 0,
                               paddingTop: index === 0 ? 0 : 1,
@@ -107,7 +108,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
                             <ZUISwitch
                               checked={isActive}
                               label={isActive ? 'On' : 'Off'}
-                              labelHidden
+                              labelPlacement="start"
                               onChange={async (newState) => {
                                 const patchRes = await fetch(
                                   `/api2/orgs/${org.id}/channels/${channel.id}`,
