@@ -8,8 +8,15 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
+import ZUIText from 'zui/components/ZUIText';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 
-const SubscriptionsTokenRequestPage: FC = () => {
+type Props = {
+  org: ZetkinOrganization;
+};
+
+const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
   const [email, setEmail] = useState('');
   const [emailValidationError, setEmailValidationError] = useState(false);
   const [submitted, setSubmitted] = useState(false); // Currently only allows one submit per page load
@@ -33,6 +40,18 @@ const SubscriptionsTokenRequestPage: FC = () => {
       }}
     >
       <Box sx={{ maxWidth: 430, p: 3, width: '100%' }}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            mb: 2,
+            px: '1.25rem',
+          }}
+        >
+          <ZUIOrgLogoAvatar orgId={org.id} />
+          <ZUIText variant="bodyMdSemiBold">{org.title}</ZUIText>
+        </Box>
         <ZUISection
           renderContent={() => {
             return (
@@ -54,9 +73,7 @@ const SubscriptionsTokenRequestPage: FC = () => {
                     disabled={submitted}
                     error={emailValidationError}
                     helperText={
-                      emailValidationError
-                        ? 'Email is not an email hehe'
-                        : undefined
+                      emailValidationError ? 'Email is invalid' : undefined
                     }
                     label="Your Email"
                     onChange={(newEmail) => setEmail(newEmail)}
@@ -66,12 +83,18 @@ const SubscriptionsTokenRequestPage: FC = () => {
                   <ZUIButton
                     actionType="submit"
                     disabled={email.length === 0 || submitted}
-                    label="Submit"
+                    label={submitted ? 'Link requested' : 'Request link'}
                     variant="primary"
                   />
                   {submitted && (
                     <ZUIAlert
-                      description="If this email has an account, you will recieve a link to manage your subscription"
+                      button={{
+                        label: 'Try again',
+                        onClick: () => {
+                          window.navigation.reload();
+                        },
+                      }}
+                      description={`If ${email} has an account, you will recieve a link to manage your subscription. Please allow a few minutes to recieve the link before trying again`}
                       severity="success"
                       title="Submitted!"
                     />
@@ -80,8 +103,8 @@ const SubscriptionsTokenRequestPage: FC = () => {
               </form>
             );
           }}
-          subtitle="To manage your email subscriptions"
-          title={`Request link`}
+          subtitle="Enter your email address to get a link to manage your subscriptions."
+          title="Email settings"
         />
       </Box>
     </Box>
