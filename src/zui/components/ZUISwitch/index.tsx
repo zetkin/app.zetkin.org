@@ -14,6 +14,11 @@ export type ZUISwitchProps = {
   label: string;
 
   /**
+   * The label is hidden to the UI, but is visible to screen readers.
+   */
+  labelHidden?: boolean;
+
+  /**
    * Placement of the label. Defaults to 'end'.
    */
   labelPlacement?: ZUIPlacement;
@@ -32,6 +37,7 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   checked,
   disabled = false,
   label,
+  labelHidden = false,
   labelPlacement = 'end',
   onChange,
   size = 'medium',
@@ -39,6 +45,7 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   <FormControlLabel
     control={
       <Switch
+        aria-label={label}
         checked={checked}
         onChange={(event, newCheckedState) => onChange(newCheckedState)}
         size={size}
@@ -48,7 +55,8 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
     label={
       <Typography
         sx={(theme) => ({
-          color: disabled ? theme.palette.text.disabled : '',
+          color: disabled ? theme.palette.text.disabled : undefined,
+          visibility: labelHidden ? 'hidden' : undefined,
         })}
         variant="labelXlMedium"
       >
