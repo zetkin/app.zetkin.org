@@ -110,7 +110,9 @@ function Row({
                   }}
                   sx={{
                     '&:hover .sort-control-indicator-icon': {
-                      color: theme.palette.grey[500],
+                      color: sort
+                        ? theme.palette.primary.light
+                        : theme.palette.grey[500],
                     },
                     alignItems: 'center',
                     cursor: 'pointer',
