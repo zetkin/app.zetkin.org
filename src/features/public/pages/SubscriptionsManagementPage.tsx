@@ -2,7 +2,7 @@
 
 import { Box } from '@mui/material';
 import { MailOutline } from '@mui/icons-material';
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUIDivider from 'zui/components/ZUIDivider';
@@ -68,7 +68,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
                       const isActive = channel.subscription === 'subscribed';
                       const isLast = index === channels.length - 1;
                       return (
-                        <>
+                        <Fragment key={channel.id}>
                           <Box
                             sx={{
                               alignItems: 'center',
@@ -107,7 +107,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
                             <ZUISwitch
                               checked={isActive}
                               label={isActive ? 'On' : 'Off'}
-                              labelPlacement="start"
+                              labelHidden
                               onChange={async (newState) => {
                                 const patchRes = await fetch(
                                   `/api2/orgs/${org.id}/channels/${channel.id}`,
@@ -138,7 +138,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
                             />
                           </Box>
                           {!isLast && <ZUIDivider />}
-                        </>
+                        </Fragment>
                       );
                     })}
                   </Box>

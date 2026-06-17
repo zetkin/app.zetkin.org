@@ -14,7 +14,7 @@ export type ZUISwitchProps = {
   label: string;
 
   /**
-   * The label is hidden to the UI, but is visible to screen readers.
+   * The label is hidden to the UI, but is still visible to screen readers using aria-label.
    */
   labelHidden?: boolean;
 
@@ -45,10 +45,10 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   <FormControlLabel
     control={
       <Switch
-        aria-label={label}
         checked={checked}
-        onChange={(event, newCheckedState) => onChange(newCheckedState)}
+        onChange={(e, newCheckedState) => onChange(newCheckedState)}
         size={size}
+        slotProps={{ input: { 'aria-label': label } }}
       />
     }
     disabled={disabled}
