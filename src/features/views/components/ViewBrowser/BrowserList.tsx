@@ -296,20 +296,13 @@ function BrowserList({
   );
 
   const updateSorting = useCallback(
-    (field: string, dir: GridSortDirection | null) => {
-      setSortModel((current) => {
-        const hasField = current.some((entry) => entry.field === field);
-        if (hasField && dir) {
-          return current.map((entry) =>
-            entry.field === field ? { field: field, sort: dir } : entry
-          );
-        } else if (dir) {
-          return [...current, { field: field, sort: dir }];
-        } else if (hasField) {
-          return current.filter((entry) => entry.field !== field);
-        }
-        return current;
-      });
+    (field: string, sort: GridSortDirection | null) => {
+      if (sort) {
+        setSortModel([{ field, sort }]);
+        return;
+      }
+
+      setSortModel([]);
     },
     [setSortModel]
   );
