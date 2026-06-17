@@ -12,15 +12,15 @@ import ZUISwitch from 'zui/components/ZUISwitch';
 import { EmailChannel } from '../types';
 import ZUIAlert from 'zui/components/ZUIAlert';
 
-const MOCK_EMAIL = 'person@thirdpartyemailprovider.org';
-
 type Props = {
+  email: string;
   initialChannels: EmailChannel[];
   org: ZetkinOrganization;
   token: string;
 };
 
 const SubscriptionsManagementPage: FC<Props> = ({
+  email,
   initialChannels,
   org,
   token,
@@ -189,7 +189,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
               title: `Block all mass emails from ${org.title}`,
             },
           ]}
-          subtitle={MOCK_EMAIL}
+          subtitle={email}
           title={`Email settings`}
         />
       </Box>

@@ -33,7 +33,16 @@ export default async function Page({ params, searchParams }: PageProps) {
       return <SubscriptionsTokenRequestPage org={org} />;
     }
 
-    const tokenExpiry = jwtDecode(token)?.exp;
+    const decodedToken = jwtDecode<{
+      email: string;
+      exp: number;
+      factors: string[];
+      iat: number;
+      level: number;
+      org_id?: 1;
+      scope: string[];
+    }>(token);
+    const tokenExpiry = decodedToken.exp;
     const isExpired = !tokenExpiry || tokenExpiry < new Date().getTime();
 
     if (isExpired) {
@@ -51,6 +60,7 @@ export default async function Page({ params, searchParams }: PageProps) {
     // const initialChannels: EmailChannel[] = await channelsReq.json();
     return (
       <SubscriptionsManagementPage
+        email={decodedToken.email}
         initialChannels={initialData}
         org={org}
         token={token}
