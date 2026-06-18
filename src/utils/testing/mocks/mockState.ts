@@ -150,6 +150,7 @@ export default function mockState(overrides?: RootState) {
       notesByPersonId: {},
       orgsByPersonId: {},
       personById: {},
+      surveySubmissionsByPersonId: {},
     },
     search: {
       matchesByQuery: {},
