@@ -71,7 +71,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
                   )}
                   <List sx={{ padding: 0 }}>
                     {channels.map((channel, index) => {
-                      const isActive = channel.subscription === 'subscribed';
+                      const isActive = !channel.is_blocked;
                       const isFirst = index === 0;
                       const isLast = index === channels.length - 1;
                       return (

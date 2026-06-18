@@ -42,10 +42,11 @@ export type ZetkinEventWithStatus = ZetkinEvent &
 
 export type EmailChannel = {
   id: number;
-  is_public: boolean;
+  is_blocked: boolean;
   organization_id: number;
+  published: string | null;
+  published_by_user_id: number | null;
   sender_email: string;
   sender_name: string;
-  subscription: 'subscribed' | 'blocked';
   title: string;
 };
