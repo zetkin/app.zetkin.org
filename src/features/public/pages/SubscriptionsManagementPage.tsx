@@ -144,7 +144,8 @@ const SubscriptionsManagementPage: FC<Props> = ({
                   </List>
                 </Stack>
               ),
-              subtitle: 'Turn a channel off to stop receiving its emails.',
+              subtitle:
+                'These are the channels you have received emails from. Turn a channel off to stop receiving its emails.',
               title: 'Channels',
             },
             {
