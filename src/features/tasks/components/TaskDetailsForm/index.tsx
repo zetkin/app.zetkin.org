@@ -29,7 +29,7 @@ import {
   isPublishedFirst,
 } from './utils';
 import messageIds from 'features/tasks/l10n/messageIds';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import { useNumericRouteParams } from 'core/hooks';
 
 dayjs.extend(utc);
@@ -46,12 +46,12 @@ const TaskDetailsForm = ({
   task,
 }: TaskDetailsFormProps): JSX.Element => {
   const messages = useMessages(messageIds);
-  const { campId, orgId } = useNumericRouteParams();
-  const { data: campaigns } = useCampaigns(orgId);
+  const { projectId: projId, orgId } = useNumericRouteParams();
+  const { data: projects } = useProjects(orgId);
   const taskStatus = task ? getTaskStatus(task) : null;
 
-  const [campaignId, setCampaignId] = useState<number | undefined>(
-    campId ?? task?.campaign?.id
+  const [projectId, setProjectId] = useState<number | undefined>(
+    projId ?? task?.campaign?.id
   );
   const [title, setTitle] = useState<string>(task?.title ?? '');
   const [instructions, setInstructions] = useState<string>(
@@ -116,7 +116,7 @@ const TaskDetailsForm = ({
       errors.intructions = messages.form.required();
     }
     if (!values.campaign_id) {
-      errors.campaign_id = messages.form.required();
+      errors.project_id = messages.form.required();
     }
     if (
       values.type === TASK_TYPE.VISIT_LINK ||
@@ -150,7 +150,7 @@ const TaskDetailsForm = ({
 
   const composedValues: NewTaskValues = useMemo(() => {
     return {
-      campaign_id: campaignId,
+      campaign_id: projectId,
       config: (() => {
         if (type === TASK_TYPE.SHARE_LINK) {
           return {
@@ -174,7 +174,7 @@ const TaskDetailsForm = ({
       type: type as TASK_TYPE,
     } as NewTaskValues;
   }, [
-    campaignId,
+    projectId,
     deadline,
     demographicsField,
     expires,
@@ -236,17 +236,17 @@ const TaskDetailsForm = ({
     <form noValidate onSubmit={handleSubmit}>
       {/* Required fields */}
       <TextField
-        disabled={!!campId}
+        disabled={!!projId}
         fullWidth
-        label={messages.form.fields.campaign()}
+        label={messages.form.fields.project()}
         margin="normal"
-        onChange={(e) => setCampaignId(Number(e.target.value))}
+        onChange={(e) => setProjectId(Number(e.target.value))}
         required
         select
-        value={campaignId ?? ''}
+        value={projectId ?? ''}
       >
-        {campaigns &&
-          campaigns.map((c) => (
+        {projects &&
+          projects.map((c) => (
             <MenuItem key={c.id} value={c.id}>
               {c.title}
             </MenuItem>

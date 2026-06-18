@@ -8,7 +8,7 @@ import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -53,7 +53,7 @@ const EmailClick = ({
 }: EmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const projects = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {

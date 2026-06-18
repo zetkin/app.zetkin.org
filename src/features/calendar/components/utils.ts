@@ -5,9 +5,9 @@ import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
-  CampaignActivity,
+  ProjectActivity,
   EventActivity,
-} from 'features/campaigns/types';
+} from 'features/projects/types';
 
 export function isAllDay(start: string, end: string): boolean {
   const startDate = new Date(removeOffset(start));
@@ -40,7 +40,7 @@ const startOfDay = (date: Temporal.PlainDateTime) =>
   date.with({ hour: 0, minute: 0, second: 0 });
 
 export const getActivitiesByDay = (
-  activities: CampaignActivity[]
+  activities: ProjectActivity[]
 ): Record<string, DaySummary> => {
   const dateHashmap: Record<string, DaySummary> = {};
   const applyToHashmap = (date: Temporal.PlainDate, event: EventActivity) => {
