@@ -34,11 +34,16 @@ import {
 } from 'features/public/hooks/useSurveyFormState';
 
 type PublicSurveyPageProps = {
+  privacyUrl: string;
   survey: ZetkinSurveyExtended;
   user: ZetkinUser | null;
 };
 
-const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
+const PublicSurveyPage: FC<PublicSurveyPageProps> = ({
+  privacyUrl,
+  survey,
+  user,
+}) => {
   const messages = useMessages(messageIds);
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState(false);
@@ -108,9 +113,6 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   const showForm = status == 'editing' || status == 'error';
   const showSuccess = status == 'submitted';
   const showErrorAlert = status == 'error';
-
-  const privacyUrl =
-    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
