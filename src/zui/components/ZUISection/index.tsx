@@ -64,6 +64,12 @@ type SectionBase = {
    * The title of the section.
    */
   title: string;
+
+  /**
+   * The HTML element used to render the title.
+   * Defaults to "span".
+   */
+  titleComponent?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span';
 };
 
 type SectionWithContent = SectionBase & {
@@ -213,7 +219,13 @@ const SubSection: FC<{ subSection: SubSectionType }> = ({ subSection }) => {
 };
 
 const ZUISection: FC<SectionProps> = (props) => {
-  const { title, subtitle, fullHeight = false, borders = true } = props;
+  const {
+    title,
+    titleComponent,
+    subtitle,
+    fullHeight = false,
+    borders = true,
+  } = props;
 
   const hasFullWidthHeaderContent = isSectionWithFullWidthHeaderContent(props);
   const hasRightHeaderContent = isSectionWithRightHeaderContent(props);
@@ -265,6 +277,7 @@ const ZUISection: FC<SectionProps> = (props) => {
             }}
           >
             <Typography
+              {...(titleComponent && { component: titleComponent })}
               sx={{
                 flex: hasFullWidthHeaderContent ? 1 : '',
                 overflow: 'hidden',
