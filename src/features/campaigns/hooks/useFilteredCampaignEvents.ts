@@ -4,10 +4,10 @@ import { filtersUpdated } from '../store';
 import useFilteredEvents from 'features/events/hooks/useFilteredEvents';
 
 export default function useFilteredCampaignEvents(
-  campId: number,
-  orgId: number
+  orgId: number,
+  campId: number
 ) {
-  const events = useUpcomingCampaignEvents(campId, orgId);
+  const events = useUpcomingCampaignEvents(orgId, campId);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.campaigns.filters);
 
