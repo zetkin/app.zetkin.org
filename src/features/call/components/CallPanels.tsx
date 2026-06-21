@@ -82,6 +82,7 @@ const CallPanels: FC<Props> = ({
         <ZUISection
           borders={false}
           fullHeight
+          inert={lane.step !== LaneStep.START}
           renderContent={() => (
             <Box
               sx={{
