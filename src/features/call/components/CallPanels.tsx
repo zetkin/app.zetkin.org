@@ -82,13 +82,13 @@ const CallPanels: FC<Props> = ({
                 paddingBottom: 10,
               }}
             >
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.start.title} />
               </ZUIText>
               <ZUIText>
                 <Msg id={messageIds.callingInfo.tutorial.start.description} />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.personInfo.title} />
               </ZUIText>
               <ZUIText>
@@ -96,19 +96,19 @@ const CallPanels: FC<Props> = ({
                   id={messageIds.callingInfo.tutorial.personInfo.description}
                 />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.call.title} />
               </ZUIText>
               <ZUIText>
                 <Msg id={messageIds.callingInfo.tutorial.call.description} />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.report.title} />
               </ZUIText>
               <ZUIText>
                 <Msg id={messageIds.callingInfo.tutorial.report.description} />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.oldCalls.title} />
               </ZUIText>
               <ZUIText>
@@ -119,6 +119,7 @@ const CallPanels: FC<Props> = ({
             </Box>
           )}
           title={messages.callingInfo.title()}
+          titleComponent="h2"
         />
       </Box>
       <Box
