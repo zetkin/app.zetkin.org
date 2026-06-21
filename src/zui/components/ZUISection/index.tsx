@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect, useRef } from 'react';
 
 import ZUIDivider from '../ZUIDivider';
 import { ZUIOrientation } from '../types';
@@ -54,6 +54,12 @@ type SectionBase = {
    * Defaults to "false".
    */
   fullHeight?: boolean;
+
+  /**
+   * If the section should be inert (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inert)
+   * Defaults to "false".
+   */
+  inert?: boolean;
 
   /**
    * The subtitle of the section.
@@ -223,10 +229,12 @@ const ZUISection: FC<SectionProps> = (props) => {
     title,
     titleComponent,
     subtitle,
+    inert = false,
     fullHeight = false,
     borders = true,
   } = props;
 
+  const sectionRef = useRef<HTMLDivElement>(null);
   const hasFullWidthHeaderContent = isSectionWithFullWidthHeaderContent(props);
   const hasRightHeaderContent = isSectionWithRightHeaderContent(props);
   const hasSubSections = isSectionWithSubSections(props);
@@ -237,8 +245,17 @@ const ZUISection: FC<SectionProps> = (props) => {
   const showVerticalDivider =
     (hasRightHeaderContent && !!props.dataPoint) || hasFullWidthHeaderContent;
 
+  useEffect(() => {
+    if (inert) {
+      sectionRef.current?.setAttribute('inert', '');
+    } else {
+      sectionRef.current?.removeAttribute('inert');
+    }
+  }, [inert]);
+
   return (
     <Box
+      ref={sectionRef}
       border={2}
       sx={(theme) => ({
         backgroundColor: theme.palette.common.white,

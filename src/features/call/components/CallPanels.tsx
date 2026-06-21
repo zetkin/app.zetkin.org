@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { Box, List, ListItem } from '@mui/material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -46,6 +46,15 @@ const CallPanels: FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const queueError = useAppSelector((state) => state.call.queueError);
+
+  const summaryRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (lane.step != LaneStep.SUMMARY) {
+      summaryRef.current?.setAttribute('inert', '');
+    } else {
+      summaryRef.current?.removeAttribute('inert');
+    }
+  }, [lane.step]);
 
   return (
     <>
@@ -251,6 +260,7 @@ const CallPanels: FC<Props> = ({
         <ZUISection
           borders={false}
           fullHeight
+          inert={lane.step != LaneStep.REPORT ? true : false}
           renderContent={() => {
             if (!call) {
               return <Box sx={{ height: '200px' }} />;
@@ -270,6 +280,7 @@ const CallPanels: FC<Props> = ({
         />
       </Box>
       <Box
+        ref={summaryRef}
         sx={{
           '@keyframes summaryOut': {
             '0%': { left: 'calc(100% / 3)' },
