@@ -24,19 +24,12 @@ import CallPanels from './CallPanels';
 
 type Props = {
   callStatus: CallStatus;
-  clearCallLanes: () => void;
   hangup: () => void;
   invite: (destination: string) => Promise<void>;
   onResetAfterError: (urlToNavigateTo: string) => void;
 };
 
-const Call: FC<Props> = ({
-  callStatus,
-  clearCallLanes,
-  hangup,
-  invite,
-  onResetAfterError,
-}) => {
+const Call: FC<Props> = ({ callStatus, hangup, invite, onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
@@ -132,14 +125,12 @@ const Call: FC<Props> = ({
         primaryButton={{
           label: messages.unexpectedError.reloadButton(),
           onClick: () => {
-            clearCallLanes();
             onResetAfterError(`/call/${assignment.id}`);
           },
         }}
         secondaryButton={{
           label: messages.unexpectedError.backToMyZetkinButton(),
           onClick: () => {
-            clearCallLanes();
             onResetAfterError('/my');
           },
         }}

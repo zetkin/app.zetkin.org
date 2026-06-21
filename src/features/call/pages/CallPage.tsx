@@ -100,7 +100,6 @@ const CallPage: FC = () => {
         {canInitialize && (
           <Call
             callStatus={callStatus}
-            clearCallLanes={() => clearCallLanes()}
             hangup={hangup}
             invite={invite}
             onResetAfterError={(urlToNavigateTo: string) => {
