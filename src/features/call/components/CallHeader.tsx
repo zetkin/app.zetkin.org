@@ -177,7 +177,7 @@ const CallHeader: FC<Props> = ({
                     <ZUIButton
                       label="Cancel"
                       onClick={hangup}
-                      startIcon={CallEnd}
+                      startIcon={CallIcon}
                       variant="warning"
                     />
                   </>
@@ -187,7 +187,7 @@ const CallHeader: FC<Props> = ({
                     label="Hang up"
                     onClick={hangup}
                     startIcon={CallEnd}
-                    variant="warning"
+                    variant="destructive"
                   />
                 )}
               </Box>
