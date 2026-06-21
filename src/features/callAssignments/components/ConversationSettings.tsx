@@ -1,8 +1,10 @@
-import { Box, Paper, Switch, Typography } from '@mui/material';
+import { Box, Paper, Stack, Switch, Typography } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useCallAssignment from '../hooks/useCallAssignment';
+import ZUISelect from 'zui/components/ZUISelect';
+import { DialingMode } from '../betaTypes';
 
 interface ConversationSettingsProps {
   assignmentId: number;
@@ -13,10 +15,11 @@ const ConversationSettings = ({
   assignmentId,
   orgId,
 }: ConversationSettingsProps) => {
-  const { data: callAssignment, updateCallAssignment } = useCallAssignment(
-    orgId,
-    assignmentId
-  );
+  const {
+    data: callAssignment,
+    updateCallAssignment,
+    updateDialingMode,
+  } = useCallAssignment(orgId, assignmentId);
 
   return (
     <Paper>
@@ -67,6 +70,34 @@ const ConversationSettings = ({
         <Typography>
           <Msg id={messageIds.conversation.settings.targetData.message} />
         </Typography>
+        <Stack marginTop={2} spacing={2}>
+          <div>
+            <Box>
+              <Typography variant="h6">
+                <Msg id={messageIds.conversation.settings.dialing_mode.title} />
+              </Typography>
+            </Box>
+            <Typography>
+              <Msg id={messageIds.conversation.settings.dialing_mode.message} />
+            </Typography>
+          </div>
+          <ZUISelect
+            items={[
+              {
+                label: 'Manual',
+                value: DialingMode.MANUAL,
+              },
+              {
+                label: 'Automatic',
+                value: DialingMode.AUTOMATIC,
+              },
+            ]}
+            label="Dialling modes"
+            onChange={(mode) => updateDialingMode(mode as DialingMode)}
+            selectedOption={callAssignment?.dialing_mode || ''}
+            size="large"
+          />
+        </Stack>
       </Box>
     </Paper>
   );
