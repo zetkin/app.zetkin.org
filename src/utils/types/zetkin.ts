@@ -13,6 +13,7 @@ import {
   ZetkinViewRow,
 } from '../../features/views/components/types';
 import { Latitude, Longitude } from 'features/areas/types';
+import { DialingMode } from 'features/callAssignments/betaTypes';
 
 export interface ZetkinCampaign {
   archived: boolean;
@@ -231,6 +232,7 @@ export interface ZetkinCallAssignment {
   cooldown: number;
   description: string;
   disable_caller_notes: boolean;
+  dialing_mode: DialingMode;
   end_date: string | null;
   expose_target_details: boolean;
   goal: ZetkinQuery;

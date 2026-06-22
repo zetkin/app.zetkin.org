@@ -1,7 +1,8 @@
-import { SkipNext } from '@mui/icons-material';
+import { Call as CallIcon, CallEnd, SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 
+import { CallStatus } from '../hooks/usePBX';
 import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
@@ -28,7 +29,10 @@ import notEmpty from 'utils/notEmpty';
 type Props = {
   assignment: ZetkinCallAssignment;
   call: UnfinishedCall | null;
+  callStatus: CallStatus;
+  hangup: () => void;
   hasUnfinishedCalls: boolean;
+  invite: (destination: string) => Promise<void>;
   lane: LaneState;
   onSkipCall: () => void;
   report: Report;
@@ -37,7 +41,10 @@ type Props = {
 const CallHeader: FC<Props> = ({
   assignment,
   call,
+  callStatus,
   hasUnfinishedCalls,
+  hangup,
+  invite,
   lane,
   onSkipCall,
   report,
@@ -149,6 +156,42 @@ const CallHeader: FC<Props> = ({
                 .filter(notEmpty)
                 .join('/')}
             </ZUIText>
+            {lane.step == LaneStep.CALL && (
+              <Box
+                sx={{ alignItems: 'center', display: 'flex', gap: 1, ml: 1 }}
+              >
+                {callStatus == 'idle' && call.target.phone && (
+                  <ZUIButton
+                    label="Call"
+                    onClick={() => invite(call.target.phone!)}
+                    startIcon={CallIcon}
+                    variant="primary"
+                  />
+                )}
+                {callStatus == 'calling' && (
+                  <>
+                    <CircularProgress size={18} />
+                    <ZUIText color="secondary" variant="bodySmRegular">
+                      Calling…
+                    </ZUIText>
+                    <ZUIButton
+                      label="Cancel"
+                      onClick={hangup}
+                      startIcon={CallIcon}
+                      variant="warning"
+                    />
+                  </>
+                )}
+                {callStatus == 'connected' && (
+                  <ZUIButton
+                    label="Hang up"
+                    onClick={hangup}
+                    startIcon={CallEnd}
+                    variant="destructive"
+                  />
+                )}
+              </Box>
+            )}
           </>
         )}
       </Box>

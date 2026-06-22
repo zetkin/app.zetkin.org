@@ -1,4 +1,5 @@
 import { ZetkinAppliedTag, ZetkinCallAssignment } from 'utils/types/zetkin';
+import { DialingMode } from './betaTypes';
 
 export interface CallAssignmentCaller {
   id: number;
@@ -14,6 +15,7 @@ export type CallAssignmentData = ZetkinCallAssignment;
 export type CallAssignmentPatchBody = Partial<
   CallAssignmentData & {
     campaign_id?: number;
+    dialing_mode?: DialingMode;
   }
 >;
 
