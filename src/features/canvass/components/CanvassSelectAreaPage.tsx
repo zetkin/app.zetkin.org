@@ -6,6 +6,7 @@ import { ArrowForwardIos } from '@mui/icons-material';
 import {
   Avatar,
   Box,
+  Chip,
   CircularProgress,
   Divider,
   List,
@@ -21,20 +22,39 @@ import { ZetkinAreaAssignment } from '../../areaAssignments/types';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import oldTheme from 'theme';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
-}> = ({ assignment }) => {
+  myUserId: number;
+}> = ({ assignment, myUserId }) => {
   const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
+  const assigneesFuture = useAreaAssignees(
+    assignment.organization_id,
+    assignment.id
+  );
+  const messages = useMessages(messageIds);
   const [loadingAreaId, setLoadingAreaId] = useState<number | null>(null);
+
+  let hasMixedUsers = false;
+  if (
+    !assigneesFuture.isLoading &&
+    assigneesFuture.data &&
+    assigneesFuture.data.length != 1
+  ) {
+    hasMixedUsers = assigneesFuture.data
+      ?.slice(1)
+      .some((a) => a.user_id != assigneesFuture.data?.[0].user_id);
+  }
+
   return (
-    <ZUIFutures futures={{ org: orgFuture }}>
-      {({ data: { org } }) => (
+    <ZUIFutures futures={{ assignees: assigneesFuture, org: orgFuture }}>
+      {({ data: { assignees, org } }) => (
         <Box
           sx={{
             display: 'flex',
@@ -112,7 +132,22 @@ const Page: FC<{
                         {loadingAreaId === area.id ? (
                           <CircularProgress size={20} />
                         ) : (
-                          <ArrowForwardIos fontSize="small" />
+                          <Box alignItems="center" display={'flex'}>
+                            {hasMixedUsers &&
+                              assignees.find(
+                                (a) =>
+                                  a.area_id == area.id && a.user_id == myUserId
+                              ) && (
+                                <Chip
+                                  label={messages.selectArea.assignedToMe()}
+                                  sx={{
+                                    backgroundColor: '#f2c71b',
+                                    marginRight: 2,
+                                  }}
+                                />
+                              )}
+                            <ArrowForwardIos fontSize="small" />
+                          </Box>
                         )}
                       </ListItemButton>
                     </ListItem>
@@ -134,10 +169,12 @@ const Page: FC<{
 
 type CanvassSelectAreaPageProps = {
   areaAssId: number;
+  myUserId: number;
 };
 
 const CanvassSelectAreaPage: FC<CanvassSelectAreaPageProps> = ({
   areaAssId,
+  myUserId,
 }) => {
   const myAssignments = useMyCanvassAssignments() || [];
   const assignment = myAssignments.find(
@@ -148,7 +185,7 @@ const CanvassSelectAreaPage: FC<CanvassSelectAreaPageProps> = ({
     notFound();
   }
 
-  return <Page assignment={assignment} />;
+  return <Page assignment={assignment} myUserId={myUserId} />;
 };
 
 export default CanvassSelectAreaPage;
