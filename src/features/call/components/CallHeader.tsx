@@ -109,6 +109,7 @@ const CallHeader: FC<Props> = ({
         }}
       >
         <ZUIText
+          component="h1"
           variant={
             lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
               ? 'headingLg'
