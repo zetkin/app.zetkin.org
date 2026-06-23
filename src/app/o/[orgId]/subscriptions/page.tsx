@@ -27,13 +27,18 @@ export default async function Page({ params, searchParams }: PageProps) {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
+  let org: ZetkinOrganization | null = null;
   try {
-    const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
+    org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
+  } catch {
+    return notFound();
+  }
 
-    if (!token) {
-      return <SubscriptionsTokenRequestPage org={org} />;
-    }
+  if (!token) {
+    return <SubscriptionsTokenRequestPage org={org} />;
+  }
 
+  try {
     const decodedToken = jwtDecode<EmailToken>(token);
     const tokenExpiry = decodedToken.exp;
     const isExpired = !tokenExpiry || tokenExpiry < new Date().getTime();
@@ -59,8 +64,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         token={token}
       />
     );
-  } catch (err) {
-    //
-    return notFound();
+  } catch {
+    return <SubscriptionsTokenRequestPage org={org} />;
   }
 }
