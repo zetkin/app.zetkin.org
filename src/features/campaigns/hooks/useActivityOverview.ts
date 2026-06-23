@@ -21,7 +21,7 @@ export default function useActivitiyOverview(
   const weekFromNow = new Date(startOfToday);
   weekFromNow.setDate(startOfToday.getDate() + 8);
 
-  const eventActivites = useEventsFromDateRange(
+  const eventActivitiesFuture = useEventsFromDateRange(
     startOfToday,
     weekFromNow,
     orgId,
@@ -40,6 +40,7 @@ export default function useActivitiyOverview(
   );
 
   if (
+    eventActivitiesFuture.isLoading ||
     callAssignmentActivitiesFuture.isLoading ||
     areaAssignmentAcitivitiesFuture.isLoading ||
     surveyActivitiesFuture.isLoading ||
@@ -59,7 +60,7 @@ export default function useActivitiyOverview(
 
   const activities: CampaignActivity[] = [];
   activities.push(
-    ...eventActivites,
+    ...(eventActivitiesFuture.data || []),
     ...(taskActivitiesFuture.data || []),
     ...(surveyActivitiesFuture.data || []),
     ...(callAssignmentActivitiesFuture.data || []),

@@ -29,12 +29,8 @@ export default function useMonthCalendarEvents({
   startDate,
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
   const { campId, orgId } = useNumericRouteParams();
-  const eventActivities = useEventsFromDateRange(
-    startDate,
-    endDate,
-    orgId,
-    campId
-  );
+  const eventActivities =
+    useEventsFromDateRange(startDate, endDate, orgId, campId).data || [];
 
   // Filter events based on user filters
   const filteredActivities = useFilteredEventActivities(eventActivities);
