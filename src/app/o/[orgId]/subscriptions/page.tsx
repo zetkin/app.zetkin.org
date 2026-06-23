@@ -8,6 +8,7 @@ import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsMana
 // import { EmailChannel } from 'features/public/types';
 import SubscriptionsTokenRequestPage from 'features/public/pages/SubscriptionsTokenRequestPage';
 import { initialData } from 'features/public/hooks/useEmailChannels';
+import { EmailToken } from 'features/public/types';
 
 type PageProps = {
   params: {
@@ -33,15 +34,7 @@ export default async function Page({ params, searchParams }: PageProps) {
       return <SubscriptionsTokenRequestPage org={org} />;
     }
 
-    const decodedToken = jwtDecode<{
-      email: string;
-      exp: number;
-      factors: string[];
-      iat: number;
-      level: number;
-      org_id?: 1;
-      scope: string[];
-    }>(token);
+    const decodedToken = jwtDecode<EmailToken>(token);
     const tokenExpiry = decodedToken.exp;
     const isExpired = !tokenExpiry || tokenExpiry < new Date().getTime();
 
@@ -66,7 +59,8 @@ export default async function Page({ params, searchParams }: PageProps) {
         token={token}
       />
     );
-  } catch {
+  } catch (err) {
+    //
     return notFound();
   }
 }

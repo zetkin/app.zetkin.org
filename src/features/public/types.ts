@@ -50,3 +50,12 @@ export type EmailChannel = {
   sender_name: string;
   title: string;
 };
+
+export type EmailToken = {
+  email: string;
+  exp: number;
+  factors: string[];
+  iat: number;
+  level: number;
+  scope: string[];
+};
