@@ -331,17 +331,17 @@ export default makeMessages('feat.views', {
     ),
   },
   deleteRowsDialog: {
-    alert: m(
-      'This is a destructive action that cannot be undone! Read carefully and ensure you understand the consequences before proceeding.'
-    ),
     cancelButton: m('Cancel'),
-    confirmButton: m('Delete people'),
-    confirmationInputLabel: m('Enter confirmation text'),
+    confirmButton: m('Delete records'),
+    confirmationInputLabel: m('Organization name'),
+    destructiveAlert: m(
+      'This is a permanent and destructive action. It cannot be undone. Please read the information below carefully before continuing.'
+    ),
     instruction: m<{ rootOrgSlug: ReactElement }>(
-      'To permanently delete these records, type {rootOrgSlug} into the textbox below and click delete.'
+      'To confirm you understand the consequences, type {rootOrgSlug} in the textbox below and click Delete'
     ),
     tagetOrgWarning: m<{ rootOrgTitle: ReactElement }>(
-      'This will delete all records of these people in {rootOrgTitle} and all it’s child organizations.'
+      'This will delete all records of these persons in {rootOrgTitle} and all it’s child organizations.'
     ),
     title: m<{ numPeople: number }>(
       'Delete all records of {numPeople, plural, =1 {one person} other {# persons}}'

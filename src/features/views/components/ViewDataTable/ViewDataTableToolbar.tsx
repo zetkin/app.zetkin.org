@@ -200,7 +200,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
           <Alert severity="warning">
-            <Msg id={messageIds.deleteRowsDialog.alert} />
+            <Msg id={messageIds.deleteRowsDialog.destructiveAlert} />
           </Alert>
           <DialogContentText>
             <Msg
