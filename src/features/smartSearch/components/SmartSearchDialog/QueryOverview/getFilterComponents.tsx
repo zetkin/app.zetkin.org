@@ -55,6 +55,7 @@ import {
   EmailBlacklistFilterConfig,
   EmailClickFilterConfig,
   EmailHistoryFilterConfig,
+  EventParticipationConfig,
   FILTER_TYPE,
   JoinFormFilterConfig,
   JourneyFilterConfig,
@@ -77,6 +78,7 @@ import {
 import DisplayJoinForm from '../../filters/JoinForm/DisplayJoinForm';
 import DisplayAllInSuborg from '../../filters/AllInSubOrg/DisplayAllInSuborg';
 import DisplayInArea from '../../filters/Area/DisplayInArea';
+import DisplayEventParticipation from '../../filters/EventParticipation/DisplayEventParticipation';
 
 export default function getFilterComponents(
   filter: SmartSearchFilterWithId<AnyFilterConfig>
@@ -133,6 +135,13 @@ export default function getFilterComponents(
     displayFilter = (
       <DisplayCampaignParticipation
         filter={filter as SmartSearchFilterWithId<CampaignParticipationConfig>}
+      />
+    );
+    filterTypeIcon = <Event color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.EVENT_PARTICIPATION) {
+    displayFilter = (
+      <DisplayEventParticipation
+        filter={filter as SmartSearchFilterWithId<EventParticipationConfig>}
       />
     );
     filterTypeIcon = <Event color="secondary" fontSize="small" />;
