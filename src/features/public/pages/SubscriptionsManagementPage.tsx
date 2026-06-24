@@ -11,6 +11,8 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUISwitch from 'zui/components/ZUISwitch';
 import { EmailChannel } from '../types';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import { useEnv } from 'core/hooks';
+import { stringToBool } from 'utils/stringUtils';
 
 type Props = {
   email: string;
@@ -27,6 +29,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
 }) => {
   const [blockAll, setBlockAll] = useState(false);
   const [channels, setChannels] = useState(initialChannels);
+  const env = useEnv();
 
   return (
     <Box
@@ -111,14 +114,20 @@ const SubscriptionsManagementPage: FC<Props> = ({
                             label={isActive ? 'On' : 'Off'}
                             labelPlacement="start"
                             onChange={async (newState) => {
+                              const apiHost = env.vars.ZETKIN_API_HOST;
+                              const apiPort = env.vars.ZETKIN_API_PORT;
+                              const ssl = stringToBool(env.vars.ZETKIN_USE_TLS);
+
+                              const protocol = ssl ? 'https' : 'http';
+                              const apiHostAndPort =
+                                apiHost + (apiPort ? `:${apiPort}` : '');
+                              const apiBase = `${protocol}://${apiHostAndPort}/v2/`;
+
                               const patchRes = await fetch(
-                                `/api2/orgs/${org.id}/channels/${channel.id}`,
-                                // does this return the entire channel, with patched data?
+                                `${apiBase}/orgs/${org.id}/channels/${channel.id}`,
                                 {
                                   body: JSON.stringify({
-                                    subscription: newState
-                                      ? 'subscribed'
-                                      : 'blocked',
+                                    is_blocked: !newState,
                                   }),
                                   headers: new Headers({
                                     Authorization: `Bearer ${token}`,
