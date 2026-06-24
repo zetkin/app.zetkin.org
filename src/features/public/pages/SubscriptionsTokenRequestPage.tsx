@@ -4,6 +4,7 @@ import isEmail from 'validator/lib/isEmail';
 import { Box } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
+import useEnv from 'core/hooks/useEnv';
 import ZUISection from 'zui/components/ZUISection';
 import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -11,6 +12,7 @@ import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import { stringToBool } from 'utils/stringUtils';
 
 type Props = {
   org: ZetkinOrganization;
@@ -20,6 +22,7 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
   const [email, setEmail] = useState('');
   const [emailValidationError, setEmailValidationError] = useState(false);
   const [submitted, setSubmitted] = useState(false); // Currently only allows one submit per page load
+  const env = useEnv();
 
   // Reset error state when retrying to type email
   useEffect(() => {
@@ -59,16 +62,29 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                 onSubmit={async (e) => {
                   e.preventDefault();
 
-                  // Email validation
                   if (!isEmail(email)) {
                     setEmailValidationError(true);
                     return;
                   }
 
-                  //send to api
-                  await fetch('http://api.dev.zetkin.org/v2/tokens/email', {
+                  const clientId = env.vars.ZETKIN_CLIENT_ID;
+                  const apiHost = env.vars.ZETKIN_API_HOST;
+                  const apiPort = env.vars.ZETKIN_API_PORT;
+                  const ssl = stringToBool(env.vars.ZETKIN_USE_TLS);
+
+                  const protocol = ssl ? 'https' : 'http';
+                  const apiHostAndPort =
+                    apiHost + (apiPort ? `:${apiPort}` : '');
+                  const apiBase = `${protocol}://${apiHostAndPort}/v2/`;
+
+                  const appHost = env.vars.ZETKIN_APP_HOST;
+                  const linkUri = `${protocol}://${appHost}/o/${org.id}/subscriptions`;
+
+                  await fetch(`${apiBase}/email_tokens`, {
                     body: JSON.stringify({
+                      client_id: clientId,
                       email,
+                      link_uri: linkUri,
                       org_id: org.id,
                       scope: ['channel.list', 'channel.read'],
                     }),
