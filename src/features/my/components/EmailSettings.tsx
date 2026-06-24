@@ -1,6 +1,6 @@
 import { Block, MailOutline } from '@mui/icons-material';
 import { Box, List, ListItem, Stack } from '@mui/material';
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import useEmailChannels from 'features/public/hooks/useEmailChannels';
 import useUserMemberships from 'features/public/hooks/useUserMemberships';
@@ -27,6 +27,25 @@ const EmailSettings: FC = () => {
       value: membership.organization.id.toString(),
     }));
   }, [memberships]);
+
+  useEffect(() => {
+    const getChannels = async () => {
+      // Fetch channels and render subscription management page
+      const channelsReq = await fetch(
+        `http://api.dev.zetkin.org/v2/orgs/1/channels`,
+        {
+          // What exactly should url be.
+          headers: new Headers({ Authorization: `Bearer djfdjhfg` }),
+        }
+      );
+      if (!channelsReq.ok) {
+        throw new Error('Channels fetch failed');
+      }
+      const initialChannels: EmailChannel[] = await channelsReq.json();
+      initialChannels.toString();
+    };
+    getChannels();
+  }, []);
 
   return (
     <ZUISection

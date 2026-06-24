@@ -4,7 +4,6 @@ export const initialData: EmailChannel[] = [
   {
     id: 1,
     is_blocked: true,
-    organization_id: 1,
     published: '',
     published_by_user_id: 12,
     sender_email: 'newsletter@united.co.uk',
@@ -14,7 +13,6 @@ export const initialData: EmailChannel[] = [
   {
     id: 2,
     is_blocked: false,
-    organization_id: 1,
     published: '',
     published_by_user_id: 12,
     sender_email: 'workplace@united.co.uk',
@@ -24,7 +22,6 @@ export const initialData: EmailChannel[] = [
   {
     id: 3,
     is_blocked: false,
-    organization_id: 1,
     published: '',
     published_by_user_id: 12,
     sender_email: 'info@united.co.uk',
@@ -34,7 +31,6 @@ export const initialData: EmailChannel[] = [
   {
     id: 4,
     is_blocked: false,
-    organization_id: 1,
     published: '',
     published_by_user_id: 12,
     sender_email: 'info@united.co.uk',
@@ -44,7 +40,6 @@ export const initialData: EmailChannel[] = [
   {
     id: 5,
     is_blocked: false,
-    organization_id: 1,
     published: '',
     published_by_user_id: 12,
     sender_email: 'board@united.co.uk',

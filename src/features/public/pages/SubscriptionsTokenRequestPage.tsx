@@ -56,7 +56,7 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
           renderContent={() => {
             return (
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
 
                   // Email validation
@@ -64,6 +64,19 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                     setEmailValidationError(true);
                     return;
                   }
+
+                  //send to api
+                  await fetch('http://api.dev.zetkin.org/v2/tokens/email', {
+                    body: JSON.stringify({
+                      email,
+                      org_id: org.id,
+                      scope: ['channel.list', 'channel.read'],
+                    }),
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    method: 'POST',
+                  });
 
                   setSubmitted(true);
                 }}

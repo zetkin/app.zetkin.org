@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsManagementPage';
-// import { EmailChannel } from 'features/public/types';
+import { EmailChannel } from 'features/public/types';
 import SubscriptionsTokenRequestPage from 'features/public/pages/SubscriptionsTokenRequestPage';
 import { initialData } from 'features/public/hooks/useEmailChannels';
 import { EmailToken } from 'features/public/types';
@@ -48,14 +48,18 @@ export default async function Page({ params, searchParams }: PageProps) {
     }
 
     // Fetch channels and render subscription management page
-    // const channelsReq = await fetch(`/api2/orgs/${orgId}/channels`, {
-    //   // What exactly should url be.
-    //   headers: new Headers({ Authorization: `Bearer ${token}` }),
-    // });
-    // if (!channelsReq.ok) {
-    //   throw new Error('Channels fetch failed');
-    // }
-    // const initialChannels: EmailChannel[] = await channelsReq.json();
+    const channelsReq = await fetch(
+      `http://localohost:3000/api2/orgs/${orgId}/channels`,
+      {
+        // What exactly should url be.
+        headers: new Headers({ Authorization: `Bearer ${token}` }),
+      }
+    );
+    if (!channelsReq.ok) {
+      throw new Error('Channels fetch failed');
+    }
+    const initialChannels: EmailChannel[] = await channelsReq.json();
+    initialChannels.toLocaleString();
     return (
       <SubscriptionsManagementPage
         email={decodedToken.email}
