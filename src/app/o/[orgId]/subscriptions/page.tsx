@@ -7,7 +7,6 @@ import { ZetkinOrganization } from 'utils/types/zetkin';
 import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsManagementPage';
 import { EmailChannel } from 'features/public/types';
 import SubscriptionsTokenRequestPage from 'features/public/pages/SubscriptionsTokenRequestPage';
-import { initialData } from 'features/public/hooks/useEmailChannels';
 import { EmailToken } from 'features/public/types';
 import requiredEnvVar from 'utils/requiredEnvVar';
 import { stringToBool } from 'utils/stringUtils';
@@ -65,12 +64,12 @@ export default async function Page({ params, searchParams }: PageProps) {
     if (!channelsReq.ok) {
       throw new Error('Channels fetch failed');
     }
-    const initialChannels: EmailChannel[] = await channelsReq.json();
-    initialChannels.toLocaleString();
+    const initialChannels: EmailChannel[] = (await channelsReq.json()).data;
+
     return (
       <SubscriptionsManagementPage
         email={decodedToken.email}
-        initialChannels={initialData}
+        initialChannels={initialChannels}
         org={org}
         token={token}
       />
