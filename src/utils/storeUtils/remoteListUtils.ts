@@ -1,4 +1,4 @@
-import { RemoteData, RemoteList, remoteList } from 'utils/storeUtils';
+import { Id, RemoteData, RemoteList, remoteList } from 'utils/storeUtils';
 
 /**
  * When recieving response from backend that a remote list has been created, this method should be used to update the redux store (cache).
@@ -7,7 +7,7 @@ import { RemoteData, RemoteList, remoteList } from 'utils/storeUtils';
  * @returns the created RemoteList.
  */
 export function remoteListCreated<
-  DataType extends RemoteData,
+  DataType extends RemoteData | Id,
 >(): RemoteList<DataType> {
   const list = remoteList<DataType>();
   list.loaded = new Date().toISOString();
@@ -21,8 +21,8 @@ export function remoteListCreated<
  * @param list RemoteList to set as loading.
  * @returns the RemoteList.
  */
-export function remoteListLoad<DataType extends RemoteData>(
-  list: RemoteList<DataType> | null
+export function remoteListLoad<DataType extends RemoteData | Id>(
+  list: RemoteList<DataType> | null | undefined
 ): RemoteList<DataType> {
   if (!list) {
     list = remoteList();
@@ -39,7 +39,7 @@ export function remoteListLoad<DataType extends RemoteData>(
  * @param items Loaded RemoteItem-compatible data used for populating the list.
  * @returns the loaded RemoteList.
  */
-export function remoteListLoaded<DataType extends RemoteData>(
+export function remoteListLoaded<DataType extends RemoteData | Id>(
   items: DataType[]
 ): RemoteList<DataType> {
   const list = remoteList(items);
@@ -57,7 +57,7 @@ export function remoteListLoaded<DataType extends RemoteData>(
  * @param list RemoteList to set as stale/invalidated.
  * @returns Stale RemoteList.
  */
-export function remoteListInvalidated<DataType extends RemoteData>(
+export function remoteListInvalidated<DataType extends RemoteData | Id>(
   list: RemoteList<DataType> | null
 ): RemoteList<DataType> {
   if (!list) {
