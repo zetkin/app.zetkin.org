@@ -75,7 +75,7 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                   const protocol = ssl ? 'https' : 'http';
                   const apiHostAndPort =
                     apiHost + (apiPort ? `:${apiPort}` : '');
-                  const apiBase = `${protocol}://${apiHostAndPort}/v2/`;
+                  const apiBase = `${protocol}://${apiHostAndPort}/v2`;
 
                   const appHost = env.vars.ZETKIN_APP_HOST;
                   const linkUri = `${protocol}://${appHost}/o/${org.id}/subscriptions`;

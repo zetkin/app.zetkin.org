@@ -54,7 +54,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     const protocol = ssl ? 'https' : 'http';
     const hostAndPort = host + (port ? `:${port}` : '');
-    const apiBase = `${protocol}://${hostAndPort}/v2/`;
+    const apiBase = `${protocol}://${hostAndPort}/v2`;
 
     // Fetch channels and render subscription management page
     const channelsReq = await fetch(`${apiBase}/orgs/${orgId}/channels`, {
