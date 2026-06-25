@@ -33,56 +33,66 @@ const AppPreferences: FC<Props> = ({ user }) => {
   );
 
   return (
-    <ZUISection
-      renderContent={() => (
-        <Box
-          sx={{
-            alignItems: 'flex-end',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-          }}
-        >
-          <ZUISelect
-            fullWidth
-            items={[
-              {
-                label: messages.settings.appPreferences.lang.auto(),
-                value: 'auto',
-              },
-              ...Object.entries(languageOptions)
-                // TODO: Remove this filter once nl is supported on server
-                .filter((entry) => entry[0] != 'nl')
-                .map(([code, label]) => ({
-                  label,
-                  value: code,
-                })),
-            ]}
-            label={messages.settings.appPreferences.lang.label()}
-            onChange={(newValue) => {
-              if (newValue == 'auto') {
-                setSelectedLanguage(null);
-              } else {
-                setSelectedLanguage(newValue as ZetkinUserLanguage);
-              }
-            }}
-            selectedOption={selectedLanguage || 'auto'}
-            size="large"
-          />
-          <ZUIButton
-            disabled={selectedLanguage == user.lang}
-            label={messages.settings.appPreferences.lang.saveButton()}
-            onClick={async () => {
-              await updateUser({ lang: selectedLanguage });
-              location.reload();
-            }}
-            size="large"
-            variant="primary"
-          />
-        </Box>
-      )}
-      title={messages.settings.appPreferences.header()}
-    />
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap={1}
+      overflow="hidden"
+      position="relative"
+    >
+      <Box mt={2}>
+        <ZUISection
+          renderContent={() => (
+            <Box
+              sx={{
+                alignItems: 'flex-end',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+              }}
+            >
+              <ZUISelect
+                fullWidth
+                items={[
+                  {
+                    label: messages.settings.appPreferences.lang.auto(),
+                    value: 'auto',
+                  },
+                  ...Object.entries(languageOptions)
+                    // TODO: Remove this filter once nl is supported on server
+                    .filter((entry) => entry[0] != 'nl')
+                    .map(([code, label]) => ({
+                      label,
+                      value: code,
+                    })),
+                ]}
+                label={messages.settings.appPreferences.lang.label()}
+                onChange={(newValue) => {
+                  if (newValue == 'auto') {
+                    setSelectedLanguage(null);
+                  } else {
+                    setSelectedLanguage(newValue as ZetkinUserLanguage);
+                  }
+                }}
+                selectedOption={selectedLanguage || 'auto'}
+                size="large"
+              />
+              <ZUIButton
+                disabled={selectedLanguage == user.lang}
+                label={messages.settings.appPreferences.lang.saveButton()}
+                onClick={async () => {
+                  await updateUser({ lang: selectedLanguage });
+                  location.reload();
+                }}
+                size="large"
+                variant="primary"
+              />
+            </Box>
+          )}
+          title={messages.settings.appPreferences.header()}
+        />
+      </Box>
+    </Box>
   );
 };
 
