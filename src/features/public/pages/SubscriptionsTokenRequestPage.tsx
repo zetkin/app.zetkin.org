@@ -86,7 +86,11 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                       email,
                       link_uri: linkUri,
                       org_id: org.id,
-                      scope: ['channel.list', 'channel.read'],
+                      scope: [
+                        'channel.list',
+                        'channel.read',
+                        'channel.update_subscription:own',
+                      ],
                     }),
                     headers: {
                       'Content-Type': 'application/json',
