@@ -45,10 +45,15 @@ export default async function RootLayout({
               MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
               TILESERVER: process.env.TILESERVER,
+              ZETKIN_API_HOST: process.env.ZETKIN_API_HOST,
+              ZETKIN_API_PORT: process.env.ZETKIN_API_PORT,
               ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+              ZETKIN_APP_HOST: process.env.ZETKIN_APP_HOST,
+              ZETKIN_CLIENT_ID: process.env.ZETKIN_CLIENT_ID,
               ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
               ZETKIN_PRIVACY_POLICY_LINK:
                 process.env.ZETKIN_PRIVACY_POLICY_LINK,
+              ZETKIN_USE_TLS: process.env.ZETKIN_USE_TLS,
             }}
             headers={headersObject}
             lang={lang}
