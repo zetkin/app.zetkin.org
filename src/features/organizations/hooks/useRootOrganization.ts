@@ -1,38 +1,23 @@
-import { useMemo } from 'react';
-
 import { IFuture } from 'core/caching/futures';
-import useOrganizationsTree from './useOrganizationsTree';
-import { TreeItemData } from '../types';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
+import { ZetkinOrganization } from 'utils/types/zetkin';
+import { rootOrgLoad, rootOrgLoaded } from '../store';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { getRootOrganizationDef } from '../rpc/getRootOrganization';
 
-const findInTree = (node: TreeItemData, targetId: number): boolean => {
-  if (node.id === targetId) {
-    return true;
-  }
-  return node.children.some((child) => findInTree(child, targetId));
-};
+const useRootOrganization = (orgId: number): IFuture<ZetkinOrganization> => {
+  const dispatch = useAppDispatch();
+  const apiClient = useApiClient();
 
-const useRootOrganization = (orgId: number): IFuture<TreeItemData> => {
-  const treeFuture = useOrganizationsTree();
+  const rootOrgItem = useAppSelector(
+    (state) => state.organizations.rootOrgByOrgId[orgId]
+  );
 
-  return useMemo(() => {
-    if (!treeFuture.data) {
-      return {
-        data: null,
-        error: treeFuture.error || null,
-        isLoading: !treeFuture.error,
-      };
-    }
-
-    const parentOrg = treeFuture.data.find((topNode) =>
-      findInTree(topNode, orgId)
-    );
-
-    return {
-      data: parentOrg || null,
-      error: null,
-      isLoading: false,
-    };
-  }, [treeFuture.data, treeFuture.error, orgId]);
+  return loadItemIfNecessary(rootOrgItem, dispatch, {
+    actionOnLoad: () => rootOrgLoad(orgId),
+    actionOnSuccess: (data) => rootOrgLoaded([orgId, data]),
+    loader: () => getRootOrganizationDef.handler({ orgId }, apiClient),
+  });
 };
 
 export default useRootOrganization;

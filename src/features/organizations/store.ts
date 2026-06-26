@@ -35,6 +35,7 @@ export interface OrganizationsStoreSlice {
   eventsByOrgId: Record<number, RemoteList<ZetkinEvent>>;
   filters: OrgEventFilters;
   orgList: RemoteList<ZetkinOrganization>;
+  rootOrgByOrgId: Record<number, RemoteItem<ZetkinOrganization>>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   suborgsWithStats: RemoteList<SuborgResult>;
   statsBySuborgId: Record<
@@ -55,6 +56,7 @@ const initialState: OrganizationsStoreSlice = {
     orgIdsToFilterBy: [],
   },
   orgList: remoteList(),
+  rootOrgByOrgId: {},
   statsBySuborgId: {},
   subOrgsByOrgId: {},
   suborgsWithStats: remoteList(),
@@ -130,6 +132,26 @@ const OrganizationsSlice = createSlice({
     organizationLoaded: (state, action: PayloadAction<ZetkinOrganization>) => {
       const org = action.payload;
       remoteItemUpdated(state.orgList, org);
+    },
+    rootOrgLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+
+      state.rootOrgByOrgId[orgId] ||= remoteItem(orgId);
+      state.rootOrgByOrgId[orgId].isLoading = true;
+    },
+    rootOrgLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinOrganization]>
+    ) => {
+      const [orgId, rootOrg] = action.payload;
+
+      state.rootOrgByOrgId[orgId] = remoteItem(orgId, {
+        data: rootOrg,
+        loaded: new Date().toISOString(),
+      });
+
+      // Keep the canonical org cache hydrated by real org ID.
+      remoteItemUpdated(state.orgList, rootOrg);
     },
     subOrgsLoad: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
@@ -218,6 +240,8 @@ export const {
   orgEventsLoaded,
   organizationLoaded,
   organizationLoad,
+  rootOrgLoad,
+  rootOrgLoaded,
   orgFollowed,
   orgUnfollowed,
   treeDataLoad,
