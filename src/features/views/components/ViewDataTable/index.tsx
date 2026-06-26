@@ -94,7 +94,7 @@ declare module '@mui/x-data-grid-pro' {
     isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
-    onRowsDelete: () => void;
+    onBulkDelete: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -353,7 +353,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setColumnToRename, updateColumn]
   );
 
-  const onRowsDelete = useCallback(async () => {
+  const onBulkDelete = useCallback(async () => {
     bulkDeletePersons(selection);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
@@ -546,8 +546,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         gridColumns,
         isLoading,
         isSmartSearch: !!view.content_query,
+        onBulkDelete,
         onColumnCreate,
-        onRowsDelete,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,
         onViewCreate,
@@ -577,7 +577,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
-      onRowsDelete,
+      onBulkDelete,
       setQuickSearch,
       modelGridProps.sortModel,
     ]

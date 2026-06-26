@@ -42,7 +42,7 @@ export interface ViewDataTableToolbarProps {
   isLoading: boolean;
   isSmartSearch: boolean;
   onColumnCreate: () => void;
-  onRowsDelete: () => void;
+  onBulkDelete: () => void;
   onRowsRemove: () => void;
   onViewCreate: () => void;
   selection: number[];
@@ -60,8 +60,8 @@ const ViewDataTableToolbar: React.FunctionComponent<
   gridColumns,
   isLoading,
   isSmartSearch,
+  onBulkDelete,
   onColumnCreate,
-  onRowsDelete,
   onRowsRemove,
   onViewCreate,
   selection,
@@ -113,6 +113,11 @@ const ViewDataTableToolbar: React.FunctionComponent<
   const handleCloseDeleteDialog = () => {
     setDeleteDialogOpen(false);
     setDeletionString('');
+  };
+
+  const handleBulkDelete = () => {
+    handleCloseDeleteDialog();
+    onBulkDelete();
   };
 
   return (
@@ -237,7 +242,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           <Button
             color="error"
             disabled={!hasConfirmedDeletion}
-            onClick={() => onRowsDelete()}
+            onClick={() => handleBulkDelete()}
             variant="contained"
           >
             <Msg id={messageIds.deleteRowsDialog.confirmButton} />
