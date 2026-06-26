@@ -72,13 +72,13 @@ const ViewDataTableToolbar: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { orgId } = useNumericRouteParams();
-  const rootOrg = useRootOrganization(orgId);
+  const rootOrg = useRootOrganization(orgId).data;
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletionString, setDeletionString] = useState('');
 
   const hasSelection = !!selection.length;
   const hasBulkDelete = useFeatureWithOrg(BULK_DELETE, orgId);
-  const hasConfirmedDeletion = deletionString === rootOrg.data?.title;
+  const hasConfirmedDeletion = deletionString === rootOrg?.title;
 
   const onClickRemoveRows = () => {
     showConfirmDialog({
@@ -212,7 +212,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
               id={messageIds.deleteRowsDialog.tagetOrgWarning}
               values={{
                 rootOrgTitle: (
-                  <Box component="strong">{rootOrg.data?.title ?? ''}</Box>
+                  <Box component="strong">{rootOrg?.title ?? ''}</Box>
                 ),
               }}
             />
@@ -221,9 +221,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
             <Msg
               id={messageIds.deleteRowsDialog.instruction}
               values={{
-                rootOrgSlug: (
-                  <Box component="b">{rootOrg.data?.title ?? ''}</Box>
-                ),
+                rootOrgSlug: <Box component="b">{rootOrg?.title ?? ''}</Box>,
               }}
             />
           </DialogContentText>
@@ -245,7 +243,10 @@ const ViewDataTableToolbar: React.FunctionComponent<
             onClick={() => handleBulkDelete()}
             variant="contained"
           >
-            <Msg id={messageIds.deleteRowsDialog.confirmButton} />
+            <Msg
+              id={messageIds.deleteRowsDialog.confirmButton}
+              values={{ numPeople: selection.length }}
+            />
           </Button>
         </DialogActions>
       </Dialog>

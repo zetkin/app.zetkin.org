@@ -332,16 +332,18 @@ export default makeMessages('feat.views', {
   },
   deleteRowsDialog: {
     cancelButton: m('Cancel'),
-    confirmButton: m('Delete records'),
+    confirmButton: m<{ numPeople: number }>(
+      'Delete {numPeople, plural, =1 {the person} other {# persons}} permanently'
+    ),
     confirmationInputLabel: m('Organization name'),
     destructiveAlert: m(
       'This is a permanent and destructive action. It cannot be undone. Please read the information below carefully before continuing.'
     ),
     instruction: m<{ rootOrgSlug: ReactElement }>(
-      'To confirm you understand the consequences, type {rootOrgSlug} in the textbox below and click Delete'
+      'To confirm you understand the consequences, type {rootOrgSlug} in the textbox below.'
     ),
     tagetOrgWarning: m<{ rootOrgTitle: ReactElement }>(
-      'This will delete all records of these persons in {rootOrgTitle} and all it’s child organizations.'
+      'This will delete all records of these persons in {rootOrgTitle} and all its child organizations.'
     ),
     title: m<{ numPeople: number }>(
       'Delete all records of {numPeople, plural, =1 {one person} other {# persons}}'
