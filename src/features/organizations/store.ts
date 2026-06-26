@@ -150,7 +150,6 @@ const OrganizationsSlice = createSlice({
         loaded: new Date().toISOString(),
       });
 
-      // Keep the canonical org cache hydrated by real org ID.
       remoteItemUpdated(state.orgList, rootOrg);
     },
     subOrgsLoad: (state, action: PayloadAction<number>) => {
