@@ -3,7 +3,7 @@ import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { rootOrgLoad, rootOrgLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { getRootOrganizationDef } from '../rpc/getRootOrganization';
+import getRootOrganization from '../rpc/getRootOrganization';
 
 const useRootOrganization = (orgId: number): IFuture<ZetkinOrganization> => {
   const dispatch = useAppDispatch();
@@ -16,7 +16,7 @@ const useRootOrganization = (orgId: number): IFuture<ZetkinOrganization> => {
   return loadItemIfNecessary(rootOrgItem, dispatch, {
     actionOnLoad: () => rootOrgLoad(orgId),
     actionOnSuccess: (data) => rootOrgLoaded([orgId, data]),
-    loader: () => getRootOrganizationDef.handler({ orgId }, apiClient),
+    loader: () => apiClient.rpc(getRootOrganization, { orgId }),
   });
 };
 
