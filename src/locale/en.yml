@@ -910,7 +910,7 @@ feat:
           zetkinIDInfo: A Zetkin ID is the ID of a person already in Zetkin. You would
             have it in a file if you exported data from Zetkin.
         orgs:
-          guess: Guess organisations
+          guess: Guess organizations
           header: Map values to organizations
           organizations: Organization
           showOrganizationSelectButton: Map to...
