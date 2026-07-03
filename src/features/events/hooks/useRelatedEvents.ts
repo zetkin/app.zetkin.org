@@ -8,8 +8,8 @@ export default function useRelatedEvents(
   orgId: number
 ): IFuture<ZetkinEvent[]> {
   const relatedEvents: ZetkinEvent[] = [];
-  const start = new Date(currentEvent.start_time);
-  const end = new Date(currentEvent.end_time);
+  const start = Temporal.PlainDate.from(currentEvent.start_time);
+  const end = Temporal.PlainDate.from(currentEvent.end_time);
   const { campId } = useNumericRouteParams();
   const allEventsInActivities = useEventsFromDateRange(
     start,

@@ -104,3 +104,22 @@ export function getOffset(dateString: string) {
 export function getDayTimeInMinutes(dateString: string | dayjs.Dayjs) {
   return dayjs(dateString).hour() * 60 + dayjs(dateString).minute();
 }
+export const plainDateTimeFromDate = (date: Date): Temporal.PlainDate =>
+  Temporal.Instant.fromEpochMilliseconds(date.valueOf())
+    .toZonedDateTimeISO(Temporal.Now.timeZoneId())
+    .toPlainDate();
+
+export const legacyDateFromPlainDate = (plainDate: Temporal.PlainDate): Date =>
+  new Date(
+    plainDate.toZonedDateTime(Temporal.Now.timeZoneId()).epochMilliseconds
+  );
+
+export const isPlainDateAfter = (
+  first: Temporal.PlainDate,
+  second: Temporal.PlainDate
+): boolean => Temporal.PlainDate.compare(first, second) > 0;
+
+export const isPlainDateBefore = (
+  first: Temporal.PlainDate,
+  second: Temporal.PlainDate
+): boolean => Temporal.PlainDate.compare(first, second) < 0;

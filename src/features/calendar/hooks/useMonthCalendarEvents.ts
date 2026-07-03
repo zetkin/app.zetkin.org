@@ -9,6 +9,7 @@ import {
   CLUSTER_TYPE,
   clusterEvents,
 } from 'features/campaigns/hooks/useClusteredActivities';
+import { plainDateTimeFromDate } from 'utils/dateUtils';
 
 type UseMonthCalendarEventsParams = {
   campaignId?: number;
@@ -30,8 +31,8 @@ export default function useMonthCalendarEvents({
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
   const { campId, orgId } = useNumericRouteParams();
   const eventActivities = useEventsFromDateRange(
-    startDate,
-    endDate,
+    plainDateTimeFromDate(startDate),
+    plainDateTimeFromDate(endDate),
     orgId,
     campId
   );

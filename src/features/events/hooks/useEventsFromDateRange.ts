@@ -1,6 +1,3 @@
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
 import range from 'utils/range';
 import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -8,11 +5,9 @@ import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-dayjs.extend(utc);
-
 export default function useEventsFromDateRange(
-  startDate: Date,
-  endDate: Date,
+  startDate: Temporal.PlainDate,
+  endDate: Temporal.PlainDate,
   orgId: number,
   campId?: number
 ): EventActivity[] {
@@ -20,25 +15,21 @@ export default function useEventsFromDateRange(
   const dispatch = useAppDispatch();
   const eventsState = useAppSelector((state) => state.events);
 
-  const dateRange = range(
-    dayjs(endDate).startOf('day').diff(dayjs(startDate).startOf('day'), 'day') +
-      1
-  ).map((diff) =>
-    dayjs(startDate).startOf('day').add(diff, 'day').utc(true).toISOString()
-  );
+  const dateRange = range(endDate.since(startDate).total('days') + 1)
+    .map((offset) => startDate.add({ days: offset }))
+    .map((plainDate) => plainDate.toString());
 
   const mustLoad = dateRange.some((date) =>
-    shouldLoad(eventsState.eventsByDate[date.slice(0, 10)])
+    shouldLoad(eventsState.eventsByDate[date])
   );
 
   if (mustLoad) {
     dispatch(eventRangeLoad(dateRange));
-    const apiEndDate = new Date(endDate);
-    apiEndDate.setDate(apiEndDate.getDate() + 1);
+    const apiEndDate = endDate.add({ days: 1 });
     const promise = apiClient
       .get<
         ZetkinEvent[]
-      >(`/api/orgs/${orgId}/actions?filter=start_time>${startDate.toISOString().slice(0, 10)}&filter=end_time<${apiEndDate.toISOString().slice(0, 10)}`)
+      >(`/api/orgs/${orgId}/actions?filter=start_time>${startDate.toString()}&filter=end_time<${apiEndDate.toString()}`)
       .then((events) => {
         dispatch(eventRangeLoaded([events, dateRange]));
       });

@@ -101,22 +101,18 @@ describe('Deleting an event', () => {
   });
 
   it('does not return deleted events when getting events from a date range', () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    const today = new Date();
+    const today = Temporal.Now.plainDateISO();
+    const yesterday = today.subtract({ days: 1 });
+    const tomorrow = today.add({ days: 1 });
 
     const firstEvent = mockEvent({
-      end_time: tomorrow.toISOString(),
-      start_time: yesterday.toISOString(),
+      end_time: tomorrow.toString(),
+      start_time: yesterday.toString(),
     });
     const secondEvent = mockEvent({
-      end_time: tomorrow.toISOString(),
+      end_time: tomorrow.toString(),
       id: 2,
-      start_time: yesterday.toISOString(),
+      start_time: yesterday.toString(),
     });
     const emptyState = mockState();
 
@@ -143,9 +139,9 @@ describe('Deleting an event', () => {
           1: eventItemsList,
         },
         eventsByDate: {
-          [yesterday.toISOString().slice(0, 10)]: eventItemsList,
-          [today.toISOString().slice(0, 10)]: eventItemsList,
-          [tomorrow.toISOString().slice(0, 10)]: eventItemsList,
+          [yesterday.toString()]: eventItemsList,
+          [today.toString()]: eventItemsList,
+          [tomorrow.toString()]: eventItemsList,
         },
       },
     });

@@ -9,7 +9,7 @@ import PreviousDayPrompt from './PreviousDayPrompt';
 import useDayCalendarEvents from 'features/calendar/hooks/useDayCalendarEvents';
 
 export interface CalendarDayViewProps {
-  focusDate: Date;
+  focusDate: Temporal.PlainDate;
   onClickPreviousDay: (date: Date) => void;
   previousActivityDay: [Date, DaySummary] | null;
 }
@@ -34,11 +34,16 @@ const CalendarDayView = ({
         />
       )}
       {/* List of days with events */}
-      {activities.map(([dateString, daySummary], index) => {
+      {activities.map(([date, daySummary], index) => {
         return (
           <Day
             key={`dayIdx-${index}`}
-            date={new Date(dateString)}
+            date={
+              new Date(
+                date.toZonedDateTime(Temporal.Now.timeZoneId())
+                  .epochMilliseconds
+              )
+            }
             dayInfo={daySummary}
           />
         );

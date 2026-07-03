@@ -4,6 +4,7 @@ import {
   dateIsAfter,
   dateIsBefore,
   isSameDate,
+  plainDateTimeFromDate,
   removeOffset,
 } from 'utils/dateUtils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
@@ -30,8 +31,8 @@ export default function useWeekCalendarEvents({
   orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
   const eventActivities = useEventsFromDateRange(
-    dates[0],
-    dates[dates.length - 1],
+    plainDateTimeFromDate(dates[0]),
+    plainDateTimeFromDate(dates[dates.length - 1]),
     orgId,
     campaignId
   );

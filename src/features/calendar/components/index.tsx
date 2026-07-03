@@ -39,6 +39,9 @@ const Calendar = () => {
 
   const focusDateStr = router.query.focusDate as string;
   const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
+  const [focusPlainDate, setFocusPlainDate] = useState(
+    Temporal.PlainDate.from(focusDateStr)
+  );
   const { nextActivityDay, prevActivityDay } = useDayCalendarNav(focusDate);
 
   const { setPersistentTimeScale, timeScale } = useTimeScale(
@@ -47,6 +50,7 @@ const Calendar = () => {
 
   useEffect(() => {
     setFocusDate(getDateFromString(focusDateStr));
+    setFocusPlainDate(Temporal.PlainDate.from(focusDateStr));
   }, [focusDateStr]);
 
   useEffect(() => {
@@ -112,7 +116,7 @@ const Calendar = () => {
         <Suspense>
           {timeScale === TimeScale.DAY && (
             <CalendarDayView
-              focusDate={focusDate}
+              focusDate={focusPlainDate}
               onClickPreviousDay={(date) => setFocusDate(date)}
               previousActivityDay={prevActivityDay}
             />

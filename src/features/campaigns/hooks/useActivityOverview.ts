@@ -1,4 +1,4 @@
-import { isSameDate } from 'utils/dateUtils';
+import { isSameDate, legacyDateFromPlainDate } from 'utils/dateUtils';
 import useCallAssignmentActivities from './useCallAssignmentActivities';
 import useAreaAssignmentActivities from 'features/areaAssignments/hooks/useAreaAssignmentActivities';
 import useEmailActivities from './useEmailActivities';
@@ -17,12 +17,11 @@ export default function useActivitiyOverview(
   orgId: number,
   campId?: number
 ): IFuture<ActivityOverview> {
-  const startOfToday = new Date(new Date().toISOString().slice(0, 10));
-  const weekFromNow = new Date(startOfToday);
-  weekFromNow.setDate(startOfToday.getDate() + 8);
+  const today = Temporal.Now.plainDateISO();
+  const weekFromNow = today.add({ days: 7 });
 
   const eventActivites = useEventsFromDateRange(
-    startOfToday,
+    today,
     weekFromNow,
     orgId,
     campId
@@ -123,8 +122,9 @@ export default function useActivitiyOverview(
 
     return (
       activity.visibleFrom &&
-      activity.visibleFrom < weekFromNow &&
-      (!activity.visibleUntil || activity.visibleUntil >= startOfToday)
+      activity.visibleFrom < legacyDateFromPlainDate(weekFromNow) &&
+      (!activity.visibleUntil ||
+        activity.visibleUntil >= legacyDateFromPlainDate(today))
     );
   });
 

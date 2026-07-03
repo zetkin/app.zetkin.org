@@ -45,7 +45,7 @@ describe('When creating an event', () => {
     store.dispatch(eventCreate());
     store.dispatch(eventCreated(event));
 
-    const today = new Date();
+    const today = Temporal.Now.plainDateISO();
     const { result } = renderHook(
       () => useEventsFromDateRange(today, today, 1, 1),
       {
