@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useMemo } from 'react';
 import utc from 'dayjs/plugin/utc';
 
 import CalendarDayView from './CalendarDayView';
@@ -20,52 +20,45 @@ export enum TimeScale {
   MONTH = 'month',
 }
 
-function getDateFromString(focusDateStr: string) {
-  let date = new Date();
-  if (focusDateStr) {
-    const d = dayjs.utc(focusDateStr);
-    if (d.isValid()) {
-      date = d.toDate();
-    }
-  }
-  return date;
-}
-
 const Calendar = () => {
   const router = useRouter();
 
   const orgId = router.query.orgId;
-  const campId = router.query.campId;
 
-  const focusDateStr = router.query.focusDate as string;
-  const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
+  const focusDate = useMemo(() => {
+    const focusDateStr = router.query.focusDate as string;
+    let date = new Date();
+    if (focusDateStr) {
+      const d = dayjs.utc(focusDateStr);
+      if (d.isValid()) {
+        date = d.toDate();
+      }
+    }
+    return date;
+  }, [router.query.focusDate]);
   const { nextActivityDay, prevActivityDay } = useDayCalendarNav(focusDate);
 
   const { setPersistentTimeScale, timeScale } = useTimeScale(
     router.query.timeScale
   );
 
-  useEffect(() => {
-    setFocusDate(getDateFromString(focusDateStr));
-  }, [focusDateStr]);
-
-  useEffect(() => {
-    const focusedDate = dayjs.utc(focusDate).format('YYYY-MM-DD');
-    router.replace(
-      {
-        pathname: undefined,
-        query: {
-          ...(campId && { campId: campId }),
-          focusDate: focusedDate,
-          orgId: orgId,
-          timeScale: timeScale,
+  const setFocusDate = useCallback(
+    async (date: Date) => {
+      const focusedDate = dayjs.utc(date).format('YYYY-MM-DD');
+      await router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...router.query,
+            focusDate: focusedDate,
+          },
         },
-      },
-      undefined,
-      { shallow: true }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusDate, timeScale]);
+        undefined,
+        { shallow: true }
+      );
+    },
+    [router]
+  );
 
   function navigateTo(timeScale: TimeScale, date: Date) {
     setPersistentTimeScale(timeScale);
