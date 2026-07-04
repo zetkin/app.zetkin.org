@@ -11,6 +11,7 @@ import CalendarWeekView from './CalendarWeekView';
 import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
 import useTimeScale from '../hooks/useTimeScale';
+import { plainDateFromLegacyDate } from 'utils/dateUtils';
 
 dayjs.extend(utc);
 
@@ -125,7 +126,7 @@ const Calendar = () => {
           )}
           {timeScale === TimeScale.MONTH && (
             <CalendarMonthView
-              focusDate={focusDate}
+              focusDate={plainDateFromLegacyDate(focusDate)}
               onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
               onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
             />
