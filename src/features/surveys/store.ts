@@ -18,7 +18,7 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats';
+import { SurveyResponseStats } from 'features/surveys/types';
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;

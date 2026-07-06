@@ -7,6 +7,7 @@ import { NoSsr } from '@mui/material';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import { useEffect, useRef } from 'react';
+import 'temporal-polyfill/global';
 
 import createStore, { Store } from 'core/store';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';

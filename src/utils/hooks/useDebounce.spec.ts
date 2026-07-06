@@ -1,4 +1,12 @@
 import { act, renderHook } from '@testing-library/react';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest,
+} from '@jest/globals';
 
 import useDebounce from './useDebounce';
 
@@ -12,7 +20,7 @@ describe('useDebounce()', () => {
   });
 
   it('calls the callback after the delay', () => {
-    const callback = jest.fn().mockResolvedValue(undefined);
+    const callback = jest.fn<(value: string) => Promise<void>>();
     const { result } = renderHook(() => useDebounce(callback, 400));
 
     act(() => {
@@ -29,8 +37,8 @@ describe('useDebounce()', () => {
   });
 
   it('uses the latest callback after re-render', () => {
-    const firstCallback = jest.fn().mockResolvedValue('first');
-    const secondCallback = jest.fn().mockResolvedValue('second');
+    const firstCallback = jest.fn<(value: string) => Promise<void>>();
+    const secondCallback = jest.fn<(value: string) => Promise<void>>();
 
     const { result, rerender } = renderHook(
       ({ callback }) => useDebounce(callback, 400),
@@ -62,7 +70,7 @@ describe('useDebounce()', () => {
     //
     // Each render creates a new arrow function closing over that
     // render's `onSave` prop. useDebounce should use the latest one.
-    const saveFn = jest.fn().mockResolvedValue(undefined);
+    const saveFn = jest.fn<(emailId: string, value: string) => Promise<void>>();
 
     const { result, rerender } = renderHook(
       ({ emailId }) =>
@@ -88,7 +96,7 @@ describe('useDebounce()', () => {
   });
 
   it('uses the new delay after re-render', () => {
-    const callback = jest.fn().mockResolvedValue(undefined);
+    const callback = jest.fn<(value: string) => Promise<void>>();
 
     const { result, rerender } = renderHook(
       ({ delay }) => useDebounce(callback, delay),

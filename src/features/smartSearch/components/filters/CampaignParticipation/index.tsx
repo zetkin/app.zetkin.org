@@ -186,7 +186,7 @@ const CampaignParticipation = ({
                 onChange={(e) => {
                   handleActivitySelectChange(e.target.value);
                 }}
-                value={filter.config.campaign || DEFAULT_VALUE}
+                value={filter.config.activity || DEFAULT_VALUE}
               />
             ),
             addRemoveSelect: (

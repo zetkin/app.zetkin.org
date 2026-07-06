@@ -301,6 +301,13 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
+    reportSubmissionErrorAdded: (
+      state,
+      action: PayloadAction<ReportSubmissionError>
+    ) => {
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.reportSubmissionError = action.payload;
+    },
     reportSubmitted: (state, action: PayloadAction<ZetkinUpdatedCall>) => {
       const lane = state.lanes[state.activeLaneIndex];
       lane.reportSubmissionError = null;
@@ -337,13 +344,6 @@ const CallSlice = createSlice({
       const report = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
       lane.report = report;
-    },
-    setReportSubmissionError: (
-      state,
-      action: PayloadAction<ReportSubmissionError>
-    ) => {
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.reportSubmissionError = action.payload;
     },
     surveyDeselected: (state) => {
       const lane = state.lanes[state.activeLaneIndex];
@@ -453,9 +453,18 @@ const CallSlice = createSlice({
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
+      const activeLane = state.lanes[state.activeLaneIndex];
+      activeLane.step = step;
 
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.step = step;
+      if (step == LaneStep.REPORT) {
+        activeLane.filters = {
+          ...emptyFilters,
+          filterState: {
+            ...emptyFilters.filterState,
+            thisCall: true,
+          },
+        };
+      }
     },
     updatePendingOrgLog: (state, action: PayloadAction<string>) => {
       const lane = state.lanes[state.activeLaneIndex];
@@ -490,7 +499,7 @@ export const {
   reportUpdated,
   surveyDeselected,
   surveySelected,
-  setReportSubmissionError,
+  reportSubmissionErrorAdded,
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,

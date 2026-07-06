@@ -65,10 +65,7 @@ test.describe('View detail page', () => {
     await page.click('[name=person]');
     await page.fill('[name=person]', `${NewPerson.last_name}`);
 
-    await Promise.all([
-      page.waitForResponse('**/orgs/1/people/views/1/rows'),
-      page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`),
-    ]);
+    await page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`);
 
     // Make sure the row was added
     expect(
@@ -121,20 +118,19 @@ test.describe('View detail page', () => {
     await page.click('[name=person]');
     await page.fill('[name=person]', `${NewPerson.last_name}`);
 
-    await Promise.all([
-      page.waitForResponse(`**/orgs/1/people/views/1/rows/${NewPerson.id}`),
-      page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`),
-    ]);
+    await page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`);
 
     // Make sure the row was added
-    expect(
-      moxy
-        .log()
-        .find(
-          (req) =>
-            req.method === 'PUT' &&
-            req.path === `/v1/orgs/1/people/views/1/rows/${NewPerson.id}`
-        )
-    ).toBeTruthy();
+    await expect
+      .poll(() =>
+        moxy
+          .log()
+          .find(
+            (req) =>
+              req.method === 'PUT' &&
+              req.path === `/v1/orgs/1/people/views/1/rows/${NewPerson.id}`
+          )
+      )
+      .toBeTruthy();
   });
 });

@@ -40,7 +40,7 @@ interface TabbedLayoutProps {
   onClickAlertBtn?: () => void;
 }
 
-const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
+export const TabbedLayoutHeader: FunctionComponent<TabbedLayoutProps> = ({
   actionButtons,
   alertBtnMsg,
   alertMsg,
@@ -89,7 +89,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   }));
 
   return (
-    <DefaultLayout title={title}>
+    <>
       {alertMsg && (
         <Alert
           action={
@@ -162,21 +162,31 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           </Tabs>
         </Collapse>
         {/* Page Content */}
-        <Box
-          component="main"
-          flexGrow={1}
-          minHeight={0}
-          p={fixedHeight ? 0 : 3}
-          position="relative"
-          role="tabpanel"
-          sx={{
-            overflow: 'hidden',
-            padding: noPad ? 0 : undefined,
-          }}
-        >
-          <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
-        </Box>
+        {children && (
+          <Box
+            component="main"
+            flexGrow={1}
+            minHeight={0}
+            p={fixedHeight ? 0 : 3}
+            position="relative"
+            role="tabpanel"
+            sx={{
+              overflow: 'hidden',
+              padding: noPad ? 0 : undefined,
+            }}
+          >
+            <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
+          </Box>
+        )}
       </Box>
+    </>
+  );
+};
+
+const TabbedLayout: FunctionComponent<TabbedLayoutProps> = (props) => {
+  return (
+    <DefaultLayout title={props.title}>
+      <TabbedLayoutHeader {...props} />
     </DefaultLayout>
   );
 };

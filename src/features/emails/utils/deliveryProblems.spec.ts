@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import deliveryProblems from './deliveryProblems';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { BlockKind, DeliveryProblem, InlineNodeKind } from '../types';

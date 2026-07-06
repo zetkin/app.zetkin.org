@@ -1,15 +1,16 @@
 import { Close } from '@mui/icons-material';
 import { Box, Button, Dialog, Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 
 import EventShiftDetails from './EventShiftDetails';
 import EventShiftTime from './EventShiftTime';
 import messageIds from 'features/events/l10n/messageIds';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 interface EventShiftModalProps {
   dates: [Date, Date];
@@ -24,6 +25,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
 
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const [type, setType] = useState<ZetkinEvent['activity']>(null);
   const [eventTitle, setEventTitle] = useState<string>('');
@@ -55,42 +57,66 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     invalidShiftTimes.includes(true);
 
   async function publishShifts(publish: boolean) {
-    eventShifts.forEach(async (shift, index) => {
-      const endTime =
-        index < eventShifts.length - 1
-          ? dayjs(eventShifts[index + 1])
-          : dayjs(eventEndTime);
+    try {
+      await Promise.all(
+        eventShifts.map((shift, index) => {
+          const endTime =
+            index < eventShifts.length - 1
+              ? dayjs(eventShifts[index + 1])
+              : dayjs(eventEndTime);
 
-      let startDate: Dayjs = dayjs(eventDate);
-      startDate = startDate
-        .set('hour', shift.hour() + 2)
-        .set('minute', shift.minute());
+          let startDate: Dayjs = dayjs(eventDate);
+          startDate = startDate
+            .set('hour', shift.hour() + 2)
+            .set('minute', shift.minute());
 
-      let endDate: Dayjs = dayjs(eventDate);
-      endDate = endDate
-        .set('hour', endTime.hour() + 2)
-        .set('minute', endTime.minute());
+          let endDate: Dayjs = dayjs(eventDate);
+          endDate = endDate
+            .set('hour', endTime.hour() + 2)
+            .set('minute', endTime.minute());
 
-      const now = dayjs();
-      const published = startDate < now ? startDate : now;
+          const now = dayjs();
+          const published = startDate < now ? startDate : now;
 
-      createEvent(
-        {
-          activity_id: type ? type.id : null,
-          campaign_id: campId,
-          end_time: endDate.toISOString(),
-          info_text: eventDescription,
-          location_id: locationId,
-          num_participants_required: eventParticipants ? eventParticipants : 0,
-          published: publish ? published.toISOString() : null,
-          start_time: startDate.toISOString(),
-          title: eventTitle || null,
-          url: eventLink,
-        },
-        false
+          return createEvent(
+            {
+              activity_id: type ? type.id : null,
+              campaign_id: campId,
+              end_time: endDate.toISOString(),
+              info_text: eventDescription,
+              location_id: locationId,
+              num_participants_required: eventParticipants
+                ? eventParticipants
+                : 0,
+              published: publish ? published.toISOString() : null,
+              start_time: startDate.toISOString(),
+              title: eventTitle || null,
+              url: eventLink,
+            },
+            false
+          );
+        })
       );
-    });
-    close();
+
+      showSnackbar(
+        'success',
+        publish ? (
+          <Msg
+            id={messageIds.eventShiftModal.successPublish}
+            values={{ no: eventShifts.length }}
+          />
+        ) : (
+          <Msg
+            id={messageIds.eventShiftModal.successDraft}
+            values={{ no: eventShifts.length }}
+          />
+        )
+      );
+
+      close();
+    } catch {
+      showSnackbar('error', messages.eventShiftModal.error());
+    }
   }
 
   return (

@@ -60,6 +60,10 @@ export default makeMessages('feat.emails', {
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
         },
+        theme: {
+          themeTitle: m<{ themeId: number }>('Theme {themeId}'),
+          title: m('Theme'),
+        },
       },
     },
     tools: {

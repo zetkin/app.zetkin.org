@@ -86,6 +86,7 @@ export default makeMessages('feat.campaigns', {
     createCallAssignment: m('Call assignment'),
     createEmail: m('Email'),
     createEvent: m('Event'),
+    createMultiShiftEvent: m('Multi-shift event'),
     createSurvey: m('Survey'),
     createTask: m('Task'),
   },
@@ -192,6 +193,7 @@ export default makeMessages('feat.campaigns', {
       },
       filterButtonLabels: {
         locations: m<{ count: number }>('{count} locations'),
+        selectDate: m('Select a date'),
         thisWeek: m('This week'),
         today: m('Today'),
         tomorrow: m('Tomorrow'),

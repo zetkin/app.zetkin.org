@@ -45,16 +45,12 @@ export default function useDayCalendarNav(
       if (prevEventDay) {
         setPrevActivityDay([
           new Date(prevEventDay.date),
-          {
-            endingActivities: [],
-            events: prevEventDay.events.map((event) => ({
-              data: event,
-              kind: ACTIVITIES.EVENT,
-              visibleFrom: event.published ? new Date(event.published) : null,
-              visibleUntil: new Date(event.end_time),
-            })),
-            startingActivities: [],
-          },
+          prevEventDay.events.map((event) => ({
+            data: event,
+            kind: ACTIVITIES.EVENT,
+            visibleFrom: event.published ? new Date(event.published) : null,
+            visibleUntil: new Date(event.end_time),
+          })),
         ]);
       }
     }
@@ -70,20 +66,16 @@ export default function useDayCalendarNav(
     if (nextEntry) {
       setNextActivityDay([
         new Date(nextEntry[0]),
-        {
-          endingActivities: [],
-          events: nextEntry[1].items
-            .filter((item) => !!item.data)
-            .map((item) => ({
-              data: item.data!,
-              kind: ACTIVITIES.EVENT,
-              visibleFrom: item.data!.published
-                ? new Date(item.data!.published)
-                : null,
-              visibleUntil: null,
-            })),
-          startingActivities: [],
-        },
+        nextEntry[1].items
+          .filter((item) => !!item.data)
+          .map((item) => ({
+            data: item.data!,
+            kind: ACTIVITIES.EVENT,
+            visibleFrom: item.data!.published
+              ? new Date(item.data!.published)
+              : null,
+            visibleUntil: null,
+          })),
       ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

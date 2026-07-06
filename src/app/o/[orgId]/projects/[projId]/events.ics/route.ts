@@ -7,8 +7,10 @@ import {
   ZetkinCampaign,
   ZetkinEvent,
   ZetkinOrganization,
+  ZetkinUser,
 } from 'utils/types/zetkin';
 import icsFromEvents from 'features/public/utils/icsFromEvents';
+import { getBrowserLanguage } from 'utils/locale';
 
 export async function GET(
   _req: Request,
@@ -41,7 +43,20 @@ export async function GET(
     `/api/orgs/${orgId}/campaigns/${projId}`
   );
 
-  return new Response(icsFromEvents(campaign.title, events, org), {
+  let user: ZetkinUser | null;
+
+  try {
+    user = await apiClient.get<ZetkinUser>('/api/users/me');
+  } catch (e) {
+    user = null;
+  }
+
+  const lang =
+    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
+
+  const ics = await icsFromEvents(campaign.title, events, org, lang);
+
+  return new Response(ics, {
     headers: { 'Content-Type': 'text/calendar' },
   });
 }

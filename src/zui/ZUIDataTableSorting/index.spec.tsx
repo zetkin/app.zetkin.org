@@ -1,5 +1,6 @@
 import { GridSortModel } from '@mui/x-data-grid-pro';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it, jest } from '@jest/globals';
 
 import { COLUMN_TYPE } from 'features/views/components/types';
 import columnTypes from 'features/views/components/ViewDataTable/columnTypes';
@@ -31,7 +32,7 @@ describe('ZUIDataTableSorting.tsx', () => {
     .slice(0, 2)
     .map((column) => ({ field: column.field, sort: 'asc' }));
 
-  const handleSetSortModel = jest.fn((sortModel) => sortModel);
+  const handleSetSortModel = jest.fn((sortModel: GridSortModel) => sortModel);
 
   it('renders correctly when sort model is empty', async () => {
     const { getByText } = render(
@@ -84,7 +85,7 @@ describe('ZUIDataTableSorting.tsx', () => {
     await userEvent.click(sortButton);
     await userEvent.click(getByText('zui.dataTableSorting.addButton'));
 
-    const updatedSortModel = handleSetSortModel.mock.calls.at(-1)?.[0];
+    const updatedSortModel = handleSetSortModel.mock.calls.at(-1)![0];
 
     rerender(
       <ZUIDataTableSorting

@@ -24,6 +24,10 @@ test.describe('Search', async () => {
     login();
   });
 
+  test.afterEach(async ({ moxy }) => {
+    moxy.teardown();
+  });
+
   test('opens the search dialog when entering "/" hotkey', async ({
     page,
     moxy,
