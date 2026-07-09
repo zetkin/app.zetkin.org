@@ -35,6 +35,7 @@ import { loadPersonFieldsDef } from 'features/duplicates/rpc/loadPersonFields';
 import { getSurveyResponseStatsDef } from 'features/surveys/rpc/getSurveyResponseStats';
 import { getPublicOrganizationsDef } from 'features/public/rpc/organizations';
 import { addParticipantsDef } from 'features/events/rpc/addParticipants';
+import { getRootOrganizationDef } from 'features/organizations/rpc/getRootOrganization';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -75,6 +76,7 @@ export function createRPCRouter() {
   rpcRouter.register(loadPersonFieldsDef);
   rpcRouter.register(getPublicOrganizationsDef);
   rpcRouter.register(addParticipantsDef);
+  rpcRouter.register(getRootOrganizationDef);
 
   return rpcRouter;
 }
