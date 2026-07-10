@@ -56,7 +56,7 @@ const Day = ({
           }}
           variant="body2"
         >
-          {date.toLocaleString(undefined, { day: 'numeric' })}
+          {date.day}
         </Typography>
       </Box>
       {dstChange !== undefined && (
