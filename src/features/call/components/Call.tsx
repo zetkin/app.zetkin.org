@@ -18,14 +18,18 @@ import useCurrentAssignment from '../hooks/useCurrentAssignment';
 import useMyAssignments from '../hooks/useMyAssignments';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { CallStatus } from '../hooks/usePBX';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 
 type Props = {
+  callStatus: CallStatus;
+  hangup: () => void;
+  invite: (destination: string) => Promise<void>;
   onResetAfterError: (urlToNavigateTo: string) => void;
 };
 
-const Call: FC<Props> = ({ onResetAfterError }) => {
+const Call: FC<Props> = ({ callStatus, hangup, invite, onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
@@ -86,7 +90,10 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
         <CallHeader
           assignment={assignment}
           call={call}
+          callStatus={callStatus}
+          hangup={hangup}
           hasUnfinishedCalls={filteredUnfinishedCalls.length > 0}
+          invite={invite}
           lane={lane}
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
@@ -117,11 +124,15 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
         }
         primaryButton={{
           label: messages.unexpectedError.reloadButton(),
-          onClick: () => onResetAfterError(`/call/${assignment.id}`),
+          onClick: () => {
+            onResetAfterError(`/call/${assignment.id}`);
+          },
         }}
         secondaryButton={{
           label: messages.unexpectedError.backToMyZetkinButton(),
-          onClick: () => onResetAfterError('/my'),
+          onClick: () => {
+            onResetAfterError('/my');
+          },
         }}
         title={messages.unexpectedError.title()}
       >

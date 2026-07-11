@@ -78,5 +78,14 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     assignment.goal = updatedGoal;
   }
 
+  if (assignment.dialing_mode) {
+    await apiClient.patch(
+      `/beta/orgs/${orgId}/callAssignments/${assignment.id}`,
+      {
+        dialing_mode: assignment.dialing_mode,
+      }
+    );
+  }
+
   return assignment;
 }

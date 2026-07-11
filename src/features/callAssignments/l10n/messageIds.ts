@@ -74,6 +74,12 @@ export default makeMessages('feat.callAssignments', {
       unsavedMessage: m('You have unsaved changes.'),
     },
     settings: {
+      dialing_mode: {
+        message: m(
+          'Configures the dialing mode to your preferences. Choose "Manual" for dialing on an external phone yourself or "Automatic" to dial on an external phone via Zetkin.'
+        ),
+        title: m('Dialing mode'),
+      },
       notes: {
         message: m(
           'Disabling caller notes may increase the call rate but could lead to important information being lost.'
@@ -121,6 +127,7 @@ export default makeMessages('feat.callAssignments', {
     callers: m<{ numCallers: number }>(
       '{numCallers, plural, =0 {No callers} one {1 caller} other {# callers}}'
     ),
+    dialing_mode: m<{ dialing_mode: string }>('Dialing {dialing_mode}ly'),
     targets: m<{ numTargets: number }>(
       '{numTargets, plural, =0 {No targets} one {1 targets} other {# targets}}'
     ),

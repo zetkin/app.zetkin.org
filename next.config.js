@@ -18,6 +18,10 @@ module.exports = {
     turbo: {
       resolveAlias: {
         canvas: 'util',
+        // isomorphic-dompurify uses jsdom on the server side, but Turbopack
+        // pulls jsdom into the browser bundle too (which fails trying to load
+        // CSS files via require). Alias it to plain dompurify for the client.
+        'isomorphic-dompurify': 'dompurify',
       },
     },
     serverComponentsExternalPackages: ['mjml', 'mongoose'],
