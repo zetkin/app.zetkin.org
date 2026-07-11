@@ -24,7 +24,7 @@ export default function useRemoteList<
   const dispatch = useAppDispatch();
 
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
-  const isLoaded = !remoteList || !remoteList?.loaded;
+  const isLoaded = !remoteList?.loaded;
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
   const { cache, getExistingPromise } = usePromiseCache(promiseKey);

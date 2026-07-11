@@ -5,20 +5,20 @@ export default function compareTags(
   tag1: ZetkinAppliedTag | null
 ): number {
   //only compare titles if they are not null
-  if (tag0 && tag0.title && tag1 && tag1.title) {
+  if (tag0?.title && tag1?.title) {
     const titleComparison = tag0.title.localeCompare(tag1.title);
     if (titleComparison !== 0) {
       return titleComparison;
     }
-  } else if (tag0 && tag0.title) {
+  } else if (tag0?.title) {
     return -1;
-  } else if (tag1 && tag1.title) {
+  } else if (tag1?.title) {
     return 1;
   }
 
   // If 'title' properties are equal, proceed to compare 'value' properties
-  if (tag0 && tag0.value != null) {
-    if (tag1 && tag1.value != null) {
+  if (tag0?.value != null) {
+    if (tag1?.value != null) {
       if (typeof tag0.value === 'string' && typeof tag1.value === 'string') {
         if (isNaN(Number(tag0.value)) && isNaN(Number(tag1.value))) {
           return tag0.value.localeCompare(tag1.value);

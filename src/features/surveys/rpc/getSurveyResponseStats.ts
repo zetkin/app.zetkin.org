@@ -72,7 +72,7 @@ const collectIncrementalStats = (
   responseStatsCounters: Record<string, ResponseStatsCounter>
 ) => {
   responses.forEach((response) => {
-    if (!response || !response.responses) {
+    if (!response?.responses) {
       return;
     }
 

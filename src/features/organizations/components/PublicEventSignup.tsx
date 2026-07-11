@@ -76,7 +76,7 @@ export const PublicEventSignup: FC<Props> = ({
     let normalizedPhone: string | null = null;
     if (trimmedPhone) {
       const parsed = parsePhoneNumberFromString(trimmedPhone);
-      if (!parsed || !parsed.isValid()) {
+      if (!parsed?.isValid()) {
         setError(eventMessages.publicEventSignup.errors.phoneFormat());
         return;
       }
