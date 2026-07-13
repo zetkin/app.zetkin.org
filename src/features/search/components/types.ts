@@ -10,6 +10,7 @@ import {
 
 export enum SEARCH_DATA_TYPE {
   PERSON = 'person',
+  // This needs to stay "campaign" as it relates to an api request.
   PROJECT = 'campaign',
   TASK = 'task',
   VIEW = 'view',
