@@ -103,6 +103,9 @@ const EventParticipation = ({
   };
 
   const handleEventSelectChange = (eventValue: string) => {
+    if (!eventValue) {
+      return;
+    }
     setConfig({ ...filter.config, action: +eventValue });
   };
 
@@ -185,6 +188,7 @@ const EventParticipation = ({
             ),
             eventSelect: (
               <StyledAutocomplete
+                clearable={true}
                 items={
                   scopedEvents?.map((event) => {
                     const title =
