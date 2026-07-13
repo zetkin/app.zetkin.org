@@ -5,9 +5,10 @@ import {
   CancelOutlined,
   ContentCopy,
   Delete,
+  Email,
   RestoreOutlined,
 } from '@mui/icons-material';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import dayjs from 'dayjs';
 
 import messageIds from '../l10n/messageIds';
@@ -20,6 +21,9 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIDatePicker from 'zui/ZUIDatePicker';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
+import useCreateEmailFromEventParticipants from 'features/events/hooks/useCreateEmailFromEventParticipants';
+import useEmailThemes from 'features/emails/hooks/useEmailThemes';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 interface EventActionButtonsProps {
   event: ZetkinEvent;
@@ -37,6 +41,40 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const router = useRouter();
   const duplicateEvent = useDuplicateEvent(orgId, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
+
+  const themes = useEmailThemes(orgId).data || [];
+  const configs = useEmailConfigs(orgId).data || [];
+  const createEmailFromEventParticipants =
+    useCreateEmailFromEventParticipants();
+
+  const onSelectSendEmailToParticipants = useCallback(() => {
+    const eventTitle =
+      event.title || event.activity?.title || messages.common.noTitle();
+    createEmailFromEventParticipants({
+      emailTitle:
+        messages.eventActionButtons.sendEmailToParticipants.emailSubject({
+          eventTitle,
+        }),
+      eventId: event.id,
+      orgId: event.organization.id,
+    }).then((email) => {
+      window.open(
+        `/organize/${email.organization.id}/projects/${
+          email.campaign?.id || 'standalone'
+        }/emails/${email.id}/compose`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+    });
+  }, [
+    createEmailFromEventParticipants,
+    event.activity?.title,
+    event.id,
+    event.organization.id,
+    event.title,
+    messages.common,
+    messages.eventActionButtons.sendEmailToParticipants,
+  ]);
 
   const published =
     !!event.published && new Date(event.published) <= new Date();
@@ -170,6 +208,19 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
               },
               startIcon: <Delete />,
             },
+            ...(configs.length && themes.length > 0
+              ? [
+                  {
+                    label: (
+                      <>
+                        {messages.eventActionButtons.sendEmailToParticipants.buttonTitle()}
+                      </>
+                    ),
+                    onSelect: onSelectSendEmailToParticipants,
+                    startIcon: <Email />,
+                  },
+                ]
+              : []),
           ]}
         />
       </Box>
