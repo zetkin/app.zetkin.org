@@ -12,11 +12,11 @@ import callAssignmentsSlice, {
   callAssignmentCreated,
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
-import campaignsSlice, {
-  campaignCreated,
-  campaignDeleted,
-  CampaignsStoreSlice,
-} from 'features/campaigns/store';
+import projectsSlice, {
+  projectCreated,
+  projectDeleted,
+  ProjectsStoreSlice,
+} from 'features/projects/store';
 import emailsSlice, {
   emailCreated,
   EmailStoreSlice,
@@ -65,7 +65,7 @@ export interface RootState {
   breadcrumbs: BreadcrumbsStoreSlice;
   call: CallStoreSlice;
   callAssignments: CallAssignmentSlice;
-  campaigns: CampaignsStoreSlice;
+  projects: ProjectsStoreSlice;
   canvass: CanvassStoreSlice;
   duplicates: PotentialDuplicatesStoreSlice;
   emails: EmailStoreSlice;
@@ -92,7 +92,6 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   call: callSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
-  campaigns: campaignsSlice.reducer,
   canvass: canvassSlice.reducer,
   duplicates: potentialDuplicatesSlice.reducer,
   emails: emailsSlice.reducer,
@@ -103,6 +102,7 @@ const reducer = {
   journeys: journeysSlice.reducer,
   organizations: organizationsSlice.reducer,
   profiles: profilesSlice.reducer,
+  projects: projectsSlice.reducer,
   search: searchSlice.reducer,
   settings: settingsSlice.reducer,
   smartSearch: smartSearchSlice.reducer,
@@ -126,7 +126,7 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  actionCreator: campaignDeleted,
+  actionCreator: projectDeleted,
   effect: (action) => {
     const orgId = action.payload[0];
     Router.push(`/organize/${orgId}/projects`);
@@ -134,12 +134,10 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  actionCreator: campaignCreated,
+  actionCreator: projectCreated,
   effect: (action) => {
-    const campaign = action.payload;
-    Router.push(
-      `/organize/${campaign.organization?.id}/projects/${campaign.id}`
-    );
+    const project = action.payload;
+    Router.push(`/organize/${project.organization?.id}/projects/${project.id}`);
   },
 });
 
@@ -159,7 +157,7 @@ listenerMiddleware.startListening({
   actionCreator: themeCreated,
   effect: (action) => {
     const [emailTheme, orgId] = action.payload;
-    Router.push(`/organize/${orgId}/settings/themes/${emailTheme.id}`);
+    Router.push(`/organize/${orgId}/settings/email/themes/${emailTheme.id}`);
   },
 });
 
@@ -167,16 +165,16 @@ listenerMiddleware.startListening({
   actionCreator: themeDeleted,
   effect: (action) => {
     const [orgId] = action.payload;
-    Router.push(`/organize/${orgId}/settings/themes`);
+    Router.push(`/organize/${orgId}/settings/email`);
   },
 });
 
 listenerMiddleware.startListening({
   actionCreator: callAssignmentCreated,
   effect: (action) => {
-    const [callAssignment, campId] = action.payload;
+    const [callAssignment, projectId] = action.payload;
     Router.push(
-      `/organize/${callAssignment.organization?.id}/projects/${campId}/callassignments/${callAssignment.id}`
+      `/organize/${callAssignment.organization?.id}/projects/${projectId}/callassignments/${callAssignment.id}`
     );
   },
 });

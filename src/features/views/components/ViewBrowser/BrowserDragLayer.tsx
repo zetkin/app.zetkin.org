@@ -74,7 +74,7 @@ const BrowserDragLayer: FC = () => {
         >
           <Box display="flex" gap={2}>
             <BrowserItemIcon item={item} />
-            {item.title}
+            {'title' in item && item.title}
           </Box>
         </Paper>
       </Box>

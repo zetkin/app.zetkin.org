@@ -4,7 +4,7 @@ import utc from 'dayjs/plugin/utc';
 import range from 'utils/range';
 import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
+import { ACTIVITIES, EventActivity } from 'features/projects/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
@@ -15,7 +15,7 @@ export default function useEventsFromDateRange(
   startDate: Date,
   endDate: Date,
   orgId: number,
-  campId?: number
+  projectId?: number
 ): IFuture<EventActivity[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -66,7 +66,7 @@ export default function useEventsFromDateRange(
 
   return new ResolvedFuture(
     events
-      .filter((event) => !campId || event.campaign?.id == campId)
+      .filter((event) => !projectId || event.campaign?.id == projectId)
       .map((event) => ({
         data: event,
         kind: ACTIVITIES.EVENT,

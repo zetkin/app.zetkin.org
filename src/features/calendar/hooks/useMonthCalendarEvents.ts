@@ -8,13 +8,13 @@ import { useNumericRouteParams } from 'core/hooks';
 import {
   CLUSTER_TYPE,
   clusterEvents,
-} from 'features/campaigns/hooks/useClusteredActivities';
+} from 'features/projects/hooks/useClusteredActivities';
 
 type UseMonthCalendarEventsParams = {
-  campaignId?: number;
   endDate: Date;
   maxPerDay: number;
   orgId: number;
+  projectId?: number;
   startDate: Date;
 };
 
@@ -28,9 +28,9 @@ export default function useMonthCalendarEvents({
   maxPerDay,
   startDate,
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
-  const { campId, orgId } = useNumericRouteParams();
+  const { projectId, orgId } = useNumericRouteParams();
   const eventActivities =
-    useEventsFromDateRange(startDate, endDate, orgId, campId).data || [];
+    useEventsFromDateRange(startDate, endDate, orgId, projectId).data || [];
 
   // Filter events based on user filters
   const filteredActivities = useFilteredEventActivities(eventActivities);
@@ -43,7 +43,7 @@ export default function useMonthCalendarEvents({
   const curDate = new Date(startDate);
   while (curDate.getTime() <= endDate.getTime()) {
     const activitiesOnCurrentDay =
-      datesWithActivities[dayjs(curDate).format('YYYY-MM-DD')]?.events || [];
+      datesWithActivities[dayjs(curDate).format('YYYY-MM-DD')] || [];
 
     const clusters: AnyClusteredEvent[] = [
       ...clusterEvents(activitiesOnCurrentDay),

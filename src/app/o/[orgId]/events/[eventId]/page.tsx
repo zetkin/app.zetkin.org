@@ -21,12 +21,21 @@ export default async function Page({ params: { eventId, orgId } }: Props) {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
+  const privacyUrl =
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
+
   try {
     const event = await apiClient.get<ZetkinEvent>(
       `/api/orgs/${orgId}/actions/${eventId}`
     );
 
-    return <PublicEventPage eventId={event.id} orgId={event.organization.id} />;
+    return (
+      <PublicEventPage
+        eventId={event.id}
+        orgId={event.organization.id}
+        privacyUrl={privacyUrl}
+      />
+    );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {
       notFound();

@@ -226,7 +226,6 @@ feat:
       calendar: Kalender
       callassignments: Telefonaktionen
       callers: Telefonierer*innen
-      campaigns: Projekte
       closed: Beendet
       compose: Erstellen
       conversation: Gespräch
@@ -561,10 +560,10 @@ feat:
       subtitle: Zielpersonen können noch nicht angerufen werden
       title: Blockiert
       viewSheetButton: Zeige Liste
-    callAssignmentChangeCampaignDialog:
+    callAssignmentChangeProjectDialog:
       error: 'Fehler: Die Zuweisung konnte nicht in das ausgewählte Projekt verschoben
         werden.'
-      success: Zuweisung "{assignmentTitle}" bewegt nach "{campaignTitle}"
+      success: Zuweisung "{assignmentTitle}" bewegt nach "{projectTitle}"
       title: Bewege Zuweisung
     callers:
       actions:
@@ -646,7 +645,7 @@ feat:
       editButton: Bearbeite Zielgruppe
       subtitle: Definiere die Zielgruppe mit Intelligenter Suche.
       title: Zielpersonen
-  campaigns:
+  projects:
     activitiesOverview:
       button: Zeige alle Aktivitäten
       empty: Heute ist frei!
@@ -696,7 +695,7 @@ feat:
       viewArchive: Archiv anzeigen
     assigneeActions: Aktionen von Beauftragten
     calendarView: Alles einblenden
-    changeCampaignDialog:
+    changeProjectDialog:
       moveButtonLabel: Verschieben
     createButton:
       createActivity: Erstelle
@@ -716,17 +715,17 @@ feat:
         defaultQuestion: Hast du diese Aufgabe beendet?
       createCallAssignment:
         newCallAssignment: Meine Telefonaktionen
-      createCampaign:
+      createProject:
         create: Erstelle Projekt
         error: Ein Fehler ist aufgetreten beim Erstellen des Projekts
-        newCampaign: Mein Projekt
+        newProject: Mein Projekt
       createEmail:
         newEmail: unbenannte E-Mail
       createSurvey:
         newSurvey: Meine Umfrage
       createTask:
         title: Erstelle Aufgabe
-      deleteCampaign:
+      deleteProject:
         cancel: Abbrechen
         error: Es ist ein Fehler aufgetreten beim Löschen des Projekts
         submitButton: Löschen bestätigen
@@ -735,7 +734,7 @@ feat:
           kann nicht rückgängig gemacht werden.
       description: Beschreibung
       edit: Projekt bearbeiten
-      editCampaignTitle:
+      editProjectTitle:
         error: Fehler beim Bearbeiten des Projekttitels
         success: Projekttitel aktualisiert
       manager:
@@ -754,7 +753,7 @@ feat:
     indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
-      allCampaigns: Alle Projekte & Aktivitäten
+      allProjects: Alle Projekte & Aktivitäten
       archive: Archiv
       calendar: Kalender
       insights: Statistik
@@ -1122,10 +1121,10 @@ feat:
       timeZone: Zeitzone
       warning: Willst du wirklich diese E-Mail löschen? Wenn sie gelöscht ist, kann
         sie nicht wieder hergestellt werden.
-    emailChangeCampaignDialog:
+    emailChangeProjectDialog:
       error: 'Error: Die Email konnte nicht in das ausgewählte Projekt verschoben
         werden.'
-      success: Email "{emailTitle}" nach "{campaignTitle}" verschoben
+      success: Email "{emailTitle}" nach "{projectTitle}" verschoben
       title: Mail verschieben
     emailFeatureIsBlocked:
       errorMessage: Deine Organisation hat momentan keinen Zugang zur E-Mail Funktionalität.
@@ -1248,10 +1247,10 @@ feat:
       warning: '"{eventTitle}" wird gelöscht.'
       warningCancel: '"{eventTitle}" wird abgesagt.'
       warningRestore: '"{eventTitle}" wird wiederhergestellt.'
-    eventChangeCampaignDialog:
+    eventChangeProjectDialog:
       error: 'Fehler: Konnte die Aktivität nicht in das ausgewählte Projekt
         verschieben.'
-      success: Aktivität wurde zu "{campaignTitle}" verschoben.
+      success: Aktivität wurde zu "{projectTitle}" verschoben.
       title: Veranstaltung verschieben
     eventContactCard:
       header: Kontakt
@@ -2265,7 +2264,7 @@ feat:
         call_history:
           description: Finde Personen, die angerufen wurden - erreicht oder nur versucht
           title: Anrufliste
-        campaign_participation:
+        project_participation:
           description: Wer hat sich angemeldet? Wer wurde eingetragen? Wer nicht? Finde sie!
           title: Teilnehmende an Veranstaltungen
         email_blacklist:
@@ -2380,16 +2379,16 @@ feat:
           {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {mal} other {mal}}'
         minTimesInput: mindestens {input} {minTimes, plural, one {mal} other {male}}
-      campaignParticipation:
+      projectParticipation:
         activitySelect:
           activity: Typ "{activity}"
           any: irgendeine
         bookedSelect:
           booked: gebucht
           signed_up: angemeldet
-        campaignSelect:
+        projectSelect:
           any: irgendein Projekt
-          campaign: Projekt "{campaign}"
+          project: Projekt "{project}"
         examples:
           one: Füge Personen hinzu, die sich für irgendein Projekt irgendeiner Art
             irgendwann am Ort 'Dorfplatz' angemeldet haben.
@@ -2399,7 +2398,7 @@ feat:
           in: wurden
           notin: wurden nicht
         inputString: '{addRemoveSelect} Personen die {haveSelect} {bookedSelect}
-          {statusSelect} für Veranstaltungen in {campaignSelect} der Kategorie
+          {statusSelect} für Veranstaltungen in {projectSelect} der Kategorie
           {activitySelect} in {locationSelect} {timeFrame}'
         locationSelect:
           any: irgendein Ort
@@ -2658,9 +2657,9 @@ feat:
           none: Diese Organisation hat bisher keine angelegten Umfragen.
           survey: Umfrage "{surveyTitle}"
       task:
-        campaignSelect:
+        projectSelect:
           any: irgendein Projekt
-          campaign: Projekt "{campaign}"
+          project: Projekt "{project}"
           in: in
         examples:
           one: Füge Personen hinzu, die die Aufgabe 'Freund*innen davon erzählen'
@@ -2668,7 +2667,7 @@ feat:
           two: Füge Personen hinzu, die irgendeine Aufgabe in irgendeinem Projekt zwischen
             2 und 5mal bis heute ignoriert haben.
         inputString: '{addRemoveSelect} Personen, die {taskStatusSelect}
-          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame} haben.'
+          {taskSelect}{projectSelect} {matchingSelect} {timeFrame} haben.'
         taskSelect:
           any: irgendeine Aufgabe
           task: Aufgabe "{task}"
@@ -2946,10 +2945,10 @@ feat:
       personRecordColumn: Befragte*r
       suggestedPeople: Vorgeschlagene Personen
       unlink: Link entfernen
-    surveyChangeCampaignDialog:
+    surveyChangeProjectDialog:
       error: 'Error: Die Umfrage konnte nicht in das ausgewählte Projekt verschoben
         werden'
-      success: Umfrage "{surveyTitle}" nach "{campaignTitle}" bewegt
+      success: Umfrage "{surveyTitle}" nach "{projectTitle}" bewegt
       title: Umfrage verschieben
     surveyDialog:
       add: hinzufügen
@@ -3128,7 +3127,7 @@ feat:
       title: Aufgabe bearbeiten
     form:
       fields:
-        campaign: Kampagne
+        project: Kampagne
         deadline: Frist
         expires: Ablaufdatum
         instructions: Anleitungen
@@ -3183,10 +3182,10 @@ feat:
       draft: Entwurf
       expired: Abgelaufen
       scheduled: Geplant
-    taskChangeCampaignDialog:
+    taskChangeProjectDialog:
       error: 'Error: Die Aufgabe konnte nicht in das ausgewählte Projekt verschoben
         werden'
-      success: Aufgabe "{taskTitle}" nach "{campaignTitle}" bewegt
+      success: Aufgabe "{taskTitle}" nach "{projectTitle}" bewegt
       title: Aufgabe verschieben
     taskDetails:
       deadlineTime: Frist

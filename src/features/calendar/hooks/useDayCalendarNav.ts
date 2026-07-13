@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { ACTIVITIES } from 'features/campaigns/types';
+import { ACTIVITIES } from 'features/projects/types';
 import { DaySummary } from '../components/utils';
 import getPrevEventDay from 'features/events/rpc/getPrevEventDay';
 import {
@@ -27,7 +27,7 @@ export default function useDayCalendarNav(
   );
   const apiClient = useApiClient();
   const eventsByDate = useAppSelector((state) => state.events.eventsByDate);
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
 
   const focusDateStr = focusDate.toISOString().slice(0, 10);
 
@@ -38,23 +38,19 @@ export default function useDayCalendarNav(
       // Ask the server about the most recent day that includes events
       const prevEventDay = await apiClient.rpc(getPrevEventDay, {
         beforeDate: focusDate.toISOString(),
-        campaignId: campId,
         orgId,
+        projectId,
       });
 
       if (prevEventDay) {
         setPrevActivityDay([
           new Date(prevEventDay.date),
-          {
-            endingActivities: [],
-            events: prevEventDay.events.map((event) => ({
-              data: event,
-              kind: ACTIVITIES.EVENT,
-              visibleFrom: event.published ? new Date(event.published) : null,
-              visibleUntil: new Date(event.end_time),
-            })),
-            startingActivities: [],
-          },
+          prevEventDay.events.map((event) => ({
+            data: event,
+            kind: ACTIVITIES.EVENT,
+            visibleFrom: event.published ? new Date(event.published) : null,
+            visibleUntil: new Date(event.end_time),
+          })),
         ]);
       }
     }
@@ -70,20 +66,16 @@ export default function useDayCalendarNav(
     if (nextEntry) {
       setNextActivityDay([
         new Date(nextEntry[0]),
-        {
-          endingActivities: [],
-          events: nextEntry[1].items
-            .filter((item) => !!item.data)
-            .map((item) => ({
-              data: item.data!,
-              kind: ACTIVITIES.EVENT,
-              visibleFrom: item.data!.published
-                ? new Date(item.data!.published)
-                : null,
-              visibleUntil: null,
-            })),
-          startingActivities: [],
-        },
+        nextEntry[1].items
+          .filter((item) => !!item.data)
+          .map((item) => ({
+            data: item.data!,
+            kind: ACTIVITIES.EVENT,
+            visibleFrom: item.data!.published
+              ? new Date(item.data!.published)
+              : null,
+            visibleUntil: null,
+          })),
       ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

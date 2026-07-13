@@ -9,6 +9,10 @@ import { useNumericRouteParams } from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import WeekNumber from './WeekNumber';
 import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
+import {
+  legacyDateFromPlainDate,
+  plainDateFromLegacyDate,
+} from 'utils/dateUtils';
 
 const gridGap = 8;
 const numberOfRows = 6;
@@ -42,12 +46,12 @@ const CalendarMonthView = ({
   const lastDayOfCalendar = new Date(firstDayOfCalendar);
   lastDayOfCalendar.setDate(lastDayOfCalendar.getDate() + 6 * 7);
 
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
   const clustersByDate = useMonthCalendarEvents({
-    campaignId: campId,
     endDate: lastDayOfCalendar,
     maxPerDay,
     orgId,
+    projectId,
     startDate: firstDayOfCalendar,
   });
 
@@ -93,10 +97,10 @@ const CalendarMonthView = ({
               <Day
                 key={gridItemKey}
                 clusters={clusters}
-                date={date}
+                date={plainDateFromLegacyDate(date)}
                 isInFocusMonth={isInFocusMonth}
                 itemHeight={itemHeight}
-                onClick={onClickDay}
+                onClick={(value) => onClickDay(legacyDateFromPlainDate(value))}
               />
             );
           })

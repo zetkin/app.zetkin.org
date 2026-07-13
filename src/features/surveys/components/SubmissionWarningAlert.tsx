@@ -7,13 +7,13 @@ import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIFuture from 'zui/ZUIFuture';
 
 type SubmissionWarningAlertProps = {
-  campId: number | 'standalone' | 'shared';
   orgId: number;
+  projectId: number | 'standalone' | 'shared';
   showUnlinkedOnly: boolean;
   surveyId: number;
 };
 const SubmissionWarningAlert = ({
-  campId,
+  projectId,
   showUnlinkedOnly,
   orgId,
   surveyId,
@@ -44,7 +44,7 @@ const SubmissionWarningAlert = ({
                 })}
             <Box>
               <NextLink
-                href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions${
+                href={`/organize/${orgId}/projects/${projectId}/surveys/${surveyId}/submissions${
                   showUnlinkedOnly ? '' : '?filter=linked'
                 }`}
                 legacyBehavior

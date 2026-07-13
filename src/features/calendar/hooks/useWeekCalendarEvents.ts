@@ -13,9 +13,9 @@ import clusterEventsForWeekCalender, {
 } from '../utils/clusterEventsForWeekCalender';
 
 type UseWeekCalendarEventsParams = {
-  campaignId: number;
   dates: Date[];
   orgId: number;
+  projectId: number;
 };
 
 type UseWeekCalendarEventsReturn = {
@@ -25,12 +25,12 @@ type UseWeekCalendarEventsReturn = {
 }[];
 
 export default function useWeekCalendarEvents({
-  campaignId,
+  projectId,
   dates,
   orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
   const eventActivities =
-    useEventsFromDateRange(dates[0], dates[dates.length - 1], orgId, campaignId)
+    useEventsFromDateRange(dates[0], dates[dates.length - 1], orgId, projectId)
       .data || [];
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
