@@ -9,6 +9,10 @@ import { useNumericRouteParams } from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import WeekNumber from './WeekNumber';
 import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
+import {
+  legacyDateFromPlainDate,
+  plainDateFromLegacyDate,
+} from 'utils/dateUtils';
 
 const gridGap = 8;
 const numberOfRows = 6;
@@ -93,10 +97,10 @@ const CalendarMonthView = ({
               <Day
                 key={gridItemKey}
                 clusters={clusters}
-                date={date}
+                date={plainDateFromLegacyDate(date)}
                 isInFocusMonth={isInFocusMonth}
                 itemHeight={itemHeight}
-                onClick={onClickDay}
+                onClick={(value) => onClickDay(legacyDateFromPlainDate(value))}
               />
             );
           })

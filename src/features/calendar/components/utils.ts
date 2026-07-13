@@ -105,7 +105,19 @@ export const getActivitiesByDay = (
 };
 
 export type DSTChange = 'summertime' | 'wintertime';
-export function getDstChangeAtDate(date: dayjs.Dayjs): DSTChange | undefined {
+export function getDstChangeAtDate(
+  date: dayjs.Dayjs | Temporal.PlainDate
+): DSTChange | undefined {
+  if (date instanceof Temporal.PlainDate) {
+    const { hoursInDay } = date.toZonedDateTime(Temporal.Now.timeZoneId());
+    if (hoursInDay === 23) {
+      return 'summertime';
+    }
+    if (hoursInDay === 25) {
+      return 'wintertime';
+    }
+    return undefined;
+  }
   const change =
     getTimezoneAtDate(date.startOf('day')) -
     getTimezoneAtDate(date.endOf('day'));

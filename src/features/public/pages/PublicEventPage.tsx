@@ -47,9 +47,10 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 type Props = {
   eventId: number;
   orgId: number;
+  privacyUrl: string;
 };
 
-export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
+export const PublicEventPage: FC<Props> = ({ eventId, orgId, privacyUrl }) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const myEvents = useMyEvents();
@@ -246,7 +247,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 padding={2}
                 width={isFullScreen && showDescriptionSection ? '40%' : '100%'}
               >
-                <SignUpSection event={event} />
+                <SignUpSection event={event} privacyUrl={privacyUrl} />
                 <DateAndLocation event={event} />
                 {isLoggedInAsContactPerson && (
                   <ParticipatingInfo
@@ -331,7 +332,8 @@ const ContactPersonSection: FC<{
 
 const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
-}> = ({ event }) => {
+  privacyUrl: string;
+}> = ({ event, privacyUrl }) => {
   const messages = useMessages(messageIds);
   const user = useUser();
   const pathname = usePathname();
@@ -374,6 +376,7 @@ const SignUpSection: FC<{
               <PublicEventSignup
                 event={event}
                 onSignupSuccess={() => setSignupSuccessful(true)}
+                privacyUrl={privacyUrl}
               />
             </Box>
             {!signupSuccessful && (

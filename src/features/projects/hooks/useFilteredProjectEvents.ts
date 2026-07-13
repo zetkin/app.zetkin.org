@@ -4,10 +4,10 @@ import { filtersUpdated } from '../store';
 import useFilteredEvents from 'features/events/hooks/useFilteredEvents';
 
 export default function useFilteredProjectEvents(
-  projectId: number,
-  orgId: number
+  orgId: number,
+  projectId: number
 ) {
-  const events = useUpcomingProjectEvents(projectId, orgId);
+  const events = useUpcomingProjectEvents(orgId, projectId);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.projects.filters);
 
