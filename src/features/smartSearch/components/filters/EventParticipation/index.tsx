@@ -1,4 +1,4 @@
-import { FormEvent, useEffect } from 'react';
+import { FormEvent, useCallback, useEffect } from 'react';
 import { Box, MenuItem, Skeleton, Typography } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
@@ -17,7 +17,9 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import useEventsByOrgs from 'features/smartSearch/hooks/useEventsByOrgs';
 import eventsMessageIds from 'features/events/l10n/messageIds';
-import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
+import StyledAutocomplete, {
+  AutocompleteItem,
+} from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
 const localMessageIds = messageIds.filters.eventParticipation;
 
@@ -34,6 +36,10 @@ interface EventParticipationProps {
   ) => void;
   onCancel: () => void;
 }
+
+type EventItem = AutocompleteItem & {
+  time: number;
+};
 
 const EventParticipation = ({
   onSubmit,
@@ -55,6 +61,10 @@ const EventParticipation = ({
   );
 
   const events = useEventsByOrgs(orgIds);
+
+  const eventsSorting = useCallback((item0: EventItem, item1: EventItem) => {
+    return item1.time - item0.time;
+  }, []);
 
   useEffect(() => {
     if (
@@ -169,22 +179,23 @@ const EventParticipation = ({
             eventSelect: (
               <StyledAutocomplete
                 items={
-                  events.data?.map((event) => {
+                  events?.data?.map((event) => {
                     const title =
                       event.title ||
                       event.activity?.title ||
                       eventsMessages.common.noTitle();
-                    const date = new Date(
-                      Date.parse(event.start_time)
-                    ).toLocaleDateString();
+                    const unix = Date.parse(event.start_time);
+                    const date = new Date(unix).toLocaleDateString();
 
                     return {
                       id: event.id,
                       label: `${title} (${date})`,
+                      time: unix,
                     };
                   }) || []
                 }
                 onChange={(e) => handleEventSelectChange(e.target.value)}
+                sorting={eventsSorting}
                 value={filter.config.action}
               />
             ),
