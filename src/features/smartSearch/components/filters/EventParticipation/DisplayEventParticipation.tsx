@@ -41,6 +41,11 @@ const DisplayEventParticipation = ({
     () => events.data?.find((ev) => ev.id === action),
     [events, action]
   );
+  const title = event
+    ? event.title || event.activity?.title || eventsMessages.common.noTitle()
+    : '';
+  const unix = event ? Date.parse(event.start_time) : 0;
+  const date = new Date(unix).toLocaleDateString();
 
   return (
     <Msg
@@ -51,15 +56,7 @@ const DisplayEventParticipation = ({
           <UnderlinedMsg id={localMessageIds.bookedSelect[state]} />
         ),
         eventSelect: (
-          <UnderlinedText
-            text={
-              event
-                ? event.title ||
-                  event.activity?.title ||
-                  eventsMessages.common.noTitle()
-                : ''
-            }
-          />
+          <UnderlinedText text={event ? `${title} (${date})` : ''} />
         ),
         statusSelect: status ? (
           <UnderlinedMsg id={localMessageIds.statusSelect[status]} />
