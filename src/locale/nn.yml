@@ -280,7 +280,6 @@ feat:
       calendar: Kalender
       callassignments: Ringeoppdrag
       callers: Ringere
-      campaigns: Prosjekter
       closed: Stengt
       compose: Utforming
       conversation: Samtale
@@ -610,9 +609,9 @@ feat:
       subtitle: Folk som ikke er klare til å ringes
       title: Blokkert
       viewSheetButton: Vis alle
-    callAssignmentChangeCampaignDialog:
+    callAssignmentChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte oppdraget til det valgte prosjektet'
-      success: Oppdraget "{assignmentTitle}" ble flyttet til "{campaignTitle}"
+      success: Oppdraget "{assignmentTitle}" ble flyttet til "{projectTitle}"
       title: Flytt oppdrag
     callers:
       actions:
@@ -694,8 +693,8 @@ feat:
       editButton: Rediger målgruppe
       subtitle: Bruk smartsøk til å definere målgruppa for dette oppdraget
       title: Folk i målgruppa
-  campaigns:
-    activeCampaigns:
+  projects:
+    activeProjects:
       header: Aktivt
     activitiesOverview:
       button: Se alle aktiviteter
@@ -728,7 +727,7 @@ feat:
           fått varsel'
         signups: Uregistrerte påmeldinger finnes
     all:
-      campaignFilterPlaceholder: Skriv for å filtrere prosjekter
+      projectFilterPlaceholder: Skriv for å filtrere prosjekter
       cardAriaLabel: Åpne prosjektet {title}
       cardCTA: Gå til prosjekt
       create: Nytt prosjekt
@@ -747,14 +746,14 @@ feat:
       noActivities: Hvis organisasjonen din har aktiviteter som ikke tilhører et
         prosjekt vises de her.
       viewArchive: Vis arkiv
-    archivedCampaigns:
+    archivedProjects:
       header: Arkiverte
       hideShowButton:
         hide: Skjul arkiverte prosjekter
         show: Vis arkiverte prosjekter
     assigneeActions: Klikk i appen
     calendarView: Se alle i kalender
-    changeCampaignDialog:
+    changeProjectDialog:
       moveButtonLabel: Flytt
     createButton:
       createActivity: Opprett
@@ -770,24 +769,24 @@ feat:
       create: Ny spørreundersøkelse
       heading: Tilbakemeldinger og spørreundersøkelser (ingen satt opp)
     form:
-      archiveCampaign:
+      archiveProject:
         archive: Arkiver prosjekt
         unarchive: Hent tilbake fra arkivet
       createAreaAssignment:
         defaultQuestion: Fullførte du oppgaven?
       createCallAssignment:
         newCallAssignment: Mitt ringeoppdrag
-      createCampaign:
+      createProject:
         create: Nytt prosjekt
         error: Kunne ikke opprette prosjektet
-        newCampaign: Mitt prosjekt
+        newProject: Mitt prosjekt
       createEmail:
         newEmail: E-post uten tittel
       createSurvey:
         newSurvey: Min spørreundersøkelse
       createTask:
         title: Ny oppgave
-      deleteCampaign:
+      deleteProject:
         cancel: Avbryt
         error: Kunne ikke slette prosjektet
         submitButton: Bekreft sletting
@@ -795,7 +794,7 @@ feat:
         warning: Er du sikker på at du vil slette dette prosjektet? Kan ikke angres.
       description: Beskrivelse
       edit: Rediger prosjekt
-      editCampaignTitle:
+      editProjectTitle:
         error: Kunne ikke oppdatere prosjektnavnet
         success: Prosjektnavn oppdatert
       manager:
@@ -814,7 +813,7 @@ feat:
     indefinite: Uten sluttdato
     layout:
       activities: Aktiviteter
-      allCampaigns: Alle prosjekter
+      allProjects: Alle prosjekter
       archive: Arkiv
       calendar: Kalender
       insights: Analyse
@@ -1182,9 +1181,9 @@ feat:
       timeZone: Tidssone
       warning: Er du sikker på at du vil slette e-posten? Handlingen er permanent og
         kan ikke angres.
-    emailChangeCampaignDialog:
+    emailChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte e-posten til valgt prosjekt'
-      success: E-posten "{emailTitle}" ble flyttet til "{campaignTitle}"
+      success: E-posten "{emailTitle}" ble flyttet til "{projectTitle}"
       title: Flytt e-post
     emailFeatureIsBlocked:
       errorMessage: Organisasjonen din har ikke tilgang til å sende e-post.
@@ -1303,9 +1302,9 @@ feat:
       warning: '"{eventTitle}" vil bli slettet.'
       warningCancel: '"{eventTitle}" vil bli avlyst.'
       warningRestore: '"{eventTitle}" vil bli gjenopprettet.'
-    eventChangeCampaignDialog:
+    eventChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte arrangementet til det valgte prosjektet'
-      success: Arrangementet ble flyttet til "{campaignTitle}"
+      success: Arrangementet ble flyttet til "{projectTitle}"
       title: Flytt arrangement
     eventContactCard:
       header: Kontakt
@@ -2383,7 +2382,7 @@ feat:
         call_history:
           description: Finn folk som har blitt ringt, nådd, eller forsøkt ringt.
           title: Ringehistorikk
-        campaign_participation:
+        project_participation:
           description: Hvem meldte seg på? Ble registrert? Hvem meldte seg ikke på? Finn
             dem!
           title: Deltakelse på arrangementer
@@ -2494,16 +2493,16 @@ feat:
           {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {ganger}}'
         minTimesInput: minst {input} {minTimes, plural, one {gang} other {ganger}}
-      campaignParticipation:
+      projectParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
           any: en aktivitet
         bookedSelect:
           booked: blitt registrert på
           signed_up: meldt seg på
-        campaignSelect:
+        projectSelect:
           any: et prosjekt
-          campaign: Prosjektet "{campaign}"
+          project: Prosjektet "{project}"
         examples:
           one: Legg til folk som har meldt seg på arrangementer i et prosjekt med en
             aktivitet på plassen 'Torget' når som helst.
@@ -2513,7 +2512,7 @@ feat:
           in: har
           notin: ikke har
         inputString: '{addRemoveSelect} folk som {haveSelect} {bookedSelect}
-          {statusSelect} på arrangementer {campaignSelect} av typen
+          {statusSelect} på arrangementer {projectSelect} av typen
           {activitySelect} på stedet {locationSelect} {timeFrame}'
         locationSelect:
           any: et sted
@@ -2752,9 +2751,9 @@ feat:
           none: Denne organisasjonen har ikke noen spørreundersøkelsen ennå
           survey: '"{surveyTitle}"'
       task:
-        campaignSelect:
+        projectSelect:
           any: et prosjekt
-          campaign: prosjektet "{campaign}"
+          project: prosjektet "{project}"
           in: i
         examples:
           one: Legg til folk som har trykket fullført på innholdet 'Verv en venn' minst en
@@ -2762,7 +2761,7 @@ feat:
           two: Legg til folk som har trykket ignorer på innhold i et prosjekt mellom 2 og
             5 ganger før i dag
         inputString: '{addRemoveSelect} folk som har {taskStatusSelect} {taskSelect}
-          {campaignSelect} {matchingSelect} {timeFrame}'
+          {projectSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: innhold
           task: innholdet "{task}"
@@ -3027,9 +3026,9 @@ feat:
       personRecordColumn: Innsender
       suggestedPeople: Foreslåtte folk
       unlink: Fjern kobling
-    surveyChangeCampaignDialog:
+    surveyChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte undersøkelsen til valgt prosjekt'
-      success: Undersøkelsen "{surveyTitle}" ble flyttet til "{campaignTitle}"
+      success: Undersøkelsen "{surveyTitle}" ble flyttet til "{projectTitle}"
       title: Flytt spørreundersøkelse
     surveyDialog:
       add: Legg til
@@ -3197,7 +3196,7 @@ feat:
       title: Rediger innhold
     form:
       fields:
-        campaign: Prosjekt
+        project: Prosjekt
         deadline: Frist
         expires: Utløpsdato
         instructions: Instruks
@@ -3251,9 +3250,9 @@ feat:
       draft: Utkast
       expired: Utløpt
       scheduled: Planlagt
-    taskChangeCampaignDialog:
+    taskChangeProjectDialog:
       error: 'Feil: Kunnne ikke flytte oppgaven til valgt prosjekt'
-      success: Oppgaven "{taskTitle}" ble flyttet til "{campaignTitle}"
+      success: Oppgaven "{taskTitle}" ble flyttet til "{projectTitle}"
       title: Flytt oppgave
     taskDetails:
       deadlineTime: Frist

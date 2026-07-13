@@ -10,12 +10,12 @@ export default function useRelatedEvents(
   const relatedEvents: ZetkinEvent[] = [];
   const start = new Date(currentEvent.start_time);
   const end = new Date(currentEvent.end_time);
-  const { campId } = useNumericRouteParams();
+  const { projectId } = useNumericRouteParams();
   const allEventsInActivities = useEventsFromDateRange(
     start,
     end,
     orgId,
-    campId
+    projectId
   );
 
   const allEvents = allEventsInActivities

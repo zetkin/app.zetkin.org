@@ -1,8 +1,8 @@
 import { describe, it, expect } from '@jest/globals';
 
+import { ProjectActivity } from 'features/projects/types';
+import { mockEvent } from 'features/projects/hooks/useClusteredActivities.spec';
 import { getActivitiesByDay } from './utils';
-import { CampaignActivity } from 'features/campaigns/types';
-import { mockEvent } from 'features/campaigns/hooks/useClusteredActivities.spec';
 
 describe('getActivitiesByDay', () => {
   it('returns an empty object when given no activities', () => {
@@ -10,7 +10,7 @@ describe('getActivitiesByDay', () => {
   });
 
   it('groups a single-day event correctly', () => {
-    const event: CampaignActivity = mockEvent(1, {
+    const event: ProjectActivity = mockEvent(1, {
       end_time: '2026-05-10T12:00:00',
       start_time: '2026-05-10T10:00:00',
       title: 'Single Day Event',
