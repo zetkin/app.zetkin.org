@@ -3,6 +3,7 @@ Security is core to our values, and we value the input of hackers acting in good
 ## Expectations
 
 When working with us according to this policy, you can expect us to:
+
 - Extend Safe Harbor (see below) for your vulnerability research that is related to this policy;
 - Work with you to understand and validate your report
 - Work to remediate discovered vulnerabilities in a timely manner; and
@@ -11,6 +12,7 @@ When working with us according to this policy, you can expect us to:
 ## Safe Harbor
 
 When conducting vulnerability research according to this policy, we consider this research to be:
+
 - Authorized in accordance with the law, and we will not initiate or support legal action against you for accidental, good faith violations of this policy;
 - Exempt from the Digital Millennium Copyright Act (DMCA), and we will not bring a claim against you for circumvention of technology controls;
 - Exempt from restrictions in our Terms & Conditions that would interfere with conducting security research, and we waive those restrictions on a limited basis for work done under this policy;
@@ -23,6 +25,7 @@ If at any time you have concerns or are uncertain whether your security research
 ## Ground Rules
 
 To encourage vulnerability research and to avoid any confusion between good-faith hacking and malicious attack, we ask that you:
+
 - Play by the rules. This includes following this policy, as well as any other relevant agreements. If there is any inconsistency between this policy and any other relevant terms, the terms of this policy will prevail.
 - Report any vulnerability you have discovered promptly.
 - Avoid violating the privacy of others, disrupting our systems, destroying data, and/or harming user experience.
@@ -40,9 +43,11 @@ The vulnerability is kept private until a fix has been deployed.
 ## Official Channels
 
 To help us receive vulnerability submissions we use the following official reporting channel:
+
 - info@zetkin.org
 
 If you think you have found a vulnerability, please include the following details with your report and be as descriptive as possible:
+
 - The location and nature of the vulnerability,
 - A detailed description of the steps required to reproduce the vulnerability (screenshots, compressed screen recordings, and proof-of-concept scripts are all helpful), and
 - Your name/handle and a link for recognition.
