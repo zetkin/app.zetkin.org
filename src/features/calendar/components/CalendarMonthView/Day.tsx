@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
 
@@ -12,10 +10,10 @@ import { Msg } from 'core/i18n';
 
 type DayProps = {
   clusters: AnyClusteredEvent[];
-  date: Date;
+  date: Temporal.PlainDate;
   isInFocusMonth: boolean;
   itemHeight: number;
-  onClick: (date: Date) => void;
+  onClick: (date: Temporal.PlainDate) => void;
 };
 
 const Day = ({
@@ -25,8 +23,8 @@ const Day = ({
   itemHeight,
   onClick,
 }: DayProps) => {
-  const isToday = dayjs(date).isSame(new Date(), 'day');
-  const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
+  const isToday = date.equals(Temporal.Now.plainDateISO());
+  const dstChange = useMemo(() => getDstChangeAtDate(date), [date]);
 
   let textColor = oldTheme.palette.text.secondary;
   if (isToday) {
@@ -58,7 +56,7 @@ const Day = ({
           }}
           variant="body2"
         >
-          <FormattedDate day="numeric" value={date} />
+          {date.day}
         </Typography>
       </Box>
       {dstChange !== undefined && (

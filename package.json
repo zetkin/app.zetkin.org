@@ -163,7 +163,8 @@
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
-    "typescript": "^6.0.3"
+    "typescript": "npm:@typescript/typescript6@^6.0.3",
+    "typescript-7": "npm:typescript@rc"
   },
   "engines": {
     "node": ">=22"

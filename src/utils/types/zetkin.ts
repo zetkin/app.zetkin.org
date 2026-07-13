@@ -14,7 +14,7 @@ import {
 } from '../../features/views/components/types';
 import { Latitude, Longitude } from 'features/areas/types';
 
-export interface ZetkinCampaign {
+export interface ZetkinProject {
   archived: boolean;
   color: string;
   info_text: string;
@@ -29,8 +29,8 @@ export interface ZetkinCampaign {
   published: boolean;
 }
 
-export interface ZetkinCampaignPostBody extends Partial<
-  Omit<ZetkinCampaign, 'organization' | 'manager'>
+export interface ZetkinProjectPostBody extends Partial<
+  Omit<ZetkinProject, 'organization' | 'manager'>
 > {
   title: string;
   manager_id?: number;

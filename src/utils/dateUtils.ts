@@ -12,16 +12,16 @@ export const getNewDateWithOffset = (date: Date, offset: number): Date => {
  * This function sorts the events by start_time and returns the first and last one.
  */
 export const getFirstAndLastEvent = (
-  campaignEvents: ZetkinEvent[]
+  projectEvents: ZetkinEvent[]
 ): (ZetkinEvent | undefined)[] => {
-  const sortedCampaignEvents = [...campaignEvents].sort((a, b) =>
+  const sortedProjectEvents = [...projectEvents].sort((a, b) =>
     dayjs(a.start_time).diff(dayjs(b.start_time))
   );
-  const firstEvent = sortedCampaignEvents.length
-    ? sortedCampaignEvents[0]
+  const firstEvent = sortedProjectEvents.length
+    ? sortedProjectEvents[0]
     : undefined;
   const lastEvent = firstEvent
-    ? sortedCampaignEvents[sortedCampaignEvents.length - 1]
+    ? sortedProjectEvents[sortedProjectEvents.length - 1]
     : undefined;
   return [firstEvent, lastEvent];
 };
@@ -104,3 +104,13 @@ export function getOffset(dateString: string) {
 export function getDayTimeInMinutes(dateString: string | dayjs.Dayjs) {
   return dayjs(dateString).hour() * 60 + dayjs(dateString).minute();
 }
+
+export const plainDateFromLegacyDate = (date: Date): Temporal.PlainDate =>
+  Temporal.Instant.fromEpochMilliseconds(date.valueOf())
+    .toZonedDateTimeISO(Temporal.Now.timeZoneId())
+    .toPlainDate();
+
+export const legacyDateFromPlainDate = (plainDate: Temporal.PlainDate): Date =>
+  new Date(
+    plainDate.toZonedDateTime(Temporal.Now.timeZoneId()).epochMilliseconds
+  );

@@ -2,19 +2,19 @@ import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 
-import ActivityList from 'features/campaigns/components/ActivityList';
-import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
-import messageIds from 'features/campaigns/l10n/messageIds';
+import ActivityList from 'features/projects/components/ActivityList';
+import FilterActivities from 'features/projects/components/ActivityList/FilterActivities';
+import messageIds from 'features/projects/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SharedActivitiesLayout from 'features/campaigns/layout/SharedActivitiesLayout';
-import useAcitvityList from 'features/campaigns/hooks/useActivityList';
+import SharedActivitiesLayout from 'features/projects/layout/SharedActivitiesLayout';
+import useAcitvityList from 'features/projects/hooks/useActivityList';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
+import { ACTIVITIES, ProjectActivity } from 'features/projects/types';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -37,8 +37,8 @@ const SharedActivitiesPage: PageWithLayout<SharedActivitiesPageProps> = ({
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const parsedOrgId = parseInt(orgId);
-  const { campId } = useNumericRouteParams();
-  const activitiesFuture = useAcitvityList(parsedOrgId, campId);
+  const { projectId } = useNumericRouteParams();
+  const activitiesFuture = useAcitvityList(parsedOrgId, projectId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
@@ -85,7 +85,7 @@ const SharedActivitiesPage: PageWithLayout<SharedActivitiesPageProps> = ({
           }
 
           const activityTypes = data.map(
-            (activity: CampaignActivity) => activity.kind
+            (activity: ProjectActivity) => activity.kind
           );
           const filterTypes = [...new Set(activityTypes)];
 

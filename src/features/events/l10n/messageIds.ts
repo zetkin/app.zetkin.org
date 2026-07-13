@@ -31,10 +31,10 @@ export default makeMessages('feat.events', {
       '"{eventTitle}" will be restored.'
     ),
   },
-  eventChangeCampaignDialog: {
+  eventChangeProjectDialog: {
     error: m('Error: Could not move the event to the selected project'),
-    success: m<{ campaignTitle: string; eventTitle: string }>(
-      'Event "{eventTitle}" moved to "{campaignTitle}"'
+    success: m<{ eventTitle: string; projectTitle: string }>(
+      'Event "{eventTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move event'),
   },

@@ -5,9 +5,9 @@ import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
-  CampaignActivity,
+  ProjectActivity,
   EventActivity,
-} from 'features/campaigns/types';
+} from 'features/projects/types';
 
 export function isAllDay(start: string, end: string): boolean {
   const startDate = new Date(removeOffset(start));
@@ -40,7 +40,7 @@ const startOfDay = (date: Temporal.PlainDateTime) =>
   date.with({ hour: 0, minute: 0, second: 0 });
 
 export const getActivitiesByDay = (
-  activities: CampaignActivity[]
+  activities: ProjectActivity[]
 ): Record<string, DaySummary> => {
   const dateHashmap: Record<string, DaySummary> = {};
   const applyToHashmap = (date: Temporal.PlainDate, event: EventActivity) => {
@@ -105,7 +105,19 @@ export const getActivitiesByDay = (
 };
 
 export type DSTChange = 'summertime' | 'wintertime';
-export function getDstChangeAtDate(date: dayjs.Dayjs): DSTChange | undefined {
+export function getDstChangeAtDate(
+  date: dayjs.Dayjs | Temporal.PlainDate
+): DSTChange | undefined {
+  if (date instanceof Temporal.PlainDate) {
+    const { hoursInDay } = date.toZonedDateTime(Temporal.Now.timeZoneId());
+    if (hoursInDay === 23) {
+      return 'summertime';
+    }
+    if (hoursInDay === 25) {
+      return 'wintertime';
+    }
+    return undefined;
+  }
   const change =
     getTimezoneAtDate(date.startOf('day')) -
     getTimezoneAtDate(date.endOf('day'));
