@@ -6,6 +6,7 @@ import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/projects/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
+import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 dayjs.extend(utc);
@@ -15,7 +16,7 @@ export default function useEventsFromDateRange(
   endDate: Date,
   orgId: number,
   projectId?: number
-): EventActivity[] {
+): IFuture<EventActivity[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const eventsState = useAppSelector((state) => state.events);
@@ -35,17 +36,22 @@ export default function useEventsFromDateRange(
     dispatch(eventRangeLoad(dateRange));
     const apiEndDate = new Date(endDate);
     apiEndDate.setDate(apiEndDate.getDate() + 1);
-    const promise = apiClient
+    apiClient
       .get<
         ZetkinEvent[]
       >(`/api/orgs/${orgId}/actions?filter=start_time>${startDate.toISOString().slice(0, 10)}&filter=end_time<${apiEndDate.toISOString().slice(0, 10)}`)
       .then((events) => {
         dispatch(eventRangeLoaded([events, dateRange]));
       });
+  }
 
-    // This will suspend React from rendering this branch
-    // until the promise resolves.
-    throw promise;
+  const isLoading = dateRange.some((date) => {
+    const list = eventsState.eventsByDate[date.slice(0, 10)];
+    return !list || (list.isLoading && !list.loaded);
+  });
+
+  if (isLoading) {
+    return new LoadingFuture();
   }
 
   const events = dateRange.flatMap((date) => {
@@ -55,12 +61,14 @@ export default function useEventsFromDateRange(
       .map((item) => item.data) as ZetkinEvent[];
   });
 
-  return events
-    .filter((event) => !projectId || event.campaign?.id == projectId)
-    .map((event) => ({
-      data: event,
-      kind: ACTIVITIES.EVENT,
-      visibleFrom: event.published ? new Date(event.published) : null,
-      visibleUntil: new Date(event.end_time),
-    }));
+  return new ResolvedFuture(
+    events
+      .filter((event) => !projectId || event.campaign?.id == projectId)
+      .map((event) => ({
+        data: event,
+        kind: ACTIVITIES.EVENT,
+        visibleFrom: event.published ? new Date(event.published) : null,
+        visibleUntil: new Date(event.end_time),
+      }))
+  );
 }

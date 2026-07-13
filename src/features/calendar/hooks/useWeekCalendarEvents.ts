@@ -29,12 +29,9 @@ export default function useWeekCalendarEvents({
   dates,
   orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
-  const eventActivities = useEventsFromDateRange(
-    dates[0],
-    dates[dates.length - 1],
-    orgId,
-    projectId
-  );
+  const eventActivities =
+    useEventsFromDateRange(dates[0], dates[dates.length - 1], orgId, projectId)
+      .data || [];
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
   return dates.map((date) => {

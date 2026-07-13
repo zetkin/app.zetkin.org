@@ -160,8 +160,8 @@ describe('Deleting an event', () => {
       }
     );
 
-    expect(result.current).toHaveLength(2);
-    expect(result.current[0].data.id).toBe(2);
-    expect(result.current[1].data.id).toBe(2);
+    expect(result.current.data).toHaveLength(2);
+    expect(result.current.data?.[0].data.id).toBe(2);
+    expect(result.current.data?.[1].data.id).toBe(2);
   });
 });

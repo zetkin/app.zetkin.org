@@ -29,12 +29,8 @@ export default function useMonthCalendarEvents({
   startDate,
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
   const { projectId, orgId } = useNumericRouteParams();
-  const eventActivities = useEventsFromDateRange(
-    startDate,
-    endDate,
-    orgId,
-    projectId
-  );
+  const eventActivities =
+    useEventsFromDateRange(startDate, endDate, orgId, projectId).data || [];
 
   // Filter events based on user filters
   const filteredActivities = useFilteredEventActivities(eventActivities);

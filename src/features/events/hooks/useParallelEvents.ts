@@ -12,7 +12,8 @@ export default function useParallelEvents(
   const end = new Date(endString);
 
   const { projectId } = useNumericRouteParams();
-  const allEvents = useEventsFromDateRange(start, end, orgId, projectId);
+  const allEvents =
+    useEventsFromDateRange(start, end, orgId, projectId).data || [];
 
   const filteredEvents = allEvents
     .filter((event) => {
