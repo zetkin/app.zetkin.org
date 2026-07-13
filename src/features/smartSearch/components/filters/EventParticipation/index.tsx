@@ -71,7 +71,7 @@ const EventParticipation = ({
         action: undefined,
       });
     }
-  }, [events.data, filter]);
+  }, [events.data, events.error, events.isLoading, filter, setConfig]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
