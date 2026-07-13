@@ -169,13 +169,20 @@ const EventParticipation = ({
             eventSelect: (
               <StyledAutocomplete
                 items={
-                  events.data?.map((event) => ({
-                    id: event.id,
-                    label:
+                  events.data?.map((event) => {
+                    const title =
                       event.title ||
                       event.activity?.title ||
-                      eventsMessages.common.noTitle(),
-                  })) || []
+                      eventsMessages.common.noTitle();
+                    const date = new Date(
+                      Date.parse(event.start_time)
+                    ).toLocaleDateString();
+
+                    return {
+                      id: event.id,
+                      label: `${title} (${date})`,
+                    };
+                  }) || []
                 }
                 onChange={(e) => handleEventSelectChange(e.target.value)}
                 value={filter.config.action}
