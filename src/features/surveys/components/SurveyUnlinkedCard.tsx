@@ -15,7 +15,7 @@ type SurveyUnlinkedCardProps = {
 };
 
 const SurveyUnlinkedCard = ({
-  projectId: projectId,
+  projectId,
   orgId,
   surveyId,
 }: SurveyUnlinkedCardProps) => {

@@ -46,12 +46,13 @@ const TaskDetailsForm = ({
   task,
 }: TaskDetailsFormProps): JSX.Element => {
   const messages = useMessages(messageIds);
-  const { projectId: projId, orgId } = useNumericRouteParams();
+  const { projectId: projectIdFromRouteParams, orgId } =
+    useNumericRouteParams();
   const { data: projects } = useProjects(orgId);
   const taskStatus = task ? getTaskStatus(task) : null;
 
   const [projectId, setProjectId] = useState<number | undefined>(
-    projId ?? task?.campaign?.id
+    projectIdFromRouteParams ?? task?.campaign?.id
   );
   const [title, setTitle] = useState<string>(task?.title ?? '');
   const [instructions, setInstructions] = useState<string>(
@@ -236,7 +237,7 @@ const TaskDetailsForm = ({
     <form noValidate onSubmit={handleSubmit}>
       {/* Required fields */}
       <TextField
-        disabled={!!projId}
+        disabled={!!projectIdFromRouteParams}
         fullWidth
         label={messages.form.fields.project()}
         margin="normal"

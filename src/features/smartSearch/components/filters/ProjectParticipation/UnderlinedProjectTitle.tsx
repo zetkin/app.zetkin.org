@@ -13,7 +13,7 @@ interface UnderlinedProjectTitleProps {
 }
 
 const UnderlinedProjectTitle: FC<UnderlinedProjectTitleProps> = ({
-  projectId: projectId,
+  projectId,
   orgId,
 }) => {
   const { projectFuture } = useProject(orgId, projectId);
