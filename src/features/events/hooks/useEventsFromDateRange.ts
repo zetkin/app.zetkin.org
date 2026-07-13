@@ -45,9 +45,6 @@ export default function useEventsFromDateRange(
       });
   }
 
-  // Suspending here while loading would commit a Suspense fallback, which
-  // blanks pages without a boundary of their own and which React 19 throttles
-  // by up to 300ms. Return a future instead and re-render when data arrives.
   const isLoading = dateRange.some((date) => {
     const list = eventsState.eventsByDate[date.slice(0, 10)];
     return !list || (list.isLoading && !list.loaded);
