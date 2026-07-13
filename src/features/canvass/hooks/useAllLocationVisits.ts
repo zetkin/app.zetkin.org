@@ -4,7 +4,7 @@ import { visitsLoad, visitsLoaded } from '../store';
 
 export default function useAllLocationVisits(
   orgId: number,
-  assignmentId: string
+  assignmentId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

@@ -6,7 +6,7 @@ import PreviewGrid from './PreviewGrid';
 import ProceduralColorIcon from 'features/organizations/components/ProceduralColorIcon';
 import { useMessages } from 'core/i18n';
 import { ZetkinOrganization } from 'utils/types/zetkin';
-import { ColumnKind, Sheet } from 'features/import/utils/types';
+import { ColumnKind, Sheet } from 'features/import/types';
 
 interface OrgsPreviewProps {
   currentSheet: Sheet;

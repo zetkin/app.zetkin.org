@@ -10,7 +10,7 @@ import problemsFromPreview from '../utils/problems/problemsFromPreview';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useMessages } from 'core/i18n';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import { PersonImport, ZetkinPersonImportPostBody } from '../utils/types';
+import { PersonImport, ZetkinPersonImportPostBody } from '../types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import remapFields from '../utils/remapFields';
 
@@ -47,7 +47,7 @@ export default function usePreflight(orgId: number) {
 
   const problems = predictProblems(
     sheet,
-    organization.country.toUpperCase() as CountryCode,
+    organization.country as CountryCode,
     fields
   );
 

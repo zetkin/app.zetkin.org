@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { TimeScale } from '../components';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 
@@ -10,7 +8,7 @@ function getTimeScale(timeScaleQueryParam: string | string[] | undefined) {
   ) {
     return timeScaleQueryParam as TimeScale;
   }
-  return TimeScale.MONTH;
+  return undefined;
 }
 
 export default function useTimeScale(
@@ -19,18 +17,9 @@ export default function useTimeScale(
   const [localStorageTimeScale, setLocalStorageTimeScale] =
     useLocalStorage<TimeScale>(
       'calendarTimeScale',
+      TimeScale.MONTH,
       getTimeScale(timeScaleQueryParam)
     );
-
-  useEffect(() => {
-    // If the time scale changes in the URL, update it in local storage
-    if (timeScaleQueryParam) {
-      const newTimeScale = getTimeScale(timeScaleQueryParam);
-      if (newTimeScale !== localStorageTimeScale) {
-        setLocalStorageTimeScale(newTimeScale);
-      }
-    }
-  }, [timeScaleQueryParam]);
 
   return {
     setPersistentTimeScale: setLocalStorageTimeScale,

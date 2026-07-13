@@ -1,4 +1,11 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Box } from '@mui/material';
 
 import HouseholdVisitPage from './pages/HouseholdVisitPage';
@@ -16,6 +23,17 @@ import LocationVisitPage from './pages/LocationVisitPage';
 import HouseholdsPage from './pages/HouseholdsPage';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import EncouragingSparkle from '../EncouragingSparkle';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
+import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
+import { ZetkinLocationVisit } from 'features/canvass/types';
+import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import messageIds from 'features/canvass/l10n/messageIds';
+import { useMessages } from 'core/i18n';
+import sortMetrics from 'features/canvass/utils/sortMetrics';
+import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
+import BulkEditHouseholdsPage from './pages/BulkEditHouseholdsPage';
+import useEditHouseholds from 'features/canvass/hooks/useEditHouseholds';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -32,7 +50,9 @@ type LocationDialogStep =
   | 'household'
   | 'editHousehold'
   | 'locationVisit'
-  | 'householdVisit';
+  | 'householdVisit'
+  | 'bulkHouseholdVisits'
+  | 'bulkEditHouseholds';
 
 const LocationDialog: FC<LocationDialogProps> = ({
   assignment,
@@ -42,10 +62,25 @@ const LocationDialog: FC<LocationDialogProps> = ({
 }) => {
   const [dialogStep, setDialogStep] = useState<LocationDialogStep>('location');
   const [showSparkle, setShowSparkle] = useState(false);
-  const { addVisit, reportLocationVisit, updateHousehold, updateLocation } =
+  const metricsList = useAreaAssignmentMetrics(
+    assignment.organization_id,
+    assignment.id
+  );
+  const { deleteHousehold, updateHousehold, updateLocation } =
     useLocationMutations(orgId, location.id);
+  const metrics = sortMetrics(metricsList);
+
+  const {
+    lastVisitByHouseholdId,
+    reportHouseholdVisit,
+    reportHouseholdVisits,
+    reportLocationVisit,
+  } = useVisitReporting(orgId, assignment.id, location.id);
+  const editHouseholds = useEditHouseholds(orgId, location.id);
 
   const pushedRef = useRef(false);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const messages = useMessages(messageIds);
 
   const goto = useCallback(
     (step: LocationDialogStep) => {
@@ -75,6 +110,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         window.removeEventListener('popstate', handlePopState);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -82,15 +118,15 @@ const LocationDialog: FC<LocationDialogProps> = ({
       pushedRef.current = true;
       goto('location');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
   );
-
-  const selectedHousehold = location.households.find(
-    (household) => household.id == selectedHouseholdId
-  );
+  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
+    null | number[]
+  >(null);
 
   return (
     <Box height="100%">
@@ -113,59 +149,96 @@ const LocationDialog: FC<LocationDialogProps> = ({
           onBack={() => back()}
           onClose={onClose}
           onSave={async (title, description) => {
-            await updateLocation({ description, title });
+            await updateLocation({
+              description,
+              title,
+            });
             back();
           }}
         />
         <HouseholdsPage
           key="households"
+          assignment={assignment}
           location={location}
           onBack={() => back()}
-          onBulk={() => goto('createHouseholds')}
-          onClose={onClose}
-          onCreateHousehold={(household) => {
-            setSelectedHouseholdId(household.id);
-            goto('household');
+          onBulkEdit={(householdIds) => {
+            setSelectedHouseholdIds(householdIds);
+            goto('bulkEditHouseholds');
           }}
-          onSelectHousehold={(householdId: string) => {
+          onBulkVisit={(households) => {
+            setSelectedHouseholdIds(households);
+            goto('bulkHouseholdVisits');
+          }}
+          onClickVisit={(householdId) => {
+            setSelectedHouseholdId(householdId);
+            goto('householdVisit');
+          }}
+          onClose={onClose}
+          onDetails={(householdId: number) => {
             setSelectedHouseholdId(householdId);
             goto('household');
           }}
-          orgId={orgId}
+          onSelectHousehold={(householdId: number) => {
+            setSelectedHouseholdIds([householdId]);
+          }}
+          onSelectHouseholds={(householdIds: null | number[]) =>
+            setSelectedHouseholdIds(householdIds)
+          }
+          selectedHouseholdIds={selectedHouseholdIds}
         />
         <Box key="household" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <HouseholdPage
-              household={selectedHousehold}
+              householdId={selectedHouseholdId}
+              location={location}
               onBack={() => back()}
               onClose={onClose}
+              onDelete={() => {
+                showConfirmDialog({
+                  onSubmit: () => {
+                    deleteHousehold(selectedHouseholdId);
+                    setSelectedHouseholdId(null);
+                    back();
+                  },
+                  onTop: true,
+                  title: messages.households.delete.title(),
+                  warningText: messages.households.delete.warningText(),
+                });
+              }}
               onEdit={() => goto('editHousehold')}
               onHouseholdVisitStart={() => {
                 goto('householdVisit');
               }}
-              visitedInThisAssignment={selectedHousehold.visits.some(
-                (visit) => visit.areaAssId == assignment.id
-              )}
+              visitedInThisAssignment={
+                !!lastVisitByHouseholdId[selectedHouseholdId]
+              }
             />
           )}
         </Box>
         <Box key="createHouseholds" height="100%">
           <CreateHouseholdsPage
-            locationId={location.id}
+            location={location}
             onBack={() => back()}
             onClose={onClose}
             orgId={orgId}
           />
         </Box>
         <Box key="editHousehold" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <EditHouseholdPage
-              household={selectedHousehold}
+              householdId={selectedHouseholdId}
+              location={location}
               onBack={() => back()}
               onClose={onClose}
-              onSave={async (title, floor) => {
-                await updateHousehold(selectedHousehold.id, { floor, title });
-                back();
+              onSave={async (title, level, color) => {
+                if (selectedHouseholdId) {
+                  await updateHousehold(selectedHouseholdId, {
+                    color,
+                    level,
+                    title,
+                  });
+                  back();
+                }
               }}
             />
           )}
@@ -177,30 +250,55 @@ const LocationDialog: FC<LocationDialogProps> = ({
             onBack={() => back()}
             onClose={onClose}
             onLogVisit={async (responses) => {
-              await reportLocationVisit(assignment.id, {
-                areaAssId: assignment.id,
-                locationId: location.id,
-                responses,
-              });
+              // TODO: User should specify household count
+              const numHouseholds = estimateVisitedHouseholds({
+                metrics: responses,
+              } as ZetkinLocationVisit);
+
+              await reportLocationVisit(numHouseholds, responses);
               setShowSparkle(true);
             }}
           />
         </Box>
         <Box key="householdVisit" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <HouseholdVisitPage
-              household={selectedHousehold}
-              metrics={assignment.metrics}
+              householdId={selectedHouseholdId}
+              location={location}
+              metrics={metrics}
               onBack={() => back()}
-              onLogVisit={async (responses, noteToOfficial) => {
-                await addVisit(selectedHousehold.id, {
-                  areaAssId: assignment.id,
-                  noteToOfficial,
-                  responses,
-                  timestamp: new Date().toISOString(),
-                });
+              onLogVisit={async (responses) => {
+                await reportHouseholdVisit(selectedHouseholdId, responses);
                 setShowSparkle(true);
                 goto('households');
+              }}
+            />
+          )}
+        </Box>
+        <Box key="bulkHouseholdVisits" height="100%">
+          {!!selectedHouseholdIds?.length && (
+            <BulkHouseholdVisitsPage
+              metrics={metrics}
+              onBack={() => back()}
+              onLogVisit={async (responses) => {
+                await reportHouseholdVisits(selectedHouseholdIds, responses);
+                setShowSparkle(true);
+                setSelectedHouseholdIds(null);
+                back();
+              }}
+              selectedHouseholsdIds={selectedHouseholdIds}
+            />
+          )}
+        </Box>
+        <Box key="bulkEditHouseholds" height="100%">
+          {!!selectedHouseholdIds?.length && (
+            <BulkEditHouseholdsPage
+              householdIds={selectedHouseholdIds}
+              onBack={() => back()}
+              onSave={async (updates) => {
+                await editHouseholds(selectedHouseholdIds, updates);
+                setSelectedHouseholdIds(null);
+                back();
               }}
             />
           )}

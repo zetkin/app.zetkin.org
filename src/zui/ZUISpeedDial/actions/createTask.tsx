@@ -11,7 +11,10 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
   closeDialog,
 }) => {
   const router = useRouter();
-  const { campId, orgId } = router.query as { campId: string; orgId: string };
+  const { projectId, orgId } = router.query as {
+    orgId: string;
+    projectId: string;
+  };
 
   const createTask = useCreateTask(parseInt(orgId as string));
   //createTask function in hook async,
@@ -24,9 +27,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
     const newTask = await createTask(body);
     closeDialog();
     // Redirect to task page
-    router.push(
-      `/organize/${orgId}/projects/${campId}/calendar/tasks/${newTask.id}`
-    );
+    router.push(`/organize/${orgId}/projects/${projectId}/tasks/${newTask.id}`);
   };
 
   return <TaskDetailsForm onCancel={closeDialog} onSubmit={handleFormSubmit} />;

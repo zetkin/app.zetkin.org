@@ -16,7 +16,7 @@ import { ZetkinUser } from '../utils/types/zetkin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 const scaffoldOptions = {
-  localeScope: ['pages.home'],
+  localeScope: ['pages.my'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -77,7 +77,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       };
     } else {
       return {
-        props: {},
+        redirect: {
+          destination: '/my/home',
+          permanent: false,
+        },
       };
     }
   },
@@ -86,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 export default function Home(): JSX.Element {
   const router = useRouter();
-  router.push('/organize');
+  router.push('/my');
 
   return (
     <>

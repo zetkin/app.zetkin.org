@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 
 import test from '../../../../fixtures/next';
-import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import SpeakToFriend from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures';
+import SpeakToFriend from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Task detail pagee', async () => {
   test.beforeEach(async ({ login, moxy }) => {
@@ -28,18 +28,15 @@ test.describe('Task detail pagee', async () => {
         204
       );
 
-      await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
+      await page.goto(appUri + '/organize/1/projects/1/tasks/1');
 
       await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');
       await page.click('data-testid=ZUIEllipsisMenu-item-deleteTask');
 
-      await Promise.all([
-        page.waitForNavigation(),
-        page.click('button:text("Confirm")'),
-      ]);
+      await page.click('button:text("Confirm")');
 
-      expect(page.url()).toEqual(appUri + '/organize/1/projects/1');
-      expect(log().length).toEqual(1);
+      await expect(page).toHaveURL(appUri + '/organize/1/projects/1');
+      await expect.poll(() => log().length).toBe(1);
     });
   });
 });

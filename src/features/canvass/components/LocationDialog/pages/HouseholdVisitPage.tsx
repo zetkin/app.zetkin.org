@@ -9,41 +9,46 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
+import { Check, Close, Undo } from '@mui/icons-material';
 import { FC, useEffect, useState } from 'react';
 
-import {
-  Household,
-  Visit,
-  ZetkinAreaAssignment,
-} from 'features/areaAssignments/types';
+import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useHousehold from 'features/canvass/hooks/useHousehold';
+import { MetricResponse } from 'features/canvass/types';
 
 type HouseholdVisitPageProps = {
-  household: Household;
-  metrics: ZetkinAreaAssignment['metrics'];
+  householdId: number;
+  location: ZetkinLocation;
+  metrics: ZetkinMetric[];
   onBack: () => void;
-  onLogVisit: (
-    responses: Visit['responses'],
-    noteToOfficial: Visit['noteToOfficial']
-  ) => void;
+  onLogVisit: (metrics: MetricResponse[]) => void;
 };
 
 const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
-  household,
+  householdId,
+  location,
   metrics,
   onBack,
   onLogVisit,
 }) => {
   const messages = useMessages(messageIds);
+  const household = useHousehold(
+    location.organization_id,
+    location.id,
+    householdId
+  );
 
   const [responseByMetricId, setResponseByMetricId] = useState<
-    Record<string, string>
+    Record<number, MetricResponse>
   >({});
   const [step, setStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setResponseByMetricId({});
     setStep(0);
   }, [household.id]);
 
@@ -53,14 +58,18 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
         step >= metrics.length && (
           <Button
             fullWidth
-            onClick={() => {
-              const responses = Object.entries(responseByMetricId).map(
-                ([metricId, response]) => ({ metricId, response })
+            loading={isLoading}
+            onClick={async () => {
+              setIsLoading(true);
+              const responses = Object.values(responseByMetricId).map(
+                (response) => response
               );
+
               const filteredResponses = responses.filter(
                 (response) => !!response.response
               );
-              onLogVisit(filteredResponses, '');
+              await onLogVisit(filteredResponses);
+              setIsLoading(false);
             }}
             variant="contained"
           >
@@ -68,7 +77,15 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
           </Button>
         )
       }
+      color={household.color}
       onBack={onBack}
+      subtitle={
+        household.level
+          ? messages.households.single.subtitle({
+              floorNumber: household.level,
+            })
+          : messages.default.floor()
+      }
       title={messages.visit.household.header({
         householdTitle: household.title,
       })}
@@ -76,7 +93,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
           const options =
-            metric.kind == 'boolean'
+            metric.type == 'bool'
               ? [
                   {
                     label: messages.visit.household.yesButtonLabel(),
@@ -88,11 +105,11 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                   },
                 ]
               : [
-                  { label: 1, value: '1' },
-                  { label: 2, value: '2' },
-                  { label: 3, value: '3' },
-                  { label: 4, value: '4' },
-                  { label: 5, value: '5' },
+                  { label: 1, value: 1 },
+                  { label: 2, value: 2 },
+                  { label: 3, value: 3 },
+                  { label: 4, value: 4 },
+                  { label: 5, value: 5 },
                 ];
 
           const stepIsCurrent = index == step;
@@ -101,28 +118,56 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
           return (
             <Step key={index}>
               <StepButton
-                onClick={() => setStep(index)}
+                onClick={() => {
+                  if (index < step) {
+                    const newResponses: Record<number, MetricResponse> = {};
+                    metrics.forEach((m, i) => {
+                      if (i < index && responseByMetricId[m.id]) {
+                        newResponses[m.id] = responseByMetricId[m.id];
+                      }
+                    });
+                    setResponseByMetricId(newResponses);
+                  }
+
+                  setStep(index);
+                }}
                 sx={{
+                  '& .MuiStepLabel-vertical': {
+                    alignItems: 'start',
+                  },
                   '& span': {
                     overflow: 'hidden',
                   },
+                  display: 'block',
                 }}
               >
-                <Typography
-                  sx={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
-                  }}
-                >
-                  {metric.question}
-                </Typography>
+                <Box sx={{ width: '100%' }}>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
+                      }}
+                    >
+                      {metric.question}
+                    </Typography>
+                    {!stepIsCurrent && index < step && <Undo />}
+                  </Box>
 
-                {completed && step != index && (
-                  <Typography variant="body2">
-                    {responseByMetricId[metric.id]}
-                  </Typography>
-                )}
+                  {completed && step != index && (
+                    <Typography variant="body2">
+                      {responseByMetricId[metric.id].response}
+                    </Typography>
+                  )}
+                </Box>
               </StepButton>
               <StepContent>
                 <Box
@@ -140,10 +185,13 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                   <ToggleButtonGroup
                     exclusive
                     fullWidth
-                    onChange={(ev, newValue) => {
+                    onChange={(ev, newValue: MetricResponse['response']) => {
                       setResponseByMetricId({
                         ...responseByMetricId,
-                        [metric.id]: newValue,
+                        [metric.id]: {
+                          metric_id: metric.id,
+                          response: newValue,
+                        },
                       });
                       setStep(index + 1);
                     }}
@@ -154,11 +202,17 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                         key={option.value.toString()}
                         value={option.value}
                       >
+                        {metric.defines_success && option.value === 'yes' && (
+                          <Check sx={{ marginRight: 1 }} />
+                        )}
+                        {metric.defines_success && option.value === 'no' && (
+                          <Close sx={{ marginRight: 1 }} />
+                        )}
                         {option.label}
                       </ToggleButton>
                     ))}
                   </ToggleButtonGroup>
-                  {!metric.definesDone && (
+                  {!metric.defines_success && (
                     <Button onClick={() => setStep(index + 1)}>
                       <Msg id={messageIds.visit.household.skipButtonLabel} />
                     </Button>

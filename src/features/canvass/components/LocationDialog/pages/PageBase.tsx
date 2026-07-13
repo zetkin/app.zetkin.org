@@ -1,4 +1,4 @@
-import { Close, Edit } from '@mui/icons-material';
+import { Close, Delete, Edit } from '@mui/icons-material';
 import { Box, Divider, IconButton } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
@@ -7,8 +7,11 @@ import PageBaseHeader from './PageBaseHeader';
 type Props = {
   actions?: ReactNode;
   children?: ReactNode;
+  color?: string | null;
+  fullWidth?: boolean;
   onBack?: () => void;
   onClose?: () => void;
+  onDelete?: () => void;
   onEdit?: () => void;
   subtitle?: string;
   title: string;
@@ -17,45 +20,52 @@ type Props = {
 const PageBase: FC<Props> = ({
   actions,
   children,
+  color,
+  fullWidth = false,
   onBack,
   onClose,
+  onDelete,
   onEdit,
   subtitle,
   title,
 }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%" pt={2}>
+      <PageBaseHeader
+        color={color}
+        iconButtons={
+          <>
+            {onEdit && (
+              <IconButton onClick={onEdit}>
+                <Edit />
+              </IconButton>
+            )}
+            {onDelete && (
+              <IconButton onClick={onDelete}>
+                <Delete />
+              </IconButton>
+            )}
+            {onClose && (
+              <IconButton onClick={onClose}>
+                <Close />
+              </IconButton>
+            )}
+          </>
+        }
+        onBack={onBack}
+        subtitle={subtitle}
+        title={title}
+      />
+      <Divider />
       <Box
-        paddingBottom={1}
-        px={2}
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'space-between',
+          flexGrow: 1,
+          overflowY: 'auto',
+          position: 'relative',
+          pt: 1,
+          px: fullWidth ? 0 : 2,
         }}
       >
-        <PageBaseHeader
-          iconButtons={
-            <>
-              {onEdit && (
-                <IconButton onClick={onEdit}>
-                  <Edit />
-                </IconButton>
-              )}
-              {onClose && (
-                <IconButton onClick={onClose}>
-                  <Close />
-                </IconButton>
-              )}
-            </>
-          }
-          onBack={onBack}
-          subtitle={subtitle}
-          title={title}
-        />
-      </Box>
-      <Divider />
-      <Box flexGrow={1} p={2} sx={{ overflowY: 'auto', position: 'relative' }}>
         {children}
       </Box>
       {actions && (

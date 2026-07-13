@@ -4,7 +4,7 @@ import {
   SvgIconTypeMap,
   TextField,
 } from '@mui/material';
-import { FC, HTMLInputTypeAttribute } from 'react';
+import { FC, HTMLInputTypeAttribute, RefObject } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 import { ZUILarge, ZUIMedium } from '../types';
@@ -53,6 +53,15 @@ type ZUITextFieldProps = {
   id?: string;
 
   /**
+   * If the text field should be initiated with a specific value.
+   * Only use when component is uncontrolled.
+   */
+  initialValue?: string;
+
+  /**Pass a ref to the input element */
+  inputRef?: RefObject<HTMLInputElement>;
+
+  /**
    * The label of the textfield
    */
   label?: string;
@@ -65,6 +74,11 @@ type ZUITextFieldProps = {
    * lower than 5, the height will adjust to that number of rows.
    */
   maxRows?: number;
+
+  /**
+   * If the font used in the box should be monospaced
+   */
+  monospaced?: boolean;
 
   /**
    * If the textfield is for mutli line input.
@@ -129,8 +143,11 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   fullWidth = false,
   helperText,
   id,
+  initialValue,
+  inputRef,
   label,
   maxRows = 5,
+  monospaced = false,
   multiline = false,
   name,
   onChange,
@@ -143,13 +160,16 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   value,
 }) => (
   <TextField
+    defaultValue={initialValue}
     disabled={disabled}
     error={error}
     fullWidth={fullWidth}
     helperText={helperText}
     id={id}
+    inputRef={inputRef}
     label={label}
     maxRows={maxRows}
+    minRows={maxRows < 5 ? maxRows : 5}
     multiline={multiline}
     name={name}
     onChange={(ev) => {
@@ -159,19 +179,22 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
     }}
     placeholder={placeholder}
     required={required}
-    rows={maxRows < 5 ? maxRows : 5}
     size={size == 'medium' ? 'small' : 'medium'}
     slotProps={{
       htmlInput: {
         'aria-describedby': ariaDescribedBy,
         sx: (theme) => ({
-          fontFamily: theme.typography.fontFamily,
-          fontSize: '1rem',
+          fontFamily: monospaced
+            ? 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+            : theme.typography.fontFamily,
+          fontSize: monospaced ? '0.875rem' : '1rem',
           fontWeight: 400,
-          letterSpacing: '1%',
-          lineHeight: '1.5rem',
+          letterSpacing: monospaced ? '0' : '1%',
+          lineHeight: monospaced ? '1.4rem' : '1.5rem',
+          overflowX: monospaced ? 'auto' : 'hidden',
           paddingX: '0.75rem',
           paddingY: size == 'medium' ? '0.594rem' : '',
+          whiteSpace: monospaced ? 'pre' : 'normal',
         }),
       },
       input: {

@@ -53,12 +53,14 @@ const TagGroupSelect: React.FunctionComponent<{
         renderInput={(params) => (
           <TextField
             {...params}
-            inputProps={{
-              ...params.inputProps,
-              'data-testid': 'TagManager-TagDialog-tagGroupSelect',
-            }}
             label={messages.dialog.groupLabel()}
             placeholder={messages.dialog.groupSelectPlaceholder()}
+            slotProps={{
+              htmlInput: {
+                ...params.inputProps,
+                'data-testid': 'TagManager-TagDialog-tagGroupSelect',
+              },
+            }}
             variant="outlined"
           />
         )}

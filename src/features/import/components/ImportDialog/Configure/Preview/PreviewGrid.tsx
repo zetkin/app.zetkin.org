@@ -1,15 +1,19 @@
 import { ReactElement } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
+import { BadgeOutlined } from '@mui/icons-material';
 
-import { CellData } from 'features/import/utils/types';
+import { CellData } from 'features/import/types';
 
 interface PreviewGridProps {
+  isImportID?: boolean;
   columnHeader?: string;
   unmappedRow?: boolean;
   rowValue: ReactElement | CellData;
   emptyLabel?: string;
 }
+
 const PreviewGrid = ({
+  isImportID = false,
   columnHeader,
   unmappedRow,
   rowValue,
@@ -30,12 +34,14 @@ const PreviewGrid = ({
     >
       <Box
         sx={{
+          alignItems: 'center',
+
           backgroundColor: columnHeader
             ? 'transparent'
             : theme.palette.transparentGrey.light,
-          height: '14px',
+          display: 'flex',
           mb: 0.5,
-          minWidth: '150px',
+          minHeight: '22px',
         }}
       >
         <Typography
@@ -49,6 +55,9 @@ const PreviewGrid = ({
         >
           {columnHeader}
         </Typography>
+        {isImportID && (
+          <BadgeOutlined color="secondary" fontSize="small" sx={{ ml: 1 }} />
+        )}
       </Box>
       <Box
         sx={{

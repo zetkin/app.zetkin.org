@@ -10,7 +10,7 @@ export default function getTagContrastColor(color: string) {
     } else if (color == funSwatch.medium.color) {
       contrastColor = funSwatch.medium.contrast;
     } else if (color == funSwatch.light.color) {
-      contrastColor == funSwatch.light.contrast;
+      contrastColor = funSwatch.light.contrast;
     }
   });
 

@@ -1,14 +1,21 @@
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
-import { ChatBubbleOutline, Delete, QuizOutlined } from '@mui/icons-material';
-import { useContext } from 'react';
+import {
+  ArrowForward,
+  ChatBubbleOutline,
+  ContentCopy,
+  Delete,
+  Groups,
+  QuizOutlined,
+} from '@mui/icons-material';
+import React, { useCallback, useContext, useState } from 'react';
 
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import getSurveyUrl from '../utils/getSurveyUrl';
 import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
-import useMemberships from 'features/organizations/hooks/useMemberships';
+import useOfficialMemberships from 'features/organizations/hooks/useOfficialMemberships';
 import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
@@ -22,16 +29,21 @@ import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
+import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
+import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
+import { useApiClient } from 'core/hooks';
+import surveyToList from 'features/surveys/rpc/surveyToList';
+import duplicateSurvey from '../rpc/duplicateSurvey';
 
 interface SurveyLayoutProps {
-  campId: string;
+  projectId: string;
   children: React.ReactNode;
   orgId: string;
   surveyId: string;
 }
 
 const SurveyLayout: React.FC<SurveyLayoutProps> = ({
-  campId,
+  projectId,
   children,
   orgId,
   surveyId,
@@ -46,14 +58,17 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     parsedOrg,
     parseInt(surveyId)
   );
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const { surveyIsEmpty, ...elementsFuture } = useSurveyElements(
     parsedOrg,
     parseInt(surveyId)
   );
+  const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
   const originalOrgId = surveyFuture.data?.organization.id;
-  const isShared = campId === 'shared';
-  const orgs = useMemberships().data ?? [];
+  const isShared = projectId === 'shared';
+  const orgs = useOfficialMemberships().data ?? [];
+  const apiClient = useApiClient();
 
   const roleAdmin =
     orgs.find((item) => item.organization.id === originalOrgId)?.role ===
@@ -74,12 +89,72 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       />
     );
   };
-  const handleDelete = () => {
-    deleteSurvey();
-    router.push(
+  const handleDelete = async () => {
+    await deleteSurvey();
+    await router.push(
       `/organize/${orgId}/projects/${surveyFuture.data?.campaign?.id || ''} `
     );
   };
+
+  const handleDuplicate = async () => {
+    const res = await apiClient.rpc(duplicateSurvey, {
+      orgId: parsedOrg,
+      projectId: parseInt(projectId),
+      surveyId: parseInt(surveyId),
+    });
+
+    if (res) {
+      await router.push(
+        `/organize/${res.organization.id}/projects/${projectId}/surveys/${res.id}`
+      );
+      showSnackbar('success', messages.surveyDuplicated.success());
+    } else {
+      showSnackbar('error', messages.surveyDuplicated.error());
+    }
+  };
+
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedSurvey = await updateSurvey({ campaign_id: projectId });
+    await router.push(
+      `/organize/${orgId}/projects/${projectId}/surveys/${surveyId}`
+    );
+    showSnackbar(
+      'success',
+      messages.surveyChangeProjectDialog.success({
+        projectTitle: updatedSurvey.campaign!.title,
+        surveyTitle: surveyFuture.data!.title,
+      })
+    );
+  };
+
+  const handleCreateList = useCallback(
+    async (folderId?: number) => {
+      try {
+        if (!surveyFuture.data) {
+          showSnackbar('error', messages.surveyToList.error());
+          return;
+        }
+
+        const view = await apiClient.rpc(surveyToList, {
+          firstNameColumnName: messages.submissions.firstNameColumn(),
+          folderId,
+          lastNameColumName: messages.submissions.lastNameColumn(),
+          orgId: parseInt(orgId),
+          surveyId: parseInt(surveyId),
+          title: messages.surveyToList.title({
+            surveyTitle: surveyFuture.data.title,
+          }),
+        });
+        await router.push(
+          `/organize/${view.organization.id}/people/lists/${view.id}`
+        );
+      } catch (e) {
+        showSnackbar('error', messages.surveyToList.error());
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [apiClient, orgId, surveyId, router.push, surveyFuture.data]
+  );
 
   return (
     <TabbedLayout
@@ -119,6 +194,21 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       }
       defaultTab="/"
       ellipsisMenuItems={[
+        {
+          label: messages.layout.actions.duplicate(),
+          onSelect: () => handleDuplicate(),
+          startIcon: <ContentCopy />,
+        },
+        {
+          label: messages.layout.actions.move(),
+          onSelect: () => setIsMoveDialogOpen(true),
+          startIcon: <ArrowForward />,
+        },
+        {
+          label: messages.layout.actions.createList(),
+          onSelect: () => handleCreateList(),
+          startIcon: <Groups />,
+        },
         {
           label: messages.layout.actions.delete(),
           onSelect: () => {
@@ -190,6 +280,13 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
               }}
             </ZUIFutures>
           </Box>
+          <ChangeProjectDialog
+            errorMessage={messages.surveyChangeProjectDialog.error()}
+            onClose={() => setIsMoveDialogOpen(false)}
+            onProjectSelected={handleOnProjectSelected}
+            open={isMoveDialogOpen}
+            title={messages.surveyChangeProjectDialog.title()}
+          />
         </Box>
       }
       tabs={[
@@ -201,6 +298,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         {
           href: '/submissions',
           label: messages.tabs.submissions(),
+        },
+        {
+          href: '/insights',
+          label: messages.tabs.insights(),
         },
       ]}
       title={
@@ -223,5 +324,4 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     </TabbedLayout>
   );
 };
-
 export default SurveyLayout;

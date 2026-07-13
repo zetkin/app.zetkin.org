@@ -1,157 +1,164 @@
+import { range } from 'lodash';
 import { FC, useState } from 'react';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListSubheader,
-  Typography,
-} from '@mui/material';
-import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
+import { Box, Button, Typography } from '@mui/material';
 
 import PageBase from './PageBase';
-import { Household, ZetkinLocation } from 'features/areaAssignments/types';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
+import {
+  ZetkinAreaAssignment,
+  ZetkinLocation,
+} from 'features/areaAssignments/types';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import FloorMatrix from '../FloorMatrix';
+import { EditedFloor } from '../FloorMatrix/types';
+import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
+import FloorMatrixToolbar from '../FloorMatrixToolbar';
+import useHouseholds from 'features/canvass/hooks/useHouseholds';
 
 type Props = {
+  assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
   onBack: () => void;
-  onBulk: () => void;
+  onBulkEdit: (householdIds: number[]) => void;
+  onBulkVisit: (households: number[]) => void;
+  onClickVisit: (householdId: number) => void;
   onClose: () => void;
-  onCreateHousehold: (householdId: Household) => void;
-  onSelectHousehold: (householdId: string) => void;
-  orgId: number;
+  onDetails: (householdId: number) => void;
+  onSelectHousehold: (householdId: number) => void;
+  onSelectHouseholds: (householdIds: null | number[]) => void;
+  selectedHouseholdIds: null | number[];
 };
 
 const HouseholdsPage: FC<Props> = ({
-  onBack,
-  onBulk,
-  onClose,
-  onCreateHousehold,
-  onSelectHousehold,
-  orgId,
+  assignment,
   location,
+  onBack,
+  onBulkEdit,
+  onBulkVisit,
+  onClickVisit,
+  onClose,
+  onDetails,
+  onSelectHousehold,
+  onSelectHouseholds,
+  selectedHouseholdIds,
 }) => {
   const messages = useMessages(messageIds);
-  const [adding, setAdding] = useState(false);
-  const { addHousehold } = useLocationMutations(orgId, location.id);
+  const households = useHouseholds(location.organization_id, location.id);
+  const { addHouseholds } = useLocationMutations(
+    location.organization_id,
+    location.id
+  );
 
-  const sortedHouseholds = location.households.concat().sort((h0, h1) => {
-    const floor0 = h0.floor ?? Infinity;
-    const floor1 = h1.floor ?? Infinity;
+  const shouldStartInEditMode = households.length == 0;
+  const initialDraft = {
+    draftHouseholdCount: 1,
+    existingHouseholds: [],
+    level: 1,
+  };
 
-    return floor0 - floor1;
-  });
+  const [draftFloors, setDraftFloors] = useState<null | EditedFloor[]>(
+    shouldStartInEditMode ? [initialDraft] : null
+  );
+
+  const hasDrafts = !!draftFloors?.length;
+  const hasHouseholds = !!households.length;
+  const isEmpty = !hasDrafts && !hasHouseholds;
 
   return (
     <PageBase
+      fullWidth
       onBack={onBack}
       onClose={onClose}
       subtitle={location.title}
       title={messages.households.page.header()}
     >
-      <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
-        {location.households.length == 0 && (
-          <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
-            <Msg id={messageIds.households.page.empty} />
-          </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100%',
+        }}
+      >
+        {households.length == 0 && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              m: 2,
+              textAlign: 'center',
+            }}
+          >
+            <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
+              <Msg id={messageIds.households.page.empty} />
+            </Typography>
+            {!draftFloors?.length && (
+              <Button
+                onClick={() => setDraftFloors([initialDraft])}
+                variant="contained"
+              >
+                Add households
+              </Button>
+            )}
+          </Box>
         )}
-        <List sx={{ overflowY: 'visible' }}>
-          {sortedHouseholds.map((household, index) => {
-            const sortedVisits = household.visits.toSorted((a, b) => {
-              const dateA = new Date(a.timestamp);
-              const dateB = new Date(b.timestamp);
-              if (dateA > dateB) {
-                return -1;
-              } else if (dateB > dateA) {
-                return 1;
-              } else {
-                return 0;
+        {!isEmpty && (
+          <Box
+            sx={{
+              marginTop: 'auto',
+            }}
+          >
+            <FloorMatrix
+              assignment={assignment}
+              draftFloors={draftFloors}
+              location={location}
+              onClickDetails={(householdId) => onDetails(householdId)}
+              onClickVisit={onClickVisit}
+              onEditChange={(drafts) => {
+                setDraftFloors(drafts);
+              }}
+              onSelectHousehold={onSelectHousehold}
+              onUpdateSelection={(selectedIds) =>
+                onSelectHouseholds([...new Set(selectedIds)])
               }
-            });
-
-            const prevFloor = sortedHouseholds[index - 1]?.floor ?? null;
-            const curFloor = household.floor || null;
-            const firstOnFloor = index == 0 || curFloor != prevFloor;
-
-            const mostRecentVisit =
-              sortedVisits.length > 0 ? sortedVisits[0] : null;
-
-            return (
-              <Box key={household.id}>
-                {firstOnFloor && (
-                  <ListSubheader>
-                    {household.floor
-                      ? `Floor ${household.floor}`
-                      : 'Unknown floor'}
-                  </ListSubheader>
-                )}
-                <Divider />
-                <ListItem
-                  alignItems="center"
-                  onClick={() => {
-                    onSelectHousehold(household.id);
-                  }}
-                >
-                  <Box flexGrow={1}>
-                    <ListItemText>{household.title}</ListItemText>
-                  </Box>
-                  {mostRecentVisit && (
-                    <Typography color="secondary">
-                      <ZUIRelativeTime datetime={mostRecentVisit.timestamp} />
-                    </Typography>
-                  )}
-                  <KeyboardArrowRight />
-                </ListItem>
-              </Box>
-            );
-          })}
-        </List>
-        <Box
-          alignItems="center"
-          display="flex"
-          flexDirection="column"
-          gap={1}
-          mt={2}
-        >
-          <Button
-            disabled={adding}
-            onClick={async () => {
-              setAdding(true);
-
-              // Since this button adds households to the unknown floor, we only count those households
-              const householdsOnUnknownFloor = sortedHouseholds.filter(
-                ({ floor }) => floor == null
-              );
-              const title = messages.households.householdDefaultTitle({
-                householdNumber: householdsOnUnknownFloor.length + 1,
+              selectedHouseholdIds={selectedHouseholdIds}
+            />
+          </Box>
+        )}
+        {!isEmpty && (
+          <FloorMatrixToolbar
+            draftFloors={draftFloors}
+            onBulkEdit={(householdIds) => onBulkEdit(householdIds)}
+            onBulkVisit={(householdIds) => onBulkVisit(householdIds)}
+            onEditCancelled={() => {
+              setDraftFloors(null);
+            }}
+            onEditSave={async () => {
+              const newHouseholds = draftFloors?.flatMap((draft) => {
+                const firstNewIndex = draft.existingHouseholds.length;
+                const lastNewIndex = firstNewIndex + draft.draftHouseholdCount;
+                return range(firstNewIndex, lastNewIndex).map((index) => ({
+                  level: draft.level,
+                  title: 'Household ' + (index + 1),
+                }));
               });
 
-              const newlyAddedHousehold = await addHousehold({ title });
-              setAdding(false);
-              onCreateHousehold(newlyAddedHousehold);
+              if (newHouseholds?.length) {
+                await addHouseholds(newHouseholds);
+              }
+
+              setDraftFloors(null);
             }}
-            startIcon={
-              adding ? (
-                <CircularProgress color="secondary" size="20px" />
-              ) : (
-                <Add />
-              )
+            onEditStart={() => setDraftFloors([])}
+            onSelectAll={() =>
+              onSelectHouseholds(households.map((household) => household.id))
             }
-            variant="outlined"
-          >
-            Add new household
-          </Button>
-          <Button onClick={onBulk} startIcon={<Apps />} variant="text">
-            Create many
-          </Button>
-        </Box>
+            onSelectCancelled={() => onSelectHouseholds(null)}
+            onSelectNone={() => onSelectHouseholds([])}
+            onSelectStart={() => onSelectHouseholds([])}
+            selectedHouseholdIds={selectedHouseholdIds}
+          />
+        )}
       </Box>
     </PageBase>
   );

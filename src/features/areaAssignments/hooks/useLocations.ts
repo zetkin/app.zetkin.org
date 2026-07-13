@@ -1,19 +1,26 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinLocation } from '../types';
 import { locationsLoad, locationsLoaded } from '../store';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 
-export default function useLocations(orgId: number) {
+export default function useLocations(
+  orgId: number,
+  assignmentId: number,
+  areaId: number
+) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const key = `${assignmentId}:${areaId}`;
   const locationList = useAppSelector(
-    (state) => state.areaAssignments.locationList
+    (state) => state.areaAssignments.locationsByAssignmentIdAndAreaId[key]
   );
 
   return loadListIfNecessary(locationList, dispatch, {
-    actionOnLoad: () => locationsLoad(),
-    actionOnSuccess: (data) => locationsLoaded(data),
+    actionOnLoad: () => locationsLoad(key),
+    actionOnSuccess: (data) => locationsLoaded([key, data]),
     loader: () =>
-      apiClient.get<ZetkinLocation[]>(`/beta/orgs/${orgId}/locations`),
+      apiClient.get<ZetkinLocation[]>(
+        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations?within_areas=${areaId}&buffer_meters=50&type=assignment`
+      ),
   });
 }

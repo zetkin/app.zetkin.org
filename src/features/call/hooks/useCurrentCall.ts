@@ -1,16 +1,14 @@
-import { RemoteItem } from 'utils/storeUtils';
 import { useAppSelector } from 'core/hooks';
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 
-export default function useCurrentCall(): ZetkinCall | null {
+export default function useCurrentCall(): UnfinishedCall | null {
   const state = useAppSelector((state) => state.call);
-  const currentCall = state.outgoingCalls.items.find(
-    (item: RemoteItem<ZetkinCall>) => item.id == state.currentCallId
+  const activeLane = state.lanes[state.activeLaneIndex];
+  const currentCallId = activeLane.currentCallId;
+
+  const currentCall = state.unfinishedCalls.items.find(
+    (item) => item.id == currentCallId
   );
 
-  if (currentCall) {
-    return currentCall.data;
-  } else {
-    return null;
-  }
+  return currentCall?.data ?? null;
 }

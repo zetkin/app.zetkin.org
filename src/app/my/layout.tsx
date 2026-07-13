@@ -2,19 +2,41 @@ import { FC, ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
-import HomeLayout from 'features/home/layouts/HomeLayout';
-import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
+import HomeLayout from 'features/my/layouts/HomeLayout';
+import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';
-import messageIds from 'features/home/l10n/messageIds';
+import messageIds from 'features/my/l10n/messageIds';
+import { getSeoTags } from '../../utils/seoTags';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = getBrowserLanguage(headers().get('accept-language') || '');
   const messages = await getServerMessages(lang, messageIds);
 
+  const headersList = headers();
+  const pathname = headersList.get('x-requested-path') || '';
+  const lastSegment = pathname.split('/').pop() ?? 'home';
+
+  let pageTitle = '';
+
+  if (lastSegment === 'feed') {
+    pageTitle = messages.tabs.feed();
+  } else if (lastSegment === 'home') {
+    pageTitle = messages.tabs.home();
+  } else if (lastSegment === 'settings') {
+    pageTitle = messages.tabs.settings();
+  } else if (lastSegment === 'orgs') {
+    pageTitle = messages.tabs.orgs();
+  }
+
+  const baseTags = getSeoTags(
+    `${pageTitle} | ${process.env.HOME_TITLE || messages.title()}`,
+    '',
+    pathname
+  );
   return {
-    icons: [{ url: '/logo-zetkin.png' }],
-    title: process.env.HOME_TITLE || messages.title(),
+    ...baseTags,
+    robots: { follow: true, index: false },
   };
 }
 

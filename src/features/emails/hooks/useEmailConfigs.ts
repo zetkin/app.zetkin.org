@@ -14,7 +14,7 @@ export default function useEmailConfigs(
   return loadListIfNecessary(configList, dispatch, {
     actionOnLoad: () => configsLoad(),
     actionOnSuccess: (items) => configsLoaded(items),
-    loader: () =>
+    loader: async () =>
       apiClient.get<ZetkinEmailConfig[]>(`/api/orgs/${orgId}/emails/configs`),
   });
 }

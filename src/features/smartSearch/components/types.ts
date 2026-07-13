@@ -16,10 +16,11 @@ export enum FILTER_TYPE {
   ALL = 'all',
   CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
-  CAMPAIGN_PARTICIPATION = 'campaign_participation',
+  PROJECT_PARTICIPATION = 'campaign_participation',
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
+  EVENT_PARTICIPATION = 'action_participation',
   JOINFORM = 'joinform',
   JOURNEY = 'journey_subjects',
   MOST_ACTIVE = 'most_active',
@@ -34,6 +35,8 @@ export enum FILTER_TYPE {
   SURVEY_SUBMISSION = 'survey_submission',
   TASK = 'task',
   USER = 'user',
+  AREA = 'area',
+  OFFICIAL = 'official',
 }
 
 export enum CONDITION_OPERATOR {
@@ -59,6 +62,11 @@ export enum JOURNEY_CONDITION_OP {
 export enum IN_OPERATOR {
   IN = 'in',
   NOTIN = 'notin',
+}
+
+export enum AREA_OPERATOR {
+  IN = 'in',
+  NOTIN = 'out',
 }
 
 export enum MATCH_OPERATORS {
@@ -89,6 +97,7 @@ export enum TIME_FRAME {
   EVER = 'ever',
   FUTURE = 'future',
   BEFORE_TODAY = 'beforeToday',
+  ON_DATE = 'onDate',
   BEFORE_DATE = 'beforeDate',
   AFTER_DATE = 'afterDate',
   BETWEEN = 'between',
@@ -263,10 +272,26 @@ export interface UserFilterConfig {
   organizations?: FilterConfigOrgOptions;
 }
 
+export interface OfficialFilterConfig {
+  role?: 'organizer' | 'admin' | 'any';
+  organizations?: FilterConfigOrgOptions;
+}
+
 export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
 
-export interface CampaignParticipationConfig {
+export type AllInSuborgFilterConfig = {
+  organizations: FilterConfigOrgOptions;
+};
+
+export type AreaFilterConfig = {
+  area: number;
+  field: string;
+  operator: AREA_OPERATOR;
+};
+
+export interface ProjectParticipationConfig {
   state: 'booked' | 'signed_up';
+  status?: 'attended' | 'cancelled' | 'noshow';
   operator: 'in' | 'notin';
   organizations?: FilterConfigOrgOptions;
   campaign?: number;
@@ -274,6 +299,13 @@ export interface CampaignParticipationConfig {
   location?: number;
   after?: string;
   before?: string;
+}
+
+export interface EventParticipationConfig {
+  action: number;
+  state: 'booked' | 'signed_up';
+  status?: 'attended' | 'cancelled' | 'noshow';
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface SubQueryFilterConfig {
@@ -338,7 +370,8 @@ export interface TaskFilterConfig {
 export type AnyFilterConfig =
   | CallBlockedFilterConfig
   | CallHistoryFilterConfig
-  | CampaignParticipationConfig
+  | ProjectParticipationConfig
+  | EventParticipationConfig
   | DefaultFilterConfig
   | EmailBlacklistFilterConfig
   | JoinFormFilterConfig
@@ -354,7 +387,8 @@ export type AnyFilterConfig =
   | SurveySubmissionFilterConfig
   | JourneyFilterConfig
   | TaskFilterConfig
-  | UserFilterConfig; // Add all filter objects here
+  | UserFilterConfig
+  | OfficialFilterConfig; // Add all filter objects here
 
 /** Filters */
 export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
@@ -363,8 +397,9 @@ export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
   type: FILTER_TYPE;
 }
 
-export interface SmartSearchFilterWithId<C = AnyFilterConfig>
-  extends ZetkinSmartSearchFilter<C> {
+export interface SmartSearchFilterWithId<
+  C = AnyFilterConfig,
+> extends ZetkinSmartSearchFilter<C> {
   id: number;
 }
 
@@ -382,6 +417,7 @@ export enum QUERY_TYPE {
   STANDALONE = 'standalone',
   PURPOSE = 'callassignment_goal',
   TARGET = 'callassignment_target',
+  EMAIL_TARGET = 'email_target',
 }
 
 export interface ZetkinQuery {

@@ -22,6 +22,7 @@ const EventInputFilter = ({
     if (reset === true) {
       setUserInput('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userText]);
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {

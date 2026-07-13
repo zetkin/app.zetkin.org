@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
@@ -9,16 +10,17 @@ import { TagManagerController } from './TagManagerController';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { EditTag, NewTag } from './types';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 jest.mock('features/user/hooks/useCurrentUser');
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
 
 const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
-const createTagCallback = jest.fn<Promise<ZetkinTag>, [NewTag]>((tag) =>
-  Promise.resolve({ ...tag, id: 1 } as ZetkinTag)
-);
+const createTagCallback = (tag: NewTag) =>
+  Promise.resolve({ ...tag, id: 1 } as ZetkinTag);
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const editTagCallback = jest.fn((tag: EditTag) => tag);
 const deleteTagCallback = jest.fn((tagId: number) => tagId);
@@ -229,12 +231,11 @@ describe('<TagManagerController />', () => {
   });
 
   describe('creating a tag', () => {
-    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
+    const onCreateTag = jest.fn((tag: NewTag) =>
+      Promise.resolve({ ...tag, id: 1857 } as ZetkinTag)
+    );
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) =>
-        Promise.resolve({ ...tag, id: 1857 } as ZetkinTag)
-      );
       assignTagCallback.mockReset();
       singletonRouter.query = {
         orgId: '1',
@@ -367,10 +368,11 @@ describe('<TagManagerController />', () => {
   });
 
   describe('editing a tag', () => {
-    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
+    const onCreateTag = jest.fn((tag: NewTag) =>
+      Promise.resolve(tag as ZetkinTag)
+    );
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) => Promise.resolve(tag as ZetkinTag));
       singletonRouter.query = {
         orgId: '1',
       };

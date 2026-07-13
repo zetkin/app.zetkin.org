@@ -1,12 +1,18 @@
-import { MenuItem } from '@mui/material';
-import { TextField } from 'mui-rff';
+import { MenuItem, TextField } from '@mui/material';
 
-import { COLLECT_DEMOGRAPHICS_FIELDS } from '../constants';
 import { DEMOGRAPHICS_FIELD } from 'features/tasks/components/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 
-const CollectDemographicsFields: React.FunctionComponent = (): JSX.Element => {
+type Props = {
+  onChange: (value: DEMOGRAPHICS_FIELD | undefined) => void;
+  value?: DEMOGRAPHICS_FIELD;
+};
+
+const CollectDemographicsFields: React.FunctionComponent<Props> = ({
+  value,
+  onChange,
+}): JSX.Element => {
   const messages = useMessages(messageIds);
 
   const fieldMessages = {
@@ -23,8 +29,11 @@ const CollectDemographicsFields: React.FunctionComponent = (): JSX.Element => {
       id="collect_demographics_field"
       label={messages.configs.collectDemographics.fields.demographic()}
       margin="normal"
-      name={COLLECT_DEMOGRAPHICS_FIELDS.FIELDS}
+      onChange={(e) =>
+        onChange((e.target.value as DEMOGRAPHICS_FIELD) || undefined)
+      }
       select
+      value={value ?? ''}
     >
       {Object.values(DEMOGRAPHICS_FIELD).map((field) => {
         const msgName = fieldMessages[field];

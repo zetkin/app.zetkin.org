@@ -1,44 +1,69 @@
-import { isSameDate } from 'utils/dateUtils';
+import { partition } from 'lodash';
+
+import {
+  dateIsAfter,
+  dateIsBefore,
+  isSameDate,
+  removeOffset,
+} from 'utils/dateUtils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
-import { useNumericRouteParams } from 'core/hooks';
 import clusterEventsForWeekCalender, {
   AnyClusteredEvent,
 } from '../utils/clusterEventsForWeekCalender';
 
 type UseWeekCalendarEventsParams = {
-  campaignId?: number;
   dates: Date[];
   orgId: number;
+  projectId: number;
 };
 
 type UseWeekCalendarEventsReturn = {
   date: Date;
   lanes: AnyClusteredEvent[][];
+  multidayEvents: AnyClusteredEvent[][];
 }[];
 
 export default function useWeekCalendarEvents({
+  projectId,
   dates,
+  orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
-  const { campId, orgId } = useNumericRouteParams();
-  const eventActivities = useEventsFromDateRange(
-    dates[0],
-    dates[dates.length - 1],
-    orgId,
-    campId
-  );
+  const eventActivities =
+    useEventsFromDateRange(dates[0], dates[dates.length - 1], orgId, projectId)
+      .data || [];
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
   return dates.map((date) => {
-    const relevantActivities = filteredActivities.filter((activity) =>
-      isSameDate(new Date(activity.data.start_time), date)
-    );
+    const relevantActivities = filteredActivities
+      .filter((activity) => {
+        const start = new Date(removeOffset(activity.data.start_time));
+        const end = new Date(removeOffset(activity.data.end_time));
+        return (
+          isSameDate(start, date) ||
+          isSameDate(end, date) ||
+          (dateIsBefore(start, date) && dateIsAfter(end, date))
+        );
+      })
+      .map((activity) => ({
+        activity,
+        isMultipleDays: !isSameDate(
+          new Date(removeOffset(activity.data.start_time)),
+          new Date(removeOffset(activity.data.end_time))
+        ),
+      }));
 
-    const lanes = clusterEventsForWeekCalender(relevantActivities);
+    const [multidayActivities, singleDayActivities] = partition(
+      relevantActivities,
+      (activity) => activity.isMultipleDays
+    ).map((l) => l.map((act) => act.activity));
 
+    const lanes = clusterEventsForWeekCalender(singleDayActivities);
+    const multidayEvents = clusterEventsForWeekCalender(multidayActivities);
     return {
       date,
       lanes,
+      multidayEvents,
     };
   });
 }

@@ -1,9 +1,9 @@
-import { CountryCode } from 'libphonenumber-js/types.cjs';
-import { describe, it } from '@jest/globals';
+import { CountryCode } from 'libphonenumber-js';
+import { describe, expect, it } from '@jest/globals';
 
 import { organization as mockOrganization } from 'utils/testing/mocks/mockOrganization';
 import prepareImportOperations from './prepareImportOperations';
-import { ColumnKind, Sheet } from './types';
+import { ColumnKind, Sheet } from '../types';
 
 const countryCode = mockOrganization.country as CountryCode;
 
@@ -550,6 +550,47 @@ describe('prepareImportOperations()', () => {
           {
             op: 'person.tag',
             tag_id: 22,
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('includes sub-ops to tag person with empty tags', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            {
+              tags: [{ id: 1 }],
+              value: null,
+            },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', ''],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            op: 'person.tag',
+            tag_id: 1,
           },
         ],
       },

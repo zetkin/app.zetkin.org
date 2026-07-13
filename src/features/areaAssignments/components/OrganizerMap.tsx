@@ -1,4 +1,11 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  startTransition,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import { useRouter } from 'next/router';
@@ -17,15 +24,12 @@ import { Close, Layers, Pentagon } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import OrganizerMapRenderer from './OrganizerMapRenderer';
-import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinAssignmentAreaStats,
-  ZetkinAreaAssignment,
-  ZetkinAreaAssignmentSession,
+  ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
-import objToLatLng from 'features/areas/utils/objToLatLng';
-import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
+import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 import OrganizerMapFilters from './OrganizerMapFilters';
 import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
 import AreaSelect from './AreaSelect';
@@ -36,22 +40,21 @@ import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFil
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import messageIdsAss from '../l10n/messageIds';
+import { ZetkinOrgUser } from 'features/user/types';
 import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 type OrganizerMapProps = {
-  areaAssId: string;
+  areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
-  assignment: ZetkinAreaAssignment;
   locations: ZetkinLocation[];
-  onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
-  sessions: ZetkinAreaAssignmentSession[];
+  onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
+  sessions: ZetkinAreaAssignee[];
 };
 
 export type MapStyle = {
-  area: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
-  location: 'dot' | 'households' | 'progress' | 'hide';
-  overlay: 'assignees' | 'households' | 'progress' | 'hide';
+  area: 'assignees' | 'outlined';
+  overlay: 'assignees';
 };
 
 type SettingName = 'layers' | 'filters' | 'select';
@@ -59,7 +62,6 @@ type SettingName = 'layers' | 'filters' | 'select';
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
-  assignment,
   areaAssId,
   onAddAssigneeToArea,
   locations,
@@ -71,20 +73,20 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     `mapStyle-${areaAssId}`,
     {
       area: 'assignees',
-      location: 'dot',
       overlay: 'assignees',
     }
   );
 
   const [settingsOpen, setSettingsOpen] = useState<SettingName | null>(null);
-  const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
-  const [selectedId, setSelectedId] = useState('');
+  const [filteredAreaIds, setFilteredAreaIds] = useState<null | number[]>(null);
+  const [selectedId, setSelectedId] = useState(0);
   const [filterText, setFilterText] = useState('');
-  const { onAssigneesFilterChange } = useContext(assigneesFilterContext);
   const { setActiveGroupIds, setActiveTagIdsByGroup } =
     useContext(areaFilterContext);
   const router = useRouter();
-  const { navigateToAreaId } = router.query;
+  const navigateToAreaId = parseInt(
+    router.query.navigateToAreaId?.toString() ?? '0'
+  );
 
   const mapRef = useRef<MapType | null>(null);
   useAutoResizeMap(mapRef.current);
@@ -125,20 +127,22 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   }, [navigateToAreaId]);
 
   const clearAndCloseSettings = () => {
-    setSettingsOpen(null);
-    setSelectedId('');
-    onAssigneesFilterChange(null);
-    setFilteredAreaIds(null);
-    setActiveGroupIds([]);
-    setActiveTagIdsByGroup({});
-    setFilterText('');
+    startTransition(() => {
+      setSettingsOpen(null);
+      setSelectedId(0);
+      setActiveGroupIds([]);
+      setActiveTagIdsByGroup({});
+      setFilterText('');
+    });
   };
 
   const toggleSettings = (settingName: SettingName) => {
     if (settingsOpen === settingName) {
       clearAndCloseSettings();
     } else {
-      setSettingsOpen(settingName);
+      startTransition(() => {
+        setSettingsOpen(settingName);
+      });
     }
   };
 
@@ -160,13 +164,13 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               if (areas.length) {
                 // Start with first area
                 const totalBounds = latLngBounds(
-                  areas[0].points.map((p) => objToLatLng(p))
+                  areas[0].points.map(flipForLeaflet)
                 );
 
                 // Extend with all areas
                 areas.forEach((area) => {
                   const areaBounds = latLngBounds(
-                    area.points.map((p) => objToLatLng(p))
+                    area.points.map(flipForLeaflet)
                   );
                   totalBounds.extend(areaBounds);
                 });
@@ -207,7 +211,9 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   if (settingsOpen == 'filters') {
                     clearAndCloseSettings();
                   } else {
-                    setSettingsOpen('filters');
+                    startTransition(() => {
+                      setSettingsOpen('filters');
+                    });
                   }
                 }}
               >
@@ -230,12 +236,16 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 onClick={() => {
                   if (settingsOpen == 'select') {
                     if (selectedId) {
-                      setSelectedId('');
+                      startTransition(() => {
+                        setSelectedId(0);
+                      });
                     } else {
                       clearAndCloseSettings();
                     }
                   } else {
-                    setSettingsOpen('select');
+                    startTransition(() => {
+                      setSettingsOpen('select');
+                    });
                   }
                 }}
               >
@@ -285,17 +295,21 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     filterAreas={filterAreas}
                     filterText={filterText}
                     locations={locations}
-                    onAddAssignee={(person) => {
+                    onAddAssignee={(user) => {
                       if (selectedArea) {
-                        onAddAssigneeToArea(selectedArea, person);
+                        onAddAssigneeToArea(selectedArea, user);
                       }
                     }}
                     onClose={clearAndCloseSettings}
                     onFilterTextChange={(newValue) => setFilterText(newValue)}
-                    onSelectArea={(newValue) => setSelectedId(newValue)}
+                    onSelectArea={(newValue) =>
+                      startTransition(() => {
+                        setSelectedId(newValue);
+                      })
+                    }
                     selectedArea={selectedArea}
                     selectedAreaStats={areaStats.stats.find(
-                      (stat) => stat.areaId == selectedArea?.id
+                      (stat) => stat.area_id == selectedArea?.id
                     )}
                     sessions={sessions}
                   />
@@ -353,21 +367,15 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           zoomControl={false}
         >
           <OrganizerMapRenderer
-            areaAssId={areaAssId}
             areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
-            assignment={assignment}
             locations={locations}
-            locationStyle={mapStyle.location}
-            onSelectedIdChange={(newId: string) => {
-              setSelectedId(newId);
-
-              if (!newId) {
-                setSettingsOpen(null);
-              } else {
-                setSettingsOpen('select');
-              }
+            onSelectedIdChange={(newId) => {
+              startTransition(() => {
+                setSelectedId(newId);
+                setSettingsOpen(newId ? 'select' : null);
+              });
             }}
             overlayStyle={mapStyle.overlay}
             selectedId={selectedId}

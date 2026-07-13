@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Box } from '@mui/material';
 import { useState } from 'react';
 
-import ZUIModal from './index';
 import ZUIButton from '../ZUIButton';
 import ZUIText from '../ZUIText';
+import ZUIModal from '.';
 
 const meta: Meta<typeof ZUIModal> = {
   component: ZUIModal,
@@ -82,9 +82,40 @@ export const NoChildrenAndNoOnclose: Story = {
         <ZUIModal
           open={open}
           primaryButton={{ label: 'Confirm', onClick: () => null }}
-          secondaryButton={{ label: 'Cancel', onClick: () => setOpen(false) }}
           title="Modal title"
         />
+      </>
+    );
+  },
+};
+
+export const NoButtons: Story = {
+  render: function Render(args) {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <>
+        <ZUIButton
+          label="Open modal"
+          onClick={() => setOpen(true)}
+          variant="primary"
+        />
+        <ZUIModal
+          {...args}
+          onClose={() => setOpen(false)}
+          open={open}
+          title="Modal title"
+        >
+          <Box
+            sx={{
+              backgroundColor: 'peachpuff',
+              height: '1000px',
+              width: '100%',
+            }}
+          >
+            <ZUIText>Children go here</ZUIText>
+          </Box>
+        </ZUIModal>
       </>
     );
   },

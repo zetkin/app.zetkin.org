@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest, test } from '@jest/globals';
 import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 
@@ -7,14 +8,15 @@ import { EditTag, NewTag } from '../../types';
 import messageIds from 'features/tags/l10n/messageIds';
 import TagDialog from 'features/tags/components/TagManager/components/TagDialog';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 
 describe('<TagDialog />', () => {
-  let onSubmit: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;
+  const onSubmit = jest.fn((tag: NewTag | EditTag) => tag);
   const deleteTagCallback = jest.fn((tagId: number) => tagId);
 
   beforeEach(() => {
-    onSubmit = jest.fn((tag: NewTag | EditTag) => tag);
     singletonRouter.query = {
       orgId: '1',
     };

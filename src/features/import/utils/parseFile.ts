@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import { parse } from 'papaparse';
 
-import { CellData, ImportedFile, Row } from './types';
+import { CellData, ImportedFile, Row } from '../types';
 
 export async function parseCSVFile(file: File): Promise<ImportedFile> {
   return new Promise((resolve, reject) => {
@@ -60,7 +60,7 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
 
-    (reader.onload = (evt) => {
+    reader.onload = (evt) => {
       const bstr = evt.target?.result;
       const workbook = XLSX.read(bstr, {
         cellStyles: true,
@@ -107,9 +107,10 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
         }
       });
       resolve(rawData);
-    }),
-      (reader.onerror = (error) => {
-        reject(error);
-      });
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
   });
 }

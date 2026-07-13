@@ -14,8 +14,8 @@ interface UseModelsFromQueryString {
   gridProps: Required<
     Pick<
       DataGridProProps,
-      'filterModel' | 'onFilterModelChange' | 'onSortModelChange' | 'sortModel'
-    >
+      'filterModel' | 'onFilterModelChange' | 'sortModel'
+    > & { onSortModelChange: (sortModel: GridSortModel) => void }
   >;
   setFilterModel: (model: GridFilterModel) => void;
   setSortModel: (model: GridSortModel) => void;
@@ -55,6 +55,7 @@ export default function useModelsFromQueryString(): UseModelsFromQueryString {
         shallow: true,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterModel, sortModel]);
 
   // Update model when router URL changes
@@ -69,6 +70,7 @@ export default function useModelsFromQueryString(): UseModelsFromQueryString {
     if (!isEqual(routerSortModel, sortModel)) {
       setSortModel(routerSortModel);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
   return {
@@ -122,7 +124,7 @@ function parseFilterModelFromQuery(query: ParsedUrlQuery): GridFilterModel {
   return {
     items,
     ...(!!items.length && {
-      linkOperator:
+      logicOperator:
         query.filterOperator == 'or'
           ? GridLogicOperator.Or
           : GridLogicOperator.And,

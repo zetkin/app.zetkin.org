@@ -1,22 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
+  remoteItem,
+  RemoteItem,
   remoteItemDeleted,
   remoteItemLoad,
   remoteItemUpdated,
   remoteList,
   RemoteList,
+  remoteListLoad,
+  remoteListLoaded,
 } from 'utils/storeUtils';
-import { ZetkinArea } from './types';
-import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
+import { Zetkin2Area, ZetkinAreaStats } from './types';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
-  areaList: RemoteList<ZetkinArea>;
+  areaList: RemoteList<Zetkin2Area>;
+  assignmentStatsByAreaId: Record<number, RemoteItem<ZetkinAreaStats>>;
   tagsByAreaId: Record<string, RemoteList<ZetkinAppliedTag>>;
 }
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  assignmentStatsByAreaId: {},
   tagsByAreaId: {},
 };
 
@@ -24,11 +30,11 @@ const areasSlice = createSlice({
   initialState: initialState,
   name: 'areas',
   reducers: {
-    areaCreated: (state, action: PayloadAction<ZetkinArea>) => {
+    areaCreated: (state, action: PayloadAction<Zetkin2Area>) => {
       const area = action.payload;
       remoteItemUpdated(state.areaList, area);
     },
-    areaDeleted: (state, action: PayloadAction<string>) => {
+    areaDeleted: (state, action: PayloadAction<number>) => {
       const deletedId = action.payload;
       remoteItemDeleted(state.areaList, deletedId);
     },
@@ -36,61 +42,42 @@ const areasSlice = createSlice({
       const areaId = action.payload;
       remoteItemLoad(state.areaList, areaId);
     },
-    areaLoaded: (state, action: PayloadAction<ZetkinArea>) => {
+    areaLoaded: (state, action: PayloadAction<Zetkin2Area>) => {
       const area = action.payload;
       remoteItemUpdated(state.areaList, area);
     },
-    areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
+    areaUpdated: (state, action: PayloadAction<Zetkin2Area>) => {
       const area = action.payload;
       remoteItemUpdated(state.areaList, area);
     },
     areasLoad: (state) => {
-      state.areaList.isLoading = true;
+      state.areaList = remoteListLoad(state.areaList);
     },
-    areasLoaded: (state, action: PayloadAction<ZetkinArea[]>) => {
-      const timestamp = new Date().toISOString();
+    areasLoaded: (state, action: PayloadAction<Zetkin2Area[]>) => {
       const areas = action.payload;
-      state.areaList = remoteList(areas);
-      state.areaList.loaded = timestamp;
-      state.areaList.items.forEach((item) => (item.loaded = timestamp));
+      state.areaList = remoteListLoaded(areas);
     },
-    tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
-      const [areaId, tag] = action.payload;
-      state.tagsByAreaId[areaId] ||= remoteList();
-
-      remoteItemUpdated(state.tagsByAreaId[areaId], tag);
-
-      const areaItem = state.areaList.items.find((item) => item.id == areaId);
-      if (areaItem?.data) {
-        areaItem.data.tags.push(tag);
-      }
-    },
-    tagUnassigned: (state, action: PayloadAction<[string, number]>) => {
-      const [areaId, tagId] = action.payload;
-      state.tagsByAreaId[areaId] ||= remoteList();
-      state.tagsByAreaId[areaId].items = state.tagsByAreaId[
-        areaId
-      ].items.filter((item) => item.id != tagId);
-
-      const areaItem = state.areaList.items.find((item) => item.id == areaId);
-      if (areaItem?.data) {
-        areaItem.data.tags = areaItem.data.tags.filter(
-          (tag) => tag.id != tagId
-        );
-      }
-    },
-    tagsLoad: (state, action: PayloadAction<string>) => {
+    assignmentStatsLoad: (state, action: PayloadAction<number>) => {
       const areaId = action.payload;
-      state.tagsByAreaId[areaId] ||= remoteList();
-      state.tagsByAreaId[areaId].isLoading = true;
+
+      if (!state.assignmentStatsByAreaId[areaId]) {
+        state.assignmentStatsByAreaId[areaId] = remoteItem(areaId);
+      }
+
+      state.assignmentStatsByAreaId[areaId].isLoading = true;
     },
-    tagsLoaded: (
+    assignmentStatsLoaded: (
       state,
-      action: PayloadAction<[string, ZetkinAppliedTag[]]>
+      action: PayloadAction<[number, ZetkinAreaStats | null]>
     ) => {
-      const [areaId, tags] = action.payload;
-      state.tagsByAreaId[areaId] = remoteList(tags);
-      state.tagsByAreaId[areaId].loaded = new Date().toISOString();
+      const [areaId, assignmentStats] = action.payload;
+
+      state.assignmentStatsByAreaId[areaId] = remoteItem(areaId, {
+        data: assignmentStats,
+        isLoading: false,
+        isStale: false,
+        loaded: new Date().toISOString(),
+      });
     },
   },
 });
@@ -104,8 +91,6 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
-  tagAssigned,
-  tagUnassigned,
-  tagsLoad,
-  tagsLoaded,
+  assignmentStatsLoad,
+  assignmentStatsLoaded,
 } = areasSlice.actions;

@@ -1,16 +1,27 @@
+import { notFound, redirect } from 'next/navigation';
+import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
+import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
+import { CALL, hasFeature } from 'utils/featureFlags';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import AssignmentStatsPage from 'features/call/pages/AssignmentStatsPage';
 
-interface PageProps {
+type Props = {
   params: {
     callAssId: string;
   };
+};
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    icons: [{ url: '/logo-zetkin.png' }],
+    title: 'Call',
+  };
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: Props) {
+  await redirectIfLoginNeeded();
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -23,8 +34,14 @@ export default async function Page({ params }: PageProps) {
   );
 
   if (!assignment) {
-    return null;
+    return notFound();
   }
 
-  return <AssignmentStatsPage assignment={assignment} />;
+  if (hasFeature(CALL, assignment.organization.id, process.env)) {
+    return redirect(`/call?assignment=${params.callAssId}`);
+  } else {
+    const callUrl = process.env.ZETKIN_GEN2_CALL_URL;
+    const assignmentUrl = `${callUrl}/assignments/${params.callAssId}/call`;
+    redirect(assignmentUrl);
+  }
 }

@@ -1,3 +1,5 @@
+import { afterEach, describe, expect, it, jest } from '@jest/globals';
+
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 import { remoteList } from 'utils/storeUtils';
 
@@ -8,7 +10,6 @@ describe('findOrAddItem', () => {
 
   afterEach(() => {
     jest.clearAllTimers();
-    jest.clearAllMocks();
   });
 
   it('Creates a new item in list if none exist', () => {

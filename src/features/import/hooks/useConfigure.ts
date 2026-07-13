@@ -10,7 +10,7 @@ import {
   ImportPreview,
   ImportPreviewProblemCode,
   ZetkinPersonImportPostBody,
-} from '../utils/types';
+} from '../types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import remapFields from '../utils/remapFields';
 
@@ -24,7 +24,7 @@ export default function useConfigure(orgId: number) {
   if (!organization) {
     return;
   }
-  const countryCode = organization.country.toUpperCase() as CountryCode;
+  const countryCode = organization.country as CountryCode;
 
   const emptyStats = {
     person: {

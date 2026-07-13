@@ -3,7 +3,7 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinAreaAssignment } from '../types';
 import { areaAssignmentLoad, areaAssignmentLoaded } from '../store';
 
-export default function useAreaAssignment(orgId: number, areaAssId: string) {
+export default function useAreaAssignment(orgId: number, areaAssId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const areaAssignmenList = useAppSelector(
@@ -18,7 +18,7 @@ export default function useAreaAssignment(orgId: number, areaAssId: string) {
     actionOnSuccess: (data) => areaAssignmentLoaded(data),
     loader: () =>
       apiClient.get<ZetkinAreaAssignment>(
-        `/beta/orgs/${orgId}/areaassignments/${areaAssId}`
+        `/api2/orgs/${orgId}/area_assignments/${areaAssId}`
       ),
   });
 }

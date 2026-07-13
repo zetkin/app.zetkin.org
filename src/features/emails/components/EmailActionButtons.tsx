@@ -1,6 +1,7 @@
-import { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { ContentCopy, Delete, Send } from '@mui/icons-material';
+import { ArrowForward, ContentCopy, Delete, Send } from '@mui/icons-material';
+import router from 'next/router';
 
 import CancelButton from './CancelButton';
 import DeliveryButton from './DeliveryButton';
@@ -12,7 +13,9 @@ import { ZetkinEmail } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
+import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
 
 interface EmailActionButtonsProp {
   email: ZetkinEmail;
@@ -27,8 +30,28 @@ const EmailActionButtons = ({
 }: EmailActionButtonsProp) => {
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const { deleteEmail, updateEmail } = useEmail(orgId, email.id);
   const { duplicateEmail } = useDuplicateEmail(orgId, email.id);
+  const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
+
+  function handleMove() {
+    setIsMoveDialogOpen(true);
+  }
+
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedEmail = await updateEmail({ campaign_id: projectId });
+    await router.push(
+      `/organize/${orgId}/projects/${projectId}/emails/${email.id}`
+    );
+    showSnackbar(
+      'success',
+      messages.emailChangeProjectDialog.success({
+        emailTitle: email.title!,
+        projectTitle: updatedEmail.campaign!.title,
+      })
+    );
+  };
 
   return (
     <Box display="flex">
@@ -66,6 +89,11 @@ const EmailActionButtons = ({
       <ZUIEllipsisMenu
         items={[
           {
+            label: <>{messages.emailActionButtons.move()}</>,
+            onSelect: () => handleMove(),
+            startIcon: <ArrowForward />,
+          },
+          {
             label: <>{messages.emailActionButtons.duplicate()}</>,
             onSelect: () => duplicateEmail(),
             startIcon: <ContentCopy />,
@@ -83,8 +111,14 @@ const EmailActionButtons = ({
           },
         ]}
       />
+      <ChangeProjectDialog
+        errorMessage={messages.emailChangeProjectDialog.error()}
+        onClose={() => setIsMoveDialogOpen(false)}
+        onProjectSelected={handleOnProjectSelected}
+        open={isMoveDialogOpen}
+        title={messages.emailChangeProjectDialog.title()}
+      />
     </Box>
   );
 };
-
 export default EmailActionButtons;

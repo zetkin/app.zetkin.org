@@ -1,20 +1,20 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
 
-import ActivityList from 'features/campaigns/components/ActivityList';
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
-import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
-import messageIds from 'features/campaigns/l10n/messageIds';
+import ActivityList from 'features/projects/components/ActivityList';
+import AllProjectsLayout from 'features/projects/layout/AllProjectsLayout';
+import FilterActivities from 'features/projects/components/ActivityList/FilterActivities';
+import messageIds from 'features/projects/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useActivityList from 'features/campaigns/hooks/useActivityList';
+import useActivityList from 'features/projects/hooks/useActivityList';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
+import { ProjectActivity } from 'features/projects/types';
+import useActivityFilters from 'features/projects/hooks/useActivityFilters';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -28,30 +28,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-const CampaignActivitiesPage: PageWithLayout = () => {
+const ProjectActivitiesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const { orgId, campId } = useNumericRouteParams();
-  const activitiesFuture = useActivityList(orgId, campId);
-  const [searchString, setSearchString] = useState('');
-  const [filters, setFilters] = useState<ACTIVITIES[]>([
-    ACTIVITIES.CALL_ASSIGNMENT,
-    ACTIVITIES.AREA_ASSIGNMENT,
-    ACTIVITIES.SURVEY,
-    ACTIVITIES.TASK,
-    ACTIVITIES.EMAIL,
-  ]);
-
-  const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const filter = evt.target.value as ACTIVITIES;
-    if (filters.includes(filter)) {
-      setFilters(filters.filter((a) => a !== filter));
-    } else {
-      setFilters([...filters, filter]);
-    }
-  };
-
-  const onSearchStringChange = (value: string) => setSearchString(value);
+  const { orgId } = useNumericRouteParams();
+  const activitiesFuture = useActivityList(orgId);
+  const { filters, onFiltersChange, onSearchStringChange, searchString } =
+    useActivityFilters('activities', orgId);
 
   if (onServer) {
     return null;
@@ -72,7 +55,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
           }
 
           const activityTypes = data.map(
-            (activity: CampaignActivity) => activity.kind
+            (activity: ProjectActivity) => activity.kind
           );
           const filterTypes = [...new Set(activityTypes)];
 
@@ -93,6 +76,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
                   filterTypes={filterTypes}
                   onFiltersChange={onFiltersChange}
                   onSearchStringChange={onSearchStringChange}
+                  searchString={searchString}
                 />
               </Grid>
             </Grid>
@@ -103,8 +87,8 @@ const CampaignActivitiesPage: PageWithLayout = () => {
   );
 };
 
-CampaignActivitiesPage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
+ProjectActivitiesPage.getLayout = function getLayout(page) {
+  return <AllProjectsLayout>{page}</AllProjectsLayout>;
 };
 
-export default CampaignActivitiesPage;
+export default ProjectActivitiesPage;

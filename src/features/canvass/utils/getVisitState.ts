@@ -4,12 +4,12 @@ export type ProgressState = 'none' | 'some' | 'all';
 
 export default function getVisitState(
   households: Household[],
-  areaAssId: string | null
+  areaAssId: number | null
 ): ProgressState {
   let numberOfVisitedHouseholds = 0;
   households.forEach((household) => {
     const hasVisitsInCurrentAssignment = household.visits.some((visit) => {
-      return visit.areaAssId == areaAssId;
+      return visit.assignment_id == areaAssId;
     });
 
     if (hasVisitsInCurrentAssignment) {

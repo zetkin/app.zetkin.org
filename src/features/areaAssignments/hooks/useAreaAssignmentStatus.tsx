@@ -12,7 +12,7 @@ export enum AreaAssignmentState {
 
 export default function useAreaAssignmentStatus(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ): AreaAssignmentState {
   const { data: areaAssignment } = useAreaAssignment(orgId, areaAssId);
 

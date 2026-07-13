@@ -1,29 +1,35 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { FC, useState } from 'react';
+import { FC, Suspense, useState } from 'react';
 import { Avatar, Box, IconButton, Typography } from '@mui/material';
 import { Menu } from '@mui/icons-material';
+import { ArrowLeftIcon } from '@mui/x-date-pickers';
+import { notFound, useRouter } from 'next/navigation';
 
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import useServerSide from 'core/useServerSide';
 import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
-import { AssignmentWithAreas } from '../types';
 import CanvassSidebar from './CanvassSidebar';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
+import GLCanvassMap from './GLCanvassMap';
 
-const CanvassMap = dynamic(() => import('./CanvassMap'), {
-  ssr: false,
-});
-
-const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
-  const orgFuture = useOrganization(assignment.organization.id);
+const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
+  areaId,
+  assignment,
+}) => {
+  const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
+  const orgFuture = useOrganization(assignment.organization_id);
+  const selectedArea = areas.find((area) => area.id == areaId);
+  const router = useRouter();
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
 
   if (isServer) {
     return null;
   }
+
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
       {({ data: { org } }) => (
@@ -51,30 +57,41 @@ const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
             <Box
               alignItems="center"
               display="flex"
-              gap={1}
               justifyContent="space-between"
-              padding={2}
+              py={2}
             >
-              <Box>
-                <Box display="flex" flexDirection="column">
+              <Box display="flex">
+                <ArrowLeftIcon
+                  fontSize="large"
+                  onClick={() => router.push(`/canvass/${assignment.id}/areas`)}
+                  sx={{ alignSelf: 'center', cursor: 'pointer', mr: 1 }}
+                />
+                <Box
+                  alignItems="flex-start"
+                  display="flex"
+                  flexDirection="column"
+                >
                   <Typography variant="body1">{assignment.title}</Typography>
-                </Box>
-                <Box alignItems="center" display="flex" gap={1}>
-                  <Avatar
-                    src={`/api/orgs/${org.id}/avatar`}
-                    sx={{ height: 24, width: 24 }}
-                  />
-                  <Typography variant="body2">{org.title}</Typography>
+                  <Box alignItems="center" display="flex" gap={1}>
+                    <Avatar
+                      src={`/api/orgs/${org.id}/avatar`}
+                      sx={{ height: 24, width: 24 }}
+                    />
+                    <Typography variant="body2">{org.title}</Typography>
+                  </Box>
                 </Box>
               </Box>
-              <Box>
-                <IconButton onClick={() => setShowMenu(!showMenu)}>
-                  <Menu />
-                </IconButton>
-              </Box>
+              <IconButton onClick={() => setShowMenu(!showMenu)}>
+                <Menu />
+              </IconButton>
             </Box>
-            <Box flexGrow={1}>
-              <CanvassMap areas={assignment.areas} assignment={assignment} />
+            <Box flexGrow={1} sx={{ height: '200px' }}>
+              {selectedArea && (
+                <GLCanvassMap
+                  assignment={assignment}
+                  selectedArea={selectedArea}
+                />
+              )}
             </Box>
             <Box
               onClick={() => setShowMenu(false)}
@@ -103,7 +120,12 @@ const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
               zIndex: 99999,
             }}
           >
-            <CanvassSidebar assignment={assignment} />
+            {selectedArea && (
+              <CanvassSidebar
+                assignment={assignment}
+                selectedArea={selectedArea}
+              />
+            )}
           </Box>
         </Box>
       )}
@@ -112,20 +134,25 @@ const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
 };
 
 type CanvassPageProps = {
-  areaAssId: string;
+  areaAssId: number;
+  areaId: number;
 };
 
-const CanvassPage: FC<CanvassPageProps> = ({ areaAssId }) => {
+const CanvassPage: FC<CanvassPageProps> = ({ areaAssId, areaId }) => {
   const myAssignments = useMyAreaAssignments();
   const assignment = myAssignments.find(
     (assignment) => assignment.id == areaAssId
   );
 
   if (!assignment) {
-    return null;
+    notFound();
   }
 
-  return <Page assignment={assignment} />;
+  return (
+    <Suspense>
+      <Page areaId={areaId} assignment={assignment} />
+    </Suspense>
+  );
 };
 
 export default CanvassPage;

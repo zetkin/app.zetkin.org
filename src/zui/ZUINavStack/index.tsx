@@ -1,5 +1,5 @@
-import { Box, Slide } from '@mui/material';
-import { FC, ReactElement } from 'react';
+import { Box, CircularProgress, Slide } from '@mui/material';
+import { FC, ReactElement, Suspense } from 'react';
 
 type Props = {
   bgcolor?: string;
@@ -41,7 +41,20 @@ const ZUINavStack: FC<Props> = ({ bgcolor, children, currentPage }) => {
                 zIndex: index,
               }}
             >
-              {child}
+              <Suspense
+                fallback={
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    height="100%"
+                    justifyContent="center"
+                  >
+                    <CircularProgress />
+                  </Box>
+                }
+              >
+                {child}
+              </Suspense>
             </Box>
           </Slide>
         );

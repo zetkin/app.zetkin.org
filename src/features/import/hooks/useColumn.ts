@@ -1,11 +1,11 @@
 import { columnUpdate } from '../store';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useMessages } from 'core/i18n';
-import { Column, ColumnKind } from '../utils/types';
+import { Column, ColumnKind } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export interface Option {
@@ -40,6 +40,10 @@ export default function useColumn(orgId: number) {
     }
 
     const exists = selectedColumns.find((column) => {
+      if (column.kind == ColumnKind.ID_FIELD) {
+        return column.idField == value;
+      }
+
       if (column.kind == ColumnKind.FIELD) {
         return column.field == value.slice(6);
       }
@@ -61,7 +65,10 @@ export default function useColumn(orgId: number) {
   };
 
   const nativeFieldsOptions: Option[] = Object.values(NATIVE_PERSON_FIELDS)
-    .filter((fieldSlug) => fieldSlug != 'id' && fieldSlug != 'ext_id')
+    .filter(
+      (fieldSlug) =>
+        fieldSlug != 'id' && fieldSlug != 'ext_id' && fieldSlug != 'email'
+    )
     .map((fieldSlug) => ({
       disabled: false,
       label: globalMessages.personFields[fieldSlug](),

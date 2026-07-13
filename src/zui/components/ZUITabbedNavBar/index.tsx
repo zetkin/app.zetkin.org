@@ -27,7 +27,7 @@ type LinkTabItem = {
   value: string;
 };
 
-type ZUITabbedNavBarProps = {
+export type ZUITabbedNavBarProps = {
   /**
    * If true, the tabs will take up all available horizontal space.
    *

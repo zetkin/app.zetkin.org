@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.views', {
   actions: {
@@ -280,6 +280,33 @@ export default makeMessages('feat.views', {
     save: m('Save'),
     title: m('Title'),
   },
+  customFilters: {
+    choose: m('Choose'),
+    date: {
+      dayOfMonth: {
+        label: m('Day of month'),
+      },
+      month: {
+        label: m('Month'),
+        months: {
+          /* eslint-disable sort-keys */
+          January: m('January'),
+          February: m('February'),
+          March: m('March'),
+          April: m('April'),
+          May: m('May'),
+          June: m('June'),
+          July: m('July'),
+          August: m('August'),
+          September: m('September'),
+          October: m('October'),
+          November: m('November'),
+          December: m('December'),
+          /* eslint-enable sort-keys */
+        },
+      },
+    },
+  },
   dataTableErrors: {
     create_column: m('There was an error creating the column'),
     delete_column: m('There was an error deleting the column'),
@@ -301,6 +328,25 @@ export default makeMessages('feat.views', {
     title: m('Delete list?'),
     warningText: m(
       'Do you really want to delete this list? This will delete any data stored in the list such as notes and toggles (but will not delete the people from the database)?'
+    ),
+  },
+  deleteRowsDialog: {
+    cancelButton: m('Cancel'),
+    confirmButton: m<{ numPeople: number }>(
+      'Delete {numPeople, plural, =1 {the person} other {# persons}} permanently'
+    ),
+    confirmationInputLabel: m('Organization name'),
+    destructiveAlert: m(
+      'This is a permanent and destructive action. It cannot be undone. Please read the information below carefully before continuing.'
+    ),
+    instruction: m<{ rootOrgSlug: ReactElement }>(
+      'To confirm you understand the consequences, type {rootOrgSlug} in the textbox below.'
+    ),
+    tagetOrgWarning: m<{ rootOrgTitle: ReactElement }>(
+      'This will delete all records of these persons in {rootOrgTitle} and all its child organizations.'
+    ),
+    title: m<{ numPeople: number }>(
+      'Delete all records of {numPeople, plural, =1 {one person} other {# persons}}'
     ),
   },
   editViewTitleAlert: {
@@ -402,14 +448,15 @@ export default makeMessages('feat.views', {
     },
   },
   toolbar: {
+    bulk: {
+      createList: m('Create list from selection'),
+      delete: m('Delete selected people from organization'),
+      handleSelection: m<{ numSelected: number }>(
+        'Handle selection ({numSelected})'
+      ),
+      removeFromList: m('Remove selected people from list'),
+    },
     createColumn: m('New column'),
-    createFromSelection: m('Create list from selection'),
-    removeFromSelection: m<{ numSelected: number }>(
-      'Remove {numSelected, plural, one {1 person} other {{numSelected} people} } from list'
-    ),
-    removeTooltip: m(
-      'Smart search lists do not currently support removing rows'
-    ),
   },
   viewLayout: {
     actions: {

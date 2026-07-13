@@ -23,7 +23,7 @@ type ZUIAlertProps = {
   /**
    * Props to render an action button at the bottom of the alert.
    */
-  buttonProps?: Pick<
+  button?: Pick<
     ZUIButtonProps,
     'label' | 'onClick' | 'endIcon' | 'startIcon' | 'href'
   >;
@@ -62,7 +62,7 @@ type ZUIAlertProps = {
 
 const ZUIAlert: FC<ZUIAlertProps> = ({
   appear = false,
-  buttonProps,
+  button,
   description,
   onClose,
   open = true,
@@ -71,18 +71,21 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
 }) => {
   const theme = useTheme();
 
+  const backgroundShade = theme.palette.mode === 'dark' ? 900 : 100;
+  const textShade = theme.palette.mode === 'dark' ? 100 : 900;
+
   const backgroundColors = {
-    error: theme.palette.swatches.red[100],
-    info: theme.palette.swatches.blue[100],
-    success: theme.palette.swatches.green[100],
-    warning: theme.palette.swatches.yellow[100],
+    error: theme.palette.swatches.red[backgroundShade],
+    info: theme.palette.swatches.blue[backgroundShade],
+    success: theme.palette.swatches.green[backgroundShade],
+    warning: theme.palette.swatches.yellow[backgroundShade],
   } as const;
 
   const colors = {
-    error: theme.palette.swatches.red[900],
-    info: theme.palette.swatches.blue[900],
-    success: theme.palette.swatches.green[900],
-    warning: theme.palette.swatches.yellow[900],
+    error: theme.palette.swatches.red[textShade],
+    info: theme.palette.swatches.blue[textShade],
+    success: theme.palette.swatches.green[textShade],
+    warning: theme.palette.swatches.yellow[textShade],
   } as const;
 
   const Icon = () => {
@@ -213,10 +216,17 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
             </Button>
           )}
         </Box>
-        {buttonProps && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {button && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              paddingTop: '0.5rem',
+            }}
+          >
             <Button
               color="inherit"
+              onClick={button.onClick}
               sx={(theme) => ({
                 boxShadow: 'none',
                 minWidth: 'max-content',
@@ -225,7 +235,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
               })}
               variant="outlined"
             >
-              {buttonProps.label}
+              {button.label}
             </Button>
           </Box>
         )}

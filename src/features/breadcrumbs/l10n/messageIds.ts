@@ -1,4 +1,4 @@
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.breadcrumbs', {
   elements: {
@@ -9,13 +9,14 @@ export default makeMessages('feat.breadcrumbs', {
     calendar: m('Calendar'),
     callassignments: m('Call assignments'),
     callers: m('Callers'),
-    campaigns: m('Projects'),
     closed: m('Closed'),
     compose: m('Compose'),
     conversation: m('Conversation'),
     duplicates: m('Duplicates'),
+    email: m('Email'),
     emails: m('Emails'),
     events: m('Events'),
+    fields: m('Fields'),
     folders: m('Lists'),
     geography: m('Geography'),
     incoming: m('Incoming'),
@@ -35,9 +36,11 @@ export default makeMessages('feat.breadcrumbs', {
     settings: m('Settings'),
     shared: m('Shared with us'),
     submissions: m('Submissions'),
+    suborgOverview: m('Suborganization overview'),
     surveys: m('Surveys'),
     tags: m('Tags'),
     tasks: m('Tasks'),
+    themes: m('Themes'),
     untitledEvent: m('Untitled event'),
     views: m('Lists'),
   },

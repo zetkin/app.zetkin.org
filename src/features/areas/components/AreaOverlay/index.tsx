@@ -24,10 +24,12 @@ import ZUIPreviewableInput, {
 } from 'zui/ZUIPreviewableInput';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import TagsSection from './TagsSection';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import AreaStats from 'features/areas/components/AreaOverlay/AreaStats';
+
+export const AREA_OVERLAY_WIDTH = 400;
 
 type Props = {
   area: ZetkinArea;
@@ -51,7 +53,7 @@ const AreaOverlay: FC<Props> = ({
     'title' | 'description' | null
   >(null);
   const { deleteArea, updateArea } = useAreaMutations(
-    area.organization.id,
+    area.organization_id,
     area.id
   );
   const tagsElement = useRef<HTMLElement>();
@@ -80,7 +82,8 @@ const AreaOverlay: FC<Props> = ({
   useEffect(() => {
     setTitle(area.title);
     setDescription(area.description);
-  }, [area]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [area.id]);
 
   return (
     <Paper
@@ -88,8 +91,8 @@ const AreaOverlay: FC<Props> = ({
         bottom: '1rem',
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: 400,
-        minWidth: 400,
+        maxWidth: AREA_OVERLAY_WIDTH,
+        minWidth: AREA_OVERLAY_WIDTH,
         overflow: 'auto',
         padding: 2,
         position: 'absolute',
@@ -126,10 +129,9 @@ const AreaOverlay: FC<Props> = ({
                 );
               }}
               renderInput={(props) => (
-                <TextField
-                  fullWidth
-                  inputProps={props}
-                  onBlur={() => {
+                <form
+                  onSubmit={(ev) => {
+                    ev.preventDefault();
                     if (fieldEditing === 'title') {
                       setFieldEditing(null);
                       updateArea({
@@ -137,10 +139,24 @@ const AreaOverlay: FC<Props> = ({
                       });
                     }
                   }}
-                  onChange={(ev) => setTitle(ev.target.value)}
-                  sx={{ marginBottom: 2 }}
-                  value={title}
-                />
+                >
+                  <TextField
+                    fullWidth
+                    onBlur={() => {
+                      if (fieldEditing === 'title') {
+                        setFieldEditing(null);
+                        updateArea({
+                          title:
+                            title?.trim() || messages.areas.default.title(),
+                        });
+                      }
+                    }}
+                    onChange={(ev) => setTitle(ev.target.value)}
+                    slotProps={{ htmlInput: props }}
+                    sx={{ marginBottom: 2 }}
+                    value={title}
+                  />
+                </form>
               )}
               renderPreview={() => (
                 <Typography variant="h5">
@@ -176,7 +192,6 @@ const AreaOverlay: FC<Props> = ({
             renderInput={(props) => (
               <TextField
                 fullWidth
-                inputProps={props}
                 inputRef={handleDescriptionTextAreaRef}
                 multiline
                 onBlur={() => {
@@ -186,6 +201,7 @@ const AreaOverlay: FC<Props> = ({
                   }
                 }}
                 onChange={(ev) => setDescription(ev.target.value)}
+                slotProps={{ htmlInput: props }}
                 sx={{
                   marginTop: 2,
                 }}
@@ -213,8 +229,11 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
+      <AreaStats areaId={area.id} />
       <Box ref={tagsElement} flexGrow={1} my={2}>
+        {/*
         <TagsSection area={area} />
+        */}
       </Box>
       <Box display="flex" gap={1}>
         {editing && (
@@ -222,7 +241,10 @@ const AreaOverlay: FC<Props> = ({
             <Button
               onClick={() => {
                 updateArea({
-                  points: area.points,
+                  boundary: {
+                    coordinates: [area.points],
+                    type: 'Polygon',
+                  },
                 });
                 onCancelEdit();
               }}

@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Box, Stack } from '@mui/material';
 import { useState } from 'react';
 
@@ -41,7 +41,7 @@ export const DescriptionAndCloseButton: Story = {
 export const Button: Story = {
   args: {
     ...Description.args,
-    buttonProps: { label: 'Click me', onClick: () => null },
+    button: { label: 'Click me', onClick: () => null },
   },
 };
 

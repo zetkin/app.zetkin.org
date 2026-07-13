@@ -1,3 +1,4 @@
+import { describe, expect, beforeEach, it, jest } from '@jest/globals';
 import singletonRouter from 'next/router';
 
 import { ASSIGNED_STATUS } from 'features/tasks/components/types';
@@ -6,7 +7,9 @@ import { render } from 'utils/testing';
 import TaskStatusSubtitle from './TaskStatusSubtitle';
 import messageIds from 'features/tasks/l10n/messageIds';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 
 beforeEach(() => {
   singletonRouter.query = {

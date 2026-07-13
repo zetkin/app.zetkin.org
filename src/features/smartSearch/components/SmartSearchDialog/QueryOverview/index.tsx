@@ -60,7 +60,11 @@ const QueryOverview = ({
   const resultCount = stats?.length ? stats[stats.length - 1].result : 0;
 
   const reorderableItems = filters
-    .filter((f) => f.type !== FILTER_TYPE.ALL)
+    .filter(
+      (f) =>
+        f.type !== FILTER_TYPE.ALL ||
+        (f.type == FILTER_TYPE.ALL && f.config && 'organizations' in f.config)
+    )
     .map((filter, index) => ({
       id: filter.id,
       renderContent: () => {

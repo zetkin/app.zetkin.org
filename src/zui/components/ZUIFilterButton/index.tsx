@@ -11,6 +11,12 @@ type ZUIFilterButtonProps = {
   active: boolean;
 
   /**
+   * If the button should have an aria label
+   * Buttons that has icons instead of labels needs aria-label to be understandable to screen readers
+   */
+  ariaLabel?: string;
+
+  /**
    * If the button should be circular.
    * For example, if it only contains a Close icon.
    *
@@ -31,6 +37,7 @@ type ZUIFilterButtonProps = {
 
 const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
   active,
+  ariaLabel,
   circular,
   label,
   onClick,
@@ -40,7 +47,19 @@ const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
 
   const renderContent = () => {
     if (hasTextLabel) {
-      return <Typography variant="bodySmRegular">{label}</Typography>;
+      return (
+        <Typography
+          sx={{
+            maxWidth: '180px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+          variant="bodySmRegular"
+        >
+          {label}
+        </Typography>
+      );
     }
 
     const Icon = label;
@@ -49,10 +68,12 @@ const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
 
   return (
     <Box
+      aria-label={ariaLabel}
+      component="button"
       onClick={onClick}
       sx={(theme) => ({
         alignItems: 'center',
-        backgroundColor: active ? theme.palette.primary.main : '',
+        backgroundColor: active ? theme.palette.primary.main : 'transparent',
         border: `0.063rem solid ${theme.palette.primary.main}`,
         borderRadius: '2rem',
         color: active ? theme.palette.common.white : theme.palette.text.primary,

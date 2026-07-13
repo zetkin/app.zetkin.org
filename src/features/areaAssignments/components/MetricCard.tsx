@@ -15,9 +15,9 @@ import { Msg } from 'core/i18n';
 import { ZetkinMetric } from '../types';
 
 type MetricCardProps = {
-  metric: ZetkinMetric;
+  metric: Partial<ZetkinMetric>;
   onClose: () => void;
-  onSave: (metric: ZetkinMetric) => void;
+  onSave: (metric: Partial<ZetkinMetric>) => void;
 };
 
 const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
@@ -26,20 +26,20 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
     metric.description || ''
   );
   const [definesDone, setDefinesDone] = useState<boolean>(
-    metric.definesDone || false
+    metric.defines_success || false
   );
 
   useEffect(() => {
     setQuestion(metric.question || '');
     setDescription(metric.description || '');
-    setDefinesDone(metric.definesDone || false);
+    setDefinesDone(metric.defines_success || false);
   }, [metric]);
 
   return (
     <Card sx={{ minWidth: 400 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
-          {metric.kind === 'boolean' ? (
+          {metric.type === 'bool' ? (
             <Typography alignItems="center" display="flex" variant="h6">
               <SwitchLeft color="secondary" sx={{ marginRight: 1 }} />
               <Msg id={messageIds.report.metricCard.choice} />
@@ -56,7 +56,7 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
           </IconButton>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
-          {metric.kind == 'scale5' && (
+          {metric.type == 'scale5' && (
             <Typography color="secondary" fontStyle="italic" mb={1}>
               <Msg id={messageIds.report.metricCard.ratingDescription} />
             </Typography>
@@ -80,11 +80,10 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
               disabled={question == ''}
               onClick={() => {
                 onSave({
-                  definesDone,
-                  description,
-                  id: metric.id || '',
-                  kind: metric.kind,
+                  defines_success: definesDone,
+                  id: metric.id,
                   question,
+                  type: metric.type,
                 });
               }}
               variant="contained"

@@ -1,12 +1,15 @@
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.profile', {
+  customFields: {
+    notEditable: m('This field cannot be edited by your organization'),
+  },
   delete: {
-    button: m('Remove person'),
+    button: m('Delete person'),
     confirm: m<{ name: string; org: string }>(
       'Are you sure you want to delete {name} from {org}, and all related organizations? This is a permanent action.'
     ),
-    title: m('Delete account'),
+    title: m('Delete person'),
     warning: m('This cannot be undone!'),
   },
   details: {
@@ -29,6 +32,20 @@ export default makeMessages('feat.profile', {
     addButton: m('Start new journey'),
     title: m('Journeys'),
   },
+  notes: {
+    addNoteButton: m('Add note'),
+    cancelButton: m('Cancel'),
+    note: {
+      author: m<{ authorName: JSX.Element }>('{authorName} added a note'),
+      delete: m('Delete'),
+      deleteWarningDescription: m<{ name: string }>(
+        'Are you sure you want to delete this note about {name}? Deleting a note cannot be undone.'
+      ),
+      deleteWarningTitle: m('Delete note'),
+    },
+    placeHolder: m('Write a note'),
+    title: m('Notes'),
+  },
   numberOfChangesMessage: m<{ number: number }>(
     'Will update {number, plural, =1 {1 field} other {# fields}}'
   ),
@@ -39,6 +56,9 @@ export default makeMessages('feat.profile', {
     title: m('Organizations'),
   },
   resetButton: m('Reset'),
+  role: {
+    noRole: m('No role'),
+  },
   saveButton: m('Save'),
   tabs: {
     manage: m('Manage'),

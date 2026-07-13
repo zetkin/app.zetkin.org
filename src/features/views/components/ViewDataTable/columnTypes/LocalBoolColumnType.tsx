@@ -1,5 +1,5 @@
 import { Box, Checkbox, useTheme } from '@mui/material';
-import { FC, KeyboardEvent } from 'react';
+import { FC, KeyboardEvent, useCallback } from 'react';
 import {
   GridColDef,
   GridRenderCellParams,
@@ -23,14 +23,23 @@ export default class LocalBoolColumnType implements IColumnType {
     return String(!!cell);
   }
 
-  getColDef(column: LocalBoolViewColumn): Omit<GridColDef, 'field'> {
+  getColDef(
+    column: LocalBoolViewColumn,
+    accessLevel: ZetkinObjectAccess['level'] | null
+  ): Omit<GridColDef, 'field'> {
     return {
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<ZetkinViewRow, boolean>) => {
         return (
-          <Cell cell={params.value} column={column} personId={params.row.id} />
+          <Cell
+            cell={params.value}
+            column={column}
+            isEditable={accessLevel !== 'readonly'}
+            personId={params.row.id}
+          />
         );
       },
+      sortingOrder: ['desc', 'asc', null],
       type: 'boolean',
     };
   }
@@ -62,11 +71,18 @@ export default class LocalBoolColumnType implements IColumnType {
 const Cell: FC<{
   cell?: boolean | undefined;
   column: LocalBoolViewColumn;
+  isEditable: boolean;
   personId: number;
-}> = ({ cell, column, personId }) => {
+}> = ({ cell, column, isEditable, personId }) => {
   const theme = useTheme();
   const { orgId, viewId } = useNumericRouteParams();
   const { setCellValue } = useViewGrid(orgId, viewId);
+  const onChange = useCallback(
+    (ev: React.ChangeEvent<HTMLInputElement>) => {
+      setCellValue(personId, column.id, !!ev.target.checked);
+    },
+    [setCellValue, personId, column.id]
+  );
 
   const checked = !!cell;
 
@@ -82,9 +98,8 @@ const Cell: FC<{
       <Checkbox
         checked={checked}
         color="success"
-        onChange={(ev) => {
-          setCellValue(personId, column.id, !!ev.target.checked);
-        }}
+        disabled={!isEditable}
+        onChange={onChange}
         tabIndex={-1}
       />
     </Box>

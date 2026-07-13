@@ -307,8 +307,8 @@ export class SankeyRenderer {
     this.ctx.fillStyle = isStroke
       ? 'transparent'
       : this._highlightCurrent
-      ? highlightColor
-      : color;
+        ? highlightColor
+        : color;
     this.ctx.setLineDash([3, 3]);
 
     return isStroke ? lineWidth / 2 : 0;

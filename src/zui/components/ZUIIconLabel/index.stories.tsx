@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Event } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
@@ -58,9 +58,9 @@ export const Secondary: Story = {
   },
 };
 
-export const Danger: Story = {
+export const Error: Story = {
   args: {
     ...Medium.args,
-    color: 'danger',
+    color: 'error',
   },
 };

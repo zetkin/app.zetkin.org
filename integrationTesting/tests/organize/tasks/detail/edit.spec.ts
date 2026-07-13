@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 
 import test from '../../../../fixtures/next';
-import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import SpeakToFriend from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures';
+import SpeakToFriend from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Task detail page', async () => {
   test.beforeEach(async ({ login, moxy }) => {
@@ -27,7 +27,7 @@ test.describe('Task detail page', async () => {
       title: newTitle,
     });
 
-    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/tasks/1');
 
     // Open modal
     await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');

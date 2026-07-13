@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
@@ -13,28 +12,6 @@ import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import messageIds from '../l10n/messageIds';
 import oldTheme from 'theme';
 
-const useStyles = makeStyles(() => ({
-  main: {
-    overflowX: 'hidden',
-  },
-  title: {
-    marginBottom: '8px',
-    transition: 'all 0.3s ease',
-  },
-  titleGrid: {
-    alignItems: 'center',
-    display: 'grid',
-    gap: '1rem',
-    gridTemplateColumns: '1fr auto',
-    gridTemplateRows: 'auto',
-    transition: 'font-size 0.2s ease',
-    width: '100%',
-    [oldTheme.breakpoints.down('md')]: {
-      gridTemplateColumns: '1fr',
-    },
-  },
-}));
-
 interface SharedViewLayoutProps {
   children?: React.ReactNode;
 }
@@ -43,7 +20,6 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   children,
 }) => {
   const { orgId, viewId } = useNumericRouteParams();
-  const classes = useStyles();
 
   const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
   const viewFuture = useView(orgId, viewId);
@@ -98,7 +74,21 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
       width={1}
     >
       <Box component="header" flexGrow={0} flexShrink={0} paddingLeft={2}>
-        <Box className={classes.titleGrid} mt={2}>
+        <Box
+          mt={2}
+          sx={{
+            alignItems: 'center',
+            display: 'grid',
+            gap: '1rem',
+            gridTemplateColumns: '1fr auto',
+            gridTemplateRows: 'auto',
+            transition: 'font-size 0.2s ease',
+            width: '100%',
+            [oldTheme.breakpoints.down('md')]: {
+              gridTemplateColumns: '1fr',
+            },
+          }}
+        >
           <Box
             alignItems="center"
             display="flex"
@@ -107,11 +97,14 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
           >
             <Box>
               <Typography
-                className={classes.title}
                 component="div"
                 data-testid="page-title"
                 noWrap
-                style={{ display: 'flex' }}
+                sx={{
+                  display: 'flex',
+                  marginBottom: '8px',
+                  transition: 'all 0.3s ease',
+                }}
                 variant="h3"
               >
                 {title}
@@ -124,11 +117,13 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
         </Box>
       </Box>
       <Box
-        className={classes.main}
         component="main"
         flexGrow={1}
         minHeight={0}
         position="relative"
+        sx={{
+          overflowX: 'hidden',
+        }}
       >
         {children}
       </Box>

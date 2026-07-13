@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('zui', {
   accessList: {
@@ -44,6 +44,18 @@ export default makeMessages('zui', {
       o: m('Other'),
       unknown: m('Unknown'),
     },
+    location: {
+      dialog: {
+        clearButton: m('Clear location'),
+        doneButton: m('Done'),
+        helperText: m('Latitude and longitude coordinates'),
+        mapInfo: m(
+          'Click and drag to pan the map. Pinch or scroll to zoom. Click or tap to select map location.'
+        ),
+      },
+      helperText: m('Latitude and longitude coordinates'),
+      mapIconTooltip: m('Edit in map'),
+    },
     showAllFields: m('Show all fields'),
     submitLabel: {
       add: m('Create & add'),
@@ -76,17 +88,19 @@ export default makeMessages('zui', {
   },
   dataTableSearch: {
     button: m('Search'),
-    helpText: m<{ minSearchLength: number }>(
-      'Type at least {minSearchLength} characters'
+    placeholder: m<{ minSearchLength: number }>(
+      'Type to search (min {minSearchLength} chars)'
     ),
-    idSearchHelpText: m('Type an ID (numbers only)'),
-    placeholder: m('Search this table'),
-    placeholderWithIdSearch: m('Search - use # for IDs, e.g. type #123'),
+    placeholderWithIdSearch: m<{ minSearchLength: number }>(
+      'Search - use # for IDs, e.g. type #123 (min {minSearchLength} chars)'
+    ),
     title: m('Search'),
   },
   dataTableSorting: {
     addButton: m('Add sorting column'),
+    ascending: m('Ascending'),
     button: m('Sort'),
+    descending: m('Descending'),
     hint: m<{ shiftKeyIcon: ReactElement }>(
       'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     ),
@@ -116,6 +130,9 @@ export default makeMessages('zui', {
     }>('{date}'),
     singleDayToday: m('Today'),
   },
+  drawerModal: {
+    close: m('Close'),
+  },
   duration: {
     days: m<{ n: number }>('{n, plural, =1 {1 day} other {# days}}'),
     h: m<{ n: number }>('{n}h'),
@@ -131,6 +148,9 @@ export default makeMessages('zui', {
   },
   editableImage: {
     add: m('Click to add image'),
+  },
+  ellipsisMenu: {
+    ariaLabel: m('More options'),
   },
   eventWarningIcons: {
     contact: m('No contact person has been assigned'),
@@ -158,6 +178,10 @@ export default makeMessages('zui', {
   lists: {
     showMore: m('Show more...'),
   },
+  mobileOrganizeHeader: {
+    sideBarMenuButtonDescription: m('Open sidebar menu'),
+    userMenuButtonDescription: m('Open user menu'),
+  },
   orgScopeSelect: {
     orgPlaceholder: m('Select organizations'),
     orgSelectionLabel: m<{ count: number }>('{count} selected'),
@@ -169,10 +193,22 @@ export default makeMessages('zui', {
     },
   },
   organizeSidebar: {
+    collapse: m('Collapse sidebar'),
+    expand: m('Expand sidebar'),
     filter: m('Type to filter'),
+    filterLabel: m('Filter organizations'),
     geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
+    myPagesInfoText: m('Go to my pages'),
+    myPagesMenuItemLabel: m('My pages'),
+    mySettingsMenuItemLabel: m('My settings'),
+    organizationAvatarAltText: m('Organization icon'),
+    organizationSwitcher: {
+      hide: m('Hide organization switcher'),
+      show: m('Show organization switcher'),
+    },
+    overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
     search: m('Search'),
@@ -189,6 +225,23 @@ export default makeMessages('zui', {
     searchResults: m('Search results'),
   },
   personSelect: {
+    bulkAdd: {
+      backButton: m('Back'),
+      cancelButton: m('Cancel'),
+      confirmMessage: m<{ count: number; entityToAddTo?: string }>(
+        '{entityToAddTo, select, undefined {You are about to add {count, number, integer} people. Are you sure you want to continue?} other {You are about to add {count, number, integer} people to ‘{entityToAddTo}’. Are you sure you want to continue?}}'
+      ),
+      confirmTitle: m('Confirm adding people'),
+      fromView: m<{ viewTitle: string }>('From  ‘{viewTitle}’'),
+      openButton: m('Bulk add'),
+
+      submitButton: m<{ numSelected: number }>(
+        '{numSelected, plural, =0 {Select} =1 {Select 1 person} other {Select {numSelected, number, integer} people}}'
+      ),
+      title: m<{ entityToAddTo?: string }>(
+        '{entityToAddTo, select, undefined {Add people} other {Add people to ‘{entityToAddTo}’}}'
+      ),
+    },
     keepTyping: m('Keep typing to start searching'),
     noResult: m('No matching person found'),
     search: m('Type to start searching'),
@@ -208,6 +261,8 @@ export default makeMessages('zui', {
     ),
   },
   signUpChip: {
+    booked: m('You are booked'),
+    callSignUp: m<{ name: string }>('{name} has signed up'),
     needed: m('You are needed'),
     signedUp: m('You have signed up'),
   },
@@ -231,46 +286,6 @@ export default makeMessages('zui', {
   },
   suffixedNumber: {
     thousands: m<{ num: number }>('{num}K'),
-  },
-  surveyForm: {
-    accept: m('I accept the terms stated below'),
-    error: m(
-      'Something went wrong when submitting your answers. Please try again later.'
-    ),
-    policy: {
-      text: m('Click to read the full Zetkin Privacy Policy'),
-    },
-    required: m('required'),
-    signature: {
-      anonymous: m('Sign anonymously'),
-      email: {
-        email: m('Email'),
-        firstName: m('First name'),
-        lastName: m('Last name'),
-      },
-      nameAndEmail: m('Sign with name and e-mail'),
-      title: m('Choose how to sign'),
-      type: {
-        anonymous: m('Sign anonymously'),
-        email: m('Sign with name and email'),
-        user: m<{ email: string; person: string }>(
-          'Sign as {person} with email {email}'
-        ),
-      },
-    },
-    submit: m('Submit'),
-    submitted: {
-      text: m<{ title: string }>(
-        'Your responses to “{title}” have been submitted.'
-      ),
-      title: m('Survey Submitted'),
-    },
-    terms: {
-      description: m<{ organization: string }>(
-        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
-      ),
-      title: m('Privacy Policy'),
-    },
   },
   timeSpan: {
     multiDay: m<{

@@ -5,6 +5,7 @@ const response: Response = {
   blob: async () => new Blob(),
   body: {} as ReadableStream,
   bodyUsed: false,
+  bytes: async () => new Uint8Array(),
   clone: () => response,
   formData: async () => new FormData(),
   headers: new Headers(),

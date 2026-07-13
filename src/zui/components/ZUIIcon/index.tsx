@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { SvgIconTypeMap, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 
-import { ZUISize } from '../types';
+import { MUIIcon, ZUISize } from '../types';
 
 type IconColor =
   | 'secondary'
@@ -11,7 +10,8 @@ type IconColor =
   | 'success'
   | 'info'
   | 'warning'
-  | 'danger';
+  | 'error'
+  | 'white';
 
 type ZUIIconProps = {
   /**
@@ -25,9 +25,9 @@ type ZUIIconProps = {
   /**
    * The MUI icon to be used.
    *
-   * Pass in reference to the icon, for example: Close, not <Close/>.
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
-  icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
+  icon: MUIIcon;
 
   /**
    * Small, medium or large. Defaults to small.
@@ -42,13 +42,14 @@ const ZUIIcon: FC<ZUIIconProps> = ({
 }) => {
   const theme = useTheme();
   const iconColors: Record<IconColor, string> = {
-    danger: theme.palette.error.main,
     data: theme.palette.data.main,
+    error: theme.palette.error.main,
     info: theme.palette.info.main,
     primary: theme.palette.text.primary,
     secondary: theme.palette.text.secondary,
     success: theme.palette.success.main,
     warning: theme.palette.warning.main,
+    white: theme.palette.common.white,
   };
 
   const fontSizes: Record<ZUISize, string> = {

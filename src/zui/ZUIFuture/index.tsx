@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Skeleton } from '@mui/material';
 
 import { IFuture } from 'core/caching/futures';
+import { isEmptyData } from 'zui/ZUIFutures';
 
 type ZUIFutureBuilderFunc<DataType> = (
   data: DataType,
@@ -90,7 +91,7 @@ function ZUIFuture<DataType>(props: ZUIFutureProps<DataType>): ReturnType<FC> {
     ),
   } = props;
 
-  if (future.data) {
+  if (future.data && (!future.isLoading || !isEmptyData(future))) {
     if (future.isLoading && ignoreDataWhileLoading) {
       return skeleton;
     }

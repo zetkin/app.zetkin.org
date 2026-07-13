@@ -1,7 +1,6 @@
-import { create } from 'random-seed';
-import { FC, ReactNode, useMemo } from 'react';
+import { FC, ReactNode } from 'react';
 
-import { funSwatches } from 'zui/theme/palette';
+import { randomizerFromSeed } from 'utils/colorUtils';
 
 export interface AvatarBackgroundProps {
   children?: ReactNode;
@@ -17,23 +16,8 @@ const AvatarBackground: FC<AvatarBackgroundProps> = ({
   variant,
 }) => {
   const seedWithoutSpaces = seed.replaceAll(' ', '');
-  const seededRand = create(seedWithoutSpaces.replaceAll(' ', ''));
-  const rand = () => seededRand(1000000) / 1000000;
 
-  const colors = useMemo(() => {
-    return Object.keys(funSwatches).reduce((acc, swatch) => {
-      acc.push(funSwatches[swatch].light.color);
-      acc.push(funSwatches[swatch].medium.color);
-
-      return acc;
-    }, [] as string[]);
-  }, [funSwatches]);
-
-  const getColor = (): string => {
-    const index = seededRand(colors.length);
-    const color = colors[index];
-    return color;
-  };
+  const { getColor, seededRand, rand } = randomizerFromSeed(seedWithoutSpaces);
 
   const uniqueName = (name: string) => {
     return name + seedWithoutSpaces;
@@ -42,6 +26,7 @@ const AvatarBackground: FC<AvatarBackgroundProps> = ({
   return (
     <svg
       height={size}
+      style={{ flexShrink: 0 }}
       version="1.1"
       width={size}
       xmlns="http://www.w3.org/2000/svg"

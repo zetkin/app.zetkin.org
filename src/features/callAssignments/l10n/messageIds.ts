@@ -1,11 +1,12 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.callAssignments', {
   actions: {
     delete: m('Delete'),
     end: m('End assignment'),
+    move: m('Move'),
     start: m('Start assignment'),
     warning: m<{ title: string }>('"{title}" will be deleted.'),
   },
@@ -24,6 +25,13 @@ export default makeMessages('feat.callAssignments', {
     subtitle: m('Targets not ready to be called'),
     title: m('Blocked'),
     viewSheetButton: m('View list'),
+  },
+  callAssignmentChangeProjectDialog: {
+    error: m('Error: Could not move the assignment to the selected project'),
+    success: m<{ assignmentTitle: string; projectTitle: string }>(
+      'Assignment "{assignmentTitle}" moved to "{projectTitle}"'
+    ),
+    title: m('Move assignment'),
   },
   callers: {
     actions: {

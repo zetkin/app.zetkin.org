@@ -1,0 +1,85 @@
+import { Box, Fade, Modal, Slide } from '@mui/material';
+import { FC, ReactNode, useEffect, useRef } from 'react';
+
+import ModalBackground from '../ZUIModal/ModalBackground';
+import { usePreventKeyboardPropagation } from '../ZUIModal/usePreventKeyboardPropagation';
+
+type Props = {
+  allowPropagation?: boolean;
+  children: ReactNode;
+  onClose?: () => void;
+  open: boolean;
+};
+
+const Drawer: FC<Props> = ({
+  allowPropagation = false,
+  children,
+  onClose,
+  open,
+}) => {
+  const seed = useRef(0);
+  useEffect(() => {
+    seed.current = Math.random();
+  }, [open]);
+
+  const drawerRef = usePreventKeyboardPropagation(open, allowPropagation);
+
+  return (
+    <Modal
+      disableRestoreFocus
+      hideBackdrop={true}
+      onClose={onClose}
+      open={open}
+    >
+      <>
+        <Slide direction="up" in={open} timeout={300}>
+          <Box
+            ref={drawerRef}
+            sx={{
+              backgroundColor: 'white',
+              bottom: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              height: 'auto',
+              left: 0,
+              maxHeight: '100%',
+              outline: 0,
+              pointerEvents: open ? 'auto' : 'none',
+              position: 'fixed',
+              right: 0,
+              top: 'auto',
+              width: '100%',
+              zIndex: 1,
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                maxHeight: 'calc(100dvh - 3.75rem)',
+                overflow: 'hidden',
+              }}
+            >
+              {children}
+            </Box>
+          </Box>
+        </Slide>
+        <Fade in={open} timeout={300}>
+          <Box
+            onClick={onClose}
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              height: '100%',
+              width: '100%',
+              zIndex: 0,
+            }}
+          >
+            <ModalBackground height="100%" seed={seed.current} width="100%" />
+          </Box>
+        </Fade>
+      </>
+    </Modal>
+  );
+};
+
+export default Drawer;

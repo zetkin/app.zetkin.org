@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Box, Dialog } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -9,22 +8,12 @@ import SearchField from './SearchField';
 import { useNumericRouteParams } from 'core/hooks';
 import useSearch from 'features/search/hooks/useSearch';
 
-const useStyles = makeStyles(() => ({
-  topPaperScrollBody: {
-    verticalAlign: 'top',
-  },
-  topScrollPaper: {
-    alignItems: 'flex-start',
-  },
-}));
-
 const SearchDialog: React.FunctionComponent<{
   activator: (openDialog: () => void) => JSX.Element;
 }> = ({ activator }) => {
   const [open, setOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
-  const classes = useStyles();
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
 
@@ -62,16 +51,20 @@ const SearchDialog: React.FunctionComponent<{
     <>
       {activator(() => setOpen(true))}
       <Dialog
-        classes={{
-          paperScrollBody: classes.topPaperScrollBody,
-          scrollPaper: classes.topScrollPaper,
-        }}
         fullWidth
         onClose={() => {
           setOpen(false);
           setQuery('');
         }}
         open={open}
+        sx={{
+          '& .MuiDialog-paperScrollBody': {
+            verticalAlign: 'top',
+          },
+          '& .MuiDialog-scrollPaper': {
+            alignItems: 'flex-start',
+          },
+        }}
       >
         <Box p={1}>
           <SearchField

@@ -5,12 +5,15 @@ import {
   participantsLoaded,
   respondentsLoad,
   respondentsLoaded,
+  unverifiedParticipantsLoad,
+  unverifiedParticipantsLoaded,
 } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
+import { EventSignupModelType } from '../models';
 
 type useEventParticipantsReturn = {
   bookedParticipants: ZetkinEventParticipant[] | [];
@@ -20,10 +23,11 @@ type useEventParticipantsReturn = {
   numConfirmedParticipants: number;
   numNoshowParticipants: number;
   numRemindedParticipants: number;
-  numSignedParticipants: number;
-  participantsFuture: IFuture<ZetkinEventParticipant[]>;
-  pendingSignUps: ZetkinEventResponse[] | [];
+  numSignedUpParticipants: number;
   respondentsFuture: IFuture<ZetkinEventResponse[]>;
+  unverifiedSignedUpParticipants: EventSignupModelType[];
+  verifiedParticipantsFuture: IFuture<ZetkinEventParticipant[]>;
+  verifiedSignedUpParticipants: ZetkinEventResponse[];
 };
 
 export default function useEventParticipants(
@@ -34,18 +38,45 @@ export default function useEventParticipants(
   const participantsState = useAppSelector((state) => state.events);
   const dispatch = useAppDispatch();
 
-  const list = participantsState.participantsByEventId[eventId];
+  const verifiedParticipantList =
+    participantsState.participantsByEventId[eventId];
   const respondentsList = participantsState.respondentsByEventId[eventId];
 
-  const participantsFuture = loadListIfNecessary(list, dispatch, {
-    actionOnLoad: () => participantsLoad(eventId),
-    actionOnSuccess: (participants) =>
-      participantsLoaded([eventId, participants]),
-    loader: () =>
-      apiClient.get<ZetkinEventParticipant[]>(
-        `/api/orgs/${orgId}/actions/${eventId}/participants`
-      ),
-  });
+  const unverifiedSignedUpParticipantsList =
+    participantsState.unverifiedParticipantsByEventId[eventId];
+
+  const verifiedParticipantsFuture = loadListIfNecessary(
+    verifiedParticipantList,
+    dispatch,
+    {
+      actionOnLoad: () => participantsLoad(eventId),
+      actionOnSuccess: (participants) =>
+        participantsLoaded([eventId, participants]),
+      loader: () =>
+        apiClient.get<ZetkinEventParticipant[]>(
+          `/api/orgs/${orgId}/actions/${eventId}/participants`
+        ),
+    }
+  );
+
+  const unverifiedSignedUpParticipantsFuture = loadListIfNecessary(
+    unverifiedSignedUpParticipantsList,
+    dispatch,
+    {
+      actionOnLoad: () => unverifiedParticipantsLoad(eventId),
+      actionOnSuccess: (unverifiedSignedUpParticipants) =>
+        unverifiedParticipantsLoaded([eventId, unverifiedSignedUpParticipants]),
+      loader: async () => {
+        const data = await apiClient.get<
+          Array<EventSignupModelType & { _id: string }>
+        >(`/beta/orgs/${orgId}/events/${eventId}`);
+        return data.map(({ _id, ...rest }) => ({
+          ...rest,
+          id: _id,
+        }));
+      },
+    }
+  );
 
   const respondentsFuture = loadListIfNecessary(respondentsList, dispatch, {
     actionOnLoad: () => respondentsLoad(eventId),
@@ -56,40 +87,42 @@ export default function useEventParticipants(
       ),
   });
 
-  const numAvailParticipants = participantsFuture.data
-    ? participantsFuture.data.filter((p) => p.cancelled == null).length
+  const numAvailParticipants = verifiedParticipantsFuture.data
+    ? verifiedParticipantsFuture.data.filter((p) => p.cancelled == null).length
     : 0;
 
-  const pendingSignUps =
+  const unverifiedSignedUpParticipants =
+    unverifiedSignedUpParticipantsFuture.data ?? [];
+
+  const verifiedSignedUpParticipants =
     respondentsFuture.data?.filter(
-      (r) => !participantsFuture.data?.some((p) => p.id === r.id)
+      (r) => !verifiedParticipantsFuture.data?.some((p) => p.id === r.id)
     ) || [];
 
+  const numSignedUpParticipants =
+    verifiedSignedUpParticipants.length + unverifiedSignedUpParticipants.length;
+
   const bookedParticipants =
-    participantsFuture?.data?.filter((p) => p.cancelled == null) ?? [];
+    verifiedParticipantsFuture?.data?.filter((p) => p.cancelled == null) ?? [];
 
   const cancelledParticipants =
-    participantsFuture?.data?.filter((p) => p.cancelled != null) ?? [];
+    verifiedParticipantsFuture?.data?.filter((p) => p.cancelled != null) ?? [];
 
   const numCancelledParticipants =
-    participantsFuture.data?.filter((p) => p.cancelled != null).length ?? 0;
+    verifiedParticipantsFuture.data?.filter((p) => p.cancelled != null)
+      .length ?? 0;
 
-  const numConfirmedParticipants = participantsFuture.data
-    ? participantsFuture.data.filter((p) => p.attended != null).length
+  const numConfirmedParticipants = verifiedParticipantsFuture.data
+    ? verifiedParticipantsFuture.data.filter((p) => p.attended != null).length
     : 0;
 
-  const numNoshowParticipants = participantsFuture.data
-    ? participantsFuture.data.filter((p) => p.noshow != null).length
+  const numNoshowParticipants = verifiedParticipantsFuture.data
+    ? verifiedParticipantsFuture.data.filter((p) => p.noshow != null).length
     : 0;
 
   const numRemindedParticipants =
-    participantsFuture.data?.filter(
+    verifiedParticipantsFuture.data?.filter(
       (p) => p.reminder_sent != null && p.cancelled == null
-    ).length ?? 0;
-
-  const numSignedParticipants =
-    respondentsFuture.data?.filter(
-      (r) => !participantsFuture.data?.some((p) => p.id === r.id)
     ).length ?? 0;
 
   return {
@@ -100,9 +133,10 @@ export default function useEventParticipants(
     numConfirmedParticipants,
     numNoshowParticipants,
     numRemindedParticipants,
-    numSignedParticipants,
-    participantsFuture,
-    pendingSignUps,
+    numSignedUpParticipants,
     respondentsFuture,
+    unverifiedSignedUpParticipants,
+    verifiedParticipantsFuture,
+    verifiedSignedUpParticipants,
   };
 }

@@ -7,9 +7,12 @@ import 'dayjs/locale/de';
 import 'dayjs/locale/da';
 import 'dayjs/locale/nn';
 import 'dayjs/locale/sv';
+import 'dayjs/locale/nl';
+
+import { SUPPORTED_LANGUAGES, SupportedLanguage } from 'core/i18n/languages';
 
 const LocaleSwitcher: FC<PropsWithChildren> = ({ children }) => {
-  const locales = ['en', 'da', 'sv', 'de', 'nn'];
+  const locales = SUPPORTED_LANGUAGES;
   const localeTextsByLocale: Record<
     string,
     typeof daDK.components.MuiLocalizationProvider.defaultProps.localeText
@@ -20,8 +23,7 @@ const LocaleSwitcher: FC<PropsWithChildren> = ({ children }) => {
     sv: svSE.components.MuiLocalizationProvider.defaultProps.localeText,
   };
 
-  type LocaleKey = typeof locales[number];
-  const [locale, setLocale] = useState<LocaleKey>('en');
+  const [locale, setLocale] = useState<SupportedLanguage>('en');
 
   return (
     <LocalizationProvider

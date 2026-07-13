@@ -10,21 +10,22 @@ export default function useBreadcrumbElements() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { pathname, asPath: path } = router;
+  const pathWithoutQueryString = path.split('?')[0];
   const crumbsItem = useAppSelector(
-    (state) => state.breadcrumbs.crumbsByPath[path]
+    (state) => state.breadcrumbs.crumbsByPath[pathWithoutQueryString]
   );
 
   const query = getPathParameters(router);
 
   const future = loadItemIfNecessary(crumbsItem, dispatch, {
-    actionOnLoad: () => crumbsLoad(path),
-    actionOnSuccess: (item) => crumbsLoaded([path, item]),
+    actionOnLoad: () => crumbsLoad(pathWithoutQueryString),
+    actionOnSuccess: (item) => crumbsLoaded([pathWithoutQueryString, item]),
     loader: async () => {
       const elements = await apiClient.get<BreadcrumbElement[]>(
         `/api/breadcrumbs?pathname=${pathname}&${query}`
       );
 
-      return { elements, id: path };
+      return { elements, id: pathWithoutQueryString };
     },
   });
 

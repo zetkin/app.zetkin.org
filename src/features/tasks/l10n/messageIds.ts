@@ -1,8 +1,13 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.tasks', {
+  actions: {
+    delete: m('Delete'),
+    edit: m('Edit'),
+    move: m('Move'),
+  },
   assignees: {
     completedStates: {
       completed: m<{ time: ReactElement }>('Completed {time}'),
@@ -78,10 +83,10 @@ export default makeMessages('feat.tasks', {
   },
   form: {
     fields: {
-      campaign: m('Campaign'),
       deadline: m('Completion Deadline'),
       expires: m('Expiration Date'),
       instructions: m('Instructions'),
+      project: m('Project'),
       published: m('Publish Time'),
       reassignInterval: m('Reassign after completion'),
       reassignIntervalOptions: {
@@ -149,6 +154,13 @@ export default makeMessages('feat.tasks', {
     draft: m('Draft'),
     expired: m('Expired'),
     scheduled: m('Scheduled'),
+  },
+  taskChangeProjectDialog: {
+    error: m('Error: Could not move the task to the selected project'),
+    success: m<{ projectTitle: string; taskTitle: string }>(
+      'Task "{taskTitle}" moved to "{projectTitle}"'
+    ),
+    title: m('Move task'),
   },
   taskDetails: {
     deadlineTime: m('Deadline Time'),

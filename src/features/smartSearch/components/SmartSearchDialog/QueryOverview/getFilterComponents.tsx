@@ -11,8 +11,10 @@ import {
   Event,
   ExploreOutlined,
   FilterAlt,
+  GroupWorkOutlined,
   LocalOfferOutlined,
   MarkEmailReadOutlined,
+  PentagonOutlined,
   PersonAddAlt,
   PersonOutlined,
   PhoneDisabled,
@@ -25,7 +27,7 @@ import {
 
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
-import DisplayCampaignParticipation from '../../filters/CampaignParticipation/DisplayCampaignParticipation';
+import DisplayProjectParticipation from '../../filters/ProjectParticipation/DisplayProjectParticipation';
 import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
 import DisplayEmailClick from '../../filters/EmailClick/DisplayEmailClick';
 import DisplayEmailHistory from '../../filters/EmailHistory/DisplayEmailHistory';
@@ -42,18 +44,23 @@ import DisplaySurveyResponse from '../../filters/SurveyResponse/DisplaySurveyRes
 import DisplaySurveySubmission from '../../filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayTask from '../../filters/Task/DisplayTask';
 import DisplayUser from '../../filters/User/DisplayUser';
+import DisplayOfficial from '../../filters/Official/DisplayOfficial';
 import {
+  AllInSuborgFilterConfig,
   AnyFilterConfig,
+  AreaFilterConfig,
   CallBlockedFilterConfig,
   CallHistoryFilterConfig,
-  CampaignParticipationConfig,
+  ProjectParticipationConfig,
   EmailBlacklistFilterConfig,
   EmailClickFilterConfig,
   EmailHistoryFilterConfig,
+  EventParticipationConfig,
   FILTER_TYPE,
   JoinFormFilterConfig,
   JourneyFilterConfig,
   MostActiveFilterConfig,
+  OfficialFilterConfig,
   OPERATION,
   PersonDataFilterConfig,
   PersonFieldFilterConfig,
@@ -69,6 +76,9 @@ import {
   UserFilterConfig,
 } from 'features/smartSearch/components/types';
 import DisplayJoinForm from '../../filters/JoinForm/DisplayJoinForm';
+import DisplayAllInSuborg from '../../filters/AllInSubOrg/DisplayAllInSuborg';
+import DisplayInArea from '../../filters/Area/DisplayInArea';
+import DisplayEventParticipation from '../../filters/EventParticipation/DisplayEventParticipation';
 
 export default function getFilterComponents(
   filter: SmartSearchFilterWithId<AnyFilterConfig>
@@ -121,10 +131,17 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <DraftsOutlined color="secondary" fontSize="small" />;
-  } else if (filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION) {
+  } else if (filter.type === FILTER_TYPE.PROJECT_PARTICIPATION) {
     displayFilter = (
-      <DisplayCampaignParticipation
-        filter={filter as SmartSearchFilterWithId<CampaignParticipationConfig>}
+      <DisplayProjectParticipation
+        filter={filter as SmartSearchFilterWithId<ProjectParticipationConfig>}
+      />
+    );
+    filterTypeIcon = <Event color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.EVENT_PARTICIPATION) {
+    displayFilter = (
+      <DisplayEventParticipation
+        filter={filter as SmartSearchFilterWithId<EventParticipationConfig>}
       />
     );
     filterTypeIcon = <Event color="secondary" fontSize="small" />;
@@ -222,6 +239,15 @@ export default function getFilterComponents(
     filterTypeIcon = (
       <AccountCircleOutlined color="secondary" fontSize="small" />
     );
+  } else if (filter.type === FILTER_TYPE.OFFICIAL) {
+    displayFilter = (
+      <DisplayOfficial
+        filter={filter as SmartSearchFilterWithId<OfficialFilterConfig>}
+      />
+    );
+    filterTypeIcon = (
+      <AccountCircleOutlined color="secondary" fontSize="small" />
+    );
   } else if (filter.type == FILTER_TYPE.JOINFORM) {
     displayFilter = (
       <DisplayJoinForm
@@ -229,6 +255,23 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <DoorFrontOutlined color="secondary" fontSize="small" />;
+  } else if (
+    filter.type == FILTER_TYPE.ALL &&
+    'organizations' in filter.config
+  ) {
+    displayFilter = (
+      <DisplayAllInSuborg
+        filter={filter as SmartSearchFilterWithId<AllInSuborgFilterConfig>}
+      />
+    );
+    filterTypeIcon = <GroupWorkOutlined color="secondary" fontSize="small" />;
+  } else if (filter.type == FILTER_TYPE.AREA) {
+    displayFilter = (
+      <DisplayInArea
+        filter={filter as SmartSearchFilterWithId<AreaFilterConfig>}
+      />
+    );
+    filterTypeIcon = <PentagonOutlined color="secondary" fontSize="small" />;
   }
 
   return {

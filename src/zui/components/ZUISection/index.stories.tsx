@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Box } from '@mui/material';
 
 import ZUISection from './index';
@@ -239,5 +239,36 @@ export const VerticalWithSubSections: Story = {
     ],
     subtitle: 'Subtitle',
     title: 'Section',
+  },
+};
+
+export const FullHeight: Story = {
+  args: {
+    fullHeight: true,
+    renderContent: () => (
+      <Box sx={{ backgroundColor: 'peachpuff', height: '200px' }}>
+        <ZUIText>Content</ZUIText>
+      </Box>
+    ),
+    title: 'Activists',
+  },
+  render: function Render(args) {
+    return (
+      <Box sx={{ height: '500px' }}>
+        <ZUISection {...args} />
+      </Box>
+    );
+  },
+};
+
+export const NoBorders: Story = {
+  args: {
+    borders: false,
+    renderContent: () => (
+      <Box sx={{ backgroundColor: 'peachpuff', height: '200px' }}>
+        <ZUIText>Content</ZUIText>
+      </Box>
+    ),
+    title: 'Activists',
   },
 };

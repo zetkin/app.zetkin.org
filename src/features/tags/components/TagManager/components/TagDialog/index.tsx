@@ -109,7 +109,6 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           error={titleEdited && !title}
           fullWidth
           helperText={titleEdited && !title && messages.dialog.titleErrorText()}
-          inputProps={{ 'data-testid': 'TagManager-TagDialog-titleField' }}
           label={messages.dialog.titleLabel()}
           margin="normal"
           onChange={(e) => {
@@ -120,6 +119,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           }}
           onClick={(e) => (e.target as HTMLInputElement).focus()}
           required
+          slotProps={{
+            htmlInput: { 'data-testid': 'TagManager-TagDialog-titleField' },
+          }}
           value={title}
           variant="outlined"
         />

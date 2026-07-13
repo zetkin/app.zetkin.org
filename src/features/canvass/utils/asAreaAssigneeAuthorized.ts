@@ -1,11 +1,9 @@
-import mongoose from 'mongoose';
 import { IncomingHttpHeaders } from 'http';
 import { NextResponse } from 'next/server';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';
-import { AreaAssignmentModel } from '../../areaAssignments/models';
 
 type GuardedFnProps = {
   apiClient: BackendApiClient;
@@ -36,18 +34,10 @@ export default async function asAreaAssigneeAuthorized(
     );
 
     if (!membership.role) {
-      await mongoose.connect(process.env.MONGODB_URL || '');
-      const assignmentModels = await AreaAssignmentModel.find({
-        orgId: membership.organization.id,
-        'sessions.personId': { $eq: membership.profile.id },
-      });
-
-      if (!assignmentModels.length) {
-        return NextResponse.json(
-          { error: { title: 'Must be areaAssignee' } },
-          { status: 403 }
-        );
-      }
+      return NextResponse.json(
+        { error: { title: 'Must be areaAssignee' } },
+        { status: 403 }
+      );
     }
 
     return fn({

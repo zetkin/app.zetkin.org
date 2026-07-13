@@ -103,13 +103,10 @@ test.describe('Journey instance page Milestones tab', () => {
     await datePicker.first().click();
     await june24.waitFor({ state: 'visible' });
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
-      ),
-      //Click June 24 to trigger setting new deadline
-      await june24.click(),
-    ]);
+    //Click June 24 to trigger setting new deadline
+    await june24.click();
+
+    await expect.poll(() => patchReqLog().length).toBe(1);
 
     //Expect the deadline to be the newly set deadline
     expect(
@@ -137,19 +134,16 @@ test.describe('Journey instance page Milestones tab', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
-      ),
-      //Click "clear"-button
-      page
-        .locator(
-          '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
-        )
-        .first()
-        .click(),
-      page.locator('.MuiPickersLayout-actionBar button').first().click(),
-    ]);
+    //Click "clear"-button
+    await page
+      .locator(
+        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
+      )
+      .first()
+      .click();
+    await page.locator('.MuiPickersLayout-actionBar button').first().click();
+
+    await expect.poll(() => patchReqLog().length).toBe(1);
 
     //Expect deadline to be set to null
     expect(patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data?.deadline).toBe(
@@ -181,18 +175,15 @@ test.describe('Journey instance page Milestones tab', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
-      ),
-      //Click "completed"-checkbox in first JourneyMilestoneCard
-      await page
-        .locator(
-          '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
-        )
-        .first()
-        .click(),
-    ]);
+    //Click "completed"-checkbox in first JourneyMilestoneCard
+    await page
+      .locator(
+        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
+      )
+      .first()
+      .click();
+
+    await expect.poll(() => patchReqLog().length).toBe(1);
 
     const submittedDate = new Date(
       patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data!.completed!
@@ -232,17 +223,14 @@ test.describe('Journey instance page Milestones tab', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
-      ),
-      //Click "completed"-checkbox in JourneyMilestoneCard
-      await page
-        .locator(
-          '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
-        )
-        .click(),
-    ]);
+    //Click "completed"-checkbox in JourneyMilestoneCard
+    await page
+      .locator(
+        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
+      )
+      .click();
+
+    await expect.poll(() => patchReqLog().length).toBe(1);
 
     expect(patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data?.completed).toBe(
       null

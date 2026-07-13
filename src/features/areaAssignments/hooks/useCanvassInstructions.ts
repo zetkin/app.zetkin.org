@@ -7,7 +7,7 @@ import useAreaAssignmentMutations from './useAreaAssignmentMutations';
 
 export default function useAreaAssignmentInstructions(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const { updateAreaAssignment } = useAreaAssignmentMutations(orgId, areaAssId);
   const { data: canvassAssignment } = useAreaAssignment(orgId, areaAssId);

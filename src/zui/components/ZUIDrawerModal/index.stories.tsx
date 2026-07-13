@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import { People, Phone, Search } from '@mui/icons-material';
@@ -20,7 +20,6 @@ export const Basic: Story = {
     featureName: 'contacts',
     icon: Phone,
     primaryButton: { label: 'New message', onClick: () => null },
-    secondaryButton: { label: 'Close', onClick: () => null },
     subtitle: 'No unread messages',
     title: 'Contact center',
   },
@@ -40,7 +39,7 @@ export const Basic: Story = {
               alignItems: 'center',
               backgroundColor: 'peachpuff',
               display: 'flex',
-              height: '1000px',
+              height: '2000px',
               justifyContent: 'center',
               padding: '1rem',
               width: '100%',
@@ -59,14 +58,13 @@ export const WithBreadcrumbs: Story = {
     featureName: 'Smart search',
     icon: Search,
     primaryButton: { label: 'Start over', onClick: () => null },
-    secondaryButton: { label: 'Close', onClick: () => null },
     subtitle: ['Overview', 'Select filter', 'Filter settings'],
     title: 'Smart search',
   },
   render: Basic.render,
 };
 
-export const NoButtonsInHeader: Story = {
+export const NoPrimaryButton: Story = {
   args: {
     featureName: 'Import',
     icon: People,

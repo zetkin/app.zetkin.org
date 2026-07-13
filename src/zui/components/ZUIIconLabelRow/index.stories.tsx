@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Event, People, PentagonOutlined } from '@mui/icons-material';
 
 import ZUIIconLabelRow from './index';
@@ -42,6 +42,6 @@ export const Secondary: Story = {
   args: { ...Medium.args, color: 'secondary' },
 };
 
-export const Danger: Story = {
-  args: { ...Medium.args, color: 'danger' },
+export const Error: Story = {
+  args: { ...Medium.args, color: 'error' },
 };

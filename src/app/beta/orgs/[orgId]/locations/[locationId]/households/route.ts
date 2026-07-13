@@ -1,8 +1,14 @@
+import { IncomingHttpHeaders } from 'http';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { LocationModel } from 'features/areaAssignments/models';
-import asAreaAssigneeAuthorized from 'features/canvass/utils/asAreaAssigneeAuthorized';
+import {
+  Zetkin2Household,
+  HouseholdColor,
+  HouseholdWithColor,
+} from 'features/canvass/types';
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import { HouseholdColorModel } from 'features/areaAssignments/models';
 
 type RouteMeta = {
   params: {
@@ -11,53 +17,30 @@ type RouteMeta = {
   };
 };
 
-export async function POST(request: NextRequest, { params }: RouteMeta) {
-  return asAreaAssigneeAuthorized(
-    {
-      orgId: params.orgId,
-      request: request,
-    },
-    async ({ orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+export async function GET(request: NextRequest, { params }: RouteMeta) {
+  await mongoose.connect(process.env.MONGODB_URL || '');
+  const headers: IncomingHttpHeaders = {};
+  request.headers.forEach((value, key) => (headers[key] = value));
+  const apiClient = new BackendApiClient(headers);
 
-      const payload = await request.json();
-
-      const model = await LocationModel.findOneAndUpdate(
-        { _id: params.locationId, orgId },
-        {
-          $push: {
-            households: {
-              $each: [
-                {
-                  id: new mongoose.Types.ObjectId().toString(),
-                  ratings: [],
-                  title: payload.title,
-                  visits: [],
-                },
-              ],
-              $position: 0,
-            },
-          },
-        },
-        { new: true }
-      );
-
-      if (!model) {
-        return new NextResponse(null, { status: 404 });
-      }
-
-      await model.save();
-
-      return NextResponse.json({
-        data: {
-          description: model.description,
-          households: model.households,
-          id: model._id.toString(),
-          orgId: orgId,
-          position: model.position,
-          title: model.title,
-        },
-      });
-    }
+  const households = await apiClient.get<Zetkin2Household[]>(
+    `/api2/orgs/${params.orgId}/locations/${
+      params.locationId
+    }/households?${request.nextUrl.searchParams.toString()}`
   );
+
+  const householdsWithColor: HouseholdWithColor[] = [];
+  for (const household of households) {
+    const householdColorModel = await HouseholdColorModel.findOne({
+      householdId: household.id,
+    });
+
+    const householdWithColor: HouseholdWithColor = {
+      ...household,
+      color: (householdColorModel?.color ?? 'clear') as HouseholdColor,
+    };
+    householdsWithColor.push(householdWithColor);
+  }
+
+  return NextResponse.json({ data: householdsWithColor });
 }

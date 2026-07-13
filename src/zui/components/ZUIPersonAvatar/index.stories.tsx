@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIPersonAvatar from './index';
 import ZUIButton from '../ZUIButton';
@@ -71,5 +71,16 @@ export const Large: Story = {
   args: {
     ...Medium.args,
     size: 'large',
+  },
+};
+
+/**
+ * This is to make it possible to distinguish that you
+ * are representing the user, rather than the person.
+ */
+export const User: Story = {
+  args: {
+    ...Medium.args,
+    isUser: true,
   },
 };

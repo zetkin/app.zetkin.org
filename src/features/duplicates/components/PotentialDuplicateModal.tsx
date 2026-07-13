@@ -20,7 +20,7 @@ const PotentialDuplicateModal: FC<Props> = ({
   const { orgId } = useNumericRouteParams();
   const { mergeDuplicate } = useDuplicatesMutations(orgId);
 
-  return (
+  return open ? (
     <MergeModal
       onClose={onClose}
       onMerge={(personIds, overrides) => {
@@ -29,7 +29,7 @@ const PotentialDuplicateModal: FC<Props> = ({
       open={open}
       persons={potentialDuplicate.duplicates}
     />
-  );
+  ) : null;
 };
 
 export default PotentialDuplicateModal;

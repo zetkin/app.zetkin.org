@@ -2,7 +2,7 @@ import { TextField } from '@mui/material';
 import { FC, MutableRefObject } from 'react';
 
 import FieldValidationWarning from './FieldValidationWarning';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import { useMessages } from 'core/i18n';
 import {
   ZetkinCreatePerson,
@@ -12,8 +12,9 @@ import {
 interface PersonFieldInputProps {
   disabled?: boolean;
   field: keyof ZetkinCreatePerson;
+  helperText?: string;
   label?: string;
-  onChange: (field: string, newValue: string) => void;
+  onChange?: (field: string, newValue: string) => void;
   required?: boolean;
   isURLField?: boolean;
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
@@ -24,6 +25,7 @@ interface PersonFieldInputProps {
 const PersonFieldInput: FC<PersonFieldInputProps> = ({
   disabled = false,
   field,
+  helperText,
   label,
   onChange,
   required,
@@ -41,20 +43,19 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
       error={error}
       fullWidth
       helperText={
-        error && (
+        error ? (
           <FieldValidationWarning field={field} isURLField={isURLField} />
+        ) : (
+          helperText
         )
       }
       inputRef={inputRef}
       label={
-        label
-          ? label
-          : globalMessages.personFields[
-              field as keyof ZetkinPersonNativeFields
-            ]()
+        label ??
+        globalMessages.personFields[field as keyof ZetkinPersonNativeFields]()
       }
-      onBlur={(e) => onChange(field, e.target.value.trim())}
-      onChange={(e) => onChange(field, e.target.value)}
+      onBlur={(e) => onChange?.(field, e.target.value.trim())}
+      onChange={(e) => onChange?.(field, e.target.value)}
       required={required}
       sx={style}
       value={value}

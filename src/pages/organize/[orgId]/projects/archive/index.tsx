@@ -1,20 +1,20 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
 
-import ActivityList from 'features/campaigns/components/ActivityList';
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
-import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
-import messageIds from 'features/campaigns/l10n/messageIds';
+import ActivityList from 'features/projects/components/ActivityList';
+import AllProjectsLayout from 'features/projects/layout/AllProjectsLayout';
+import FilterActivities from 'features/projects/components/ActivityList/FilterActivities';
+import messageIds from 'features/projects/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import useActivityArchive from 'features/campaigns/hooks/useActivityArchive';
+import useActivityArchive from 'features/projects/hooks/useActivityArchive';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
+import { ProjectActivity } from 'features/projects/types';
+import useActivityFilters from 'features/projects/hooks/useActivityFilters';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -31,27 +31,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const ActivitiesArchivePage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const { orgId, campId } = useNumericRouteParams();
-  const archivedActivities = useActivityArchive(orgId, campId);
-  const [searchString, setSearchString] = useState('');
-  const [filters, setFilters] = useState<ACTIVITIES[]>([
-    ACTIVITIES.CALL_ASSIGNMENT,
-    ACTIVITIES.AREA_ASSIGNMENT,
-    ACTIVITIES.SURVEY,
-    ACTIVITIES.TASK,
-    ACTIVITIES.EMAIL,
-  ]);
-
-  const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const filter = evt.target.value as ACTIVITIES;
-    if (filters.includes(filter)) {
-      setFilters(filters.filter((a) => a !== filter));
-    } else {
-      setFilters([...filters, filter]);
-    }
-  };
-
-  const onSearchStringChange = (value: string) => setSearchString(value);
+  const { orgId } = useNumericRouteParams();
+  const archivedActivities = useActivityArchive(orgId);
+  const { filters, onFiltersChange, onSearchStringChange, searchString } =
+    useActivityFilters('archive', orgId);
 
   if (onServer) {
     return null;
@@ -72,7 +55,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
           }
 
           const activityTypes = data.map(
-            (activity: CampaignActivity) => activity.kind
+            (activity: ProjectActivity) => activity.kind
           );
           const filterTypes = [...new Set(activityTypes)];
 
@@ -84,6 +67,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
                   filters={filters}
                   orgId={orgId}
                   searchString={searchString}
+                  sortNewestFirst
                 />
               </Grid>
 
@@ -104,7 +88,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
 };
 
 ActivitiesArchivePage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
+  return <AllProjectsLayout>{page}</AllProjectsLayout>;
 };
 
 export default ActivitiesArchivePage;

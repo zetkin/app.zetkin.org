@@ -1,29 +1,40 @@
 import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 
-import { Household as ZetkinHousehold } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import { ZetkinLocation } from 'features/areaAssignments/types';
+import useHousehold from 'features/canvass/hooks/useHousehold';
 
 type HouseholdPageProps = {
-  household: ZetkinHousehold;
+  householdId: number;
+  location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
+  onDelete: () => void;
   onEdit: () => void;
   onHouseholdVisitStart: () => void;
   visitedInThisAssignment: boolean;
 };
 
 const HouseholdPage: FC<HouseholdPageProps> = ({
-  household,
+  householdId,
+  location,
   onBack,
   onClose,
+  onDelete,
   onEdit,
   onHouseholdVisitStart,
   visitedInThisAssignment,
 }) => {
   const messages = useMessages(messageIds);
+  const household = useHousehold(
+    location.organization_id,
+    location.id,
+    householdId
+  );
+
   return (
     <PageBase
       actions={
@@ -38,13 +49,15 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
           </Button>
         </Box>
       }
+      color={household.color}
       onBack={onBack}
       onClose={onClose}
+      onDelete={onDelete}
       onEdit={onEdit}
       subtitle={
-        household.floor
+        household.level
           ? messages.households.single.subtitle({
-              floorNumber: household.floor,
+              floorNumber: household.level,
             })
           : messages.default.floor()
       }

@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  NoSsr,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -13,6 +14,7 @@ interface ZUIDialogProps {
   contentHeight?: number | string;
   open: boolean;
   onClose: () => void;
+  onTop?: boolean;
   title?: string;
   maxWidth?: false | 'sm' | 'md' | 'lg' | 'xl';
 }
@@ -22,6 +24,7 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
   contentHeight,
   maxWidth,
   open,
+  onTop,
   onClose,
   title,
 }): JSX.Element => {
@@ -29,18 +32,25 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      fullWidth
-      maxWidth={maxWidth || 'sm'}
-      onClose={onClose}
-      open={open}
-    >
-      <Box p={2}>
-        {title && <DialogTitle>{title}</DialogTitle>}
-        <DialogContent sx={{ height: contentHeight }}>{children}</DialogContent>
-      </Box>
-    </Dialog>
+    <NoSsr>
+      <Dialog
+        fullScreen={fullScreen}
+        fullWidth
+        maxWidth={maxWidth || 'sm'}
+        onClose={onClose}
+        open={open}
+        sx={{
+          zIndex: onTop ? theme.zIndex.tooltip + 9999 : theme.zIndex.modal,
+        }}
+      >
+        <Box p={2}>
+          {title && <DialogTitle>{title}</DialogTitle>}
+          <DialogContent sx={{ height: contentHeight }}>
+            {children}
+          </DialogContent>
+        </Box>
+      </Dialog>
+    </NoSsr>
   );
 };
 

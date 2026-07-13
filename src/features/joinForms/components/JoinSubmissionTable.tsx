@@ -1,6 +1,5 @@
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
 import { Box, Button, useTheme } from '@mui/material';
 
 import messageIds from '../l10n/messageIds';
@@ -9,16 +8,6 @@ import { ZetkinJoinSubmission } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 import oldTheme from 'theme';
 
-const useStyles = makeStyles(() => ({
-  chip: {
-    backgroundColor: oldTheme.palette.grey[300],
-    borderRadius: '1em',
-    color: oldTheme.palette.text.secondary,
-    fontSize: 'xs',
-    padding: '0.2em 0.7em',
-  },
-}));
-
 type Props = {
   onSelect: (submission: ZetkinJoinSubmission) => void;
   orgId: number;
@@ -26,7 +15,6 @@ type Props = {
 };
 
 const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
-  const classes = useStyles();
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const { approveSubmission, deleteSubmission } =
@@ -43,33 +31,41 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             headerName: messages.status(),
             renderCell: (params) => {
               return (
-                <Box className={classes.chip}>
+                <Box
+                  sx={{
+                    backgroundColor: oldTheme.palette.grey[300],
+                    borderRadius: '1em',
+                    color: oldTheme.palette.text.secondary,
+                    fontSize: 'xs',
+                    padding: '0.2em 0.7em',
+                  }}
+                >
                   {messages.states[params.row.state]()}
                 </Box>
               );
             },
-            valueGetter: (params) => params.row.state,
+            valueGetter: (value, row) => row.state,
           },
           {
             disableColumnMenu: true,
             field: 'first_name',
             flex: 2,
             headerName: messages.submissionList.firstName(),
-            valueGetter: (params) => params.row.person_data.first_name,
+            valueGetter: (value, row) => row.person_data.first_name,
           },
           {
             disableColumnMenu: true,
             field: 'last_name',
             flex: 2,
             headerName: messages.submissionList.lastName(),
-            valueGetter: (params) => params.row.person_data.last_name,
+            valueGetter: (value, row) => row.person_data.last_name,
           },
           {
             disableColumnMenu: true,
             field: 'form',
             flex: 2,
             headerName: messages.submissionList.form(),
-            valueGetter: (params) => params.row.form.title,
+            valueGetter: (value, row) => row.form.title,
           },
           {
             disableColumnMenu: true,
@@ -77,7 +73,7 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             flex: 2,
             headerName: messages.submissionList.timestamp(),
             type: 'dateTime',
-            valueGetter: (params) => new Date(params.row.submitted),
+            valueGetter: (value, row) => new Date(row.submitted),
           },
           {
             align: 'right',

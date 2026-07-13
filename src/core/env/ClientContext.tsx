@@ -1,33 +1,33 @@
 'use client';
 
 import CssBaseline from '@mui/material/CssBaseline';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactNode } from 'react';
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from '@mui/material/styles';
+import { FC, ReactNode, Suspense, useRef } from 'react';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { EmotionCache } from '@emotion/utils';
+import 'dayjs/locale/de';
+import 'dayjs/locale/da';
+import 'dayjs/locale/nn';
+import 'dayjs/locale/sv';
+import 'dayjs/locale/nl';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { MessageList } from 'utils/locale';
-import { store } from 'core/store';
+import createStore, { Store } from 'core/store';
 import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
+import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
+import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 
 type ClientContextProps = {
   children: ReactNode;
@@ -47,13 +47,23 @@ const ClientContext: FC<ClientContextProps> = ({
   user,
 }) => {
   const onServer = typeof window == 'undefined';
+  const storeRef = useRef<Store | null>(null);
+
+  if (!storeRef.current) {
+    storeRef.current = createStore();
+  }
 
   const apiClient = onServer
     ? new BackendApiClient(headers)
     : new BrowserApiClient();
 
   const env = new Environment(apiClient, envVars);
-  const cache = createCache({ key: 'css', prepend: true });
+
+  const cache = useRef<EmotionCache | null>(null);
+
+  if (!cache.current) {
+    cache.current = createCache({ key: 'css', prepend: true });
+  }
 
   // MUI-X license
   if (env.vars.MUIX_LICENSE_KEY) {
@@ -61,20 +71,35 @@ const ClientContext: FC<ClientContextProps> = ({
   }
 
   return (
-    <ReduxProvider store={store}>
+    <ReduxProvider store={storeRef.current}>
       <StyledEngineProvider injectFirst>
-        <CacheProvider value={cache}>
+        <CacheProvider value={cache.current}>
           <ThemeProvider theme={oldThemeWithLocale(lang)}>
             <EnvProvider env={env}>
               <UserProvider user={user}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider
+                  adapterLocale={lang}
+                  dateAdapter={AdapterDayjs}
+                >
                   <IntlProvider
                     defaultLocale="en"
                     locale={lang}
                     messages={messages}
                   >
-                    <CssBaseline />
-                    {children}
+                    <AppRouterCacheProvider>
+                      <ZUISnackbarProvider>
+                        <IntlProvider
+                          defaultLocale="en"
+                          locale={lang}
+                          messages={messages}
+                        >
+                          <ZUIConfirmDialogProvider>
+                            <CssBaseline />
+                            <Suspense>{children}</Suspense>
+                          </ZUIConfirmDialogProvider>
+                        </IntlProvider>
+                      </ZUISnackbarProvider>
+                    </AppRouterCacheProvider>
                   </IntlProvider>
                 </LocalizationProvider>
               </UserProvider>

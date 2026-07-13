@@ -173,6 +173,12 @@ export type EmailTheme = {
   id: number;
 };
 
+export type EmailThemePatchBody = Partial<
+  Pick<EmailTheme, 'block_attributes' | 'css' | 'frame_mjml'>
+>;
+
+export type ThemeSection = keyof EmailThemePatchBody;
+
 export type ZetkinEmailRecipient = {
   delivered: string | null;
   email: {
@@ -202,7 +208,10 @@ export type ZetkinEmailLink = {
   url: string;
 };
 
-type EmailLinkWithMeta = ZetkinEmailLink & { clicks: number; text: string };
+export type EmailLinkWithMeta = ZetkinEmailLink & {
+  clicks: number;
+  text: string;
+};
 
 export type EmailInsights = {
   id: number;

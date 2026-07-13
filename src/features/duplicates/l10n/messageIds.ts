@@ -1,4 +1,4 @@
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.duplicates', {
   modal: {
@@ -6,11 +6,6 @@ export default makeMessages('feat.duplicates', {
     fieldSettings: {
       data: m('Data'),
       field: m('Field'),
-      gender: {
-        f: m('Female'),
-        m: m('Male'),
-        o: m('Other'),
-      },
       noValue: m('No value'),
       title: m('Data to merge'),
     },
@@ -31,15 +26,18 @@ export default makeMessages('feat.duplicates', {
     },
     title: m('Merge duplicates'),
     warningMessage: m(
-      'All data related to any of the person records will transfer to the merged person. This includes event participation, survey submissions, tags etc. But the values you discard in the fields above will be lost.'
+      'All data related to any of the person records will transfer to the merged person. This includes event participation, survey submissions, tags etc. But the values you discard in the fields below will be lost.'
     ),
     warningTitle: m('Risk of data loss'),
   },
   page: {
     dismiss: m('Dismiss'),
     noDuplicates: m('No duplicates'),
+    noDuplicatesContactUs: m(
+      'If you find that the matching algorithm does not find enough duplicates, please contact Zetkin Foundation to let us know about your use case.'
+    ),
     noDuplicatesDescription: m(
-      'Yay! all your members seem to be unique individuals.'
+      'Zetkin has not found any likely duplicates in your person database. The database is scanned daily and potential duplicates will be displayed here.'
     ),
     possibleDuplicates: m('Possible duplicates'),
     possibleDuplicatesDescription: m<{ numPeople: number }>(

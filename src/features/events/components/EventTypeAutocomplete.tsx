@@ -1,8 +1,7 @@
 import Fuse from 'fuse.js';
-import { lighten } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
+import { lighten, styled } from '@mui/material/styles';
 import { Add, DeleteOutline } from '@mui/icons-material';
-import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
+import { Autocomplete, Box, TextField, Tooltip } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
@@ -14,42 +13,21 @@ import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
-interface StyleProps {
-  showBorder: boolean | undefined;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  inputRoot: {
-    '& fieldset': { border: 'none' },
-    '&:focus, &:hover': {
-      borderColor: lighten(oldTheme.palette.primary.main, 0.65),
-      paddingLeft: 10,
-      paddingRight: 0,
-    },
-    border: '2px dotted transparent',
-    borderColor: ({ showBorder }) =>
-      showBorder ? lighten(oldTheme.palette.primary.main, 0.65) : '',
-    borderRadius: 10,
-    paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
-    paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
-    transition: 'all 0.2s ease',
+const InputSpan = styled('span')({
+  // Same styles as input
+  '&:focus, &:hover': {
+    borderColor: lighten(oldTheme.palette.primary.main, 0.65),
+    paddingLeft: 10,
+    paddingRight: 0,
   },
-  span: {
-    // Same styles as input
-    '&:focus, &:hover': {
-      borderColor: lighten(oldTheme.palette.primary.main, 0.65),
-      paddingLeft: 10,
-      paddingRight: 0,
-    },
-    border: '2px dotted transparent',
-    borderRadius: 10,
-    fontSize: '1rem',
-    paddingRight: 10,
-    // But invisible and positioned absolutely to not affect flow
-    position: 'absolute',
-    visibility: 'hidden',
-  },
-}));
+  border: '2px dotted transparent',
+  borderRadius: 10,
+  fontSize: '1rem',
+  paddingRight: 10,
+  // But invisible and positioned absolutely to not affect flow
+  position: 'absolute',
+  visibility: 'hidden',
+});
 
 type EventTypeAutocompleteProps = {
   onBlur: () => void;
@@ -87,7 +65,6 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const [dropdownListWidth, setDropdownListWidth] = useState(0);
 
   const spanRef = useRef<HTMLSpanElement>(null);
-  const classes = useStyles({ showBorder });
 
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
@@ -102,6 +79,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onChangeNewOption(newEventType!.id);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [types.length]);
 
   useEffect(() => {
@@ -109,10 +87,12 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
       const width = spanRef.current.offsetWidth;
       setDropdownListWidth(width);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spanRef.current, text]);
 
   useEffect(() => {
     setText(value ? value.title : uncategorizedMsg);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const allTypes: EventTypeOption[] = [
@@ -132,9 +112,6 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
     <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
       <Autocomplete
         blurOnSelect
-        classes={{
-          root: classes.inputRoot,
-        }}
         componentsProps={{
           popper: {
             placement: 'bottom-start',
@@ -144,12 +121,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         disableClearable
         filterOptions={(options, { inputValue }) => {
           const searchedResults = fuse.search(inputValue);
-          const inputStartWithCapital = inputValue
-            ? `${inputValue[0].toUpperCase()}${inputValue.substring(
-                1,
-                inputValue.length
-              )}`
-            : '';
+          const sanitized = inputValue.trim();
 
           const filteredResult: EventTypeOption[] = [
             ...searchedResults.map((result) => {
@@ -172,7 +144,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
 
           filteredResult.push({
             id: 'CREATE',
-            title: inputStartWithCapital,
+            title: sanitized,
           });
           return inputValue ? filteredResult : options;
         }}
@@ -209,9 +181,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         options={allTypes}
         renderInput={(params) => (
           <>
-            <span ref={spanRef} className={classes.span}>
-              {text}
-            </span>
+            <InputSpan ref={spanRef}>{text}</InputSpan>
             <TextField
               {...params}
               InputLabelProps={{
@@ -278,6 +248,22 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
               )}
             </Box>
           );
+        }}
+        sx={{
+          '& fieldset': { border: 'none' },
+          '&:focus, &:hover': {
+            borderColor: lighten(oldTheme.palette.primary.main, 0.65),
+            paddingLeft: '10px',
+            paddingRight: 0,
+          },
+          border: '2px dotted transparent',
+          borderColor: showBorder
+            ? lighten(oldTheme.palette.primary.main, 0.65)
+            : '',
+          borderRadius: '10px',
+          paddingLeft: showBorder ? '10px' : 0,
+          paddingRight: showBorder ? 0 : '10px',
+          transition: 'all 0.2s ease',
         }}
         value={
           value

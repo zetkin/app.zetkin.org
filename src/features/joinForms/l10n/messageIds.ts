@@ -1,4 +1,4 @@
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.joinForms', {
   defaultTitle: m('Untitled form'),
@@ -52,5 +52,9 @@ export default makeMessages('feat.joinForms', {
     info: m<{ org: string }>(
       'Your submission has been verified and organizers in {org} will review it shortly.'
     ),
+  },
+  submitToken: {
+    copySubmitToken: m('Copy submit token'),
+    submitTokenCopied: m('Submit token copied.'),
   },
 });

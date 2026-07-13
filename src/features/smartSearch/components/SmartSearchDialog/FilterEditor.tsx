@@ -1,6 +1,8 @@
+import AllInSuborg from '../filters/AllInSubOrg';
+import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
-import CampaignParticipation from '../filters/CampaignParticipation';
+import ProjectParticipation from '../filters/ProjectParticipation';
 import EmailBlacklist from '../filters/EmailBlacklist';
 import EmailClick from '../filters/EmailClick';
 import EmailHistory from '../filters/EmailHistory';
@@ -18,6 +20,7 @@ import SurveyResponse from '../filters/SurveyResponse';
 import SurveySubmission from '../filters/SurveySubmission';
 import Task from '../filters/Task';
 import User from '../filters/User';
+import Official from '../filters/Official';
 import {
   AnyFilterConfig,
   FILTER_TYPE,
@@ -25,6 +28,7 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+import EventParticipation from '../filters/EventParticipation';
 
 interface FilterEditorProps {
   onCancelSubmitFilter: () => void;
@@ -41,6 +45,20 @@ const FilterEditor = ({
 }: FilterEditorProps): JSX.Element => {
   return (
     <>
+      {filter.type == FILTER_TYPE.ALL && (
+        <AllInSuborg
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type == FILTER_TYPE.AREA && (
+        <Area
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
       {filter.type === FILTER_TYPE.CALL_BLOCKED && (
         <CallBlocked
           filter={filter}
@@ -55,8 +73,8 @@ const FilterEditor = ({
           onSubmit={onSubmitFilter}
         />
       )}
-      {filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && (
-        <CampaignParticipation
+      {filter.type === FILTER_TYPE.PROJECT_PARTICIPATION && (
+        <ProjectParticipation
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
@@ -85,6 +103,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.MOST_ACTIVE && (
         <MostActive
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.EVENT_PARTICIPATION && (
+        <EventParticipation
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
@@ -162,6 +187,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.USER && (
         <User
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.OFFICIAL && (
+        <Official
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

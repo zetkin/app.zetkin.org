@@ -1,18 +1,17 @@
-import { AreaAssigneeInfo, ZetkinAreaAssignmentSession } from '../types';
+import { AreaAssigneeInfo, ZetkinAreaAssignee } from '../types';
 
-const getAreaAssignees = (sessions: ZetkinAreaAssignmentSession[]) => {
+const getAreaAssignees = (sessions: ZetkinAreaAssignee[]) => {
   const sessionsByPersonId: Record<number, AreaAssigneeInfo> = {};
 
   sessions.forEach((session) => {
-    if (session.assignee && session.assignee.id) {
-      if (!sessionsByPersonId[session.assignee.id]) {
-        sessionsByPersonId[session.assignee.id] = {
-          id: session.assignee.id,
-          person: session.assignee,
+    if (session.user_id) {
+      if (!sessionsByPersonId[session.user_id]) {
+        sessionsByPersonId[session.user_id] = {
+          id: session.user_id,
           sessions: [session],
         };
       } else {
-        sessionsByPersonId[session.assignee.id].sessions.push(session);
+        sessionsByPersonId[session.user_id].sessions.push(session);
       }
     }
   });

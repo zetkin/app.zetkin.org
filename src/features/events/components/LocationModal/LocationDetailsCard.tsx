@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import {
   Box,
   Button,
@@ -20,13 +19,6 @@ import ZUIPreviewableInput, {
 } from 'zui/ZUIPreviewableInput';
 import oldTheme from 'theme';
 
-const useStyles = makeStyles(() => ({
-  icon: {
-    color: oldTheme.palette.grey[400],
-    fontSize: '8rem',
-  },
-}));
-
 interface LocationDetailsCardProps {
   onClose: () => void;
   onMove: () => void;
@@ -44,7 +36,6 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   orgId,
   relatedEvents,
 }) => {
-  const classes = useStyles();
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(location.title);
   const [description, setDescription] = useState(location.info_text);
@@ -111,8 +102,8 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
               renderInput={(props) => (
                 <TextField
                   fullWidth
-                  inputProps={props}
                   onChange={(ev) => setTitle(ev.target.value)}
+                  slotProps={{ htmlInput: props }}
                   sx={{ marginBottom: 2 }}
                   value={title}
                 />
@@ -148,11 +139,11 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
             renderInput={(props) => (
               <TextField
                 fullWidth
-                inputProps={props}
                 inputRef={handleDescriptionTextAreaRef}
                 maxRows={4}
                 multiline
                 onChange={(ev) => setDescription(ev.target.value)}
+                slotProps={{ htmlInput: props }}
                 sx={{ marginTop: 2 }}
                 value={description}
               />
@@ -204,7 +195,9 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
             height="100"
             justifyContent="center"
           >
-            <EventOutlined className={classes.icon} />
+            <EventOutlined
+              sx={{ color: oldTheme.palette.grey[400], fontSize: '8rem' }}
+            />
             <Typography color="secondary">
               {messages.locationModal.noRelatedEvents()}
             </Typography>

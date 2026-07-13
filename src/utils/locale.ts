@@ -5,12 +5,12 @@ import { NextApiRequest } from 'next';
 import path from 'path';
 import yaml from 'yaml';
 
+import { SUPPORTED_LANGUAGES, SupportedLanguage } from 'core/i18n/languages';
+
 export type MessageList = Record<string, string>;
 type MessageDB = Record<string, MessageList>;
 
 let MESSAGES: MessageDB | null = null;
-
-export type SupportedLanguage = 'en' | 'sv' | 'de' | 'dk' | 'nn';
 
 function flattenObject(
   obj: Record<string, unknown>,
@@ -45,7 +45,7 @@ async function loadMessages(): Promise<MessageDB> {
   const basePath = path.resolve('./src/locale');
   const messages: MessageDB = {};
 
-  for await (const fullPath of findYMLFiles('./src')) {
+  for await (const fullPath of findYMLFiles(basePath)) {
     const localPath = fullPath.replace(basePath, '');
     const pathElems = localPath.split(path.sep).filter((elem) => elem.length);
     const fileName = pathElems.pop();
@@ -53,7 +53,7 @@ async function loadMessages(): Promise<MessageDB> {
       const dotPath = pathElems.join('.');
       const lang = fileName.replace('.yml', '');
 
-      const content = await fs.readFile(fullPath, 'utf8');
+      const content = await fs.readFile(fullPath || '', 'utf8');
       const data = yaml.parse(content);
       const flattened = flattenObject(data, dotPath);
 
@@ -67,7 +67,7 @@ async function loadMessages(): Promise<MessageDB> {
   // Fall back to English for any strings that is missing from other languages
   Object.keys(messages).forEach((lang) => {
     if (lang !== 'en') {
-      const messagesWithFallbacks: MessageList = {};
+      const messagesWithFallbacks: MessageList = { ...messages[lang] };
       Object.keys(messages.en).forEach((id) => {
         const val = messages[lang][id];
         messagesWithFallbacks[id] = val || messages.en[id];
@@ -113,6 +113,6 @@ export const getBrowserLanguage = (
   } else {
     negotiator = new Negotiator(req);
   }
-  const languages = negotiator.languages(['en', 'nn', 'da', 'de', 'sv']);
+  const languages = negotiator.languages(SUPPORTED_LANGUAGES.concat());
   return languages.length ? (languages[0] as SupportedLanguage) : 'en';
 };

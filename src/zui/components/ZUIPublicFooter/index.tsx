@@ -18,8 +18,9 @@ const ZUIPublicFooter: FC = () => {
       component="footer"
       display="flex"
       flexDirection="column"
+      mt={2}
       mx={1}
-      my={2}
+      pb={2}
       sx={{ opacity: 0.75 }}
     >
       <ZUILogo />

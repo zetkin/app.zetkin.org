@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import ZUIDivider from '../ZUIDivider';
 import { ZUIOrientation } from '../types';
@@ -8,7 +8,7 @@ type SubSectionBase = {
   /**
    * The content of the sub section.
    */
-  renderContent: () => JSX.Element;
+  renderContent: () => ReactNode;
 
   /**
    * The subtitle of the sub section.
@@ -44,6 +44,18 @@ type SubSectionType =
 
 type SectionBase = {
   /**
+   * If the section should have rounded gray borders.
+   * Defaults to "true".
+   */
+  borders?: boolean;
+
+  /**
+   * If the section should grow to the height of its parent.
+   * Defaults to "false".
+   */
+  fullHeight?: boolean;
+
+  /**
    * The subtitle of the section.
    */
   subtitle?: string;
@@ -58,7 +70,7 @@ type SectionWithContent = SectionBase & {
   /**
    * A function that returns an element to be rendered as the content of the section.
    */
-  renderContent: () => JSX.Element;
+  renderContent: () => ReactNode;
 };
 
 type SectionWithSubSections = SectionBase & {
@@ -201,7 +213,7 @@ const SubSection: FC<{ subSection: SubSectionType }> = ({ subSection }) => {
 };
 
 const ZUISection: FC<SectionProps> = (props) => {
-  const { title, subtitle } = props;
+  const { title, subtitle, fullHeight = false, borders = true } = props;
 
   const hasFullWidthHeaderContent = isSectionWithFullWidthHeaderContent(props);
   const hasRightHeaderContent = isSectionWithRightHeaderContent(props);
@@ -215,10 +227,14 @@ const ZUISection: FC<SectionProps> = (props) => {
 
   return (
     <Box
+      border={2}
       sx={(theme) => ({
         backgroundColor: theme.palette.common.white,
-        border: `0.063rem solid ${theme.palette.dividers.main}`,
-        borderRadius: '0.25rem',
+        border: borders ? `0.063rem solid ${theme.palette.dividers.main}` : '',
+        borderRadius: borders ? '0.25rem' : '',
+        display: 'flex',
+        flexDirection: 'column',
+        height: fullHeight ? '100%' : 'auto',
         padding: !hasSubSections ? '1.25rem' : '',
       })}
     >
@@ -321,6 +337,7 @@ const ZUISection: FC<SectionProps> = (props) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
+            height: fullHeight ? '100%' : '',
             width: '100%',
           }}
         >

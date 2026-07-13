@@ -11,20 +11,22 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const lang = getBrowserLanguage(headers().get('accept-language') || '');
-  const messages = await getMessages(lang);
-
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
   let user: ZetkinUser | null;
+
   try {
     user = await apiClient.get<ZetkinUser>('/api/users/me');
   } catch (e) {
     user = null;
   }
+
+  const lang =
+    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
+  const messages = await getMessages(lang);
 
   return (
     <html lang="en">
@@ -33,10 +35,16 @@ export default async function RootLayout({
           <ClientContext
             envVars={{
               FEAT_AREAS: process.env.FEAT_AREAS,
+              FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
+              FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
+              FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
               FEAT_TASKS: process.env.FEAT_TASKS,
+              FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
               INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
               INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+              MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+              TILESERVER: process.env.TILESERVER,
               ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
               ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
               ZETKIN_PRIVACY_POLICY_LINK:
