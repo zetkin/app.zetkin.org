@@ -2,18 +2,28 @@ import { Box, Fade, Modal, Slide } from '@mui/material';
 import { FC, ReactNode, useEffect, useRef } from 'react';
 
 import ModalBackground from '../ZUIModal/ModalBackground';
+import { usePreventKeyboardPropagation } from '../ZUIModal/usePreventKeyboardPropagation';
 
 type Props = {
+  allowPropagation?: boolean;
   children: ReactNode;
   onClose?: () => void;
   open: boolean;
 };
 
-const Drawer: FC<Props> = ({ children, onClose, open }) => {
+const Drawer: FC<Props> = ({
+  allowPropagation = false,
+  children,
+  onClose,
+  open,
+}) => {
   const seed = useRef(0);
   useEffect(() => {
     seed.current = Math.random();
   }, [open]);
+
+  const drawerRef = usePreventKeyboardPropagation(open, allowPropagation);
+
   return (
     <Modal
       disableRestoreFocus
@@ -24,6 +34,7 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
       <>
         <Slide direction="up" in={open} timeout={300}>
           <Box
+            ref={drawerRef}
             sx={{
               backgroundColor: 'white',
               bottom: 0,

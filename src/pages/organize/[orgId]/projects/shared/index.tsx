@@ -2,11 +2,11 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Suspense } from 'react';
 
-import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
-import messageIds from 'features/campaigns/l10n/messageIds';
+import ActivitiesOverview from 'features/projects/components/ActivitiesOverview';
+import messageIds from 'features/projects/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SharedActivitiesLayout from 'features/campaigns/layout/SharedActivitiesLayout';
+import SharedActivitiesLayout from 'features/projects/layout/SharedActivitiesLayout';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 

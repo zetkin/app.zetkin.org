@@ -98,16 +98,16 @@ async function fetchElements(
         label: `${person.data.first_name} ${person.data.last_name}`,
       },
     ];
-  } else if (fieldName === 'campId') {
+  } else if (fieldName === 'projectId') {
     // check if the value is a numeric ID, as `fieldValue` could also be passed as 'standalone' or 'shared'
     if (isInteger(fieldValue)) {
-      const campaign = await apiFetch(
+      const project = await apiFetch(
         `/orgs/${orgId}/campaigns/${fieldValue}`
       ).then((res) => res.json());
       return [
         {
           href: basePath + '/' + fieldValue,
-          label: campaign.data.title,
+          label: project.data.title,
         },
       ];
     }
@@ -216,6 +216,13 @@ async function fetchElements(
       {
         href: basePath + '/' + fieldValue,
         label: email.data.title,
+      },
+    ];
+  } else if (fieldName == 'themeId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: `Theme ${fieldValue}`,
       },
     ];
   }

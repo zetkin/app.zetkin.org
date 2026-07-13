@@ -36,6 +36,8 @@ import { getSurveyResponseStatsDef } from 'features/surveys/rpc/getSurveyRespons
 import { getPublicOrganizationsDef } from 'features/public/rpc/organizations';
 import { addParticipantsDef } from 'features/events/rpc/addParticipants';
 import { getAutoLinkableSubmissionsDef } from 'features/surveys/rpc/getAutoLinkableSubmissions';
+import { getRootOrganizationDef } from 'features/organizations/rpc/getRootOrganization';
+import { createEmailFromEventParticipantsDef } from 'features/events/rpc/createEmailFromEventParticipants';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -51,6 +53,7 @@ export function createRPCRouter() {
   rpcRouter.register(surveyToListDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);
+  rpcRouter.register(createEmailFromEventParticipantsDef);
   rpcRouter.register(getEventStatsDef);
   rpcRouter.register(getPrevEventDayDef);
   rpcRouter.register(getNextEventDayDef);
@@ -77,6 +80,7 @@ export function createRPCRouter() {
   rpcRouter.register(loadPersonFieldsDef);
   rpcRouter.register(getPublicOrganizationsDef);
   rpcRouter.register(addParticipantsDef);
+  rpcRouter.register(getRootOrganizationDef);
 
   return rpcRouter;
 }

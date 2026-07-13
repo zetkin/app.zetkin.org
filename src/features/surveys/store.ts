@@ -18,7 +18,7 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats';
+import { SurveyResponseStats } from 'features/surveys/types';
 import { AutoLinkableSubmissions } from 'features/surveys/rpc/getAutoLinkableSubmissions';
 
 export interface SurveysStoreSlice {
@@ -32,7 +32,7 @@ export interface SurveysStoreSlice {
   submissionList: RemoteList<ZetkinSurveySubmission>;
   submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
-  surveyIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
+  surveyIdsByProjectId: Record<number, RemoteList<{ id: string | number }>>;
   surveyList: RemoteList<ZetkinSurvey>;
   surveysWithElementsList: RemoteList<ZetkinSurveyExtended>;
 }
@@ -45,7 +45,7 @@ const initialState: SurveysStoreSlice = {
   statsBySurveyId: {},
   submissionList: remoteList(),
   submissionsBySurveyId: {},
-  surveyIdsByCampaignId: {},
+  surveyIdsByProjectId: {},
   surveyList: remoteList(),
   surveysWithElementsList: remoteList(),
 };
@@ -100,23 +100,7 @@ const surveysSlice = createSlice({
         new Date().toISOString();
       state.autoLinkableSubmissionsBySurveyId[surveyId].isStale = false;
     },
-    campaignSurveyIdsLoad: (state, action: PayloadAction<number>) => {
-      const campaignId = action.payload;
-      if (!state.surveyIdsByCampaignId[campaignId]) {
-        state.surveyIdsByCampaignId[campaignId] = remoteList();
-      }
-      state.surveyIdsByCampaignId[campaignId].isLoading = true;
-    },
-    campaignSurveyIdsLoaded: (
-      state,
-      action: PayloadAction<[number, { id: string | number }[]]>
-    ) => {
-      const [campaignId, surveyIds] = action.payload;
-      const timestamp = new Date().toISOString();
 
-      state.surveyIdsByCampaignId[campaignId] = remoteList(surveyIds);
-      state.surveyIdsByCampaignId[campaignId].loaded = timestamp;
-    },
     elementAdded: (
       state,
       action: PayloadAction<[number, ZetkinSurveyElement]>
@@ -273,6 +257,23 @@ const surveysSlice = createSlice({
         new Date().toISOString();
       state.extendedSurveyBySurveyId[surveyId].isStale = false;
     },
+    projectSurveyIdsLoad: (state, action: PayloadAction<number>) => {
+      const projectId = action.payload;
+      if (!state.surveyIdsByProjectId[projectId]) {
+        state.surveyIdsByProjectId[projectId] = remoteList();
+      }
+      state.surveyIdsByProjectId[projectId].isLoading = true;
+    },
+    projectSurveyIdsLoaded: (
+      state,
+      action: PayloadAction<[number, { id: string | number }[]]>
+    ) => {
+      const [projectId, surveyIds] = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.surveyIdsByProjectId[projectId] = remoteList(surveyIds);
+      state.surveyIdsByProjectId[projectId].loaded = timestamp;
+    },
     responseStatsError: (state, action: PayloadAction<[number, unknown]>) => {
       const [surveyId, error] = action.payload;
       if (!state.responseStatsBySurveyId[surveyId]) {
@@ -346,10 +347,10 @@ const surveysSlice = createSlice({
       state.elementsBySurveyId[survey.id] = remoteList();
 
       if (survey.campaign) {
-        if (!state.surveyIdsByCampaignId[survey.campaign.id]) {
-          state.surveyIdsByCampaignId[survey.campaign.id] = remoteList();
+        if (!state.surveyIdsByProjectId[survey.campaign.id]) {
+          state.surveyIdsByProjectId[survey.campaign.id] = remoteList();
         }
-        state.surveyIdsByCampaignId[survey.campaign.id].items.push(
+        state.surveyIdsByProjectId[survey.campaign.id].items.push(
           remoteItem(survey.id)
         );
       }
@@ -536,8 +537,8 @@ export default surveysSlice;
 export const {
   autoLinkableSubmissionsLoad,
   autoLinkableSubmissionsLoaded,
-  campaignSurveyIdsLoad,
-  campaignSurveyIdsLoaded,
+  projectSurveyIdsLoad,
+  projectSurveyIdsLoaded,
   elementAdded,
   elementDeleted,
   elementOptionAdded,

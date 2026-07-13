@@ -14,7 +14,7 @@ import {
 } from '../../features/views/components/types';
 import { Latitude, Longitude } from 'features/areas/types';
 
-export interface ZetkinCampaign {
+export interface ZetkinProject {
   archived: boolean;
   color: string;
   info_text: string;
@@ -29,8 +29,8 @@ export interface ZetkinCampaign {
   published: boolean;
 }
 
-export interface ZetkinCampaignPostBody extends Partial<
-  Omit<ZetkinCampaign, 'organization' | 'manager'>
+export interface ZetkinProjectPostBody extends Partial<
+  Omit<ZetkinProject, 'organization' | 'manager'>
 > {
   title: string;
   manager_id?: number;
@@ -121,8 +121,9 @@ export interface ZetkinFile {
 }
 
 export interface ZetkinOrganizerAction {
-  assigment: {
+  assignment: {
     id: number;
+    organization_id: number;
     title: string;
   };
   caller: {
@@ -131,9 +132,9 @@ export interface ZetkinOrganizerAction {
     last_name: string;
   };
   id: number;
-  message_to_organizer: string;
+  message_to_organizer: string | null;
   organizer_action_needed: boolean;
-  organizer_action_taken: boolean;
+  organizer_action_taken: boolean | null;
   update_time: string;
 }
 

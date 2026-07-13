@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { PersonOrganization } from './people';
 import { flattenTree, nestByParentId } from './organizations';
 

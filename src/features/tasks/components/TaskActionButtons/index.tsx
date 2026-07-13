@@ -14,7 +14,7 @@ import { useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 import { ZetkinTaskRequestBody } from '../types';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../../projects/components/ChangeProjectDialog';
 
 enum TASK_MENU_ITEMS {
   EDIT_TASK = 'editTask',
@@ -53,15 +53,15 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
     );
   };
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedTask = await updateTask({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedTask = await updateTask({ campaign_id: projectId });
     await router.push(
-      `/organize/${task.organization.id}/projects/${campaignId}/tasks/${task.id}`
+      `/organize/${task.organization.id}/projects/${projectId}/tasks/${task.id}`
     );
     showSnackbar(
       'success',
-      messages.taskChangeCampaignDialog.success({
-        campaignTitle: updatedTask.campaign.title,
+      messages.taskChangeProjectDialog.success({
+        projectTitle: updatedTask.campaign.title,
         taskTitle: task.title,
       })
     );
@@ -115,12 +115,12 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
           task={task}
         />
       </ZUIDialog>
-      <ChangeCampaignDialog
-        errorMessage={messages.taskChangeCampaignDialog.error()}
-        onCampaignSelected={handleOnCampaignSelected}
+      <ChangeProjectDialog
+        errorMessage={messages.taskChangeProjectDialog.error()}
         onClose={() => setIsMoveDialogOpen(false)}
+        onProjectSelected={handleOnProjectSelected}
         open={isMoveDialogOpen}
-        title={messages.taskChangeCampaignDialog.title()}
+        title={messages.taskChangeProjectDialog.title()}
       />
     </Box>
   );

@@ -6,7 +6,7 @@ import {
   MailOutline,
 } from '@mui/icons-material';
 
-import messageIds from 'features/campaigns/l10n/messageIds';
+import messageIds from 'features/projects/l10n/messageIds';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';
@@ -23,8 +23,12 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
   orgId,
 }) => {
   const event = useEvent(orgId, eventId)?.data;
-  const { verifiedParticipantsFuture, numSignedUpParticipants } =
-    useEventParticipants(orgId, eventId);
+  const {
+    verifiedParticipantsFuture,
+    numSignedUpParticipants,
+    numRemindedParticipants,
+    numAvailParticipants,
+  } = useEventParticipants(orgId, eventId);
 
   if (!event) {
     return null;
@@ -34,11 +38,8 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
     <EventWarningIconsSansModel
       compact={compact}
       hasContact={!!event.contact}
-      numParticipants={verifiedParticipantsFuture.data?.length ?? 0}
-      numRemindersSent={
-        verifiedParticipantsFuture.data?.filter((p) => !!p.reminder_sent)
-          .length ?? 0
-      }
+      numParticipants={numAvailParticipants}
+      numRemindersSent={numRemindedParticipants}
       numSignups={numSignedUpParticipants}
       participantsLoading={!verifiedParticipantsFuture.data}
     />

@@ -39,7 +39,7 @@ const BrowserDragLayer: FC = () => {
       <Box
         sx={{
           left: 0,
-          pointerEvens: 'none',
+          pointerEvents: 'none',
           position: 'fixed',
           top: 0,
           zIndex: 9999,
@@ -61,7 +61,7 @@ const BrowserDragLayer: FC = () => {
               ? '0 6px 6px rgba(0,0,0,0.2)'
               : '0 14px 14px rgba(0,0,0,0.2)',
             left: currentOffset.x,
-            padding: 10,
+            padding: 1,
             pointerEvents: 'none',
             position: 'absolute',
             top: currentOffset.y,
@@ -74,7 +74,7 @@ const BrowserDragLayer: FC = () => {
         >
           <Box display="flex" gap={2}>
             <BrowserItemIcon item={item} />
-            {item.title}
+            {'title' in item && item.title}
           </Box>
         </Paper>
       </Box>

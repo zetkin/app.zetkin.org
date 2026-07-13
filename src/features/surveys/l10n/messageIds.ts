@@ -154,6 +154,10 @@ export default makeMessages('feat.surveys', {
       ),
     },
     textFields: {
+      copyResponse: {
+        copy: m('Copy to clipboard'),
+        wasCopied: m('Copied!'),
+      },
       subheader: m<{
         answerCount: number;
         totalUniqueWordCount: number;
@@ -243,10 +247,10 @@ export default makeMessages('feat.surveys', {
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
-  surveyChangeCampaignDialog: {
+  surveyChangeProjectDialog: {
     error: m('Error: Could not move the survey to the selected project'),
-    success: m<{ campaignTitle: string; surveyTitle: string }>(
-      'Survey "{surveyTitle}" moved to "{campaignTitle}"'
+    success: m<{ projectTitle: string; surveyTitle: string }>(
+      'Survey "{surveyTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move survey'),
   },
@@ -256,6 +260,8 @@ export default makeMessages('feat.surveys', {
     description: m(
       'The person you have just linked does not have an email address while the survey response does. Would you like to add it the person?'
     ),
+    new: m('New'),
+    old: m('Old'),
     title: m('Add email address'),
   },
   surveyDialogDifferentEmail: {

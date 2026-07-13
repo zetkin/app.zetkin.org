@@ -26,26 +26,27 @@ test.describe('View detail page', () => {
   });
 
   test('allows title to be changed', async ({ page, appUri, moxy }) => {
-    moxy.setZetkinApiMock('/v1/orgs/1/people/views/1', 'patch');
+    const { log: patchLog } = moxy.setZetkinApiMock(
+      '/orgs/1/people/views/1',
+      'patch'
+    );
 
-    const inputSelector = 'data-testid=page-title >> input';
+    const input = page.locator('data-testid=page-title').locator('input');
 
     // Click to edit, fill and submit change
     await page.goto(appUri + '/organize/1/people/lists/1');
-    await page.click(inputSelector);
-    await page.fill(inputSelector, 'Friends of Zetkin');
-    await Promise.all([
-      page.waitForResponse('**/orgs/1/people/views/1'),
-      page.keyboard.press('Enter'),
-    ]);
 
-    // Check body of request
-    const titleUpdateRequest = moxy
-      .log()
-      .find(
-        (mock) =>
-          mock.method === 'PATCH' && mock.path === '/v1/orgs/1/people/views/1'
-      );
-    expect(titleUpdateRequest?.data).toEqual({ title: 'Friends of Zetkin' });
+    await expect(input).toBeVisible();
+
+    await input.click();
+    await input.fill('Friends of Zetkin');
+    await input.press('Enter');
+    await input.blur();
+
+    await expect.poll(() => patchLog().length).toBe(1);
+
+    expect(patchLog()[0].data).toEqual({
+      title: 'Friends of Zetkin',
+    });
   });
 });

@@ -1,10 +1,10 @@
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
   ELEMENT_TYPE,
@@ -21,7 +21,7 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 const localMessageIds = messageIds.filters.surveyResponse;
@@ -50,11 +50,9 @@ const SurveyResponse = ({
   onCancel,
   filter: initialFilter,
 }: SurveyResponseProps): JSX.Element => {
+  const messages = useMessages(localMessageIds);
   const { orgId } = useNumericRouteParams();
   const surveys = useSurveysWithElements(orgId).data || [];
-  const surveysSorted = surveys.sort((s1, s2) => {
-    return s1.title.localeCompare(s2.title);
-  });
 
   const getSurveyIdfromQuestionId = (questionId?: number) => {
     return questionId
@@ -88,7 +86,7 @@ const SurveyResponse = ({
       setInternalConfig({
         operator: internalConfig.operator || MATCH_OPERATORS.IN,
         question: internalConfig.question,
-        survey: internalConfig.survey || surveys[0].id,
+        survey: internalConfig.survey,
         value: internalConfig.value || '',
       });
     }
@@ -104,9 +102,6 @@ const SurveyResponse = ({
           e.type === ELEMENT_TYPE.QUESTION &&
           e.question.response_type === RESPONSE_TYPE.TEXT
       ) as ZetkinSurveyTextQuestionElement[]) || [];
-  const validQuestionsSorted = validQuestions.sort((vq1, vq2) => {
-    return vq1.question.question.localeCompare(vq2.question.question);
-  });
 
   //submit if there is valid survey, valid questions and search field filled in
   const submittable =
@@ -220,93 +215,38 @@ const SurveyResponse = ({
               </StyledSelect>
             ),
             questionSelect: (
-              <StyledSelect
-                disabled={!surveys.length}
-                onChange={(e) => handleQuestionSelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.questionSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.questionSelect.question}
-                        values={{
-                          question: truncateOnMiddle(
-                            validQuestions.find((q) => q.id === value)?.question
-                              .question ?? '',
-                            30
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.questionSelect.any(),
                   },
-                }}
+                  ...validQuestions.map((q) => ({
+                    id: q.id,
+                    label: q.question.question,
+                  })),
+                ]}
+                onChange={(e) => handleQuestionSelectChange(e.target.value)}
                 value={internalConfig.question || DEFAULT_VALUE}
-              >
-                {!validQuestions.length && (
-                  <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id={localMessageIds.questionSelect.none} />
-                  </MenuItem>
-                )}
-                {validQuestions.length && (
-                  <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id={localMessageIds.questionSelect.any} />
-                  </MenuItem>
-                )}
-                {validQuestionsSorted.map((q) => (
-                  <MenuItem key={q.id} value={q.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={
-                        q.question.question.length >= 40
-                          ? q.question.question
-                          : ''
-                      }
-                    >
-                      <Box>{truncateOnMiddle(q.question.question, 40)}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             surveySelect: (
-              <StyledSelect
-                onChange={(e) => handleSurveySelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.surveySelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.surveySelect.survey}
-                        values={{
-                          surveyTitle: truncateOnMiddle(
-                            surveys.find((s) => s.id === value)?.title ?? '',
-                            30
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.surveySelect.any(),
                   },
-                }}
+                  ...surveys.map((s) => ({
+                    id: s.id,
+                    label: s.title,
+                  })),
+                ]}
+                onChange={(e) => handleSurveySelectChange(e.target.value)}
                 value={internalConfig.survey || DEFAULT_VALUE}
-              >
-                {!surveys.length && (
-                  <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id={localMessageIds.surveySelect.none} />
-                  </MenuItem>
-                )}
-                {surveysSorted.map((s) => (
-                  <MenuItem key={s.id} value={s.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={s.title.length >= 40 ? s.title : ''}
-                    >
-                      <Box>{truncateOnMiddle(s.title, 40)}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
           }}
         />
