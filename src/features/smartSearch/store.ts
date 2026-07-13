@@ -18,16 +18,16 @@ export type EphemeralQueryStats = {
 };
 
 export interface smartSearchStoreSlice {
-  eventsByEventId: Record<string, RemoteItem<ZetkinEvent>>;
   eventsByOrgId: Record<string, RemoteList<ZetkinEvent>>;
   queryList: RemoteList<ZetkinQuery>;
+  recursiveEventsByOrgId: Record<string, RemoteList<ZetkinEvent>>;
   statsByFilterSpec: Record<string, RemoteItem<EphemeralQueryStats>>;
 }
 
 const initialState: smartSearchStoreSlice = {
-  eventsByEventId: {},
   eventsByOrgId: {},
   queryList: remoteList(),
+  recursiveEventsByOrgId: {},
   statsByFilterSpec: {},
 };
 
@@ -35,36 +35,26 @@ const smartSearchSlice = createSlice({
   initialState: initialState,
   name: 'smartSearch',
   reducers: {
-    eventsByEventIdLoad: (state, action: PayloadAction<number>) => {
-      const eventId = action.payload;
-      if (!state.eventsByEventId[eventId]) {
-        state.eventsByEventId[eventId] = remoteItem(eventId);
+    eventsByOrgLoad: (state, action: PayloadAction<[number, boolean]>) => {
+      const [orgId, recursive] = action.payload;
+      const eventsState = recursive
+        ? state.recursiveEventsByOrgId
+        : state.eventsByOrgId;
+      if (!eventsState[orgId]) {
+        eventsState[orgId] = remoteList();
       }
-      state.eventsByEventId[eventId].isLoading = true;
-    },
-    eventsByEventIdLoaded: (
-      state,
-      action: PayloadAction<[number, ZetkinEvent | null]>
-    ) => {
-      const [eventId, event] = action.payload;
-      state.eventsByEventId[eventId] = remoteItem(eventId);
-      state.eventsByEventId[eventId].data = event;
-      state.eventsByEventId[eventId].loaded = new Date().toISOString();
-    },
-    eventsByOrgLoad: (state, action: PayloadAction<number>) => {
-      const orgId = action.payload;
-      if (!state.eventsByOrgId[orgId]) {
-        state.eventsByOrgId[orgId] = remoteList();
-      }
-      state.eventsByOrgId[orgId].isLoading = true;
+      eventsState[orgId].isLoading = true;
     },
     eventsByOrgLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinEvent[]]>
+      action: PayloadAction<[number, ZetkinEvent[], boolean]>
     ) => {
-      const [orgId, events] = action.payload;
-      state.eventsByOrgId[orgId] = remoteList(events);
-      state.eventsByOrgId[orgId].loaded = new Date().toISOString();
+      const [orgId, events, recursive] = action.payload;
+      const eventsState = recursive
+        ? state.recursiveEventsByOrgId
+        : state.eventsByOrgId;
+      eventsState[orgId] = remoteList(events);
+      eventsState[orgId].loaded = new Date().toISOString();
     },
     queriesLoad: (state) => {
       state.queryList.isLoading = true;
@@ -97,8 +87,6 @@ const smartSearchSlice = createSlice({
 
 export default smartSearchSlice;
 export const {
-  eventsByEventIdLoad,
-  eventsByEventIdLoaded,
   eventsByOrgLoad,
   eventsByOrgLoaded,
   queriesLoad,

@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo } from 'react';
 import { Box, MenuItem, Skeleton, Typography } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
@@ -15,7 +15,7 @@ import {
 } from 'features/smartSearch/components/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import useEventsByOrgs from 'features/smartSearch/hooks/useEventsByOrgs';
+import useOrgEvents from 'features/smartSearch/hooks/useOrgEvents';
 import eventsMessageIds from 'features/events/l10n/messageIds';
 import StyledAutocomplete, {
   AutocompleteItem,
@@ -59,8 +59,15 @@ const EventParticipation = ({
     orgId,
     filter.config.organizations || [orgId]
   );
+  const multiFilterActive = orgIds.length > 1;
+  const searchOrgId = orgIds.length === 1 ? orgIds[0] : orgId;
 
-  const events = useEventsByOrgs(orgIds);
+  const events = useOrgEvents(searchOrgId, multiFilterActive);
+  const orgIdSet = useMemo(() => new Set(orgIds), [orgIds]);
+  const scopedEvents = useMemo(
+    () => events?.data?.filter((ev) => orgIdSet.has(ev.organization.id)),
+    [events, orgIdSet]
+  );
 
   const eventsSorting = useCallback((item0: EventItem, item1: EventItem) => {
     return item1.time - item0.time;
@@ -70,19 +77,19 @@ const EventParticipation = ({
     if (
       events.isLoading ||
       events.error ||
-      !events.data ||
+      !scopedEvents ||
       !filter.config.action
     ) {
       return;
     }
 
-    if (!events.data.some((event) => event.id === filter.config.action)) {
+    if (!scopedEvents.some((event) => event.id === filter.config.action)) {
       setConfig({
         ...filter.config,
         action: undefined,
       });
     }
-  }, [events.data, events.error, events.isLoading, filter, setConfig]);
+  }, [scopedEvents, events.error, events.isLoading, filter, setConfig]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -179,7 +186,7 @@ const EventParticipation = ({
             eventSelect: (
               <StyledAutocomplete
                 items={
-                  events?.data?.map((event) => {
+                  scopedEvents?.map((event) => {
                     const title =
                       event.title ||
                       event.activity?.title ||
