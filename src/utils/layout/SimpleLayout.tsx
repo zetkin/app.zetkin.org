@@ -1,22 +1,10 @@
-import makeStyles from '@mui/styles/makeStyles';
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
 import Header from '../../zui/ZUIHeader';
 import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
-
-interface StyleProps {
-  noPad?: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  main: {
-    overflowX: 'hidden',
-    padding: ({ noPad }) => (noPad ? 0 : undefined),
-  },
-}));
 
 interface SimpleLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
@@ -30,7 +18,7 @@ interface SimpleLayoutProps {
   noPad?: boolean;
 }
 
-const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
+export const SimpleLayoutHeader: FunctionComponent<SimpleLayoutProps> = ({
   actionButtons,
   avatar,
   belowActionButtons,
@@ -42,41 +30,51 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
   title,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const classes = useStyles({ noPad });
 
   const onToggleCollapsed = fixedHeight
     ? (value: boolean) => setCollapsed(value)
     : undefined;
 
   return (
-    <DefaultLayout>
-      <Box
-        display={fixedHeight ? 'flex' : 'block'}
-        flexDirection="column"
-        height={fixedHeight ? 1 : 'auto'}
-      >
-        <Header
-          actionButtons={actionButtons}
-          avatar={avatar}
-          belowActionButtons={belowActionButtons}
-          collapsed={collapsed}
-          ellipsisMenuItems={ellipsisMenuItems}
-          onToggleCollapsed={onToggleCollapsed}
-          subtitle={subtitle}
-          title={title}
-        />
-        {/* Page Content */}
+    <Box
+      display={fixedHeight ? 'flex' : 'block'}
+      flexDirection="column"
+      height={fixedHeight ? 1 : 'auto'}
+    >
+      <Header
+        actionButtons={actionButtons}
+        avatar={avatar}
+        belowActionButtons={belowActionButtons}
+        collapsed={collapsed}
+        ellipsisMenuItems={ellipsisMenuItems}
+        onToggleCollapsed={onToggleCollapsed}
+        subtitle={subtitle}
+        title={title}
+      />
+      {/* Page Content */}
+      {children && (
         <Box
-          className={classes.main}
           component="main"
           flexGrow={1}
           minHeight={0}
           p={fixedHeight ? 0 : 3}
           position="relative"
+          sx={{
+            overflowX: 'hidden',
+            padding: noPad ? 0 : undefined,
+          }}
         >
           <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
         </Box>
-      </Box>
+      )}
+    </Box>
+  );
+};
+
+const SimpleLayout: FunctionComponent<SimpleLayoutProps> = (props) => {
+  return (
+    <DefaultLayout title={props.title}>
+      <SimpleLayoutHeader {...props} />
     </DefaultLayout>
   );
 };

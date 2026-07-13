@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIDateTime from '.';
 
 export default {
   component: ZUIDateTime,
-  title: 'Atoms/ZUIDateTime',
+  title: 'Other/ZUIDateTime',
 } as Meta<typeof ZUIDateTime>;
 
 const Template: StoryFn<typeof ZUIDateTime> = (args) => (

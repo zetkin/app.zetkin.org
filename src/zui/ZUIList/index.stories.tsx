@@ -1,11 +1,11 @@
 import { ListItem, ListItemText } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIList from '.';
 
 export default {
   component: ZUIList,
-  title: 'Atoms/ZUIList',
+  title: 'Other/ZUIList',
 } as Meta<typeof ZUIList>;
 
 const Template: StoryFn<typeof ZUIList> = (args) => (

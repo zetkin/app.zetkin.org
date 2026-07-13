@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.tags', {
   dialog: {
@@ -24,6 +24,15 @@ export default makeMessages('feat.tags', {
       text: m('Text values'),
     },
     updateTagButton: m('Update'),
+  },
+  groupDialog: {
+    deleteTitle: m<{ groupName: string }>('Delete "{groupName}"'),
+    deleteWarning: m(
+      'Are you sure you want to delete this group? Deleting a group cannot be undone. Tags in this group will not be deleted but remain unassigned.'
+    ),
+    editButton: m('Edit'),
+    editTitle: m('Edit group'),
+    titleLabel: m('Group name'),
   },
   manager: {
     addTag: m('Add tag'),

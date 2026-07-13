@@ -1,6 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { findOrAddItem, remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  remoteItemLoad,
+  remoteItemDeleted,
+  remoteItemUpdate,
+  remoteItemUpdated,
+  remoteList,
+  RemoteList,
+  remoteListLoad,
+  remoteListLoaded,
+} from 'utils/storeUtils';
 import { ZetkinJoinForm, ZetkinJoinSubmission } from './types';
 
 export interface JoinFormsStoreSlice {
@@ -19,74 +28,63 @@ const joinFormsSlice = createSlice({
   reducers: {
     joinFormCreated: (state, action: PayloadAction<ZetkinJoinForm>) => {
       const form = action.payload;
-      const item = findOrAddItem(state.formList, form.id);
-      item.loaded = new Date().toISOString();
-      item.data = form;
+      remoteItemUpdated(state.formList, form);
+    },
+    joinFormDeleted: (state, action: PayloadAction<number>) => {
+      const formId = action.payload;
+      remoteItemDeleted(state.formList, formId);
     },
     joinFormLoad: (state, action: PayloadAction<number>) => {
       const formId = action.payload;
-      const item = findOrAddItem(state.formList, formId);
-      item.isLoading = true;
+      remoteItemLoad(state.formList, formId);
     },
     joinFormLoaded: (state, action: PayloadAction<ZetkinJoinForm>) => {
       const form = action.payload;
-      const item = findOrAddItem(state.formList, form.id);
-      item.isLoading = false;
-      item.loaded = new Date().toISOString();
-      item.data = form;
+      remoteItemUpdated(state.formList, form);
     },
     joinFormUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [formId, mutating] = action.payload;
-      const item = findOrAddItem(state.formList, formId);
-      item.mutating = mutating;
+      remoteItemUpdate(state.formList, formId, mutating);
     },
     joinFormUpdated: (state, action: PayloadAction<ZetkinJoinForm>) => {
       const form = action.payload;
-      const item = findOrAddItem(state.formList, form.id);
-      item.data = form;
-      item.mutating = [];
-      item.loaded = new Date().toISOString();
+      remoteItemUpdated(state.formList, form);
     },
     joinFormsLoad: (state) => {
-      state.formList.isLoading = true;
+      state.formList = remoteListLoad(state.formList);
     },
     joinFormsLoaded: (state, action: PayloadAction<ZetkinJoinForm[]>) => {
-      state.formList = remoteList(action.payload);
-      state.formList.loaded = new Date().toISOString();
+      state.formList = remoteListLoaded(action.payload);
+    },
+    submissionDeleted: (state, action: PayloadAction<number>) => {
+      const submissionId = action.payload;
+      remoteItemDeleted(state.submissionList, submissionId);
     },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const submissionId = action.payload;
-      const item = findOrAddItem(state.submissionList, submissionId);
-      item.isLoading = true;
+      remoteItemLoad(state.submissionList, submissionId);
     },
     submissionLoaded: (state, action: PayloadAction<ZetkinJoinSubmission>) => {
       const submission = action.payload;
-      const item = findOrAddItem(state.submissionList, submission.id);
-      item.isLoading = false;
-      item.data = submission;
-      item.loaded = new Date().toISOString();
+      remoteItemUpdated(state.submissionList, submission);
     },
     submissionUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [submissionId, mutating] = action.payload;
-      const item = findOrAddItem(state.submissionList, submissionId);
-      item.mutating = mutating;
+      remoteItemUpdate(state.submissionList, submissionId, mutating);
     },
     submissionUpdated: (state, action: PayloadAction<ZetkinJoinSubmission>) => {
       const submission = action.payload;
-      const item = findOrAddItem(state.submissionList, submission.id);
-      item.mutating = [];
-      item.data = submission;
-      item.loaded = new Date().toISOString();
+      remoteItemUpdated(state.submissionList, submission);
     },
     submissionsLoad: (state) => {
-      state.submissionList.isLoading = true;
+      state.submissionList = remoteListLoad(state.submissionList);
     },
     submissionsLoaded: (
       state,
       action: PayloadAction<ZetkinJoinSubmission[]>
     ) => {
-      state.submissionList = remoteList(action.payload);
-      state.submissionList.loaded = new Date().toISOString();
+      const submissions = action.payload;
+      state.submissionList = remoteListLoaded(submissions);
     },
   },
 });
@@ -94,12 +92,14 @@ const joinFormsSlice = createSlice({
 export default joinFormsSlice;
 export const {
   joinFormCreated,
+  joinFormDeleted,
   joinFormLoad,
   joinFormLoaded,
   joinFormUpdate,
   joinFormUpdated,
   joinFormsLoad,
   joinFormsLoaded,
+  submissionDeleted,
   submissionLoad,
   submissionLoaded,
   submissionUpdate,

@@ -1,9 +1,12 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import mockRouter from 'next-router-mock';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import useModelsFromQueryString from './useModelsFromQueryString';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 
 describe('useModelsFromQueryString()', () => {
   describe('parser', () => {

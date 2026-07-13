@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUISuffixedNumber from '.';
 
 export default {
   component: ZUISuffixedNumber,
-  title: 'ZUISuffixedNumber',
+  title: 'Other/ZUISuffixedNumber',
 } as Meta<typeof ZUISuffixedNumber>;
 
 const Template: StoryFn<typeof ZUISuffixedNumber> = (args) => {

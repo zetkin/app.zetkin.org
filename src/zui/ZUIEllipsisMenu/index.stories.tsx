@@ -1,11 +1,11 @@
 import MovieIcon from '@mui/icons-material/Movie';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIEllipsisMenu from '.';
 
 export default {
   component: ZUIEllipsisMenu,
-  title: 'Atoms/ZUIEllipsisMenu',
+  title: 'Other/ZUIEllipsisMenu',
 } as Meta<typeof ZUIEllipsisMenu>;
 
 const Template: StoryFn<typeof ZUIEllipsisMenu> = (args) => (

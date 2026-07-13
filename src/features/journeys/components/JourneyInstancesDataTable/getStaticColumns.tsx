@@ -188,102 +188,6 @@ export const getStaticColumns = (
       },
     },
     {
-      field: 'subjects',
-      filterOperators: [
-        makeIncludesFilterOperator(
-          messages,
-          messages.instances.filters.personLabel(),
-          uniqueSubjects
-        ),
-        makeDoesNotIncludeFilterOperator(
-          messages,
-          messages.instances.filters.doesNotIncludeOperator(),
-          uniqueSubjects
-        ),
-        makeEmptyFilterOperator(messages),
-      ],
-      sortComparator: (value0, value1) => sortByName(value0, value1),
-      valueFormatter: (params) =>
-        getPeopleString(params.value as ZetkinPersonType[]),
-    },
-    {
-      field: 'created',
-      renderCell: (params) => (
-        <ZUIRelativeTime
-          convertToLocal
-          datetime={params.value as string}
-          forcePast
-        />
-      ),
-      type: 'date',
-      valueFormatter: (params) => new Date(params.value),
-    },
-    {
-      field: 'updated',
-      renderCell: (params) => (
-        <ZUIRelativeTime
-          convertToLocal
-          datetime={params.value as string}
-          forcePast
-        />
-      ),
-      type: 'date',
-      valueFormatter: (params) => new Date(params.value),
-    },
-    {
-      field: 'nextMilestoneTitle',
-      filterOperators: [
-        makeSelectFilterOperator(
-          messages.instances.filters.isOperator(),
-          'is',
-          messages.instances.filters.milestoneLabel(),
-          uniqueMilestones,
-          (item, params) =>
-            (
-              params.row as ZetkinJourneyInstance
-            ).next_milestone?.id.toString() === item.value
-        ),
-        makeSelectFilterOperator(
-          messages.instances.filters.isNotOperator(),
-          'isNot',
-          messages.instances.filters.milestoneLabel(),
-          uniqueMilestones,
-          (item, params) =>
-            (
-              params.row as ZetkinJourneyInstance
-            ).next_milestone?.id.toString() !== item.value
-        ),
-      ],
-      valueGetter: (params) =>
-        (params.row as ZetkinJourneyInstance).next_milestone?.title,
-    },
-    {
-      field: 'nextMilestoneDeadline',
-      renderCell: (params) =>
-        params.value ? (
-          <>
-            <ZUIRelativeTime datetime={params.value as string} />
-            &nbsp;(
-            <FormattedDate
-              day="numeric"
-              month="short"
-              value={params.value as string}
-            />
-            )
-          </>
-        ) : null,
-      type: 'date',
-      valueFormatter: (params) => new Date(params.value),
-      valueGetter: (params) =>
-        (params.row as ZetkinJourneyInstance).next_milestone?.deadline,
-    },
-    {
-      field: 'summary',
-    },
-    {
-      field: 'outcome',
-    },
-    {
       field: 'assignees',
       filterOperators: [
         makeIncludesFilterOperator(
@@ -311,8 +215,98 @@ export const getStaticColumns = (
           </ZUIPersonHoverCard>
         )),
       sortComparator: (value0, value1) => sortByName(value0, value1),
-      valueFormatter: (params) =>
-        getPeopleString(params.value as ZetkinPersonType[]),
+      valueFormatter: (value: ZetkinPersonType[]) => getPeopleString(value),
+    },
+    {
+      field: 'subjects',
+      filterOperators: [
+        makeIncludesFilterOperator(
+          messages,
+          messages.instances.filters.personLabel(),
+          uniqueSubjects
+        ),
+        makeDoesNotIncludeFilterOperator(
+          messages,
+          messages.instances.filters.doesNotIncludeOperator(),
+          uniqueSubjects
+        ),
+        makeEmptyFilterOperator(messages),
+      ],
+      sortComparator: (value0, value1) => sortByName(value0, value1),
+      valueFormatter: (value: ZetkinPersonType[]) => getPeopleString(value),
+    },
+    {
+      field: 'created',
+      renderCell: (params) => (
+        <ZUIRelativeTime
+          convertToLocal
+          datetime={params.value as string}
+          forcePast
+        />
+      ),
+      type: 'date',
+      valueFormatter: (value) => new Date(value),
+    },
+    {
+      field: 'updated',
+      renderCell: (params) => (
+        <ZUIRelativeTime
+          convertToLocal
+          datetime={params.value as string}
+          forcePast
+        />
+      ),
+      type: 'date',
+      valueFormatter: (value) => new Date(value),
+    },
+    {
+      field: 'nextMilestoneTitle',
+      filterOperators: [
+        makeSelectFilterOperator(
+          messages.instances.filters.isOperator(),
+          'is',
+          messages.instances.filters.milestoneLabel(),
+          uniqueMilestones,
+          (item, params) =>
+            (
+              params.row as ZetkinJourneyInstance
+            ).next_milestone?.id.toString() === item.value
+        ),
+        makeSelectFilterOperator(
+          messages.instances.filters.isNotOperator(),
+          'isNot',
+          messages.instances.filters.milestoneLabel(),
+          uniqueMilestones,
+          (item, params) =>
+            (
+              params.row as ZetkinJourneyInstance
+            ).next_milestone?.id.toString() !== item.value
+        ),
+      ],
+      valueGetter: (value, row: ZetkinJourneyInstance) =>
+        row.next_milestone?.title,
+    },
+    {
+      field: 'nextMilestoneDeadline',
+      renderCell: (params) =>
+        params.value ? (
+          <FormattedDate
+            day="numeric"
+            month="long"
+            value={params.value as string}
+            year="numeric"
+          />
+        ) : null,
+      type: 'date',
+      valueFormatter: (value) => new Date(value),
+      valueGetter: (value, row: ZetkinJourneyInstance) =>
+        row.next_milestone?.deadline,
+    },
+    {
+      field: 'summary',
+    },
+    {
+      field: 'outcome',
     },
   ];
 };

@@ -1,13 +1,16 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { Check } from '@mui/icons-material';
 import { forwardRef } from 'react';
 
-import messageIds from 'features/events/l10n/messageIds';
+import UnverifiedSignupsSection from 'features/events/components/UnverifiedSignupsSection';
+import { Msg, useMessages } from 'core/i18n';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
-import theme from 'theme';
-import useEventParticipants from '../hooks/useEventParticipants';
-import { useMessages } from 'core/i18n';
-import useParticipantStatus from '../hooks/useParticipantsStatus';
+import messageIds from 'features/events/l10n/messageIds';
+import oldTheme from 'theme';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import useEventParticipants from '../hooks/useEventParticipants';
+import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
+import useParticipantStatus from '../hooks/useParticipantsStatus';
 
 interface EventParticipantsListProps {
   data: ZetkinEvent;
@@ -25,22 +28,55 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
     cancelledParticipants,
     numAvailParticipants,
     numCancelledParticipants,
-    numSignedParticipants,
-    pendingSignUps,
+    numSignedUpParticipants,
+    respondentsFuture,
+    unverifiedSignedUpParticipants,
+    verifiedSignedUpParticipants,
   } = useEventParticipants(orgId, data.id);
+  const { addParticipant } = useEventParticipantsMutations(orgId, data.id);
   const participantStatus = useParticipantStatus(orgId, data.id);
+  const respondents = respondentsFuture.data;
 
   return (
     <Box ref={ref}>
-      {numSignedParticipants > 0 && (
-        <ParticipantListSection
-          chipColor={theme.palette.grey[500]}
-          chipNumber={numSignedParticipants.toString()}
-          description={messages.eventParticipantsList.descriptionSignups()}
+      {unverifiedSignedUpParticipants.length > 0 && (
+        <UnverifiedSignupsSection
+          chipColor={oldTheme.palette.grey[500]}
+          chipNumber={unverifiedSignedUpParticipants.length.toString()}
+          description={messages.eventParticipantsList.descriptionUnverifiedSignups()}
           eventId={data.id}
           filterString={filterString}
           orgId={orgId}
-          rows={pendingSignUps ?? []}
+          rows={unverifiedSignedUpParticipants}
+          title={messages.eventParticipantsList.unverifiedSignups()}
+        />
+      )}
+      {numSignedUpParticipants > 0 && (
+        <ParticipantListSection
+          chipColor={oldTheme.palette.grey[500]}
+          chipNumber={numSignedUpParticipants.toString()}
+          description={messages.eventParticipantsList.descriptionSignups()}
+          eventId={data.id}
+          filterString={filterString}
+          headerActions={
+            <Button
+              onClick={() => {
+                respondents?.map((r) => {
+                  if (!bookedParticipants.some((p) => p.id === r.person.id)) {
+                    addParticipant(r.person.id);
+                  }
+                });
+              }}
+              size="small"
+              startIcon={<Check />}
+              sx={{ marginLeft: 2 }}
+              variant="outlined"
+            >
+              <Msg id={messageIds.participantSummaryCard.bookButton} />
+            </Button>
+          }
+          orgId={orgId}
+          rows={verifiedSignedUpParticipants ?? []}
           title={messages.eventParticipantsList.signUps()}
           type="signups"
         />
@@ -58,7 +94,7 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
       />
       {numCancelledParticipants > 0 && (
         <ParticipantListSection
-          chipColor={theme.palette.grey[500]}
+          chipColor={oldTheme.palette.grey[500]}
           chipNumber={numCancelledParticipants.toString()}
           description={messages.eventParticipantsList.descriptionCancelled()}
           eventId={data.id}

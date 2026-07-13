@@ -4,11 +4,12 @@ import Head from 'next/head';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/views/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
-import PeopleLayout from 'features/views/layout/PeopleLayout';
+import PeopleLayout, { PeopleHeader } from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 import ViewBrowser from 'features/views/components/ViewBrowser';
+import { ZetkinView } from 'features/views/components/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -18,16 +19,15 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const views = await apiClient.get(`/api/orgs/${orgId}/people/views`);
-
-  if (views) {
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    await apiClient.get<ZetkinView[]>(`/api/orgs/${orgId}/people/views`);
     return {
       props: {
         orgId,
       },
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };
@@ -50,13 +50,16 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
       <Head>
         <title>{messages.browserLayout.title()}</title>
       </Head>
-      <ViewBrowser basePath={`/organize/${orgId}/people`} />
+      <ViewBrowser
+        basePath={`/organize/${orgId}/people`}
+        header={<PeopleHeader />}
+      />
     </>
   );
 };
 
 PeopleViewsPage.getLayout = function getLayout(page) {
-  return <PeopleLayout>{page}</PeopleLayout>;
+  return <PeopleLayout hideHeader={true}>{page}</PeopleLayout>;
 };
 
 export default PeopleViewsPage;

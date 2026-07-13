@@ -1,0 +1,118 @@
+import { Box } from '@mui/material';
+import { FC } from 'react';
+
+import {
+  ZetkinSurvey,
+  ZetkinSurveyQuestionElement,
+  ZetkinSurveyTextQuestionElement,
+} from 'utils/types/zetkin';
+import ZUIText from '../../../../zui/components/ZUIText';
+import TextQuestion from './TextQuestion';
+import OptionsQuestion from './OptionsQuestion';
+import useServerSide from 'core/useServerSide';
+import LinkifiedText from './LinkifiedText';
+import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import ZUIFuture from 'zui/ZUIFuture';
+
+type SurveyFormProps = {
+  initialValues?: Record<string, string | string[]>;
+  onChange?: (name: string, value: string | string[]) => void;
+  survey: ZetkinSurvey;
+};
+
+const isTextQuestionType = (
+  question: ZetkinSurveyQuestionElement
+): question is ZetkinSurveyTextQuestionElement => {
+  return question.question.response_type == 'text';
+};
+
+const SurveyForm: FC<SurveyFormProps> = ({
+  initialValues = {},
+  onChange,
+  survey,
+}) => {
+  const isServer = useServerSide();
+  const extendedSurvey = useSurveyElements(survey.organization.id, survey.id);
+
+  if (isServer) {
+    return null;
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2rem',
+        paddingY: '1rem',
+      }}
+    >
+      <ZUIFuture future={extendedSurvey}>
+        {(data) => (
+          <>
+            {data
+              .filter((element) => element.hidden !== true)
+              .map((element) => {
+                const isTextBlock = element.type == 'text';
+                const isTextQuestion =
+                  !isTextBlock && isTextQuestionType(element);
+                const isOptionsQuestion = !isTextBlock && !isTextQuestion;
+
+                return (
+                  <Box key={element.id}>
+                    {isTextBlock && (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.5rem',
+                          wordBreak: 'break-word',
+                        }}
+                      >
+                        <ZUIText variant="headingMd">
+                          {element.text_block.header}
+                        </ZUIText>
+                        <ZUIText renderLineBreaks={true}>
+                          {element.text_block.content && (
+                            <LinkifiedText text={element.text_block.content} />
+                          )}
+                        </ZUIText>
+                      </Box>
+                    )}
+                    {isTextQuestion && (
+                      <TextQuestion
+                        element={element}
+                        initialValue={
+                          initialValues[`${element.id}.text`] as string
+                        }
+                        name={`${element.id}.text`}
+                        onChange={(newValue) => {
+                          if (onChange) {
+                            onChange(`${element.id}.text`, newValue);
+                          }
+                        }}
+                      />
+                    )}
+                    {isOptionsQuestion && (
+                      <OptionsQuestion
+                        element={element}
+                        initialValue={initialValues[`${element.id}.options`]}
+                        name={`${element.id}.options`}
+                        onChange={(newValue) => {
+                          if (onChange) {
+                            onChange(`${element.id}.options`, newValue);
+                          }
+                        }}
+                      />
+                    )}
+                  </Box>
+                );
+              })}
+          </>
+        )}
+      </ZUIFuture>
+    </Box>
+  );
+};
+
+export default SurveyForm;

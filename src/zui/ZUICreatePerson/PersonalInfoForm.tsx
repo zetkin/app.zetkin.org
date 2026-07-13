@@ -1,6 +1,4 @@
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ExpandMore } from '@mui/icons-material';
-import utc from 'dayjs/plugin/utc';
 import {
   Box,
   Button,
@@ -9,27 +7,32 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { FC, useEffect, useRef, useState } from 'react';
+import utc from 'dayjs/plugin/utc';
 import { CountryCode } from 'libphonenumber-js';
+import { FC, useEffect, useRef, useState } from 'react';
 
-import checkInvalidFields from './checkInvalidFields';
-import formatUrl from 'utils/formatUrl';
-import globalMessageIds from 'core/i18n/globalMessageIds';
-import { makeNaiveDateString } from 'utils/dateUtils';
-import messageIds from 'zui/l10n/messageIds';
-import PersonFieldInput from './PersonFieldInput';
-import { TagManagerSection } from 'features/tags/components/TagManager';
-import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
-import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
+import globalMessageIds from 'core/i18n/messageIds';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
+import { TagManagerSection } from 'features/tags/components/TagManager';
+import useTags from 'features/tags/hooks/useTags';
+import { makeNaiveDateString } from 'utils/dateUtils';
+import formatUrl from 'utils/formatUrl';
 import {
   CUSTOM_FIELD_TYPE,
+  ZetkinAppliedTag,
   ZetkinCreatePerson,
-  ZetkinTag,
+  ZetkinLngLatFieldValue,
 } from 'utils/types/zetkin';
+import messageIds from 'zui/l10n/messageIds';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
+import checkInvalidFields from './checkInvalidFields';
+import PersonFieldInput from './PersonFieldInput';
+import PersonLngLatFieldInput from './PersonLngLatFieldInput';
+import { TagToBeAdded } from 'features/profile/types';
 
 dayjs.extend(utc);
 
@@ -37,9 +40,9 @@ type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null | number) => void;
+  onChange: (field: string, value: string | null | TagToBeAdded) => void;
   personalInfo: ZetkinCreatePerson;
-  tags: number[];
+  tags: TagToBeAdded[];
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
@@ -58,10 +61,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
 
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
-    tags.reduce((acc: ZetkinTag[], item) => {
-      const tag = allTags.find((t) => t.id === item);
+    tags.reduce((acc: ZetkinAppliedTag[], item) => {
+      const tag = allTags.find((t) => t.id === item.id);
       if (tag) {
-        return acc.concat(tag);
+        return acc.concat({ ...tag, value: item.value });
       }
       return acc;
     }, []) ?? [];
@@ -99,6 +102,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field={'first_name'}
             onChange={(field, value) => onChange(field, value)}
             required
+            value={personalInfo.first_name}
           />
         </Box>
         <Box width="50%">
@@ -106,6 +110,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field={'last_name'}
             onChange={(field, value) => onChange(field, value)}
             required
+            value={personalInfo.last_name}
           />
         </Box>
       </Box>
@@ -113,11 +118,13 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         error={invalidFields.includes('email')}
         field={'email'}
         onChange={(field, value) => onChange(field, value)}
+        value={personalInfo.email || ''}
       />
       <PersonFieldInput
         error={invalidFields.includes('phone')}
         field={'phone'}
         onChange={(field, value) => onChange(field, value)}
+        value={personalInfo.phone || ''}
       />
       {!!showAllClickedType && (
         <Box display="flex" flexDirection="column" gap={2}>
@@ -128,6 +135,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             onChange={(field, value) =>
               onChange(field, value === ' ' ? '' : value)
             }
+            value={personalInfo.alt_phone || ''}
           />
           <FormControl fullWidth>
             <InputLabel>
@@ -153,10 +161,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           <PersonFieldInput
             field={'street_address'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.street_address || ''}
           />
           <PersonFieldInput
             field={'co_address'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.co_address || ''}
           />
           <Box>
             <PersonFieldInput
@@ -166,6 +176,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 pr: 2,
                 width: '30%',
               }}
+              value={personalInfo.zip_code || ''}
             />
             <PersonFieldInput
               field={'city'}
@@ -173,20 +184,25 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               style={{
                 width: '70%',
               }}
+              value={personalInfo.city || ''}
             />
           </Box>
           <PersonFieldInput
             field={'country'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.country || ''}
           />
           <PersonFieldInput
             field={'ext_id'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.ext_id || ''}
           />
         </Box>
       )}
       {!!showAllClickedType &&
         customFields.map((field) => {
+          const fieldValue = personalInfo[field.slug];
+
           if (
             field.organization.id !== orgId &&
             field.org_write !== 'suborgs'
@@ -223,6 +239,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                   const formattedUrl = formatUrl(value as string);
                   onChange(field, formattedUrl ?? value);
                 }}
+                value={fieldValue || ''}
               />
             );
           } else if (
@@ -230,7 +247,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field.enum_choices
           ) {
             return (
-              <Box alignItems="flex-start" display="flex" flex={1}>
+              <Box
+                key={field.slug}
+                alignItems="flex-start"
+                display="flex"
+                flex={1}
+              >
                 <FormControl fullWidth>
                   <InputLabel>{field.title}</InputLabel>
                   <Select
@@ -245,6 +267,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                       }
                       onChange(field.slug, value);
                     }}
+                    value={fieldValue || ''}
                   >
                     <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
                       <Msg id={messageIds.createPerson.enumFields.noneOption} />
@@ -258,6 +281,17 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 </FormControl>
               </Box>
             );
+          } else if (field.type === CUSTOM_FIELD_TYPE.LNGLAT) {
+            return (
+              <PersonLngLatFieldInput
+                key={field.slug}
+                error={invalidFields.includes(field.slug)}
+                field={field.slug}
+                label={field.title}
+                onChange={onChange}
+                value={fieldValue as unknown as ZetkinLngLatFieldValue}
+              />
+            );
           } else {
             return (
               <PersonFieldInput
@@ -265,6 +299,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 field={field.slug}
                 label={field.title}
                 onChange={(field, value) => onChange(field, value)}
+                value={fieldValue || ''}
               />
             );
           }
@@ -286,13 +321,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       </Box>
       <TagManagerSection
         assignedTags={selectedTags}
-        disableEditTags
-        disableValueTags
         onAssignTag={(tag) => {
-          onChange('tags', tag.id);
+          onChange('tags', { id: tag.id, value: tag.value });
         }}
         onUnassignTag={(tag) => {
-          onChange('tags', tag.id);
+          onChange('tags', { id: tag.id, value: tag.value });
         }}
         submitCreateTagLabel={messages.createPerson.tagCreateAndApplyLabel()}
       />

@@ -1,44 +1,56 @@
-import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { CircularProgress, Link, Theme } from '@mui/material';
-import { FC, useContext } from 'react';
+import { CircularProgress, Link, Skeleton, SxProps } from '@mui/material';
+import { FC, MouseEvent, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutations';
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
-import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
+import { BrowserRowContext } from './BrowserRow';
 import messageIds from 'features/views/l10n/messageIds';
+import RenameTextField from 'features/views/components/ViewBrowser/RenameTextField';
 
 interface BrowserItemProps {
   basePath: string;
   item: ViewBrowserItem;
+  onClick: (ev: MouseEvent) => void;
+  renaming: boolean;
+  onRenamed: (
+    item: ViewBrowserItem,
+    newTitle: string,
+    canceled?: boolean
+  ) => void;
 }
 
-const useStyles = makeStyles<Theme, BrowserRowDropProps>({
-  itemLink: {
+const BrowserItem: FC<BrowserItemProps> = ({
+  basePath,
+  item,
+  onClick,
+  renaming,
+  onRenamed,
+}) => {
+  const dropProps = useContext(BrowserRowContext);
+  const { orgId } = useNumericRouteParams();
+  const { itemIsRenaming } = useViewBrowserMutations(orgId);
+
+  const linkStyles: SxProps = {
     '&:hover': {
       textDecoration: 'underline',
     },
     color: 'inherit',
-    fontWeight: (props) => (props.active ? 'bold' : 'normal'),
+    fontWeight: dropProps.active ? 'bold' : 'normal',
     textDecoration: 'none',
-  },
-});
+  };
 
-const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
-  const dropProps = useContext(BrowserRowContext);
-  const styles = useStyles(dropProps);
-  const { orgId } = useNumericRouteParams();
-  const { itemIsRenaming } = useViewBrowserMutations(orgId);
-
-  if (item.type == 'back') {
+  if (item.type === 'loading') {
+    return <Skeleton variant={'rounded'} width={400} />;
+  } else if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
 
     return (
       <NextLink href={`${basePath}/${subPath}`} legacyBehavior passHref>
-        <Link className={styles.itemLink}>
+        <Link onClick={(ev) => onClick(ev)} sx={linkStyles}>
           {item.title ? (
             <Msg
               id={
@@ -60,11 +72,15 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
         </Link>
       </NextLink>
     );
+  } else if (renaming) {
+    return <RenameTextField item={item} onRenamed={onRenamed} />;
   } else {
     return (
       <BrowserDraggableItem item={item}>
         <NextLink href={`${basePath}/${item.id}`} legacyBehavior passHref>
-          <Link className={styles.itemLink}>{item.title}</Link>
+          <Link onClick={(ev) => onClick(ev)} sx={linkStyles}>
+            {item.title}
+          </Link>
         </NextLink>
         {itemIsRenaming(item.type, item.data.id) && (
           <CircularProgress size={20} />

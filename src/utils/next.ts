@@ -7,8 +7,7 @@ import {
 } from 'next';
 
 import { AppSession } from './types';
-import { getBrowserLanguage } from './locale';
-import { getMessages } from './locale';
+import { getBrowserLanguage, getMessages } from './locale';
 import getUserMemberships from './getUserMemberships';
 import requiredEnvVar from './requiredEnvVar';
 import { stringToBool } from './stringUtils';
@@ -16,9 +15,11 @@ import { ZetkinZ } from './types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from './types/zetkin';
 import { hasFeature } from './featureFlags';
+import { EnvVars } from 'core/env/Environment';
+import { omitUndefined } from './omitUndefined';
 
 //TODO: Create module definition and revert to import.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const Z = require('zetkin');
 
 type RegularProps = {
@@ -27,6 +28,7 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
+  envVars: EnvVars;
   lang: string;
   messages: Record<string, string>;
   user: ZetkinUser | null;
@@ -50,6 +52,7 @@ interface ScaffoldOptions {
   // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
   authLevelRequired?: number;
   allowNonOfficials?: boolean;
+  allowUnverified?: boolean;
   featuresRequired?: string[];
   localeScope?: string[];
 }
@@ -116,18 +119,36 @@ export const scaffold =
       ctx.user = null;
     }
 
-    if (options?.authLevelRequired) {
-      let authLevel;
+    let apiSession: ZetkinSession | null = null;
+    let authLevel = 0;
 
-      try {
-        const apiSessionRes = await ctx.z.resource('session').get();
-        const apiSession = apiSessionRes.data.data as ZetkinSession;
-        authLevel = apiSession.level;
-      } catch (err) {
-        // Not logged in, so auth level is zero (anonymous)
-        authLevel = 0;
+    try {
+      const apiSessionRes = await ctx.z.resource('session').get();
+      apiSession = apiSessionRes.data.data as ZetkinSession;
+      authLevel = apiSession.level;
+    } catch (err) {
+      authLevel = 0;
+    }
+
+    if (ctx.user && apiSession && apiSession.factors) {
+      const hasEmailAuth = apiSession.factors.includes('email_password');
+      const hasUnverifiedEmail = !ctx.user.email_is_verified;
+      const unverifiedIsNotAllowed = !options?.allowUnverified;
+
+      const needsToVerifyEmail =
+        hasEmailAuth && hasUnverifiedEmail && unverifiedIsNotAllowed;
+
+      if (needsToVerifyEmail) {
+        return {
+          redirect: {
+            destination: '/verify',
+            permanent: false,
+          },
+        };
       }
+    }
 
+    if (options?.authLevelRequired) {
       if (authLevel < options.authLevelRequired) {
         // Store the URL that the user tried to access, so that they
         // can be redirected back here after logging in
@@ -203,13 +224,24 @@ export const scaffold =
     if (hasProps(result)) {
       result.props = {
         ...result.props,
-        envVars: {
-          FEAT_AREAS: process.env.FEAT_AREAS || null,
-          MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
-          ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
-          ZETKIN_GEN2_ORGANIZE_URL:
-            process.env.ZETKIN_GEN2_ORGANIZE_URL || null,
-        },
+        envVars: omitUndefined({
+          FEAT_AREAS: process.env.FEAT_AREAS,
+          FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
+          FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
+          FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
+          FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
+          FEAT_TASKS: process.env.FEAT_TASKS,
+          FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
+          INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
+          INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+          MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
+          MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+          TILESERVER:
+            process.env.TILESERVER || 'https://tile.openstreetmap.org',
+          ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+          ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
+          ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
+        }),
         lang,
         messages,
         user: ctx.user,

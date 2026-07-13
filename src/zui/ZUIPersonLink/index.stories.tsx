@@ -1,12 +1,12 @@
 import { Typography } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import mockPerson from 'utils/testing/mocks/mockPerson';
 import ZUIPersonLink from '.';
 
 export default {
   component: ZUIPersonLink,
-  title: 'Atoms/ZetkinPersonLink',
+  title: 'Other/ZUIPersonLink',
 } as Meta<typeof ZUIPersonLink>;
 
 const Template: StoryFn<typeof ZUIPersonLink> = (args) => (

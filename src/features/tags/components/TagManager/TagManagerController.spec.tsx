@@ -1,24 +1,26 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 
 import messageIds from 'features/tags/l10n/messageIds';
-import mockTag from 'utils/testing/mocks/mockTag';
+import mockTag, { mockAppliedTag } from 'utils/testing/mocks/mockTag';
 import { render } from 'utils/testing';
 import { TagManagerController } from './TagManagerController';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { EditTag, NewTag } from './types';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 jest.mock('features/user/hooks/useCurrentUser');
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
 
 const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
-const createTagCallback = jest.fn<Promise<ZetkinTag>, [NewTag]>((tag) =>
-  Promise.resolve({ ...tag, id: 1 } as ZetkinTag)
-);
+const createTagCallback = (tag: NewTag) =>
+  Promise.resolve({ ...tag, id: 1 } as ZetkinTag);
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const editTagCallback = jest.fn((tag: EditTag) => tag);
 const deleteTagCallback = jest.fn((tagId: number) => tagId);
@@ -26,8 +28,8 @@ const deleteTagCallback = jest.fn((tagId: number) => tagId);
 describe('<TagManagerController />', () => {
   describe('Renders list of tags passed in', () => {
     it('shows tags that have been applied in the tags list', () => {
-      const tag1 = mockTag({ title: 'Organizer' });
-      const tag2 = mockTag({ id: 2, title: 'Activist' });
+      const tag1 = mockAppliedTag({ title: 'Organizer' });
+      const tag2 = mockAppliedTag({ id: 2, title: 'Activist' });
       const { getByText } = render(
         <TagManagerController
           assignedTags={[tag1, tag2]}
@@ -46,34 +48,34 @@ describe('<TagManagerController />', () => {
   });
   it('groups tags passed tagsGrouped prop', () => {
     const tags = [
-      mockTag({ group: { id: 1, title: 'Political' } }),
-      mockTag({
+      mockAppliedTag({ group: { id: 1, title: 'Political' } }),
+      mockAppliedTag({
         group: { id: 1, title: 'Political' },
         id: 2,
         title: 'Activist',
       }),
-      mockTag({
+      mockAppliedTag({
         group: { id: 2, title: 'Skills' },
         id: 3,
         title: 'Software',
       }),
-      mockTag({
+      mockAppliedTag({
         group: { id: 2, title: 'Skills' },
         id: 4,
         title: 'Cooking',
       }),
-      mockTag({
+      mockAppliedTag({
         group: { id: 2, title: 'Skills' },
         id: 4,
         title: 'Phone banking',
       }),
       // Ungrouped tags
-      mockTag({
+      mockAppliedTag({
         group: null,
         id: 5,
         title: 'Vegan',
       }),
-      mockTag({
+      mockAppliedTag({
         group: null,
         id: 5,
         title: 'Listens to progg',
@@ -192,7 +194,7 @@ describe('<TagManagerController />', () => {
   it('can remove a tag', async () => {
     const onUnassignTag = jest.fn((tag: ZetkinTag) => tag);
 
-    const tag1 = mockTag({
+    const tag1 = mockAppliedTag({
       group: { id: 2, title: 'Skills' },
       id: 4,
       title: 'Phone banking',
@@ -229,12 +231,11 @@ describe('<TagManagerController />', () => {
   });
 
   describe('creating a tag', () => {
-    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
+    const onCreateTag = jest.fn((tag: NewTag) =>
+      Promise.resolve({ ...tag, id: 1857 } as ZetkinTag)
+    );
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) =>
-        Promise.resolve({ ...tag, id: 1857 } as ZetkinTag)
-      );
       assignTagCallback.mockReset();
       singletonRouter.query = {
         orgId: '1',
@@ -367,10 +368,11 @@ describe('<TagManagerController />', () => {
   });
 
   describe('editing a tag', () => {
-    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
+    const onCreateTag = jest.fn((tag: NewTag) =>
+      Promise.resolve(tag as ZetkinTag)
+    );
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) => Promise.resolve(tag as ZetkinTag));
       singletonRouter.query = {
         orgId: '1',
       };

@@ -64,6 +64,7 @@ const Calendar = () => {
       undefined,
       { shallow: true }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusDate, timeScale]);
 
   function navigateTo(timeScale: TimeScale, date: Date) {

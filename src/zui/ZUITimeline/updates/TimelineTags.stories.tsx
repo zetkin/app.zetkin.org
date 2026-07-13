@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import mockOrganization from 'utils/testing/mocks/mockOrganization';
@@ -9,7 +9,7 @@ import { UPDATE_TYPES } from 'zui/ZUITimeline/types';
 
 export default {
   component: TimelineTags,
-  title: 'Organisms/Timeline/Updates/TimelineTags',
+  title: 'Other/ZUITimeline/Updates/TimelineTags',
 } as Meta<typeof TimelineTags>;
 
 const Template: StoryFn<typeof TimelineTags> = (args) => (

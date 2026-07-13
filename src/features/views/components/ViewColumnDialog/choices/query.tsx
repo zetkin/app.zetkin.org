@@ -11,7 +11,7 @@ import { CHOICES } from './types';
 import { ColumnChoice } from './types';
 import LocalQueryConfig from '../LocalQueryConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   CallHistoryFilterConfig,
@@ -20,7 +20,7 @@ import {
 } from 'features/smartSearch/components/types';
 import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
 
-const { blue } = theme.palette.viewColumnGallery;
+const { blue } = oldTheme.palette.viewColumnGallery;
 
 export const customQuery: ColumnChoice = {
   color: blue,
@@ -64,6 +64,7 @@ export const booked = createQueryChoice(CHOICES.QUERY_BOOKED, Event, [
       after: 'now',
       operator: 'in',
       state: 'booked',
+      status: undefined,
     },
     op: OPERATION.ADD,
     type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
@@ -72,7 +73,8 @@ export const booked = createQueryChoice(CHOICES.QUERY_BOOKED, Event, [
     config: {
       after: 'now',
       operator: 'in',
-      state: 'booked',
+      state: 'signed_up',
+      status: undefined,
     },
     op: OPERATION.ADD,
     type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
@@ -98,6 +100,7 @@ export const participated = createQueryChoice(
         before: 'now',
         operator: 'in',
         state: 'booked',
+        status: 'attended',
       },
       op: OPERATION.ADD,
       type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,

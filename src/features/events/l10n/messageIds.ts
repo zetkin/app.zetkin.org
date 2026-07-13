@@ -1,4 +1,4 @@
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.events', {
   addPerson: {
@@ -32,10 +32,11 @@ export default makeMessages('feat.events', {
     ),
   },
   eventChangeCampaignDialog: {
-    dialogTitle: m('Move event'),
     error: m('Error: Could not move the event to the selected project'),
-    moveButtonLabel: m('Move'),
-    success: m<{ campaignTitle: string }>('Event moved to "{campaignTitle}"'),
+    success: m<{ campaignTitle: string; eventTitle: string }>(
+      'Event "{eventTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move event'),
   },
   eventContactCard: {
     header: m('Contact'),
@@ -80,10 +81,12 @@ export default makeMessages('feat.events', {
     buttonDelete: m('Delete'),
     buttonNoshow: m('No-show'),
     cancelledParticipants: m('Cancelled Participants'),
+    columnAction: m('Action'),
     columnEmail: m('Email'),
     columnName: m('Name'),
     columnNotified: m('Notified'),
     columnPhone: m('Phone'),
+    columnSignedUp: m('Signed up'),
     contactTooltip: m('Contact Person'),
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
@@ -94,15 +97,20 @@ export default makeMessages('feat.events', {
     descriptionSignups: m(
       'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
     ),
+    descriptionUnverifiedSignups: m(
+      'These people have signed up themselves without a user account. You must confirm them.'
+    ),
     dropDownAttended: m('Confirmed attendance'),
     dropDownNoshow: m('Did not show up'),
     participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
+    unverifiedSignups: m('Unverified Sign-ups'),
   },
   eventPopper: {
     backToEvents: m('Back to event list'),
     backToLocations: m('Back to locations'),
     backToShifts: m('Back to shift list'),
+    bookAll: m('Book all'),
     booked: m('Booked'),
     cancel: m('Cancel'),
     cancelWarning: m(
@@ -110,6 +118,10 @@ export default makeMessages('feat.events', {
     ),
     confirmCancel: m('Are you sure you want to cancel this event?'),
     confirmDelete: m('Are you sure you want to delete this event?'),
+    confirmRemindersMessage: m<{ numReminders: number }>(
+      'Please confirm that you want to send out a reminder to {numReminders, plural, =1 {one participant} other {# participants}}'
+    ),
+    confirmRemindersTitle: m('Confirm sending out reminders'),
     contactPerson: m('Contact person'),
     dateAndTime: m('Date & Time'),
     delete: m('Delete'),
@@ -146,6 +158,7 @@ export default makeMessages('feat.events', {
     description: m('Description'),
     draft: m('Draft'),
     end: m('End'),
+    error: m('Could not create multi-shift event. Please try again.'),
     event: m('Event'),
     eventDuration: m('Event duration'),
     header: m('Create multi-shift event'),
@@ -171,6 +184,12 @@ export default makeMessages('feat.events', {
     shiftsHeader: m('Shifts'),
     showMoreSettingsButton: m('More settings'),
     start: m('Start'),
+    successDraft: m<{ no: number }>(
+      '{no, plural, one {Created 1 draft event} other {Created # draft events}}'
+    ),
+    successPublish: m<{ no: number }>(
+      '{no, plural, one {Published 1 shift} other {Published # shifts}}'
+    ),
     type: m('Type'),
   },
   eventStatus: {
@@ -180,6 +199,25 @@ export default makeMessages('feat.events', {
     open: m('Open'),
     scheduled: m('Scheduled'),
     unknown: m('Unknown'),
+  },
+  filterButtonLabels: {
+    eventTypes: m<{ numEventTypes: number; singleEventType: string }>(
+      '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}} other {# event types}}'
+    ),
+  },
+  linkSignupDialog: {
+    bookButton: m('Book'),
+    cancelButton: m('Cancel'),
+    createPersonButton: m('Create new person'),
+    helperText: m(
+      'Book this sign-up by selecting a person, or create one if no match is found.'
+    ),
+    keepTyping: m('Keep typing to start searching'),
+    noResults: m('No matching people found'),
+    searchLabel: m('Search for person'),
+    searchPlaceholder: m('Search by name, email, or phone'),
+    signupDetails: m('Sign-up details'),
+    title: m('No exact match found. Please choose a person.'),
   },
   list: {
     events: m('Events'),
@@ -262,6 +300,43 @@ export default makeMessages('feat.events', {
     submitButton: m('Execute'),
     title: m('Manage participants'),
   },
+  publicEventSignup: {
+    alert: {
+      error: m('Error'),
+      signupSuccessful: m('Signup successful'),
+      thankYou: m('Thank you for signing up!'),
+    },
+    errors: {
+      emailOrPhoneRequired: m('Either email or phone is required'),
+      gdprConsentRequired: m('You need to accept the terms'),
+      invalidEmail: m('Please provide a valid email'),
+      nameRequired: m('First name and last name are required'),
+      phoneFormat: m(
+        'Phone number must be in international format, e.g. +46701234567'
+      ),
+      signupError: m('An error occurred while signing up'),
+      signupFailed: m('Failed to sign up'),
+    },
+    fields: {
+      email: m('Email'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+      phone: m('Phone'),
+    },
+    info: {
+      description: m(
+        'Enter your name at least one way for organizers to contact you.'
+      ),
+      title: m('Time to sign up'),
+    },
+    privacyPolicy: m<{ organization: string }>(
+      'When you sign up to an event, the information you provide will be stored and processed in Zetkin by My Organization in order to organize activism and in accordance with the Zetkin privacy policy.'
+    ),
+    submit: {
+      button: m('Sign up'),
+      submitting: m('Submitting...'),
+    },
+  },
   search: m('Search'),
   state: {
     cancelled: m('Cancelled'),
@@ -282,7 +357,28 @@ export default makeMessages('feat.events', {
   tooltipContent: m('Untitled events will display type as title'),
   type: {
     createType: m<{ type: string }>('Create "{type}"'),
+    deleteMessage: m<{ eventType: string }>(
+      'Are you sure you want to delete the "{eventType}" event type for the whole organization?'
+    ),
+    deleteWarning: m<{ eventType: string; orgTitle: string }>(
+      'Are you sure you want to delete the "{eventType}" event type for all of {orgTitle}?'
+    ),
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
+  },
+  unverifiedSignups: {
+    actionFailed: m('Something went wrong. Please try again.'),
+    booked: m<{ name: string }>('{name} has been successfully booked.'),
+    exactMatchBooked: m<{ name: string }>(
+      'Exact person match found. This sign-up is now booked as {name}.'
+    ),
+  },
+  urlCard: {
+    nowAccepting: m('Now accepting sign-ups at this link'),
+    open: m('Open for sign-ups'),
+    preview: m('Preview event'),
+    previewPortal: m('Preview event in activist portal'),
+    visitPortal: m('Visit event in activist portal'),
+    willAccept: m('Will accept sign-ups at this link'),
   },
 });

@@ -4,10 +4,10 @@ import { Box, lighten, Typography } from '@mui/material';
 import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import messageIds from 'features/views/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 interface CellContentProps {
-  tag: ZetkinTag;
+  tag: ZetkinAppliedTag;
 }
 
 const ValueTagCell: FC<CellContentProps> = ({ tag }) => {

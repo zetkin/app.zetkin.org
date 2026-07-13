@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.journeys', {
   instance: {
@@ -31,6 +31,12 @@ export default makeMessages('feat.journeys', {
     editButton: m('Edit'),
     ellipsisMenu: {
       convert: m('Convert to...'),
+      deletion: {
+        delete: m<{ instanceTitle: string }>('Delete "{instanceTitle}"'),
+        warning: m<{ instanceTitle: string }>(
+          '"{instanceTitle}" will be deleted. This action cannot be undone.'
+        ),
+      },
     },
     expandButton: m('Expand'),
     markedCompleteLabel: m<{ relativeTime: ReactElement }>(

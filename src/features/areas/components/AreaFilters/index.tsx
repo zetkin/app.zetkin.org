@@ -1,21 +1,21 @@
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { Box, Checkbox, Typography } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { Box, Checkbox, Typography, useTheme } from '@mui/material';
 
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
-import { useMessages } from 'core/i18n';
-import messageIds from 'features/areas/l10n/messageIds';
 import FilterDropDown from '../FilterDropDown';
 import { areaFilterContext } from './AreaFilterContext';
 import AddFilterButton from './AddFilterButton';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
-  onFilteredIdsChange: (areaIds: string[]) => void;
+  onFilteredIdsChange: (areaIds: number[]) => void;
 };
 
 const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
+  const messages = useMessages(messageIds);
   const theme = useTheme();
   const [openDropdown, setOpenDropdown] = useState<'add' | number | null>(null);
   const {
@@ -24,7 +24,6 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     activeTagIdsByGroup,
     setActiveTagIdsByGroup,
   } = useContext(areaFilterContext);
-  const messages = useMessages(messageIds);
 
   const groupsById = useMemo(() => {
     const groupsById: Record<
@@ -70,6 +69,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     });
 
     onFilteredIdsChange(filteredAreas.map((area) => area.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeGroupIds, activeTagIdsByGroup]);
 
   return (
@@ -80,6 +80,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         if (info) {
           return (
             <FilterDropDown
+              key={groupId}
               items={info.tags.map((tag) => {
                 const selected = currentIds.includes(tag.id) ?? false;
 
@@ -99,7 +100,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
               label={
                 info.group
                   ? info.group.title
-                  : messages.filters.tagsWithoutGroup()
+                  : messages.areas.filter.ungroupedTagsLabel()
               }
               onToggle={(open) => setOpenDropdown(open ? groupId : null)}
               open={openDropdown == groupId}
@@ -142,8 +143,8 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           return {
             icon: <Checkbox checked={selected} />,
             label: item.group
-              ? messages.filters.tagGroup({ label: item.group.title })
-              : messages.filters.tagsWithoutGroup(),
+              ? item.group.title
+              : messages.areas.filter.ungroupedTagsLabel(),
             onClick: () => {
               if (selected) {
                 setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));

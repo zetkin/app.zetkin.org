@@ -38,23 +38,29 @@ The Zetkin web app is a NEXT.js app that runs in the Node.js JavaScript runtime.
 If you don't have it already, you must [install Node.js](https://nodejs.org/)
 first.
 
-We use [`yarn` (Classic)](https://classic.yarnpkg.com) to manage our code
-dependencies. Once you have installed `yarn` you can install all other
-dependencies like so:
+On the first run, you will have to install the dependencies using npm.
 
 ```
-$ yarn install
+$ npm install
 ```
 
 With dependencies installed, you can start the development server:
 
 ```
-$ yarn devserver
+$ npm run devserver
 ```
 
 You should now be able to access the app on http://localhost:3000. It will
 communicate with the Zetkin API running on our public development server. See
 below for login credentials.
+
+#### Setting up MongoDB for local development
+
+Experimental features might require a running MongoDB. It does not need to be seeded and port is set with .env variable `MONGODB_URL`.
+
+```bash
+docker run --rm -ti -p27017:27017 mongo
+```
 
 ### Running the code (Docker)
 
@@ -69,7 +75,7 @@ Docker Compose setup.
   $ docker compose -f dev.yml --profile static up
   ```
 
-- Frontend development: Similar to the normal yarn setup documented here.
+- Frontend development: Similar to the normal npm setup documented here.
 
   ```
   $ docker compose -f dev.yml --profile dev up
@@ -89,6 +95,50 @@ Docker Compose setup.
 Note: If you are running the backend locally and things like `dev.zetkin.org` resolve to `127.0.0.1`,
 then this only works on Linux-based systems, due to the nature of `127.0.0.1` pointing to the host on Linux
 (but not on Windows/Mac, where it points to the container itself).
+
+### Running the code (Dev container)
+
+As **another alternative**, you can run the provided dev container.
+
+- Requires Docker Compose
+- (VSCode) Requires [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+Once you have cloned the GitHub repo locally, select the option to `Open in Container`, either from the prompt or after clicking the `Open a Remote Window` icon in the bottom-left corner of the window.
+
+The new container will take a while to set itself up. It will automatically pull the images, install dependencies, then install the app, along with recommended VSCode extensions and preferred configurations. It will also start a mongodb container for using experimental features not yet built in the real Zetkin backend.
+
+Once setup is complete, you can start the development server in the same way as the normal method above:
+
+```
+$ npm run devserver
+```
+
+For your reference, there's a [guide to developing inside a container](https://code.visualstudio.com/docs/devcontainers/containers) on the VSCode website.
+
+JetBrains IDE also supports dev containers but this has not yet been tested.
+
+### Debugging
+
+If you want to debug this applications you can do so through VS Code or JetBrains IDE's (as IntelliJ or WebStorm).
+
+#### VS Code
+
+For VS Code there are 2 debugging configurations within [`./.vscode/launch.json`](./.vscode/launch.json).
+One for debugging with chrome and one for firefox.
+
+1. Start the devserver via `npm run devserver`
+2. In the sidebar on the left go to `Run and Debug`
+3. Select and run `Next.js: debug client-side (Chrome)` or `Next.js: debug client-side (Firefox)` (note that you need to have the [Debugger for Firefox Extension](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) installed as referenced in [`./.vscode/extensions.json`](./.vscode/extensions.json))
+4. A browser window should open itself. Navigate to the page that you need to debug (don't forget to set your breakpoints first)
+
+#### JetBrains IDE's
+
+For JetBrains IDE's unfortunately there's only a debug configuration for chrome available ([`./.idea/launch.json`](./.idea/launch.json)).
+
+1. Start the devserver via `npm run devserver`
+2. In the top bar select the run configuration `Next.js: debug client-side (Chrome)`
+3. Run that selected configuration in the debug mode by clicking on the bug icon.
+4. A chrome window should open itself. Navigate to the page that you need to debug (don't forget to set your breakpoints first)
 
 ## Development server login credentials
 

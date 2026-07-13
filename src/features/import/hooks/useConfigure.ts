@@ -10,8 +10,9 @@ import {
   ImportPreview,
   ImportPreviewProblemCode,
   ZetkinPersonImportPostBody,
-} from '../utils/types';
+} from '../types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import remapFields from '../utils/remapFields';
 
 export default function useConfigure(orgId: number) {
   const dispatch = useAppDispatch();
@@ -85,7 +86,7 @@ export default function useConfigure(orgId: number) {
         >(`/api/orgs/${orgId}/bulk/preview`, {
           ops: importOperations,
         });
-        dispatch(importPreviewAdd(previewRes));
+        dispatch(importPreviewAdd(remapFields(previewRes) as ImportPreview));
       } catch (error) {
         addUnexpectedErrorToProblems();
       }

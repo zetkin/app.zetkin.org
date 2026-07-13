@@ -37,7 +37,7 @@ const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
         </title>
       </Head>
       <Grid container direction="row" spacing={6}>
-        <Grid item lg={4}>
+        <Grid size={{ lg: 4 }}>
           <PersonDeleteCard orgId={orgId} person={person} />
         </Grid>
       </Grid>

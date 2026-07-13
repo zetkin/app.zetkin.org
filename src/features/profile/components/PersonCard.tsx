@@ -1,8 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
 import {
   Card,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
@@ -12,22 +12,7 @@ import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
 import messageIds from '../l10n/messageIds';
-
-const useStyles = makeStyles((theme) => ({
-  divider: {
-    marginLeft: 72,
-  },
-  editButton: {
-    '& span': {
-      fontWeight: 'bold',
-    },
-    color: theme.palette.primary.main,
-    textTransform: 'uppercase',
-  },
-  title: {
-    marginBottom: theme.spacing(1),
-  },
-}));
+import oldTheme from 'theme';
 
 const PersonCard: React.FunctionComponent<{
   children: React.ReactNode;
@@ -35,7 +20,6 @@ const PersonCard: React.FunctionComponent<{
   title: string;
 }> = ({ onClickEdit, title, children }) => {
   const [editable, setEditable] = useState<boolean>();
-  const classes = useStyles();
   const messages = useMessages(messageIds);
 
   const onToggleEdit = (evt: SyntheticEvent) => {
@@ -51,22 +35,30 @@ const PersonCard: React.FunctionComponent<{
         {children}
         {onClickEdit && (
           <List disablePadding>
-            <ListItem button disabled={!onClickEdit} onClick={onToggleEdit}>
-              <ListItemIcon>
-                {editable ? (
-                  <Close color="primary" />
-                ) : (
-                  <Edit color="primary" />
-                )}
-              </ListItemIcon>
-              <ListItemText
-                className={classes.editButton}
-                primary={
-                  editable
-                    ? messages.editButtonClose({ title })
-                    : messages.editButton({ title })
-                }
-              />
+            <ListItem onClick={onToggleEdit}>
+              <ListItemButton disabled={!onClickEdit}>
+                <ListItemIcon>
+                  {editable ? (
+                    <Close color="primary" />
+                  ) : (
+                    <Edit color="primary" />
+                  )}
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    editable
+                      ? messages.editButtonClose({ title })
+                      : messages.editButton({ title })
+                  }
+                  sx={{
+                    color: oldTheme.palette.primary.main,
+                    span: {
+                      fontWeight: 'bold',
+                    },
+                    textTransform: 'uppercase',
+                  }}
+                />
+              </ListItemButton>
             </ListItem>
           </List>
         )}

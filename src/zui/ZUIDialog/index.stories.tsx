@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIDialog from '.';
 
 export default {
   component: ZUIDialog,
-  title: 'Atoms/ZUIDialog',
+  title: 'Other/ZUIDialog',
 } as Meta<typeof ZUIDialog>;
 
 const Template: StoryFn<typeof ZUIDialog> = (args) => (

@@ -36,10 +36,10 @@ const ConversationPage: PageWithLayout = () => {
         <title>{data?.title}</title>
       </Head>
       <Grid container spacing={2}>
-        <Grid item lg={8} md={6} sm={12}>
+        <Grid size={{ lg: 8, md: 6, sm: 12 }}>
           <CallerInstructions assignmentId={callAssId} orgId={orgId} />
         </Grid>
-        <Grid item lg={4} md={6} sm={12}>
+        <Grid size={{ lg: 4, md: 6, sm: 12 }}>
           <ConversationSettings assignmentId={callAssId} orgId={orgId} />
         </Grid>
       </Grid>

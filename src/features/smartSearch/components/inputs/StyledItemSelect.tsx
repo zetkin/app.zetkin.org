@@ -1,30 +1,21 @@
-import makeStyles from '@mui/styles/makeStyles';
-import { Autocomplete, AutocompleteProps, Box } from '@mui/material';
-import { Chip, TextField } from '@mui/material';
-import { Theme, Tooltip } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteProps,
+  Box,
+  Chip,
+  TextField,
+  Tooltip,
+} from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-
-const useStyles = makeStyles<Theme>((theme) => ({
-  MuiInput: {
-    fontSize: theme.typography.h4.fontSize,
-    padding: 0,
-    width: '10rem',
-  },
-  MuiTextField: {
-    display: 'inline',
-    verticalAlign: 'inherit',
-  },
-  autocomplete: {
-    display: 'inline',
-  },
-}));
+import oldTheme from 'theme';
 
 interface StyledItem {
   id: number;
   title: string;
+  group?: { title: string } | null;
 }
 
 type StyledItemSelectProps = Omit<
@@ -33,21 +24,29 @@ type StyledItemSelectProps = Omit<
 > & { noOptionsText?: JSX.Element };
 
 const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
-  const classes = useStyles();
   return (
     <Autocomplete
-      className={classes.autocomplete}
       disableClearable
       getOptionLabel={(item) => item.title}
       multiple
       noOptionsText={<Msg id={messageIds.misc.noOptions} />}
       renderInput={(params) => (
         <TextField
-          className={classes.MuiTextField}
+          sx={{
+            display: 'inline',
+            verticalAlign: 'inherit',
+          }}
           {...params}
-          inputProps={{
-            ...params.inputProps,
-            className: classes.MuiInput,
+          slotProps={{
+            htmlInput: {
+              ...params.inputProps,
+              className: '',
+              sx: {
+                fontSize: oldTheme.typography.h4.fontSize,
+                padding: 0,
+                width: '10rem',
+              },
+            },
           }}
           variant="standard"
         />
@@ -77,6 +76,9 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
         );
       }}
       renderTags={() => null}
+      sx={{
+        display: 'inline',
+      }}
       {...props}
     />
   );

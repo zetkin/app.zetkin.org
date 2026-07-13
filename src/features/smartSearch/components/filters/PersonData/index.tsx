@@ -49,9 +49,12 @@ const PersonData = ({
     });
 
   const ALL_FIELDS = Object.values(DATA_FIELD);
+  const ALL_FIELDS_SORTED = ALL_FIELDS.sort((af1, af2) => {
+    return af1.localeCompare(af2);
+  });
 
   // check which fields are present in the filter config, and load their key-value pairs into an array
-  const initialCriteria = ALL_FIELDS.filter(
+  const initialCriteria = ALL_FIELDS_SORTED.filter(
     (f) => f in filter.config.fields
   ).map((f) => ({ field: f, value: filter.config.fields[f] || '' }));
 
@@ -70,6 +73,7 @@ const PersonData = ({
       ...filter.config,
       fields,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [criteria]);
 
   const addCriteria = (field: string) => {
@@ -98,10 +102,20 @@ const PersonData = ({
     if (field === REMOVE_FIELD) {
       setCriteria(criteria.filter((criterion) => criterion.field !== c.field));
     } else {
+      let value = c.value;
+      // Default value for gender is 'f'
+      if (field === DATA_FIELD.GENDER) {
+        value = 'f';
+      }
+
+      // It doesn't make sense to use the gender value when changing to other fields
+      if (c.field === DATA_FIELD.GENDER) {
+        value = '';
+      }
       setCriteria(
         criteria.map((criterion) => {
           return criterion.field === c.field
-            ? { ...criterion, field: field as DATA_FIELD }
+            ? { field: field as DATA_FIELD, value }
             : criterion;
         })
       );

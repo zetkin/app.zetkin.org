@@ -1,26 +1,11 @@
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
 import { Box, Button, Divider, lighten, Typography } from '@mui/material';
 import { Close, OpenWith } from '@mui/icons-material';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
-
-const useStyles = makeStyles((theme) => ({
-  instructions: {
-    alignItems: 'center',
-    backgroundColor: lighten(theme.palette.primary.main, 0.8),
-    borderRadius: 4,
-    display: 'flex',
-    flexDirection: 'row',
-    margin: '16px 16px 0px 16px',
-    padding: 8,
-  },
-  moveIcon: {
-    color: theme.palette.primary.main,
-  },
-}));
+import oldTheme from 'theme';
 
 interface MoveLocationCardProps {
   location: ZetkinLocation;
@@ -36,7 +21,6 @@ const MoveLocationCard: FC<MoveLocationCardProps> = ({
   onSaveLocation,
 }) => {
   const messages = useMessages(messageIds);
-  const classes = useStyles();
 
   return (
     <Box
@@ -60,8 +44,18 @@ const MoveLocationCard: FC<MoveLocationCardProps> = ({
         />
       </Box>
       <Divider />
-      <Box className={classes.instructions}>
-        <OpenWith className={classes.moveIcon} />
+      <Box
+        sx={{
+          alignItems: 'center',
+          backgroundColor: lighten(oldTheme.palette.primary.main, 0.8),
+          borderRadius: '4px',
+          display: 'flex',
+          flexDirection: 'row',
+          margin: '16px 16px 0px 16px',
+          padding: '8px',
+        }}
+      >
+        <OpenWith sx={{ color: oldTheme.palette.primary.main }} />
         <Typography sx={{ marginLeft: 1 }} variant="body2">
           {messages.locationModal.moveInstructions()}
         </Typography>

@@ -10,6 +10,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 
 const PersonDeleteCard: React.FunctionComponent<{
   orgId: number;
@@ -20,6 +21,11 @@ const PersonDeleteCard: React.FunctionComponent<{
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { deletePerson } = usePersonMutations(orgId, person.id);
+
+  const orgTitle = useOrganization(orgId).data?.title;
+  if (!orgTitle) {
+    return null;
+  }
 
   const handleDelete = () => {
     showConfirmDialog({
@@ -33,6 +39,7 @@ const PersonDeleteCard: React.FunctionComponent<{
       },
       warningText: messages.delete.confirm({
         name: person.first_name + ' ' + person.last_name,
+        org: orgTitle,
       }),
     });
   };

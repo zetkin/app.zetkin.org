@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import {
   Alert,
@@ -10,7 +9,6 @@ import {
   Tab,
   TabProps,
   Tabs,
-  Theme,
 } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
@@ -18,17 +16,6 @@ import DefaultLayout from './DefaultLayout';
 import Header from '../../zui/ZUIHeader';
 import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
-
-interface StyleProps {
-  noPad?: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  main: {
-    overflowX: 'hidden',
-    padding: ({ noPad }) => (noPad ? 0 : undefined),
-  },
-}));
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
@@ -53,7 +40,7 @@ interface TabbedLayoutProps {
   onClickAlertBtn?: () => void;
 }
 
-const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
+export const TabbedLayoutHeader: FunctionComponent<TabbedLayoutProps> = ({
   actionButtons,
   alertBtnMsg,
   alertMsg,
@@ -71,7 +58,6 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   title,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const classes = useStyles({ noPad });
   const router = useRouter();
 
   const currentTab =
@@ -103,7 +89,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   }));
 
   return (
-    <DefaultLayout>
+    <>
       {alertMsg && (
         <Alert
           action={
@@ -121,8 +107,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
       <Box
         display="flex"
         flexDirection="column"
+        flexGrow="1"
         height={fixedHeight ? 1 : 'auto'}
-        minHeight="100vh"
       >
         <Header
           actionButtons={actionButtons}
@@ -138,6 +124,13 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           <Tabs
             aria-label="campaign tabs"
             onChange={(_, selected) => selectTab(selected)}
+            slotProps={{
+              list: {
+                sx: {
+                  overflowX: 'auto',
+                },
+              },
+            }}
             value={currentTab}
           >
             {tabs.map((tab) => {
@@ -169,18 +162,31 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           </Tabs>
         </Collapse>
         {/* Page Content */}
-        <Box
-          className={classes.main}
-          component="main"
-          flexGrow={1}
-          minHeight={0}
-          p={fixedHeight ? 0 : 3}
-          position="relative"
-          role="tabpanel"
-        >
-          <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
-        </Box>
+        {children && (
+          <Box
+            component="main"
+            flexGrow={1}
+            minHeight={0}
+            p={fixedHeight ? 0 : 3}
+            position="relative"
+            role="tabpanel"
+            sx={{
+              overflow: 'hidden',
+              padding: noPad ? 0 : undefined,
+            }}
+          >
+            <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
+          </Box>
+        )}
       </Box>
+    </>
+  );
+};
+
+const TabbedLayout: FunctionComponent<TabbedLayoutProps> = (props) => {
+  return (
+    <DefaultLayout title={props.title}>
+      <TabbedLayoutHeader {...props} />
     </DefaultLayout>
   );
 };

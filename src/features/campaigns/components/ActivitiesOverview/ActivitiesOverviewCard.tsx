@@ -18,7 +18,7 @@ import { Msg, useMessages } from 'core/i18n';
 import useClusteredActivities, {
   CLUSTER_TYPE,
 } from 'features/campaigns/hooks/useClusteredActivities';
-import CanvassAssignmentOverviewListItem from './items/CanvassAssignmentOverviewListItem';
+import AreaAssignmentOverviewListItem from './items/AreaAssignmentOverviewListItem';
 
 type OverviewListProps = {
   activities: CampaignActivity[];
@@ -63,11 +63,11 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
               />
             </Box>
           );
-        } else if (activity.kind === ACTIVITIES.CANVASS_ASSIGNMENT) {
+        } else if (activity.kind === ACTIVITIES.AREA_ASSIGNMENT) {
           return (
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <CanvassAssignmentOverviewListItem
+              <AreaAssignmentOverviewListItem
                 activity={activity}
                 focusDate={focusDate}
               />

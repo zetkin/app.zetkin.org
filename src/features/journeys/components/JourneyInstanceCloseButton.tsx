@@ -7,7 +7,7 @@ import TagManager from 'features/tags/components/TagManager';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinJourneyInstance } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
 import useJourneyInstanceMutations from '../hooks/useJourneyInstanceMutations';
 import { useNumericRouteParams } from 'core/hooks';
@@ -26,7 +26,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
   );
 
   const [outcomeNote, setOutcomeNote] = useState('');
-  const [internalTags, setInternalTags] = useState<ZetkinTag[]>([]);
+  const [internalTags, setInternalTags] = useState<ZetkinAppliedTag[]>([]);
 
   const closeAndClear = () => {
     setShowDialog(false);
@@ -69,9 +69,6 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             </Typography>
             <TextField
               fullWidth
-              inputProps={{
-                'data-testid': 'JourneyInstanceCloseButton-outcomeNoteField',
-              }}
               margin="normal"
               multiline
               onChange={(e) => setOutcomeNote(e.target.value)}
@@ -79,6 +76,11 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
                 { singularLabel: journeyInstance.journey.singular_label }
               )}
               rows={3}
+              slotProps={{
+                htmlInput: {
+                  'data-testid': 'JourneyInstanceCloseButton-outcomeNoteField',
+                },
+              }}
               variant="outlined"
             />
             <Box mt={2}>

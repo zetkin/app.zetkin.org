@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   GridColDef,
@@ -13,6 +13,7 @@ import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
+import ZUICreatePerson from 'zui/ZUICreatePerson';
 import {
   COLUMN_TYPE,
   LocalPersonViewColumn,
@@ -24,11 +25,15 @@ import { useMessages } from 'core/i18n';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
-export default class LocalPersonColumnType
-  implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
-{
+const makeName = (cell: { first_name: string; last_name: string }) =>
+  `${cell.first_name} ${cell.last_name}`;
+
+export default class LocalPersonColumnType implements IColumnType<
+  LocalPersonViewColumn,
+  LocalPersonViewCell
+> {
   cellToString(cell: LocalPersonViewCell): string {
-    return cell ? `${cell.first_name} ${cell.last_name}` : '';
+    return cell ? makeName(cell) : '';
   }
   getColDef(
     col: LocalPersonViewColumn
@@ -38,7 +43,6 @@ export default class LocalPersonColumnType
       editable: true,
       filterable: true,
       headerAlign: 'center',
-
       renderCell: (params: GridRenderCellParams) => {
         return <ZUIPersonGridCell person={params.value} />;
       },
@@ -52,9 +56,18 @@ export default class LocalPersonColumnType
         if (!v2) {
           return -1;
         }
-        const name1 = `${v1.first_name} ${v1.last_name}`;
-        const name2 = `${v2.first_name} ${v2.last_name}`;
-        return name1.localeCompare(name2);
+        return makeName(v1).localeCompare(makeName(v2));
+      },
+      valueGetter: (value: ZetkinViewRow) => {
+        // we add a `toString`-method, which will be used when filtering for LocalPersons
+        return value
+          ? {
+              ...value,
+              toString() {
+                return makeName(this);
+              },
+            }
+          : undefined;
       },
     };
   }
@@ -76,6 +89,7 @@ const EditCell: FC<{
   column: LocalPersonViewColumn;
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
+  const [createPersonOpen, setCreatePersonOpen] = useState<boolean>(false);
   const api = useGridApiContext();
   const { orgId, viewId } = useRouter().query;
 
@@ -96,9 +110,26 @@ const EditCell: FC<{
     setCellValue(row.id, column.id, person?.id ?? null);
   };
 
+  if (createPersonOpen) {
+    return (
+      <ZUICreatePerson
+        onClose={() => setCreatePersonOpen(false)}
+        onSubmit={(_e, person) => {
+          if (!createPersonOpen) {
+            return;
+          }
+          updateCellValue(person);
+          setCreatePersonOpen(false);
+        }}
+        open={!!createPersonOpen}
+      />
+    );
+  }
+
   return (
     <ZUIPersonGridEditCell
       cell={cell}
+      onCreate={() => setCreatePersonOpen(true)}
       onUpdate={updateCellValue}
       removePersonLabel={messages.cells.localPerson.clearLabel()}
       restrictedMode={isRestrictedMode}

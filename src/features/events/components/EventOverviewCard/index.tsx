@@ -23,7 +23,7 @@ import { FC, useMemo, useState } from 'react';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import useEventLocations from 'features/events/hooks/useEventLocations';
@@ -38,6 +38,7 @@ import {
   makeNaiveDateString,
   makeNaiveTimeString,
   removeOffset,
+  getDayTimeInMinutes,
 } from 'utils/dateUtils';
 import { ZetkinEvent, ZetkinFile, ZetkinLocation } from 'utils/types/zetkin';
 
@@ -70,6 +71,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   const naiveEnd = `${endDate}T${endTime}`;
   const naiveStart = `${startDate}T${startTime}`;
 
+  const [singleDayEventsTimeSpan, setTimeSpan] = useState(
+    getDayTimeInMinutes(naiveEnd) - getDayTimeInMinutes(naiveStart)
+  );
+
   const [wantsToShowEndDate, setWantsToShowEndDate] = useState(false);
   const mustShowEndDate = dayjs(endDate).isAfter(dayjs(startDate), 'day');
 
@@ -99,7 +104,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
       return a.title.localeCompare(b.title);
     });
     return sorted;
-  }, [locations?.length]);
+  }, [locations]);
 
   const options: (
     | ZetkinLocation
@@ -110,6 +115,26 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
     : ['NO_PHYSICAL_LOCATION', 'CREATE_NEW_LOCATION'];
 
   const events = useParallelEvents(orgId, data.start_time, data.end_time);
+
+  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
+
+  const adjustEndTime = () => {
+    let newEndTime = dayjs(naiveStart).add(
+      Math.abs(singleDayEventsTimeSpan) || 1,
+      'minutes'
+    );
+
+    const endTimeInMinutes = getDayTimeInMinutes(newEndTime);
+    const startTimeInMinutes = getDayTimeInMinutes(naiveStart);
+    setTimeSpan(endTimeInMinutes - startTimeInMinutes);
+
+    if (endTimeInMinutes < startTimeInMinutes) {
+      newEndTime = dayjs().set('hour', 23).set('minute', 59);
+    }
+
+    const endTimeString = makeNaiveTimeString(newEndTime.utc().toDate());
+    setEndTime(endTimeString);
+  };
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -137,7 +162,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 <ZUIPreviewableInput
                   {...previewableProps}
                   renderInput={(params) => {
-                    params.ref;
                     return (
                       <DatePicker
                         format="DD-MM-YYYY"
@@ -149,8 +173,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                               newStartDate.utc().toDate()
                             );
                             setStartDate(startDateString);
-                            if (newStartDate > dayjs(endDate) || !showEndDate) {
+                            if (
+                              newStartDate >= dayjs(endDate) ||
+                              !showEndDate
+                            ) {
                               setEndDate(startDateString);
+                              adjustEndTime();
                             }
                           }
                         }}
@@ -187,6 +215,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                               newStartTime.utc().toDate()
                             );
                             setStartTime(startTimeString);
+                          }
+                        }}
+                        onSelectedSectionsChange={(newField) => {
+                          if (
+                            newField === null &&
+                            dayjs(naiveStart).diff(naiveEnd, 'day') === 0
+                          ) {
+                            adjustEndTime();
                           }
                         }}
                         slotProps={{
@@ -248,6 +284,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                                   )
                                 ) {
                                   setWantsToShowEndDate(false);
+                                  adjustEndTime();
                                 }
                               }
                             }}
@@ -274,19 +311,30 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     return (
                       <TimeField
                         ampm={false}
-                        disableIgnoringDatePartForTimeValidation={true}
                         format="HH:mm"
                         fullWidth
                         inputRef={params.ref}
                         label={messages.eventOverviewCard.endTime()}
-                        minTime={dayjs(naiveStart).add(1, 'min')}
                         onChange={(newEndTime) => {
                           if (newEndTime) {
-                            if (newEndTime >= dayjs(naiveStart).add(1, 'min')) {
-                              const endTimeString = makeNaiveTimeString(
-                                newEndTime.utc().toDate()
+                            const endTimeString = makeNaiveTimeString(
+                              newEndTime.utc().toDate()
+                            );
+                            setEndTime(endTimeString);
+                          }
+                        }}
+                        onSelectedSectionsChange={(newField) => {
+                          if (
+                            newField === null &&
+                            dayjs(naiveStart).diff(naiveEnd, 'day') === 0
+                          ) {
+                            if (dayjs(naiveEnd) <= dayjs(naiveStart)) {
+                              adjustEndTime();
+                            } else {
+                              setTimeSpan(
+                                getDayTimeInMinutes(naiveEnd) -
+                                  getDayTimeInMinutes(naiveStart)
                               );
-                              setEndTime(endTimeString);
                             }
                           }
                         }}
@@ -317,7 +365,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
             <Box display="flex" flex={1} flexDirection="column" gap={2}>
               <ZUIPreviewableInput
                 {...previewableProps}
-                renderInput={() => {
+                renderInput={(renderParams) => {
                   return (
                     <Box alignItems="center" display="flex">
                       <Autocomplete
@@ -327,8 +375,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           option === 'CREATE_NEW_LOCATION'
                             ? messages.eventOverviewCard.createLocation()
                             : option === 'NO_PHYSICAL_LOCATION'
-                            ? messages.eventOverviewCard.noLocation()
-                            : option.title
+                              ? messages.eventOverviewCard.noLocation()
+                              : option.title
                         }
                         onChange={(ev, option) => {
                           if (option === 'CREATE_NEW_LOCATION') {
@@ -347,11 +395,22 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           }
                           setLocationId(location.id);
                         }}
+                        onClose={() => setLocationDropdownOpen(false)}
+                        onOpen={() => setLocationDropdownOpen(true)}
+                        open={locationDropdownOpen}
                         options={options}
                         renderInput={(params) => (
                           <TextField
                             {...params}
+                            inputRef={renderParams.ref}
                             label={messages.eventOverviewCard.location()}
+                            onFocus={(e) => {
+                              setLocationDropdownOpen(true);
+                              const target = e.currentTarget;
+                              setTimeout(() => {
+                                target?.select();
+                              }, 0);
+                            }}
                             sx={{
                               backgroundColor: 'white',
                               borderRadius: '5px',
@@ -442,9 +501,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 renderInput={(props) => (
                   <TextField
                     fullWidth
-                    inputProps={props}
                     label={messages.eventOverviewCard.url()}
                     onChange={(ev) => setLink(ev.target.value)}
+                    slotProps={{ htmlInput: { props } }}
                     value={link}
                   />
                 )}
@@ -453,7 +512,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     renderPreview: () => (
                       <Box marginLeft={4}>
                         <Typography
-                          color={theme.palette.text.secondary}
+                          color={oldTheme.palette.text.secondary}
                           variant="subtitle1"
                         >
                           {messages.eventOverviewCard.url().toUpperCase()}
@@ -489,11 +548,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
               renderInput={(props) => (
                 <TextField
                   fullWidth
-                  inputProps={props}
                   label={messages.eventOverviewCard.description()}
                   multiline
                   onChange={(ev) => setInfoText(ev.target.value)}
                   rows={4}
+                  slotProps={{ htmlInput: props }}
                   value={infoText}
                 />
               )}
@@ -501,12 +560,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 renderPreview: () => (
                   <Box>
                     <Typography
-                      color={theme.palette.text.secondary}
+                      color={oldTheme.palette.text.secondary}
                       variant="subtitle1"
                     >
                       {messages.eventOverviewCard.description().toUpperCase()}
                     </Typography>
-                    <Typography variant="body1">{data.info_text}</Typography>
+                    <Typography sx={{ whiteSpace: 'pre-line' }} variant="body1">
+                      {data.info_text}
+                    </Typography>
                   </Box>
                 ),
               })}

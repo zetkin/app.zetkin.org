@@ -9,7 +9,7 @@ import { EmbeddedJoinFormData, EmbeddedJoinFormStatus } from '../types';
 export default async function submitJoinForm(
   prevState: EmbeddedJoinFormStatus,
   inputFormData: FormData
-) {
+): Promise<EmbeddedJoinFormStatus> {
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -22,10 +22,15 @@ export default async function submitJoinForm(
     Iron.defaults
   )) as EmbeddedJoinFormData;
 
-  const outputFormData: Record<string, string> = {};
+  const outputFormData: Record<string, string | null> = {};
 
   joinFormInfo.fields.forEach((field) => {
-    outputFormData[field.s] = inputFormData.get(field.s)?.toString() || '';
+    const value = inputFormData.get(field.s)?.toString() || '';
+    if (field.s == 'gender' && value == 'unspecified') {
+      outputFormData[field.s] = null;
+    } else {
+      outputFormData[field.s] = value;
+    }
   });
 
   await apiClient.post(

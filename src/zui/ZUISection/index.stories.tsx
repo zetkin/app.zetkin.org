@@ -1,11 +1,11 @@
 import { Button } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUISection from '.';
 
 export default {
   component: ZUISection,
-  title: 'Atoms/ZUISection',
+  title: 'Other/ZUISection',
 } as Meta<typeof ZUISection>;
 
 const Template: StoryFn<typeof ZUISection> = (args) => (

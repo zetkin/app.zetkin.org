@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import {
   MULTIPART,
@@ -10,7 +10,7 @@ import PrettyEmail from './PrettyEmail';
 
 export default {
   component: PrettyEmail,
-  title: 'Organisms/Timeline/Updates/PrettyEmail',
+  title: 'Other/ZUITimeline/Updates/PrettyEmail',
 } as Meta<typeof PrettyEmail>;
 
 const Template: StoryFn<typeof PrettyEmail> = (args) => (

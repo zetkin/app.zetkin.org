@@ -27,15 +27,37 @@ function isItem(
   return 'deleted' in thing;
 }
 
+/**
+ * Determines if a remote object needs to be loaded from the server.
+ *
+ * Returns `false` for items that are deleted, currently loading, or have been
+ * loaded within the TTL.
+ *
+ * Returns `true` for items whose data is older than the TTL or has been marked
+ * as stale.
+ *
+ * @category Cache
+ * @param {RemoteItem|RemoteList} item The remote object to check.
+ * @return {boolean} `true` if the object should be loaded, `false` otherwise.
+ */
 export default function shouldLoad(
-  item: RemoteItem<unknown> | RemoteList<unknown> | undefined
+  /**
+   * The remote object to check.
+   */
+  item: RemoteItem<unknown> | RemoteList<unknown> | undefined | null
 ): boolean;
+/**
+ * @category Cache
+ */
 export default function shouldLoad(
-  item: RemoteObjectRecord | undefined,
+  item: RemoteObjectRecord | undefined | null,
   ids: number[]
 ): boolean;
+/**
+ * @category Cache
+ */
 export default function shouldLoad(
-  item: ObjThatNeedsLoading,
+  item: ObjThatNeedsLoading | null,
   idsOrVoid?: number[]
 ): boolean {
   if (!item) {

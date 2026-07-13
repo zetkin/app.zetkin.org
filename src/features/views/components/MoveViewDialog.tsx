@@ -11,9 +11,9 @@ import {
   List,
   ListItem,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useTheme } from '@mui/styles';
 
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -21,6 +21,7 @@ import { ZetkinViewFolder } from './types';
 import useViewBrowserItems, {
   ViewBrowserBackItem,
   ViewBrowserItem,
+  ViewBrowserLoadingItem,
 } from '../hooks/useViewBrowserItems';
 import useViewBrowserMutations from '../hooks/useViewBrowserMutations';
 import useViewTree from '../hooks/useViewTree';
@@ -116,6 +117,12 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
   close,
   itemToMove,
 }) => {
+  if (itemToMove.type == 'back' || itemToMove.type === 'loading') {
+    throw new Error(
+      'Should not be possible to move a back button or loading indicator'
+    );
+  }
+
   const [viewedFolder, setViewedFolder] = useState(itemToMove.folderId);
 
   const { orgId } = useNumericRouteParams();
@@ -126,10 +133,6 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-  if (itemToMove.type == 'back') {
-    throw new Error('Should not be possible to move a back button');
-  }
 
   const doMove = (folderId: number | null) => {
     moveItem(itemToMove.type, itemToMove.data.id, folderId);
@@ -163,8 +166,12 @@ const MoveViewDialog: FunctionComponent<MoveViewDialogProps> = ({
         <ZUIFuture future={itemsFuture}>
           {(data) => {
             const relevantItems = data.filter(
-              (item): item is Exclude<typeof item, ViewBrowserBackItem> =>
-                item.type != 'back'
+              (
+                item
+              ): item is Exclude<
+                typeof item,
+                ViewBrowserBackItem | ViewBrowserLoadingItem
+              > => item.type != 'back' && item.type !== 'loading'
             );
             if (relevantItems.length == 0) {
               return (

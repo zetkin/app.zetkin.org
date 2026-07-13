@@ -1,12 +1,12 @@
 import { Box, Paper } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
-import { ReactNode, useState } from 'react';
+import { Meta, StoryFn } from '@storybook/nextjs';
+import { ReactNode, useState, type JSX } from 'react';
 
 import ZUIReorderable from '.';
 
 export default {
   component: ZUIReorderable,
-  title: 'Atoms/ZUIReorderable',
+  title: 'Other/ZUIReorderable',
 } as Meta<typeof ZUIReorderable>;
 
 const Template: StoryFn<typeof ZUIReorderable> = (args) => {

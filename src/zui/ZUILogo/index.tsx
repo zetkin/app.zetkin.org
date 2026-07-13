@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
 import SvgIcon from '@mui/material/SvgIcon';
 import { Box, Typography } from '@mui/material';
+
+import oldTheme from 'theme';
 
 interface ZUILogoProps {
   size?: number;
@@ -9,33 +10,21 @@ interface ZUILogoProps {
   beta?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
-  beta: {
-    backgroundColor: theme.palette.secondary.main,
-    borderRadius: theme.spacing(0.25),
-    bottom: theme.spacing(0.0),
-    color: theme.palette.background.paper,
-    fontSize: '0.5rem',
-    fontWeight: 900,
-    lineHeight: 1,
-    padding: theme.spacing(0.25),
-    position: 'absolute',
-    right: theme.spacing(-0.5),
-  },
-  logoContainer: {
-    position: 'relative',
-  },
-}));
-
 const ZUILogo = ({
   size,
   color,
   htmlColor,
   beta,
 }: ZUILogoProps): JSX.Element => {
-  const classes = useStyles();
   return (
-    <Box className={classes.logoContainer}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        position: 'relative',
+      }}
+    >
       <SvgIcon
         color={color}
         htmlColor={htmlColor}
@@ -93,7 +82,21 @@ const ZUILogo = ({
         />
       </SvgIcon>
       {beta && (
-        <Typography className={classes.beta} variant="overline">
+        <Typography
+          sx={{
+            backgroundColor: oldTheme.palette.secondary.main,
+            borderRadius: oldTheme.spacing(0.25),
+            bottom: oldTheme.spacing(0.0),
+            color: oldTheme.palette.background.paper,
+            fontSize: '0.5rem',
+            fontWeight: 900,
+            lineHeight: 1,
+            padding: oldTheme.spacing(0.25),
+            position: 'absolute',
+            right: oldTheme.spacing(-0.5),
+          }}
+          variant="overline"
+        >
           Beta
         </Typography>
       )}

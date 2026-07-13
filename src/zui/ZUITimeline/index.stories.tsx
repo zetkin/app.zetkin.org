@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import dayjs from 'dayjs';
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 const chance = Chance();
 
@@ -20,7 +20,7 @@ export default {
     backgroundColor: { control: 'color' },
   },
   component: ZUITimeline,
-  title: 'Organisms/ZUITimeline',
+  title: 'Other/ZUITimeline',
 } as Meta<typeof ZUITimeline>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args

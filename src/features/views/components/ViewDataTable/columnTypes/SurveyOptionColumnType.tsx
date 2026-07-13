@@ -8,10 +8,11 @@ import { IColumnType } from '.';
 import { Msg } from 'core/i18n';
 import { SurveyOptionViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
-import theme from '../../../../../theme';
+import oldTheme from '../../../../../theme';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 import messageIds from 'features/views/l10n/messageIds';
+import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 type SurveyOptionViewCell =
   | {
@@ -21,9 +22,10 @@ type SurveyOptionViewCell =
     }[]
   | null;
 
-export default class SurveyOptionColumnType
-  implements IColumnType<SurveyOptionViewColumn, SurveyOptionViewCell>
-{
+export default class SurveyOptionColumnType implements IColumnType<
+  SurveyOptionViewColumn,
+  SurveyOptionViewCell
+> {
   cellToString(cell: SurveyOptionViewCell): string {
     const pickedThisOption = cell?.filter((submission) => submission.selected);
     return pickedThisOption?.length ? pickedThisOption[0].submitted : '';
@@ -34,6 +36,35 @@ export default class SurveyOptionColumnType
       headerAlign: 'center',
       renderCell: (params) => {
         return <Cell cell={params.value} />;
+      },
+      sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
+        const getPriority = (cell: SurveyOptionViewCell) => {
+          if (!cell || cell.length == 0) {
+            return 1;
+          }
+
+          const hasPickedThisOption = !!cell.filter(
+            (submission) => submission.selected
+          ).length;
+
+          if (!hasPickedThisOption) {
+            return 1;
+          }
+
+          const sorted = cell.concat().sort((sub0, sub1) => {
+            const d0 = new Date(sub0.submitted);
+            const d1 = new Date(sub1.submitted);
+            return d1.getTime() - d0.getTime();
+          });
+
+          const mostRecent = sorted[0];
+
+          return mostRecent.selected ? -1 : 0;
+        };
+
+        const result = getPriority(v1) - getPriority(v2);
+
+        return result;
       },
       type: 'boolean',
     };
@@ -48,6 +79,10 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
   const { orgId } = useRouter().query;
+  const { open: openPopper, close: closePopper } = useToggleDebounce(
+    (ev) => setAnchorEl(ev.currentTarget),
+    () => setAnchorEl(null)
+  );
 
   if (!cell?.length) {
     return null;
@@ -71,12 +106,12 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   return (
     <Box
       alignItems="center"
-      bgcolor={mostRecent.selected ? theme.palette.success.light : ''}
+      bgcolor={mostRecent.selected ? oldTheme.palette.success.light : ''}
       display="flex"
       height="100%"
       justifyContent="center"
-      onMouseOut={() => setAnchorEl(null)}
-      onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+      onMouseOut={closePopper}
+      onMouseOver={openPopper}
       width="100%"
     >
       {mostRecent.selected ? (

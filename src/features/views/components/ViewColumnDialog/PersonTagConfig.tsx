@@ -2,7 +2,7 @@ import { FormControl } from '@mui/material';
 import { useState } from 'react';
 
 import TagManager from 'features/tags/components/TagManager';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 
 interface PersonTagConfigProps {
@@ -10,9 +10,9 @@ interface PersonTagConfigProps {
 }
 
 const PersonTagConfig = ({ onOutputConfigured }: PersonTagConfigProps) => {
-  const [selectedTags, setSelectedTags] = useState<ZetkinTag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<ZetkinAppliedTag[]>([]);
 
-  const onChangeTags = (tags: ZetkinTag[]) => {
+  const onChangeTags = (tags: ZetkinAppliedTag[]) => {
     setSelectedTags(tags);
     const columns = tags.map((tag) => ({
       config: { tag_id: tag.id },
@@ -30,7 +30,9 @@ const PersonTagConfig = ({ onOutputConfigured }: PersonTagConfigProps) => {
         groupTags={false}
         ignoreValues={true}
         onAssignTag={(tag) => {
-          const newAssignedTags = selectedTags.concat([tag] as ZetkinTag[]);
+          const newAssignedTags = selectedTags.concat([
+            tag,
+          ] as ZetkinAppliedTag[]);
           onChangeTags(newAssignedTags);
         }}
         onUnassignTag={(tag) => {

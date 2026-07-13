@@ -16,13 +16,13 @@ export default makeMessages('feat.emails', {
     ),
     empty: m('Your email is empty. Go to the Compose tab to add some content.'),
     noSubject: m(
-      'Your email has no subject line. Go to Settings in the Compose tab to add one.'
+      'Your email has no subject line. Go to the Compose tab to add one.'
     ),
     notTargeted: m(
       'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
     ),
     targetsNotLocked: m(
-      'The targets are not locked. Go to the Ready section in the Overview tab to do this.'
+      'The targets are not locked. Go to the Targets section in the Overview tab to do this.'
     ),
   },
   deliveryStatus: {
@@ -44,16 +44,25 @@ export default makeMessages('feat.emails', {
           instructions: m(
             'Here you can send this email to yourself to preview what it will look like for the recipients. '
           ),
+          invalidEmailAddress: m('This is not a valid email address'),
           okButton: m('OK!'),
+          previewInBrowser: m('Preview in browser'),
+          previewInBrowserInstructions: m(
+            'Use the button below to preview the email in your browser.'
+          ),
           sendButton: m('Send'),
           sendTo: m('The email will be sent to this address:'),
           title: m('Preview'),
         },
         settings: {
           senderAddressInputLabel: m('Sender address'),
-          senderNameInputLabel: m('Sender name'),
+          senderInputLabel: m('Sender'),
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
+        },
+        theme: {
+          themeTitle: m<{ themeId: number }>('Theme {themeId}'),
+          title: m('Theme'),
         },
       },
     },
@@ -63,6 +72,7 @@ export default makeMessages('feat.emails', {
           noButtonText: m('Click to change this text!'),
         },
         settings: {
+          buttonTextWarning: m('Make sure to add your text to the button'),
           invalidUrl: m('This is not a valid link'),
           testLink: m('Click to test link'),
           urlLabel: m('Link url'),
@@ -100,6 +110,7 @@ export default makeMessages('feat.emails', {
     deliveryDate: m('Delivery date'),
     deliveryTime: m('Delivery time'),
     duplicate: m('Duplicate'),
+    move: m('Move'),
     schedule: m('Schedule'),
     sendAnyway: m('Send anyway'),
     sendLater: m('Send later'),
@@ -117,6 +128,13 @@ export default makeMessages('feat.emails', {
     warning: m(
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
+  },
+  emailChangeCampaignDialog: {
+    error: m('Error: Could not move the email to the selected project'),
+    success: m<{ campaignTitle: string; emailTitle: string }>(
+      'Email "{emailTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move email'),
   },
   emailFeatureIsBlocked: {
     errorMessage: m(
@@ -171,20 +189,12 @@ export default makeMessages('feat.emails', {
     },
   },
   ready: {
-    loading: m('Loading...'),
-    lockButton: m('Lock for delivery'),
-    lockDescription: m('Lock to enable email delivery'),
-    locked: m('Locked'),
-    scheduledDescription: m(
-      'This email is scheduled for delivery. If you want to unlock the targets, cancel the delivery first.'
+    missingEmailsDescription: m<{ numPeople: number }>(
+      'There {numPeople, plural, one {is a person} other {are people}} with a missing email address in the target group. If you resolve it they will be included in the target group.'
     ),
     sentSubtitle: m('Targets that were available for delivery'),
     subtitle: m('Targets currently available for delivery'),
     title: m('Ready'),
-    unlockButton: m('Unlock'),
-    unlockDescription: m(
-      'Proceed to delivery or unlock recipients to edit targeting. Unlocking may add or remove some targets depending on what results the Smart Search will produce.'
-    ),
   },
   state: {
     draft: m('Draft'),
@@ -207,12 +217,32 @@ export default makeMessages('feat.emails', {
   targets: {
     defineButton: m('Define target group'),
     editButton: m('Edit target group'),
+    loading: m('Loading...'),
+    lockButton: m('Lock for delivery'),
     locked: m('Targets are locked for delivery'),
-    sentSubtitle: m(
-      'You can look at the Smart Search that was used to define the recipients of this email'
-    ),
-    subtitle: m('Use Smart Search to define the recipients of this email.'),
+    lockedChip: m('Locked'),
+    subtitle: {
+      notTargeted: m(
+        'Use Smart Search to define the recipients of this email.'
+      ),
+      scheduled: m(
+        'This email is scheduled for delivery. If you want to unlock the targets to edit the Smart Search, cancel the delivery first.'
+      ),
+      sent: m(
+        'You can look at the Smart Search that was used to define the recipients of this email'
+      ),
+      targetedAndLocked: m(
+        'Proceed to delivery or unlock recipients if you want to edit the Smart Search that is used to define the recipients of this email.'
+      ),
+      targetedNotLocked: m(
+        'Edit the Smart Search that is used to define the recipients of this email, or lock the target group to enable email delivery.'
+      ),
+    },
     title: m('Targets'),
+    unlockAlert: m(
+      'Unlocking may add or remove people from the target group depending on what results the Smart Search will produce.'
+    ),
+    unlockButton: m('Unlock'),
     viewButton: m('View target group'),
   },
   unsubscribePage: {
@@ -228,6 +258,14 @@ export default makeMessages('feat.emails', {
     info: m<{ org: string }>(
       'You have been unsubscribed from mass email from {org}.'
     ),
+  },
+  urlCard: {
+    nowAccepting: m('Everyone can view the email at this link'),
+    open: m('Public view'),
+    preview: m('Future direct link'),
+    previewPortal: m('Preview email'),
+    visitPortal: m('Visit email'),
+    willAccept: m('Everyone will be able to view the email at this link'),
   },
   varDefaults: {
     target: m('reader'),

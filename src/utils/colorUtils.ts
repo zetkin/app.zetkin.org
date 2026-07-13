@@ -1,7 +1,9 @@
-import randomSeed from 'random-seed';
+import { create } from 'random-seed';
+
+import { funSwatches } from 'zui/theme/palette';
 
 export function generateRandomColor(seed: string): string {
-  const rand = randomSeed.create(seed);
+  const rand = create(seed);
   const r = rand(256);
   //TODO: Temporarily limiting spectrum so it looks good
   const g = 0;
@@ -26,4 +28,29 @@ export function getContrastColor(color: string): string {
   }
 
   return '#' + ((fgR << 16) | (fgG << 8) | fgB).toString(16).padStart(6, '0');
+}
+
+const defaultColors = Object.keys(funSwatches).reduce((acc, swatch) => {
+  acc.push(funSwatches[swatch].light.color);
+  acc.push(funSwatches[swatch].medium.color);
+
+  return acc;
+}, [] as string[]);
+
+export function randomizerFromSeed(seed: string, colors = defaultColors) {
+  const seedWithoutSpaces = seed.replaceAll(' ', '');
+  const seededRand = create(seedWithoutSpaces.replaceAll(' ', ''));
+  const rand = () => seededRand(1000000) / 1000000;
+
+  const getColor = (): string => {
+    const index = seededRand(colors.length);
+    const color = colors[index];
+    return color;
+  };
+
+  return {
+    getColor,
+    rand,
+    seededRand,
+  };
 }

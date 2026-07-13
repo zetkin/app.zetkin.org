@@ -11,6 +11,7 @@ const paramsSchema = z.object({
       campaign_id: z.optional(z.number()),
       cancelled: z.union([z.string(), z.null()]),
       contact_id: z.union([z.optional(z.number()), z.null()]),
+      cover_file_id: z.union([z.optional(z.number()), z.null()]),
       end_time: z.string(),
       info_text: z.optional(z.string()),
       location_id: z.union([z.optional(z.number()), z.null()]),

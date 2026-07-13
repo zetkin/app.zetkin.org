@@ -6,10 +6,10 @@ import SingleIconCardVisual from '../SingleIconCardVisual';
 import SurveyResponseConfig from '../SurveyResponseConfig';
 import SurveyResponsesConfig from '../SurveyResponsePluralConfig';
 import SurveySubmitDateConfig from '../SurveySubmitDateConfig';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { SelectedViewColumn, ZetkinViewColumn } from '../../types';
 
-const { blue } = theme.palette.viewColumnGallery;
+const { blue } = oldTheme.palette.viewColumnGallery;
 
 export const multipleSurveyQuestions: ColumnChoice = {
   color: blue,

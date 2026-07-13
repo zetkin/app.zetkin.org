@@ -33,7 +33,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
             {instances
               .sort((i0, i1) => Number(!!i0.closed) - Number(!!i1.closed))
               .map((instance) => (
-                <ListItem key={instance.id} button divider>
+                <ListItem key={instance.id} divider>
                   <ZUIJourneyInstanceItem
                     instance={instance}
                     orgId={instance.organization.id}

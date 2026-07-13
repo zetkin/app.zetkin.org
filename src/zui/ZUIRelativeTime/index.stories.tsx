@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIRelativeTime from '.';
 
 export default {
   component: ZUIRelativeTime,
-  title: 'Atoms/ZUIRelativeTime',
+  title: 'Other/ZUIRelativeTime',
 } as Meta<typeof ZUIRelativeTime>;
 
 const Template: StoryFn<typeof ZUIRelativeTime> = (args) => (

@@ -28,6 +28,7 @@ const ZUICollapse: React.FC<ZUICollapseProps> = ({
         setDidMeasure(true);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setNeedsCollapse]
   );
 

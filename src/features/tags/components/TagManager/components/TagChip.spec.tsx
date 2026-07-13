@@ -1,10 +1,11 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 
 import { render } from 'utils/testing';
 import mockTag from 'utils/testing/mocks/mockTag';
 import TagChip from './TagChip';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 describe('<TagChip />', () => {
   describe('on hover', () => {
@@ -52,8 +53,8 @@ describe('<TagChip />', () => {
     it('shows value for value tags', () => {
       const tag = mockTag({
         value: 'foo',
-        value_type: 'string',
-      });
+        value_type: 'text',
+      }) as ZetkinAppliedTag;
       const { getByText } = render(<TagChip tag={tag} />);
 
       const valueEl = getByText(tag.value as string);
@@ -62,7 +63,7 @@ describe('<TagChip />', () => {
 
     it('shows empty value for value tags without a value', () => {
       const tag = mockTag({
-        value_type: 'string',
+        value_type: 'text',
       });
 
       const { container } = render(<TagChip tag={tag} />);

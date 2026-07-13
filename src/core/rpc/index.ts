@@ -3,6 +3,7 @@ import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
 import { copyEmailDef } from 'features/emails/rpc/copyEmail';
 import { copyEventsDef } from 'features/events/rpc/copyEvents';
 import { createNewViewRouteDef } from 'features/views/rpc/createNew/server';
+import { copyViewRouteDef } from 'features/views/rpc/copy/server';
 import { deleteEventsDef } from 'features/events/rpc/deleteEvents';
 import { deleteFolderRouteDef } from 'features/views/rpc/deleteFolder';
 import { getEventStatsDef } from 'features/events/rpc/getEventStats';
@@ -19,13 +20,34 @@ import { getEmailInsightsDef } from 'features/emails/rpc/getEmailInsights';
 import { renderEmailDef } from 'features/emails/rpc/renderEmail/server';
 import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCallAssignment';
 import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbedData';
+import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
+import { submitHouseholdVisitsDef } from 'features/canvass/rpc/submitHouseholdVisits';
+import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
+import { connectToOrgDef } from 'features/organizations/rpc/connectToOrg';
+import { submitSurveysDef } from 'features/call/rpc/submitSurveysAndUpdateCall';
+import { editHouseholdsDef } from 'features/canvass/rpc/editHouseholds';
+import { loadLocationHouseholdVisitsDef } from 'features/canvass/rpc/loadLocationHouseholdVisits';
+import { getSuborgsWithStatsDef } from 'features/organizations/rpc/getSuborgsWithStats';
+import { getSuborgWithStatsDef } from 'features/organizations/rpc/getSuborgWithStats';
+import { surveyToListDef } from 'features/surveys/rpc/surveyToList';
+import { duplicateSurveyDef } from 'features/surveys/rpc/duplicateSurvey';
+import { loadPersonFieldsDef } from 'features/duplicates/rpc/loadPersonFields';
+import { getSurveyResponseStatsDef } from 'features/surveys/rpc/getSurveyResponseStats';
+import { getPublicOrganizationsDef } from 'features/public/rpc/organizations';
+import { addParticipantsDef } from 'features/events/rpc/addParticipants';
+import { getRootOrganizationDef } from 'features/organizations/rpc/getRootOrganization';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
 
+  rpcRouter.register(getAllEventsDef);
   rpcRouter.register(deleteFolderRouteDef);
   rpcRouter.register(createNewViewRouteDef);
+  rpcRouter.register(copyViewRouteDef);
   rpcRouter.register(getSurveyStatsDef);
+  rpcRouter.register(getSurveyResponseStatsDef);
+  rpcRouter.register(duplicateSurveyDef);
+  rpcRouter.register(surveyToListDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);
   rpcRouter.register(getEventStatsDef);
@@ -43,6 +65,18 @@ export function createRPCRouter() {
   rpcRouter.register(renderEmailDef);
   rpcRouter.register(createCallAssignmentDef);
   rpcRouter.register(getJoinFormEmbedDataDef);
+  rpcRouter.register(createHouseholdsDef);
+  rpcRouter.register(connectToOrgDef);
+  rpcRouter.register(submitSurveysDef);
+  rpcRouter.register(submitHouseholdVisitsDef);
+  rpcRouter.register(editHouseholdsDef);
+  rpcRouter.register(loadLocationHouseholdVisitsDef);
+  rpcRouter.register(getSuborgsWithStatsDef);
+  rpcRouter.register(getSuborgWithStatsDef);
+  rpcRouter.register(loadPersonFieldsDef);
+  rpcRouter.register(getPublicOrganizationsDef);
+  rpcRouter.register(addParticipantsDef);
+  rpcRouter.register(getRootOrganizationDef);
 
   return rpcRouter;
 }

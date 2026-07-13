@@ -48,9 +48,12 @@ const journeysSlice = createSlice({
       if (instanceItem) {
         instanceItem.isStale = true;
         if (instanceItem.data) {
-          if (state.timelineUpdatesByInstanceId[instanceItem.data?.id]) {
-            state.timelineUpdatesByInstanceId[instanceItem.data?.id].isStale =
-              true;
+          const { id } = instanceItem.data;
+          if (state.timelineUpdatesByInstanceId[id]) {
+            state.timelineUpdatesByInstanceId[id].isStale = true;
+          }
+          if (state.milestonesByInstanceId[id]) {
+            state.milestonesByInstanceId[id].isStale = true;
           }
         }
       }
@@ -74,9 +77,23 @@ const journeysSlice = createSlice({
         remoteItem(journeyInstance.id, { data: journeyInstance })
       );
 
-      state.journeyInstancesByJourneyId[journeyInstance.journey.id].items.push(
+      state.journeyInstancesByJourneyId[journeyInstance.journey.id]?.items.push(
         remoteItem(journeyInstance.id, { data: journeyInstance })
       );
+    },
+    journeyInstanceDeleted: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+
+      state.journeyInstanceList.items = state.journeyInstanceList.items.map(
+        (item) => (item.id == id ? { ...item, deleted: true } : item)
+      );
+
+      for (const journeyId in state.journeyInstancesByJourneyId) {
+        state.journeyInstancesByJourneyId[+journeyId].items =
+          state.journeyInstancesByJourneyId[+journeyId].items.filter(
+            (item) => item.id !== id
+          );
+      }
     },
     journeyInstanceLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -257,6 +274,7 @@ export const {
   invalidateTimeline,
   journeyInstanceCreate,
   journeyInstanceCreated,
+  journeyInstanceDeleted,
   journeyInstanceLoad,
   journeyInstanceLoaded,
   journeyInstanceUpdate,

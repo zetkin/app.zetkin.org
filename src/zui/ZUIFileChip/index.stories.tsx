@@ -1,11 +1,11 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import mockFile from 'utils/testing/mocks/mockFile';
 import ZUIFileChip from '.';
 
 export default {
   component: ZUIFileChip,
-  title: 'Atoms/ZUIFileChip',
+  title: 'Other/ZUIFileChip',
 } as Meta<typeof ZUIFileChip>;
 
 const Template: StoryFn<typeof ZUIFileChip> = (args) => (

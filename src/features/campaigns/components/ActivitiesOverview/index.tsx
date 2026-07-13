@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import NextLink from 'next/link';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Skeleton, Typography } from '@mui/material';
 
 import ActivitiesOverviewCard from './ActivitiesOverviewCard';
 import messageIds from 'features/campaigns/l10n/messageIds';
@@ -14,6 +14,36 @@ type ActivitiesOverviewProps = {
   campaignId?: number;
   isShared?: boolean;
   orgId: number;
+};
+
+export const ActivitiesOverviewSkeleton = () => {
+  return (
+    <>
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        my={2}
+      >
+        <Box sx={{ maxWidth: '100%' }}>
+          <Typography sx={{ maxWidth: '100%' }} variant="h4">
+            <Skeleton sx={{ maxWidth: '100%' }} width={'400px'} />
+          </Typography>
+        </Box>
+      </Box>
+      <Grid container height={'400px'} spacing={2}>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <Skeleton height={'100%'} variant={'rounded'} />
+        </Grid>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <Skeleton height={'100%'} variant={'rounded'} />
+        </Grid>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <Skeleton height={'100%'} variant={'rounded'} />
+        </Grid>
+      </Grid>
+    </>
+  );
 };
 
 const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
@@ -94,7 +124,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
 
           return (
             <Grid container spacing={2}>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <ActivitiesOverviewCard
                   activities={data.today}
                   campId={campaignId}
@@ -104,7 +134,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
                   timeScale={'day'}
                 />
               </Grid>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <ActivitiesOverviewCard
                   activities={data.tomorrow}
                   campId={campaignId}
@@ -114,7 +144,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
                   timeScale={'day'}
                 />
               </Grid>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <ActivitiesOverviewCard
                   activities={data.alsoThisWeek}
                   campId={campaignId}

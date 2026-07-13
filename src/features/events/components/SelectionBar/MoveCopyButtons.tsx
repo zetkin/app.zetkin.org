@@ -36,7 +36,7 @@ const MoveCopyButtons: FC = () => {
         }}
         variant="outlined"
       >
-        <Msg id={messageIds.selectionBar.moveCopyButtons.move} />
+        <Msg id={messageIds.selectionBar.moveCopyButtons.reschedule} />
       </Button>
       <Menu
         anchorEl={moveMenuAnchorEl}
@@ -56,7 +56,7 @@ const MoveCopyButtons: FC = () => {
         <Box sx={{ cursor: 'default', paddingLeft: 2 }}>
           <Typography fontWeight="medium" variant="body2">
             <Msg
-              id={messageIds.selectionBar.moveCopyButtons.moveMenuHeader}
+              id={messageIds.selectionBar.moveCopyButtons.rescheduleMenuHeader}
               values={{ numberOfEvents: selectedEvents.length }}
             />
           </Typography>

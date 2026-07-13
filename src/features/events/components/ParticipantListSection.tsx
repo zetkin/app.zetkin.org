@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
-import filterParticipants from '../utils/filterParticipants';
+import { filterSignupOrParticipantRows } from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
 import { removeOffset } from 'utils/dateUtils';
@@ -101,6 +101,7 @@ interface ParticipantListSectionListProps {
   description: string;
   filterString: string;
   eventId: number;
+  headerActions?: ReactNode;
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
   title: string;
@@ -113,6 +114,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   description,
   filterString,
   eventId,
+  headerActions,
   orgId,
   rows,
   title,
@@ -132,9 +134,11 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       headerName: '',
       hideSortIcons: true,
       renderCell: (params) => (
-        <ZUIPersonHoverCard personId={params.row.id}>
-          <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
-        </ZUIPersonHoverCard>
+        <Link href={`/organize/${orgId}/people/${params.row.id}`}>
+          <ZUIPersonHoverCard personId={params.row.id}>
+            <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
+          </ZUIPersonHoverCard>
+        </Link>
       ),
       resizable: false,
       sortable: false,
@@ -182,8 +186,8 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       },
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
-        return `${params.row.first_name || ''} ${params.row.last_name || ''}`;
+      valueGetter: (value, row) => {
+        return `${row.first_name || ''} ${row.last_name || ''}`;
       },
     },
     {
@@ -230,9 +234,12 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
     },
     {
       disableColumnMenu: true,
-      field: 'notified',
+      field: type == 'signups' ? 'signups' : 'notified',
       flex: 1,
-      headerName: messages.eventParticipantsList.columnNotified(),
+      headerName:
+        type == 'signups'
+          ? messages.eventParticipantsList.columnSignedUp()
+          : messages.eventParticipantsList.columnNotified(),
       renderCell: (params) => {
         if (params.row.person) {
           return <ZUIRelativeTime datetime={params.row.response_date} />;
@@ -243,11 +250,11 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
       type: 'date',
-      valueGetter: (params) => {
-        if (params.row.person) {
-          return new Date(params.row.response_date);
+      valueGetter: (value, row) => {
+        if (row.person) {
+          return new Date(row.response_date);
         } else {
-          return new Date(params.row.reminder_sent);
+          return new Date(row.reminder_sent);
         }
       },
     },
@@ -283,8 +290,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               ]}
             />
           );
-        } else if (type == 'booked') {
-          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
+        } else if (event && type == 'booked') {
+          const eventStart = new Date(removeOffset(event.start_time));
+          const anHourFromNow = new Date(
+            new Date().setHours(new Date().getHours() + 1)
+          );
+          const canTakeAttendance = eventStart < anHourFromNow;
+
+          if (canTakeAttendance) {
             const options: ButtonOption[] = [
               {
                 callback: () => {
@@ -373,10 +386,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       },
       resizable: false,
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
-        if (params.row.attended) {
+      valueGetter: (value, row) => {
+        if (row.attended) {
           return 1;
-        } else if (params.row.noshow) {
+        } else if (row.noshow) {
           return 2;
         } else {
           return 0;
@@ -401,6 +414,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           {title}
         </Typography>
         <ZUINumberChip color={chipColor} outlined={true} value={chipNumber} />
+        {headerActions}
       </Box>
       <Typography mb={2} variant="body1">
         {description}
@@ -410,7 +424,9 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         checkboxSelection={false}
         columns={columns}
         rows={
-          filterString ? filterParticipants(rows, filterString) : rows ?? []
+          filterString
+            ? filterSignupOrParticipantRows(rows, filterString)
+            : (rows ?? [])
         }
         sx={{
           '& .MuiDataGrid-row:hover': {

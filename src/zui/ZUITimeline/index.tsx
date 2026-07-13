@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material';
+import { Alert, Stack } from '@mui/material';
 import React, { useState } from 'react';
 import {
   Box,
@@ -46,23 +46,21 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
 
   return (
     <Fade appear in timeout={1000}>
-      <Grid container direction="column" spacing={5}>
-        <Grid item>
-          <TimelineAddNote
-            disabled={disabled}
-            onSubmit={async (note) => {
-              setShowPostRequestError(false);
-              try {
-                // Await is needed here to catch the exception if the request fails
-                await onAddNote(note);
-              } catch (e) {
-                setShowPostRequestError(true);
-              }
-            }}
-            showPostRequestError={showPostRequestError}
-          />
-        </Grid>
-        <Grid item sm={6} xl={4} xs={12}>
+      <Stack spacing={5}>
+        <TimelineAddNote
+          disabled={disabled}
+          onSubmit={async (note) => {
+            setShowPostRequestError(false);
+            try {
+              // Await is needed here to catch the exception if the request fails
+              await onAddNote(note);
+            } catch (e) {
+              setShowPostRequestError(true);
+            }
+          }}
+          showPostRequestError={showPostRequestError}
+        />
+        <Grid size={{ sm: 6, xl: 4, xs: 12 }}>
           {/* Filter timeline select */}
           <Select
             fullWidth
@@ -107,22 +105,20 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
           </Select>
         </Grid>
         {updateTypeFilter !== 'all' && (
-          <Grid item>
-            <CardActionArea>
-              <Alert
-                onClick={() =>
-                  setUpdateTypeFilter(UPDATE_TYPE_FILTER_OPTIONS.ALL)
-                }
-                severity="warning"
-                style={{ cursor: 'pointer' }}
-              >
-                <Msg id={messageIds.filter.warning} />
-              </Alert>
-            </CardActionArea>
-          </Grid>
+          <CardActionArea>
+            <Alert
+              onClick={() =>
+                setUpdateTypeFilter(UPDATE_TYPE_FILTER_OPTIONS.ALL)
+              }
+              severity="warning"
+              sx={{ cursor: 'pointer' }}
+            >
+              <Msg id={messageIds.filter.warning} />
+            </Alert>
+          </CardActionArea>
         )}
         {renderUpdateList()}
-      </Grid>
+      </Stack>
     </Fade>
   );
 
@@ -139,12 +135,12 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
   function renderUpdate(update: ZetkinUpdate, divider: boolean) {
     return (
       <React.Fragment key={update.timestamp + update.type}>
-        <Grid aria-label="timeline update" item>
+        <Grid aria-label="timeline update">
           <TimelineUpdate onEditNote={onEditNote} update={update} />
         </Grid>
         {divider && (
-          <Grid item>
-            <Divider style={{ width: '100%' }} />
+          <Grid>
+            <Divider sx={{ width: '100%' }} />
           </Grid>
         )}
       </React.Fragment>

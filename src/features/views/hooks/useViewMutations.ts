@@ -5,8 +5,10 @@ import {
   viewDeleted,
   viewUpdate,
   viewUpdated,
+  viewDuplicated,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
+import duplicate from '../rpc/copy/client';
 
 type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
   folder_id?: number | null;
@@ -19,6 +21,11 @@ interface UseViewMutationsReturn {
     viewId: number,
     data: ZetkinViewUpdateBody
   ) => PromiseFuture<ZetkinView>;
+  duplicateView: (
+    oldViewId: number,
+    folderId: number | null,
+    title: string
+  ) => Promise<ZetkinView>;
 }
 
 export default function useViewMutations(
@@ -29,16 +36,16 @@ export default function useViewMutations(
 
   const deleteView = async (viewId: number): Promise<void> => {
     await apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
-    dispatch(viewDeleted(viewId));
+    dispatch(viewDeleted([orgId, viewId]));
   };
 
   const updateView = (viewId: number, data: ZetkinViewUpdateBody) => {
     const mutating = Object.keys(data);
-    dispatch(viewUpdate([viewId, mutating]));
+    dispatch(viewUpdate([orgId, viewId, mutating]));
     const promise = apiClient
       .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
       .then((view) => {
-        dispatch(viewUpdated([view, mutating]));
+        dispatch(viewUpdated([orgId, view, mutating]));
         return view;
       });
 
@@ -56,5 +63,21 @@ export default function useViewMutations(
     dispatch(columnOrderUpdated([viewId, columnOrder]));
   };
 
-  return { deleteView, updateColumnOrder, updateView };
+  const duplicateView = async (
+    oldViewId: number,
+    folderId: number | null,
+    title: string
+  ) => {
+    const view = await apiClient.rpc(duplicate, {
+      folderId: typeof folderId == 'number' ? folderId : undefined,
+      oldViewId,
+      orgId,
+      title,
+    });
+    dispatch(viewDuplicated([orgId, view]));
+
+    return view;
+  };
+
+  return { deleteView, duplicateView, updateColumnOrder, updateView };
 }

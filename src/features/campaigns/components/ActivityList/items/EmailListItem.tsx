@@ -13,8 +13,8 @@ interface EmailListItemProps {
 }
 
 const statusColors = {
-  [EmailState.UNKNOWN]: STATUS_COLORS.GRAY,
-  [EmailState.DRAFT]: STATUS_COLORS.GRAY,
+  [EmailState.UNKNOWN]: STATUS_COLORS.GREY,
+  [EmailState.DRAFT]: STATUS_COLORS.GREY,
   [EmailState.SCHEDULED]: STATUS_COLORS.BLUE,
   [EmailState.SENT]: STATUS_COLORS.GREEN,
 };
@@ -31,7 +31,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     numLockedTargets,
     numBlocked,
   } = useEmailStats(orgId, emailId);
-  const endNumber = numTargetMatches - numBlocked.any ?? 0;
+  const endNumber = numTargetMatches - numBlocked.any;
 
   if (!email) {
     return null;

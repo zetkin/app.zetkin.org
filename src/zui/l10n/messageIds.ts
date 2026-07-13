@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('zui', {
   accessList: {
@@ -8,6 +8,12 @@ export default makeMessages('zui', {
       'Added by {sharer} {updated}'
     ),
     removeAccess: m('Remove access'),
+  },
+  autocomplete: {
+    noOptionsDefaultText: m('No option matches your search'),
+  },
+  breadcrumbs: {
+    showMore: m<{ number: number }>('{number} more...'),
   },
   collapse: {
     collapse: m('Collapse'),
@@ -38,6 +44,18 @@ export default makeMessages('zui', {
       o: m('Other'),
       unknown: m('Unknown'),
     },
+    location: {
+      dialog: {
+        clearButton: m('Clear location'),
+        doneButton: m('Done'),
+        helperText: m('Latitude and longitude coordinates'),
+        mapInfo: m(
+          'Click and drag to pan the map. Pinch or scroll to zoom. Click or tap to select map location.'
+        ),
+      },
+      helperText: m('Latitude and longitude coordinates'),
+      mapIconTooltip: m('Edit in map'),
+    },
     showAllFields: m('Show all fields'),
     submitLabel: {
       add: m('Create & add'),
@@ -50,8 +68,8 @@ export default makeMessages('zui', {
         'Create person and add to {journey}'
       ),
       addToList: m<{ list: string }>('Create person and add to {list}'),
-      assignToCanvassAssignment: m<{ canvassAss: string }>(
-        'Create person and assign to {canvassAss}'
+      assignToAreaAssignment: m<{ areaAss: string }>(
+        'Create person and assign to {areaAss}'
       ),
       assignToJourney: m<{ journey: string }>(
         'Create person and assign to {journey}'
@@ -70,17 +88,19 @@ export default makeMessages('zui', {
   },
   dataTableSearch: {
     button: m('Search'),
-    helpText: m<{ minSearchLength: number }>(
-      'Type at least {minSearchLength} characters'
+    placeholder: m<{ minSearchLength: number }>(
+      'Type to search (min {minSearchLength} chars)'
     ),
-    idSearchHelpText: m('Type an ID (numbers only)'),
-    placeholder: m('Search this table'),
-    placeholderWithIdSearch: m('Search - use # for IDs, e.g. type #123'),
+    placeholderWithIdSearch: m<{ minSearchLength: number }>(
+      'Search - use # for IDs, e.g. type #123 (min {minSearchLength} chars)'
+    ),
     title: m('Search'),
   },
   dataTableSorting: {
     addButton: m('Add sorting column'),
+    ascending: m('Ascending'),
     button: m('Sort'),
+    descending: m('Descending'),
     hint: m<{ shiftKeyIcon: ReactElement }>(
       'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     ),
@@ -110,6 +130,9 @@ export default makeMessages('zui', {
     }>('{date}'),
     singleDayToday: m('Today'),
   },
+  drawerModal: {
+    close: m('Close'),
+  },
   duration: {
     days: m<{ n: number }>('{n, plural, =1 {1 day} other {# days}}'),
     h: m<{ n: number }>('{n}h'),
@@ -126,6 +149,23 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  ellipsisMenu: {
+    ariaLabel: m('More options'),
+  },
+  eventWarningIcons: {
+    contact: m('No contact person has been assigned'),
+    reminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
+    signUps: m('There are pending signups'),
+  },
+  expandableText: {
+    showLess: m('Show less'),
+    showMore: m('Show more'),
+  },
+  footer: {
+    privacyPolicy: m('Privacy policy'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
@@ -138,6 +178,10 @@ export default makeMessages('zui', {
   lists: {
     showMore: m('Show more...'),
   },
+  mobileOrganizeHeader: {
+    sideBarMenuButtonDescription: m('Open sidebar menu'),
+    userMenuButtonDescription: m('Open user menu'),
+  },
   orgScopeSelect: {
     orgPlaceholder: m('Select organizations'),
     orgSelectionLabel: m<{ count: number }>('{count} selected'),
@@ -149,10 +193,22 @@ export default makeMessages('zui', {
     },
   },
   organizeSidebar: {
-    areas: m('Areas'),
+    collapse: m('Collapse sidebar'),
+    expand: m('Expand sidebar'),
     filter: m('Type to filter'),
+    filterLabel: m('Filter organizations'),
+    geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
+    myPagesInfoText: m('Go to my pages'),
+    myPagesMenuItemLabel: m('My pages'),
+    mySettingsMenuItemLabel: m('My settings'),
+    organizationAvatarAltText: m('Organization icon'),
+    organizationSwitcher: {
+      hide: m('Hide organization switcher'),
+      show: m('Show organization switcher'),
+    },
+    overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
     search: m('Search'),
@@ -169,16 +225,60 @@ export default makeMessages('zui', {
     searchResults: m('Search results'),
   },
   personSelect: {
+    bulkAdd: {
+      backButton: m('Back'),
+      cancelButton: m('Cancel'),
+      confirmMessage: m<{ count: number; entityToAddTo?: string }>(
+        '{entityToAddTo, select, undefined {You are about to add {count, number, integer} people. Are you sure you want to continue?} other {You are about to add {count, number, integer} people to ‘{entityToAddTo}’. Are you sure you want to continue?}}'
+      ),
+      confirmTitle: m('Confirm adding people'),
+      fromView: m<{ viewTitle: string }>('From  ‘{viewTitle}’'),
+      openButton: m('Bulk add'),
+
+      submitButton: m<{ numSelected: number }>(
+        '{numSelected, plural, =0 {Select} =1 {Select 1 person} other {Select {numSelected, number, integer} people}}'
+      ),
+      title: m<{ entityToAddTo?: string }>(
+        '{entityToAddTo, select, undefined {Add people} other {Add people to ‘{entityToAddTo}’}}'
+      ),
+    },
     keepTyping: m('Keep typing to start searching'),
     noResult: m('No matching person found'),
     search: m('Type to start searching'),
     searching: m('Searching...'),
+  },
+  privacyPolicyLink: m('https://zetkin.org/privacy'),
+  publicFooter: {
+    hostingOrganization: m<{ name: string }>(
+      'This instance of Zetkin is hosted and managed by {name}.'
+    ),
+    links: {
+      foundation: m('Zetkin Foundation'),
+      privacy: m('Privacy Policy'),
+    },
+    text: m(
+      'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
+    ),
+  },
+  signUpChip: {
+    booked: m('You are booked'),
+    callSignUp: m<{ name: string }>('{name} has signed up'),
+    needed: m('You are needed'),
+    signedUp: m('You have signed up'),
   },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),
     success: m('Success!'),
     warning: m('Warning!'),
+  },
+  statusChip: {
+    cancelled: m('Cancelled'),
+    closed: m('Closed'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    published: m('Published'),
+    scheduled: m('Scheduled'),
   },
   submitOrCancel: {
     cancel: m('Cancel'),
@@ -189,34 +289,36 @@ export default makeMessages('zui', {
   },
   timeSpan: {
     multiDay: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - {endDate}, {end}'),
     multiDayEndsToday: m<{
-      end: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - Today, {end}'),
     multiDayToday: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
     }>('Today, {start} - {endDate}, {end}'),
     singleDay: m<{
-      date: ReactElement;
-      end: ReactElement;
-      start: ReactElement;
+      date: string | ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
     }>('{date}, {start} - {end}'),
     singleDayAllDay: m('All day today'),
-    singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
-      'Today, {start} - {end}'
-    ),
+    singleDayToday: m<{
+      end: string | ReactElement;
+      start: string | ReactElement;
+    }>('Today, {start} - {end}'),
   },
-  timezonePicker: {
+  timeZonePicker: {
     gmt: m('GMT'),
-    placeholder: m('Type to search location'),
-    timezone: m('Timezone'),
+    noOptionsText: m('No location matches your search'),
+    placeholder: m('Type to search for a location'),
+    timeZone: m('Time zone'),
   },
 });

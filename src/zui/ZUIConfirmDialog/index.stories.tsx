@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIConfirmDialog from '.';
 
 export default {
   component: ZUIConfirmDialog,
-  title: 'Atoms/ZetkinConfirmDialog',
+  title: 'Other/ZUIConfirmDialog',
 } as Meta<typeof ZUIConfirmDialog>;
 
 const Template: StoryFn<typeof ZUIConfirmDialog> = (args) => (

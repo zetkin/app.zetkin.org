@@ -29,10 +29,10 @@ export default function useDuplicatesMutations(
 
   const dismissDuplicate = async (duplicateId: number) => {
     await apiClient
-      .patch<PotentialDuplicate, PotentialDuplicatePatchBody>(
-        `/api/orgs/${orgId}/people/duplicates/${duplicateId}`,
-        { dismissed: true }
-      )
+      .patch<
+        PotentialDuplicate,
+        PotentialDuplicatePatchBody
+      >(`/api/orgs/${orgId}/people/duplicates/${duplicateId}`, { dismissed: true })
       .then((duplicate) => {
         dispatch(duplicateUpdated(duplicate));
       });

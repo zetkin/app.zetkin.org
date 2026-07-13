@@ -1,11 +1,31 @@
 module.exports = {
+  /**
+   * Block cross-origin requests during development.
+   *
+   * Without this, when running next dev, malicious website can:
+   * - Initiate a WebSocket connection to localhost and interact
+   *   with the local development server, potentially exposing
+   *   internal component code.
+   * - Inject a <script> tag referencing predictable paths for
+   *   development scripts (e.g., /app/page.js), which are then
+   *   executed in the attacker's origin.
+   *
+   * See https://vercel.com/changelog/cve-2025-48068
+   */
+  allowedDevOrigins: [],
+
   experimental: {
-    esmExternals: "loose",
-    serverComponentsExternalPackages: ["mjml", "mongoose"],
+    turbo: {
+      resolveAlias: {
+        canvas: 'util',
+      },
+    },
+    serverComponentsExternalPackages: ['mjml', 'mongoose'],
   },
   images: {
     domains: [
       `files.${process.env.ZETKIN_API_DOMAIN}`,
+      `avatars.${process.env.ZETKIN_API_DOMAIN}`,
 
       // localhost added for playwright testing
       'localhost',
@@ -13,6 +33,21 @@ module.exports = {
   },
   async redirects() {
     return [
+      {
+        source: '/storybook',
+        destination: '/storybook/index.html',
+        permanent: true,
+      },
+      {
+        source: '/docs',
+        destination: '/docs/index.html',
+        permanent: true,
+      },
+      {
+        source: '/my',
+        destination: '/my/home',
+        permanent: false,
+      },
       {
         source: '/:prevPath*/calendar/events',
         destination: '/:prevPath*/calendar',

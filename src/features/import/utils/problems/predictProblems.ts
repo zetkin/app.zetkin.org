@@ -1,9 +1,12 @@
-import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
-import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
+import { z } from 'zod';
+import {
+  CountryCode,
+  isValidPhoneNumber,
+  getCountries,
+} from 'libphonenumber-js';
 
-import parseDate from '../parseDate';
-import { ColumnKind, Sheet } from '../types';
+import { ColumnKind, Sheet } from '../../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 import {
   ImportFieldProblem,
@@ -11,6 +14,8 @@ import {
   ImportProblemKind,
   ImportRowProblem,
 } from './types';
+import parserFactory from '../dateParsing/parserFactory';
+import { cleanPhoneNumber } from '../phoneUtils';
 
 const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   date: (value) => {
@@ -22,6 +27,7 @@ const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   },
   enum: () => true,
   json: () => true,
+  lnglat: () => true,
   text: () => true,
   url: (value) => isURL(value),
 };
@@ -63,12 +69,14 @@ export function predictProblems(
     const existing = problemByField[field];
     if (existing) {
       existing.indices.push(row);
+      return true;
     } else {
       problemByField[field] = {
         field: field,
         indices: [row],
         kind: ImportProblemKind.INVALID_FORMAT,
       };
+      return false;
     }
   }
 
@@ -95,6 +103,12 @@ export function predictProblems(
         if (value) {
           if (column.kind == ColumnKind.ID_FIELD) {
             rowHasId = true;
+            if (
+              column.idField == 'email' &&
+              !z.string().email().safeParse(value.toString().trim()).success
+            ) {
+              accumulateFieldProblem(column.idField, rowIndex);
+            }
           } else if (column.kind == ColumnKind.FIELD) {
             const fieldInfo = customFieldsBySlug[column.field];
             if (fieldInfo) {
@@ -107,15 +121,23 @@ export function predictProblems(
               rowHasFirstName = true;
             } else if (column.field == 'last_name') {
               rowHasLastName = true;
-            } else if (
-              column.field == 'email' &&
-              !isEmail(value.toString().trim())
-            ) {
-              accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
-              const phoneValue = value.toString().replaceAll(/[^+\d]/g, '');
-              if (!isValidPhoneNumber(phoneValue.toString(), country)) {
-                accumulateFieldProblem(column.field, rowIndex);
+              if (!isValidPhoneNumber(cleanPhoneNumber(value), country)) {
+                const isKnownProblem = accumulateFieldProblem(
+                  column.field,
+                  rowIndex
+                );
+
+                if (!isKnownProblem) {
+                  const countryIsUnknown =
+                    getCountries().findIndex((iso) => country == iso) == -1;
+                  if (countryIsUnknown) {
+                    problems.push({
+                      code: country,
+                      kind: ImportProblemKind.INVALID_ORG_COUNTRY,
+                    });
+                  }
+                }
               }
             } else if (column.field == 'gender') {
               if (!['m', 'f', 'o', ''].includes(value.toString())) {
@@ -126,7 +148,8 @@ export function predictProblems(
             const validator = VALIDATORS['date'];
 
             if (column.dateFormat) {
-              const date = parseDate(value, column.dateFormat);
+              const parser = parserFactory(column.dateFormat);
+              const date = parser.parse(value.toString());
               const valid = validator(date);
               if (!valid) {
                 accumulateFieldProblem(column.field, rowIndex);

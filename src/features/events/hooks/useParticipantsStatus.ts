@@ -1,4 +1,4 @@
-import theme from 'theme';
+import oldTheme from 'theme';
 import useEvent from './useEvent';
 import useEventParticipants from './useEventParticipants';
 
@@ -12,10 +12,10 @@ export default function useParticipantStatus(
   const diff = reqParticipants - numAvailParticipants;
 
   if (diff <= 0) {
-    return theme.palette.statusColors.green;
+    return oldTheme.palette.statusColors.green;
   } else if (diff === 1) {
-    return theme.palette.statusColors.orange;
+    return oldTheme.palette.statusColors.orange;
   } else {
-    return theme.palette.statusColors.red;
+    return oldTheme.palette.statusColors.red;
   }
 }

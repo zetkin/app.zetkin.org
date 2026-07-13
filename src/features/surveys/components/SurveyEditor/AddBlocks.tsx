@@ -7,7 +7,7 @@ import {
 } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ELEMENT_TYPE, RESPONSE_TYPE } from 'utils/types/zetkin';
 import messageIds from 'features/surveys/l10n/messageIds';
@@ -22,7 +22,7 @@ const AddBlocks: FC<AddBlocksProps> = ({ orgId, surveyId }) => {
   return (
     <Card
       sx={{
-        backgroundColor: theme.palette.grey[200],
+        backgroundColor: oldTheme.palette.grey[200],
         border: 'none',
         padding: 2,
       }}

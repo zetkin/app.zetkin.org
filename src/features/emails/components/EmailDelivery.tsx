@@ -13,7 +13,9 @@ import {
   Stack,
   Tab,
 } from '@mui/material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 import deliveryProblems from '../utils/deliveryProblems';
 import messageIds from '../l10n/messageIds';
@@ -75,7 +77,7 @@ const EmailDelivery = ({ email, onClose, orgId }: EmailDeliveryProps) => {
         ) : (
           <>
             <TabContext value={tab}>
-              <TabList onChange={(ev, value) => setTab(value)} value={tab}>
+              <TabList onChange={(ev, value) => setTab(value)}>
                 <Tab
                   label={messages.emailActionButtons.sendLater()}
                   value="later"

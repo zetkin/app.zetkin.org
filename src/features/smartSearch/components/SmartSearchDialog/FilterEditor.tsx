@@ -1,9 +1,12 @@
+import AllInSuborg from '../filters/AllInSubOrg';
+import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
 import EmailBlacklist from '../filters/EmailBlacklist';
 import EmailClick from '../filters/EmailClick';
 import EmailHistory from '../filters/EmailHistory';
+import JoinFormFilter from '../filters/JoinForm';
 import Journey from '../filters/Journey';
 import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
@@ -17,6 +20,7 @@ import SurveyResponse from '../filters/SurveyResponse';
 import SurveySubmission from '../filters/SurveySubmission';
 import Task from '../filters/Task';
 import User from '../filters/User';
+import Official from '../filters/Official';
 import {
   AnyFilterConfig,
   FILTER_TYPE,
@@ -40,6 +44,20 @@ const FilterEditor = ({
 }: FilterEditorProps): JSX.Element => {
   return (
     <>
+      {filter.type == FILTER_TYPE.ALL && (
+        <AllInSuborg
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type == FILTER_TYPE.AREA && (
+        <Area
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
       {filter.type === FILTER_TYPE.CALL_BLOCKED && (
         <CallBlocked
           filter={filter}
@@ -161,6 +179,20 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.USER && (
         <User
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.OFFICIAL && (
+        <Official
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.JOINFORM && (
+        <JoinFormFilter
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

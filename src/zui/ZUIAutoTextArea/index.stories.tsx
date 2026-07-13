@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIAutoTextArea from '.';
 
 export default {
   component: ZUIAutoTextArea,
-  title: 'Atoms/ZUIAutoTextArea',
+  title: 'Other/ZUIAutoTextArea',
 } as Meta<typeof ZUIAutoTextArea>;
 
 const Template: StoryFn<typeof ZUIAutoTextArea> = (args) => (

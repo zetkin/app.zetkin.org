@@ -1,63 +1,21 @@
-import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
+import { Box, SvgIconTypeMap, Tooltip, Typography } from '@mui/material';
 
 import { CampaignActivity } from 'features/campaigns/types';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import theme from 'theme';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
-
-interface StyleProps {
-  color: STATUS_COLORS;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  container: {
-    alignItems: 'center',
-    display: 'flex',
-    padding: '1em',
-  },
-  dot: {
-    backgroundColor: ({ color }) => theme.palette.statusColors[color],
-    borderRadius: '100%',
-    height: '10px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '10px',
-  },
-  endNumber: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
-  left: {
-    alignItems: 'center',
-    display: 'flex',
-  },
-  primaryIcon: {
-    color: theme.palette.grey[500],
-    fontSize: '28px',
-  },
-  right: {
-    alignItems: 'center',
-    display: 'flex',
-  },
-  secondaryIcon: {
-    color: theme.palette.grey[700],
-    margin: '0 0.5em',
-  },
-}));
+import oldTheme from 'theme';
 
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',
-  GRAY = 'gray',
+  GREY = 'grey',
   ORANGE = 'orange',
   RED = 'red',
 }
@@ -100,8 +58,6 @@ const OverviewListItem = ({
   subtitle,
 }: OverviewListItemProps) => {
   //const color = getStatusColor(startDate, endDate);
-  const classes = useStyles({ color });
-
   const now = new Date();
   let label: JSX.Element | null = null;
 
@@ -175,7 +131,12 @@ const OverviewListItem = ({
           justifyContent="space-between"
         >
           <Box flex="0 0" width={30}>
-            <PrimaryIcon className={classes.primaryIcon} />
+            <PrimaryIcon
+              sx={{
+                color: oldTheme.palette.grey[500],
+                fontSize: '28px',
+              }}
+            />
           </Box>
           <Box
             sx={{
@@ -184,7 +145,7 @@ const OverviewListItem = ({
             width="calc(100% - 30px - 80px - 20px)"
           >
             <Typography
-              color={theme.palette.text.primary}
+              color={oldTheme.palette.text.primary}
               sx={{
                 margin: 0,
                 overflow: 'hidden',
@@ -215,11 +176,20 @@ const OverviewListItem = ({
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Box width={30}>
             <Tooltip title={getStatusDotLabel({ color })}>
-              <Box className={classes.dot} />
+              <Box
+                sx={{
+                  backgroundColor: oldTheme.palette.statusColors[color],
+                  borderRadius: '100%',
+                  height: '10px',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  width: '10px',
+                }}
+              />
             </Tooltip>
           </Box>
           <Box width="calc(100% - 30px - 80px - 20px)">
-            <Typography color={theme.palette.grey[500]} variant="body2">
+            <Typography color={oldTheme.palette.grey[500]} variant="body2">
               {label}
             </Typography>
           </Box>

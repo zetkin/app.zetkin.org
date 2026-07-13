@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ParticipantOp } from './types';
+import { ParticipantOp, ZetkinEventReminder } from './types';
 import {
   RemoteItem,
   remoteItem,
@@ -15,6 +15,8 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
+import { ZetkinEventWithStatus } from 'features/public/types';
+import { EventSignupModelType } from './models';
 
 export enum ACTION_FILTER_OPTIONS {
   CONTACT_MISSING = 'missing',
@@ -50,6 +52,7 @@ export type FilterCategoryType =
   | 'selectedTypes';
 
 export interface EventsStoreSlice {
+  allEventsList: RemoteList<ZetkinEvent>;
   eventList: RemoteList<ZetkinEvent>;
   eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
@@ -67,9 +70,15 @@ export interface EventsStoreSlice {
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
+  unverifiedParticipantsByEventId: Record<
+    number,
+    RemoteList<EventSignupModelType>
+  >;
+  userEventList: RemoteList<ZetkinEventWithStatus>;
 }
 
 const initialState: EventsStoreSlice = {
+  allEventsList: remoteList(),
   eventList: remoteList(),
   eventsByCampaignId: {},
   eventsByDate: {},
@@ -87,12 +96,24 @@ const initialState: EventsStoreSlice = {
   selectedEventIds: [],
   statsByEventId: {},
   typeList: remoteList(),
+  unverifiedParticipantsByEventId: {},
+  userEventList: remoteList(),
 };
 
 const eventsSlice = createSlice({
   initialState,
   name: 'events',
   reducers: {
+    allEventsLoad: (state) => {
+      state.allEventsList.isLoading = true;
+    },
+    allEventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.allEventsList = remoteList(action.payload);
+      state.allEventsList.loaded = new Date().toISOString();
+    },
+    allEventsUnload: (state) => {
+      state.allEventsList = remoteList();
+    },
     campaignEventsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.eventsByCampaignId[id] = remoteList<ZetkinEvent>();
@@ -468,6 +489,26 @@ const eventsSlice = createSlice({
         }
       }
     },
+    participantsAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventParticipant[]]>
+    ) => {
+      const [eventId, participants] = action.payload;
+
+      participants.forEach((participant) => {
+        state.participantsByEventId[eventId].items.push(
+          remoteItem(participant.id, { data: participant })
+        );
+      });
+
+      const event = state.eventList.items.find(
+        (e) => e?.data?.id === eventId
+      )?.data;
+
+      if (event) {
+        updateAvailParticipantToState(state, event);
+      }
+    },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       if (!state.participantsByEventId[eventId]) {
@@ -488,12 +529,24 @@ const eventsSlice = createSlice({
       const eventId = action.payload;
       state.remindingByEventId[eventId] = true;
     },
-    participantsReminded: (state, action: PayloadAction<number>) => {
-      const eventId = action.payload;
+    participantsReminded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventReminder[]]>
+    ) => {
+      const [eventId, reminders] = action.payload;
       state.remindingByEventId[eventId] = false;
-      state.participantsByEventId[eventId].items.map((item) => {
-        if (item.data && item.data?.reminder_sent == null) {
-          item.data = { ...item.data, reminder_sent: new Date().toISOString() };
+
+      const participants = state.participantsByEventId[eventId].items;
+
+      participants.forEach((participant) => {
+        if (participant.data) {
+          const reminder = reminders.find(
+            (rem) => rem.person.id == participant.id
+          );
+
+          if (reminder) {
+            participant.data.reminder_sent = reminder.sent;
+          }
         }
       });
     },
@@ -541,6 +594,20 @@ const eventsSlice = createSlice({
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
+    typeDeleted: (state, action: PayloadAction<number>) => {
+      const typeId = action.payload;
+      const typeListItem = state.typeList.items.find(
+        (item) => item.id === typeId
+      );
+
+      if (typeListItem) {
+        typeListItem.deleted = true;
+      }
+
+      state.typeList.items = state.typeList.items.filter(
+        (type) => type.id !== typeId
+      );
+    },
     typeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.typeList.items.find((item) => item.id == id);
@@ -568,6 +635,70 @@ const eventsSlice = createSlice({
       const [, eventTypes] = action.payload;
       state.typeList = remoteList(eventTypes);
       state.typeList.loaded = new Date().toISOString();
+    },
+    unverifiedParticipantsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      if (!state.unverifiedParticipantsByEventId[eventId]) {
+        state.unverifiedParticipantsByEventId[eventId] = remoteList();
+      }
+
+      state.unverifiedParticipantsByEventId[eventId].isLoading = true;
+    },
+    unverifiedParticipantsLoaded: (
+      state,
+      action: PayloadAction<[number, EventSignupModelType[]]>
+    ) => {
+      const [eventId, unverifiedParticipants] = action.payload;
+      state.unverifiedParticipantsByEventId[eventId] = remoteList(
+        unverifiedParticipants
+      );
+      state.unverifiedParticipantsByEventId[eventId].loaded =
+        new Date().toISOString();
+    },
+    unverifiedSignupDeleted: (
+      state,
+      action: PayloadAction<[number, string]>
+    ) => {
+      const [eventId, signupId] = action.payload;
+      const list = state.unverifiedParticipantsByEventId[eventId];
+      if (list) {
+        list.items = list.items.filter((item) => item.id !== signupId);
+      }
+    },
+    unverifiedSignupUpdated: (
+      state,
+      action: PayloadAction<[number, EventSignupModelType]>
+    ) => {
+      const [eventId, updatedSignup] = action.payload;
+      const list = state.unverifiedParticipantsByEventId[eventId];
+      if (list) {
+        const item = list.items.find((item) => item.id === updatedSignup.id);
+        if (item) {
+          item.data = { ...item.data, ...updatedSignup };
+        }
+      }
+    },
+    userEventsLoad: (state) => {
+      state.userEventList.isLoading = true;
+    },
+    userEventsLoaded: (
+      state,
+      action: PayloadAction<ZetkinEventWithStatus[]>
+    ) => {
+      state.userEventList = remoteList(action.payload);
+      state.userEventList.loaded = new Date().toISOString();
+    },
+    userResponseAdded: (state, action: PayloadAction<ZetkinEvent>) => {
+      const event = action.payload;
+      state.userEventList.items.push(
+        remoteItem(event.id, { data: { ...event, status: 'signedUp' } })
+      );
+    },
+    userResponseDeleted: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.userEventList.items = state.userEventList.items.filter(
+        (item) => item.id != eventId
+      );
     },
   },
 });
@@ -683,6 +814,9 @@ function updateAvailParticipantToState(
 
 export default eventsSlice;
 export const {
+  allEventsLoad,
+  allEventsLoaded,
+  allEventsUnload,
   campaignEventsLoad,
   campaignEventsLoaded,
   eventCreate,
@@ -712,6 +846,7 @@ export const {
   locationsLoad,
   locationsLoaded,
   participantAdded,
+  participantsAdded,
   participantDeleted,
   participantOpAdd,
   participantOpsClear,
@@ -728,8 +863,17 @@ export const {
   statsLoaded,
   typeAdd,
   typeAdded,
+  typeDeleted,
   typeLoad,
   typeLoaded,
   typesLoad,
   typesLoaded,
+  unverifiedParticipantsLoad,
+  unverifiedParticipantsLoaded,
+  unverifiedSignupDeleted,
+  unverifiedSignupUpdated,
+  userEventsLoad,
+  userEventsLoaded,
+  userResponseAdded,
+  userResponseDeleted,
 } = eventsSlice.actions;

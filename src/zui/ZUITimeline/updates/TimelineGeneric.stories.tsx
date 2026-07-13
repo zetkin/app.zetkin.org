@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import mockPerson from 'utils/testing/mocks/mockPerson';
@@ -7,7 +7,7 @@ import { UPDATE_TYPES } from 'zui/ZUITimeline/types';
 
 export default {
   component: TimelineGeneric,
-  title: 'Organisms/Timeline/Updates/TimelineGeneric',
+  title: 'Other/ZUITimeline/Updates/TimelineGeneric',
 } as Meta<typeof TimelineGeneric>;
 
 const Template: StoryFn<typeof TimelineGeneric> = (args) => (

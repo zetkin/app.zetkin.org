@@ -1,11 +1,20 @@
-import { FC } from 'react';
-import { ListSubheader, MenuItem, Select } from '@mui/material';
+import { FC, useContext, useState } from 'react';
+import {
+  Box,
+  ListItemText,
+  ListSubheader,
+  MenuItem,
+  Select,
+} from '@mui/material';
+import { BadgeOutlined } from '@mui/icons-material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Option } from 'features/import/hooks/useColumn';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
-import { Column, ColumnKind } from 'features/import/utils/types';
+import { Column, ColumnKind } from 'features/import/types';
 import { Msg, useMessages } from 'core/i18n';
+import useImportID from 'features/import/hooks/useImportID';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface FieldSelectProps {
   clearConfiguration: () => void;
@@ -25,6 +34,23 @@ const FieldSelect: FC<FieldSelectProps> = ({
   optionAlreadySelected,
 }) => {
   const messages = useMessages(messageIds);
+  const { importID, updateImportID } = useImportID();
+  const [open, setOpen] = useState(false);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+
+  const fieldOptionsSorted = [
+    ...fieldOptions,
+    {
+      disabled: false,
+      label: messages.configuration.mapping.externalID(),
+      value: 'ext_id',
+    },
+    {
+      disabled: false,
+      label: messages.configuration.mapping.email(),
+      value: 'email',
+    },
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
   const getValue = () => {
     if (column.originalColumn.kind == ColumnKind.FIELD) {
@@ -35,8 +61,16 @@ const FieldSelect: FC<FieldSelectProps> = ({
       return `date:${column.originalColumn.field}`;
     }
 
+    if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+      return column.originalColumn.idField || '';
+    }
+
     if (column.originalColumn.kind == ColumnKind.ENUM) {
       return `enum:${column.originalColumn.field}`;
+    }
+
+    if (column.originalColumn.kind == ColumnKind.GENDER) {
+      return `field:gender`;
     }
 
     if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
@@ -49,16 +83,38 @@ const FieldSelect: FC<FieldSelectProps> = ({
 
   // This has to be a function, not a component with PascalCase. If it is used
   // as a component, the `Select` below won't recognise it as a valid option.
-  const listOption = ({ value, label, key }: Option & { key?: string }) => {
+  const listOption = ({
+    disabled,
+    value,
+    label,
+    key,
+  }: Option & { key?: string }) => {
     const alreadySelected = optionAlreadySelected(value);
     return (
       <MenuItem
         key={key}
-        disabled={alreadySelected}
+        disabled={alreadySelected || disabled}
         sx={{ paddingLeft: 4 }}
         value={value}
       >
-        {label}
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          width="100%"
+        >
+          <ListItemText
+            sx={{
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            {label}
+          </ListItemText>
+          {importID == value && open && (
+            <BadgeOutlined color="secondary" fontSize="small" />
+          )}
+        </Box>
       </MenuItem>
     );
   };
@@ -69,9 +125,55 @@ const FieldSelect: FC<FieldSelectProps> = ({
       label={messages.configuration.mapping.selectZetkinField()}
       onChange={(event) => {
         clearConfiguration();
-        if (event.target.value == 'id') {
+
+        if (!event.target.value) {
           onChange({
-            idField: null,
+            kind: ColumnKind.UNKNOWN,
+            selected: false,
+          });
+        } else if (event.target.value == 'ext_id') {
+          onChange({
+            idField: 'ext_id',
+            kind: ColumnKind.ID_FIELD,
+            selected: true,
+          });
+          onConfigureStart();
+        } else if (event.target.value == 'id') {
+          if (importID && importID != 'id') {
+            showConfirmDialog({
+              onSubmit: () => {
+                onChange({
+                  idField: 'id',
+                  kind: ColumnKind.ID_FIELD,
+                  selected: true,
+                });
+                updateImportID('id');
+                onConfigureStart();
+              },
+              title:
+                messages.configuration.configure.ids.confirmIDChange.title(),
+              warningText:
+                messages.configuration.configure.ids.confirmIDChange.description(
+                  {
+                    currentImportID:
+                      messages.configuration.configure.ids.field[importID](),
+                    newImportID:
+                      messages.configuration.configure.ids.field['id'](),
+                  }
+                ),
+            });
+          } else {
+            onChange({
+              idField: 'id',
+              kind: ColumnKind.ID_FIELD,
+              selected: true,
+            });
+            updateImportID('id');
+            onConfigureStart();
+          }
+        } else if (event.target.value == 'email') {
+          onChange({
+            idField: 'email',
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
@@ -90,6 +192,14 @@ const FieldSelect: FC<FieldSelectProps> = ({
             selected: true,
           });
           onConfigureStart();
+        } else if (event.target.value == 'field:gender') {
+          onChange({
+            field: event.target.value,
+            kind: ColumnKind.GENDER,
+            mapping: [],
+            selected: true,
+          });
+          onConfigureStart();
         } else if (event.target.value.startsWith('field')) {
           onChange({
             field: event.target.value.slice(6),
@@ -98,7 +208,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
           });
         } else if (event.target.value.startsWith('date')) {
           onChange({
-            dateFormat: 'YYYY-MM-DD',
+            dateFormat: null,
             field: event.target.value.slice(5),
             kind: ColumnKind.DATE,
             selected: true,
@@ -114,6 +224,9 @@ const FieldSelect: FC<FieldSelectProps> = ({
           onConfigureStart();
         }
       }}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
       sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
       value={getValue()}
     >
@@ -121,25 +234,28 @@ const FieldSelect: FC<FieldSelectProps> = ({
         <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.id} />
       </ListSubheader>
       {listOption({
-        label: messages.configuration.mapping.id(),
+        disabled: false,
+        label: messages.configuration.mapping.zetkinID(),
         value: 'id',
       })}
 
-      {fieldOptions.length > 0 && (
+      {fieldOptionsSorted.length > 0 && (
         <ListSubheader>
           <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.fields} />
         </ListSubheader>
       )}
-      {fieldOptions.map((option) => listOption(option))}
+      {fieldOptionsSorted.map(listOption)}
 
       <ListSubheader>
         <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.other} />
       </ListSubheader>
       {listOption({
+        disabled: false,
         label: messages.configuration.mapping.organization(),
         value: 'org',
       })}
       {listOption({
+        disabled: false,
         label: messages.configuration.mapping.tags(),
         value: 'tag',
       })}

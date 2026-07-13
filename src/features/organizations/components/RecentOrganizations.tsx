@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import NextLink from 'next/link';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Link, Typography, useTheme } from '@mui/material';
 
 import ProceduralColorIcon from './ProceduralColorIcon';
 import { TreeItemData } from '../types';
@@ -27,7 +26,12 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
           return;
         }
         return (
-          <NextLink key={org.id} href={`/organize/${org.id}`} legacyBehavior>
+          <Link
+            key={org.id}
+            color={'inherit'}
+            href={`/organize/${org.id}`}
+            underline={'none'}
+          >
             <Box
               onClick={onSwitchOrg}
               sx={{
@@ -52,7 +56,7 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
                 {org.title}
               </Typography>
             </Box>
-          </NextLink>
+          </Link>
         );
       })}
     </Box>

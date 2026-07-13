@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import { MobileFriendly } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
+import {
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+} from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinTask } from 'utils/types/zetkin';
@@ -23,21 +28,20 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
 
   return (
     <Link
-      key={task.id}
-      href={`/organize/${orgId}/projects/${task.campaign.id}/calendar/tasks/${task.id}`}
-      legacyBehavior
-      passHref
+      href={`/organize/${orgId}/projects/${task.campaign.id}/tasks/${task.id}`}
     >
-      <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
-        <ListItemAvatar>
-          <Avatar>
-            <MobileFriendly />
-          </Avatar>
-        </ListItemAvatar>
-        <ResultsListItemText
-          primary={task.title}
-          secondary={elements.join(' / ')}
-        />
+      <ListItem data-testid="SearchDialog-resultsListItem">
+        <ListItemButton>
+          <ListItemAvatar>
+            <Avatar>
+              <MobileFriendly />
+            </Avatar>
+          </ListItemAvatar>
+          <ResultsListItemText
+            primary={task.title}
+            secondary={elements.join(' / ')}
+          />
+        </ListItemButton>
       </ListItem>
     </Link>
   );

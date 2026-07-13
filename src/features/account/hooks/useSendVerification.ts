@@ -1,0 +1,39 @@
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { useApiClient } from 'core/hooks';
+import { ZetkinUser } from 'utils/types/zetkin';
+import { SendVerificationStatus } from '../types';
+
+type Return = {
+  loading: boolean;
+  sendVerification: () => Promise<SendVerificationStatus>;
+};
+
+export function useSendVerification(): Return {
+  const apiClient = useApiClient();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const sendVerification = async (): Promise<SendVerificationStatus> => {
+    setLoading(true);
+    try {
+      const user = await apiClient.get<ZetkinUser>(`/api/users/me`);
+      if (user.email_is_verified) {
+        router.push('/login');
+      }
+
+      await apiClient.post(`/api/users/me/verification_codes`, {});
+
+      return {
+        success: true,
+      };
+    } catch (err) {
+      return { errorCode: 'unknownError', success: false };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, sendVerification };
+}

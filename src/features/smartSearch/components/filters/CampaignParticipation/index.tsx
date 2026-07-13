@@ -1,11 +1,9 @@
 import { FormEvent } from 'react';
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
-import StyledGroupedSelect from '../../inputs/StyledGroupedSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
@@ -21,6 +19,7 @@ import {
 } from 'features/smartSearch/components/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
 const localMessageIds = messageIds.filters.campaignParticipation;
 
@@ -41,7 +40,10 @@ const removeKey = (
           }
           return result;
         },
-        { operator: config.operator, state: config.state }
+        {
+          operator: config.operator,
+          state: config.state,
+        }
       )
     : config;
 };
@@ -71,6 +73,7 @@ const CampaignParticipation = ({
       operator: 'in',
       organizations: [orgId],
       state: 'booked',
+      status: undefined,
     });
 
   const orgIds = useOrgIdsFromOrgScope(
@@ -92,8 +95,15 @@ const CampaignParticipation = ({
     after?: string;
     before?: string;
   }) => {
-    const { state, operator, campaign, activity, location, organizations } =
-      filter.config;
+    const {
+      state,
+      status,
+      operator,
+      campaign,
+      activity,
+      location,
+      organizations,
+    } = filter.config;
     setConfig({
       activity,
       campaign,
@@ -101,6 +111,7 @@ const CampaignParticipation = ({
       operator,
       organizations,
       state,
+      status,
       ...range,
     });
   };
@@ -129,6 +140,17 @@ const CampaignParticipation = ({
     }
   };
 
+  const handleStatusSelectChange = (statusValue: string) => {
+    if (statusValue === DEFAULT_VALUE) {
+      setConfig(removeKey(filter.config, 'status'));
+    } else {
+      setConfig({
+        ...filter.config,
+        status: statusValue as 'attended' | 'cancelled' | 'noshow',
+      });
+    }
+  };
+
   return (
     <FilterForm
       enableOrgSelect
@@ -149,41 +171,23 @@ const CampaignParticipation = ({
           id={localMessageIds.inputString}
           values={{
             activitySelect: (
-              <StyledSelect
-                onChange={(e) => handleActivitySelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.activitySelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.activitySelect.activity}
-                        values={{
-                          activity: truncateOnMiddle(
-                            activities.find((l) => l.id === value)?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.activitySelect.any(),
                   },
+                  ...activities.map((activity) => ({
+                    id: activity.id,
+                    label: activity.title,
+                  })),
+                ]}
+                onChange={(e) => {
+                  handleActivitySelectChange(e.target.value);
                 }}
                 value={filter.config.activity || DEFAULT_VALUE}
-              >
-                <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id={localMessageIds.activitySelect.any} />
-                </MenuItem>
-                {activities.map((a) => (
-                  <MenuItem key={a.id} value={a.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={a.title.length >= 40 ? a.title : ''}
-                    >
-                      <Box>{a.title}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             addRemoveSelect: (
               <StyledSelect
@@ -220,10 +224,10 @@ const CampaignParticipation = ({
               </StyledSelect>
             ),
             campaignSelect: (
-              <StyledGroupedSelect
+              <StyledAutocomplete
                 items={[
                   {
-                    group: null,
+                    group: 'pinned',
                     id: DEFAULT_VALUE,
                     label: messages.campaignSelect.any(),
                   },
@@ -258,35 +262,39 @@ const CampaignParticipation = ({
               </StyledSelect>
             ),
             locationSelect: (
-              <StyledSelect
-                onChange={(e) => handleLocationSelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === DEFAULT_VALUE ? (
-                      <Msg id={localMessageIds.locationSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.locationSelect.location}
-                        values={{
-                          location: truncateOnMiddle(
-                            locations.find((l) => l.id === value)?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.locationSelect.any(),
                   },
-                }}
+                  ...locations.map((loc) => ({
+                    id: loc.id,
+                    label: loc.title,
+                  })),
+                ]}
+                onChange={(e) => handleLocationSelectChange(e.target.value)}
                 value={filter.config.location || DEFAULT_VALUE}
+              />
+            ),
+            statusSelect: (
+              <StyledSelect
+                onChange={(e) => handleStatusSelectChange(e.target.value)}
+                value={filter.config.status || DEFAULT_VALUE}
               >
-                <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id={localMessageIds.locationSelect.any} />
+                <MenuItem key="any" value={DEFAULT_VALUE}>
+                  <Msg id={localMessageIds.statusSelect.any} />
                 </MenuItem>
-                {locations.map((l) => (
-                  <MenuItem key={l.id} value={l.id}>
-                    {l.title}
-                  </MenuItem>
-                ))}
+                <MenuItem key="attended" value="attended">
+                  <Msg id={localMessageIds.statusSelect.attended} />
+                </MenuItem>
+                <MenuItem key="cancelled" value="cancelled">
+                  <Msg id={localMessageIds.statusSelect.cancelled} />
+                </MenuItem>
+                <MenuItem key="noshow" value="noshow">
+                  <Msg id={localMessageIds.statusSelect.noshow} />
+                </MenuItem>
               </StyledSelect>
             ),
             timeFrame: (

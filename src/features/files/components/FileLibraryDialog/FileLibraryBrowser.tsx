@@ -119,11 +119,11 @@ const FileLibraryBrowser: FC<Props> = ({
 
             return (
               <Grid container>
-                <Grid md={3} p={1} pb={5} xs={12}>
+                <Grid p={1} pb={5} size={{ md: 3, xs: 12 }}>
                   <FileUploadCard onFileBrowserOpen={onFileBrowserOpen} />
                 </Grid>
                 {sortedFiles.map((file) => (
-                  <Grid key={file.id} md={3} p={1} xs={12}>
+                  <Grid key={file.id} p={1} size={{ md: 3, xs: 12 }}>
                     <LibraryImageCard
                       imageFile={file}
                       onSelectImage={() => onSelectFile(file)}

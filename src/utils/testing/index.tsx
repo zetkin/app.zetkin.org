@@ -3,13 +3,9 @@ import { CssBaseline } from '@mui/material';
 import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactElement, ReactNode } from 'react';
+import React, { FC, ReactElement, ReactNode } from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 
 import { AnyMessage } from 'core/i18n/messages';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
@@ -17,29 +13,30 @@ import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import IApiClient from 'core/api/client/IApiClient';
 import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLuxemburgUser';
-import theme from 'theme';
-import { UserContext } from 'utils/hooks/useFocusDate';
+import oldTheme from 'theme';
+import zuiTheme from 'zui/theme';
 import { Store } from 'core/store';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
+import { UserProvider } from 'core/env/UserContext';
+import mockApiClient from './mocks/mockApiClient';
 
 interface ZetkinAppProvidersProps {
   children: React.ReactNode;
+  theme: 'old' | 'zui';
 }
 
-const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
+const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({
+  children,
+  theme,
+}) => {
   const env = new Environment(new BrowserApiClient(), {
-    MUIX_LICENSE_KEY: null,
     ZETKIN_APP_DOMAIN: 'https://app.zetkin.org',
   });
+  const appTheme = theme === 'zui' ? zuiTheme : oldTheme;
 
   return (
-    <UserContext.Provider value={null}>
+    <UserProvider user={null}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={appTheme}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <IntlProvider
               defaultLocale="en"
@@ -61,7 +58,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
           </LocalizationProvider>
         </ThemeProvider>
       </StyledEngineProvider>
-    </UserContext.Provider>
+    </UserProvider>
   );
 };
 
@@ -79,11 +76,16 @@ type CustomRenderResult = RenderResult & {
  */
 const customRender = (
   ui: ReactElement | FC<unknown>,
-  options?: Omit<RenderOptions, 'wrapper'>
+  options?: Omit<RenderOptions, 'wrapper'> & { theme?: 'old' | 'zui' }
 ): CustomRenderResult => {
+  const { theme = 'old', ...renderOptions } = options || {};
+  const wrapper: FC<{ children: ReactNode }> = ({ children }) => (
+    <ZetkinAppProviders theme={theme}>{children}</ZetkinAppProviders>
+  );
+
   const result = render(ui as ReactElement, {
-    wrapper: ZetkinAppProviders,
-    ...options,
+    wrapper,
+    ...renderOptions,
   });
 
   return {
@@ -97,24 +99,17 @@ export * from '@testing-library/react';
 
 export { customRender as render };
 
-export const makeWrapper = (store: Store) =>
+export const makeWrapper = (
+  store: Store,
+  apiClient: IApiClient = mockApiClient()
+) =>
   function Wrapper({ children }: { children: ReactNode }) {
-    const apiClient: jest.Mocked<IApiClient> = {
-      delete: jest.fn(),
-      get: jest.fn(),
-      patch: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      rpc: jest.fn(),
-    };
-
     const env = new Environment(apiClient);
+
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>
-          <UserContext.Provider value={RosaLuxemburgUser}>
-            {children}
-          </UserContext.Provider>
+          <UserProvider user={RosaLuxemburgUser}>{children}</UserProvider>
         </EnvProvider>
       </ReduxProvider>
     );

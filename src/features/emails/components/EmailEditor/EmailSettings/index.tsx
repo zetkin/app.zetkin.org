@@ -7,32 +7,27 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import BlockListItem from './BlockListItem';
 import messageIds from 'features/emails/l10n/messageIds';
 import PreviewTab from './PreviewTab';
-import SettingsTab from './SettingsTab';
 import { useMessages } from 'core/i18n';
-import { ZetkinEmail } from 'utils/types/zetkin';
+import ThemeTab from 'features/emails/components/EmailEditor/EmailSettings/ThemeTab';
 
 interface EmailSettingsProps {
   apiRef: MutableRefObject<EditorJS | null>;
   blocks: OutputBlockData[];
-  onSave: (email: Partial<ZetkinEmail>) => void;
   readOnly: boolean;
   selectedBlockIndex: number;
-  subject: string;
 }
 
 const EmailSettings: FC<EmailSettingsProps> = ({
   apiRef,
   blocks,
-  onSave,
   readOnly,
   selectedBlockIndex,
-  subject,
 }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<
-    'content' | 'preview' | 'settings'
+    'content' | 'preview' | 'settings' | 'theme'
   >('content');
-  const boxRef = useRef<HTMLElement>();
+  const boxRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     boxRef.current?.children[selectedBlockIndex]?.scrollIntoView({
@@ -57,8 +52,8 @@ const EmailSettings: FC<EmailSettingsProps> = ({
             value="content"
           />
           <Tab
-            label={messages.editor.settings.tabs.settings.title()}
-            value="settings"
+            label={messages.editor.settings.tabs.theme.title()}
+            value="theme"
           />
           <Tab
             label={messages.editor.settings.tabs.preview.title()}
@@ -89,12 +84,8 @@ const EmailSettings: FC<EmailSettingsProps> = ({
             ))}
           </Stack>
         </TabPanel>
-        <TabPanel sx={{ padding: 0 }} value="settings">
-          <SettingsTab
-            onChange={onSave}
-            readOnly={readOnly}
-            subject={subject}
-          />
+        <TabPanel sx={{ padding: 0 }} value="theme">
+          <ThemeTab />
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="preview">
           <PreviewTab />

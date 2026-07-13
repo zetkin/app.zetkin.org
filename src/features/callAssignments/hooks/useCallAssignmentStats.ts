@@ -84,15 +84,15 @@ export default function useCallAssignmentStats(
         ]
       : [
           {
-            color: 'statusColors.gray',
+            color: 'statusColors.grey',
             value: 1,
           },
           {
-            color: 'statusColors.gray',
+            color: 'statusColors.grey',
             value: 1,
           },
           {
-            color: 'statusColors.gray',
+            color: 'statusColors.grey',
             value: 1,
           },
         ];

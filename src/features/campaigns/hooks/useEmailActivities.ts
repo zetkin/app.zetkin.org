@@ -20,8 +20,8 @@ export default function useEmailActivities(
   const activities: CampaignActivity[] = [];
 
   const allEmailsFuture = loadListIfNecessary(emailsList, dispatch, {
-    actionOnLoad: () => dispatch(emailsLoad),
-    actionOnSuccess: (data) => dispatch(emailsLoaded(data)),
+    actionOnLoad: () => emailsLoad(),
+    actionOnSuccess: (data) => emailsLoaded(data),
     loader: () => apiClient.get(`/api/orgs/${orgId}/emails`),
   });
 

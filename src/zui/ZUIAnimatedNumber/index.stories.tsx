@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIAnimatedNumber from '.';
 
 export default {
   component: ZUIAnimatedNumber,
-  title: 'Atoms/ZUIAnimatedNumber',
+  title: 'Other/ZUIAnimatedNumber',
 } as Meta<typeof ZUIAnimatedNumber>;
 
 const Template: StoryFn<typeof ZUIAnimatedNumber> = (args) => {

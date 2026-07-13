@@ -22,14 +22,13 @@ export type ZetkinEventPostBody = ZetkinEventPatchBody;
 
 type useEventMutationsReturn = {
   cancelEvent: () => void;
-  changeEventCampaign: (campaignId: number) => Promise<void>;
   deleteEvent: () => void;
   publishEvent: () => void;
   restoreEvent: () => void;
   setPublished: (published: string | null) => void;
   setTitle: (title: string) => void;
   setType: (id: number | null) => void;
-  updateEvent: (data: ZetkinEventPatchBody) => Promise<void>;
+  updateEvent: (data: ZetkinEventPatchBody) => Promise<ZetkinEvent>;
 };
 
 export default function useEventMutations(
@@ -63,12 +62,6 @@ export default function useEventMutations(
     });
   };
 
-  const changeEventCampaign = (campaignId: number) => {
-    return updateEvent({
-      campaign_id: campaignId,
-    });
-  };
-
   const setPublished = (published: string | null) => {
     updateEvent({
       cancelled: null,
@@ -86,18 +79,18 @@ export default function useEventMutations(
     });
   };
 
-  const updateEvent = (data: ZetkinEventPatchBody) => {
+  const updateEvent = async (data: ZetkinEventPatchBody) => {
     dispatch(eventUpdate([eventId, Object.keys(data)]));
-    return apiClient
-      .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
-      .then((event) => {
-        dispatch(eventUpdated(event));
-      });
+    const event = await apiClient.patch<ZetkinEvent>(
+      `/api/orgs/${orgId}/actions/${eventId}`,
+      data
+    );
+    dispatch(eventUpdated(event));
+    return event;
   };
 
   return {
     cancelEvent,
-    changeEventCampaign,
     deleteEvent,
     publishEvent,
     restoreEvent,

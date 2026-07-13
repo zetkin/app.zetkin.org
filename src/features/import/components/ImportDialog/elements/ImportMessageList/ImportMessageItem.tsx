@@ -9,6 +9,7 @@ import {
   ImportProblem,
   ImportProblemKind,
 } from 'features/import/utils/problems/types';
+import useSheets from 'features/import/hooks/useSheets';
 
 type Props = {
   onCheck: (checked: boolean) => void;
@@ -20,6 +21,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const getFieldTitle = useFieldTitle(orgId);
+  const { skipUnknown } = useSheets();
 
   if (problem.kind == ImportProblemKind.INVALID_FORMAT) {
     return (
@@ -60,7 +62,11 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
   } else if (problem.kind == ImportProblemKind.NO_IMPACT) {
     return (
       <ImportMessage
-        description={messages.preflight.messages.noImpact.description()}
+        description={
+          skipUnknown
+            ? messages.preflight.messages.noImpact.descriptionSkipped()
+            : messages.preflight.messages.noImpact.description()
+        }
         onCheck={onCheck}
         onClickBack={onClickBack}
         status="error"
@@ -106,6 +112,18 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         rowIndices={problem.indices}
         status="error"
         title={messages.preflight.messages.unknownPerson.title()}
+      />
+    );
+  } else if (problem.kind == ImportProblemKind.INVALID_ORG_COUNTRY) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.invalidOrgCountry.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        status="info"
+        title={messages.preflight.messages.invalidOrgCountry.title({
+          code: problem.code,
+        })}
       />
     );
   } else if (problem.kind == ImportProblemKind.UNKNOWN_ERROR) {

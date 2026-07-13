@@ -1,11 +1,11 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import { person } from '../../utils/testing/mocks/mockPerson';
 import ZUIPerson from '.';
 
 export default {
   component: ZUIPerson,
-  title: 'Atoms/ZUIPerson',
+  title: 'Other/ZUIPerson',
 } as Meta<typeof ZUIPerson>;
 
 const Template: StoryFn<typeof ZUIPerson> = (args) => (

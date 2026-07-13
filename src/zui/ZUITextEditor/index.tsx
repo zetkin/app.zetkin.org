@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { isEqual } from 'lodash';
-import { makeStyles } from '@mui/styles';
 import { withHistory } from 'slate-history';
 import { Box, ClickAwayListener, Collapse } from '@mui/material';
 import {
@@ -31,7 +30,7 @@ import { markdownToSlate } from './utils/markdownToSlate';
 import './types';
 import { FileUpload } from 'features/files/hooks/useFileUploads';
 import TextElement from './TextElement';
-import theme from 'theme';
+import oldTheme from 'theme';
 import Toolbar from './Toolbar';
 import { ZetkinFileUploadChip } from 'zui/ZUIFileChip';
 import {
@@ -47,29 +46,6 @@ const emptySlate = [
     type: 'paragraph',
   },
 ] as Descendant[];
-
-const useStyles = makeStyles({
-  container: {
-    '& a': {
-      color: theme.palette.primary.main,
-      fontWeight: 600,
-    },
-    '&:hover': {
-      borderColor: theme.palette.onSurface.medium,
-    },
-    background: (props: { active: boolean }) =>
-      props.active ? 'white' : 'transparent',
-    border: '1.5px solid',
-    borderColor: (props: { active: boolean }) =>
-      props.active
-        ? theme.palette.onSurface.medium
-        : theme.palette.outline.main,
-    borderRadius: 8,
-    fontFamily: 'system-ui',
-    padding: 16,
-    transition: 'all 0.3s ease',
-  },
-});
 
 export interface ZUITextEditorProps {
   clear?: number;
@@ -91,7 +67,6 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   placeholder,
 }) => {
   const [active, setActive] = useState<boolean>(false);
-  const classes = useStyles({ active });
   const renderElement = useCallback(
     (props: RenderElementProps) => <TextElement {...props} />,
     []
@@ -154,17 +129,33 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
       clearEditor();
       setActive(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clear]);
 
   return (
     <ClickAwayListener onClickAway={onClickAway}>
       <Box
-        className={classes.container}
         onClick={() => ReactEditor.focus(editor)}
         sx={{
+          '& a': {
+            color: oldTheme.palette.primary.main,
+            fontWeight: 600,
+          },
+          '&:hover': {
+            borderColor: oldTheme.palette.onSurface.medium,
+          },
+          background: active ? 'white' : 'transparent',
+          border: '1.5px solid',
+          borderColor: active
+            ? oldTheme.palette.onSurface.medium
+            : oldTheme.palette.outline.main,
+          borderRadius: '8px',
           display: 'flex',
           flexDirection: 'column',
+          fontFamily: 'system-ui',
           minHeight: 0,
+          padding: '16px',
+          transition: 'all 0.3s ease',
         }}
       >
         {/* Only render when slate has been generated */}

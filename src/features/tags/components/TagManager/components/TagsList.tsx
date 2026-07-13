@@ -1,32 +1,12 @@
-import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { Box, Theme, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { groupTags } from '../utils';
 import messageIds from '../../../l10n/messageIds';
 import TagChip from './TagChip';
 import { useMessages } from 'core/i18n';
-import { ZetkinTag } from 'utils/types/zetkin';
-
-interface StyleProps {
-  clickable: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  chip: {
-    borderColor: theme.palette.grey[500],
-    borderRadius: '1em',
-    borderWidth: '1px',
-    color: theme.palette.text.secondary,
-    cursor: ({ clickable }) => (clickable ? 'pointer' : 'default'),
-    display: 'flex',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-    textOverflow: 'ellipsis',
-  },
-}));
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
+import oldTheme from 'theme';
 
 const PersonLink: React.FunctionComponent<{
   capOverflowHref?: string;
@@ -46,12 +26,10 @@ const TagsList: React.FunctionComponent<{
   cap?: number;
   capOverflowHref?: string;
   isGrouped: boolean;
-  onUnassignTag?: (tag: ZetkinTag) => void;
+  onUnassignTag?: (tag: ZetkinAppliedTag) => void;
   tags: ZetkinTag[];
 }> = ({ cap = Infinity, capOverflowHref, isGrouped, onUnassignTag, tags }) => {
-  const classes = useStyles({
-    clickable: !!capOverflowHref,
-  });
+  const clickable = !!capOverflowHref;
   const messages = useMessages(messageIds);
 
   const renderCappedTags = (tags: ZetkinTag[], capOverflowHref?: string) => {
@@ -66,7 +44,22 @@ const TagsList: React.FunctionComponent<{
         })}
         {isCapped ? (
           <PersonLink capOverflowHref={capOverflowHref}>
-            <Box border={2} className={classes.chip}>
+            <Box
+              border={2}
+              sx={{
+                borderColor: oldTheme.palette.grey[500],
+                borderRadius: '1em',
+                borderWidth: '1px',
+                color: oldTheme.palette.text.secondary,
+                cursor: clickable ? 'pointer' : 'default',
+                display: 'flex',
+                lineHeight: 'normal',
+                marginRight: '0.1em',
+                overflow: 'hidden',
+                padding: '0.2em 0.7em',
+                textOverflow: 'ellipsis',
+              }}
+            >
               {`+${hiddenTags.length}`}
             </Box>
           </PersonLink>

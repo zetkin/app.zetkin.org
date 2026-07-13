@@ -2,12 +2,13 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import FolderLayout from 'features/views/layout/FolderLayout';
+import FolderLayout, { FolderHeader } from 'features/views/layout/FolderLayout';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import ViewBrowser from 'features/views/components/ViewBrowser';
 import messageIds from 'features/views/l10n/messageIds';
+import { ZetkinViewFolder } from 'features/views/components/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -17,19 +18,20 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, folderId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const folder = await apiClient.get(
-    `/api/orgs/${orgId}/people/view_folders/${folderId}`
-  );
-
-  if (folder) {
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    // Note: We don't actually care for the returned folder, but we still want to perform
+    // the api request to know if this user may access this particular folder.
+    await apiClient.get<ZetkinViewFolder>(
+      `/api/orgs/${orgId}/people/view_folders/${folderId}`
+    );
     return {
       props: {
         folderId,
         orgId,
       },
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };
@@ -55,15 +57,14 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({
       <ViewBrowser
         basePath={`/organize/${orgId}/people`}
         folderId={parseInt(folderId)}
+        header={<FolderHeader folderId={+folderId} />}
       />
     </>
   );
 };
 
-PeopleViewsPage.getLayout = function getLayout(page, props) {
-  return (
-    <FolderLayout folderId={parseInt(props.folderId)}>{page}</FolderLayout>
-  );
+PeopleViewsPage.getLayout = function getLayout(page) {
+  return <FolderLayout>{page}</FolderLayout>;
 };
 
 export default PeopleViewsPage;

@@ -17,6 +17,11 @@ test.describe('Campaigns list page ', () => {
 
   test('shows list of campaigns ', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock('/orgs/1/actions', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/area_assignments', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/tasks', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/emails', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/call_assignments', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/surveys', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/campaigns', 'get', [
       ReferendumSignatures,
       WelcomeNewMembers,

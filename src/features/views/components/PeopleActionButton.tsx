@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import {
   FolderOutlined,
@@ -30,6 +30,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   orgId,
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const joinFormMessages = useMessages(joinFormMessageIds);
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
@@ -56,6 +57,9 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             label: messages.actions.createFolder(),
             onClick: () => {
               createFolder(messages.newFolderTitle(), folderId || undefined);
+              if (!pathname?.includes('folders')) {
+                router.push(`/organize/${orgId}/people`);
+              }
             },
           },
           {
@@ -78,7 +82,8 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             onClick: async () => {
               router.push(`/organize/${orgId}/people/joinforms`);
               await createForm({
-                fields: ['first_name', 'last_name'],
+                fields: ['first_name', 'last_name', 'email'],
+                requires_email_verification: true,
                 title: joinFormMessages.defaultTitle(),
               });
             },

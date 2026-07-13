@@ -6,19 +6,25 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, Suspense, useRef } from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { EmotionCache } from '@emotion/utils';
+import 'dayjs/locale/de';
+import 'dayjs/locale/da';
+import 'dayjs/locale/nn';
+import 'dayjs/locale/sv';
+import 'dayjs/locale/nl';
 
 import Environment from './env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
 import { MessageList } from 'utils/locale';
 import { Store } from './store';
-import { themeWithLocale } from '../theme';
-import { UserContext } from 'utils/hooks/useFocusDate';
+import { oldThemeWithLocale } from '../theme';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
+import { UserProvider } from './env/UserContext';
 
 type ProviderData = {
   env: Environment;
@@ -58,16 +64,23 @@ const Providers: FC<ProvidersProps> = ({
     };
   }
 
-  const cache = createCache({ key: 'css', prepend: true });
+  const cache = useRef<EmotionCache | null>(null);
+
+  if (!cache.current) {
+    cache.current = createCache({ key: 'css', prepend: true });
+  }
 
   return (
     <ReduxProvider store={store}>
       <EnvProvider env={env}>
-        <UserContext.Provider value={user}>
+        <UserProvider user={user}>
           <StyledEngineProvider injectFirst>
-            <CacheProvider value={cache}>
-              <ThemeProvider theme={themeWithLocale(lang)}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <CacheProvider value={cache.current}>
+              <ThemeProvider theme={oldThemeWithLocale(lang)}>
+                <LocalizationProvider
+                  adapterLocale={lang}
+                  dateAdapter={AdapterDayjs}
+                >
                   <IntlProvider
                     defaultLocale="en"
                     locale={lang}
@@ -77,7 +90,7 @@ const Providers: FC<ProvidersProps> = ({
                       <ZUIConfirmDialogProvider>
                         <EventPopperProvider>
                           <DndProvider backend={HTML5Backend}>
-                            {children}
+                            <Suspense>{children}</Suspense>
                           </DndProvider>
                         </EventPopperProvider>
                       </ZUIConfirmDialogProvider>
@@ -87,7 +100,7 @@ const Providers: FC<ProvidersProps> = ({
               </ThemeProvider>
             </CacheProvider>
           </StyledEngineProvider>
-        </UserContext.Provider>
+        </UserProvider>
       </EnvProvider>
     </ReduxProvider>
   );

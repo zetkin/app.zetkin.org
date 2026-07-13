@@ -12,6 +12,7 @@ export default function useCustomFields(
   const fieldsList = useAppSelector((state) => state.profiles.fieldsList);
 
   return loadListIfNecessary(fieldsList, dispatch, {
+    actionOnError: () => fieldsLoaded([]),
     actionOnLoad: () => fieldsLoad(),
     actionOnSuccess: (fields) => fieldsLoaded(fields),
     loader: async () =>

@@ -1,11 +1,11 @@
 import { HTMLProps, useState } from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIPreviewableInput, { ZUIPreviewableMode } from '.';
 
 export default {
   component: ZUIPreviewableInput,
-  title: 'Atoms/ZUIPreviewableInput',
+  title: 'Other/ZUIPreviewableInput',
 } as Meta<typeof ZUIPreviewableInput>;
 
 const Template: StoryFn<typeof ZUIPreviewableInput> = (args) => {

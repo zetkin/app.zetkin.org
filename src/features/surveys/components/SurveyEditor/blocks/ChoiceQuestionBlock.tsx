@@ -27,7 +27,7 @@ import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
-import ZUIReorderable from 'zui/ZUIReorderable';
+import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ChoiceQuestionBlockProps {
@@ -111,6 +111,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
 
       lengthRef.current = options.length;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elemQuestion.options?.length]);
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
@@ -119,8 +120,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       onEditModeEnter,
       onEditModeExit,
       readOnly,
-      save: () => {
-        updateElement(element.id, {
+      save: async () => {
+        await Promise.all(
+          options.map((option) =>
+            updateElementOption(element.id, option.id, option.text)
+          )
+        );
+
+        await updateElement(element.id, {
           question: {
             description: description,
             question: title,
@@ -140,8 +147,20 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   });
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  function onDelete(elementId: number, optionId: number) {
+    showConfirmDialog({
+      onSubmit: () => deleteElementOption(elementId, optionId),
+      title: messages.blocks.deleteOptionDialog.title(),
+      warningText: messages.blocks.deleteOptionDialog.warningText(),
+    });
+  }
+
   return (
-    <ClickAwayListener {...clickAwayProps}>
+    <ClickAwayListener
+      mouseEvent="onMouseDown"
+      onClickAway={clickAwayProps.onClickAway}
+      touchEvent="onTouchStart"
+    >
       <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
@@ -191,7 +210,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         )}
         <ZUIReorderable
           centerWidgets
-          disableClick
+          disableClick={!editable}
           disableDrag={!editable}
           items={optionsToShow.map((option, index) => ({
             hidden: index > 2 && !expand && !editable,
@@ -216,7 +235,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus={addedOptionId == option.id}
                       fullWidth
-                      inputProps={props}
                       onBlur={(ev) => {
                         updateElementOption(
                           element.id,
@@ -233,22 +251,9 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                           )
                         );
                       }}
+                      slotProps={{ htmlInput: props }}
                       value={option.text}
                     />
-                    <IconButton
-                      onClick={() => {
-                        showConfirmDialog({
-                          onSubmit: () =>
-                            deleteElementOption(element.id, option.id),
-                          title: messages.blocks.deleteOptionDialog.title(),
-                          warningText:
-                            messages.blocks.deleteOptionDialog.warningText(),
-                        });
-                      }}
-                      sx={{ paddingX: 2 }}
-                    >
-                      <Close />
-                    </IconButton>
                   </Box>
                 )}
                 renderPreview={() => (
@@ -259,6 +264,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                     <Typography
                       color={option.text ? 'inherit' : 'secondary'}
                       fontStyle={option.text ? 'inherit' : 'italic'}
+                      sx={{ wordBreak: 'break-word' }}
                     >
                       {option.text || messages.blocks.choice.emptyOption()}
                     </Typography>
@@ -268,9 +274,13 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               />
             ),
           }))}
+          onDelete={(optionId) => {
+            onDelete(element.id, optionId as number);
+          }}
           onReorder={(ids) => {
             updateOptionOrder(element.id, ids);
           }}
+          widgets={[ZUIReorderableWidget.MENU]}
         />
         {options.length > 3 && !editable && (
           <Button

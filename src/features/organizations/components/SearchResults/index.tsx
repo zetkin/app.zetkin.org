@@ -1,5 +1,4 @@
-import NextLink from 'next/link';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Link, Typography, useTheme } from '@mui/material';
 
 import Ancestors from './Ancestors';
 import ProceduralColorIcon from '../ProceduralColorIcon';
@@ -64,10 +63,11 @@ const SearchResults = ({
               <Ancestors ancestors={findAncestors(results[0])} />
             </Box>
             {results.map((result) => (
-              <NextLink
+              <Link
                 key={result.id}
+                color={'inherit'}
                 href={`/organize/${result.id}`}
-                legacyBehavior
+                underline={'none'}
               >
                 <Box
                   display="flex"
@@ -94,7 +94,7 @@ const SearchResults = ({
                     <Typography variant="body2">{result.title}</Typography>
                   </Box>
                 </Box>
-              </NextLink>
+              </Link>
             ))}
           </Box>
         );

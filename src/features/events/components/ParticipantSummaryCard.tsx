@@ -1,20 +1,17 @@
 import {
   Box,
   Button,
-  CircularProgress,
   ClickAwayListener,
   Paper,
   Popper,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import { Check, PriorityHigh, Settings } from '@mui/icons-material';
+import { Settings } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
-import { useAppSelector } from 'core/hooks';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
@@ -22,6 +19,7 @@ import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
+import RemindAllButton from './RemindAllButton';
 
 type ParticipantSummaryCardProps = {
   eventId: number;
@@ -37,18 +35,17 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   const event = useEvent(orgId, eventId)?.data;
   const participantStatus = useParticipantStatus(orgId, eventId);
   const {
-    respondentsFuture,
+    numSignedUpParticipants,
     numAvailParticipants,
     numCancelledParticipants,
     numConfirmedParticipants,
     numNoshowParticipants,
     numRemindedParticipants,
-    numSignedParticipants,
-    bookedParticipants,
   } = useEventParticipants(orgId, eventId);
-  const { addParticipant, setReqParticipants, sendReminders } =
-    useEventParticipantsMutations(orgId, eventId);
-  const respondents = respondentsFuture.data;
+  const { setReqParticipants, sendReminders } = useEventParticipantsMutations(
+    orgId,
+    eventId
+  );
   const messages = useMessages(messageIds);
 
   const reqParticipants = event?.num_participants_required ?? 0;
@@ -67,14 +64,12 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     null | (EventTarget & SVGSVGElement)
   >(null);
 
-  const isRemindingParticipants = useAppSelector(
-    (state) => state.events.remindingByEventId[eventId]
-  );
-
   if (!event) {
     return null;
   }
 
+  const eventHasStarted = new Date(removeOffset(event.start_time)) > new Date();
+  const eventHasEnded = new Date(removeOffset(event.end_time)) < new Date();
   return (
     <Box>
       <ZUICard
@@ -154,80 +149,21 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
             <Typography color={'secondary'}>
               {messages.participantSummaryCard.pending()}
             </Typography>
-            <Box display="flex">
-              <Typography variant="h4">{numSignedParticipants}</Typography>
-              {numSignedParticipants > 0 && (
-                <Button
-                  onClick={() => {
-                    respondents?.map((r) => {
-                      if (
-                        !bookedParticipants.some((p) => p.id === r.person.id)
-                      ) {
-                        addParticipant(r.person.id);
-                      }
-                    });
-                  }}
-                  size="small"
-                  startIcon={<Check />}
-                  sx={{
-                    marginLeft: 2,
-                  }}
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.participantSummaryCard.bookButton} />
-                </Button>
-              )}
-            </Box>
+            <Typography variant="h4">{numSignedUpParticipants}</Typography>
           </Box>
-          {new Date(removeOffset(event.start_time)) > new Date() ? (
+          {eventHasStarted ? (
             <Box display="flex" flexDirection="column">
               <Typography color={'secondary'}>
                 {messages.participantSummaryCard.booked()}
               </Typography>
               <Box alignItems="center" display="flex">
                 <Typography variant="h4">{`${numRemindedParticipants}/${numAvailParticipants}`}</Typography>
-                <Tooltip
-                  arrow
-                  placement="top-start"
-                  title={
-                    contactPerson == null
-                      ? messages.participantSummaryCard.remindButtondisabledTooltip()
-                      : ''
-                  }
-                >
-                  <Box>
-                    <Button
-                      disabled={
-                        contactPerson == null ||
-                        isRemindingParticipants ||
-                        numRemindedParticipants >= numAvailParticipants
-                      }
-                      onClick={() => {
-                        sendReminders(eventId);
-                      }}
-                      size="small"
-                      startIcon={
-                        contactPerson ? (
-                          isRemindingParticipants ? (
-                            <CircularProgress size={20} />
-                          ) : (
-                            <Check />
-                          )
-                        ) : (
-                          <PriorityHigh />
-                        )
-                      }
-                      sx={{
-                        marginLeft: 2,
-                      }}
-                      variant="outlined"
-                    >
-                      <Msg
-                        id={messageIds.participantSummaryCard.remindButton}
-                      />
-                    </Button>
-                  </Box>
-                </Tooltip>
+                <RemindAllButton
+                  contactPerson={contactPerson}
+                  eventId={eventId}
+                  orgId={orgId}
+                  sendReminders={sendReminders}
+                />
               </Box>
             </Box>
           ) : (
@@ -248,6 +184,14 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                       noshows: numNoshowParticipants,
                     })}
                   </Typography>
+                )}
+                {!eventHasEnded && (
+                  <RemindAllButton
+                    contactPerson={contactPerson}
+                    eventId={eventId}
+                    orgId={orgId}
+                    sendReminders={sendReminders}
+                  />
                 )}
                 {!hasRecordedAttendance && (
                   <Box ml={2}>

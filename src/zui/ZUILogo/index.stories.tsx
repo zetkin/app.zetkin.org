@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUILogo from '.';
 
 export default {
   component: ZUILogo,
-  title: 'Atoms/ZUILogo',
+  title: 'Other/ZUILogo',
 } as Meta<typeof ZUILogo>;
 
 const Template: StoryFn<typeof ZUILogo> = (args) => (

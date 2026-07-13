@@ -15,21 +15,26 @@ import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
-import { AppDispatch, RootState } from 'core/store';
+import { AppDispatch } from 'core/store';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
+import { RemoteList } from 'utils/storeUtils';
+import { ZetkinCustomField, ZetkinTag } from 'utils/types/zetkin';
 
 export interface IColumnType<
   ColumnType = ZetkinViewColumn,
-  CellType = unknown
+  CellType = unknown,
 > {
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(
     column: ColumnType,
     accessLevel: ZetkinObjectAccess['level'] | null,
-    state?: RootState,
-    apiClient?: IApiClient,
-    dispatch?: AppDispatch,
-    orgId?: number
+    optionalParams: {
+      apiClient?: IApiClient;
+      customFieldsInfo?: ZetkinCustomField[];
+      dispatch?: AppDispatch;
+      orgId?: number;
+      tagListState?: RemoteList<ZetkinTag>;
+    }
   ): Omit<GridColDef, 'field'>;
   getSearchableStrings(cell: CellType, column: ColumnType): string[];
   handleKeyDown?(

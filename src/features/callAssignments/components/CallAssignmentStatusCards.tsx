@@ -54,10 +54,10 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
 
   return (
     <Grid container spacing={2}>
-      <Grid item md={4} xs={12}>
+      <Grid size={{ md: 4, xs: 12 }}>
         <Card>
           <StatusCardHeader
-            chipColor={hasTargets ? 'orange' : 'gray'}
+            chipColor={hasTargets ? 'orange' : 'grey'}
             subtitle={messages.blocked.subtitle()}
             title={messages.blocked.title()}
             value={stats?.blocked}
@@ -161,10 +161,10 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
           </List>
         </Card>
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid size={{ md: 4, xs: 12 }}>
         <Card>
           <StatusCardHeader
-            chipColor={hasTargets ? 'blue' : 'gray'}
+            chipColor={hasTargets ? 'blue' : 'grey'}
             subtitle={messages.ready.subtitle()}
             title={messages.ready.title()}
             value={stats?.ready}
@@ -181,10 +181,10 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
           </List>
         </Card>
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid size={{ md: 4, xs: 12 }}>
         <Card>
           <StatusCardHeader
-            chipColor={hasTargets ? 'green' : 'gray'}
+            chipColor={hasTargets ? 'green' : 'grey'}
             subtitle={messages.done.subtitle()}
             title={messages.done.title()}
             value={stats?.done}

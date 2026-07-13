@@ -1,7 +1,12 @@
 import { InsertDriveFileOutlined } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
+import {
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+} from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinView } from 'utils/types/zetkin';
@@ -22,21 +27,19 @@ const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
   elements.push(messages.results.view());
 
   return (
-    <Link
-      href={`/organize/${orgId}/people/views/${view.id}`}
-      legacyBehavior
-      passHref
-    >
-      <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
-        <ListItemAvatar>
-          <Avatar>
-            <InsertDriveFileOutlined />
-          </Avatar>
-        </ListItemAvatar>
-        <ResultsListItemText
-          primary={view.title}
-          secondary={elements.join(' / ')}
-        />
+    <Link href={`/organize/${orgId}/people/lists/${view.id}`}>
+      <ListItem data-testid="SearchDialog-resultsListItem">
+        <ListItemButton>
+          <ListItemAvatar>
+            <Avatar>
+              <InsertDriveFileOutlined />
+            </Avatar>
+          </ListItemAvatar>
+          <ResultsListItemText
+            primary={view.title}
+            secondary={elements.join(' / ')}
+          />
+        </ListItemButton>
       </ListItem>
     </Link>
   );

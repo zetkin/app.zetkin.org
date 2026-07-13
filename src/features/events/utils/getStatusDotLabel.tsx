@@ -34,7 +34,7 @@ export default function getStatusDotLabel({
       return <Msg id={messageIds.eventStatus.scheduled} />;
     } else if (color === STATUS_COLORS.ORANGE) {
       return <Msg id={messageIds.eventStatus.cancelled} />;
-    } else if (color === STATUS_COLORS.GRAY) {
+    } else if (color === STATUS_COLORS.GREY) {
       return <Msg id={messageIds.eventStatus.draft} />;
     }
   }

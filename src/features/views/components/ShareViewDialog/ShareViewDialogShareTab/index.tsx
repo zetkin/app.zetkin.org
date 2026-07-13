@@ -12,7 +12,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 import ZUIInlineCopyToClipboard from 'zui/ZUIInlineCopyToClipBoard';
 import ZUIScrollingContainer from 'zui/ZUIScrollingContainer';
 import { Msg, useMessages } from 'core/i18n';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'features/views/l10n/messageIds';
 
 const ShareViewDialogShareTab = () => {

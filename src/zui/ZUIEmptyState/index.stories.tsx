@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIEmptyState from '.';
 
 export default {
   component: ZUIEmptyState,
-  title: 'ZUIEmptyState',
+  title: 'Other/ZUIEmptyState',
 } as Meta<typeof ZUIEmptyState>;
 
 const Template: StoryFn<typeof ZUIEmptyState> = (args) => {

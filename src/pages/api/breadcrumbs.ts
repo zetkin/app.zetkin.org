@@ -51,12 +51,10 @@ const breadcrumbs = async (
         elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
       } else {
-        if (
-          field == 'callassignments' ||
-          field == 'folders' ||
-          field == 'lists' ||
-          field == 'surveys'
-        ) {
+        if (field == 'callassignments' || field == 'surveys') {
+          curPath.push(field);
+          continue;
+        } else if (field == 'folders' || field == 'lists') {
           // Ignore "views" and "folders" which are only there
           // for technical reasons, but do not represent any page
           // and shouldn't link to anything.
@@ -86,7 +84,7 @@ async function fetchElements(
     const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
     return [
       {
-        href: basePath + '/' + fieldValue,
+        href: basePath + '/' + fieldValue + '/projects',
         label: org.data.title,
       },
     ];
@@ -159,7 +157,7 @@ async function fetchElements(
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: journey.data.plural_label,
+        label: journey.data.title,
       },
     ];
   } else if (fieldName == 'callAssId') {
@@ -218,6 +216,13 @@ async function fetchElements(
       {
         href: basePath + '/' + fieldValue,
         label: email.data.title,
+      },
+    ];
+  } else if (fieldName == 'themeId') {
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: `Theme ${fieldValue}`,
       },
     ];
   }

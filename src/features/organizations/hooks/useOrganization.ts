@@ -7,10 +7,12 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 const useOrganization = (orgId: number): IFuture<ZetkinOrganization> => {
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
-  const organizationState = useAppSelector((state) => state.organizations);
+  const orgItem = useAppSelector((state) =>
+    state.organizations.orgList.items.find((item) => item.id == orgId)
+  );
 
-  return loadItemIfNecessary(organizationState.orgData, dispatch, {
-    actionOnLoad: () => organizationLoad(),
+  return loadItemIfNecessary(orgItem, dispatch, {
+    actionOnLoad: () => organizationLoad(orgId),
     actionOnSuccess: (data) => organizationLoaded(data),
     loader: () => apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`),
   });

@@ -1,168 +1,167 @@
 import { Clear } from '@mui/icons-material';
-import { useState } from 'react';
-import { Box, IconButton, lighten, Theme, Tooltip } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Box, IconButton, Tooltip } from '@mui/material';
+import { lighten, rgbToHex } from '@mui/system';
 
 import { DEFAULT_TAG_COLOR } from '../utils';
 import { getContrastColor } from 'utils/colorUtils';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 type TagChipSize = 'small' | 'medium' | 'large';
 
-interface StyleProps {
-  clickable: boolean;
-  deletable: boolean;
-  disabled: boolean;
-  hover: boolean;
-  size: TagChipSize;
-  tag: ZetkinTag;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  chip: {
-    borderRadius: '1em',
-    cursor: ({ clickable, disabled }) =>
-      clickable && !disabled ? 'pointer' : 'default',
-    display: 'flex',
-    fontSize: ({ size }) =>
-      ({
-        large: '1.2em',
-        medium: '1.0em',
-        small: '0.8em',
-      }[size]),
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    opacity: ({ disabled }) => (disabled ? 0.5 : 1.0),
-    overflow: 'hidden',
-  },
-  deleteButton: {
-    fontSize: '1.1rem',
-    padding: '3px',
-    position: 'absolute',
-    right: '0.12em',
-    transform: ({ deletable, hover }) =>
-      deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
-    transition: ({ deletable, hover }) =>
-      deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
-  },
-  deleteContainer: {
-    padding: ({ deletable, hover }) => {
-      if (deletable) {
-        return hover ? '0.2em 1.5em 0.2em 0.7em' : '0.2em 1em';
-      } else {
-        return '0.2em 0.6em';
-      }
-    },
-    position: 'relative',
-    transition: 'padding 0.1s',
-  },
-  deleteIcon: {
-    color: ({ tag }) =>
-      tag.value_type
-        ? 'black'
-        : getContrastColor(tag.color || DEFAULT_TAG_COLOR),
-  },
-  label: {
-    backgroundColor: ({ tag }) => tag.color || DEFAULT_TAG_COLOR,
-    color: ({ tag }) => getContrastColor(tag.color || DEFAULT_TAG_COLOR),
-    maxWidth: '100%',
-    overflow: 'hidden',
-    padding: '0.2em 0.4em 0.2em 1em',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  value: {
-    backgroundColor: ({ tag }) => lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
-    maxWidth: '10em',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-}));
-
-const TagToolTip: React.FunctionComponent<{
-  children: JSX.Element;
-  tag: ZetkinTag;
-}> = ({ children, tag }) => {
-  return (
-    <Tooltip
-      arrow
-      title={
-        <>
-          {tag.title} <br /> {tag.description || ''}
-        </>
-      }
-    >
-      {children}
-    </Tooltip>
-  );
+const isValueTag = (
+  tag: ZetkinAppliedTag | ZetkinTag
+): tag is ZetkinAppliedTag => {
+  return tag.value_type == 'text';
 };
 
 const TagChip: React.FunctionComponent<{
   disabled?: boolean;
   noWrappedLabel?: boolean;
   onClick?: (tag: ZetkinTag) => void;
-  onDelete?: (tag: ZetkinTag) => void;
+  onDelete?: (tag: ZetkinAppliedTag) => void;
   size?: TagChipSize;
-  tag: ZetkinTag;
+  tag: ZetkinTag | ZetkinAppliedTag;
 }> = ({ disabled = false, onClick, onDelete, size = 'medium', tag }) => {
-  const [hover, setHover] = useState(false);
-  const classes = useStyles({
-    clickable: !!onClick,
-    deletable: !!onDelete,
-    disabled,
-    hover,
-    size,
-    tag,
-  });
+  const clickable = !!onClick;
+  const deletable = !!onDelete;
+  const isAppliedTag = isValueTag(tag);
+
+  const commonTextStyle = {
+    '&:last-of-type': {
+      paddingInline: isAppliedTag ? '0.375rem 0.75rem' : '0.75rem',
+    },
+    lineHeight: '1.375',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    paddingBlock: '0.0625rem',
+    paddingInline: '0.75rem 0.375rem',
+    textOverflow: 'ellipsis',
+    transition: 'translate 0.1s',
+    whiteSpace: 'nowrap',
+  };
 
   const deleteButton = onDelete ? (
     <IconButton
-      className={classes.deleteButton}
       data-testid="TagChip-deleteButton"
       onClick={(ev) => {
         // Stop propagation to prevent regular onClick() from being invoked
         ev.stopPropagation();
-        onDelete(tag);
+        onDelete(tag as ZetkinAppliedTag);
       }}
       size="large"
+      sx={{
+        bottom: 0,
+        fontSize: '1.1rem',
+        left: '100%',
+        padding: 0,
+        position: 'absolute',
+        top: 0,
+        transition: 'translate 0.1s',
+        translate: '0',
+      }}
       tabIndex={-1}
     >
-      <Clear className={classes.deleteIcon} fontSize="inherit" />
+      <Clear
+        fontSize="inherit"
+        sx={{
+          color: isAppliedTag
+            ? getContrastColor(
+                rgbToHex(lighten(tag.color || DEFAULT_TAG_COLOR, 0.7))
+              )
+            : getContrastColor(tag.color || DEFAULT_TAG_COLOR),
+        }}
+      />
     </IconButton>
   ) : null;
 
   return (
     <Box
-      className={classes.chip}
       onClick={() => !disabled && onClick && onClick(tag)}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      sx={{
+        '& > span': { maxWidth: '100%' },
+        '&:hover': {
+          button: {
+            transition: 'translate 0.1s 0.1s',
+            translate: '-1.25rem  0',
+          },
+          'div:last-of-type': {
+            translate: deletable ? '-0.375rem 0' : '0',
+          },
+        },
+
+        alignContent: 'center',
+        backgroundColor: isAppliedTag
+          ? lighten(tag.color || DEFAULT_TAG_COLOR, 0.7)
+          : 'currentColor',
+        border: '0.125rem solid currentColor',
+        borderRadius: '1rem',
+        color: tag.color || DEFAULT_TAG_COLOR,
+        cursor: clickable && !disabled ? 'pointer' : 'default',
+        display: 'inline-flex',
+
+        fontSize: {
+          large: '1.2em',
+          medium: '1.0em',
+          small: '0.8em',
+        }[size],
+        lineHeight: 'normal',
+        opacity: disabled ? 0.5 : 1.0,
+        overflow: 'hidden',
+        position: 'relative',
+      }}
     >
-      {tag.value_type && (
-        <>
-          <TagToolTip tag={tag}>
-            <Box className={classes.label}>{tag.title}</Box>
-          </TagToolTip>
-          <Tooltip arrow title={tag.value || ''}>
+      <Tooltip
+        arrow
+        title={
+          <>
+            <Box component="p" sx={{ margin: 0 }}>
+              <span>{tag.title}</span>
+              {isAppliedTag && tag.value && (
+                <Box component="span">: {tag.value}</Box>
+              )}
+            </Box>
+            {tag.description && (
+              <Box component="p" sx={{ marginBottom: 0 }}>
+                {tag.description}
+              </Box>
+            )}
+          </>
+        }
+      >
+        <Box
+          component="span"
+          sx={{
+            display: 'flex',
+          }}
+        >
+          <Box
+            className="title"
+            data-testid="TagChip-value"
+            sx={{
+              backgroundColor: tag.color || DEFAULT_TAG_COLOR,
+              ...commonTextStyle,
+              color: getContrastColor(tag.color || DEFAULT_TAG_COLOR),
+            }}
+          >
+            {tag.title}
+          </Box>
+          {isAppliedTag && (
             <Box
-              className={classes.value + ' ' + classes.deleteContainer}
-              data-testid="TagChip-value"
+              className="valueArea"
+              sx={{
+                ...commonTextStyle,
+                color: getContrastColor(
+                  rgbToHex(lighten(tag.color || DEFAULT_TAG_COLOR, 0.7))
+                ),
+                minWidth: '3ch',
+              }}
             >
               {tag.value}
-              {deleteButton}
             </Box>
-          </Tooltip>
-        </>
-      )}
-      {!tag.value_type && (
-        <TagToolTip tag={tag}>
-          <Box className={classes.label + ' ' + classes.deleteContainer}>
-            {tag.title}
-            {deleteButton}
-          </Box>
-        </TagToolTip>
-      )}
+          )}
+        </Box>
+      </Tooltip>
+      {deleteButton}
     </Box>
   );
 };

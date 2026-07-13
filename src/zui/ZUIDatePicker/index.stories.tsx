@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIDatePicker from '.';
 
 export default {
   component: ZUIDatePicker,
-  title: 'Molecules/ZUIDatePicker',
+  title: 'Other/ZUIDatePicker',
 } as Meta<typeof ZUIDatePicker>;
 
 const Template: StoryFn<typeof ZUIDatePicker> = () => (

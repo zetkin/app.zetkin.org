@@ -1,9 +1,8 @@
 import { useContext } from 'react';
 import { FormatListBulleted, OpenInNew } from '@mui/icons-material';
-import makeStyles from '@mui/styles/makeStyles';
-import { Box, Button, Theme, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import { ZetkinJoinForm } from '../types';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useApiClient } from 'core/hooks';
@@ -11,41 +10,13 @@ import getJoinFormEmbedData from '../rpc/getJoinFormEmbedData';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-
-const useStyles = makeStyles<Theme>((theme) => ({
-  container: {
-    alignItems: 'center',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '1.0em 0.5em',
-  },
-  endNumber: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    width: '7em',
-  },
-  icon: {
-    color: theme.palette.grey[500],
-    fontSize: '28px',
-  },
-  left: {
-    alignItems: 'center',
-    display: 'flex',
-    flex: '1 0',
-    gap: '1em',
-  },
-  right: {
-    alignItems: 'center',
-    display: 'flex',
-  },
-}));
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import useJoinFormMutations from '../hooks/useJoinFormMutations';
 
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',
-  GRAY = 'gray',
+  GREY = 'grey',
   ORANGE = 'orange',
   RED = 'red',
 }
@@ -56,28 +27,63 @@ type Props = {
 };
 
 const JoinFormListItem = ({ form, onClick }: Props) => {
-  const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteForm } = useJoinFormMutations(form.organization.id, form.id);
   const messages = useMessages(messageIds);
+  async function handleDeleteJoinForm() {
+    await deleteForm();
+    showSnackbar(
+      'success',
+      <Msg
+        id={messageIds.deleteJoinForm.success}
+        values={{ title: form.title }}
+      />
+    );
+  }
 
   return (
     <Box
-      className={classes.container}
       onClick={() => {
         onClick();
       }}
+      sx={{
+        alignItems: 'center',
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '1.0em 0.5em',
+      }}
     >
-      <Box className={classes.left}>
-        <FormatListBulleted className={classes.icon} />
-        <Box>
-          <Typography color={theme.palette.text.primary}>
-            {form.title}
-          </Typography>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flex: '1 0',
+          gap: '1em',
+        }}
+      >
+        <FormatListBulleted
+          sx={{
+            color: oldTheme.palette.grey[500],
+            fontSize: '28px',
+          }}
+        />
+        <Box alignItems="center" display="flex" gap={1}>
+          <Typography>{form.title}</Typography>
+          <Typography color="secondary">(#{form.id})</Typography>
         </Box>
       </Box>
       <Box>
-        <Box className={classes.endNumber}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            width: '7em',
+          }}
+        >
           {/* TODO: Add stats
             <ZUIIconLabel
               icon={<SecondaryIcon color={endNumberColor} />}
@@ -118,6 +124,32 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
                     </Button>
                   </>
                 );
+              },
+            },
+            {
+              label: messages.submitToken.copySubmitToken(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+
+                navigator.clipboard.writeText(form.submit_token);
+
+                showSnackbar(
+                  'success',
+                  <Msg id={messageIds.submitToken.submitTokenCopied} />
+                );
+              },
+            },
+            {
+              label: messages.embedding.delete(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+                showConfirmDialog({
+                  onSubmit: handleDeleteJoinForm,
+                  title: messages.deleteJoinForm.title(),
+                  warningText: messages.deleteJoinForm.warning({
+                    title: form.title,
+                  }),
+                });
               },
             },
           ]}

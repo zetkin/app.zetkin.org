@@ -1,5 +1,3 @@
-//TODO: Enable eslint rules and fix errors
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { getIronSession } from 'iron-session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -18,6 +16,7 @@ export const config = {
 };
 
 //TODO: Create module definition and revert to import.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const Z = require('zetkin');
 
 interface HttpVerbMethod {
@@ -58,14 +57,30 @@ export default async function handle(
       const url = `${protocol}://${host}:${port}/v1/${pathStr}`;
       const result = await fetch(url, { redirect: 'manual' });
       const location = result.headers.get('location');
-      const headers = location
-        ? {
-            location: location,
-          }
-        : undefined;
-      res.writeHead(result.status, headers);
 
-      res.end();
+      // Proxy image redirects server-side
+      const shouldProxy =
+        location && result.status >= 300 && result.status < 400;
+
+      if (shouldProxy) {
+        const imageResponse = await fetch(location);
+
+        if (imageResponse.ok) {
+          const contentType = imageResponse.headers.get('content-type');
+          if (contentType) {
+            res.setHeader('Content-Type', contentType);
+          }
+
+          const imageBuffer = await imageResponse.arrayBuffer();
+          res.status(200).send(Buffer.from(imageBuffer));
+        } else {
+          res.status(imageResponse.status).end();
+        }
+      } else {
+        const headers = location ? { location } : undefined;
+        res.writeHead(result.status, headers);
+        res.end();
+      }
     } catch (err) {
       res.status(500).json(err);
     }

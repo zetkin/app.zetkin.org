@@ -20,8 +20,12 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
+import zuiMessages from 'zui/l10n/messageIds';
+import { useMessages } from 'core/i18n';
+import { TagToBeAdded } from 'features/profile/types';
 
 interface ZUICreatePersonProps {
+  initialValues?: ZetkinCreatePerson;
   onClose: () => void;
   onSubmit?: (e: MouseEvent<HTMLButtonElement>, person: ZetkinPerson) => void;
   open: boolean;
@@ -30,6 +34,7 @@ interface ZUICreatePersonProps {
 }
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
+  initialValues,
   open,
   onClose,
   onSubmit,
@@ -43,9 +48,12 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const createPerson = useCreatePerson(orgId);
   const organization = useOrganization(orgId).data;
   const countryCode = organization?.country as CountryCode;
-  const [tags, setTags] = useState<number[]>([]);
+  const [tags, setTags] = useState<TagToBeAdded[]>([]);
 
-  const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
+  const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({
+    ...initialValues,
+  });
+  const messages = useMessages(zuiMessages);
 
   return (
     <Dialog
@@ -61,9 +69,10 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
       <Box sx={{ padding: '40px 0 40px 40px' }}>
         <Box display="flex">
           <Typography sx={{ ml: 0.5 }} variant="h5">
-            {title}
+            {title ?? messages.createPerson.title.default()}
           </Typography>
         </Box>
+
         {!customFields ? (
           <Box
             sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
@@ -78,11 +87,12 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 delete copied[field];
                 setPersonalInfo(copied);
               } else {
-                if (field === 'tags' && value) {
+                if (field === 'tags' && value && typeof value !== 'string') {
+                  const tag = value;
                   setTags((prev) =>
-                    tags.includes(value as number)
-                      ? tags.filter((item) => item !== value)
-                      : [...prev, value as number]
+                    tags.find((item) => item.id === tag.id)
+                      ? tags.filter((item) => item.id !== tag.id)
+                      : [...prev, tag]
                   );
                 } else {
                   setPersonalInfo((prev) => {

@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -6,6 +5,7 @@ import {
   Paper,
   Popper,
   PopperProps,
+  SxProps,
   Typography,
 } from '@mui/material';
 import { Check, ListAlt, PriorityHigh } from '@mui/icons-material';
@@ -16,15 +16,30 @@ import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
 import { Msg } from 'core/i18n';
 import { OrganizerActionPane } from 'features/callAssignments/panes/OrganizerActionPane';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { usePanes } from 'utils/panes';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 import { ZetkinViewRow } from '../../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import messageIds from 'features/views/l10n/messageIds';
+import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 type OrganizerActionViewCell = null | ZetkinOrganizerAction[];
+
+const sortByOa = (v1: ZetkinOrganizerAction[], v2: ZetkinOrganizerAction[]) => {
+  const getPriority = (v: ZetkinOrganizerAction[]) => {
+    if (v.length === 0) {
+      return 2;
+    }
+    if (v.every((oan) => oan.organizer_action_taken)) {
+      return 1;
+    }
+    return 0;
+  };
+
+  return getPriority(v1) - getPriority(v2);
+};
 
 export default class OrganizerActionColumnType implements IColumnType {
   cellToString(cell: OrganizerActionViewCell): string {
@@ -52,6 +67,7 @@ export default class OrganizerActionColumnType implements IColumnType {
           />
         );
       },
+      sortComparator: (v1, v2) => sortByOa(v1, v2),
     };
   }
 
@@ -59,19 +75,6 @@ export default class OrganizerActionColumnType implements IColumnType {
     return [];
   }
 }
-
-const useStyles = makeStyles<typeof theme, { numUnsolved: number }>(() => ({
-  organizerActionContainer: {
-    alignItems: 'center',
-    backgroundColor: (props) =>
-      props.numUnsolved > 0 ? theme.palette.statusColors.orange : 'transparent',
-    cursor: 'pointer',
-    display: 'flex',
-    height: '100%',
-    justifyContent: 'center',
-    width: '100%',
-  },
-}));
 
 const Cell: FC<{
   cell?: OrganizerActionViewCell;
@@ -83,11 +86,14 @@ const Cell: FC<{
   const viewId = parseInt(query.viewId as string);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
+  const { open: openPopper, close: closePopper } = useToggleDebounce(
+    (ev) => setAnchorEl(ev.currentTarget),
+    () => setAnchorEl(null)
+  );
 
   const [isRestricted] = useAccessLevel();
   const numUnsolved =
     cell?.filter((call) => !call.organizer_action_taken).length ?? 0;
-  const styles = useStyles({ numUnsolved });
 
   if (cell?.length) {
     if (!isRestricted) {
@@ -95,9 +101,20 @@ const Cell: FC<{
     }
     return (
       <Box
-        className={styles.organizerActionContainer}
-        onMouseOut={() => setAnchorEl(null)}
-        onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+        onMouseOut={closePopper}
+        onMouseOver={openPopper}
+        sx={{
+          alignItems: 'center',
+          backgroundColor:
+            numUnsolved > 0
+              ? oldTheme.palette.statusColors.orange
+              : 'transparent',
+          cursor: 'pointer',
+          display: 'flex',
+          height: '100%',
+          justifyContent: 'center',
+          width: '100%',
+        }}
       >
         {numUnsolved < 1 ? (
           <Check />
@@ -141,43 +158,11 @@ interface PreviewPopperProps {
   calls: OrganizerActionViewCell;
 }
 
-const usePopperStyles = makeStyles({
-  buttonBox: {
-    display: 'flex',
-    justifyContent: 'end',
-  },
-  container: {
-    width: 300,
-  },
-  header: {
-    color: 'grey',
-    fontSize: '1em',
-    fontWeight: 'bold',
-    paddingBottom: '1em',
-    textTransform: 'uppercase',
-  },
-  messageToOrganizer: {
-    paddingBottom: '0.7em',
-  },
-  solvedIssues: {
-    color: 'grey',
-    fontSize: '1em',
-    fontWeight: 'bold',
-    paddingTop: '1em',
-    textTransform: 'uppercase',
-  },
-  timestamp: {
-    color: 'grey',
-    paddingBottom: '0.5em',
-  },
-});
-
 const PreviewPopper: FC<PreviewPopperProps> = ({
   anchorEl,
   onOpenCalls,
   calls,
 }) => {
-  const styles = usePopperStyles();
   const sortedUnsolved = useMemo(
     () =>
       calls
@@ -193,39 +178,63 @@ const PreviewPopper: FC<PreviewPopperProps> = ({
   const numSolved =
     calls?.filter((call) => !!call.organizer_action_taken).length || 0;
 
+  const headerSx: SxProps = {
+    color: 'grey',
+    fontSize: '1em',
+    fontWeight: 'bold',
+    paddingBottom: '1em',
+    textTransform: 'uppercase',
+  };
+
   return (
     <Popper
       anchorEl={anchorEl}
-      className={styles.container}
       open={!!anchorEl}
       popperOptions={{
         placement: 'left',
       }}
+      sx={{
+        width: 300,
+      }}
     >
       <Paper elevation={2}>
         <Box p={2}>
-          <Typography className={styles.header}>
+          <Typography sx={headerSx}>
             <Msg id={messageIds.cells.organizerAction.actionNeeded} />
           </Typography>
           {sortedUnsolved?.map((call) => (
             <Box key={call.id}>
-              <Typography className={styles.timestamp}>
+              <Typography
+                sx={{
+                  color: 'grey',
+                  paddingBottom: '0.5em',
+                }}
+              >
                 <ZUIRelativeTime datetime={call.update_time} />
               </Typography>
-              <Typography className={styles.messageToOrganizer}>
+              <Typography
+                sx={{
+                  paddingBottom: '0.7em',
+                }}
+              >
                 {getEllipsedString(call.message_to_organizer || '', 70)}
               </Typography>
             </Box>
           ))}
           {numSolved > 0 ? (
-            <Typography className={styles.header}>
+            <Typography sx={headerSx}>
               <Msg
                 id={messageIds.cells.organizerAction.solvedIssues}
                 values={{ count: numSolved }}
               />
             </Typography>
           ) : null}
-          <Box className={styles.buttonBox}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'end',
+            }}
+          >
             <Button onClick={onOpenCalls} startIcon={<ListAlt />}>
               <Msg id={messageIds.cells.organizerAction.showDetails} />
             </Button>

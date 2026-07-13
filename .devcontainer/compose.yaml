@@ -1,0 +1,18 @@
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    network_mode: 'service:betadb'
+    command: sleep infinity
+
+  betadb:
+    image: mongo:latest
+    restart: unless-stopped
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:

@@ -1,20 +1,7 @@
 import React from 'react';
-import { lighten, TextareaAutosize } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Box, lighten, TextareaAutosize } from '@mui/material';
 
-const useStyles = makeStyles((theme) => ({
-  textarea: {
-    border: '2px dotted transparent',
-    borderColor: lighten(theme.palette.primary.main, 0.65),
-    borderRadius: 10,
-    fontFamily: theme.typography.fontFamily,
-    lineHeight: '1.5',
-    overflow: 'hidden',
-    padding: 10,
-    resize: 'none',
-    width: '100%',
-  },
-}));
+import oldTheme from 'theme';
 
 interface ZUIAutoTextAreaProps {
   value: string;
@@ -29,15 +16,26 @@ const ZUIAutoTextArea = React.forwardRef<
   { onChange, value, placeholder, ...restProps },
   ref
 ) {
-  const classes = useStyles();
-
   return (
-    <TextareaAutosize
+    <Box
       ref={ref}
-      className={classes.textarea}
+      component={TextareaAutosize}
       data-testid="AutoTextArea-textarea"
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+        onChange(e.target.value)
+      }
       placeholder={placeholder}
+      sx={{
+        border: '2px dotted',
+        borderColor: lighten(oldTheme.palette.primary.main, 0.65),
+        borderRadius: '10px',
+        fontFamily: oldTheme.typography.fontFamily,
+        lineHeight: '1.5',
+        overflow: 'hidden',
+        padding: '10px',
+        resize: 'none',
+        width: '100%',
+      }}
       value={value}
       {...restProps}
     />

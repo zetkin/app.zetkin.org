@@ -1,12 +1,21 @@
-import { Box, BoxProps, IconButton } from '@mui/material';
+import {
+  Box,
+  BoxProps,
+  IconButton,
+  Menu,
+  MenuItem,
+  SvgIcon,
+} from '@mui/material';
 import {
   DragIndicatorOutlined,
   KeyboardArrowDown,
   KeyboardArrowUp,
+  MoreVert,
 } from '@mui/icons-material';
 import {
   FC,
   MouseEvent as ReactMouseEvent,
+  startTransition,
   useEffect,
   useRef,
   useState,
@@ -28,6 +37,7 @@ export enum ZUIReorderableWidget {
   DRAG = 'drag',
   MOVE_DOWN = 'down',
   MOVE_UP = 'up',
+  MENU = 'menu',
 }
 
 type ZUIReorderableProps = {
@@ -35,6 +45,7 @@ type ZUIReorderableProps = {
   disableClick?: boolean;
   disableDrag?: boolean;
   items: ReorderableItem[];
+  onDelete?: (id: IDType) => void;
   onDragEnd?: () => void;
   onDragStart?: () => void;
   onReorder: (ids: IDType[]) => void;
@@ -51,6 +62,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   onDragEnd,
   onDragStart,
   onReorder,
+  onDelete,
   widgets = [
     ZUIReorderableWidget.DRAG,
     ZUIReorderableWidget.MOVE_UP,
@@ -80,6 +92,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
         onReorder(order);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);
 
   const yOffsetRef = useRef<number>();
@@ -143,7 +156,9 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     document.removeEventListener('mouseup', onMouseUp);
 
     if (onDragEnd) {
-      onDragEnd();
+      startTransition(() => {
+        onDragEnd();
+      });
     }
   };
 
@@ -158,6 +173,8 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
           !item.hidden && (
             <ZUIReorderableItem
               key={item.id}
+              canMoveDown={index + 1 < items.length}
+              canMoveUp={index > 0}
               centerWidgets={!!centerWidgets}
               dragging={activeId == item.id}
               item={item}
@@ -207,31 +224,34 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
                   onReorder(ids);
                 }
               }}
+              onDelete={onDelete}
               onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
-              widgets={widgets.filter((widget) => {
+              widgets={widgets.map((widget) => {
                 if (disableClick) {
                   // Hide all widgets when click is disabled
-                  return false;
+                  return { shown: false, widget };
                 }
 
                 if (
                   widget == ZUIReorderableWidget.MOVE_DOWN &&
                   index < items.length - 1
                 ) {
-                  return true;
+                  return { shown: true, widget };
                 } else if (
                   widget == ZUIReorderableWidget.MOVE_UP &&
                   index > 0
                 ) {
-                  return true;
+                  return { shown: true, widget };
                 } else if (
                   widget == ZUIReorderableWidget.DRAG &&
                   !disableDrag
                 ) {
-                  return true;
+                  return { shown: true, widget };
+                } else if (widget == ZUIReorderableWidget.MENU) {
+                  return { shown: true, widget };
                 }
 
-                return false;
+                return { shown: false, widget };
               })}
               widgetsOnlyOnHover={widgetsOnlyOnHover}
               widgetsProps={widgetsProps}
@@ -242,7 +262,14 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   );
 };
 
+type WidgetState = {
+  shown: boolean;
+  widget: ZUIReorderableWidget;
+};
+
 const ZUIReorderableItem: FC<{
+  canMoveDown: boolean;
+  canMoveUp: boolean;
   centerWidgets: boolean;
   dragging: boolean;
   item: ReorderableItem;
@@ -253,17 +280,21 @@ const ZUIReorderableItem: FC<{
   ) => void;
   onClickDown: () => void;
   onClickUp: () => void;
+  onDelete?: (id: IDType) => void;
   onNodeExists: (node: HTMLDivElement) => void;
-  widgets: ZUIReorderableWidget[];
+  widgets: WidgetState[];
   widgetsOnlyOnHover?: boolean;
   widgetsProps?: BoxProps;
 }> = ({
+  canMoveDown,
+  canMoveUp,
   centerWidgets,
   dragging,
   item,
   onBeginDrag,
   onClickDown,
   onClickUp,
+  onDelete,
   onNodeExists,
   widgets,
   widgetsOnlyOnHover = false,
@@ -272,6 +303,10 @@ const ZUIReorderableItem: FC<{
   const [hovered, setHovered] = useState(false);
   const itemRef = useRef<HTMLDivElement>();
   const contentRef = useRef<HTMLDivElement>();
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const menuOpen = Boolean(menuAnchor);
+
+  const shown = widgetsOnlyOnHover ? hovered : true;
 
   return (
     <Box
@@ -291,17 +326,38 @@ const ZUIReorderableItem: FC<{
           position: dragging ? 'absolute' : 'static',
         }}
       >
-        <Box display="flex" flexDirection="column" {...widgetsProps}>
-          {widgets.map((widget) => {
-            if (widgetsOnlyOnHover && !hovered) {
-              // Hide all widgets when not hovering
-              return false;
+        <Box
+          display="flex"
+          flexDirection="column"
+          {...widgetsProps}
+          sx={{
+            ...widgetsProps?.sx,
+            opacity: shown ? 1 : 0,
+            zIndex: shown ? 10 : undefined,
+          }}
+        >
+          {widgets.map(({ widget, shown }, idx) => {
+            if (!shown && !centerWidgets) {
+              return null;
+            }
+
+            if (!shown) {
+              return (
+                <IconButton key={`${widget}-${idx}`}>
+                  <SvgIcon />
+                </IconButton>
+              );
             }
 
             if (widget == ZUIReorderableWidget.DRAG) {
               return (
                 <IconButton
+                  key={`${widget}-${idx}`}
                   onMouseDown={(ev) => {
+                    if (!shown) {
+                      return;
+                    }
+
                     if (itemRef.current && contentRef.current) {
                       onBeginDrag(itemRef.current, contentRef.current, ev);
                     }
@@ -312,15 +368,68 @@ const ZUIReorderableItem: FC<{
               );
             } else if (widget == ZUIReorderableWidget.MOVE_DOWN) {
               return (
-                <IconButton onClick={() => onClickDown()}>
+                <IconButton
+                  key={`${widget}-${idx}`}
+                  onClick={() => shown && onClickDown()}
+                >
                   <KeyboardArrowDown />
                 </IconButton>
               );
             } else if (widget == ZUIReorderableWidget.MOVE_UP) {
               return (
-                <IconButton onClick={() => onClickUp()}>
+                <IconButton
+                  key={`${widget}-${idx}`}
+                  onClick={() => shown && onClickUp()}
+                >
                   <KeyboardArrowUp />
                 </IconButton>
+              );
+            } else if (widget == ZUIReorderableWidget.MENU) {
+              return (
+                <>
+                  <IconButton
+                    onClick={(ev) => shown && setMenuAnchor(ev.currentTarget)}
+                  >
+                    <MoreVert />
+                  </IconButton>
+                  <Menu
+                    anchorEl={menuAnchor}
+                    anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                    onClose={() => setMenuAnchor(null)}
+                    open={menuOpen}
+                    transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+                  >
+                    <MenuItem
+                      disabled={!canMoveUp}
+                      onClick={() => {
+                        onClickUp();
+                        setMenuAnchor(null);
+                      }}
+                    >
+                      Move up
+                    </MenuItem>
+                    <MenuItem
+                      disabled={!canMoveDown}
+                      onClick={() => {
+                        onClickDown();
+                        setMenuAnchor(null);
+                      }}
+                    >
+                      Move down
+                    </MenuItem>
+                    <MenuItem
+                      disabled={!onDelete}
+                      onClick={() => {
+                        if (onDelete) {
+                          onDelete(item.id);
+                        }
+                        setMenuAnchor(null);
+                      }}
+                    >
+                      Delete
+                    </MenuItem>
+                  </Menu>
+                </>
               );
             }
           })}

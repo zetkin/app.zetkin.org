@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { personUpdated } from 'features/profile/store';
 import { SurveyStats } from './rpc/getSurveyStats';
 import {
   ELEMENT_TYPE,
@@ -17,9 +18,12 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
+import { SurveyResponseStats } from 'features/surveys/types';
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
+  extendedSurveyBySurveyId: Record<number, RemoteItem<ZetkinSurveyExtended>>;
+  responseStatsBySurveyId: Record<number, RemoteItem<SurveyResponseStats>>;
   submissionList: RemoteList<ZetkinSurveySubmission>;
   submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
@@ -30,6 +34,8 @@ export interface SurveysStoreSlice {
 
 const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
+  extendedSurveyBySurveyId: {},
+  responseStatsBySurveyId: {},
   statsBySurveyId: {},
   submissionList: remoteList(),
   submissionsBySurveyId: {},
@@ -39,6 +45,33 @@ const initialState: SurveysStoreSlice = {
 };
 
 const surveysSlice = createSlice({
+  extraReducers: (builder) =>
+    builder.addCase(personUpdated, (state, action) => {
+      const person = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item?.data?.respondent?.id === person.id
+      );
+
+      if (item?.data?.respondent) {
+        const respondent = item.data.respondent;
+
+        if (person.email) {
+          respondent.email = person.email;
+        }
+        if (person.first_name) {
+          respondent.first_name = person.first_name;
+        }
+        if (person.last_name) {
+          respondent.last_name = person.last_name;
+        }
+      }
+      const submissionsUpdated = state.submissionList.items
+        .map((item) => item.data)
+        .filter((data): data is ZetkinSurveySubmission => data !== null);
+
+      addSubmissionToState(state, submissionsUpdated);
+    }),
+
   initialState,
   name: 'surveys',
   reducers: {
@@ -133,6 +166,7 @@ const surveysSlice = createSlice({
             oldOption.id == optionId ? updatedOption : oldOption
           );
       }
+      delete state.responseStatsBySurveyId[surveyId];
     },
     elementOptionsReordered: (
       state,
@@ -165,6 +199,7 @@ const surveysSlice = createSlice({
       ].items.map((item) =>
         item.id == elemId ? remoteItem(elemId, { data: updatedElement }) : item
       );
+      delete state.responseStatsBySurveyId[surveyId];
     },
     elementsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
@@ -194,6 +229,48 @@ const surveysSlice = createSlice({
             newOrder.default.indexOf(el0.data?.id ?? 0) -
             newOrder.default.indexOf(el1.data?.id ?? 0)
         );
+    },
+    extendedSurveyLoad: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+      if (!state.extendedSurveyBySurveyId[surveyId]) {
+        state.extendedSurveyBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.extendedSurveyBySurveyId[surveyId].isLoading = true;
+    },
+    extendedSurveyLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveyExtended]>
+    ) => {
+      const [surveyId, survey] = action.payload;
+      state.extendedSurveyBySurveyId[surveyId].data = survey;
+      state.extendedSurveyBySurveyId[surveyId].isLoading = false;
+      state.extendedSurveyBySurveyId[surveyId].loaded =
+        new Date().toISOString();
+      state.extendedSurveyBySurveyId[surveyId].isStale = false;
+    },
+    responseStatsError: (state, action: PayloadAction<[number, unknown]>) => {
+      const [surveyId, error] = action.payload;
+      if (!state.responseStatsBySurveyId[surveyId]) {
+        state.responseStatsBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.responseStatsBySurveyId[surveyId].error = error;
+    },
+    responseStatsLoad: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+      if (!state.responseStatsBySurveyId[surveyId]) {
+        state.responseStatsBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.responseStatsBySurveyId[surveyId].isLoading = true;
+    },
+    responseStatsLoaded: (
+      state,
+      action: PayloadAction<[number, SurveyResponseStats]>
+    ) => {
+      const [surveyId, stats] = action.payload;
+      state.responseStatsBySurveyId[surveyId].data = stats;
+      state.responseStatsBySurveyId[surveyId].isLoading = false;
+      state.responseStatsBySurveyId[surveyId].loaded = new Date().toISOString();
+      state.responseStatsBySurveyId[surveyId].isStale = false;
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
@@ -262,7 +339,7 @@ const surveysSlice = createSlice({
     surveyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.surveyList.items.find((item) => item.id == id);
-      state.elementsBySurveyId[id] == remoteList();
+      state.elementsBySurveyId[id] = remoteList();
       state.surveyList.items = state.surveyList.items
         .filter((item) => item.id != id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
@@ -279,6 +356,26 @@ const surveysSlice = createSlice({
       item.loaded = new Date().toISOString();
 
       state.elementsBySurveyId[survey.id] = remoteList(survey.elements);
+    },
+    surveySubmissionDeleted: (
+      state,
+      action: PayloadAction<{ submissionId: number; surveyId: number }>
+    ) => {
+      const { submissionId, surveyId } = action.payload;
+
+      const itemInList = state.submissionList.items.find(
+        (item) => item.id === submissionId
+      );
+      if (itemInList) {
+        itemInList.deleted = true;
+      }
+
+      const itemInMap = state.submissionsBySurveyId[surveyId].items.find(
+        (item) => item.id === submissionId
+      );
+      if (itemInMap) {
+        itemInMap.deleted = true;
+      }
     },
     surveySubmissionUpdate: (
       state,
@@ -304,6 +401,7 @@ const surveysSlice = createSlice({
         item.data = { ...item.data, ...submission };
         item.mutating = [];
         state.statsBySurveyId[submission.survey.id].isStale = true;
+        delete state.responseStatsBySurveyId[submission.survey.id];
       }
       const submissions = state.submissionsBySurveyId[submission.survey.id];
       if (submissions) {
@@ -328,7 +426,8 @@ const surveysSlice = createSlice({
     },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
-      state.submissionsBySurveyId[action.payload] = remoteList();
+      state.submissionsBySurveyId[action.payload] =
+        state.submissionsBySurveyId[action.payload] || remoteList();
       state.submissionsBySurveyId[action.payload].isLoading = true;
       state.submissionList.isLoading = true;
     },
@@ -356,6 +455,7 @@ const surveysSlice = createSlice({
         item.data = { ...item.data, ...survey };
         item.mutating = [];
       }
+      delete state.responseStatsBySurveyId[survey.id];
     },
     surveysWithElementsLoad: (state) => {
       state.surveysWithElementsList.isLoading = true;
@@ -420,6 +520,11 @@ export const {
   elementsLoad,
   elementsLoaded,
   elementsReordered,
+  extendedSurveyLoad,
+  extendedSurveyLoaded,
+  responseStatsError,
+  responseStatsLoad,
+  responseStatsLoaded,
   submissionLoad,
   submissionLoaded,
   statsLoad,
@@ -429,6 +534,7 @@ export const {
   surveyDeleted,
   surveyLoad,
   surveyLoaded,
+  surveySubmissionDeleted,
   surveySubmissionUpdate,
   surveySubmissionUpdated,
   surveySubmissionsLoad,

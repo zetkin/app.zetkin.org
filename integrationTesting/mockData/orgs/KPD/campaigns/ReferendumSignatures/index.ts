@@ -9,6 +9,7 @@ import { ZetkinCampaign } from 'utils/types/zetkin';
  * - Published
  */
 const ReferendumSignatureCollection: ZetkinCampaign = {
+  archived: false,
   color: '',
   id: 1,
   info_text: `20,000 signatures are needed to put the motion to expropriate mega landlords the people of Berlin.`,
@@ -16,7 +17,7 @@ const ReferendumSignatureCollection: ZetkinCampaign = {
   organization: KPD,
   published: true,
   title: 'Deutsche Wohnen Enteignen Signatures Collection',
-  visibility: 'private',
+  visibility: 'hidden',
 };
 
 export default ReferendumSignatureCollection;

@@ -5,9 +5,11 @@ import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 import { FC, MouseEvent, ReactNode, useState } from 'react';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 type ZUIButtonMenuProps = {
+  alignHorizontal?: 'right' | 'left';
+  alignVertical?: 'bottom' | 'top';
   items: {
     disabled?: boolean;
     icon?: JSX.Element;
@@ -15,13 +17,17 @@ type ZUIButtonMenuProps = {
     onClick: () => void;
   }[];
   label: string;
+  loading?: boolean;
   startIcon?: ReactNode;
   variant?: 'text' | 'outlined' | 'contained';
 };
 
 const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
+  alignHorizontal = 'right',
+  alignVertical = 'bottom',
   items,
   label,
+  loading,
   startIcon,
   variant = 'contained',
 }) => {
@@ -38,6 +44,7 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
     <div>
       <Button
         endIcon={<ArrowDropDown />}
+        loading={loading}
         onClick={handleClick}
         startIcon={startIcon}
         variant={variant}
@@ -47,8 +54,8 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
+          horizontal: alignHorizontal,
+          vertical: alignVertical,
         }}
         onClose={handleClose}
         open={open}
@@ -60,17 +67,17 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
               },
               '&:active': {
                 backgroundColor: alpha(
-                  theme.palette.primary.main,
-                  theme.palette.action.selectedOpacity
+                  oldTheme.palette.primary.main,
+                  oldTheme.palette.action.selectedOpacity
                 ),
               },
             },
-            marginTop: theme.spacing(1),
+            marginTop: oldTheme.spacing(1),
           },
         }}
         transformOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
+          horizontal: alignHorizontal,
+          vertical: alignVertical == 'bottom' ? 'top' : 'bottom',
         }}
       >
         {items.map((item, idx) => {

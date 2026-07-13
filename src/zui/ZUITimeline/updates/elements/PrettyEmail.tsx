@@ -1,11 +1,10 @@
 import Link from 'next/link';
-import makeStyles from '@mui/styles/makeStyles';
 import {
   Box,
   Chip,
   CircularProgress,
   Grid,
-  Theme,
+  Stack,
   Typography,
 } from '@mui/material';
 import { LetterparserNode, parse } from 'letterparser';
@@ -15,6 +14,7 @@ import { Msg } from 'core/i18n';
 import ZUICleanHtml from 'zui/ZUICleanHtml';
 import ZUICollapse from 'zui/ZUICollapse';
 import messageIds from 'zui/ZUITimeline/l10n/messageIds';
+import oldTheme from 'theme';
 
 interface PrettyEmailProps {
   emailStr: string;
@@ -37,7 +37,7 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
       <Box>
         <EmailHeader headers={emailData.headers} />
         <Typography
-          style={{ fontWeight: 'bold', marginBottom: 8, marginTop: 8 }}
+          sx={{ fontWeight: 'bold', marginBottom: '8px', marginTop: '8px' }}
         >
           {emailData.headers.Subject}
         </Typography>
@@ -51,28 +51,11 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   }
 };
 
-const useBodyStyles = makeStyles<Theme, { plain: boolean }>((theme) => ({
-  body: {
-    '& blockquote': {
-      borderColor: theme.palette.text.disabled,
-      borderLeftWidth: 4,
-      borderStyle: 'solid',
-      borderWidth: 0,
-      marginLeft: 2,
-      opacity: 0.8,
-      paddingLeft: 10,
-    },
-    fontFamily: 'sans-serif',
-    whiteSpace: ({ plain }) => (plain ? 'pre' : 'normal'),
-  },
-}));
-
 const EmailBody: React.FC<{
   body: LetterparserNode['body'];
   forcePlain?: boolean;
 }> = ({ body, forcePlain = false }) => {
   const plain = forcePlain || typeof body == 'string';
-  const classes = useBodyStyles({ plain });
 
   if (Array.isArray(body)) {
     let bodyToRender = body.find(
@@ -90,11 +73,23 @@ const EmailBody: React.FC<{
     return (
       <ZUICleanHtml
         BoxProps={{
-          className: classes.body,
           component: 'div',
           style: {
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
+          },
+          sx: {
+            '& blockquote': {
+              borderColor: oldTheme.palette.text.disabled,
+              borderLeftWidth: 4,
+              borderStyle: 'solid',
+              borderWidth: 0,
+              marginLeft: 2,
+              opacity: 0.8,
+              paddingLeft: 10,
+            },
+            fontFamily: 'sans-serif',
+            whiteSpace: plain ? 'pre' : 'normal',
           },
         }}
         dirtyHtml={content}
@@ -109,7 +104,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
   const RELEVANT_HEADERS = ['from', 'to', 'cc'] as const;
 
   return (
-    <Grid container direction="column" spacing={1}>
+    <Stack spacing={1}>
       {RELEVANT_HEADERS.map((headerName) => {
         const matchedHeader = Object.entries(headers).find(
           ([key]) => key.toLowerCase() == headerName.toLowerCase()
@@ -119,13 +114,13 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
           const values = matchedHeader[1].split(',');
 
           return (
-            <Grid key={headerName} container direction="row" item wrap="nowrap">
-              <Grid item style={{ marginRight: 12, marginTop: '0.2em' }}>
+            <Grid key={headerName} container direction="row" wrap="nowrap">
+              <Grid style={{ marginRight: 12, marginTop: '0.2em' }}>
                 <Typography>
                   <Msg id={messageIds.email.headers[headerName]} />
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid>
                 {values.map((value) => (
                   <Link
                     key={value}
@@ -147,7 +142,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
           return null;
         }
       })}
-    </Grid>
+    </Stack>
   );
 };
 

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.surveys', {
   addBlocks: {
@@ -80,8 +80,7 @@ export default makeMessages('feat.surveys', {
   },
   editWarning: {
     editing: {
-      header: m('Survey can be edited'),
-      lockButton: m('Lock'),
+      header: m('Survey unlocked'),
       safe: {
         bullet1: m('Fixing spelling mistakes'),
         bullet2: m('Reordering blocks'),
@@ -105,12 +104,59 @@ export default makeMessages('feat.surveys', {
       subheader: m(
         'This survey has started receiving submissions. Editing the survey now may cause problems with the data. Proceed with caution.'
       ),
-      unlockButton: m('Unlock'),
+    },
+  },
+  insights: {
+    error: m('Unknown error occurred while loading.'),
+    export: {
+      errorUnknown: m('Unknown error occurred while exporting.'),
+      toPdf: m('Export to pdf'),
+      toPng: m('Export to png'),
+    },
+    optionsFields: {
+      displayInsights: {
+        absoluteCount: m('Amount'),
+        percentCount: m('Percent'),
+      },
+      subheader: m<{
+        answerCount: number;
+        totalSelectedOptionsCount: number;
+      }>(
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}} and {totalSelectedOptionsCount, plural, =1 {1 selected option} other {# selected options}}.'
+      ),
+      tabs: {
+        barPlot: m('Bar'),
+        piePlot: m('Pie'),
+      },
+      warningMultipleSelectedOptionsPie: m<{ respondentCount: number }>(
+        'Note that this question allows respondents to choose more than one option, and {respondentCount, plural, =1 {1 respondent} other {# respondents}} did. This may make the pie chart misleading.'
+      ),
+    },
+    textFields: {
+      copyResponse: {
+        copy: m('Copy to clipboard'),
+        wasCopied: m('Copied!'),
+      },
+      subheader: m<{
+        answerCount: number;
+        totalUniqueWordCount: number;
+        totalWordCount: number;
+      }>(
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}}, {totalWordCount, plural, =1 {1 word} other {# words}} and {totalUniqueWordCount, plural, =1 {1 unique word} other {# unique words}}.'
+      ),
+      tabs: {
+        responses: m('Response'),
+        wordCloud: m('Cloud'),
+        wordFrequencies: m('Bar'),
+      },
     },
   },
   layout: {
     actions: {
-      delete: m('Delete survey'),
+      createList: m('Create list from submissions'),
+      delete: m('Delete'),
+      duplicate: m('Duplicate'),
+      move: m('Move'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
       warning: m<{ surveyTitle: string }>('"{surveyTitle}" will be deleted.'),
@@ -157,12 +203,21 @@ export default makeMessages('feat.surveys', {
     anonymous: m('Anonymous'),
     hidden: m('Hidden'),
     linked: m('Linked'),
-    subtitle:
-      m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
+    subtitle: m<{ date: ReactElement; person: ReactElement }>(
+      '{person} {date}'
+    ),
   },
   submissions: {
     anonymous: m('Anonymous'),
+    createPersonSubmit: m('Save and link'),
+    createPersonTitle: m('Create new person'),
     dateColumn: m('Date'),
+    delete: m('Delete'),
+    deleteSuccess: m('Successfully deleted'),
+    deleteTitle: m('Delete submission'),
+    deleteWarningText: m(
+      'Are you sure you want to delete this survey submission?'
+    ),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
@@ -171,13 +226,42 @@ export default makeMessages('feat.surveys', {
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
+  surveyChangeCampaignDialog: {
+    error: m('Error: Could not move the survey to the selected project'),
+    success: m<{ campaignTitle: string; surveyTitle: string }>(
+      'Survey "{surveyTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move survey'),
+  },
+  surveyDialog: {
+    add: m('Add'),
+    cancel: m("Don't add"),
+    description: m(
+      'The person you have just linked does not have an email address while the survey response does. Would you like to add it the person?'
+    ),
+    new: m('New'),
+    old: m('Old'),
+    title: m('Add email address'),
+  },
+  surveyDialogDifferentEmail: {
+    description: m(
+      'The person you have just linked to has a different email to the one in the survey response. Would you like to set the survey response email to be the new email for this person?'
+    ),
+    keep: m('No, keep old email'),
+    title: m('Update email address'),
+    update: m('Yes, update email'),
+  },
+  surveyDuplicated: {
+    error: m('Error: Could not duplicate survey'),
+    success: m('Your survey has been duplicated.'),
+    title: m('Survey Duplicated'),
+  },
   surveyForm: {
     accept: m('I accept the terms stated below'),
     error: m(
       'Something went wrong when submitting your answers. Please try again later.'
     ),
     policy: {
-      link: m('https://zetkin.org/privacy'),
       text: m('Click to read the full Zetkin Privacy Policy'),
     },
     required: m('required'),
@@ -194,6 +278,7 @@ export default makeMessages('feat.surveys', {
     },
   },
   surveyFormSubmitted: {
+    retakeSurvey: m('Retake survey'),
     text: m<{ title: string }>(
       'Your responses to “{title}” have been submitted.'
     ),
@@ -214,7 +299,14 @@ export default makeMessages('feat.surveys', {
       ),
     },
   },
+  surveyToList: {
+    error: m(
+      'Could not create list from survey submissions due to unknown error.'
+    ),
+    title: m<{ surveyTitle: string }>('Submissions from {surveyTitle}'),
+  },
   tabs: {
+    insights: m('Insights'),
     overview: m('Overview'),
     questions: m('Questions'),
     submissions: m('Submissions'),

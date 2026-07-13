@@ -16,6 +16,10 @@ import {
   ZetkinEvent,
   ZetkinSurvey,
 } from 'utils/types/zetkin';
+import {
+  asLongitude,
+  asLatitude,
+} from 'features/areas/utils/asLongitudeLatitude';
 
 const mockEventData: ZetkinEvent = {
   activity: {
@@ -34,8 +38,8 @@ const mockEventData: ZetkinEvent = {
   info_text: '',
   location: {
     id: 1,
-    lat: 0,
-    lng: 0,
+    lat: asLatitude(0),
+    lng: asLongitude(0),
     title: 'Dorfplatz',
   },
   num_participants_available: 0,
@@ -48,7 +52,10 @@ const mockEventData: ZetkinEvent = {
   start_time: '1857-07-05T13:37:00.000Z',
 };
 
-function mockEvent(id: number, data: Partial<ZetkinEvent>): EventActivity {
+export function mockEvent(
+  id: number,
+  data: Partial<ZetkinEvent>
+): EventActivity {
   return {
     data: {
       ...mockEventData,
@@ -129,8 +136,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T13:00:00.000Z',
           location: {
             id: 1,
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T12:00:00.000Z',
@@ -139,8 +146,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T14:00:00.000Z',
           location: {
             id: 1,
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T13:00:00.000Z',
@@ -149,8 +156,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T15:00:00.000Z',
           location: {
             id: 2, // <-- Different location
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T14:00:00.000Z',
@@ -175,8 +182,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T13:00:00.000Z',
           location: {
             id: 1,
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T12:00:00.000Z',
@@ -201,8 +208,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T14:00:00.000Z',
           location: {
             id: 1,
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T13:00:00.000Z',
@@ -228,8 +235,8 @@ describe('useClusteredActivities()', () => {
           },
           location: {
             id: 1,
-            lat: 12123.1,
-            lng: 12123.2,
+            lat: asLatitude(12123.1),
+            lng: asLongitude(12123.2),
             title: 'The square',
           },
         }),
@@ -240,8 +247,8 @@ describe('useClusteredActivities()', () => {
           },
           location: {
             id: 2,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -252,8 +259,8 @@ describe('useClusteredActivities()', () => {
           },
           location: {
             id: 3,
-            lat: 12987.1,
-            lng: 12987.2,
+            lat: asLatitude(12987.1),
+            lng: asLongitude(12987.2),
             title: 'The square',
           },
         }),
@@ -290,16 +297,16 @@ describe('useClusteredActivities()', () => {
         mockEvent(2, {
           location: {
             id: 1,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
         mockEvent(2, {
           location: {
             id: 2,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -314,16 +321,16 @@ describe('useClusteredActivities()', () => {
         mockEvent(2, {
           location: {
             id: 1,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
         mockEvent(2, {
           location: {
             id: 2,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -331,8 +338,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-03T13:00:00.000Z',
           location: {
             id: 2,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
           start_time: '1857-07-03T12:00:00.000Z',
@@ -348,8 +355,8 @@ describe('useClusteredActivities()', () => {
         mockEvent(112, {
           location: {
             id: 112,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -360,16 +367,16 @@ describe('useClusteredActivities()', () => {
           },
           location: {
             id: 2,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
         mockEvent(123, {
           location: {
             id: 2,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -384,8 +391,8 @@ describe('useClusteredActivities()', () => {
         mockEvent(112, {
           location: {
             id: 112,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -396,8 +403,8 @@ describe('useClusteredActivities()', () => {
           },
           location: {
             id: 112,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -412,24 +419,24 @@ describe('useClusteredActivities()', () => {
         mockEvent(9, {
           location: {
             id: 112,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square1',
           },
         }),
         mockEvent(10, {
           location: {
             id: 222,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square2',
           },
         }),
         mockEvent(11, {
           location: {
             id: 2222,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square3',
           },
         }),
@@ -440,8 +447,8 @@ describe('useClusteredActivities()', () => {
           },
           location: {
             id: 112,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
         }),
@@ -449,8 +456,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T13:00:00.000Z',
           location: {
             id: 1,
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T12:00:00.000Z',
@@ -459,8 +466,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T14:00:00.000Z',
           location: {
             id: 1,
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T13:00:00.000Z',
@@ -469,8 +476,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T15:00:00.000Z',
           location: {
             id: 2, // <-- Different location
-            lat: 0,
-            lng: 0,
+            lat: asLatitude(0),
+            lng: asLongitude(0),
             title: '',
           },
           start_time: '1857-07-05T14:00:00.000Z',
@@ -490,8 +497,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T13:00:00.000Z',
           location: {
             id: 112,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
           start_time: '1857-07-05T12:00:00.000Z',
@@ -505,8 +512,8 @@ describe('useClusteredActivities()', () => {
           end_time: '1857-07-05T14:00:00.000Z',
           location: {
             id: 112,
-            lat: 12321.1,
-            lng: 12321.2,
+            lat: asLatitude(12321.1),
+            lng: asLongitude(12321.2),
             title: 'The square',
           },
           start_time: '1857-07-05T13:00:00.000Z',

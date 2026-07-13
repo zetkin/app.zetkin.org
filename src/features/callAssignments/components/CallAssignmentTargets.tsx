@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { Add, Edit } from '@mui/icons-material';
 import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import { FC, useState } from 'react';
@@ -9,20 +8,7 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
-
-const useStyles = makeStyles((theme) => ({
-  chip: {
-    backgroundColor: theme.palette.statusColors.gray,
-    borderRadius: '1em',
-    color: theme.palette.text.secondary,
-    display: 'flex',
-    fontSize: '1.8em',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-  },
-}));
+import oldTheme from 'theme';
 
 interface CallAssignmentTargetsProps {
   orgId: number;
@@ -33,7 +19,6 @@ const CallAssignmentTargets: FC<CallAssignmentTargetsProps> = ({
   orgId,
   assignmentId,
 }) => {
-  const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   const {
@@ -53,7 +38,21 @@ const CallAssignmentTargets: FC<CallAssignmentTargetsProps> = ({
           {isTargeted && (
             <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
               {(animatedValue) => (
-                <Box className={classes.chip}>{animatedValue}</Box>
+                <Box
+                  sx={{
+                    backgroundColor: oldTheme.palette.statusColors.grey,
+                    borderRadius: '1em',
+                    color: oldTheme.palette.text.secondary,
+                    display: 'flex',
+                    fontSize: '1.8em',
+                    lineHeight: 'normal',
+                    marginRight: '0.1em',
+                    overflow: 'hidden',
+                    padding: '0.2em 0.7em',
+                  }}
+                >
+                  {animatedValue}
+                </Box>
               )}
             </ZUIAnimatedNumber>
           )}

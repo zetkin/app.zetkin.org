@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
-import { Box, Theme, Tooltip, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import { Group, PlaceOutlined, ScheduleOutlined } from '@mui/icons-material';
 
 import { EventState } from 'features/events/hooks/useEventState';
@@ -15,47 +14,7 @@ import { useMessages } from 'core/i18n';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-
-interface StyleProps {
-  color: STATUS_COLORS;
-  selected: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  container: {
-    alignItems: 'center',
-    backgroundColor: ({ selected }) =>
-      selected ? theme.palette.grey[100] : 'transparent',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '1.0em 0.5em',
-  },
-  dot: {
-    backgroundColor: ({ color }) => theme.palette.statusColors[color],
-    borderRadius: '100%',
-    flexShrink: 0,
-    height: '10px',
-    marginLeft: '0.5em',
-    marginRight: '0.5em',
-    width: '10px',
-  },
-  endNumber: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    width: '7em',
-  },
-  left: {
-    alignItems: 'center',
-    display: 'flex',
-    flex: '1 0',
-  },
-  primaryIcon: {
-    color: theme.palette.grey[500],
-    fontSize: '28px',
-  },
-}));
+import oldTheme from 'theme';
 
 type Props = {
   eventId: number;
@@ -72,7 +31,7 @@ const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
 
   const status = event ? getEventState(event) : EventState.UNKNOWN;
 
-  let color = STATUS_COLORS.GRAY;
+  let color = STATUS_COLORS.GREY;
   if (status === EventState.OPEN) {
     color = STATUS_COLORS.GREEN;
   } else if (status === EventState.ENDED) {
@@ -82,7 +41,6 @@ const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
   } else if (status === EventState.CANCELLED) {
     color = STATUS_COLORS.ORANGE;
   }
-  const classes = useStyles({ color, selected });
 
   if (!event) {
     return null;
@@ -96,14 +54,37 @@ const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
 
   return (
     <Box
-      className={classes.container}
       onClick={() => {
         onSelect();
       }}
+      sx={{
+        alignItems: 'center',
+        backgroundColor: selected ? oldTheme.palette.grey[100] : 'transparent',
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '1.0em 0.5em',
+      }}
     >
-      <Box className={classes.left}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flex: '1 0',
+        }}
+      >
         <Tooltip title={getStatusDotLabel({ color })}>
-          <Box className={classes.dot} />
+          <Box
+            sx={{
+              backgroundColor: oldTheme.palette.statusColors[color],
+              borderRadius: '100%',
+              flexShrink: 0,
+              height: '10px',
+              marginLeft: '0.5em',
+              marginRight: '0.5em',
+              width: '10px',
+            }}
+          />
         </Tooltip>
         <Box>
           <Typography>{title}</Typography>
@@ -144,7 +125,14 @@ const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
         </Box>
       </Box>
       <Box>
-        <Box className={classes.endNumber}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            width: '7em',
+          }}
+        >
           <ZUIIconLabel
             color={endNumberColor}
             icon={<Group color={endNumberColor} />}

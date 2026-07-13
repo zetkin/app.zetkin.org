@@ -11,6 +11,7 @@ import {
   CallAssignmentCaller,
   CallAssignmentData,
   CallAssignmentStats,
+  ZetkinCallAssignmentStats,
 } from './apiTypes';
 
 export interface CallAssignmentSlice {
@@ -21,7 +22,12 @@ export interface CallAssignmentSlice {
   >;
   callersById: Record<number, RemoteList<CallAssignmentCaller>>;
   callList: RemoteList<Call>;
+  simpleStatsById: Record<
+    number,
+    RemoteItem<ZetkinCallAssignmentStats & { id: number }>
+  >;
   statsById: Record<number, RemoteItem<CallAssignmentStats>>;
+  userAssignmentList: RemoteList<CallAssignmentData>;
 }
 
 const initialState: CallAssignmentSlice = {
@@ -29,7 +35,9 @@ const initialState: CallAssignmentSlice = {
   callAssignmentIdsByCampaignId: {},
   callList: remoteList(),
   callersById: {},
+  simpleStatsById: {},
   statsById: {},
+  userAssignmentList: remoteList(),
 };
 
 const callAssignmentsSlice = createSlice({
@@ -61,7 +69,7 @@ const callAssignmentsSlice = createSlice({
       const id = action.payload;
       const item = state.assignmentList.items.find((item) => item.id == id);
       if (item) {
-        item.deleted;
+        item.deleted = true;
       }
     },
     callAssignmentLoad: (state, action: PayloadAction<number>) => {
@@ -125,8 +133,8 @@ const callAssignmentsSlice = createSlice({
       }
 
       if (caItem) {
-        caItem.mutating = caItem.mutating.filter((attr) =>
-          mutating.includes(attr)
+        caItem.mutating = caItem.mutating.filter(
+          (attr) => !mutating.includes(attr)
         );
       }
 
@@ -162,8 +170,8 @@ const callAssignmentsSlice = createSlice({
       const callItem = state.callList.items.find((item) => item.id == call.id);
 
       if (callItem) {
-        callItem.mutating = callItem.mutating.filter((attr) =>
-          mutating.includes(attr)
+        callItem.mutating = callItem.mutating.filter(
+          (attr) => !mutating.includes(attr)
         );
       }
 
@@ -255,6 +263,20 @@ const callAssignmentsSlice = createSlice({
         remoteList(callAssignmentIds);
       state.callAssignmentIdsByCampaignId[campaignId].loaded = timestamp;
     },
+    simpleStatsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.simpleStatsById[id] = remoteItem(id, { isLoading: true });
+    },
+    simpleStatsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinCallAssignmentStats]>
+    ) => {
+      const [id, stats] = action.payload;
+      state.simpleStatsById[id] = remoteItem(id, {
+        data: { id, ...stats },
+        loaded: new Date().toISOString(),
+      });
+    },
     statsLoad: (state, action: PayloadAction<number | string>) => {
       const id = action.payload as number;
       const statsItem = state.statsById[id];
@@ -291,6 +313,16 @@ const callAssignmentsSlice = createSlice({
         }
       );
     },
+    userAssignmentsLoad: (state) => {
+      state.userAssignmentList.isLoading = true;
+    },
+    userAssignmentsLoaded: (
+      state,
+      action: PayloadAction<CallAssignmentData[]>
+    ) => {
+      state.userAssignmentList = remoteList(action.payload);
+      state.userAssignmentList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -317,6 +349,10 @@ export const {
   callersLoaded,
   campaignCallAssignmentsLoad,
   campaignCallAssignmentsLoaded,
+  simpleStatsLoad,
+  simpleStatsLoaded,
   statsLoad,
   statsLoaded,
+  userAssignmentsLoad,
+  userAssignmentsLoaded,
 } = callAssignmentsSlice.actions;

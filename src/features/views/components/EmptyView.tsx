@@ -34,7 +34,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   return (
     <Box m={2}>
       <Grid container spacing={2}>
-        <Grid item md={6}>
+        <Grid size={{ md: 6 }}>
           <Card>
             <CardContent>
               <Typography variant="h5">
@@ -45,23 +45,25 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
               </Typography>
               <Box marginTop={2}>
                 <PersonSelect
+                  createPersonLabels={{
+                    submitLabel: messages.createPerson.submitLabel.add(),
+                    title: messages.createPerson.title.addToList({
+                      list: view.title,
+                    }),
+                  }}
                   name="person"
                   onChange={async (person) => {
                     await deleteContentQuery();
                     await addPerson(person.id);
                   }}
                   selectedPerson={null}
-                  submitLabel={messages.createPerson.submitLabel.add()}
-                  title={messages.createPerson.title.addToList({
-                    list: view.title,
-                  })}
                   variant="outlined"
                 />
               </Box>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item md={6}>
+        <Grid size={{ md: 6 }}>
           <Card>
             <CardContent>
               <Typography variant="h5">

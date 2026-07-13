@@ -1,3 +1,5 @@
+import { describe, expect, it, jest } from '@jest/globals';
+
 import JourneyInstancesDataTable from './index';
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import { render } from 'utils/testing';
@@ -5,7 +7,9 @@ import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 const journeyInstances = [mockJourneyInstance({ assignees: [], subjects: [] })];
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 
 describe('JourneyInstancesDataTable.tsx', () => {
   it('Renders with no data', async () => {

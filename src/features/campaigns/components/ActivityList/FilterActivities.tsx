@@ -11,15 +11,15 @@ import {
 
 import { ACTIVITIES } from 'features/campaigns/types';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import useDebounce from 'utils/hooks/useDebounce';
 import { useMessages } from 'core/i18n';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS } from 'utils/featureFlags';
+import { AREAS, TASKS } from 'utils/featureFlags';
 
 interface FilterActivitiesProps {
   filters: ACTIVITIES[];
   filterTypes: ACTIVITIES[];
   onFiltersChange: (evt: ChangeEvent<HTMLInputElement>) => void;
+  searchString?: string;
   onSearchStringChange: (value: string) => void;
 }
 
@@ -27,17 +27,12 @@ const FilterActivities = ({
   filters,
   filterTypes,
   onFiltersChange,
+  searchString,
   onSearchStringChange,
 }: FilterActivitiesProps) => {
   const messages = useMessages(messageIds);
-  const hasCanvassing = useFeature(AREAS);
-
-  const debouncedFinishedTyping = useDebounce(
-    async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      onSearchStringChange(evt.target.value);
-    },
-    400
-  );
+  const hasAreaAssignments = useFeature(AREAS);
+  const hasTasks = useFeature(TASKS);
 
   return (
     <Card>
@@ -52,8 +47,9 @@ const FilterActivities = ({
               />
             ),
           }}
-          onChange={(e) => debouncedFinishedTyping(e)}
+          onChange={(e) => onSearchStringChange(e.target.value)}
           placeholder={messages.singleProject.filterActivities()}
+          value={searchString}
         />
         <FormGroup>
           <FormControlLabel
@@ -78,32 +74,32 @@ const FilterActivities = ({
             }
             label={messages.all.filter.calls()}
           />
-          {hasCanvassing && (
+          {hasAreaAssignments && (
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={filters.includes(ACTIVITIES.CANVASS_ASSIGNMENT)}
-                  disabled={
-                    !filterTypes.includes(ACTIVITIES.CANVASS_ASSIGNMENT)
-                  }
+                  checked={filters.includes(ACTIVITIES.AREA_ASSIGNMENT)}
+                  disabled={!filterTypes.includes(ACTIVITIES.AREA_ASSIGNMENT)}
                   onChange={onFiltersChange}
-                  value={ACTIVITIES.CANVASS_ASSIGNMENT}
+                  value={ACTIVITIES.AREA_ASSIGNMENT}
                 />
               }
-              label={messages.all.filter.canvasses()}
+              label={messages.all.filter.areaAssignments()}
             />
           )}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={filters.includes(ACTIVITIES.TASK)}
-                disabled={!filterTypes.includes(ACTIVITIES.TASK)}
-                onChange={onFiltersChange}
-                value={ACTIVITIES.TASK}
-              />
-            }
-            label={messages.tasks()}
-          />
+          {hasTasks && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={filters.includes(ACTIVITIES.TASK)}
+                  disabled={!filterTypes.includes(ACTIVITIES.TASK)}
+                  onChange={onFiltersChange}
+                  value={ACTIVITIES.TASK}
+                />
+              }
+              label={messages.tasks()}
+            />
+          )}
           <FormControlLabel
             control={
               <Checkbox

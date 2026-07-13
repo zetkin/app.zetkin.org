@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUICollapse from '.';
 
 export default {
   component: ZUICollapse,
-  title: 'Atoms/ZUICollapse',
+  title: 'Other/ZUICollapse',
 } as Meta<typeof ZUICollapse>;
 
 const Template: StoryFn<typeof ZUICollapse> = (args) => (

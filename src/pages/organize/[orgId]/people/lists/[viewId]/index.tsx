@@ -12,6 +12,8 @@ import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIFutures from 'zui/ZUIFutures';
+import { ZetkinView } from 'features/views/components/types';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -23,14 +25,30 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, viewId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const view = await apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`);
 
-  if (view) {
+  // Try to fetch the view as the current user. If this is unsuccessful, and error object will
+  // be returned and the apiClient will throw an error for us to catch.
+  try {
+    // Note: We don't actually care for the returned view, but we still want to perform
+    // the api request to know if this user may access this particular view.
+    await apiClient.get<ZetkinView>(
+      `/api/orgs/${orgId}/people/views/${viewId}`
+    );
+
     // Check if user is an official
     // TODO: Consider moving this to some more general-purpose utility
     const officialMemberships = await getUserMemberships(ctx, false);
-    if (!officialMemberships.includes(parseInt(orgId as string))) {
+    const isOfficialMember = officialMemberships.includes(
+      parseInt(orgId as string)
+    );
+
+    const isSuperUser = !!ctx.user?.is_superuser;
+
+    const notAllowedAccess = !isOfficialMember && !isSuperUser;
+
+    if (notAllowedAccess) {
       // The user does NOT have this organization among it's official memberships
+      // and they are not a super user,
       // but they did have access to the view, so the view must have been shared
       // with them.
       return {
@@ -51,7 +69,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
         },
       };
     }
-  } else {
+  } catch {
     return {
       notFound: true,
     };
@@ -73,6 +91,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   const parsedViewId = parseInt(viewId);
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const viewFuture = useView(parsedOrgId, parsedViewId);
+  const customFieldsFuture = useCustomFields(parsedOrgId);
 
   if (onServer) {
     return null;
@@ -82,11 +101,12 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
     <ZUIFutures
       futures={{
         cols: columnsFuture,
+        customFields: customFieldsFuture,
         rows: rowsFuture,
         view: viewFuture,
       }}
     >
-      {({ data: { cols, rows, view } }) => (
+      {({ data: { cols, customFields, rows, view } }) => (
         <>
           <Head>
             <title>{view.title}</title>
@@ -94,7 +114,15 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
 
           <AccessLevelProvider>
             {!columnsFuture.isLoading || !!columnsFuture.data?.length ? (
-              <ViewDataTable columns={cols} rows={rows} view={view} />
+              <ViewDataTable
+                columns={cols}
+                customFields={customFields}
+                rows={rows}
+                rowSelection={{
+                  mode: 'selectWithBulkActions',
+                }}
+                view={view}
+              />
             ) : null}
           </AccessLevelProvider>
         </>

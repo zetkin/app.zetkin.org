@@ -1,11 +1,11 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import ZUIJourneyInstanceCard from '.';
 
 export default {
   component: ZUIJourneyInstanceCard,
-  title: 'Molecules/ZUIJourneyInstanceCard',
+  title: 'Other/ZUIJourneyInstanceCard',
 } as Meta<typeof ZUIJourneyInstanceCard>;
 
 const Template: StoryFn<typeof ZUIJourneyInstanceCard> = (args) => (

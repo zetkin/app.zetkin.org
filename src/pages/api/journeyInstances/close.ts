@@ -5,12 +5,12 @@ import handleResponseData, {
   ZetkinApiErrorResponse,
   ZetkinApiSuccessResponse,
 } from 'utils/api/handleResponseData';
-import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export interface JourneyInstanceCloseBody {
   closed: string; // Datetime
   outcome?: string;
-  tags?: ZetkinTag[];
+  tags?: ZetkinAppliedTag[];
 }
 
 const closeJourneyInstance = async (
@@ -39,10 +39,20 @@ const closeJourneyInstance = async (
     // Async put all tags
     if (body.tags) {
       await Promise.all(
-        body.tags.map((tag: ZetkinTag) => {
-          apiFetch(
+        body.tags.map((tag: ZetkinAppliedTag) => {
+          const data = tag.value
+            ? JSON.stringify({ value: tag.value })
+            : undefined;
+
+          return apiFetch(
             `/orgs/${orgId}/journey_instances/${instanceId}/tags/${tag.id}`,
-            { method: 'PUT' }
+            {
+              body: data,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              method: 'PUT',
+            }
           );
         })
       );

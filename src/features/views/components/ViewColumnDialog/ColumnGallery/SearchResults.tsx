@@ -32,7 +32,7 @@ const SearchResults = ({
           searchResult.alreadyInView &&
           searchResult.alreadyInView(existingColumns);
         return (
-          <Grid key={searchResult.key} item lg={4} sm={6} xs={12}>
+          <Grid key={searchResult.key} size={{ lg: 4, sm: 6, xs: 12 }}>
             <ColumnChoiceCard
               alreadyInView={alreadyInView}
               cardVisual={searchResult.renderCardVisual(

@@ -1,54 +1,12 @@
 import { ArrowUpward } from '@mui/icons-material';
-import makeStyles from '@mui/styles/makeStyles';
 import { ReactElement } from 'react';
-import {
-  Avatar,
-  Box,
-  Button,
-  Collapse,
-  Theme,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Collapse, Typography } from '@mui/material';
 
 import BreadcrumbTrail from 'features/breadcrumbs/components/BreadcrumbTrail';
 import { Msg } from 'core/i18n';
 import ZUIEllipsisMenu, { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 import messageIds from './l10n/messageIds';
-
-interface StyleProps {
-  collapsed: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  avatar: {
-    height: 65,
-    marginRight: 20,
-    width: 'auto',
-  },
-  collapseButton: {
-    '& svg': {
-      transform: ({ collapsed }) => (collapsed ? 'rotate(180deg)' : 'none'),
-      transition: 'transform 0.2s ease',
-    },
-    gridColumnEnd: 'none',
-  },
-  title: {
-    marginBottom: '8px',
-    transition: 'margin 0.3s ease',
-  },
-  titleGrid: {
-    alignItems: 'center',
-    display: 'grid',
-    gap: '1rem',
-    gridTemplateColumns: '1fr auto',
-    gridTemplateRows: 'auto',
-    transition: 'font-size 0.2s ease',
-    width: '100%',
-    [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: '1fr',
-    },
-  },
-}));
+import oldTheme from 'theme';
 
 interface HeaderProps {
   actionButtons?: ReactElement | ReactElement[];
@@ -71,8 +29,6 @@ const Header: React.FC<HeaderProps> = ({
   subtitle,
   title,
 }) => {
-  const classes = useStyles({ collapsed });
-
   const toggleCollapsed = () => {
     if (onToggleCollapsed) {
       onToggleCollapsed(!collapsed);
@@ -87,7 +43,15 @@ const Header: React.FC<HeaderProps> = ({
           {/* Search and collapse buttons */}
           <Box display="flex" flexDirection="row">
             {!!onToggleCollapsed && (
-              <Box className={classes.collapseButton}>
+              <Box
+                sx={{
+                  '& svg': {
+                    transform: collapsed ? 'rotate(180deg)' : 'none',
+                    transition: 'transform 0.2s ease',
+                  },
+                  gridColumnEnd: 'none',
+                }}
+              >
                 <Button
                   color="inherit"
                   onClick={toggleCollapsed}
@@ -107,26 +71,57 @@ const Header: React.FC<HeaderProps> = ({
         </Box>
         {/* Title, subtitle, and action buttons */}
         <Collapse in={!collapsed}>
-          <Box className={classes.titleGrid} mt={2}>
+          <Box
+            mt={2}
+            sx={{
+              alignItems: 'center',
+              display: 'grid',
+              gap: '1rem',
+              gridTemplateColumns: '1fr auto',
+              gridTemplateRows: 'auto',
+              transition: 'font-size 0.2s ease',
+              width: '100%',
+              [oldTheme.breakpoints.down('md')]: {
+                gridTemplateColumns: '1fr',
+              },
+            }}
+          >
             <Box
               alignItems="center"
               display="flex"
               flexDirection="row"
               overflow="hidden"
             >
-              {avatar && <Avatar className={classes.avatar} src={avatar} />}
-              <Box>
+              {avatar && (
+                <Avatar
+                  src={avatar}
+                  sx={{
+                    aspectRatio: 1,
+                    height: '65px',
+                    marginRight: '20px',
+                    width: 'auto',
+                  }}
+                />
+              )}
+              <Box
+                sx={{
+                  maxWidth: '100%',
+                }}
+              >
                 <Typography
-                  className={classes.title}
-                  component="div"
+                  component="h1"
                   data-testid="page-title"
                   noWrap
-                  style={{ display: 'flex' }}
+                  sx={{
+                    lineHeight: '1.5',
+                    marginBottom: '8px',
+                    transition: 'margin 0.3s ease',
+                  }}
                   variant="h3"
                 >
                   {title}
                 </Typography>
-                <Typography color="secondary" component="h2" variant="h5">
+                <Typography color="secondary" component="div" variant="h5">
                   {subtitle}
                 </Typography>
               </Box>

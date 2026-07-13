@@ -1,7 +1,12 @@
 import { Event } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
+import {
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+} from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinCampaign } from 'utils/types/zetkin';
@@ -14,22 +19,19 @@ const CampaignListItem: React.FunctionComponent<{
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
   return (
-    <Link
-      key={campaign.id}
-      href={`/organize/${orgId}/projects/${campaign.id}`}
-      legacyBehavior
-      passHref
-    >
-      <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
-        <ListItemAvatar>
-          <Avatar>
-            <Event />
-          </Avatar>
-        </ListItemAvatar>
-        <ResultsListItemText
-          primary={campaign.title}
-          secondary={<Msg id={messageIds.results.project} />}
-        />
+    <Link key={campaign.id} href={`/organize/${orgId}/projects/${campaign.id}`}>
+      <ListItem data-testid="SearchDialog-resultsListItem">
+        <ListItemButton>
+          <ListItemAvatar>
+            <Avatar>
+              <Event />
+            </Avatar>
+          </ListItemAvatar>
+          <ResultsListItemText
+            primary={campaign.title}
+            secondary={<Msg id={messageIds.results.project} />}
+          />
+        </ListItemButton>
       </ListItem>
     </Link>
   );

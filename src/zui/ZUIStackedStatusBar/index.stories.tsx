@@ -1,12 +1,12 @@
-import { useState } from '@storybook/preview-api';
+import { useState } from 'storybook/preview-api';
 import { Box, Button } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIStackedStatusBar from '.';
 
 export default {
   component: ZUIStackedStatusBar,
-  title: 'ZUIStackedStatusBar',
+  title: 'Other/ZUIStackedStatusBar',
 } as Meta<typeof ZUIStackedStatusBar>;
 
 const Template: StoryFn<typeof ZUIStackedStatusBar> = (args) => {

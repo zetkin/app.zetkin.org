@@ -3,42 +3,85 @@ import { remoteItem, remoteList } from 'utils/storeUtils';
 
 export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
+    areaAssignments: {
+      areaAssignmentList: remoteList(),
+      areaGraphByAssignmentId: {},
+      areaStatsByAssignmentId: {},
+      areasByAssignmentId: {},
+      assigneesByAssignmentId: {},
+      locationsByAssignmentId: {},
+      locationsByAssignmentIdAndAreaId: {},
+      metricsByAssignmentId: {},
+      statsByAreaAssId: {},
+    },
     areas: {
       areaList: remoteList(),
-      assigneesByCanvassAssignmentId: {},
-      canvassAssignmentList: remoteList(),
-      mySessionsList: remoteList(),
-      placeList: remoteList(),
-      sessionsByAssignmentId: {},
-      statsByCanvassAssId: {},
+      assignmentStatsByAreaId: {},
       tagsByAreaId: {},
     },
     breadcrumbs: {
       crumbsByPath: {},
+    },
+    call: {
+      activeLaneIndex: 0,
+      finishedCalls: remoteList(),
+      lanes: [],
+      myAssignmentsList: remoteList(),
+      queueError: null,
+      unfinishedCalls: remoteList(),
+      upcomingEventsList: remoteList(),
     },
     callAssignments: {
       assignmentList: remoteList(),
       callAssignmentIdsByCampaignId: {},
       callList: remoteList(),
       callersById: {},
+      simpleStatsById: {},
       statsById: {},
+      userAssignmentList: remoteList(),
     },
     campaigns: {
       campaignList: remoteList(),
       campaignsByOrgId: {},
+      filters: {
+        customDatesToFilterBy: [null, null],
+        dateFilterState: null,
+        eventTypesToFilterBy: [],
+        geojsonToFilterBy: [],
+      },
       recentlyCreatedCampaign: null,
     },
+    canvass: {
+      householdsByLocationId: {},
+      myAssignmentsList: remoteList(),
+      visitsByAssignmentAndLocationId: {},
+      visitsByAssignmentId: {},
+    },
     duplicates: {
+      detailedPersonsList: {},
       potentialDuplicatesList: remoteList(),
     },
     emails: {
+      configList: remoteList(),
       emailList: remoteList(),
       insightsByEmailId: {},
       linksByEmailId: {},
       statsById: {},
+      themeEditorValue: {
+        block_attributes: '',
+        css: '',
+        frame_mjml: '',
+      },
+      themeJsonError: {
+        block_attributes: false,
+        css: false,
+        frame_mjml: false,
+      },
       themeList: remoteList(),
+      themeUpdateError: null,
     },
     events: {
+      allEventsList: remoteList(),
       eventList: remoteList(),
       eventsByCampaignId: {},
       eventsByDate: {},
@@ -56,11 +99,14 @@ export default function mockState(overrides?: RootState) {
       selectedEventIds: [],
       statsByEventId: {},
       typeList: remoteList(),
+      unverifiedParticipantsByEventId: {},
+      userEventList: remoteList(),
     },
     files: {
       fileList: remoteList(),
     },
     import: {
+      importID: null,
       importResult: null,
       pendingFile: {
         selectedSheetIndex: 0,
@@ -82,13 +128,27 @@ export default function mockState(overrides?: RootState) {
       timelineUpdatesByInstanceId: {},
     },
     organizations: {
-      orgData: remoteItem(0),
+      eventsByOrgId: {},
+      filters: {
+        customDatesToFilterBy: [null, null],
+        dateFilterState: null,
+        eventTypesToFilterBy: [],
+        geojsonToFilterBy: [],
+        orgIdsToFilterBy: [],
+      },
+      orgList: remoteList(),
+      rootOrgByOrgId: {},
+      statsBySuborgId: {},
       subOrgsByOrgId: {},
+      suborgsWithStats: remoteList(),
       treeDataList: remoteList(),
       userMembershipList: remoteList(),
     },
     profiles: {
+      fieldCreateError: null,
+      fieldUpdateError: null,
       fieldsList: remoteList(),
+      notesByPersonId: {},
       orgsByPersonId: {},
       personById: {},
     },
@@ -104,6 +164,8 @@ export default function mockState(overrides?: RootState) {
     },
     surveys: {
       elementsBySurveyId: {},
+      extendedSurveyBySurveyId: {},
+      responseStatsBySurveyId: {},
       statsBySurveyId: {},
       submissionList: remoteList(),
       submissionsBySurveyId: {},
@@ -123,7 +185,7 @@ export default function mockState(overrides?: RootState) {
       tasksList: remoteList(),
     },
     user: {
-      membershipList: remoteList(),
+      orgUserList: remoteList(),
       userItem: remoteItem('me'),
     },
     views: {
@@ -133,7 +195,7 @@ export default function mockState(overrides?: RootState) {
       officialList: remoteList(),
       recentlyCreatedFolder: null,
       rowsByViewId: {},
-      viewList: remoteList(),
+      viewsByOrgId: {},
     },
   };
 

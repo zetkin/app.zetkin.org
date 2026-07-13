@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIAccessList from '.';
 
 export default {
   component: ZUIAccessList,
-  title: 'Molecules/ZUIAccessList',
+  title: 'Other/ZUIAccessList',
 } as Meta<typeof ZUIAccessList>;
 
 const Template: StoryFn<typeof ZUIAccessList> = (args) => {

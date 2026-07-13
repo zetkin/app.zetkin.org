@@ -4,6 +4,7 @@ import { Box, Chip, MenuItem } from '@mui/material';
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -45,6 +46,9 @@ const Journey: FC<JourneyProps> = ({
     useSmartSearchFilter<JourneyFilterConfig>(initialFilter, {});
   const { data } = useTags(orgId);
   const tags = data || [];
+  const tagsSorted = tags.sort((t1, t2) => {
+    return t1.title.localeCompare(t2.title);
+  });
   const journeys = useJourneys(orgId).data || [];
 
   const REGARDLESS_TAGS = 'regardlessTags';
@@ -52,7 +56,7 @@ const Journey: FC<JourneyProps> = ({
   // preserve the order of the tag array
   const selectedTags =
     filter.config.tags?.ids.reduce((acc: ZetkinTag[], id) => {
-      const tag = tags.find((tag) => tag.id === id);
+      const tag = tagsSorted.find((tag) => tag.id === id);
       if (tag) {
         return acc.concat(tag);
       }
@@ -102,8 +106,8 @@ const Journey: FC<JourneyProps> = ({
   const selected = !filter.config.tags
     ? REGARDLESS_TAGS
     : filter.config.tags.min_matching
-    ? JOURNEY_CONDITION_OP.SOME
-    : filter.config.tags.condition;
+      ? JOURNEY_CONDITION_OP.SOME
+      : filter.config.tags.condition;
 
   const notRegardlessTags = !!filter.config.tags;
 
@@ -171,6 +175,7 @@ const Journey: FC<JourneyProps> = ({
                   options={[
                     TIME_FRAME.EVER,
                     TIME_FRAME.AFTER_DATE,
+                    TIME_FRAME.ON_DATE,
                     TIME_FRAME.BEFORE_DATE,
                     TIME_FRAME.BETWEEN,
                     TIME_FRAME.LAST_FEW_DAYS,
@@ -183,10 +188,6 @@ const Journey: FC<JourneyProps> = ({
                 {conditionSelect}
                 {selected === JOURNEY_CONDITION_OP.SOME && (
                   <StyledNumberInput
-                    inputProps={{
-                      max: filter.config.tags!.ids.length,
-                      min: '1',
-                    }}
                     onChange={(e) =>
                       setConfig({
                         ...filter.config,
@@ -197,6 +198,12 @@ const Journey: FC<JourneyProps> = ({
                         },
                       })
                     }
+                    slotProps={{
+                      htmlInput: {
+                        max: filter.config.tags!.ids.length,
+                        min: '1',
+                      },
+                    }}
                     sx={{ ml: '0.5rem' }}
                     value={filter.config.tags?.min_matching}
                   />
@@ -204,22 +211,20 @@ const Journey: FC<JourneyProps> = ({
               </>
             ),
             journeySelect: (
-              <StyledSelect
-                minWidth="10rem"
-                onChange={(e) =>
+              <StyledAutocomplete
+                clearable={true}
+                items={journeys.map((journey) => ({
+                  id: journey.id,
+                  label: journey.plural_label,
+                }))}
+                onChange={(e) => {
                   setConfig({
                     ...filter.config,
-                    journey: parseInt(e.target.value),
-                  })
-                }
-                value={filter.config.journey || ''}
-              >
-                {journeys.map((journey) => (
-                  <MenuItem key={`journey-${journey.id}`} value={journey.id}>
-                    {journey.plural_label}
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+                    journey: +e.target.value,
+                  });
+                }}
+                value={filter.config.journey}
+              />
             ),
             openedTimeFrame: (
               <TimeFrame
@@ -239,6 +244,7 @@ const Journey: FC<JourneyProps> = ({
                 options={[
                   TIME_FRAME.EVER,
                   TIME_FRAME.AFTER_DATE,
+                  TIME_FRAME.ON_DATE,
                   TIME_FRAME.BEFORE_DATE,
                   TIME_FRAME.BETWEEN,
                   TIME_FRAME.LAST_FEW_DAYS,

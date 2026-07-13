@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUITextEditor from 'zui/ZUITextEditor/index';
 
@@ -8,7 +8,7 @@ export default {
     backgroundColor: { control: 'color' },
   },
   component: ZUITextEditor,
-  title: 'Organisms/TextEditor',
+  title: 'Other/ZUITextEditor',
 } as Meta<typeof ZUITextEditor>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args

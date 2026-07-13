@@ -9,14 +9,16 @@ import {
   ColumnKind,
   DateColumn,
   EnumColumn,
+  GenderColumn,
   IDFieldColumn,
   OrgColumn,
   TagColumn,
-} from 'features/import/utils/types';
+} from 'features/import/types';
 import useUIDataColumn, {
   UIDataColumn,
 } from 'features/import/hooks/useUIDataColumn';
 import EnumConfig from './EnumConfig';
+import GenderConfig from './GenderConfig';
 
 interface ConfigurationProps {
   columnIndexBeingConfigured: number;
@@ -48,6 +50,12 @@ const Configuration: FC<ConfigurationProps> = ({
       {uiDataColumn &&
         uiDataColumn.originalColumn.kind == ColumnKind.ORGANIZATION && (
           <OrgConfig uiDataColumn={uiDataColumn as UIDataColumn<OrgColumn>} />
+        )}
+      {uiDataColumn &&
+        uiDataColumn.originalColumn.kind == ColumnKind.GENDER && (
+          <GenderConfig
+            uiDataColumn={uiDataColumn as UIDataColumn<GenderColumn>}
+          />
         )}
       {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.DATE && (
         <DateConfig uiDataColumn={uiDataColumn as UIDataColumn<DateColumn>} />

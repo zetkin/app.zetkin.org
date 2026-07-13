@@ -1,54 +1,48 @@
-import { Box } from '@mui/material';
-import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
+import { Box, SxProps } from '@mui/material';
+import { FC, useMemo } from 'react';
 
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import oldTheme from 'theme';
 
 interface EmailStatusChipProps {
   state: EmailState;
 }
 
-const useStyles = makeStyles((theme) => ({
-  chip: {
-    alignItems: 'center',
-    borderRadius: '2em',
-    color: 'white',
-    display: 'inline-flex',
-    fontSize: 14,
-    fontWeight: 'bold',
-    padding: '0.5em 0.7em',
-  },
-  draft: {
-    backgroundColor: theme.palette.grey[500],
-  },
-  scheduled: {
-    backgroundColor: theme.palette.statusColors.blue,
-  },
-  sent: {
-    backgroundColor: theme.palette.success.main,
-  },
-}));
-
 const EmailStatusChip: FC<EmailStatusChipProps> = ({ state }) => {
-  const classes = useStyles();
+  const chipStyles: SxProps = useMemo(() => {
+    return {
+      alignItems: 'center',
+      borderRadius: '2em',
+      color: 'white',
+      display: 'inline-flex',
+      fontSize: 14,
+      fontWeight: 'bold',
+      padding: '0.5em 0.7em',
+      ...{
+        [EmailState.DRAFT]: {
+          backgroundColor: oldTheme.palette.grey[500],
+        },
+        [EmailState.UNKNOWN]: {
+          backgroundColor: oldTheme.palette.grey[500],
+        },
+        [EmailState.SENT]: {
+          backgroundColor: oldTheme.palette.success.main,
+        },
+        [EmailState.SCHEDULED]: {
+          backgroundColor: oldTheme.palette.statusColors.blue,
+        },
+      }[state],
+    };
+  }, [state]);
 
   if (state == EmailState.UNKNOWN) {
     return null;
   }
 
-  const classMap: Record<EmailState, string> = {
-    [EmailState.DRAFT]: classes.draft,
-    [EmailState.UNKNOWN]: classes.draft,
-    [EmailState.SENT]: classes.sent,
-    [EmailState.SCHEDULED]: classes.scheduled,
-  };
-
-  const colorClassName = classMap[state];
-
   return (
-    <Box className={`${colorClassName} ${classes.chip}`}>
+    <Box sx={chipStyles}>
       <Msg id={messageIds.state[state]} />
     </Box>
   );

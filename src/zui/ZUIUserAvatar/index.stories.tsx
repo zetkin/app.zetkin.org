@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIUserAvatar from '.';
 
 export default {
   component: ZUIUserAvatar,
-  title: 'Atoms/ZUIUserAvatar',
+  title: 'Other/ZUIUserAvatar',
 } as Meta<typeof ZUIUserAvatar>;
 
 const Template: StoryFn<typeof ZUIUserAvatar> = (args) => {

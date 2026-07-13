@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-ignore
 import Header from '@editorjs/header';
-//@ts-ignore
-import Paragraph from '@editorjs/paragraph';
 import { Box, useTheme } from '@mui/material';
 import EditorJS, {
   EditorConfig,
@@ -19,6 +17,7 @@ import messageIds from 'features/emails/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import variableToolFactory from './tools/inlineVariable';
+import ParagraphWithSpanPaste from './tools/paragraphWithSpanPaste';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -110,7 +109,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           },
         },
         paragraph: {
-          class: Paragraph,
+          class: ParagraphWithSpanPaste as unknown as ToolConstructable,
         },
         variable: {
           class: variableToolFactory(messages.editor.tools.variable.title()),
@@ -138,6 +137,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         }
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -158,10 +158,10 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     return () => {
       clearInterval(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const styleSheet: CSSStyleSheet = new CSSStyleSheet();
-  styleSheet.deleteRule;
 
   function prefixRule(rule: CSSRule): string {
     if (rule instanceof CSSStyleRule) {
@@ -216,6 +216,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           '& .ce-block__content': {
             px: 2,
           },
+          marginLeft: 8,
           minHeight: '100%',
         }}
       />

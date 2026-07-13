@@ -5,7 +5,7 @@ import AddedOrgs from './AddedOrgs';
 import AddedTags from './AddedTags';
 import ChangedFields from './ChangedFields';
 import CreatedAndUpdated from './CreatedAndUpdated';
-import { PersonImportSummary } from 'features/import/utils/types';
+import { PersonImportSummary } from 'features/import/types';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import useTags from 'features/tags/hooks/useTags';
 
@@ -25,10 +25,16 @@ const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
     Object.keys(tagged.byTag).includes(tag.id.toString())
   );
 
-  const orgsWithNewPeople = subOrgs.filter(
-    (org) =>
-      Object.keys(addedToOrg.byOrg).includes(org.id.toString()) && org.is_active
-  );
+  const orgsWithNewPeople = subOrgs
+    .filter(
+      (org) =>
+        Object.keys(addedToOrg.byOrg).includes(org.id.toString()) &&
+        org.is_active
+    )
+    .map((org) => ({
+      adding: summary.addedToOrg.byOrg[org.id],
+      org,
+    }));
 
   return (
     <>
@@ -44,6 +50,7 @@ const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
           <AddedTags
             addedTags={addedTags}
             numPeopleWithTagsAdded={summary.tagged.total}
+            peoplePerTag={summary.tagged.byTag}
             tense={tense}
           />
         )}

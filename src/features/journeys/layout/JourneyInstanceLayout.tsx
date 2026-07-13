@@ -1,10 +1,12 @@
 import { FormattedDate } from 'react-intl';
-import { Forward } from '@mui/icons-material';
+import { Forward, Delete } from '@mui/icons-material';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useContext } from 'react';
 
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import JourneyStatusChip from '../components/JourneyStatusChip';
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
@@ -29,16 +31,20 @@ const JourneyInstanceLayout: React.FunctionComponent<
 > = ({ children }) => {
   const messages = useMessages(messageIds);
   const { orgId, journeyId, instanceId } = useNumericRouteParams();
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const journeysFuture = useJourneys(orgId);
 
-  const { updateJourneyInstance } = useJourneyInstanceMutations(
-    orgId,
-    instanceId
-  );
+  const { updateJourneyInstance, deleteJourneyInstance } =
+    useJourneyInstanceMutations(orgId, instanceId);
+
+  const handleDelete = async () => {
+    await deleteJourneyInstance();
+    router.push(`/organize/${orgId}/journeys/${journeyId}`);
+  };
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
@@ -73,6 +79,27 @@ const JourneyInstanceLayout: React.FunctionComponent<
   if (!journeyInstance) {
     return null;
   }
+  const journeyInstanceTitle =
+    journeyInstance.title || journeyInstance.journey.title;
+
+  ellipsisMenu.push({
+    id: 'delete-journey-instance',
+    label: messages.instance.ellipsisMenu.deletion.delete({
+      instanceTitle: journeyInstanceTitle,
+    }),
+    onSelect: () => {
+      showConfirmDialog({
+        onSubmit: handleDelete,
+        title: messages.instance.ellipsisMenu.deletion.delete({
+          instanceTitle: journeyInstanceTitle,
+        }),
+        warningText: messages.instance.ellipsisMenu.deletion.warning({
+          instanceTitle: journeyInstanceTitle,
+        }),
+      });
+    },
+    startIcon: <Delete color="secondary" />,
+  });
 
   return (
     <TabbedLayout
@@ -184,7 +211,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
               await updateJourneyInstance({ title: newTitle });
               setIsLoading(false);
             }}
-            value={journeyInstance.title || journeyInstance.journey.title}
+            value={journeyInstanceTitle}
           />
           <Typography
             color="secondary"

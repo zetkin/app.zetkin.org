@@ -14,6 +14,8 @@ import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
 import ZUIFutures from 'zui/ZUIFutures';
+import { ZetkinView } from 'features/views/components/types';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -41,9 +43,14 @@ async function getAccessLevel(
     return 'configure';
   }
 
-  const accessList = await apiClient.get<ZetkinObjectAccess[]>(
-    `/api/orgs/${orgId}/people/views/${viewId}/access`
-  );
+  let accessList: ZetkinObjectAccess[] = [];
+  try {
+    accessList = await apiClient.get<ZetkinObjectAccess[]>(
+      `/api/orgs/${orgId}/people/views/${viewId}/access`
+    );
+  } catch (e) {
+    return null;
+  }
   const accessObject = accessList.find(
     (obj) => obj.person.id == myMembership.profile.id
   );
@@ -62,21 +69,29 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     parseInt(viewId as string)
   );
 
-  try {
-    await apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`);
-
+  if (accessLevel == null) {
     return {
-      props: {
-        accessLevel,
-        orgId,
-        viewId,
-      },
+      notFound: true,
     };
+  }
+
+  try {
+    await apiClient.get<ZetkinView>(
+      `/api/orgs/${orgId}/people/views/${viewId}`
+    );
   } catch (err) {
     return {
       notFound: true,
     };
   }
+
+  return {
+    props: {
+      accessLevel,
+      orgId,
+      viewId,
+    },
+  };
 }, scaffoldOptions);
 
 type SharedViewPageProps = {
@@ -95,6 +110,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
 
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   const viewFuture = useView(parsedOrgId, parsedViewId);
+  const customFieldsFuture = useCustomFields(parsedOrgId);
   const canConfigure = accessLevel == 'configure';
 
   const onServer = useServerSide();
@@ -106,11 +122,12 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
     <ZUIFutures
       futures={{
         cols: columnsFuture,
+        customFields: customFieldsFuture,
         rows: rowsFuture,
         view: viewFuture,
       }}
     >
-      {({ data: { cols, rows, view } }) => (
+      {({ data: { cols, customFields, rows, view } }) => (
         <>
           <Head>
             <title>{view.title}</title>
@@ -119,7 +136,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
             {!columnsFuture.isLoading ? (
               <ViewDataTable
                 columns={cols}
-                disableBulkActions
+                customFields={customFields}
                 disableConfigure={!canConfigure}
                 rows={rows}
                 view={view}

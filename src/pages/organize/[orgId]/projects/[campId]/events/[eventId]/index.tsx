@@ -8,6 +8,7 @@ import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventParticipantsCard';
 import EventRelatedCard from 'features/events/components/EventRelatedCard';
+import EventURLCard from 'features/events/components/EventURLCard';
 import useEvent from 'features/events/hooks/useEvent';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -59,15 +60,20 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
       {(data) => {
         return (
           <Grid container spacing={2}>
-            <Grid item md={8} xs={12}>
+            <Grid size={{ md: 8, xs: 12 }}>
               <EventOverviewCard data={data} orgId={parseInt(orgId)} />
             </Grid>
-            <Grid item md={4} xs={6}>
+            <Grid size={{ md: 4, xs: 6 }}>
               <EventParticipantsCard
                 eventId={parseInt(eventId)}
                 orgId={parseInt(orgId)}
               />
               <EventRelatedCard data={data} orgId={parseInt(orgId)} />
+              <EventURLCard
+                eventId={parseInt(eventId)}
+                isOpen={data.published != null}
+                orgId={parseInt(orgId)}
+              />
             </Grid>
           </Grid>
         );

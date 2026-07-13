@@ -1,10 +1,10 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUITimeSpan from '.';
 
 export default {
   component: ZUITimeSpan,
-  title: 'ZUITimeSpan',
+  title: 'Other/ZUITimeSpan',
 } as Meta<typeof ZUITimeSpan>;
 
 const Template: StoryFn<typeof ZUITimeSpan> = (args) => {

@@ -1,11 +1,10 @@
-import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import { CallAssignmentCaller } from '../apiTypes';
 import TagManager from 'features/tags/components/TagManager';
 import { useMessages } from 'core/i18n';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import messageIds from '../l10n/messageIds';
@@ -24,8 +23,8 @@ const CallerConfigDialog: FC<CallerConfigDialogProps> = ({
   open,
 }) => {
   const messages = useMessages(messageIds);
-  const [prioTags, setPrioTags] = useState<ZetkinTag[]>([]);
-  const [excludedTags, setExcludedTags] = useState<ZetkinTag[]>([]);
+  const [prioTags, setPrioTags] = useState<ZetkinAppliedTag[]>([]);
+  const [excludedTags, setExcludedTags] = useState<ZetkinAppliedTag[]>([]);
 
   useEffect(() => {
     if (caller) {
@@ -72,31 +71,30 @@ const CallerConfigDialog: FC<CallerConfigDialogProps> = ({
   );
 };
 
-const useStyles = makeStyles(() => ({
-  subtitle: {
-    marginBottom: '0.5em',
-  },
-  title: {
-    fontSize: '1em',
-    fontWeight: 'bold',
-    marginTop: '1em',
-  },
-}));
-
 const CallerTagSection: FC<{
-  onChange: (tags: ZetkinTag[]) => void;
+  onChange: (tags: ZetkinAppliedTag[]) => void;
   subtitle: string;
-  tags: ZetkinTag[];
+  tags: ZetkinAppliedTag[];
   title: string;
 }> = ({ onChange, subtitle, tags, title }) => {
-  const classes = useStyles();
-
   return (
     <>
-      <Typography className={classes.title} variant="h3">
+      <Typography
+        sx={{
+          fontSize: '1em',
+          fontWeight: 'bold',
+          marginTop: '1em',
+        }}
+        variant="h3"
+      >
         {title}
       </Typography>
-      <Typography className={classes.subtitle} variant="body1">
+      <Typography
+        sx={{
+          marginBottom: '0.5em',
+        }}
+        variant="body1"
+      >
         {subtitle}
       </Typography>
       <TagManager
