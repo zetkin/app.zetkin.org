@@ -1,5 +1,5 @@
 import { FormEvent, useEffect } from 'react';
-import { Box, MenuItem, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, MenuItem, Skeleton, Typography } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -17,6 +17,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import useEventsByOrgs from 'features/smartSearch/hooks/useEventsByOrgs';
 import eventsMessageIds from 'features/events/l10n/messageIds';
+import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
 const localMessageIds = messageIds.filters.eventParticipation;
 
@@ -166,25 +167,19 @@ const EventParticipation = ({
               </StyledSelect>
             ),
             eventSelect: (
-              <StyledSelect
+              <StyledAutocomplete
+                items={
+                  events.data?.map((event) => ({
+                    id: event.id,
+                    label:
+                      event.title ||
+                      event.activity?.title ||
+                      eventsMessages.common.noTitle(),
+                  })) || []
+                }
                 onChange={(e) => handleEventSelectChange(e.target.value)}
                 value={filter.config.action}
-              >
-                {(events.data || []).map((a) => (
-                  <MenuItem key={a.id} value={a.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={a.title && a.title.length >= 40 ? a.title : ''}
-                    >
-                      <Box>
-                        {a.title ||
-                          a.activity?.title ||
-                          eventsMessages.common.noTitle()}
-                      </Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             statusSelect: (
               <StyledSelect
