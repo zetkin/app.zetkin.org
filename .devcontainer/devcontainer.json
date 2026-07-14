@@ -28,5 +28,5 @@
 
   "remoteUser": "node",
 
-  "postCreateCommand": "git config core.hooksPath .githooks && yarn install"
+  "postCreateCommand": "git config core.hooksPath .githooks && npm install"
 }

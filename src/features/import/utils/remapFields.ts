@@ -1,4 +1,4 @@
-import { ImportPreview, PersonImport } from './types';
+import { ImportPreview, PersonImport } from '../types';
 
 type TransformFunction = (k: string) => string;
 

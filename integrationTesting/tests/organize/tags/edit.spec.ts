@@ -51,11 +51,9 @@ test.describe('Tag manager', () => {
       'New tag title'
     );
 
-    // Check that request made to edit tag with correct values
-    await Promise.all([
-      page.click('data-testid=SubmitCancelButtons-submitButton'),
-      page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
-    ]);
+    await page.click('data-testid=SubmitCancelButtons-submitButton');
+
+    await expect.poll(() => editTagRequest.log().length).toBe(1);
 
     expect(editTagRequest.log()[0].data).toEqual({
       group_id: ActivistTag.group?.id,

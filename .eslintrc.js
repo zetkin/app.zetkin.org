@@ -6,8 +6,23 @@ module.exports = {
   },
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
   // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
-  ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'],
-  extends: ['eslint:recommended', 'next', 'prettier'],
+  ignorePatterns: [
+    'node_modules/*',
+    '.next/*',
+    '.out/*',
+    '!.prettierrc.js',
+    'src/locale/*',
+    'public/*',
+  ],
+  extends: [
+    'eslint:recommended',
+    'next',
+    'prettier',
+    'plugin:storybook/recommended',
+  ],
+  rules: {
+    'storybook/prefer-pascal-case': 'off',
+  },
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files
@@ -21,7 +36,6 @@ module.exports = {
       },
       extends: [
         'plugin:@typescript-eslint/recommended', // TypeScript rules
-        'plugin:react-hooks/recommended', // React hooks rules
         'plugin:jsx-a11y/recommended', // Accessibility rules
       ],
       plugins: ['no-switch-statements', 'no-only-tests'],
@@ -87,7 +101,7 @@ module.exports = {
         'react/prefer-stateless-function': 'error',
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
-        'react-hooks/exhaustive-deps': 'off',
+        'react-hooks/exhaustive-deps': 'error',
         'react/self-closing-comp': [
           'error',
           {
@@ -98,6 +112,26 @@ module.exports = {
         'sort-keys': 'error',
         'sort-vars': 'error',
         'no-only-tests/no-only-tests': 'error',
+      },
+    },
+    // This configuration will apply only to YAML files
+    {
+      files: ['**/*.yml', '**/*.yaml'],
+      extends: ['plugin:yml/standard'],
+      parser: 'yaml-eslint-parser',
+      rules: {
+        'yml/quotes': ['error', { prefer: 'single' }],
+      },
+    },
+    {
+      files: ['integrationTesting/**/*.ts', 'integrationTesting/**/*.tsx'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
+      },
+      rules: {
+        '@typescript-eslint/no-floating-promises': ['error'],
       },
     },
   ],

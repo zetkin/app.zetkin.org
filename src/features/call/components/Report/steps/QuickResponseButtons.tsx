@@ -37,6 +37,7 @@ export const QuickResponseButtons: FC<QuickResponseProps> = ({ options }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const numberButtons = [

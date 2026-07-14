@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import PublicProjPage from 'features/campaigns/pages/PublicProjPage';
+import PublicProjPage from 'features/public/pages/PublicProjPage';
 
 type Props = {
   params: {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const Page: FC<Props> = ({ params }) => {
-  return <PublicProjPage campId={params.projId} orgId={params.orgId} />;
+  return <PublicProjPage orgId={params.orgId} projectId={params.projId} />;
 };
 
 export default Page;

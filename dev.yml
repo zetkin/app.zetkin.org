@@ -11,17 +11,17 @@ services:
         FROM node:22-alpine3.22
         COPY . /build/src/
         WORKDIR /build/src
-        RUN yarn install
-        RUN yarn build
-        ENTRYPOINT yarn start -p 3000
-    profiles: ['static']
+        RUN npm install
+        RUN npm run build
+        ENTRYPOINT npm run start -p 3000
+    profiles: [static]
     env_file:
       - path: ./.env.development
     ports:
       - 3000
-    network_mode: 'host'
+    network_mode: host
 
-  # With this version of the app, yarn will install dependencies every time you start
+  # With this version of the app, npm will install dependencies every time you start
   # the container. So it's a bit slower to start, which may be annoying if you're only
   # developing the backend (Zetkin Platform)
   app-dev:
@@ -30,13 +30,13 @@ services:
       dockerfile_inline: |
         FROM node:22-alpine3.22
         WORKDIR /repo
-        ENTRYPOINT yarn install && yarn devserver
-    profiles: ['dev']
+        ENTRYPOINT npm install && npm run devserver
+    profiles: [dev]
     ports:
       - 3000
     volumes:
       - ./:/repo
-    network_mode: 'host'
+    network_mode: host
 
   # WIP: It's possible to run the precommit hook from within a container
   # docker compose -f dev.yml run lint
@@ -48,8 +48,8 @@ services:
         FROM node:22-alpine3.22
         USER node
         WORKDIR /repo
-        RUN yarn install
-    profiles: ['lint']
+        RUN npm install
+    profiles: [lint]
     user: node
     tty: true
     working_dir: /repo

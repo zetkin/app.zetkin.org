@@ -53,8 +53,9 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     options.find((o) => o.value == report.callBackAfter?.slice(-5)) ||
     options[0];
 
-  const [time, setTime] =
-    useState<{ label: string; value: string }>(initialTime);
+  const [time, setTime] = useState<{ label: string; value: string }>(
+    initialTime
+  );
   const [date, setDate] = useState<Dayjs>(initialDate);
 
   const getNextMonday = () => {
@@ -166,6 +167,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callBackAfter]);
 
   const dateIsValid = date.isValid() && date.isAfter(today.date());
@@ -209,6 +211,30 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             value={time}
           />
         </Box>
+        <ZUIButton
+          disabled={!dateIsValid}
+          endIcon={dateIsValid && !isMobile ? LooksOneOutlined : undefined}
+          label={
+            dateIsValid
+              ? messages.report.steps.callBack.question.callBackButtonLabel({
+                  date:
+                    time.value == 'any' ? (
+                      <ZUIDate datetime={callBackAfter} />
+                    ) : (
+                      <ZUIDateTime datetime={callBackAfter} />
+                    ),
+                })
+              : messages.report.steps.callBack.question.invalidDateButtonLabel()
+          }
+          onClick={() => {
+            onReportUpdate({
+              ...report,
+              callBackAfter,
+              step: 'organizerAction',
+            });
+          }}
+          variant="secondary"
+        />
         <Box
           sx={{
             alignItems: isMobile ? 'flex-start' : 'center',
@@ -243,30 +269,6 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             />
           </Box>
         </Box>
-        <ZUIButton
-          disabled={!dateIsValid}
-          endIcon={dateIsValid && !isMobile ? LooksOneOutlined : undefined}
-          label={
-            dateIsValid
-              ? messages.report.steps.callBack.question.callBackButtonLabel({
-                  date:
-                    time.value == 'any' ? (
-                      <ZUIDate datetime={callBackAfter} />
-                    ) : (
-                      <ZUIDateTime datetime={callBackAfter} />
-                    ),
-                })
-              : messages.report.steps.callBack.question.invalidDateButtonLabel()
-          }
-          onClick={() => {
-            onReportUpdate({
-              ...report,
-              callBackAfter,
-              step: 'organizerAction',
-            });
-          }}
-          variant="secondary"
-        />
       </Stack>
     </StepBase>
   );

@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import { FC, useEffect } from 'react';
 import { redirect } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useRouter } from 'next/navigation';
 
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
@@ -15,14 +16,18 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 const CallPage: FC = () => {
-  const { initialize, canInitialize } = useCallInitialization();
+  const router = useRouter();
+  const { clearCallLanes, clearStaleCallLanes, initialize, canInitialize } =
+    useCallInitialization();
 
   useEffect(() => {
     if (canInitialize) {
       initialize();
     } else {
+      clearStaleCallLanes();
       return redirect('/my');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onServer = useServerSide();
@@ -66,7 +71,14 @@ const CallPage: FC = () => {
           </Box>
         }
       >
-        <Call />
+        {canInitialize && (
+          <Call
+            onResetAfterError={(urlToNavigateTo: string) => {
+              clearCallLanes();
+              router.push(urlToNavigateTo);
+            }}
+          />
+        )}
       </ErrorBoundary>
     </main>
   );

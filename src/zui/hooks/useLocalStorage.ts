@@ -4,7 +4,7 @@ export default function useLocalStorage<T>(
   key: string,
   defaultValue: T,
   initialValue?: T
-): [T, (newValue: T) => void] {
+): [T, (newValue: T) => void, () => void] {
   const [value, setValue] = useState<T>(() =>
     getLocalStorageValue(key, defaultValue, initialValue)
   );
@@ -13,7 +13,15 @@ export default function useLocalStorage<T>(
     localStorage.setItem(key, JSON.stringify(value));
   }, [value, key]);
 
-  return [value, setValue] as const;
+  return [value, setValue, () => clear(key)] as const;
+}
+
+function clear(key: string) {
+  const isBrowser = typeof window !== 'undefined';
+
+  if (isBrowser) {
+    localStorage.removeItem(key);
+  }
 }
 
 function getLocalStorageValue<T>(

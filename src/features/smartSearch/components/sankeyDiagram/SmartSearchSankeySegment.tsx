@@ -54,6 +54,7 @@ const SmartSearchSankeySegment: FC<SmartSearchSankeySegmentProps> = ({
     return () => {
       cancelAnimationFrame(animFrameRef.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     canvasRef.current,
     canvasHeight,

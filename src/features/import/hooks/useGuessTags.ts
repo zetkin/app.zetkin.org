@@ -3,7 +3,7 @@ import Fuse from 'fuse.js';
 import { UIDataColumn } from './useUIDataColumn';
 import useTagConfig from './useTagConfig';
 import useTags from 'features/tags/hooks/useTags';
-import { CellData, TagColumn } from '../utils/types';
+import { CellData, TagColumn } from '../types';
 
 const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const tags = useTags(orgId);
@@ -15,25 +15,23 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
   const fuse = new Fuse(tags.data || [], {
     includeScore: true,
     keys: ['title'],
+    threshold: 0.25,
   });
 
   const guessTags = () => {
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
       (acc: TagColumn['mapping'], cellValue: CellData) => {
-        if (typeof cellValue === 'string') {
+        if (typeof cellValue === 'string' && cellValue.length > 2) {
           // Find tags with most similar name
           const results = fuse.search(cellValue);
-          // Filter out items with a bad match
-          const goodResults = results.filter(
-            (result) => result.score && result.score < 0.25
-          );
+
           // If there is a match, guess it
-          if (goodResults.length > 0) {
+          if (results.length > 0) {
             return [
               ...acc,
               {
-                tags: [{ id: goodResults[0].item.id }],
+                tags: [{ id: results[0].item.id }],
                 value: cellValue,
               },
             ];

@@ -4,6 +4,7 @@ import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../../../mockData/orgs/KPD/people/views/AllMembers/columns';
 import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMembers/rows';
+import AllCustomFields from '../../../../mockData/orgs/KPD/people/views/AllMembers/fields';
 import KPD from '../../../../mockData/orgs/KPD';
 
 test.describe('View detail page', () => {
@@ -17,6 +18,7 @@ test.describe('View detail page', () => {
       'get',
       AllMembersColumns
     );
+    moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
   });
 
   test.afterEach(({ moxy }) => {
@@ -24,8 +26,8 @@ test.describe('View detail page', () => {
   });
 
   test('lets user remove row from view', async ({ page, appUri, moxy }) => {
-    moxy.setZetkinApiMock(
-      '/v1/orgs/1/people/views/1/rows/1',
+    const { log: deleteLog } = moxy.setZetkinApiMock(
+      '/orgs/1/people/views/1/rows/1',
       'delete',
       undefined,
       204
@@ -45,18 +47,12 @@ test.describe('View detail page', () => {
     await page.locator(bulkButton).click();
     await page.locator('[role="menuitem"]:has-text("remove")').click();
     await expect(page.locator(confirmButtonInModal)).toBeVisible();
+
     await page.locator(confirmButtonInModal).click();
+
     await expect(page.locator(confirmButtonInModal)).toBeHidden();
 
     // Check for delete request
-    expect(
-      moxy
-        .log()
-        .find(
-          (req) =>
-            req.method === 'DELETE' &&
-            req.path === '/v1/orgs/1/people/views/1/rows/1'
-        )
-    ).toBeTruthy();
+    await expect.poll(() => deleteLog().length).toBe(1);
   });
 });

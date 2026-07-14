@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import JourneyInstanceOutcome from './JourneyInstanceOutcome';
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import { render } from 'utils/testing';

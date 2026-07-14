@@ -84,8 +84,7 @@ const CallAssignmentCallersList = ({
       field: 'name',
       flex: 1,
       headerName: messages.callers.nameColumn(),
-      valueGetter: (params) =>
-        `${params.row.first_name} ${params.row.last_name}`,
+      valueGetter: (value, row) => `${row.first_name} ${row.last_name}`,
     },
     {
       field: 'prioritized_tags',

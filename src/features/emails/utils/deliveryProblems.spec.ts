@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import deliveryProblems from './deliveryProblems';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import { BlockKind, DeliveryProblem, InlineNodeKind } from '../types';
@@ -63,6 +65,7 @@ const mockEmail = (emailOverrides?: Partial<ZetkinEmail>): ZetkinEmail => {
     },
     theme: { frame_mjml: null, id: 1 },
     title: 'Welcome email for new members',
+    uuid: '2079ac84-cca5-4cfa-851a-2089e357e81d',
     ...emailOverrides,
   };
 };

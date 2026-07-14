@@ -1,0 +1,165 @@
+import { FC } from 'react';
+import NextLink from 'next/link';
+import { Box, Button, Grid, Skeleton, Typography } from '@mui/material';
+
+import ActivitiesOverviewCard from './ActivitiesOverviewCard';
+import messageIds from 'features/projects/l10n/messageIds';
+import useActivitiyOverview from 'features/projects/hooks/useActivityOverview';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
+import ZUIFuture from 'zui/ZUIFuture';
+import { ActivityOverview, ProjectActivity } from 'features/projects/types';
+import { Msg, useMessages } from 'core/i18n';
+
+type ActivitiesOverviewProps = {
+  isShared?: boolean;
+  orgId: number;
+  projectId?: number;
+};
+
+export const ActivitiesOverviewSkeleton = () => {
+  return (
+    <>
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        my={2}
+      >
+        <Box sx={{ maxWidth: '100%' }}>
+          <Typography sx={{ maxWidth: '100%' }} variant="h4">
+            <Skeleton sx={{ maxWidth: '100%' }} width={'400px'} />
+          </Typography>
+        </Box>
+      </Box>
+      <Grid container height={'400px'} spacing={2}>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <Skeleton height={'100%'} variant={'rounded'} />
+        </Grid>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <Skeleton height={'100%'} variant={'rounded'} />
+        </Grid>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <Skeleton height={'100%'} variant={'rounded'} />
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+
+const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
+  projectId,
+  isShared,
+  orgId,
+}) => {
+  const messages = useMessages(messageIds);
+  const activityOverview = useActivitiyOverview(orgId, projectId);
+
+  const todayDate = new Date();
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+  const filterSharedSurveys = (items: ProjectActivity[]) => {
+    return items.filter(
+      (item) =>
+        item.kind === 'survey' &&
+        item.data.org_access === 'suborgs' &&
+        item.data.organization.id != orgId
+    );
+  };
+
+  return (
+    <>
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        my={2}
+      >
+        <Box>
+          <Typography variant="h4">
+            <Msg id={messageIds.activitiesOverview.title} />
+          </Typography>
+        </Box>
+        <Box>
+          <NextLink
+            href={`/organize/${orgId}/projects${
+              projectId ? `/${projectId}` : isShared ? '/shared' : ''
+            }/activities`}
+            legacyBehavior
+            passHref
+          >
+            <Button variant="text">
+              <Msg id={messageIds.activitiesOverview.button} />
+            </Button>
+          </NextLink>
+        </Box>
+      </Box>
+      <ZUIFuture future={activityOverview}>
+        {(activities) => {
+          //It only filters shared surveys for now, but there will be more shared activities in the future.
+          const data: ActivityOverview = isShared
+            ? {
+                alsoThisWeek: filterSharedSurveys(activities.alsoThisWeek),
+                today: filterSharedSurveys(activities.today),
+                tomorrow: filterSharedSurveys(activities.tomorrow),
+              }
+            : activities;
+
+          const totalLength =
+            data.today.length + data.tomorrow.length + data.alsoThisWeek.length;
+
+          if (totalLength == 0) {
+            return (
+              <Box>
+                <ZUIEmptyState
+                  href={`/organize/${orgId}/projects${
+                    projectId ? `/${projectId}` : ''
+                  }/activities`}
+                  linkMessage={messages.activitiesOverview.goToActivities()}
+                  message={messages.activitiesOverview.noActivities()}
+                />
+              </Box>
+            );
+          }
+
+          return (
+            <Grid container spacing={2}>
+              <Grid size={{ md: 4, xs: 12 }}>
+                <ActivitiesOverviewCard
+                  activities={data.today}
+                  focusDate={todayDate}
+                  header={messages.activitiesOverview.todayCard()}
+                  orgId={orgId}
+                  projectId={projectId}
+                  timeScale={'day'}
+                />
+              </Grid>
+              <Grid size={{ md: 4, xs: 12 }}>
+                <ActivitiesOverviewCard
+                  activities={data.tomorrow}
+                  focusDate={tomorrowDate}
+                  header={messages.activitiesOverview.tomorrowCard()}
+                  orgId={orgId}
+                  projectId={projectId}
+                  timeScale={'day'}
+                />
+              </Grid>
+              <Grid size={{ md: 4, xs: 12 }}>
+                <ActivitiesOverviewCard
+                  activities={data.alsoThisWeek}
+                  focusDate={null}
+                  header={messages.activitiesOverview.thisWeekCard()}
+                  orgId={orgId}
+                  projectId={projectId}
+                  timeScale={'week'}
+                />
+              </Grid>
+            </Grid>
+          );
+        }}
+      </ZUIFuture>
+    </>
+  );
+};
+
+export default ActivitiesOverview;

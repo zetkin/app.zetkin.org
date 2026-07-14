@@ -9,8 +9,8 @@ module.exports = {
   ],
   addons: [
     '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
+    '@vueless/storybook-dark-mode',
+    '@storybook/addon-docs',
   ],
 
   framework: '@storybook/nextjs',

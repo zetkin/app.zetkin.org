@@ -100,12 +100,16 @@ const SuborgsList: FC<{
           if (isError(orgWithStats)) {
             if (orgWithStats.id == 'loadingError') {
               return (
-                <Alert severity="error">{`Error loading suborg data`}</Alert>
+                <Alert
+                  key={orgWithStats.id}
+                  severity="error"
+                >{`Error loading suborg data`}</Alert>
               );
             }
 
             return (
               <Box
+                key={orgWithStats.id}
                 sx={{
                   alignContent: 'center',
                   padding: 2,

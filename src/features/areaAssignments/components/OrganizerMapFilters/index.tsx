@@ -78,6 +78,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     });
 
     onFilteredIdsChange(filteredAreas.map((area) => area.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeGroupIds, activeTagIdsByGroup]);
 
   return (

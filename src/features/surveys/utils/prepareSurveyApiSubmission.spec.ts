@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it } from '@jest/globals';
+
 import prepareSurveyApiSubmission from './prepareSurveyApiSubmission';
 
 describe('prepareSurveyApiSubmission()', () => {
@@ -69,9 +71,10 @@ describe('prepareSurveyApiSubmission()', () => {
       formData,
       {
         email: 'testuser@example.org',
+        email_is_verified: true,
         first_name: 'test',
         id: 0,
-        is_verifiend: true,
+        is_verified: true,
         lang: null,
         last_name: 'user',
         phone: null,
@@ -89,9 +92,10 @@ describe('prepareSurveyApiSubmission()', () => {
       formData,
       {
         email: 'testuser@example.org',
+        email_is_verified: true,
         first_name: 'test',
         id: 0,
-        is_verifiend: true,
+        is_verified: true,
         lang: null,
         last_name: 'user',
         phone: null,

@@ -53,6 +53,10 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     filters: {
+      action_participation: {
+        description: m('Who signed up or booked for particular events?'),
+        title: m('Participation in a particular event'),
+      },
       all: {
         description: m(
           'Find people based on what sub-organizations they are in.'
@@ -96,6 +100,12 @@ export default makeMessages('feat.smartSearch', {
           'Find people who are on a journey or finished it already'
         ),
         title: m('People on a journey'),
+      },
+      official: {
+        description: m(
+          'Find people who have organizer or administrator access in an organization'
+        ),
+        title: m('Based on their access level'),
       },
       person_data: {
         description: m('Name, address, email and more!'),
@@ -261,58 +271,6 @@ export default makeMessages('feat.smartSearch', {
         minTimes: number;
       }>('at least {input} {minTimes, plural, one {time} other {times}}'),
     },
-    campaignParticipation: {
-      activitySelect: {
-        activity: m<{ activity: ReactElement | string }>('type "{activity}"'),
-        any: m('any type'),
-      },
-      bookedSelect: {
-        booked: m('been booked'),
-        signed_up: m('signed up'),
-      },
-      campaignSelect: {
-        any: m('any project'),
-        campaign: m<{ campaign: ReactElement | string }>(
-          'project "{campaign}"'
-        ),
-      },
-      examples: {
-        one: m(
-          "Add people who have signed up and showed up for events in any project of any type at location 'Dorfplatz' at any point in time"
-        ),
-        two: m(
-          "Remove people who have not been booked no matter their attendance for events in any project of type 'Put up posters' at any location before today."
-        ),
-      },
-      haveSelect: {
-        in: m('have'),
-        notin: m('have not'),
-      },
-      inputString: m<{
-        activitySelect: ReactElement;
-        addRemoveSelect: ReactElement;
-        bookedSelect: ReactElement;
-        campaignSelect: ReactElement;
-        haveSelect: ReactElement;
-        locationSelect: ReactElement;
-        statusSelect: ReactElement;
-        timeFrame: ReactElement;
-      }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
-      ),
-      locationSelect: {
-        any: m('any location'),
-        location: m<{ location: ReactElement | string }>(
-          'location "{location}"'
-        ),
-      },
-      statusSelect: {
-        any: m('no matter their attendance'),
-        attended: m('and showed up'),
-        cancelled: m('and cancelled'),
-        noshow: m('and did not show up'),
-      },
-    },
     emailBlacklist: {
       inputString: m<{
         addRemoveSelect: ReactElement;
@@ -373,6 +331,28 @@ export default makeMessages('feat.smartSearch', {
         notSent: m('not been sent'),
         opened: m('opened'),
         sent: m('been sent'),
+      },
+    },
+    eventParticipation: {
+      bookedSelect: {
+        booked: m('been booked'),
+        signed_up: m('signed up'),
+      },
+      error: m('An error has occurred while loading events'),
+      example: m('Add people who have been booked and attended an event.'),
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        bookedSelect: ReactElement;
+        eventSelect: ReactElement;
+        statusSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have {bookedSelect} {statusSelect} for {eventSelect}'
+      ),
+      statusSelect: {
+        any: m('no matter their attendance'),
+        attended: m('and showed up'),
+        cancelled: m('and cancelled'),
+        noshow: m('and did not show up'),
       },
     },
     joinForm: {
@@ -441,8 +421,26 @@ export default makeMessages('feat.smartSearch', {
       numPeople: m<{
         numPeople: number;
       }>('{numPeople, plural, one {person} other {people}}'),
-      numPeopleSelect:
-        m<{ numPeopleSelect: ReactElement | number }>('{numPeopleSelect}'),
+      numPeopleSelect: m<{ numPeopleSelect: ReactElement | number }>(
+        '{numPeopleSelect}'
+      ),
+    },
+    official: {
+      examples: {
+        one: m(
+          'Add all people who have access as either organizer or administrator.'
+        ),
+        two: m('Remove all people who have access as administrator.'),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        roleSelect: ReactElement;
+      }>('{addRemoveSelect} all people who have access as {roleSelect}.'),
+      roleSelect: {
+        admin: m('administrators'),
+        any: m('either organizer or administrator'),
+        organizer: m('organizers'),
+      },
     },
     personData: {
       ellipsis: m('...'),
@@ -524,6 +522,7 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     personTags: {
+      addAllFromGroupButton: m('Add all'),
       condition: {
         conditionSelect: {
           all: m('all'),
@@ -560,6 +559,7 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people with {condition} of the following tags: {tags}'
       ),
+      noGroup: m('No group'),
     },
     personView: {
       examples: {
@@ -577,6 +577,56 @@ export default makeMessages('feat.smartSearch', {
       }>('{addRemoveSelect} people who are {inSelect} the list {viewSelect}.'),
       viewSelect: {
         none: m("This organization doesn't have any lists yet"),
+      },
+    },
+    projectParticipation: {
+      activitySelect: {
+        activity: m<{ activity: ReactElement | string }>('type "{activity}"'),
+        any: m('any type'),
+      },
+      bookedSelect: {
+        booked: m('been booked'),
+        signed_up: m('signed up'),
+      },
+      examples: {
+        one: m(
+          "Add people who have signed up and showed up for events in any project of any type at location 'Dorfplatz' at any point in time"
+        ),
+        two: m(
+          "Remove people who have not been booked no matter their attendance for events in any project of type 'Put up posters' at any location before today."
+        ),
+      },
+      haveSelect: {
+        in: m('have'),
+        notin: m('have not'),
+      },
+      inputString: m<{
+        activitySelect: ReactElement;
+        addRemoveSelect: ReactElement;
+        bookedSelect: ReactElement;
+        haveSelect: ReactElement;
+        locationSelect: ReactElement;
+        projectSelect: ReactElement;
+        statusSelect: ReactElement;
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {projectSelect} of {activitySelect} at {locationSelect} {timeFrame}'
+      ),
+      locationSelect: {
+        any: m('any location'),
+        location: m<{ location: ReactElement | string }>(
+          'location "{location}"'
+        ),
+      },
+      projectSelect: {
+        any: m('any project'),
+        project: m<{ project: ReactElement | string }>('project "{project}"'),
+      },
+      statusSelect: {
+        any: m('no matter their attendance'),
+        attended: m('and showed up'),
+        cancelled: m('and cancelled'),
+        noshow: m('and did not show up'),
       },
     },
     random: {
@@ -773,13 +823,6 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     task: {
-      campaignSelect: {
-        any: m('any project'),
-        campaign: m<{ campaign: ReactElement | string }>(
-          'project "{campaign}"'
-        ),
-        in: m(' in '),
-      },
       examples: {
         one: m(
           'Add people who have completed task "Tell your friends" at least once at any point in time'
@@ -790,14 +833,19 @@ export default makeMessages('feat.smartSearch', {
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
-        campaignSelect: ReactElement | null;
         matchingSelect: ReactElement;
+        projectSelect: ReactElement | null;
         taskSelect: ReactElement;
         taskStatusSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who have {taskStatusSelect} {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
+        '{addRemoveSelect} people who have {taskStatusSelect} {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
       ),
+      projectSelect: {
+        any: m('any project'),
+        in: m(' in '),
+        project: m<{ project: ReactElement | string }>('project "{project}"'),
+      },
       taskSelect: {
         any: m('any task'),
         task: m<{ task: ReactElement | string }>('task "{task}"'),
@@ -977,6 +1025,10 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}'
       ),
+      onDate: m<{
+        onDateSelect: ReactElement;
+        onTimeFrameSelect: ReactElement;
+      }>('{onTimeFrameSelect} {onDateSelect}'),
     },
     preview: {
       afterDate: m<{ afterDate: string }>('after {afterDate}'),
@@ -990,6 +1042,7 @@ export default makeMessages('feat.smartSearch', {
       lastFew: m<{ days: number }>(
         'during the last {days} {days, plural, one {day} other {days}}'
       ),
+      onDate: m<{ onDate: string }>('on {onDate}'),
     },
     timeFrameSelectLabel: {
       afterDate: m('after'),
@@ -999,6 +1052,7 @@ export default makeMessages('feat.smartSearch', {
       ever: m('at any point in time'),
       future: m('in the future'),
       lastFew: m('during the last'),
+      onDate: m('on'),
     },
     timeFrameSelectOptions: {
       afterDate: m('after a certain date'),
@@ -1008,6 +1062,7 @@ export default makeMessages('feat.smartSearch', {
       ever: m('at any point in time'),
       future: m('in the future'),
       lastFew: m('recently'),
+      onDate: m('on a certain date'),
     },
   },
 });

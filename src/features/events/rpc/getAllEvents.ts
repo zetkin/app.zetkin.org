@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinEvent,
+  ZetkinProject,
   ZetkinMembership,
   ZetkinOrganization,
 } from 'utils/types/zetkin';
@@ -94,8 +95,33 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   );
   const events = eventsByOrg.flat();
 
-  return events.filter((event) => {
-    const state = getEventState(event);
-    return state == EventState.OPEN || state == EventState.SCHEDULED;
+  const filteredEvents = await Promise.all(
+    events.map(async (event) => {
+      let isPublished = false;
+      if (event.published) {
+        isPublished = new Date(event.published) < new Date();
+      }
+      if (event.campaign && isPublished) {
+        const project = await apiClient
+          .get<ZetkinProject>(
+            `/api/orgs/${event.organization.id}/campaigns/${event.campaign.id}`
+          )
+          .catch(() => null);
+        isPublished =
+          !!project &&
+          !project.archived &&
+          project.published &&
+          project.visibility == 'open';
+      }
+      const state = getEventState(event);
+      return (
+        (state == EventState.OPEN || state == EventState.SCHEDULED) &&
+        isPublished
+      );
+    })
+  );
+
+  return events.filter((event, i) => {
+    return filteredEvents[i];
   });
 }

@@ -21,7 +21,7 @@ import { RemoteItem, RemoteList } from 'utils/storeUtils';
  *   actionOnSuccess: (data) => tasksLoaded(data),
  *   loader: () =>
  *     apiClient.get<ZetkinTask[]>(
- *       `/api/orgs/${orgId}/campaigns/${campId}/tasks`
+ *       `/api/orgs/${orgId}/campaigns/${projectId}/tasks`
  *     ),
  * });
  * ```
@@ -37,7 +37,7 @@ import { RemoteItem, RemoteList } from 'utils/storeUtils';
 export function loadListIfNecessary<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType[]
+  OnSuccessPayload = DataType[],
 >(
   remoteList: RemoteList<DataType> | undefined,
   dispatch: AppDispatch,
@@ -93,7 +93,7 @@ export function loadListIfNecessary<
 export function loadList<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType[]
+  OnSuccessPayload = DataType[],
 >(
   dispatch: AppDispatch,
   hooks: {
@@ -149,11 +149,18 @@ export function loadList<
 export function loadItemIfNecessary<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType
+  OnSuccessPayload = DataType,
 >(
   remoteItem: RemoteItem<DataType> | undefined,
   dispatch: AppDispatch,
   hooks: {
+    /**
+     * Called when an error occurs while loading the item.
+     * @param err The error that occurred during the loading process.
+     * @return {PayloadAction} The action to dispatch when an error occurs.
+     */
+    actionOnError?: (err: unknown) => PayloadAction<unknown>;
+
     /**
      * Called when the item begins loading.
      * @returns {PayloadAction} The action to dispatch when the item is loading.
@@ -175,10 +182,20 @@ export function loadItemIfNecessary<
 ): IFuture<DataType> {
   if (!remoteItem || shouldLoad(remoteItem)) {
     dispatch(hooks.actionOnLoad());
-    const promise = hooks.loader().then((val) => {
-      dispatch(hooks.actionOnSuccess(val));
-      return val;
-    });
+    const promise = hooks
+      .loader()
+      .then((val) => {
+        dispatch(hooks.actionOnSuccess(val));
+        return val;
+      })
+      .catch((err: unknown) => {
+        if (hooks.actionOnError) {
+          dispatch(hooks.actionOnError(err));
+          return null;
+        } else {
+          throw err;
+        }
+      });
 
     return new PromiseFuture(promise, remoteItem?.data);
   }

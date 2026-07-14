@@ -1,4 +1,4 @@
-import { ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinOrganization } from 'utils/types/zetkin';
 
 export type ZetkinPersonNote = {
   author: { id: number; name: string };
@@ -7,3 +7,5 @@ export type ZetkinPersonNote = {
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   text: string;
 };
+
+export type TagToBeAdded = Pick<ZetkinAppliedTag, 'id' | 'value'>;
