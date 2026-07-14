@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { tagGroupsLoad, tagGroupsLoaded } from '../store';
@@ -12,19 +10,7 @@ export default function useTagGroups(orgId: number) {
 
   const tagGroupIndex = useAppSelector((state) => state.tags.tagGroups[orgId]);
   const groupsById = useAppSelector((state) => state.tags.groupsById);
-  const tagGroupMapper = useCallback(
-    (groupId: number) => {
-      const group = groupsById[groupId];
-
-      if (group?.deleted) {
-        return null;
-      }
-
-      return group?.data ?? null;
-    },
-    [groupsById]
-  );
-  const tagGroupsList = useRemoteListMapping(tagGroupIndex, tagGroupMapper);
+  const tagGroupsList = useRemoteListMapping(tagGroupIndex, groupsById);
 
   return loadListIfNecessary(tagGroupsList, dispatch, {
     actionOnLoad: () => tagGroupsLoad([orgId]),

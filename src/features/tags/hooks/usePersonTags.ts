@@ -1,37 +1,57 @@
-import { useCallback } from 'react';
+import { useMemo } from 'react';
 
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
 import { personTagsLoad, personTagsLoaded } from 'features/tags/store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import useRemoteListMapping from 'utils/hooks/useRemoteListMapping';
+import { remoteList } from 'utils/storeUtils';
+import { SafeRecord } from 'utils/types';
 
 export default function usePersonTags(orgId: number, personId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const tagIndex = useAppSelector(
+  const tagValueIndex = useAppSelector(
     (state) => state.tags.personTags[`${orgId}-${personId}`]
   );
-  const tags = useAppSelector((state) => state.tags.tagsById);
+  const tagsById = useAppSelector((state) => state.tags.tagsById);
 
-  const tagMapper = useCallback(
-    ({ id, value }: { id: number; value: number | string | null }) => {
-      const tag = tags[id];
-
-      if (!tag || !tag.data || tag.deleted) {
-        return null;
-      }
-
-      return <ZetkinAppliedTag>{
-        ...tag.data,
-        value,
-      };
-    },
-    [tags]
+  const tagIndex = useMemo(
+    () =>
+      remoteList<number>(
+        tagValueIndex?.items
+          .map((item) => item.data?.id)
+          .filter((value) => typeof value === 'number')
+      ),
+    [tagValueIndex]
   );
-  const tagList = useRemoteListMapping(tagIndex, tagMapper);
+  const tagList = useRemoteListMapping(tagIndex, tagsById);
+  const appliedTagList = useMemo(() => {
+    const valuesById = tagValueIndex
+      ? tagValueIndex.items.reduce(
+          (prev, cur) => {
+            if (!cur.data) {
+              return prev;
+            }
+            prev[cur.data.id] = cur.data.value;
+            return prev;
+          },
+          {} as SafeRecord<number, string | number | null>
+        )
+      : {};
 
-  return loadListIfNecessary(tagList, dispatch, {
+    return remoteList<ZetkinAppliedTag>(
+      tagList?.items.map(
+        (tag) =>
+          <ZetkinAppliedTag>{
+            ...tag.data,
+            value: (tag.data && valuesById[tag.data.id]) || null,
+          }
+      )
+    );
+  }, [tagList?.items, tagValueIndex]);
+
+  return loadListIfNecessary(appliedTagList, dispatch, {
     actionOnLoad: () => personTagsLoad([orgId, personId]),
     actionOnSuccess: (tags) => personTagsLoaded([[orgId, personId], tags]),
     loader: () =>

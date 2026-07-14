@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -13,17 +11,7 @@ export default function useTags(orgId: number): IFuture<ZetkinTag[]> {
 
   const tagIndex = useAppSelector((state) => state.tags.orgTags[orgId]);
   const tagsById = useAppSelector((state) => state.tags.tagsById);
-  const tagMapper = useCallback(
-    (tagId: number) => {
-      const tag = tagsById[tagId];
-      if (tag?.deleted) {
-        return null;
-      }
-      return tag?.data ?? null;
-    },
-    [tagsById]
-  );
-  const tagListState = useRemoteListMapping(tagIndex, tagMapper);
+  const tagListState = useRemoteListMapping(tagIndex, tagsById);
 
   return loadListIfNecessary(tagListState, dispatch, {
     actionOnLoad: () => tagsLoad([orgId]),

@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { tagGroupDeleted } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import useTagMutations from 'features/tags/hooks/useTagMutations';
@@ -12,19 +10,7 @@ export default function useDeleteTagGroup(orgId: number) {
 
   const tagIndex = useAppSelector((state) => state.tags.orgTags[orgId]);
   const tagsById = useAppSelector((state) => state.tags.tagsById);
-  const tagMapper = useCallback(
-    (tagId: number) => {
-      const tag = tagsById[tagId];
-
-      if (tag?.deleted) {
-        return null;
-      }
-
-      return tag?.data ?? null;
-    },
-    [tagsById]
-  );
-  const tagListState = useRemoteListMapping(tagIndex, tagMapper);
+  const tagListState = useRemoteListMapping(tagIndex, tagsById);
 
   return async (tagGroupId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/tag_groups/${tagGroupId}`);
