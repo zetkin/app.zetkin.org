@@ -77,7 +77,7 @@ const SurveySubmissionsList = ({
       | 'firstNameColumn'
       | 'lastNameColumn'
       | 'personRecordColumn'
-  ) => {
+  ): GridColDef<ZetkinSurveySubmission> => {
     return {
       field: field,
       flex: 1,
@@ -100,11 +100,9 @@ const SurveySubmissionsList = ({
       },
       sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
       sortable: true,
-      valueGetter: (
-        params: GridRenderCellParams<ZetkinSurveySubmission, string>
-      ) => {
-        if (params.row.respondent !== null) {
-          return params.row.respondent[field] || '';
+      valueGetter: (value, row) => {
+        if (row.respondent !== null) {
+          return row.respondent[field] || '';
         } else {
           return messages.submissions.anonymous();
         }
@@ -254,6 +252,7 @@ const SurveySubmissionsList = ({
       if (emailOrName.length > 2) {
         setQuery(emailOrName);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [emailOrName]);
 
     const updateCellValue = (person: ZetkinPerson | null) => {
@@ -266,7 +265,9 @@ const SurveySubmissionsList = ({
       const respondentEmail = row.respondent?.email;
       if (person) {
         const personHasNoEmail = person.email == null || person.email == '';
-        const personHasDifferentEmail = person.email !== respondentEmail;
+        const personHasDifferentEmail =
+          person.email &&
+          person.email.toLowerCase() !== respondentEmail?.toLowerCase();
         if (
           (personHasNoEmail && respondentEmail != undefined) ||
           (personHasDifferentEmail && respondentEmail != undefined)

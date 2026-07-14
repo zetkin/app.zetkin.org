@@ -1,6 +1,8 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { ImportProblemKind } from './types';
 import problemsFromPreview from './problemsFromPreview';
-import { ImportPreview, ImportPreviewProblemCode } from '../types';
+import { ImportPreview, ImportPreviewProblemCode } from '../../types';
 
 type PreviewOverrides = {
   problems?: ImportPreview['problems'];

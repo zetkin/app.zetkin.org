@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
-import JoinFormVerifiedPage from 'features/joinForms/components/JoinFormVerifiedPage';
+import JoinFormVerifiedPage from 'features/public/components/JoinFormVerifiedPage';
 
 type PageProps = {
   params: {

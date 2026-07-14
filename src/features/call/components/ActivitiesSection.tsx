@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -17,9 +17,10 @@ import {
   Hotel,
 } from '@mui/icons-material';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
+import { partition } from 'lodash';
 
 import EventCard from './EventCard';
-import { ZetkinCallTarget } from '../types';
+import { LaneStep, ZetkinCallTarget } from '../types';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import SurveyCard from './SurveyCard';
 import useFilteredActivities, {
@@ -32,13 +33,13 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
-import { ACTIVITIES } from 'features/campaigns/types';
+import { ACTIVITIES } from 'features/projects/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
 import ZUISection from 'zui/components/ZUISection';
 import messageIds from '../l10n/messageIds';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 
 type Filter = {
   active: boolean;
@@ -98,22 +99,16 @@ const Activities: FC<ActivitiesProps> = ({
             onClick={() => onClearFilters()}
           />
         )}
-        {baseFilters.map((filter) => (
-          <ZUIFilterButton
-            key={filter.key}
-            active={filter.active}
-            label={filter.label}
-            onClick={filter.onClick}
-          />
-        ))}
-        {eventFilters.map((filter) => (
-          <ZUIFilterButton
-            key={filter.key}
-            active={filter.active}
-            label={filter.label}
-            onClick={filter.onClick}
-          />
-        ))}
+        {partition([...baseFilters, ...eventFilters], (filter) => filter.active)
+          .flat()
+          .map((filter) => (
+            <ZUIFilterButton
+              key={filter.key}
+              active={filter.active}
+              label={filter.label}
+              onClick={filter.onClick}
+            />
+          ))}
       </Box>
       {showNoActivities && (
         <Box
@@ -126,7 +121,9 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Chair} size="large" />
-          <ZUIText color="secondary">No activities</ZUIText>
+          <ZUIText color="secondary">
+            <Msg id={messageIds.activities.empty} />
+          </ZUIText>
         </Box>
       )}
       {showNoSignups && (
@@ -140,11 +137,16 @@ const Activities: FC<ActivitiesProps> = ({
           }}
         >
           <ZUIIcon color="secondary" icon={Hotel} size="large" />
-          <ZUIText color="secondary">{`${target.first_name} is not booked or signed up for any events.`}</ZUIText>
+          <ZUIText color="secondary">
+            <Msg
+              id={messageIds.activities.noBookings}
+              values={{ name: target.first_name }}
+            />
+          </ZUIText>
         </Box>
       )}
       {activities.map((activity) => {
-        if (activity.kind == ACTIVITIES.EVENT) {
+        if (target && activity.kind == ACTIVITIES.EVENT) {
           return (
             <EventCard
               key={activity.data.id}
@@ -170,11 +172,13 @@ const Activities: FC<ActivitiesProps> = ({
 
 type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
+  step: LaneStep;
   target: ZetkinCallTarget | null;
 };
 
 const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   assignment,
+  step,
   target,
 }) => {
   const messages = useMessages(messageIds);
@@ -218,7 +222,11 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   };
 
   const isFiltered =
-    filterState.alreadyIn || filterState.events || filterState.surveys;
+    filterState.alreadyIn ||
+    filterState.events ||
+    filterState.surveys ||
+    filterState.thisCall ||
+    projectIdsToFilterActivitiesBy.length > 0;
   const showAll =
     !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
@@ -228,30 +236,27 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const surveysWithCampaign = surveys.filter((survey) => !!survey.campaign);
-  const eventsWithCampaign = events.filter((event) => !!event.campaign);
+  const surveysWithProject = surveys.filter((survey) => !!survey.campaign);
+  const eventsWithProject = events.filter((event) => !!event.campaign);
 
-  const activitiesWithCampaign = [
-    ...surveysWithCampaign,
-    ...eventsWithCampaign,
-  ];
+  const activitiesWithProject = [...surveysWithProject, ...eventsWithProject];
 
   const projects: { id: 'noProject' | number; title: string }[] = [
     ...new Map(
-      eventsWithCampaign
+      eventsWithProject
         .map((event) => event.campaign)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
     ...new Map(
-      surveysWithCampaign
+      surveysWithProject
         .map((survey) => survey.campaign)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  if (activitiesWithCampaign.length != surveys.length + events.length) {
+  if (activitiesWithProject.length != surveys.length + events.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
 
@@ -302,7 +307,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const showAlreadyInFilter =
     filterState.alreadyIn || filterState.events || showAll;
   const showThisCallFilter =
-    respondedEventIds.length > 0 || respondedSurveyIds.length > 0;
+    respondedEventIds.length > 0 ||
+    respondedSurveyIds.length > 0 ||
+    step == LaneStep.REPORT;
 
   const baseFilters = [
     ...(showThisCallFilter
@@ -501,9 +508,24 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       : []),
   ];
 
+  useEffect(() => {
+    const project = assignment.campaign;
+    const projectHasActivities =
+      !!project && projectIdsWithActivities.includes(project.id);
+
+    if (projectHasActivities) {
+      dispatch(
+        filtersUpdated({
+          projectIdsToFilterActivitiesBy: [project.id],
+        })
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target?.id]);
+
   return (
     <>
-      <Box id="accctivitiesSecitonOuter" sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ height: '100%', width: '100%' }}>
         {selectedSurvey && <Survey survey={selectedSurvey} />}
         {!selectedSurvey && (
           <ZUISection
@@ -527,6 +549,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                         thisCall: false,
                       },
                       orgIdsToFilterEventsBy: [],
+                      projectIdsToFilterActivitiesBy: [],
                     })
                   )
                 }
@@ -542,9 +565,13 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 target={target}
               />
             )}
-            subtitle={messages.activities.description({
-              name: target?.first_name || '',
-            })}
+            subtitle={
+              target
+                ? messages.activities.description({
+                    name: target.first_name,
+                  })
+                : ''
+            }
             title={messages.activities.title()}
           />
         )}

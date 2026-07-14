@@ -7,7 +7,7 @@ import { RemoteData, RemoteList, remoteList } from 'utils/storeUtils';
  * @returns the created RemoteList.
  */
 export function remoteListCreated<
-  DataType extends RemoteData
+  DataType extends RemoteData,
 >(): RemoteList<DataType> {
   const list = remoteList<DataType>();
   list.loaded = new Date().toISOString();

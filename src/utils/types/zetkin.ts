@@ -14,7 +14,7 @@ import {
 } from '../../features/views/components/types';
 import { Latitude, Longitude } from 'features/areas/types';
 
-export interface ZetkinCampaign {
+export interface ZetkinProject {
   archived: boolean;
   color: string;
   info_text: string;
@@ -29,8 +29,9 @@ export interface ZetkinCampaign {
   published: boolean;
 }
 
-export interface ZetkinCampaignPostBody
-  extends Partial<Omit<ZetkinCampaign, 'organization' | 'manager'>> {
+export interface ZetkinProjectPostBody extends Partial<
+  Omit<ZetkinProject, 'organization' | 'manager'>
+> {
   title: string;
   manager_id?: number;
 }
@@ -57,8 +58,12 @@ export interface ZetkinEventResponse {
   action_id: number;
   id: number;
   person: {
+    email?: string | null;
+    first_name?: string | null;
     id: number;
+    last_name?: string | null;
     name: string;
+    phone?: string | null;
   };
   response_date: string;
 }
@@ -116,8 +121,9 @@ export interface ZetkinFile {
 }
 
 export interface ZetkinOrganizerAction {
-  assigment: {
+  assignment: {
     id: number;
+    organization_id: number;
     title: string;
   };
   caller: {
@@ -126,18 +132,19 @@ export interface ZetkinOrganizerAction {
     last_name: string;
   };
   id: number;
-  message_to_organizer: string;
+  message_to_organizer: string | null;
   organizer_action_needed: boolean;
-  organizer_action_taken: boolean;
+  organizer_action_taken: boolean | null;
   update_time: string;
 }
 
 export interface ZetkinUser {
   email: string;
+  email_is_verified: boolean;
   first_name: string;
   id: number;
   is_superuser?: boolean;
-  is_verifiend: boolean;
+  is_verified: boolean;
   lang: string | null;
   last_name: string;
   phone: string | null;
@@ -213,6 +220,7 @@ export interface ZetkinSession {
   created: string;
   level: number;
   user: ZetkinUser;
+  factors: ('email_password' | 'phone_otp' | 'api_key')[];
 }
 
 export interface ZetkinCallAssignment {
@@ -241,8 +249,7 @@ export type ZetkinCallAssignmentPartial = Partial<
   Omit<ZetkinCallAssignment, 'organization'>
 >;
 
-export interface ZetkinCallAssignmentPostBody
-  extends ZetkinCallAssignmentPartial {
+export interface ZetkinCallAssignmentPostBody extends ZetkinCallAssignmentPartial {
   goal_filters: [];
   target_filters: [];
 }
@@ -264,8 +271,9 @@ export interface ZetkinSurvey {
   signature: 'require_signature' | 'allow_anonymous' | 'force_anonymous';
 }
 
-export interface ZetkinSurveyPostBody
-  extends Partial<Omit<ZetkinSurvey, 'organization' | 'id'>> {
+export interface ZetkinSurveyPostBody extends Partial<
+  Omit<ZetkinSurvey, 'organization' | 'id'>
+> {
   title: string;
 }
 
@@ -380,18 +388,20 @@ export type ZetkinSurveySignaturePayload =
       last_name: string;
     };
 
+export type ZetkinSurveySubmissionRespondent = {
+  email: string;
+  first_name: string;
+  id: number | null;
+  last_name: string;
+};
+
 export interface ZetkinSurveySubmission {
   id: number;
   organization: {
     id: number;
     title: string;
   };
-  respondent: {
-    email: string;
-    first_name: string;
-    id: number | null;
-    last_name: string;
-  } | null;
+  respondent: ZetkinSurveySubmissionRespondent | null;
   survey: {
     id: number;
     title: string;
@@ -400,8 +410,9 @@ export interface ZetkinSurveySubmission {
   responses?: ZetkinSurveyQuestionResponse[]; // TODO: Lying! Segregate with/without responses
 }
 
-export interface ZetkinSurveySubmissionPatchBody
-  extends Partial<Omit<ZetkinTag, 'organization' | 'respondent' | 'survey'>> {
+export interface ZetkinSurveySubmissionPatchBody extends Partial<
+  Omit<ZetkinTag, 'organization' | 'respondent' | 'survey'>
+> {
   respondent_id: number | null;
 }
 
@@ -443,14 +454,16 @@ export interface ZetkinTag {
 
 export type ZetkinAppliedTag = ZetkinTag & { value: string | number | null };
 
-export interface ZetkinTagPostBody
-  extends Partial<Omit<ZetkinTag, 'id' | 'group' | 'organization'>> {
+export interface ZetkinTagPostBody extends Partial<
+  Omit<ZetkinTag, 'id' | 'group' | 'organization'>
+> {
   title: string;
   group_id?: number | null;
 }
 
-export interface ZetkinTagPatchBody
-  extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
+export interface ZetkinTagPatchBody extends Partial<
+  Omit<ZetkinTag, 'group' | 'organization'>
+> {
   id: number;
   group_id?: number | null;
 }
@@ -570,6 +583,7 @@ export interface ZetkinEmail {
   content: string | null;
   title: string | null;
   target: ZetkinQuery;
+  uuid: string;
 }
 
 export interface ZetkinLink {

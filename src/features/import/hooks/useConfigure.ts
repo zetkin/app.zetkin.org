@@ -10,7 +10,7 @@ import {
   ImportPreview,
   ImportPreviewProblemCode,
   ZetkinPersonImportPostBody,
-} from '../utils/types';
+} from '../types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import remapFields from '../utils/remapFields';
 

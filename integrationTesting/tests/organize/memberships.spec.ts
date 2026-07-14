@@ -26,7 +26,7 @@ test.describe('User gets 404 when trying to access org pages', () => {
     ];
 
     login(RosaLuxemburgUser, memberships);
-    const response = await page.goto(appUri + '/organize/1/campaigns');
+    const response = await page.goto(appUri + '/organize/1/projects');
     expect(response?.status()).toEqual(404);
   });
 
@@ -47,7 +47,7 @@ test.describe('User gets 404 when trying to access org pages', () => {
     ];
 
     login(RosaLuxemburgUser, memberships);
-    const response = await page.goto(appUri + '/organize/1/campaigns');
+    const response = await page.goto(appUri + '/organize/1/projects');
     expect(response?.status()).toEqual(404);
   });
 });

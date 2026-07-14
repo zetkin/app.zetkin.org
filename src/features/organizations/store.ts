@@ -11,6 +11,7 @@ import {
 import {
   remoteItem,
   RemoteItem,
+  remoteItemUpdated,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
@@ -20,6 +21,7 @@ import {
   ZetkinOrganization,
   ZetkinSubOrganization,
 } from 'utils/types/zetkin';
+import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 type OrgEventFilters = {
   customDatesToFilterBy: DateRange<Dayjs>;
@@ -32,7 +34,8 @@ type OrgEventFilters = {
 export interface OrganizationsStoreSlice {
   eventsByOrgId: Record<number, RemoteList<ZetkinEvent>>;
   filters: OrgEventFilters;
-  orgData: RemoteItem<ZetkinOrganization>;
+  orgList: RemoteList<ZetkinOrganization>;
+  rootOrgByOrgId: Record<number, RemoteItem<ZetkinOrganization>>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   suborgsWithStats: RemoteList<SuborgResult>;
   statsBySuborgId: Record<
@@ -52,7 +55,8 @@ const initialState: OrganizationsStoreSlice = {
     geojsonToFilterBy: [],
     orgIdsToFilterBy: [],
   },
-  orgData: remoteItem(0),
+  orgList: remoteList(),
+  rootOrgByOrgId: {},
   statsBySuborgId: {},
   subOrgsByOrgId: {},
   suborgsWithStats: remoteList(),
@@ -120,15 +124,33 @@ const OrganizationsSlice = createSlice({
         membershipToUpdate.loaded = new Date().toISOString();
       }
     },
-    organizationLoad: (state) => {
-      state.orgData.isLoading = true;
+    organizationLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      const item = findOrAddItem(state.orgList, orgId);
+      item.isLoading = true;
     },
     organizationLoaded: (state, action: PayloadAction<ZetkinOrganization>) => {
       const org = action.payload;
+      remoteItemUpdated(state.orgList, org);
+    },
+    rootOrgLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
 
-      state.orgData.data = org;
-      state.orgData.loaded = new Date().toISOString();
-      state.orgData.isLoading = false;
+      state.rootOrgByOrgId[orgId] ||= remoteItem(orgId);
+      state.rootOrgByOrgId[orgId].isLoading = true;
+    },
+    rootOrgLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinOrganization]>
+    ) => {
+      const [orgId, rootOrg] = action.payload;
+
+      state.rootOrgByOrgId[orgId] = remoteItem(orgId, {
+        data: rootOrg,
+        loaded: new Date().toISOString(),
+      });
+
+      remoteItemUpdated(state.orgList, rootOrg);
     },
     subOrgsLoad: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
@@ -217,6 +239,8 @@ export const {
   orgEventsLoaded,
   organizationLoaded,
   organizationLoad,
+  rootOrgLoad,
+  rootOrgLoaded,
   orgFollowed,
   orgUnfollowed,
   treeDataLoad,

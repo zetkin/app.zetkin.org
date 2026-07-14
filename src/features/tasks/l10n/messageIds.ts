@@ -83,10 +83,10 @@ export default makeMessages('feat.tasks', {
   },
   form: {
     fields: {
-      campaign: m('Campaign'),
       deadline: m('Completion Deadline'),
       expires: m('Expiration Date'),
       instructions: m('Instructions'),
+      project: m('Project'),
       published: m('Publish Time'),
       reassignInterval: m('Reassign after completion'),
       reassignIntervalOptions: {
@@ -155,10 +155,10 @@ export default makeMessages('feat.tasks', {
     expired: m('Expired'),
     scheduled: m('Scheduled'),
   },
-  taskChangeCampaignDialog: {
+  taskChangeProjectDialog: {
     error: m('Error: Could not move the task to the selected project'),
-    success: m<{ campaignTitle: string; taskTitle: string }>(
-      'Task "{taskTitle}" moved to "{campaignTitle}"'
+    success: m<{ projectTitle: string; taskTitle: string }>(
+      'Task "{taskTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move task'),
   },

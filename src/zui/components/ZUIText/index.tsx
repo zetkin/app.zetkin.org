@@ -15,13 +15,13 @@ type TextVariant =
 type ZUITextProps = {
   children: ReactNode;
   color?: ZUIPrimary | ZUISecondary | 'inherit';
-  component?: 'div' | 'p' | 'span';
+  component?: 'div' | 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   gutterBottom?: boolean;
   noWrap?: boolean;
+  renderLineBreaks?: boolean;
   variant?: TextVariant;
 } & Omit<
   BoxProps,
-  | 'sx'
   | 'color'
   | 'typography'
   | 'fontFamily'
@@ -40,6 +40,7 @@ const ZUIText: FC<ZUITextProps> = ({
   component = 'p',
   gutterBottom,
   noWrap,
+  renderLineBreaks,
   variant = 'bodyMdRegular',
   ...boxProps
 }) => (
@@ -50,6 +51,7 @@ const ZUIText: FC<ZUITextProps> = ({
     gutterBottom={gutterBottom}
     noWrap={noWrap}
     variant={variant}
+    whiteSpace={renderLineBreaks ? 'pre-line' : undefined}
   >
     {children}
   </Typography>

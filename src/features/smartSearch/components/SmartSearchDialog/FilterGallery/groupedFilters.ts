@@ -37,7 +37,10 @@ export const GROUPED_FILTERS: {
       pale: filterCategoryColors.green.pale,
       strong: filterCategoryColors.green.strong,
     },
-    filters: [FILTER_TYPE.CAMPAIGN_PARTICIPATION],
+    filters: [
+      FILTER_TYPE.PROJECT_PARTICIPATION,
+      FILTER_TYPE.EVENT_PARTICIPATION,
+    ],
   },
   [FILTER_CATEGORY.JOURNEY]: {
     colors: {
@@ -86,6 +89,7 @@ export const GROUPED_FILTERS: {
     filters: [
       FILTER_TYPE.ALL,
       FILTER_TYPE.JOINFORM,
+      FILTER_TYPE.OFFICIAL,
       FILTER_TYPE.RANDOM,
       FILTER_TYPE.USER,
     ],

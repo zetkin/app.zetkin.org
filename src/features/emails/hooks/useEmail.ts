@@ -15,6 +15,7 @@ import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 type ZetkinEmailPatchBody = Partial<Omit<ZetkinEmail, 'locked'>> & {
   campaign_id?: number;
   locked?: boolean;
+  theme_id?: number;
 };
 
 interface UseEmailReturn {
@@ -66,10 +67,10 @@ export default function useEmail(
     const mutating = Object.keys(data);
     dispatch(emailUpdate([emailId, mutating]));
     return await apiClient
-      .patch<ZetkinEmail, ZetkinEmailPatchBody>(
-        `/api/orgs/${orgId}/emails/${emailId}`,
-        data
-      )
+      .patch<
+        ZetkinEmail,
+        ZetkinEmailPatchBody
+      >(`/api/orgs/${orgId}/emails/${emailId}`, data)
       .then((email: ZetkinEmail) => {
         dispatch(emailUpdated([email, mutating]));
         return email;

@@ -11,8 +11,9 @@ export default function useParallelEvents(
   const start = new Date(startString);
   const end = new Date(endString);
 
-  const { campId } = useNumericRouteParams();
-  const allEvents = useEventsFromDateRange(start, end, orgId, campId);
+  const { projectId } = useNumericRouteParams();
+  const allEvents =
+    useEventsFromDateRange(start, end, orgId, projectId).data || [];
 
   const filteredEvents = allEvents
     .filter((event) => {
@@ -21,8 +22,8 @@ export default function useParallelEvents(
 
       return (
         isSameDate(start, eventStart) ||
-        (dateIsBefore(start, eventStart) && dateIsAfter(start, eventEnd)) ||
-        (dateIsAfter(start, eventStart) && dateIsBefore(end, eventStart))
+        (dateIsAfter(start, eventStart) && dateIsBefore(start, eventEnd)) ||
+        (dateIsBefore(start, eventStart) && dateIsAfter(end, eventStart))
       );
     })
     .filter((event) => event.data.organization.id === orgId)

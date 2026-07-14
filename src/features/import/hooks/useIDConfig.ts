@@ -1,5 +1,5 @@
 import hasWrongIDFormat from '../utils/hasWrongIDFormat';
-import { IDFieldColumn } from '../utils/types';
+import { IDFieldColumn } from '../types';
 import { useAppSelector } from 'core/hooks';
 
 export default function useIDConfig(

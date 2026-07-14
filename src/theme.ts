@@ -2,7 +2,7 @@ import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import { createElement } from 'react';
 import { createTheme } from '@mui/material/styles';
 import { Localization } from '@mui/x-data-grid/utils/getGridLocalization';
-import { daDK, deDE, nbNO, svSE } from '@mui/x-data-grid-pro';
+import { daDK, deDE, nbNO, svSE } from '@mui/x-data-grid-pro/locales';
 
 import { oldThemePalette } from 'oldThemePalette';
 
@@ -26,7 +26,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiDataGrid-cell': {
+            alignItems: 'center',
+            display: 'flex',
             fontSize: 16,
+            lineHeight: 'unset',
           },
           '& .MuiDataGrid-columnHeaderTitle': {
             color: oldThemePalette.onSurface.medium,

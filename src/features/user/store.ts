@@ -6,18 +6,16 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { ZetkinMembership, ZetkinUser } from 'utils/types/zetkin';
+import { ZetkinUser } from 'utils/types/zetkin';
 import { ZetkinOrgUser } from './types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export interface UserStoreSlice {
-  membershipList: RemoteList<ZetkinMembership & { id: number }>;
   orgUserList: RemoteList<ZetkinOrgUser>;
   userItem: RemoteItem<ZetkinUser>;
 }
 
 const initialState: UserStoreSlice = {
-  membershipList: remoteList(),
   orgUserList: remoteList(),
   userItem: remoteItem('me'),
 };
@@ -26,18 +24,6 @@ const userSlice = createSlice({
   initialState: initialState,
   name: 'user',
   reducers: {
-    membershipsLoad: (state) => {
-      state.membershipList.isLoading = true;
-    },
-    membershipsLoaded: (state, action: PayloadAction<ZetkinMembership[]>) => {
-      state.membershipList = remoteList(
-        action.payload.map((membership) => ({
-          ...membership,
-          id: membership.organization.id,
-        }))
-      );
-      state.membershipList.loaded = new Date().toISOString();
-    },
     orgUserLoad: (state, action: PayloadAction<number>) => {
       const userId = action.payload;
       const item = findOrAddItem(state.orgUserList, userId);
@@ -78,8 +64,6 @@ const userSlice = createSlice({
 
 export default userSlice;
 export const {
-  membershipsLoad,
-  membershipsLoaded,
   userLoad,
   userLoaded,
   orgUserLoad,

@@ -6,7 +6,7 @@ import {
   getCountries,
 } from 'libphonenumber-js';
 
-import { ColumnKind, Sheet } from '../types';
+import { ColumnKind, Sheet } from '../../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 import {
   ImportFieldProblem,
@@ -103,6 +103,12 @@ export function predictProblems(
         if (value) {
           if (column.kind == ColumnKind.ID_FIELD) {
             rowHasId = true;
+            if (
+              column.idField == 'email' &&
+              !z.string().email().safeParse(value.toString().trim()).success
+            ) {
+              accumulateFieldProblem(column.idField, rowIndex);
+            }
           } else if (column.kind == ColumnKind.FIELD) {
             const fieldInfo = customFieldsBySlug[column.field];
             if (fieldInfo) {
@@ -115,11 +121,6 @@ export function predictProblems(
               rowHasFirstName = true;
             } else if (column.field == 'last_name') {
               rowHasLastName = true;
-            } else if (
-              column.field == 'email' &&
-              !z.string().email().safeParse(value.toString().trim()).success
-            ) {
-              accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
               if (!isValidPhoneNumber(cleanPhoneNumber(value), country)) {
                 const isKnownProblem = accumulateFieldProblem(

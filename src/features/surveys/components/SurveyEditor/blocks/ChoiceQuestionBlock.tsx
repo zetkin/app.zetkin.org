@@ -111,6 +111,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
 
       lengthRef.current = options.length;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elemQuestion.options?.length]);
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
@@ -119,8 +120,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       onEditModeEnter,
       onEditModeExit,
       readOnly,
-      save: () => {
-        updateElement(element.id, {
+      save: async () => {
+        await Promise.all(
+          options.map((option) =>
+            updateElementOption(element.id, option.id, option.text)
+          )
+        );
+
+        await updateElement(element.id, {
           question: {
             description: description,
             question: title,

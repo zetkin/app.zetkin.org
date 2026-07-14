@@ -1,11 +1,7 @@
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from '@mui/x-data-grid-pro';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
 
 import { IColumnType } from '.';
@@ -21,9 +17,10 @@ type SurveySubmittedViewCell =
     }[]
   | null;
 
-export default class SurveySubmittedColumnType
-  implements IColumnType<SurveySubmittedViewColumn, SurveySubmittedViewCell>
-{
+export default class SurveySubmittedColumnType implements IColumnType<
+  SurveySubmittedViewColumn,
+  SurveySubmittedViewCell
+> {
   cellToString(cell: SurveySubmittedViewCell): string {
     return cell?.length ? new Date(cell[0].submitted).toLocaleDateString() : '';
   }
@@ -33,8 +30,7 @@ export default class SurveySubmittedColumnType
         return <Cell cell={params.row[params.field]} />;
       },
       type: 'date',
-      valueGetter: (params: GridValueGetterParams) => {
-        const submissions: SurveySubmittedViewCell = params.row[params.field];
+      valueGetter: (submissions: SurveySubmittedViewCell) => {
         if (submissions?.length) {
           const lastSub = submissions[submissions.length - 1];
           return new Date(lastSub.submitted);
@@ -57,7 +53,7 @@ const Cell: FC<{ cell: SurveySubmittedViewCell | undefined }> = ({ cell }) => {
     return null;
   }
 
-  const sorted = cell.sort((sub0, sub1) => {
+  const sorted = [...cell].sort((sub0, sub1) => {
     const d0 = new Date(sub0.submitted);
     const d1 = new Date(sub1.submitted);
     return d1.getTime() - d0.getTime();

@@ -42,8 +42,8 @@ test.describe('Tag manager', () => {
     const addTagButton = page.locator('text=Add tag');
     const playsGuitar = page.locator('text=Plays Guitar');
 
-    page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
-    addTagButton.waitFor({ state: 'visible' });
+    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    await addTagButton.waitFor({ state: 'visible' });
 
     await page.locator('text=Add tag').click();
 
@@ -92,10 +92,9 @@ test.describe('Tag manager', () => {
       .locator('data-testid=TagManager-TagSelect-searchField')
       .type('Revolutionary');
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PUT'),
-      page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
-    ]);
+    await page.locator('data-testid=SubmitCancelButtons-submitButton').click();
+
+    await expect.poll(() => putTagLog().length).toBe(1);
 
     // Expect to have made request to put tag
     expect(putTagLog()[0].data).toEqual({

@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import UnsubscribePage from 'features/emails/pages/UnsubscribePage';
+import UnsubscribePage from 'features/public/pages/UnsubscribePage';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
 type PageProps = {
@@ -23,7 +23,9 @@ export default async function Page({ params, searchParams }: PageProps) {
   const apiClient = new BackendApiClient(headersObject);
 
   const unsubUrl = searchParams.unsub;
-  if (!unsubUrl) {
+  const validUnsubUrl = unsubUrl?.startsWith('https://');
+
+  if (!unsubUrl || !validUnsubUrl) {
     return notFound();
   }
 
