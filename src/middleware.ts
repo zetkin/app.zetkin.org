@@ -37,8 +37,7 @@ function setupCsp(path: string) {
   const styleSrc = isEmbedJoinForm
     ? "* 'unsafe-inline'"
     : `'self' https://use.typekit.net https://p.typekit.net ${
-        // TODO: switch after https://github.com/zetkin/app.zetkin.org/issues/3176 to: isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`
-        "'unsafe-inline'"
+        isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`
       }`;
   const cspHeader = `
   default-src 'self' ${mapTiler};
