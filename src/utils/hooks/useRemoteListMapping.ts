@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 
-import { RemoteItem, RemoteList } from 'utils/storeUtils';
+import { Id, RemoteItem, RemoteList } from 'utils/storeUtils';
+import { SafeRecord } from 'utils/types';
 
-export default function useRemoteListMapping<DataTypeFrom, DataTypeTo>(
-  list: RemoteList<DataTypeFrom> | undefined,
-  mapper: (item: DataTypeFrom) => DataTypeTo | null
+export default function useRemoteListMapping<IdType extends Id, DataTypeTo>(
+  list: RemoteList<IdType> | undefined,
+  record: SafeRecord<IdType, DataTypeTo>
 ): RemoteList<DataTypeTo> | undefined {
   return useMemo(() => {
     if (typeof list === 'undefined') {
@@ -19,10 +20,10 @@ export default function useRemoteListMapping<DataTypeFrom, DataTypeTo>(
           .map((item) => {
             return <RemoteItem<DataTypeTo>>{
               ...item,
-              data: item.data && mapper(item.data),
+              data: item.data && record[item.data],
             };
           }),
       };
     }
-  }, [list, mapper]);
+  }, [list, record]);
 }
