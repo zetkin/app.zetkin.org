@@ -24,16 +24,15 @@ test.describe('Creating a journey instance from journey instance page', () => {
 
     await page.goto(appUri + '/organize/1/journeys/2');
 
-    await Promise.all([
-      page.waitForNavigation(),
-      page.locator('data-testid=JourneyInstanceOverviewPage-addFab').click(),
-    ]);
+    await page
+      .locator('data-testid=JourneyInstanceOverviewPage-addFab')
+      .click();
 
-    expect(
-      await page
-        .locator('data-testid=SubmitCancelButtons-submitButton')
-        .textContent()
-    ).toEqual('Create new Marxist training');
+    await expect(page).toHaveURL(/journeys\/2\/new/);
+
+    await expect(
+      page.locator('data-testid=SubmitCancelButtons-submitButton')
+    ).toHaveText('Create new Marxist training');
 
     expect(await page.locator('data-testid=page-title').textContent()).toEqual(
       'New Marxist training'
@@ -56,15 +55,11 @@ test.describe('Creating a journey instance from journey instance page', () => {
     await page.locator('[data-testid=page-title] input').press('Enter');
     await page.locator('data-testid=AutoTextArea-textarea').type('Some info');
 
-    await Promise.all([
-      page.waitForResponse((res) => res.url().includes('createNew')),
-      page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
-    ]);
+    await page.locator('data-testid=SubmitCancelButtons-submitButton').click();
+
+    await expect.poll(() => instMock.log().length).toBe(1);
 
     const requests = instMock.log<ZetkinJourneyInstance>();
-    await expect(() => {
-      expect(requests.length).toBe(1);
-    }).toPass();
     expect(requests[0].data?.title).toEqual('My training');
     expect(requests[0].data?.opening_note).toEqual('Some info');
   });
@@ -139,19 +134,16 @@ test.describe('Creating a journey instance from journey instance page', () => {
       .locator('data-testid=SubmitCancelButtons-submitButton')
       .click({ force: true });
 
-    await Promise.all([
-      page.waitForResponse(async (res) => res.url().includes('createNew')),
-      page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
-    ]);
+    await page.locator('data-testid=SubmitCancelButtons-submitButton').click();
 
     // Expect requests to have been made to:
     // * POST to create journey instance
     // * PUT to add assignee
     // * PUT to add subject
     // * PUT to assign tag
-    expect(instMock.log().length).toBe(1);
-    expect(assigneeMock.log().length).toBe(1);
-    expect(subjectMock.log().length).toBe(1);
-    expect(tagMock.log().length).toBe(1);
+    await expect.poll(() => instMock.log().length).toBe(1);
+    await expect.poll(() => assigneeMock.log().length).toBe(1);
+    await expect.poll(() => subjectMock.log().length).toBe(1);
+    await expect.poll(() => tagMock.log().length).toBe(1);
   });
 });

@@ -3,18 +3,18 @@ import { useIntl } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 import { ChevronRightOutlined, People } from '@mui/icons-material';
 
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import EventSelectionCheckBox from '../../EventSelectionCheckBox';
 import EventWarningIcons from '../../EventWarningIcons';
 import LocationLabel from '../../LocationLabel';
 import messageIds from 'features/events/l10n/messageIds';
-import { MultiDayEvent } from 'features/calendar/components/utils';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from '../StatusDot';
 import useEventState from 'features/events/hooks/useEventState';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
+import { MultiDayEvent } from 'features/calendar/components/utils';
 
 interface MultiEventListItemProps {
   clusterType: CLUSTER_TYPE;

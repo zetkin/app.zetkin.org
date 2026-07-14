@@ -34,6 +34,7 @@ export default makeMessages('feat.home', {
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
       ),
+      selectDate: m('Select a date'),
       thisWeek: m('This week'),
       today: m('Today'),
       tomorrow: m('Tomorrow'),
@@ -52,12 +53,6 @@ export default makeMessages('feat.home', {
     followButton: m('Follow'),
     organizeButton: m('Organize'),
     unfollowButton: m('Unfollow'),
-  },
-  newLandingPageAlert: {
-    description: m(
-      'If you are looking for the organizer pages, you can find them from now on by clicking the button in the header below.'
-    ),
-    title: m('This is your new landing page'),
   },
   settings: {
     accountSettings: {

@@ -67,7 +67,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
       const server: Server = await new Promise((resolve) => {
         const server = createServer((req, res) => {
           const parsedUrl = parse(req.url as string, true);
-          handle(req, res, parsedUrl);
+          void handle(req, res, parsedUrl);
         });
         server.listen((error: unknown) => {
           if (error) {

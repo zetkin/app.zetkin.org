@@ -44,6 +44,18 @@ export default makeMessages('zui', {
       o: m('Other'),
       unknown: m('Unknown'),
     },
+    location: {
+      dialog: {
+        clearButton: m('Clear location'),
+        doneButton: m('Done'),
+        helperText: m('Latitude and longitude coordinates'),
+        mapInfo: m(
+          'Click and drag to pan the map. Pinch or scroll to zoom. Click or tap to select map location.'
+        ),
+      },
+      helperText: m('Latitude and longitude coordinates'),
+      mapIconTooltip: m('Edit in map'),
+    },
     showAllFields: m('Show all fields'),
     submitLabel: {
       add: m('Create & add'),

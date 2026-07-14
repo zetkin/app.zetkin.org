@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Call } from 'features/callAssignments/apiTypes';
 import { callUpdated } from 'features/callAssignments/store';
-import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
 import { PersonViewFilterConfig } from 'features/smartSearch/components/types';
@@ -28,6 +27,8 @@ import { personsDeleted } from 'features/profile/store';
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
 };
+
+const SUPPORTED_COLUMN_TYPES = new Set<string>(Object.values(COLUMN_TYPE));
 
 export interface ViewsStoreSlice {
   accessByViewId: Record<number | string, RemoteList<ZetkinObjectAccessWithId>>;
@@ -285,7 +286,7 @@ const viewsSlice = createSlice({
       const [viewId, columns] = action.payload;
       const supportedColumns = columns.map((column) => {
         const copy: ZetkinViewColumn = { ...column };
-        if (!Object.keys(columnTypes).includes(copy.type)) {
+        if (!SUPPORTED_COLUMN_TYPES.has(copy.type)) {
           copy.type = COLUMN_TYPE.UNSUPPORTED;
         }
 
@@ -314,7 +315,7 @@ const viewsSlice = createSlice({
         state.folderList.items.filter((item) =>
           foldersDeleted.includes(item.id)
         ) || [];
-      deletedFolderItems.forEach((item) => item.deleted);
+      deletedFolderItems.forEach((item) => (item.deleted = true));
       state.folderList.isStale = true;
 
       const deletedViewItems =

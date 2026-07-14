@@ -10,7 +10,8 @@ type Props = {
 
 const EncouragingSparkle: FC<Props> = ({ duration = 2000, onComplete }) => {
   useEffect(() => {
-    setTimeout(() => onComplete?.(), duration);
+    const timerId = setTimeout(() => onComplete?.(), duration);
+    return () => clearTimeout(timerId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

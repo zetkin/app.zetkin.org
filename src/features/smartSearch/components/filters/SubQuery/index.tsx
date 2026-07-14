@@ -1,10 +1,10 @@
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
-import { truncateOnMiddle } from 'utils/stringUtils';
 import useCallAssignments from 'features/callAssignments/hooks/useCallAssignments';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -91,9 +91,6 @@ const SubQuery = ({
   }, [standaloneQueries, assignments]);
 
   const renderedOptions = queries.filter((q) => q.type === selectedQuery?.type);
-  const renderedOptionsSorted = renderedOptions.sort((r1, r2) => {
-    return r1.title!.localeCompare(r2.title!);
-  });
 
   const submittable = !!queries.length;
 
@@ -283,23 +280,14 @@ const SubQuery = ({
                       </StyledSelect>
                     ),
                     titleSelect: (
-                      <StyledSelect
+                      <StyledAutocomplete
+                        items={renderedOptions.map((o) => ({
+                          id: o.id,
+                          label: o.title ?? '',
+                        }))}
                         onChange={(e) => handleOptionChange(+e.target.value)}
                         value={selectedQuery.id}
-                      >
-                        {renderedOptionsSorted.map((o) => (
-                          <MenuItem key={o.id} value={o.id}>
-                            <Tooltip
-                              placement="right-start"
-                              title={
-                                !o.title || o.title.length < 40 ? '' : o.title
-                              }
-                            >
-                              <Box>{truncateOnMiddle(o.title ?? '', 40)}</Box>
-                            </Tooltip>
-                          </MenuItem>
-                        ))}
-                      </StyledSelect>
+                      />
                     ),
                   }}
                 />

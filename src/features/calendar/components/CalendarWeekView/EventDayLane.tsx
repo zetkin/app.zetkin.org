@@ -74,11 +74,11 @@ const EventDayLane: FC<EventDayLaneProps> = ({
       }
     }
 
-    laneRef.current?.addEventListener('mousedown', handleMouseDown);
+    const node = laneRef.current;
+    node?.addEventListener('mousedown', handleMouseDown);
 
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      laneRef.current?.removeEventListener('mousedown', handleMouseDown);
+      node?.removeEventListener('mousedown', handleMouseDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [laneRef.current]);

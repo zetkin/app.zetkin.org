@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
   ComponentType,
-  FC,
   HTMLAttributes,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -15,7 +15,7 @@ import Autocomplete, {
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ListSubheader from '@mui/material/ListSubheader';
 import Popper from '@mui/material/Popper';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, Theme, useTheme } from '@mui/material/styles';
 import {
   List,
   ListImperativeAPI,
@@ -28,7 +28,8 @@ import {
   AutocompleteChangeDetails,
   AutocompleteChangeReason,
   AutocompleteValue,
-} from '@mui/material/useAutocomplete/useAutocomplete';
+} from '@mui/material/useAutocomplete';
+import { SystemStyleObject } from '@mui/system';
 
 const LISTBOX_PADDING = 8; // px
 
@@ -89,10 +90,35 @@ const ListboxComponent = React.forwardRef<
   const itemData: ItemData = [];
   const optionIndexMap = React.useMemo(() => new Map<string, number>(), []);
 
-  (children as ItemData).forEach((item) => {
-    if ('group' in item && item.group.trim() !== '') {
-      itemData.push(item);
+  const addGroupHeader = (
+    groupItem: {
+      children: React.ReactNode;
+      group: string;
+      key: number;
+    },
+    index: number
+  ) => {
+    const isPinnedGroup = groupItem.group.trim() === 'pinned';
+    const isEmptyGroup = groupItem.group.trim() === '';
+    const isFirstElement = index === 0;
+
+    if (isPinnedGroup) {
+      return;
     }
+
+    if (isEmptyGroup && isFirstElement) {
+      return;
+    }
+
+    itemData.push(groupItem);
+  };
+
+  (children as ItemData).forEach((item, index) => {
+    const isGroupItem = 'group' in item;
+    if (isGroupItem) {
+      addGroupHeader(item, index);
+    }
+
     if ('children' in item && Array.isArray(item.children)) {
       itemData.push(...item.children);
     }
@@ -119,8 +145,8 @@ const ListboxComponent = React.forwardRef<
   const itemSize = smUp ? 36 : 48;
 
   const getChildSize = (child: ItemData[number]) => {
-    if (Object.prototype.hasOwnProperty.call(child, 'group')) {
-      return 48;
+    if ('group' in child) {
+      return child.group === '' ? 24 : 48;
     }
     return itemSize;
   };
@@ -177,20 +203,26 @@ type Item = {
   label: string;
 };
 
-type Props = {
-  items: Item[];
+export { type Item as AutocompleteItem };
+
+type Props<I extends Item> = {
+  clearable?: boolean;
+  items: I[];
+  label?: string;
   minWidth?: string;
   onChange?: (
     event: React.SyntheticEvent & { target: { value: string } },
-    value: AutocompleteValue<Item, false, true, false>,
+    value: AutocompleteValue<I, false, boolean, false>,
     reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<Item>
+    details?: AutocompleteChangeDetails<I>
   ) => void;
+  sorting?: (item0: I, item1: I) => number;
+  sx?: SystemStyleObject<Theme>;
   value?: string | number;
 };
 
-const StyledAutocomplete: FC<Props> = (props) => {
-  const options: Item[] = useMemo(
+function StyledAutocomplete<I extends Item>(props: Props<I>) {
+  const options: I[] = useMemo(
     () =>
       props.items
         .sort((item0, item1) => {
@@ -207,36 +239,40 @@ const StyledAutocomplete: FC<Props> = (props) => {
 
           const ret = group0.localeCompare(group1);
           if (ret === 0) {
+            if (props.sorting) {
+              return props.sorting(item0, item1);
+            }
+
             return item0.label.localeCompare(item1.label);
           }
 
           return ret;
         })
-        .map((item) => {
-          if (item.group === 'pinned') {
-            return {
-              id: item.id,
-              label: item.label,
-            };
-          }
-          return item;
-        })
         .map((item) => ({
           ...item,
           label: item.label.trim(),
         })),
-    [props.items]
+    [props]
   );
 
-  const valueItem = useMemo(
-    () =>
-      props.value === undefined
-        ? props.items.length === 0
-          ? undefined
-          : props.items[0]
-        : options.find((item) => item.id === props.value),
-    [props.value, options, props.items]
-  );
+  const valueItem = useMemo(() => {
+    if (props.value !== undefined) {
+      const matchingValue = options.find((item) => item.id === props.value);
+      if (matchingValue) {
+        return matchingValue;
+      }
+    }
+
+    if (props.clearable) {
+      return null;
+    }
+
+    if (props.items.length === 0) {
+      return undefined;
+    }
+
+    return props.items[0];
+  }, [props.value, props.clearable, props.items, options]);
 
   // Use react-window v2's useListRef hook for imperative API access
   const internalListRef = useListRef(null);
@@ -262,14 +298,20 @@ const StyledAutocomplete: FC<Props> = (props) => {
     }
   };
 
-  const [inputValue, setInputValue] = useState(valueItem?.label);
+  const [inputValue, setInputValue] = useState(valueItem?.label ?? '');
+
+  useEffect(() => {
+    if (valueItem) {
+      setInputValue(valueItem.label);
+    }
+  }, [valueItem]);
 
   const onChange = useCallback(
     (
       event: React.SyntheticEvent,
-      value: AutocompleteValue<Item, false, true, false>,
+      value: AutocompleteValue<I, false, boolean, false>,
       reason: AutocompleteChangeReason,
-      details?: AutocompleteChangeDetails<Item>
+      details?: AutocompleteChangeDetails<I>
     ) => {
       props.onChange?.(
         {
@@ -287,13 +329,14 @@ const StyledAutocomplete: FC<Props> = (props) => {
     [props]
   );
 
-  if (!valueItem) {
+  if (valueItem === undefined) {
     return null;
   }
 
   return (
     <Autocomplete
-      disableClearable={true}
+      clearIcon={null}
+      disableClearable={!props.clearable}
       disableListWrap
       groupBy={(option) => option.group ?? ''}
       inputValue={inputValue}
@@ -315,7 +358,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
             position: 'relative',
           }}
         >
-          <TextField {...params} />
+          <TextField {...params} label={props.label} variant={'standard'} />
           <Typography
             sx={{
               fontSize: '34px',
@@ -344,7 +387,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         } as SlotProps<
           ComponentType<HTMLAttributes<HTMLUListElement>>,
           unknown,
-          AutocompleteOwnerState<Item, false, true, false, 'div'>
+          AutocompleteOwnerState<I, false, boolean, false, 'div'>
         >,
         popper: {
           placement: 'bottom-start',
@@ -353,65 +396,31 @@ const StyledAutocomplete: FC<Props> = (props) => {
       slots={{
         popper: StyledPopper,
       }}
-      sx={(theme) => ({
+      sx={{
+        '& .MuiAutocomplete-clearIndicator': {
+          display: 'none',
+        },
         '& .MuiFormControl-root': {
           verticalAlign: 'baseline',
         },
-        '& .MuiOutlinedInput-notchedOutline': {
-          border: 'none',
-          padding: 0,
-        },
-        '& .MuiOutlinedInput-root': {
-          border: 'none',
-          borderRadius: 0,
-          padding: 0,
-        },
-        '& .MuiOutlinedInput-root .MuiInputBase-input': {
+        '& .MuiInputBase-root .MuiInputBase-input': {
           fontSize: '34px',
           padding: 0,
           textOverflow: 'clip',
         },
-        '& .MuiOutlinedInput-root.Mui-focused:after': {
-          borderBottom: `2px solid ${theme.palette.primary.main}`,
-          transform: 'scaleX(1) translateX(0)',
-        },
-        '& .MuiOutlinedInput-root:after': {
-          bottom: 0,
-          content: '""',
-          left: 0,
-          position: 'absolute',
-          right: 0,
-          transform: 'scaleX(0)',
-          transition: 'transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
-        },
-        '& .MuiOutlinedInput-root:before': {
-          borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
-          bottom: 0,
-          content: '""',
-          left: 0,
-          pointerEvents: 'none',
-          position: 'absolute',
-          right: 0,
-          transition:
-            'border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-        },
-        '& .MuiOutlinedInput-root:hover:before': {
-          borderBottom: `2px solid black`,
-        },
-        '& .MuiSvgIcon-root': {
-          color: 'rgba(0, 0, 0, 0.54)',
-        },
-        '& .MuiSvgIcon-root:hover': {
-          color: 'rgba(0, 0, 0, 0.54)',
-        },
+        '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root':
+          {
+            padding: 0,
+          },
         display: 'inline-block',
         minWidth: props.minWidth,
         verticalAlign: 'bottom',
         width: 'fit-content',
-      })}
+        ...props.sx,
+      }}
       value={valueItem}
     />
   );
-};
+}
 
 export default StyledAutocomplete;

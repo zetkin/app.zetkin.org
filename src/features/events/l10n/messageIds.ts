@@ -22,6 +22,10 @@ export default makeMessages('feat.events', {
     move: m('Move'),
     publish: m('Publish'),
     restore: m('Restore'),
+    sendEmailToParticipants: {
+      buttonTitle: m('Send email to participants'),
+      emailSubject: m<{ eventTitle: string }>('Re: {eventTitle}'),
+    },
     unpublish: m('Unpublish'),
     warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
     warningCancel: m<{ eventTitle: string }>(
@@ -31,10 +35,10 @@ export default makeMessages('feat.events', {
       '"{eventTitle}" will be restored.'
     ),
   },
-  eventChangeCampaignDialog: {
+  eventChangeProjectDialog: {
     error: m('Error: Could not move the event to the selected project'),
-    success: m<{ campaignTitle: string; eventTitle: string }>(
-      'Event "{eventTitle}" moved to "{campaignTitle}"'
+    success: m<{ eventTitle: string; projectTitle: string }>(
+      'Event "{eventTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move event'),
   },
@@ -158,6 +162,7 @@ export default makeMessages('feat.events', {
     description: m('Description'),
     draft: m('Draft'),
     end: m('End'),
+    error: m('Could not create multi-shift event. Please try again.'),
     event: m('Event'),
     eventDuration: m('Event duration'),
     header: m('Create multi-shift event'),
@@ -183,6 +188,12 @@ export default makeMessages('feat.events', {
     shiftsHeader: m('Shifts'),
     showMoreSettingsButton: m('More settings'),
     start: m('Start'),
+    successDraft: m<{ no: number }>(
+      '{no, plural, one {Created 1 draft event} other {Created # draft events}}'
+    ),
+    successPublish: m<{ no: number }>(
+      '{no, plural, one {Published 1 shift} other {Published # shifts}}'
+    ),
     type: m('Type'),
   },
   eventStatus: {

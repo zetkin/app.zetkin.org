@@ -3,7 +3,7 @@ import { CssBaseline } from '@mui/material';
 import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactElement, ReactNode } from 'react';
+import React, { FC, ReactElement, ReactNode } from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 
@@ -14,23 +14,29 @@ import { EnvProvider } from 'core/env/EnvContext';
 import IApiClient from 'core/api/client/IApiClient';
 import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLuxemburgUser';
 import oldTheme from 'theme';
+import zuiTheme from 'zui/theme';
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
 import mockApiClient from './mocks/mockApiClient';
 
 interface ZetkinAppProvidersProps {
   children: React.ReactNode;
+  theme: 'old' | 'zui';
 }
 
-const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
+const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({
+  children,
+  theme,
+}) => {
   const env = new Environment(new BrowserApiClient(), {
     ZETKIN_APP_DOMAIN: 'https://app.zetkin.org',
   });
+  const appTheme = theme === 'zui' ? zuiTheme : oldTheme;
 
   return (
     <UserProvider user={null}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={oldTheme}>
+        <ThemeProvider theme={appTheme}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <IntlProvider
               defaultLocale="en"
@@ -70,11 +76,16 @@ type CustomRenderResult = RenderResult & {
  */
 const customRender = (
   ui: ReactElement | FC<unknown>,
-  options?: Omit<RenderOptions, 'wrapper'>
+  options?: Omit<RenderOptions, 'wrapper'> & { theme?: 'old' | 'zui' }
 ): CustomRenderResult => {
+  const { theme = 'old', ...renderOptions } = options || {};
+  const wrapper: FC<{ children: ReactNode }> = ({ children }) => (
+    <ZetkinAppProviders theme={theme}>{children}</ZetkinAppProviders>
+  );
+
   const result = render(ui as ReactElement, {
-    wrapper: ZetkinAppProviders,
-    ...options,
+    wrapper,
+    ...renderOptions,
   });
 
   return {

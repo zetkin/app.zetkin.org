@@ -197,6 +197,7 @@ const AreaSelect: FC<Props> = ({
                         } else if (index == 4) {
                           return (
                             <Box
+                              key={user_id}
                               alignItems="center"
                               bgcolor={theme.palette.grey[300]}
                               borderRadius="100%"

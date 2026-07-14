@@ -3,7 +3,7 @@ import { FC, useState } from 'react';
 
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import Arbitrary from './Arbitrary';
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import MultiLocation from './MultiLocation';
 import MultiShift from './MultiShift';
 import Single from './Single';

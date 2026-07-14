@@ -33,7 +33,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
 }) => {
   const sorted = useMemo(
     () =>
-      submissions.sort((sub0, sub1) => {
+      [...submissions].sort((sub0, sub1) => {
         const d0 = new Date(sub0.submitted);
         const d1 = new Date(sub1.submitted);
         return d1.getTime() - d0.getTime();

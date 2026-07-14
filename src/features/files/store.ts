@@ -13,7 +13,7 @@ const initialState: FilesStoreSlice = {
 
 const filesSlice = createSlice({
   initialState: initialState,
-  name: 'tags',
+  name: 'files',
   reducers: {
     fileUploaded: (state, action: PayloadAction<ZetkinFile>) => {
       const file = action.payload;

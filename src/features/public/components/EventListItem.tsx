@@ -40,6 +40,7 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
       info={[
         {
           Icon: GroupWorkOutlined,
+          key: 'project',
           labels: [
             event.campaign && {
               href: `/o/${event.organization.id}/projects/${event.campaign.id}`,
@@ -53,6 +54,7 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
         },
         {
           Icon: WatchLaterOutlined,
+          key: 'time',
           labels: [
             timeSpanToString(
               new Date(removeOffset(event.start_time)),
@@ -63,6 +65,7 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
         },
         {
           Icon: LocationOnOutlined,
+          key: 'location',
           labels: [
             event.location?.title || messages.defaultTitles.noLocation(),
           ],

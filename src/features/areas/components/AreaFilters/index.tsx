@@ -80,6 +80,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         if (info) {
           return (
             <FilterDropDown
+              key={groupId}
               items={info.tags.map((tag) => {
                 const selected = currentIds.includes(tag.id) ?? false;
 
