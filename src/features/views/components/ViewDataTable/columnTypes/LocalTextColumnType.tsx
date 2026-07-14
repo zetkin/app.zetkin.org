@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { Box, InputBase, InputBaseProps, Paper, Popper } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 import {
@@ -54,33 +53,32 @@ export default class LocalTextColumnType implements IColumnType {
   }
 }
 
-const useStyles = makeStyles({
-  cell: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '100%',
-  },
-  content: {
-    '-webkit-box-orient': 'vertical',
-    '-webkit-line-clamp': 2,
-    display: '-webkit-box',
-    maxHeight: '100%',
-    overflow: 'hidden',
-    whiteSpace: 'normal',
-    width: '100%',
-  },
-});
-
 const Cell: FC<{ cell: LocalTextViewCell | undefined }> = ({ cell }) => {
-  const styles = useStyles();
-
   if (!cell) {
     return null;
   }
 
   return (
-    <Box className={styles.cell}>
-      <Box className={styles.content}>{cell}</Box>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        height: '100%',
+      }}
+    >
+      <Box
+        sx={{
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+          display: '-webkit-box',
+          maxHeight: '100%',
+          overflow: 'hidden',
+          whiteSpace: 'normal',
+          width: '100%',
+        }}
+      >
+        {cell}
+      </Box>
     </Box>
   );
 };
@@ -102,6 +100,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
       el.setSelectionRange(el.value.length, el.value.length);
       el.scrollTop = el.scrollHeight;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRef = useCallback((el: HTMLElement | null) => {
@@ -120,6 +119,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
         event
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiRef, field, id]
   );
 
@@ -130,6 +130,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
         event.stopPropagation();
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiRef, id, field]
   );
 

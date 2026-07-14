@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 import { Box, Dialog } from '@mui/material';
 import { Add } from '@mui/icons-material';

@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import mockFile from 'utils/testing/mocks/mockFile';
 import ZUIFileChip from '.';

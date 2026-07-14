@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys */
+import { describe, expect, it } from '@jest/globals';
 import mjml2html from 'mjml';
 
 import renderEmailHtml from './renderEmailHtml';
@@ -424,6 +425,7 @@ export default function mockEmail(
       title: '',
     },
     title: '',
+    uuid: '',
     ...overrides,
   };
 }

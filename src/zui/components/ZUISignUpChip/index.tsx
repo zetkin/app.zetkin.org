@@ -6,10 +6,11 @@ import messageIds from 'zui/l10n/messageIds';
 import ZUILabel from '../ZUILabel';
 
 type ZUISignUpChipProps = {
+  name?: string;
   status: 'needed' | 'signedUp' | 'booked';
 };
 
-const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ status }) => {
+const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ name, status }) => {
   const theme = useTheme();
 
   const getColors = () => {
@@ -39,7 +40,11 @@ const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ status }) => {
       }}
     >
       <ZUILabel color="inherit">
-        <Msg id={messageIds.signUpChip[status]} />
+        {name && status == 'signedUp' ? (
+          <Msg id={messageIds.signUpChip.callSignUp} values={{ name }} />
+        ) : (
+          <Msg id={messageIds.signUpChip[status]} />
+        )}
       </ZUILabel>
     </Box>
   );

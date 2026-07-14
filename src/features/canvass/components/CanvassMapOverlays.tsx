@@ -1,6 +1,5 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import { FC, Suspense, useEffect, useState } from 'react';
-import { makeStyles } from '@mui/styles';
 
 import {
   ZetkinAreaAssignment,
@@ -21,19 +20,6 @@ type Props = {
   suggestions?: string[];
 };
 
-const useStyles = makeStyles(() => ({
-  actionAreaContainer: {
-    bottom: 15,
-    display: 'flex',
-    gap: 8,
-    justifyContent: 'center',
-    padding: 8,
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1000,
-  },
-}));
-
 const CanvassMapOverlays: FC<Props> = ({
   assignment,
   isCreating,
@@ -43,7 +29,6 @@ const CanvassMapOverlays: FC<Props> = ({
   suggestions = [],
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const classes = useStyles();
 
   const showViewLocationButton = !!selectedLocation && !expanded;
 
@@ -62,13 +47,30 @@ const CanvassMapOverlays: FC<Props> = ({
     if (!selectedLocation && expanded) {
       setExpanded(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLocation]);
 
   return (
     <>
       {!selectedLocation && !isCreating && (
-        <Box className={classes.actionAreaContainer}>
-          <Button onClick={() => onToggleCreating(true)} variant="contained">
+        <Box
+          sx={{
+            bottom: 15,
+            display: 'flex',
+            gap: 8,
+            justifyContent: 'center',
+            padding: 8,
+            pointerEvents: 'none',
+            position: 'absolute',
+            width: '100%',
+            zIndex: 1000,
+          }}
+        >
+          <Button
+            onClick={() => onToggleCreating(true)}
+            sx={{ pointerEvents: 'all' }}
+            variant="contained"
+          >
             <Msg id={messageIds.map.addLocation.add} />
           </Button>
         </Box>
@@ -97,7 +99,22 @@ const CanvassMapOverlays: FC<Props> = ({
           </Box>
         )}
         {selectedLocation && expanded && (
-          <Suspense>
+          <Suspense
+            fallback={
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100dvh',
+                  justifyContent: 'center',
+                  width: '100vw',
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            }
+          >
             <LocationDialog
               assignment={assignment}
               location={selectedLocation}

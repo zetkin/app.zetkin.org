@@ -3,6 +3,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 import mockApiClient from 'utils/testing/mocks/mockApiClient';
 import { Zetkin2Household, ZetkinHouseholdVisit } from '../types';
 import { loadLocationHouseholdVisitsDef } from './loadLocationHouseholdVisits';
+import IApiClient from 'core/api/client/IApiClient';
 
 describe('loadLocationHouseholdVisits RPC', () => {
   it('loads visits for all households across multiple pages (>100)', async () => {
@@ -57,9 +58,7 @@ describe('loadLocationHouseholdVisits RPC', () => {
     });
 
     const apiClient = mockApiClient({
-      get: get as unknown as jest.MockedFunction<
-        <T>(path: string) => Promise<T>
-      >,
+      get: get as jest.Mock<IApiClient['get']>,
     });
 
     const result = await loadLocationHouseholdVisitsDef.handler(

@@ -6,7 +6,7 @@ import {
   nbNO as dataGridNbNO,
   svSE as dataGridSvSE,
   frFR as dataGridFrFR,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-pro/locales';
 import {
   daDK as pickersDaDK,
   deDE as pickersDeDE,
@@ -51,6 +51,7 @@ const theme = createTheme({
     },
   },
   palette: palette,
+  spacing: (factor: number) => `${0.5 * factor}rem`,
   typography: typography,
 });
 

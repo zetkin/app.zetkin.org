@@ -35,7 +35,7 @@ export default function useCopyEvents() {
   const duplicate = async (events: ZetkinEvent[]) => {
     const eventsToDuplicate = events.map((e) => makeZetkinEventPatchBody(e));
 
-    dispatch(eventsCreate);
+    dispatch(eventsCreate());
     const duplicatedEvents = await apiClient.rpc(copyEvents, {
       events: eventsToDuplicate,
       orgId: orgId.toString(),
@@ -58,7 +58,7 @@ export default function useCopyEvents() {
       });
     });
 
-    dispatch(eventsCreate);
+    dispatch(eventsCreate());
     const createdShifts = await apiClient.rpc(copyEvents, {
       events: shiftsToCreate,
       orgId: orgId.toString(),
@@ -79,7 +79,7 @@ export default function useCopyEvents() {
       });
     });
 
-    dispatch(eventsCreate);
+    dispatch(eventsCreate());
     const createdEvents = await apiClient.rpc(copyEvents, {
       events: eventsToCreate,
       orgId: orgId.toString(),

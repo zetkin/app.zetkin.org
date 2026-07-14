@@ -7,7 +7,7 @@ import {
   People,
   Share,
 } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import RightSide from './index';
 import ZUIButton from 'zui/components/ZUIButton';

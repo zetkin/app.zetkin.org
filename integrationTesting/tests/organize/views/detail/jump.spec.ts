@@ -33,7 +33,7 @@ test.describe('View detail page', () => {
     await page.click('data-testid=view-jump-menu-button');
 
     // Assert that the input is automatically focused, and type in part of the title of NewView
-    expect(
+    await expect(
       page.locator('data-testid=view-jump-menu-popover >> input')
     ).toBeFocused();
     await page.fill(
@@ -43,12 +43,9 @@ test.describe('View detail page', () => {
 
     // Press down to select view and enter to navigate
     await page.keyboard.press('ArrowDown');
-
-    await Promise.all([page.waitForNavigation(), page.keyboard.press('Enter')]);
+    await page.keyboard.press('Enter');
 
     // Assert that we navigate away to the new view
-    expect(page.url()).toEqual(
-      appUri + `/organize/1/people/lists/${NewView.id}`
-    );
+    await page.waitForURL(appUri + `/organize/1/people/lists/${NewView.id}`);
   });
 });

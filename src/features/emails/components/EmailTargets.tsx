@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { Add, Edit, Lock, LockOpen, Visibility } from '@mui/icons-material';
 import {
   Alert,
@@ -19,20 +18,6 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
 import oldTheme from 'theme';
-
-const useStyles = makeStyles(() => ({
-  chip: {
-    backgroundColor: oldTheme.palette.statusColors.grey,
-    borderRadius: '1em',
-    color: oldTheme.palette.text.secondary,
-    display: 'flex',
-    fontSize: '1.8em',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-  },
-}));
 
 interface EmailTargetsProps {
   email: ZetkinEmail;
@@ -58,7 +43,6 @@ const EmailTargets: FC<EmailTargetsProps> = ({
   updateTargets,
 }) => {
   const theme = useTheme();
-  const classes = useStyles();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   //not locked, not targeted
@@ -111,7 +95,21 @@ const EmailTargets: FC<EmailTargetsProps> = ({
             )}
             <ZUIAnimatedNumber value={targets}>
               {(animatedValue) => (
-                <Box className={classes.chip}>{animatedValue}</Box>
+                <Box
+                  sx={{
+                    backgroundColor: oldTheme.palette.statusColors.grey,
+                    borderRadius: '1em',
+                    color: oldTheme.palette.text.secondary,
+                    display: 'flex',
+                    fontSize: '1.8em',
+                    lineHeight: 'normal',
+                    marginRight: '0.1em',
+                    overflow: 'hidden',
+                    padding: '0.2em 0.7em',
+                  }}
+                >
+                  {animatedValue}
+                </Box>
               )}
             </ZUIAnimatedNumber>
           </Box>

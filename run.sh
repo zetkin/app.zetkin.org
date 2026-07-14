@@ -2,7 +2,7 @@
 
 if [[ "$NODE_ENV" == "production" ]];
 then
-    yarn start
+    npm run start
 else
-    yarn dev
+    npm run dev
 fi

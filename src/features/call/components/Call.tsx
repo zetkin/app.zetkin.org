@@ -10,7 +10,7 @@ import { updateLaneStep } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import ZUIText from 'zui/components/ZUIText';
-import useOutgoingCalls from '../hooks/useOutgoingCalls';
+import useUnfinishedCalls from '../hooks/useUnfinishedCalls';
 import useCallMutations from '../hooks/useCallMutations';
 import CallSwitchModal from '../components/CallSwitchModal';
 import ZUIModal from 'zui/components/ZUIModal';
@@ -21,7 +21,11 @@ import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 
-const Call: FC = () => {
+type Props = {
+  onResetAfterError: (urlToNavigateTo: string) => void;
+};
+
+const Call: FC<Props> = ({ onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
@@ -38,7 +42,7 @@ const Call: FC = () => {
 
   const { abandonUnfinishedCall, skipCurrentCall, switchToUnfinishedCall } =
     useCallMutations(assignment.organization.id);
-  const outgoingCalls = useOutgoingCalls();
+  const unfinishedCalls = useUnfinishedCalls();
 
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
@@ -47,12 +51,9 @@ const Call: FC = () => {
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
 
-  const unfinishedCalls = outgoingCalls.filter((c) => {
-    const isUnfinishedCall = c.state == 0;
-    const isNotCurrentCall = call ? call.id != c.id : true;
-
-    return isUnfinishedCall && isNotCurrentCall;
-  });
+  const filteredUnfinishedCalls = unfinishedCalls.filter((unfinishedCall) =>
+    call ? call.id != unfinishedCall.id : true
+  );
 
   const switchedTo = allUserAssignments.find(
     (oc) => oc.id == assignmentSwitchedTo
@@ -85,7 +86,7 @@ const Call: FC = () => {
         <CallHeader
           assignment={assignment}
           call={call}
-          hasUnfinishedCalls={unfinishedCalls.length > 0}
+          hasUnfinishedCalls={filteredUnfinishedCalls.length > 0}
           lane={lane}
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
@@ -95,7 +96,9 @@ const Call: FC = () => {
             assignment={assignment}
             call={call}
             lane={lane}
-            onAbandonUnfinishedCall={(callId) => abandonUnfinishedCall(callId)}
+            onAbandonUnfinishedCall={(assignmentId, callId) =>
+              abandonUnfinishedCall(assignmentId, callId)
+            }
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
               switchToUnfinishedCall(callId, assignmentId);
@@ -104,10 +107,30 @@ const Call: FC = () => {
               }
             }}
             report={report}
-            unfinishedCalls={unfinishedCalls}
+            unfinishedCalls={filteredUnfinishedCalls}
           />
         </Box>
       </Box>
+      <ZUIModal
+        open={
+          !call && (lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT)
+        }
+        primaryButton={{
+          label: messages.unexpectedError.reloadButton(),
+          onClick: () => onResetAfterError(`/call/${assignment.id}`),
+        }}
+        secondaryButton={{
+          label: messages.unexpectedError.backToMyZetkinButton(),
+          onClick: () => onResetAfterError('/my'),
+        }}
+        title={messages.unexpectedError.title()}
+      >
+        <Box sx={{ paddingTop: 2 }}>
+          <ZUIText>
+            <Msg id={messageIds.unexpectedError.description} />
+          </ZUIText>
+        </Box>
+      </ZUIModal>
       <CallSwitchModal
         assignment={assignment}
         onClose={() => setCallLogOpen(false)}
@@ -139,7 +162,9 @@ const Call: FC = () => {
           },
         }}
         size="small"
-        title={messages.skipCallDialog.title({ name: call?.target.name || '' })}
+        title={messages.skipCallDialog.title({
+          name: call?.target.name || '',
+        })}
       />
       <Snackbar
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}

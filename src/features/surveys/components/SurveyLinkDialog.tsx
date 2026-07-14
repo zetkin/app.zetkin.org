@@ -1,4 +1,4 @@
-import { ArrowForward } from '@mui/icons-material';
+import { ArrowDownward } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -32,29 +32,119 @@ const SurveyLinkDialog = ({
   const { orgId } = useNumericRouteParams();
   const { updatePerson } = usePersonMutations(orgId, person.id);
 
+  if (person.email && email !== person.email) {
+    return (
+      <Dialog open={open}>
+        <DialogTitle>{messages.surveyDialogDifferentEmail.title()}</DialogTitle>
+        <Divider />
+        <DialogContent>
+          <Box
+            alignItems="center"
+            display="flex"
+            flexDirection="row"
+            paddingBottom="5px"
+          >
+            <ZUIPersonAvatar
+              orgId={orgId}
+              personId={person?.id ?? 0}
+              size="sm"
+            />
+            <Typography ml={2} variant="h6">
+              {person?.first_name} {person?.last_name}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 2,
+              marginBlock: 2,
+            }}
+          >
+            <Box>
+              <Box
+                sx={{
+                  fontSize: '0.825rem',
+                }}
+              >
+                {messages.surveyDialog.new().toLocaleUpperCase()}
+              </Box>
+              <Box sx={{ fontWeight: 'bold' }}>{email}</Box>
+            </Box>
+            <Box>
+              <Box
+                sx={{
+                  fontSize: '0.825rem',
+                }}
+              >
+                {messages.surveyDialog.old().toLocaleUpperCase()}
+              </Box>
+              <Box sx={{ fontWeight: 'bold', textDecoration: 'line-through' }}>
+                {person.email}
+              </Box>
+            </Box>
+          </Box>
+          {messages.surveyDialogDifferentEmail.description()}
+        </DialogContent>
+        <DialogActions sx={{ padding: '24px' }}>
+          <Button onClick={onClose}>
+            {messages.surveyDialogDifferentEmail.keep()}
+          </Button>
+          <Button
+            onClick={() => {
+              updatePerson({ email });
+              onClose();
+            }}
+            variant="contained"
+          >
+            {messages.surveyDialogDifferentEmail.update()}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
   return (
     <Dialog open={open}>
       <DialogTitle>{messages.surveyDialog.title()}</DialogTitle>
       <Divider />
       <DialogContent>
-        <Box alignItems="center" display="flex" mb={2}>
+        <Box
+          mb={2}
+          sx={{
+            alignItems: 'start',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           {email}
-          <Box alignItems="center" display="flex" ml={2} mr={2}>
-            <ArrowForward
-              color="secondary"
-              sx={{
-                opacity: '50%',
-              }}
+          <ArrowDownward
+            color="secondary"
+            sx={{
+              opacity: '50%',
+            }}
+          />
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <ZUIPersonAvatar
+              orgId={orgId}
+              personId={person?.id ?? 0}
+              size="sm"
             />
+            <Typography ml={2} variant="h6">
+              {person?.first_name} {person?.last_name}
+            </Typography>
           </Box>
-          <ZUIPersonAvatar orgId={orgId} personId={person?.id ?? 0} size="sm" />
-          <Typography ml={2} variant="h6">
-            {person?.first_name} {person?.last_name}
-          </Typography>
         </Box>
         {messages.surveyDialog.description()}
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ padding: '20px 24px' }}>
         <Button onClick={onClose} variant="outlined">
           {messages.surveyDialog.cancel()}
         </Button>

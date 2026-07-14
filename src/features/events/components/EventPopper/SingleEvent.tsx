@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import {
   AccessTime,
@@ -12,7 +11,7 @@ import {
   People,
   PlaceOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Link, Skeleton, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
 
@@ -40,19 +39,8 @@ import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
-import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
-
-const useStyles = makeStyles(() => ({
-  description: {
-    '-webkit-box-orient': 'vertical',
-    '-webkit-line-clamp': 3,
-    display: '-webkit-box',
-    maxHeight: '100%',
-    overflow: 'hidden',
-    whiteSpace: 'normal',
-    width: '100%',
-  },
-}));
+import ChangeProjectDialog from '../../../projects/components/ChangeProjectDialog';
+import useEventParticipantsMutations from 'features/events/hooks/useEventParticipantsMutations';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -62,22 +50,24 @@ interface SingleEventProps {
 const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
-  const classes = useStyles();
   const orgId = event.organization.id;
-  const { participantsFuture, respondentsFuture } = useEventParticipants(
-    event.organization.id,
-    event.id
-  );
+  const {
+    verifiedParticipantsFuture,
+    respondentsFuture,
+    numSignedUpParticipants,
+    verifiedSignedUpParticipants,
+  } = useEventParticipants(event.organization.id, event.id);
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
     useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
+  const { addParticipants } = useEventParticipantsMutations(orgId, event.id);
 
   const dispatch = useAppDispatch();
-  const participants = participantsFuture.data || [];
-  const respondents = respondentsFuture.data || [];
+  const participants = verifiedParticipantsFuture.data || [];
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const [isBooking, setBooking] = useState(false);
 
   const showPublishButton =
     state == EventState.DRAFT ||
@@ -89,26 +79,38 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);
-  const signedParticipants = respondents.filter(
-    (r) => !participants.some((p) => p.id === r.id)
-  );
+
+  const bookVerifiedSignedUpParticipants = async () => {
+    setBooking(true);
+    await addParticipants(verifiedSignedUpParticipants.map((p) => p.person.id));
+    setBooking(false);
+  };
+
+  const isLoading =
+    verifiedParticipantsFuture.isLoading ||
+    respondentsFuture.isLoading ||
+    state == EventState.UNKNOWN;
+  const showSignups = numSignedUpParticipants > 0 || isLoading;
+
+  const allSignedUpParticipantsAreVerified =
+    numSignedUpParticipants == verifiedSignedUpParticipants.length;
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
   };
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedEvent = await updateEvent({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedEvent = await updateEvent({ campaign_id: projectId });
     onClickAway();
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
+      `/organize/${orgId}/projects/${projectId}/events/${event.id}`
     );
 
     showSnackbar(
       'success',
-      messages.eventChangeCampaignDialog.success({
-        campaignTitle: updatedEvent.campaign!.title,
+      messages.eventChangeProjectDialog.success({
         eventTitle: event.title!,
+        projectTitle: updatedEvent.campaign!.title,
       })
     );
   };
@@ -220,7 +222,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         </Typography>
       </Box>
       <Box display="flex" flexDirection="column" gap={1} sx={{ mb: 2 }}>
-        {signedParticipants.length > 0 && (
+        {showSignups && (
           <>
             <Box
               alignItems="center"
@@ -240,18 +242,39 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
                   size="xs"
                 />
               </Box>
-              <Typography
-                color={
-                  (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
-                }
-              >
-                {signedParticipants.length ?? 0}
-              </Typography>
+              {isLoading ? (
+                <Skeleton width={20} />
+              ) : (
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+                  {allSignedUpParticipantsAreVerified && (
+                    <Button
+                      color="primary"
+                      loading={isBooking}
+                      onClick={() => bookVerifiedSignedUpParticipants()}
+                      size="small"
+                      variant="outlined"
+                    >
+                      {messages.eventPopper.bookAll()}
+                    </Button>
+                  )}
+                  <Typography
+                    color={numSignedUpParticipants > 0 ? 'red' : 'secondary'}
+                  >
+                    {numSignedUpParticipants}
+                  </Typography>
+                </Box>
+              )}
             </Box>
-            <ParticipantAvatars
-              orgId={orgId}
-              participants={signedParticipants}
-            />
+            {isLoading ? (
+              <Skeleton height={20} variant="rectangular" width="100%" />
+            ) : (
+              numSignedUpParticipants > 0 && (
+                <ParticipantAvatars
+                  orgId={orgId}
+                  participants={verifiedSignedUpParticipants}
+                />
+              )
+            )}
           </>
         )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -268,11 +291,15 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             numerator={event.num_participants_available}
           />
         </Box>
-        {availableParticipants.length > 0 && (
-          <ParticipantAvatars
-            orgId={orgId}
-            participants={availableParticipants}
-          />
+        {isLoading ? (
+          <Skeleton height={20} variant="rectangular" width="100%" />
+        ) : (
+          availableParticipants.length > 0 && (
+            <ParticipantAvatars
+              orgId={orgId}
+              participants={availableParticipants}
+            />
+          )
         )}
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Box alignItems="center" display="flex">
@@ -321,7 +348,17 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           <Typography color="secondary" fontSize="0.7em">
             {messages.eventPopper.description().toUpperCase()}
           </Typography>
-          <Box className={classes.description}>
+          <Box
+            sx={{
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 3,
+              display: '-webkit-box',
+              maxHeight: '100%',
+              overflow: 'hidden',
+              whiteSpace: 'normal',
+              width: '100%',
+            }}
+          >
             <Typography color="secondary" variant="body2">
               {event.info_text}
             </Typography>
@@ -378,12 +415,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </NextLink>
 
           <ZUIEllipsisMenu items={ellipsisMenuItems} />
-          <ChangeCampaignDialog
-            errorMessage={messages.eventChangeCampaignDialog.error()}
-            onCampaignSelected={handleOnCampaignSelected}
+          <ChangeProjectDialog
+            errorMessage={messages.eventChangeProjectDialog.error()}
             onClose={() => setIsMoveDialogOpen(false)}
+            onProjectSelected={handleOnProjectSelected}
             open={isMoveDialogOpen}
-            title={messages.eventChangeCampaignDialog.title()}
+            title={messages.eventChangeProjectDialog.title()}
           />
         </Box>
       )}

@@ -44,6 +44,18 @@ export default makeMessages('zui', {
       o: m('Other'),
       unknown: m('Unknown'),
     },
+    location: {
+      dialog: {
+        clearButton: m('Clear location'),
+        doneButton: m('Done'),
+        helperText: m('Latitude and longitude coordinates'),
+        mapInfo: m(
+          'Click and drag to pan the map. Pinch or scroll to zoom. Click or tap to select map location.'
+        ),
+      },
+      helperText: m('Latitude and longitude coordinates'),
+      mapIconTooltip: m('Edit in map'),
+    },
     showAllFields: m('Show all fields'),
     submitLabel: {
       add: m('Create & add'),
@@ -86,7 +98,9 @@ export default makeMessages('zui', {
   },
   dataTableSorting: {
     addButton: m('Add sorting column'),
+    ascending: m('Ascending'),
     button: m('Sort'),
+    descending: m('Descending'),
     hint: m<{ shiftKeyIcon: ReactElement }>(
       'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     ),
@@ -135,6 +149,9 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  ellipsisMenu: {
+    ariaLabel: m('More options'),
+  },
   eventWarningIcons: {
     contact: m('No contact person has been assigned'),
     reminders: m<{ numMissing: number }>(
@@ -161,6 +178,10 @@ export default makeMessages('zui', {
   lists: {
     showMore: m('Show more...'),
   },
+  mobileOrganizeHeader: {
+    sideBarMenuButtonDescription: m('Open sidebar menu'),
+    userMenuButtonDescription: m('Open user menu'),
+  },
   orgScopeSelect: {
     orgPlaceholder: m('Select organizations'),
     orgSelectionLabel: m<{ count: number }>('{count} selected'),
@@ -172,13 +193,21 @@ export default makeMessages('zui', {
     },
   },
   organizeSidebar: {
+    collapse: m('Collapse sidebar'),
+    expand: m('Expand sidebar'),
     filter: m('Type to filter'),
+    filterLabel: m('Filter organizations'),
     geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
     myPagesInfoText: m('Go to my pages'),
     myPagesMenuItemLabel: m('My pages'),
     mySettingsMenuItemLabel: m('My settings'),
+    organizationAvatarAltText: m('Organization icon'),
+    organizationSwitcher: {
+      hide: m('Hide organization switcher'),
+      show: m('Show organization switcher'),
+    },
     overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
@@ -233,6 +262,7 @@ export default makeMessages('zui', {
   },
   signUpChip: {
     booked: m('You are booked'),
+    callSignUp: m<{ name: string }>('{name} has signed up'),
     needed: m('You are needed'),
     signedUp: m('You have signed up'),
   },

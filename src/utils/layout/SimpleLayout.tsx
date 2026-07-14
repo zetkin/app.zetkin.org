@@ -18,7 +18,7 @@ interface SimpleLayoutProps {
   noPad?: boolean;
 }
 
-const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
+export const SimpleLayoutHeader: FunctionComponent<SimpleLayoutProps> = ({
   actionButtons,
   avatar,
   belowActionButtons,
@@ -36,23 +36,23 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
     : undefined;
 
   return (
-    <DefaultLayout>
-      <Box
-        display={fixedHeight ? 'flex' : 'block'}
-        flexDirection="column"
-        height={fixedHeight ? 1 : 'auto'}
-      >
-        <Header
-          actionButtons={actionButtons}
-          avatar={avatar}
-          belowActionButtons={belowActionButtons}
-          collapsed={collapsed}
-          ellipsisMenuItems={ellipsisMenuItems}
-          onToggleCollapsed={onToggleCollapsed}
-          subtitle={subtitle}
-          title={title}
-        />
-        {/* Page Content */}
+    <Box
+      display={fixedHeight ? 'flex' : 'block'}
+      flexDirection="column"
+      height={fixedHeight ? 1 : 'auto'}
+    >
+      <Header
+        actionButtons={actionButtons}
+        avatar={avatar}
+        belowActionButtons={belowActionButtons}
+        collapsed={collapsed}
+        ellipsisMenuItems={ellipsisMenuItems}
+        onToggleCollapsed={onToggleCollapsed}
+        subtitle={subtitle}
+        title={title}
+      />
+      {/* Page Content */}
+      {children && (
         <Box
           component="main"
           flexGrow={1}
@@ -66,7 +66,15 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
         >
           <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
         </Box>
-      </Box>
+      )}
+    </Box>
+  );
+};
+
+const SimpleLayout: FunctionComponent<SimpleLayoutProps> = (props) => {
+  return (
+    <DefaultLayout title={props.title}>
+      <SimpleLayoutHeader {...props} />
     </DefaultLayout>
   );
 };

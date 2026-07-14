@@ -1,6 +1,6 @@
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { allocateCallError, allocateNewCall, newCallAllocated } from '../store';
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 
 export type SerializedError = {
   message: string;
@@ -9,8 +9,8 @@ export type SerializedError = {
 
 type UseAllocateCallReturn = {
   allocateCall: () => Promise<void | SerializedError>;
-  error: SerializedError | null;
   isLoading: boolean;
+  queueError: SerializedError | null;
 };
 
 export default function useAllocateCall(
@@ -19,7 +19,7 @@ export default function useAllocateCall(
 ): UseAllocateCallReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const error = useAppSelector((state) => state.call.queueHasError);
+  const queueError = useAppSelector((state) => state.call.queueError);
   const callIsBeingAllocated = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].callIsBeingAllocated
   );
@@ -27,25 +27,26 @@ export default function useAllocateCall(
   const allocateCall = async (): Promise<void | SerializedError> => {
     dispatch(allocateNewCall());
     try {
-      const call = await apiClient.post<ZetkinCall>(
+      const call = await apiClient.post<UnfinishedCall>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
         {}
       );
       dispatch(newCallAllocated(call));
     } catch (e) {
-      const error = e instanceof Error ? e : new Error('Empty queue error');
+      const queueError =
+        e instanceof Error ? e : new Error('Empty queue error');
       const serialized = {
-        message: error.message,
-        name: error.name,
+        message: queueError.message,
+        name: queueError.name,
       };
       dispatch(allocateCallError(serialized));
-      return error;
+      return queueError;
     }
   };
 
   return {
     allocateCall,
-    error,
     isLoading: callIsBeingAllocated,
+    queueError,
   };
 }

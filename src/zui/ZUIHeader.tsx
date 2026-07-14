@@ -103,13 +103,17 @@ const Header: React.FC<HeaderProps> = ({
                   }}
                 />
               )}
-              <Box>
+              <Box
+                sx={{
+                  maxWidth: '100%',
+                }}
+              >
                 <Typography
-                  component="div"
+                  component="h1"
                   data-testid="page-title"
                   noWrap
-                  style={{ display: 'flex' }}
                   sx={{
+                    lineHeight: '1.5',
                     marginBottom: '8px',
                     transition: 'margin 0.3s ease',
                   }}
@@ -117,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({
                 >
                   {title}
                 </Typography>
-                <Typography color="secondary" component="h2" variant="h5">
+                <Typography color="secondary" component="div" variant="h5">
                   {subtitle}
                 </Typography>
               </Box>

@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { Tooltip } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 
@@ -7,7 +6,7 @@ import PreviewGrid from './PreviewGrid';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { useMessages } from 'core/i18n';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { ColumnKind, Sheet } from 'features/import/utils/types';
+import { ColumnKind, Sheet } from 'features/import/types';
 import oldTheme from 'theme';
 
 interface TagPreviewProps {
@@ -15,25 +14,8 @@ interface TagPreviewProps {
   tags: ZetkinTag[];
 }
 
-const useStyles = makeStyles(() => ({
-  chip: {
-    borderColor: oldTheme.palette.grey[500],
-    borderRadius: '1em',
-    borderWidth: '1px',
-    color: oldTheme.palette.text.secondary,
-    cursor: 'default',
-    display: 'flex',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.1em 0.7em',
-    textOverflow: 'ellipsis',
-  },
-}));
-
 const TagsPreview = ({ tags, currentSheet }: TagPreviewProps) => {
   const messages = useMessages(messageIds);
-  const classes = useStyles();
 
   const hasMapped = currentSheet.columns.some(
     (column) => column.kind === ColumnKind.TAG && column.mapping.length > 0
@@ -63,7 +45,22 @@ const TagsPreview = ({ tags, currentSheet }: TagPreviewProps) => {
             ))}
             {hiddenTags!.length > 0 && (
               <Tooltip title={tooltipTitle}>
-                <Box border={2} className={classes.chip}>
+                <Box
+                  border={2}
+                  sx={{
+                    borderColor: oldTheme.palette.grey[500],
+                    borderRadius: '1em',
+                    borderWidth: '1px',
+                    color: oldTheme.palette.text.secondary,
+                    cursor: 'default',
+                    display: 'flex',
+                    lineHeight: 'normal',
+                    marginRight: '0.1em',
+                    overflow: 'hidden',
+                    padding: '0.1em 0.7em',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
                   {`${displayedTags!.length > 0 ? '+' : ''}${
                     hiddenTags?.length
                   }`}

@@ -33,7 +33,7 @@ import EmptyView from 'features/views/components/EmptyView';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
 import useCreateView from 'features/views/hooks/useCreateView';
-import { useMessages } from 'core/i18n';
+import { useMessages, UseMessagesMap } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import UseViewDataTableMutations from 'features/views/hooks/useViewDataTableMutations';
 import useViewGrid from 'features/views/hooks/useViewGrid';
@@ -60,10 +60,9 @@ import ViewDataTableColumnMenu, {
 import ViewDataTableFooter, {
   ViewDataTableFooterProps,
 } from 'features/views/components/ViewDataTable/ViewDataTableFooter';
-import ViewDataTableToolbar, {
-  ViewDataTableToolbarProps,
-} from './ViewDataTableToolbar';
+import ViewDataTableToolbar from './ViewDataTableToolbar';
 import {
+  ZetkinCustomField,
   ZetkinPerson,
   ZetkinViewColumn,
   ZetkinViewRow,
@@ -72,6 +71,8 @@ import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
 import oldTheme from 'theme';
+import useViewBulkActions from 'features/views/hooks/useViewBulkActions';
+import { dayOfMonthOperator, monthOperator } from './customFilters/date';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -86,11 +87,14 @@ declare module '@mui/x-data-grid-pro' {
   }
 
   interface ToolbarPropsOverrides {
+    disableBulkActions?: boolean;
     disableConfigure?: boolean;
     disabled: boolean;
     gridColumns: GridColDef[];
+    isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
+    onBulkDelete: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -100,28 +104,39 @@ declare module '@mui/x-data-grid-pro' {
   }
 }
 
-const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
+const getFilterOperators = (
+  col: Omit<GridColDef, 'field'>,
+  messages: UseMessagesMap<typeof messageIds>
+) => {
+  if (col.filterOperators) {
+    return col.filterOperators;
+  }
+
   const stringOperators = getGridStringOperators().filter(
     (op) => op.value !== 'isAnyOf'
   );
-  if (col.filterOperators) {
-    return col.filterOperators;
-  } else {
-    const defaultTypes = getGridDefaultColumnTypes();
-    if (col.type && col.type in defaultTypes) {
-      return (
-        defaultTypes[col.type].filterOperators?.filter(
-          (op) => op.value !== 'isAnyOf'
-        ) ?? stringOperators
-      );
-    } else {
-      return stringOperators;
+  const defaultTypes = getGridDefaultColumnTypes();
+  if (col.type && col.type in defaultTypes) {
+    const defaultOperators =
+      defaultTypes[col.type].filterOperators?.filter(
+        (op) => op.value !== 'isAnyOf'
+      ) ?? stringOperators;
+    if (col.type === 'date') {
+      return [
+        ...defaultOperators,
+        monthOperator(messages.customFilters),
+        dayOfMonthOperator(messages.customFilters),
+      ];
     }
+    return defaultOperators;
   }
+
+  return stringOperators;
 };
 
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
+  customFields?: ZetkinCustomField[];
   disableAdd?: boolean;
   disableConfigure?: boolean;
   rows: ZetkinViewRow[];
@@ -153,6 +168,7 @@ const slots = {
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
+  customFields,
   disableAdd = false,
   disableConfigure,
   rows,
@@ -161,6 +177,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const dispatch = useAppDispatch();
+  const apiClient = useApiClient();
+  const tagListState = useAppSelector((state) => state.tags.tagList);
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
   const [columnToCreate, setColumnToCreate] =
@@ -180,6 +199,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     ) {
       selectionModel.onSelectionChange(selection);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
   const [waiting, setWaiting] = useState(false);
 
@@ -198,11 +218,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
+  const { bulkDeletePersons } = useViewBulkActions(orgId);
 
   const showError = useCallback(
     (error: VIEW_DATA_TABLE_ERROR) => {
       showSnackbar('error', messages.dataTableErrors[error]());
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [showSnackbar]
   );
 
@@ -267,6 +289,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const colSpec = columns.find((col) => col.id === colId) || null;
       setColumnToConfigure(colSpec);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [colIdFromFieldName, columns, setColumnToConfigure]
   );
 
@@ -301,6 +324,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         doDelete();
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       colIdFromFieldName,
       columns,
@@ -317,6 +341,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const colSpec = columns.find((col) => col.id === colId) || null;
       setColumnToRename(colSpec);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [colIdFromFieldName, columns, setColumnToRename]
   );
 
@@ -328,6 +353,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setColumnToRename, updateColumn]
   );
 
+  const onBulkDelete = useCallback(async () => {
+    bulkDeletePersons(selection);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selection]);
+
   const onRowsRemove = useCallback(async () => {
     setWaiting(true);
     try {
@@ -337,6 +367,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     } finally {
       setWaiting(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewGrid.removeRows, showError, setWaiting]);
 
   const onViewCreate = useCallback(() => {
@@ -404,51 +435,43 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ];
       debouncedUpdateColumnOrder(newColumnOrder);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [colIdFromFieldName, columns, debouncedUpdateColumnOrder]
   );
-
-  const dispatch = useAppDispatch();
-  const apiClient = useApiClient();
-  const tagListState = useAppSelector((state) => state.tags.tagList);
 
   const unConfiguredGridColumns = useMemo(
     () => [
       avatarColumn,
-      ...columns.map((col) => ({
-        field: `col_${col.id}`,
-        filterOperators: getFilterOperators(
-          columnTypes[col.type].getColDef(
-            col,
-            accessLevel,
-            tagListState,
-            apiClient,
-            dispatch,
-            orgId
-          )
-        ),
-        headerName: col.title,
-        minWidth: 100,
-        resizable: true,
-        sortable: true,
-        width: 150,
-        ...columnTypes[col.type].getColDef(
-          col,
-          accessLevel,
-          tagListState,
+      ...columns.map((col) => {
+        const colDef = columnTypes[col.type].getColDef(col, accessLevel, {
           apiClient,
+          customFieldsInfo: customFields ?? [],
           dispatch,
-          orgId
-        ),
-      })),
+          orgId,
+          tagListState,
+        });
+        return {
+          field: `col_${col.id}`,
+          filterOperators: getFilterOperators(colDef, messages),
+          headerName: col.title,
+          minWidth: 100,
+          resizable: true,
+          sortable: true,
+          width: 150,
+          ...colDef,
+        };
+      }),
     ],
     [
       avatarColumn,
       columns,
       accessLevel,
       tagListState,
+      customFields,
       apiClient,
       dispatch,
       orgId,
+      messages,
     ]
   );
 
@@ -476,7 +499,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const componentsProps: {
     columnMenu: ViewDataTableColumnMenuProps;
     footer: ViewDataTableFooterProps;
-    toolbar: ViewDataTableToolbarProps;
   } = useMemo(
     () => ({
       columnMenu: {
@@ -524,6 +546,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         gridColumns,
         isLoading,
         isSmartSearch: !!view.content_query,
+        onBulkDelete,
         onColumnCreate,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,
@@ -533,6 +556,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         sortModel: modelGridProps.sortModel,
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       onColumnConfigure,
       onColumnDelete,
@@ -553,6 +577,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
+      onBulkDelete,
       setQuickSearch,
       modelGridProps.sortModel,
     ]
@@ -577,6 +602,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
       noRowsLabel: messages.empty.notice[contentSource](),
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme.components, messages.empty.notice]
   );
 
@@ -657,6 +683,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       }
       return after;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [columns]
   );
 

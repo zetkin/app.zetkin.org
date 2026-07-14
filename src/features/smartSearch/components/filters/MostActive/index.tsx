@@ -93,13 +93,13 @@ const MostActive = ({
             numPeopleSelect: (
               <StyledNumberInput
                 defaultValue={filter.config?.size}
-                inputProps={{ min: '1' }}
                 onChange={(e) => {
                   setConfig({
                     ...filter.config,
                     size: +e.target.value,
                   });
                 }}
+                slotProps={{ htmlInput: { min: '1' } }}
               />
             ),
             timeFrame: (

@@ -59,7 +59,7 @@ const useFilterUpdates = (updates: ZetkinUpdate[]) => {
 
   // Sorts and groups only when the updates are changed
   const groupedUpdates = useMemo(() => {
-    const sortedUpdates = updates.sort(
+    const sortedUpdates = [...updates].sort(
       (u0, u1) =>
         new Date(u1.timestamp).getTime() - new Date(u0.timestamp).getTime()
     );

@@ -27,6 +27,9 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import AreaStats from 'features/areas/components/AreaOverlay/AreaStats';
+
+export const AREA_OVERLAY_WIDTH = 400;
 
 type Props = {
   area: ZetkinArea;
@@ -79,6 +82,7 @@ const AreaOverlay: FC<Props> = ({
   useEffect(() => {
     setTitle(area.title);
     setDescription(area.description);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [area.id]);
 
   return (
@@ -87,8 +91,8 @@ const AreaOverlay: FC<Props> = ({
         bottom: '1rem',
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: 400,
-        minWidth: 400,
+        maxWidth: AREA_OVERLAY_WIDTH,
+        minWidth: AREA_OVERLAY_WIDTH,
         overflow: 'auto',
         padding: 2,
         position: 'absolute',
@@ -138,7 +142,6 @@ const AreaOverlay: FC<Props> = ({
                 >
                   <TextField
                     fullWidth
-                    inputProps={props}
                     onBlur={() => {
                       if (fieldEditing === 'title') {
                         setFieldEditing(null);
@@ -149,6 +152,7 @@ const AreaOverlay: FC<Props> = ({
                       }
                     }}
                     onChange={(ev) => setTitle(ev.target.value)}
+                    slotProps={{ htmlInput: props }}
                     sx={{ marginBottom: 2 }}
                     value={title}
                   />
@@ -188,7 +192,6 @@ const AreaOverlay: FC<Props> = ({
             renderInput={(props) => (
               <TextField
                 fullWidth
-                inputProps={props}
                 inputRef={handleDescriptionTextAreaRef}
                 multiline
                 onBlur={() => {
@@ -198,6 +201,7 @@ const AreaOverlay: FC<Props> = ({
                   }
                 }}
                 onChange={(ev) => setDescription(ev.target.value)}
+                slotProps={{ htmlInput: props }}
                 sx={{
                   marginTop: 2,
                 }}
@@ -225,6 +229,7 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
+      <AreaStats areaId={area.id} />
       <Box ref={tagsElement} flexGrow={1} my={2}>
         {/*
         <TagsSection area={area} />

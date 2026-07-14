@@ -102,8 +102,8 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
               renderInput={(props) => (
                 <TextField
                   fullWidth
-                  inputProps={props}
                   onChange={(ev) => setTitle(ev.target.value)}
+                  slotProps={{ htmlInput: props }}
                   sx={{ marginBottom: 2 }}
                   value={title}
                 />
@@ -139,11 +139,11 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
             renderInput={(props) => (
               <TextField
                 fullWidth
-                inputProps={props}
                 inputRef={handleDescriptionTextAreaRef}
                 maxRows={4}
                 multiline
                 onChange={(ev) => setDescription(ev.target.value)}
+                slotProps={{ htmlInput: props }}
                 sx={{ marginTop: 2 }}
                 value={description}
               />

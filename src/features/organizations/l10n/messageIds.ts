@@ -13,6 +13,7 @@ export default makeMessages('feat.organizations', {
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
       ),
+      selectDate: m('Select a date'),
       thisWeek: m('This week'),
       today: m('Today'),
       tomorrow: m('Tomorrow'),
@@ -30,9 +31,14 @@ export default makeMessages('feat.organizations', {
     cancelledParagraph: m(
       'You can no longer sign up for it and if you were signed up, you are no longer expected to attend.'
     ),
-    contactPerson: m<{ name: string }>('{name} is the contact person'),
+    contactPerson: {
+      default: m<{ name: string }>('{name} is the contact person'),
+      you: m('You are the contact person'),
+    },
     defaultTitle: m('Untitled event'),
+    haveAccount: m('I have an account'),
     loading: m('Loading...'),
+    noDescription: m('This event has no description'),
     noLocation: m('No physical location'),
     partOfProject: m<{ projectLink: ReactElement }>('Part of {projectLink}'),
     participatingInfo: m<{ participatingCount: number }>(
@@ -62,13 +68,12 @@ export default makeMessages('feat.organizations', {
     },
     map: {
       viewInList: m('View in list'),
-      viewInMap: m('View in map'),
+      viewOnMap: m('View on map'),
     },
     menu: {
-      allEvents: m('All events'),
       logout: m('Logout'),
-      myActivities: m('My activities'),
       myZetkin: m('My Zetkin'),
+      organize: m('Organize'),
       settings: m('Settings'),
     },
     tabs: {
@@ -106,6 +111,14 @@ export default makeMessages('feat.organizations', {
       clear: m('Clear'),
       title: m('Recent organizations'),
     },
+  },
+  signupChoiceModal: {
+    description: m(
+      "Use your Zetkin account to sign up to an event. If you don't have an account, don't worry you can still sign up without one."
+    ),
+    title: m('How do you want to sign up?'),
+    withAccount: m('With an account'),
+    withoutAccount: m('Without an account'),
   },
   subOrgEventBlurb: {
     description: m<{

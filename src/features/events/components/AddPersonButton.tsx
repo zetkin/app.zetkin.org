@@ -23,13 +23,11 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
   const zuiMessages = useMessages(zuiMessageIds);
   const eventFuture = useEvent(orgId, eventId);
   const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
-  const { participantsFuture, respondentsFuture } = useEventParticipants(
-    orgId,
-    eventId
-  );
+  const { verifiedParticipantsFuture, respondentsFuture } =
+    useEventParticipants(orgId, eventId);
   const isParticipant = (personId: number): boolean => {
     return (
-      participantsFuture?.data?.some(
+      verifiedParticipantsFuture?.data?.some(
         (participant) => participant.id === personId
       ) ?? false
     );
@@ -73,7 +71,7 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
         <Box mt={1} p={2}>
           <ZUIFutures
             futures={{
-              participants: participantsFuture,
+              participants: verifiedParticipantsFuture,
               respondents: respondentsFuture,
             }}
           >

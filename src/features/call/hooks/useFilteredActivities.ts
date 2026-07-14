@@ -2,10 +2,10 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { useAppSelector } from 'core/hooks';
 import useUpcomingEvents from './useUpcomingEvents';
-import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import { getUTCDateWithoutTime } from 'utils/dateUtils';
 import useCurrentCall from './useCurrentCall';
-import { ZetkinEvent, ZetkinSurveyExtended } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinSurvey } from 'utils/types/zetkin';
+import useSurveys from 'features/surveys/hooks/useSurveys';
 
 type ActivityBase = {
   visibleFrom: Date | null;
@@ -18,7 +18,7 @@ type EventActivity = ActivityBase & {
 };
 
 type SurveyActivity = ActivityBase & {
-  data: ZetkinSurveyExtended;
+  data: ZetkinSurvey;
   kind: 'survey';
 };
 
@@ -26,7 +26,7 @@ export type Activity = EventActivity | SurveyActivity;
 
 export default function useFilteredActivities(orgId: number) {
   const events = useUpcomingEvents(orgId);
-  const surveys = useSurveysWithElements(orgId).data || [];
+  const surveys = useSurveys(orgId).data || [];
   const {
     filterState,
     customDatesToFilterEventsBy,

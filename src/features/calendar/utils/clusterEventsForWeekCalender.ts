@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 
-import { clusterEvents } from 'features/campaigns/hooks/useClusteredActivities';
-import { EventActivity } from 'features/campaigns/types';
+import { clusterEvents } from 'features/projects/hooks/useClusteredActivities';
+import { EventActivity } from 'features/projects/types';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   CLUSTER_TYPE,
   ClusteredEvent,
-} from 'features/campaigns/hooks/useClusteredActivities';
+} from 'features/projects/hooks/useClusteredActivities';
 
 type ArbitraryEventCluster = {
   events: ZetkinEvent[];

@@ -69,9 +69,6 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             </Typography>
             <TextField
               fullWidth
-              inputProps={{
-                'data-testid': 'JourneyInstanceCloseButton-outcomeNoteField',
-              }}
               margin="normal"
               multiline
               onChange={(e) => setOutcomeNote(e.target.value)}
@@ -79,6 +76,11 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
                 { singularLabel: journeyInstance.journey.singular_label }
               )}
               rows={3}
+              slotProps={{
+                htmlInput: {
+                  'data-testid': 'JourneyInstanceCloseButton-outcomeNoteField',
+                },
+              }}
               variant="outlined"
             />
             <Box mt={2}>
