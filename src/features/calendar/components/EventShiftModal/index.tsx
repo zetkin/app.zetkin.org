@@ -65,17 +65,26 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               ? dayjs(eventShifts[index + 1])
               : dayjs(eventEndTime);
 
-          let startDate: Dayjs = dayjs(eventDate);
-          startDate = startDate
-            .set('hour', shift.hour() + 2)
-            .set('minute', shift.minute());
+          const startDate = new Date(
+            Date.UTC(
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
+              shift.hour(),
+              shift.minute()
+            )
+          );
 
-          let endDate: Dayjs = dayjs(eventDate);
-          endDate = endDate
-            .set('hour', endTime.hour() + 2)
-            .set('minute', endTime.minute());
-
-          const now = dayjs();
+          const endDate = new Date(
+            Date.UTC(
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
+              endTime.hour(),
+              endTime.minute()
+            )
+          );
+          const now = new Date();
           const published = startDate < now ? startDate : now;
 
           return createEvent(
