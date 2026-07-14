@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
-import dayjs from 'dayjs';
 
 import Day from './Day';
 import range from 'utils/range';
@@ -8,11 +7,7 @@ import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEven
 import { useNumericRouteParams } from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import WeekNumber from './WeekNumber';
-import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
-import {
-  legacyDateFromPlainDate,
-  plainDateFromLegacyDate,
-} from 'utils/dateUtils';
+import { legacyDateFromPlainDate } from 'utils/dateUtils';
 
 const gridGap = 8;
 const numberOfRows = 6;
@@ -20,7 +15,7 @@ const numberOfDayColumns = 7;
 const numberOfGridColumns = 8;
 
 type CalendarMonthViewProps = {
-  focusDate: Date;
+  focusDate: Temporal.PlainDate;
   onClickDay: (date: Date) => void;
   onClickWeek: (date: Date) => void;
 };
@@ -33,26 +28,25 @@ const CalendarMonthView = ({
   const itemHeight = 25;
   const { gridRef, maxPerDay } = useFlexibleMaxPerDay(itemHeight);
 
-  const firstDayOfMonth: Date = new Date(
-    Date.UTC(focusDate.getFullYear(), focusDate.getMonth(), 1)
-  );
-  const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
-    .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')
-    .toDate();
+  const firstDayOfMonth = focusDate.with({ day: 1 });
+  const firstDayOfCalendar = firstDayOfMonth.subtract({
+    days: firstDayOfMonth.dayOfWeek - 1,
+  });
 
   function onClickWeekHandler(rowIndex: number) {
-    onClickWeek(dayjs(firstDayOfCalendar).add(rowIndex, 'week').toDate());
+    onClickWeek(
+      legacyDateFromPlainDate(firstDayOfCalendar.add({ weeks: rowIndex }))
+    );
   }
-  const lastDayOfCalendar = new Date(firstDayOfCalendar);
-  lastDayOfCalendar.setDate(lastDayOfCalendar.getDate() + 6 * 7);
+  const lastDayOfCalendar = firstDayOfCalendar.add({ weeks: 6 });
 
   const { orgId, projectId } = useNumericRouteParams();
   const clustersByDate = useMonthCalendarEvents({
-    endDate: lastDayOfCalendar,
+    endDate: legacyDateFromPlainDate(lastDayOfCalendar),
     maxPerDay,
     orgId,
     projectId,
-    startDate: firstDayOfCalendar,
+    startDate: legacyDateFromPlainDate(firstDayOfCalendar),
   });
 
   return (
@@ -78,26 +72,28 @@ const CalendarMonthView = ({
                 <WeekNumber
                   key={gridItemKey}
                   onClick={() => onClickWeekHandler(rowIndex)}
-                  weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
+                  weekNr={
+                    firstDayOfCalendar.add({ weeks: rowIndex }).weekOfYear!
+                  }
                 />
               );
             }
 
             // Remaining items in each row are days
             const dayIndex = columnIndex - 1 + rowIndex * numberOfDayColumns; // Index of the day within the day grid
-            const date = dayjs(firstDayOfCalendar)
-              .add(dayIndex, 'day')
-              .toDate();
+            const date = firstDayOfCalendar.add({ days: dayIndex });
 
             const clusters = clustersByDate[dayIndex].clusters;
 
-            const isInFocusMonth = date.getMonth() === focusDate.getMonth();
+            const isInFocusMonth = date
+              .toPlainYearMonth()
+              .equals(focusDate.toPlainYearMonth());
 
             return (
               <Day
                 key={gridItemKey}
                 clusters={clusters}
-                date={plainDateFromLegacyDate(date)}
+                date={date}
                 isInFocusMonth={isInFocusMonth}
                 itemHeight={itemHeight}
                 onClick={(value) => onClickDay(legacyDateFromPlainDate(value))}
