@@ -67,9 +67,9 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
 
           const startDate = new Date(
             Date.UTC(
-              shift.year(),
-              shift.month(),
-              shift.date(),
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
               shift.hour(),
               shift.minute()
             )
@@ -77,9 +77,9 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
 
           const endDate = new Date(
             Date.UTC(
-              endTime.year(),
-              endTime.month(),
-              endTime.date(),
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
               endTime.hour(),
               endTime.minute()
             )
