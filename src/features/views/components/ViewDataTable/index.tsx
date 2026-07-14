@@ -177,9 +177,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const { orgId } = useNumericRouteParams();
+
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
-  const tagListState = useAppSelector((state) => state.tags.tagList);
+  const tagState = useAppSelector((state) => state.tags.tagsById);
+
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
   const [columnToCreate, setColumnToCreate] =
@@ -207,7 +210,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [, accessLevel] = useAccessLevel();
 
   const [quickSearch, setQuickSearch] = useState('');
-  const { orgId } = useNumericRouteParams();
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -448,7 +450,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           customFieldsInfo: customFields ?? [],
           dispatch,
           orgId,
-          tagListState,
+          tagState,
         });
         return {
           field: `col_${col.id}`,
@@ -466,7 +468,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       avatarColumn,
       columns,
       accessLevel,
-      tagListState,
+      tagState,
       customFields,
       apiClient,
       dispatch,

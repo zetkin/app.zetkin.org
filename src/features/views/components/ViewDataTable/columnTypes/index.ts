@@ -17,8 +17,9 @@ import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { AppDispatch } from 'core/store';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
-import { RemoteList } from 'utils/storeUtils';
 import { ZetkinCustomField, ZetkinTag } from 'utils/types/zetkin';
+import { SafeRecord } from 'utils/types';
+import { RemoteItem } from 'utils/storeUtils';
 
 export interface IColumnType<
   ColumnType = ZetkinViewColumn,
@@ -33,7 +34,7 @@ export interface IColumnType<
       customFieldsInfo?: ZetkinCustomField[];
       dispatch?: AppDispatch;
       orgId?: number;
-      tagListState?: RemoteList<ZetkinTag>;
+      tagState?: SafeRecord<number, RemoteItem<ZetkinTag>>;
     }
   ): Omit<GridColDef, 'field'>;
   getSearchableStrings(cell: CellType, column: ColumnType): string[];

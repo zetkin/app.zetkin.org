@@ -20,26 +20,26 @@ export default function useCreateTag(
         group: undefined,
         group_id: newGroup.id,
       };
-      dispatch(tagCreate());
+      dispatch(tagCreate([orgId]));
       const tagFuture = await apiClient
         .post<
           ZetkinTag,
           ZetkinTagPostBody
         >(`/api/orgs/${orgId}/people/tags`, tagWithNewGroup)
         .then((data: ZetkinTag) => {
-          dispatch(tagCreated(data));
+          dispatch(tagCreated([[orgId], data]));
           return data;
         });
       return tagFuture;
     } else {
-      dispatch(tagCreate());
+      dispatch(tagCreate([orgId]));
       const tagFuture = await apiClient
         .post<
           ZetkinTag,
           ZetkinTagPostBody
         >(`/api/orgs/${orgId}/people/tags`, tag)
         .then((data: ZetkinTag) => {
-          dispatch(tagCreated(data));
+          dispatch(tagCreated([[orgId], data]));
           return data;
         });
       return tagFuture;

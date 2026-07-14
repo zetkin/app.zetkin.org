@@ -159,9 +159,11 @@ export default function mockState(overrides?: RootState) {
       surveysWithElementsList: remoteList(),
     },
     tags: {
-      tagGroupList: remoteList(),
-      tagList: remoteList(),
-      tagsByPersonId: {},
+      groupsById: {},
+      orgTags: {},
+      personTags: {},
+      tagGroups: {},
+      tagsById: {},
     },
     tasks: {
       assignedTasksByTaskId: {},
