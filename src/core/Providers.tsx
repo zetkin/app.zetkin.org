@@ -9,6 +9,11 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, Suspense, useRef } from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { EmotionCache } from '@emotion/utils';
+import 'dayjs/locale/de';
+import 'dayjs/locale/da';
+import 'dayjs/locale/nn';
+import 'dayjs/locale/sv';
+import 'dayjs/locale/nl';
 
 import Environment from './env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
@@ -72,7 +77,10 @@ const Providers: FC<ProvidersProps> = ({
           <StyledEngineProvider injectFirst>
             <CacheProvider value={cache.current}>
               <ThemeProvider theme={oldThemeWithLocale(lang)}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider
+                  adapterLocale={lang}
+                  dateAdapter={AdapterDayjs}
+                >
                   <IntlProvider
                     defaultLocale="en"
                     locale={lang}

@@ -26,9 +26,10 @@ const surveyOptionsColumnSortRank = (allOptionsJoined: string) => {
   return -lastOption.length;
 };
 
-export default class SurveyOptionsColumnType
-  implements IColumnType<ZetkinViewColumn, SurveyOptionsViewCell>
-{
+export default class SurveyOptionsColumnType implements IColumnType<
+  ZetkinViewColumn,
+  SurveyOptionsViewCell
+> {
   cellToString(cell: SurveyOptionsViewCell): string {
     return cell?.length ? cell[0].selected.map((o) => o.text).toString() : '';
   }

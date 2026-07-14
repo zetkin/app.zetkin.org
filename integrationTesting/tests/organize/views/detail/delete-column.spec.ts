@@ -30,7 +30,7 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApiMock(
+    const { log: deleteLog } = moxy.setZetkinApiMock(
       `/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`,
       'delete'
     );
@@ -38,18 +38,15 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Delete first column
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'DELETE'),
-      (async () => {
-        await page.hover('[role=columnheader]:has-text("First name")');
-        await page.click(
-          '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
-        );
-        await page.click(
-          `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
-        );
-      })(),
-    ]);
+    await page.hover('[role=columnheader]:has-text("First name")');
+    await page.click(
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
+    );
+    await page.click(
+      `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
+    );
+
+    await expect.poll(() => deleteLog().length).toBe(1);
 
     // Check body of request
     const columnDeleteRequest = moxy
@@ -68,7 +65,7 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApiMock(
+    const { log: deleteLog } = moxy.setZetkinApiMock(
       `/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`,
       'delete',
       undefined,
@@ -78,22 +75,16 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Delete first column
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'DELETE'),
-      (async () => {
-        await page.hover('[role=columnheader]:has-text("First name")');
-        await page.click(
-          '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
-        );
-        await page.click(
-          `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
-        );
-      })(),
-    ]);
+    await page.hover('[role=columnheader]:has-text("First name")');
+    await page.click(
+      '[role=columnheader]:has-text("First name") [aria-label="First name column menu"]'
+    );
+    await page.click(
+      `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
+    );
 
-    await page.locator('data-testid=Snackbar-error').waitFor();
-
-    await expect(page.locator('data-testid=Snackbar-error')).toHaveCount(1);
+    await expect.poll(() => deleteLog().length).toBe(1);
+    await expect(page.locator('data-testid=Snackbar-error')).toBeVisible();
   });
 
   test('the user must confirm deletion of a column with local data', async ({
@@ -101,27 +92,24 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApiMock(
-      `/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`,
+    const { log: deleteLog } = moxy.setZetkinApiMock(
+      `/orgs/1/people/views/1/columns/${AllMembersColumns[2].id}`,
       'delete'
     );
 
     await page.goto(appUri + '/organize/1/people/lists/1');
 
     // Delete local column
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'DELETE'),
-      (async () => {
-        await page.hover('[role=columnheader]:has-text("Active")');
-        await page.click(
-          '[role=columnheader]:has-text("Active") [aria-label="Active column menu"]'
-        );
-        await page.click(
-          `data-testid=delete-column-button-col_${AllMembersColumns[2].id}`
-        );
-        await page.click('button:text("Confirm")');
-      })(),
-    ]);
+    await page.hover('[role=columnheader]:has-text("Active")');
+    await page.click(
+      '[role=columnheader]:has-text("Active") [aria-label="Active column menu"]'
+    );
+    await page.click(
+      `data-testid=delete-column-button-col_${AllMembersColumns[2].id}`
+    );
+    await page.click('button:text("Confirm")');
+
+    await expect.poll(() => deleteLog().length).toBe(1);
 
     // Check body of request
     const columnDeleteRequest = moxy

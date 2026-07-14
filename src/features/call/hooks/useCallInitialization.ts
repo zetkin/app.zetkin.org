@@ -44,6 +44,7 @@ export default function useCallInitialization() {
       }
     });
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store]);
 
   const assignmentIdFromQuery = queryParams?.get('assignment');

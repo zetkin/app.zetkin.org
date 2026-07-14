@@ -1,4 +1,4 @@
-import { ColorPalette } from '@storybook/blocks';
+import { ColorPalette } from '@storybook/addon-docs/blocks';
 import { FC, ReactElement } from 'react';
 
 import lightPalette, { darkPalette } from 'zui/theme/palette';

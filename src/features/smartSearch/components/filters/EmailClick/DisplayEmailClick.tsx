@@ -7,7 +7,7 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -26,7 +26,7 @@ interface DisplayEmailClickProps {
 const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const projects = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
 
   const { config } = filter;
   const { operator, campaign: projectId, email: emailId, links } = config;
@@ -56,10 +56,10 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
                 filter.config.campaign
                   ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
                   : filter.config.email && !filter.config.links
-                  ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
-                  : filter.config.email && filter.config.links
-                  ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
-                  : LINK_SELECT_SCOPE.ANY_LINK
+                    ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
+                    : filter.config.email && filter.config.links
+                      ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
+                      : LINK_SELECT_SCOPE.ANY_LINK
               ]
             }
           />

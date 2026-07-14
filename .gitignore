@@ -52,3 +52,4 @@ tsconfig.tsbuildinfo
 # generated docs
 public/docs
 public/storybook
+storybook-static/

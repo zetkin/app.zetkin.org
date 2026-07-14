@@ -24,6 +24,7 @@ jobs:
     with:
       build-script: npx playwright install chromium
       test-script: e2e:ci
+      upload-name: playwright-report
       upload-path: playwright-report/
 
   unit-test:

@@ -20,6 +20,7 @@ const ValueTagForm: React.FC<{
     } else {
       onChange(inputValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
 
   return (

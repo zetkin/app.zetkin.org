@@ -10,13 +10,16 @@ import {
   ZetkinSmartSearchFilter,
 } from '../../types';
 import FilterForm from '../../FilterForm';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import TimeFrame from '../TimeFrame';
 import useJoinForms from 'features/joinForms/hooks/useJoinForms';
 import { useNumericRouteParams } from 'core/hooks';
+
+const DEFAULT_VALUE = 'any';
 
 type Props = {
   filter: SmartSearchFilterWithId<JoinFormFilterConfig> | NewSmartSearchFilter;
@@ -35,11 +38,9 @@ const JoinFormFilter: FC<Props> = ({
   onSubmit,
   onCancel,
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const forms = useJoinForms(orgId).data || [];
-  const formsSorted = forms.sort((f1, f2) => {
-    return f1.title.localeCompare(f2.title);
-  });
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JoinFormFilterConfig>(initialFilter, {});
 
@@ -69,29 +70,30 @@ const JoinFormFilter: FC<Props> = ({
               </StyledSelect>
             ),
             formSelect: (
-              <StyledSelect
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: DEFAULT_VALUE,
+                    label: messages.filters.joinForm.anyForm(),
+                  },
+                  ...forms.map((form) => ({
+                    id: form.id,
+                    label: form.title,
+                  })),
+                ]}
                 onChange={(e) => {
-                  const formId = parseInt(e.target.value);
+                  const formId = +e.target.value;
                   const config = { ...filter.config };
-                  if (formId) {
+                  if (e.target.value) {
                     config.form = formId;
                   } else {
                     delete config.form;
                   }
-
                   setConfig(config);
                 }}
-                value={filter.config.form || 'any'}
-              >
-                <MenuItem value="any">
-                  <Msg id={localMessageIds.anyForm} />
-                </MenuItem>
-                {formsSorted.map((form) => (
-                  <MenuItem key={form.id} value={form.id}>
-                    {form.title}
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+                value={filter.config.form || DEFAULT_VALUE}
+              />
             ),
             timeFrame: (
               <TimeFrame

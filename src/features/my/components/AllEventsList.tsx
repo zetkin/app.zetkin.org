@@ -70,7 +70,7 @@ const AllEventsList: FC = () => {
     if (rangeParam) {
       return rangeParam.split(',').map((d) => (d ? dayjs(d) : null)) as [
         Dayjs | null,
-        Dayjs | null
+        Dayjs | null,
       ];
     }
     return [null, null];
@@ -118,6 +118,7 @@ const AllEventsList: FC = () => {
 
       router.push(pathname + '?' + params.toString());
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pathname, router, searchParams, dateFilterState]
   );
 
@@ -136,11 +137,11 @@ const AllEventsList: FC = () => {
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
-    if (!dateFilterState || dateFilterState == 'custom') {
+    if (!dateFilterState || dateFilterState === 'custom') {
       return customDatesToFilterBy;
-    } else if (dateFilterState == 'today') {
+    } else if (dateFilterState === 'today') {
       return [today, null];
-    } else if (dateFilterState == 'tomorrow') {
+    } else if (dateFilterState === 'tomorrow') {
       return [today.add(1, 'day'), null];
     } else {
       //dateFilterState is 'thisWeek'
@@ -164,7 +165,7 @@ const AllEventsList: FC = () => {
 
   const filteredEvents = allEvents
     .filter((event) => {
-      if (orgIdsToFilterBy.length == 0) {
+      if (orgIdsToFilterBy.length === 0) {
         return true;
       }
       return orgIdsToFilterBy.includes(event.organization.id);
@@ -172,7 +173,7 @@ const AllEventsList: FC = () => {
     .filter((event) => {
       if (
         !dateFilterState ||
-        (dateFilterState == 'custom' && !customDatesToFilterBy[0])
+        (dateFilterState === 'custom' && !customDatesToFilterBy[0])
       ) {
         return true;
       }
@@ -244,61 +245,77 @@ const AllEventsList: FC = () => {
 
   const filters = [
     {
-      active: dateFilterState == 'today',
+      active: dateFilterState === 'today',
       key: 'today',
       label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
         setFilters({
-          date: 'today',
+          date: dateFilterState === 'today' ? null : 'today',
           range: null,
         });
       },
     },
     {
-      active: dateFilterState == 'tomorrow',
+      active: dateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
         setFilters({
-          date: 'tomorrow',
+          date: dateFilterState === 'tomorrow' ? null : 'tomorrow',
           range: null,
         });
       },
     },
     {
-      active: dateFilterState == 'thisWeek',
+      active: dateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
         setFilters({
-          date: 'thisWeek',
+          date: dateFilterState === 'thisWeek' ? null : 'thisWeek',
           range: null,
         });
       },
     },
     {
-      active: dateFilterState == 'custom',
+      active: dateFilterState === 'custom',
+      ariaLabel: messages.allEventsList.filterButtonLabels.selectDate(),
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerContent('calendar');
+        if (dateFilterState === 'custom') {
+          setFilters({
+            date: null,
+            range: null,
+          });
+        } else {
+          setDrawerContent('calendar');
+        }
       },
     },
     ...(moreThanOneOrgHasEvents
       ? [
           {
-            active: !!orgIdsToFilterBy.length,
+            active: orgIdsToFilterBy?.length > 0,
             key: 'orgs',
             label: messages.allEventsList.filterButtonLabels.organizations({
               numOrgs: orgIdsToFilterBy.length,
             }),
-            onClick: () => setDrawerContent('orgs'),
+            onClick: () => {
+              if (orgIdsToFilterBy?.length > 0) {
+                setFilters({
+                  orgs: null,
+                });
+              } else {
+                setDrawerContent('orgs');
+              }
+            },
           },
         ]
       : []),
@@ -308,7 +325,15 @@ const AllEventsList: FC = () => {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: eventTypeFilter.filterButtonLabel,
-            onClick: () => setDrawerContent('eventTypes'),
+            onClick: () => {
+              if (eventTypeFilter.isFiltered) {
+                setFilters({
+                  types: null,
+                });
+              } else {
+                setDrawerContent('eventTypes');
+              }
+            },
           },
         ]
       : []),
@@ -351,13 +376,14 @@ const AllEventsList: FC = () => {
             <ZUIFilterButton
               key={filter.key}
               active={filter.active}
+              ariaLabel={filter.ariaLabel}
               label={filter.label}
               onClick={filter.onClick}
             />
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {filteredEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -404,7 +430,7 @@ const AllEventsList: FC = () => {
       ))}
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'calendar'}
+        open={drawerContent === 'calendar'}
       >
         <Box
           alignItems="center"
@@ -466,7 +492,7 @@ const AllEventsList: FC = () => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'orgs'}
+        open={drawerContent === 'orgs'}
       >
         <List>
           {orgs.map((org) => (
@@ -495,7 +521,7 @@ const AllEventsList: FC = () => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'eventTypes'}
+        open={drawerContent === 'eventTypes'}
       >
         <List>
           {eventTypeFilter.eventTypeLabels.map((eventType) => (

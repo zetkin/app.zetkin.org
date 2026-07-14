@@ -22,7 +22,7 @@ export interface CallStoreSlice {
   lanes: LaneState[];
   myAssignmentsList: RemoteList<ZetkinCallAssignment>;
   unfinishedCalls: RemoteList<UnfinishedCall>;
-  queueHasError: SerializedError | null;
+  queueError: SerializedError | null;
 }
 
 const emptyFilters: ActivityFilters = {
@@ -57,7 +57,7 @@ const initialState: CallStoreSlice = {
   finishedCalls: remoteList(),
   lanes: [],
   myAssignmentsList: remoteList(),
-  queueHasError: null,
+  queueError: null,
   unfinishedCalls: remoteList(),
   upcomingEventsList: remoteList(),
 };
@@ -68,7 +68,7 @@ const CallSlice = createSlice({
   reducers: {
     allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
-      state.queueHasError = error;
+      state.queueError = error;
 
       const lane = state.lanes[state.activeLaneIndex];
       lane.step = LaneStep.START;
@@ -82,7 +82,7 @@ const CallSlice = createSlice({
     },
     allocatePreviousCall: (state, action: PayloadAction<UnfinishedCall>) => {
       const newCall = action.payload;
-      state.queueHasError = null;
+      state.queueError = null;
 
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
@@ -141,7 +141,7 @@ const CallSlice = createSlice({
         (item) => item.id != skippedCallId
       );
 
-      state.queueHasError = null;
+      state.queueError = null;
 
       const activeLane = state.lanes[state.activeLaneIndex];
       activeLane.currentCallId = newCall.id;
@@ -263,7 +263,7 @@ const CallSlice = createSlice({
       const newCall = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
       lane.currentCallId = action.payload.id;
-      state.queueHasError = null;
+      state.queueError = null;
 
       state.unfinishedCalls.items.push(
         remoteItem(newCall.id, {
@@ -301,6 +301,13 @@ const CallSlice = createSlice({
       lane.filters = emptyFilters;
       lane.selectedSurveyId = null;
     },
+    reportSubmissionErrorAdded: (
+      state,
+      action: PayloadAction<ReportSubmissionError>
+    ) => {
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.reportSubmissionError = action.payload;
+    },
     reportSubmitted: (state, action: PayloadAction<ZetkinUpdatedCall>) => {
       const lane = state.lanes[state.activeLaneIndex];
       lane.reportSubmissionError = null;
@@ -337,13 +344,6 @@ const CallSlice = createSlice({
       const report = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
       lane.report = report;
-    },
-    setReportSubmissionError: (
-      state,
-      action: PayloadAction<ReportSubmissionError>
-    ) => {
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.reportSubmissionError = action.payload;
     },
     surveyDeselected: (state) => {
       const lane = state.lanes[state.activeLaneIndex];
@@ -453,9 +453,18 @@ const CallSlice = createSlice({
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
+      const activeLane = state.lanes[state.activeLaneIndex];
+      activeLane.step = step;
 
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.step = step;
+      if (step == LaneStep.REPORT) {
+        activeLane.filters = {
+          ...emptyFilters,
+          filterState: {
+            ...emptyFilters.filterState,
+            thisCall: true,
+          },
+        };
+      }
     },
     updatePendingOrgLog: (state, action: PayloadAction<string>) => {
       const lane = state.lanes[state.activeLaneIndex];
@@ -490,7 +499,7 @@ export const {
   reportUpdated,
   surveyDeselected,
   surveySelected,
-  setReportSubmissionError,
+  reportSubmissionErrorAdded,
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,

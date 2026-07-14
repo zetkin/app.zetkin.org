@@ -11,7 +11,7 @@ type Props = {
 };
 
 const ActivistPortalOrgEventsMap: FC<Props> = ({ orgId }) => {
-  const { allEvents } = useFilteredOrgEvents(orgId);
+  const { filteredEvents } = useFilteredOrgEvents(orgId);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.organizations.filters);
   const path = usePathname();
@@ -30,12 +30,13 @@ const ActivistPortalOrgEventsMap: FC<Props> = ({ orgId }) => {
         router.push(`/o/${orgId}`);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch, filtersUpdated, lastSegment, router.push, orgId]
   );
 
   return (
     <ActivistPortalEventMap
-      events={allEvents}
+      events={filteredEvents}
       locationFilter={filters.geojsonToFilterBy}
       setLocationFilter={onLocationFilterChange}
     />

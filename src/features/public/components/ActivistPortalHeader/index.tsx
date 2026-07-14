@@ -40,16 +40,23 @@ const ActivistPortalHeader: FC<Props> = ({
     useState<HTMLButtonElement | null>(null);
   const router = useRouter();
 
+  const memberships = useUserMemberships();
+  const isOfficial = memberships.find((membership) => membership.role != null);
+
   const menuItems: MenuItem[] = useMemo(
     () => [
       {
-        label: messages.home.menu.myActivities(),
+        label: messages.home.menu.myZetkin(),
         onClick: () => router.push('/my/home'),
       },
-      {
-        label: messages.home.menu.allEvents(),
-        onClick: () => router.push('/my/feed'),
-      },
+      ...(isOfficial
+        ? [
+            {
+              label: messages.home.menu.organize(),
+              onClick: () => router.push('/organize'),
+            },
+          ]
+        : []),
       {
         divider: true,
         label: messages.home.menu.settings(),
@@ -61,11 +68,8 @@ const ActivistPortalHeader: FC<Props> = ({
         startIcon: Logout,
       },
     ],
-    [messages, router]
+    [messages, router, isOfficial]
   );
-
-  const memberships = useUserMemberships();
-  const isOfficial = memberships.find((membership) => membership.role != null);
 
   return (
     <Box
@@ -134,7 +138,9 @@ const ActivistPortalHeader: FC<Props> = ({
           >
             <Box>
               {typeof title == 'string' ? (
-                <ZUIText variant="headingLg">{title}</ZUIText>
+                <ZUIText component="h1" variant="headingLg">
+                  {title}
+                </ZUIText>
               ) : (
                 title
               )}

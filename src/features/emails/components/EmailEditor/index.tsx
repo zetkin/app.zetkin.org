@@ -69,6 +69,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
       }
     }
     blocksRef.current = content.blocks;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content.blocks.length]);
 
   const debouncedFinishedTyping = useDebounce(async (value: string) => {

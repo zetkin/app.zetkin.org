@@ -3,7 +3,7 @@ import { GroupWorkOutlined } from '@mui/icons-material';
 
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import useCampaign from 'features/campaigns/hooks/useCampaign';
+import useProject from 'features/projects/hooks/useProject';
 import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import ZUIButton from 'zui/components/ZUIButton';
 import { useMessages } from 'core/i18n';
@@ -15,10 +15,7 @@ type Props = {
 };
 
 const AreaAssignmentListItem: FC<Props> = ({ assignment, href }) => {
-  const campaign = useCampaign(
-    assignment.organization_id,
-    assignment.project_id
-  );
+  const project = useProject(assignment.organization_id, assignment.project_id);
   const organization = useOrganization(assignment.organization_id);
   const messages = useMessages(messageIds);
 
@@ -36,10 +33,17 @@ const AreaAssignmentListItem: FC<Props> = ({ assignment, href }) => {
       info={[
         {
           Icon: GroupWorkOutlined,
+          key: 'project',
           labels: [
-            campaign.campaignFuture.data?.title,
-            organization.data?.title,
-          ].filter((label) => !!label) as string[],
+            project.projectFuture.data && {
+              href: `/o/${project.projectFuture.data.organization.id}/projects/${project.projectFuture.data.id}`,
+              text: project.projectFuture.data.title,
+            },
+            organization.data && {
+              href: `/o/${organization.data.id}`,
+              text: organization.data.title,
+            },
+          ].filter((label) => !!label),
         },
       ]}
       title={assignment.title || messages.defaultTitles.areaAssignment()}

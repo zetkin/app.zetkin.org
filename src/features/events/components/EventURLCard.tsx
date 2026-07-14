@@ -24,6 +24,7 @@ const EventURLCard = ({
       event != null && event.data
         ? `${location.protocol}//${location.host}/o/${event.data.organization.id}/events/${eventId}`
         : '',
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [event?.data, eventId]
   );
 

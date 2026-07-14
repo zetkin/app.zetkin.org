@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   GridColDef,
@@ -13,6 +13,7 @@ import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
+import ZUICreatePerson from 'zui/ZUICreatePerson';
 import {
   COLUMN_TYPE,
   LocalPersonViewColumn,
@@ -27,9 +28,10 @@ type LocalPersonViewCell = null | ZetkinPerson;
 const makeName = (cell: { first_name: string; last_name: string }) =>
   `${cell.first_name} ${cell.last_name}`;
 
-export default class LocalPersonColumnType
-  implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
-{
+export default class LocalPersonColumnType implements IColumnType<
+  LocalPersonViewColumn,
+  LocalPersonViewCell
+> {
   cellToString(cell: LocalPersonViewCell): string {
     return cell ? makeName(cell) : '';
   }
@@ -87,6 +89,7 @@ const EditCell: FC<{
   column: LocalPersonViewColumn;
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
+  const [createPersonOpen, setCreatePersonOpen] = useState<boolean>(false);
   const api = useGridApiContext();
   const { orgId, viewId } = useRouter().query;
 
@@ -107,10 +110,26 @@ const EditCell: FC<{
     setCellValue(row.id, column.id, person?.id ?? null);
   };
 
+  if (createPersonOpen) {
+    return (
+      <ZUICreatePerson
+        onClose={() => setCreatePersonOpen(false)}
+        onSubmit={(_e, person) => {
+          if (!createPersonOpen) {
+            return;
+          }
+          updateCellValue(person);
+          setCreatePersonOpen(false);
+        }}
+        open={!!createPersonOpen}
+      />
+    );
+  }
+
   return (
     <ZUIPersonGridEditCell
       cell={cell}
-      onCreate={() => null}
+      onCreate={() => setCreatePersonOpen(true)}
       onUpdate={updateCellValue}
       removePersonLabel={messages.cells.localPerson.clearLabel()}
       restrictedMode={isRestrictedMode}

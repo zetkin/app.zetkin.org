@@ -21,9 +21,14 @@ import eventMessageIds from 'features/events/l10n/messageIds';
 type Props = {
   event: ZetkinEventWithStatus;
   onSignupSuccess?: () => void;
+  privacyUrl: string;
 };
 
-export const PublicEventSignup: FC<Props> = ({ event, onSignupSuccess }) => {
+export const PublicEventSignup: FC<Props> = ({
+  event,
+  onSignupSuccess,
+  privacyUrl,
+}) => {
   const messages = useMessages(messageIds);
   const eventMessages = useMessages(eventMessageIds);
   const [firstName, setFirstName] = useState('');
@@ -33,9 +38,6 @@ export const PublicEventSignup: FC<Props> = ({ event, onSignupSuccess }) => {
   const [gdprConsent, setGdprConsent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
-  const privacyUrl =
-    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
 
   const { isSubmitting, submit } = usePublicEventSignup(event, {
     onError: setError,

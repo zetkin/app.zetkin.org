@@ -1,13 +1,13 @@
 import { FormEvent } from 'react';
-import { Box, MenuItem, Tooltip } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { truncateOnMiddle } from 'utils/stringUtils';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import useTasks from 'features/tasks/hooks/useTasks';
@@ -25,7 +25,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.task;
 
-const ANY_CAMPAIGN = 'any';
+const ANY_PROJECT = 'any';
 const ANY_TASK = 'any';
 
 interface TaskProps {
@@ -43,18 +43,13 @@ const Task = ({
   onCancel,
   filter: initialFilter,
 }: TaskProps): JSX.Element => {
+  const messages = useMessages(localMessageIds);
   const { orgId } = useNumericRouteParams();
 
   const tasksQuery = useTasks(orgId);
   const tasks = tasksQuery.data || [];
-  const tasksSorted = tasks.sort((t1, t2) => {
-    return t1.title.localeCompare(t2.title);
-  });
 
-  const campaigns = useCampaigns(orgId).data || [];
-  const campaignsSorted = campaigns.sort((c1, c2) => {
-    return c1.title.localeCompare(c2.title);
-  });
+  const projects = useProjects(orgId).data || [];
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(
     initialFilter,
@@ -97,7 +92,7 @@ const Task = ({
     if (taskValue === ANY_TASK) {
       setConfig({ ...filter.config, task: undefined });
     } else {
-      // When specifying a task we don't want to specify a campaign
+      // When specifying a task we don't want to specify a project
       setConfig({
         ...filter.config,
         campaign: undefined,
@@ -106,13 +101,13 @@ const Task = ({
     }
   };
 
-  const handleCampaignSelectChange = (campaignValue: string) => {
-    if (campaignValue === ANY_CAMPAIGN) {
+  const handleProjectSelectChange = (projectValue: string) => {
+    if (projectValue === ANY_PROJECT) {
       setConfig({ ...filter.config, campaign: undefined });
     } else {
       setConfig({
         ...filter.config,
-        campaign: +campaignValue,
+        campaign: +projectValue,
         task: undefined,
       });
     }
@@ -162,71 +157,50 @@ const Task = ({
                 ))}
               </StyledSelect>
             ),
-            campaignSelect: !filter.config.task ? (
-              <>
-                <Box component="span" paddingX={1}>
-                  <Msg id={localMessageIds.campaignSelect.in} />
-                </Box>
-                <StyledSelect
-                  onChange={(e) => handleCampaignSelectChange(e.target.value)}
-                  value={filter.config.campaign || ANY_CAMPAIGN}
-                >
-                  <MenuItem key={ANY_CAMPAIGN} value={ANY_CAMPAIGN}>
-                    <Msg id={localMessageIds.campaignSelect.any} />
-                  </MenuItem>
-                  {campaignsSorted.map((c) => (
-                    <MenuItem key={c.id} value={c.id}>
-                      <Msg
-                        id={localMessageIds.campaignSelect.campaign}
-                        values={{ campaign: c.title }}
-                      />
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
-              </>
-            ) : null,
             matchingSelect: (
               <Matching
                 filterConfig={filter.config.matching || {}}
                 onChange={handleMatchingChange}
               />
             ),
+            projectSelect: !filter.config.task ? (
+              <>
+                <Box component="span" paddingX={1}>
+                  <Msg id={localMessageIds.projectSelect.in} />
+                </Box>
+                <StyledAutocomplete
+                  items={[
+                    {
+                      group: 'pinned',
+                      id: ANY_PROJECT,
+                      label: messages.projectSelect.any(),
+                    },
+                    ...projects.map((c) => ({
+                      id: c.id,
+                      label: c.title,
+                    })),
+                  ]}
+                  onChange={(e) => handleProjectSelectChange(e.target.value)}
+                  value={filter.config.campaign || ANY_PROJECT}
+                />
+              </>
+            ) : null,
             taskSelect: (
-              <StyledSelect
-                onChange={(e) => handleTaskSelectChange(e.target.value)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return value === ANY_TASK ? (
-                      <Msg id={localMessageIds.taskSelect.any} />
-                    ) : (
-                      <Msg
-                        id={localMessageIds.taskSelect.task}
-                        values={{
-                          task: truncateOnMiddle(
-                            tasks.find((t) => t.id === value)?.title ?? '',
-                            40
-                          ),
-                        }}
-                      />
-                    );
+              <StyledAutocomplete
+                items={[
+                  {
+                    group: 'pinned',
+                    id: ANY_TASK,
+                    label: messages.taskSelect.any(),
                   },
-                }}
+                  ...tasks.map((t) => ({
+                    id: t.id,
+                    label: t.title,
+                  })),
+                ]}
+                onChange={(e) => handleTaskSelectChange(e.target.value)}
                 value={filter.config.task || ANY_TASK}
-              >
-                <MenuItem key={ANY_TASK} value={ANY_TASK}>
-                  <Msg id={localMessageIds.taskSelect.any} />
-                </MenuItem>
-                {tasksSorted.map((t) => (
-                  <MenuItem key={t.id} value={t.id}>
-                    <Tooltip
-                      placement="right-start"
-                      title={t.title.length >= 40 ? t.title : ''}
-                    >
-                      <Box>{truncateOnMiddle(t.title, 40)}</Box>
-                    </Tooltip>
-                  </MenuItem>
-                ))}
-              </StyledSelect>
+              />
             ),
             taskStatusSelect: (
               <StyledSelect

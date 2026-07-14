@@ -64,6 +64,7 @@ const TimeFrame = ({
         before: before.toISOString().slice(0, 10),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [before, after, selected, numDays]);
 
   const afterDateSelect = (

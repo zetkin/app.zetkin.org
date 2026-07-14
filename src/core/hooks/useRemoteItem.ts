@@ -8,7 +8,7 @@ import usePromiseCache from './usePromiseCache';
 export default function useRemoteItem<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType
+  OnSuccessPayload = DataType,
 >(
   remoteItem: RemoteItem<DataType> | undefined | null,
   hooks: {

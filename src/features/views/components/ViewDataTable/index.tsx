@@ -94,7 +94,7 @@ declare module '@mui/x-data-grid-pro' {
     isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
-    onRowsDelete: () => void;
+    onBulkDelete: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -199,6 +199,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     ) {
       selectionModel.onSelectionChange(selection);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
   const [waiting, setWaiting] = useState(false);
 
@@ -223,6 +224,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     (error: VIEW_DATA_TABLE_ERROR) => {
       showSnackbar('error', messages.dataTableErrors[error]());
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [showSnackbar]
   );
 
@@ -287,6 +289,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const colSpec = columns.find((col) => col.id === colId) || null;
       setColumnToConfigure(colSpec);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [colIdFromFieldName, columns, setColumnToConfigure]
   );
 
@@ -321,6 +324,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         doDelete();
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       colIdFromFieldName,
       columns,
@@ -337,6 +341,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const colSpec = columns.find((col) => col.id === colId) || null;
       setColumnToRename(colSpec);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [colIdFromFieldName, columns, setColumnToRename]
   );
 
@@ -348,8 +353,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setColumnToRename, updateColumn]
   );
 
-  const onRowsDelete = useCallback(async () => {
+  const onBulkDelete = useCallback(async () => {
     bulkDeletePersons(selection);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
 
   const onRowsRemove = useCallback(async () => {
@@ -361,6 +367,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     } finally {
       setWaiting(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewGrid.removeRows, showError, setWaiting]);
 
   const onViewCreate = useCallback(() => {
@@ -428,6 +435,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ];
       debouncedUpdateColumnOrder(newColumnOrder);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [colIdFromFieldName, columns, debouncedUpdateColumnOrder]
   );
 
@@ -538,8 +546,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         gridColumns,
         isLoading,
         isSmartSearch: !!view.content_query,
+        onBulkDelete,
         onColumnCreate,
-        onRowsDelete,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,
         onViewCreate,
@@ -548,6 +556,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         sortModel: modelGridProps.sortModel,
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       onColumnConfigure,
       onColumnDelete,
@@ -568,7 +577,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
-      onRowsDelete,
+      onBulkDelete,
       setQuickSearch,
       modelGridProps.sortModel,
     ]
@@ -593,6 +602,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
       noRowsLabel: messages.empty.notice[contentSource](),
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme.components, messages.empty.notice]
   );
 
@@ -673,6 +683,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       }
       return after;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [columns]
   );
 

@@ -55,7 +55,10 @@ const BreadCrumbSibling: FC<{
             {Icon && !isCurrentItem ? (
               <Icon
                 sx={(theme) => ({
-                  color: theme.palette.grey[300],
+                  color:
+                    theme.palette.grey[
+                      theme.palette.mode === 'dark' ? 400 : 300
+                    ],
                   fontSize: '1.25rem',
                   marginRight: '0.375rem',
                 })}
@@ -85,7 +88,7 @@ const Breadcrumb: FC<{
     {!isTopLevel ? (
       <SubdirectoryArrowRight
         sx={(theme) => ({
-          color: theme.palette.grey[200],
+          color: theme.palette.grey[theme.palette.mode === 'dark' ? 800 : 200],
           fontSize: '1.25rem',
           marginRight: '0.25rem',
         })}
@@ -184,9 +187,10 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
         <Box
           sx={(theme) => ({
             alignItems: 'center',
-            backgroundColor: theme.palette.grey[50],
+            backgroundColor:
+              theme.palette.grey[theme.palette.mode === 'dark' ? 900 : 50],
             borderRadius: '2rem 0 0 2rem',
-            borderRight: `0.063rem solid ${theme.palette.grey[200]}`,
+            borderRight: `0.063rem solid ${theme.palette.grey[theme.palette.mode === 'dark' ? 800 : 200]}`,
             display: 'flex',
             height: '1.625rem',
           })}
@@ -207,7 +211,8 @@ const ZUIBreadcrumbs: FC<ZUIBreadcrumbsProps> = ({ breadcrumbs }) => {
         }
         sx={(theme) => ({
           alignItems: 'center',
-          backgroundColor: theme.palette.grey[50],
+          backgroundColor:
+            theme.palette.grey[theme.palette.mode === 'dark' ? 900 : 50],
           borderRadius: '0 2rem 2rem 0',
           cursor: 'pointer',
           display: 'flex',

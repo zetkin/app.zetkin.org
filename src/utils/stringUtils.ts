@@ -20,7 +20,7 @@ const getEllipsedString = (string: string, maxLength: number): string => {
   const ellipseIndex = matches.find(
     (m) => (m.index as number) >= maxLength
   )?.index;
-  return string.slice(0, ellipseIndex) + '...';
+  return string.slice(0, ellipseIndex ?? maxLength) + '...';
 };
 
 /**

@@ -60,6 +60,7 @@ export default function usePersonSearch(orgId: number): UsePersonSearchReturn {
           });
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTyping]);
 
   return {

@@ -79,6 +79,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onChangeNewOption(newEventType!.id);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [types.length]);
 
   useEffect(() => {
@@ -86,10 +87,12 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
       const width = spanRef.current.offsetWidth;
       setDropdownListWidth(width);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spanRef.current, text]);
 
   useEffect(() => {
     setText(value ? value.title : uncategorizedMsg);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const allTypes: EventTypeOption[] = [

@@ -39,7 +39,8 @@ import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
-import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../../projects/components/ChangeProjectDialog';
+import useEventParticipantsMutations from 'features/events/hooks/useEventParticipantsMutations';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -50,20 +51,23 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
   const orgId = event.organization.id;
-  const { participantsFuture, respondentsFuture } = useEventParticipants(
-    event.organization.id,
-    event.id
-  );
+  const {
+    verifiedParticipantsFuture,
+    respondentsFuture,
+    numSignedUpParticipants,
+    verifiedSignedUpParticipants,
+  } = useEventParticipants(event.organization.id, event.id);
   const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
     useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
+  const { addParticipants } = useEventParticipantsMutations(orgId, event.id);
 
   const dispatch = useAppDispatch();
-  const participants = participantsFuture.data || [];
-  const respondents = respondentsFuture.data || [];
+  const participants = verifiedParticipantsFuture.data || [];
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const [isBooking, setBooking] = useState(false);
 
   const showPublishButton =
     state == EventState.DRAFT ||
@@ -75,32 +79,38 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
       .length ?? 0;
 
   const availableParticipants = participants.filter((p) => !p.cancelled);
-  const signedParticipants = respondents.filter(
-    (r) => !participants.some((p) => p.id === r.id)
-  );
+
+  const bookVerifiedSignedUpParticipants = async () => {
+    setBooking(true);
+    await addParticipants(verifiedSignedUpParticipants.map((p) => p.person.id));
+    setBooking(false);
+  };
 
   const isLoading =
-    participantsFuture.isLoading ||
+    verifiedParticipantsFuture.isLoading ||
     respondentsFuture.isLoading ||
     state == EventState.UNKNOWN;
-  const showSignups = signedParticipants.length > 0 || isLoading;
+  const showSignups = numSignedUpParticipants > 0 || isLoading;
+
+  const allSignedUpParticipantsAreVerified =
+    numSignedUpParticipants == verifiedSignedUpParticipants.length;
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
   };
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedEvent = await updateEvent({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedEvent = await updateEvent({ campaign_id: projectId });
     onClickAway();
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
+      `/organize/${orgId}/projects/${projectId}/events/${event.id}`
     );
 
     showSnackbar(
       'success',
-      messages.eventChangeCampaignDialog.success({
-        campaignTitle: updatedEvent.campaign!.title,
+      messages.eventChangeProjectDialog.success({
         eventTitle: event.title!,
+        projectTitle: updatedEvent.campaign!.title,
       })
     );
   };
@@ -235,22 +245,33 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
               {isLoading ? (
                 <Skeleton width={20} />
               ) : (
-                <Typography
-                  color={
-                    (signedParticipants.length ?? 0) > 0 ? 'red' : 'secondary'
-                  }
-                >
-                  {signedParticipants.length ?? 0}
-                </Typography>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+                  {allSignedUpParticipantsAreVerified && (
+                    <Button
+                      color="primary"
+                      loading={isBooking}
+                      onClick={() => bookVerifiedSignedUpParticipants()}
+                      size="small"
+                      variant="outlined"
+                    >
+                      {messages.eventPopper.bookAll()}
+                    </Button>
+                  )}
+                  <Typography
+                    color={numSignedUpParticipants > 0 ? 'red' : 'secondary'}
+                  >
+                    {numSignedUpParticipants}
+                  </Typography>
+                </Box>
               )}
             </Box>
             {isLoading ? (
               <Skeleton height={20} variant="rectangular" width="100%" />
             ) : (
-              signedParticipants.length > 0 && (
+              numSignedUpParticipants > 0 && (
                 <ParticipantAvatars
                   orgId={orgId}
-                  participants={signedParticipants}
+                  participants={verifiedSignedUpParticipants}
                 />
               )
             )}
@@ -394,12 +415,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </NextLink>
 
           <ZUIEllipsisMenu items={ellipsisMenuItems} />
-          <ChangeCampaignDialog
-            errorMessage={messages.eventChangeCampaignDialog.error()}
-            onCampaignSelected={handleOnCampaignSelected}
+          <ChangeProjectDialog
+            errorMessage={messages.eventChangeProjectDialog.error()}
             onClose={() => setIsMoveDialogOpen(false)}
+            onProjectSelected={handleOnProjectSelected}
             open={isMoveDialogOpen}
-            title={messages.eventChangeCampaignDialog.title()}
+            title={messages.eventChangeProjectDialog.title()}
           />
         </Box>
       )}

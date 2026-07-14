@@ -10,6 +10,7 @@ import {
   AreaFilterConfig,
   OPERATION,
 } from '../../types';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
@@ -87,22 +88,21 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
   );
 
   const areaSelect = (
-    <StyledSelect
-      onChange={(ev) => {
-        const areaId = parseInt(ev.target.value);
+    <StyledAutocomplete
+      clearable={true}
+      items={areas.map((area) => ({
+        id: area.id,
+        label: area.title,
+      }))}
+      onChange={(e) => {
+        const areaId = +e.target.value;
         setConfig({
           ...filter.config,
           area: areaId,
         });
       }}
-      value={filter.config.area}
-    >
-      {areas.map((area) => (
-        <MenuItem key={area.id} value={area.id}>
-          {area.title}
-        </MenuItem>
-      ))}
-    </StyledSelect>
+      value={filter.config.area === 0 ? undefined : filter.config.area}
+    />
   );
 
   const lnglatFieldSelect = (

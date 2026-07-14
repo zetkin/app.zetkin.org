@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 /** @jest-environment jsdom */
 import htmlToInlineNodes from './htmlToInlineNodes';
 import { InlineNodeKind } from '../types';

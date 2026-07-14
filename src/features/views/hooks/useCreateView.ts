@@ -22,13 +22,13 @@ export default function useCreateView(orgId: number): useCreateViewReturn {
     rows: number[] = []
   ): Promise<ZetkinView> => {
     setIsLoading(true);
-    dispatch(viewCreate());
+    dispatch(viewCreate(orgId));
     const view = await apiClient.rpc(createNew, {
       folderId,
       orgId,
       rows,
     });
-    dispatch(viewCreated(view));
+    dispatch(viewCreated([orgId, view]));
     router.push(`/organize/${view.organization.id}/people/lists/${view.id}`);
     setIsLoading(false);
     return view;

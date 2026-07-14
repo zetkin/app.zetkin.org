@@ -23,6 +23,7 @@ const Heartbeat: FC = () => {
     }, HEARTBEAT_FREQUENCY);
 
     return () => clearInterval(heartbeatTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;

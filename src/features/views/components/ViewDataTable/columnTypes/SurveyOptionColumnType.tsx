@@ -22,9 +22,10 @@ type SurveyOptionViewCell =
     }[]
   | null;
 
-export default class SurveyOptionColumnType
-  implements IColumnType<SurveyOptionViewColumn, SurveyOptionViewCell>
-{
+export default class SurveyOptionColumnType implements IColumnType<
+  SurveyOptionViewColumn,
+  SurveyOptionViewCell
+> {
   cellToString(cell: SurveyOptionViewCell): string {
     const pickedThisOption = cell?.filter((submission) => submission.selected);
     return pickedThisOption?.length ? pickedThisOption[0].submitted : '';

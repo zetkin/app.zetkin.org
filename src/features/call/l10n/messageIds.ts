@@ -35,6 +35,13 @@ export default makeMessages('feat.call', {
   },
   activities: {
     description: m<{ name: string }>('Acting as {name}'),
+    empty: m('No activities'),
+    events: {
+      alreadyBooked: m<{ name: string }>('{name} is already signed up.'),
+      noLocation: m('No physical location'),
+      signUp: m('Sign up'),
+      undoSignUp: m('Undo sign-up'),
+    },
     filters: {
       basic: {
         alreadyIn: m('Already in'),
@@ -57,11 +64,33 @@ export default makeMessages('feat.call', {
         '{numProjects, plural, =0{Context} =1{1 project} other{# projects}}'
       ),
     },
+    noBookings: m<{ name: string }>(
+      '{name} is not booked or signed up for any events.'
+    ),
     projects: {
       wihoutProjectLabel: m('No project'),
     },
-
+    survey: {
+      backButton: m('Back to activities'),
+      cancelButton: m('Cancel'),
+      clearButton: m('Clear responses'),
+      confirmClearSurvey: m<{ title: string }>(
+        'Do you want to remove the responses for {title}?'
+      ),
+      editButton: m('Edit'),
+      fillOutButton: m('Fill out'),
+      inProgress: m('Survey in progress'),
+    },
     title: m('Activities'),
+    untitled: {
+      event: m('Untitled event'),
+      project: m('Untitled project'),
+      survey: m('Untitled survey'),
+    },
+  },
+  callAlert: {
+    description: m('No more calls left in queue'),
+    title: m('Empty call queue'),
   },
   callLog: {
     openCallLogButton: m('Call log'),
@@ -350,14 +379,20 @@ export default makeMessages('feat.call', {
       success: m<{ name: string }>('You talked to {name}'),
       wrongNumber: m<{ name: string }>('We had the wrong number for ${name}'),
     },
-    error: {
+    previousCallMissingError: {
+      description: m(
+        'The report was submitted and you can keep calling as normal'
+      ),
+      title: m('Could not load previous call'),
+    },
+    reportSubmissionError: {
       description: m(
         'The call is now among your unfinished calls and you can go back and try submitting the report again.'
       ),
       title: m('Something went wrong when the report was being submitted.'),
     },
     title: {
-      success: m('Woop woop!'),
+      success: m('Call done!'),
     },
     unfinishedCallsMessage: m(
       'But, before you move on: you have unfinished calls, deal with them!'

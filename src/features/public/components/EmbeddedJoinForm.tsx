@@ -27,17 +27,12 @@ type Props = {
 const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
   const globalMessages = useMessages(globalMessageIds);
 
-  const [status, action] = useFormState<EmbeddedJoinFormStatus>(
+  const [status, action] = useFormState<EmbeddedJoinFormStatus, FormData>(
     submitJoinForm,
     'editing'
   );
 
-  // For some reason, the version of react (or @types/react) that we use
-  // does not understand server action functions as properties to the form,
-  // but upgrading to the most recent versions causes type-related problems
-  // with react-intl (and perhaps other libraries). So this workaround
-  // allows us to pass the action to the form by pretending it's a string.
-  const actionWhileTrickingTypescript = action as unknown as string;
+  const actionWhileTrickingTypescript = action;
 
   useEffect(() => {
     if (status == 'submitted') {

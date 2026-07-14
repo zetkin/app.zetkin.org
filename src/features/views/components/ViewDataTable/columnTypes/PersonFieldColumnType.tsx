@@ -22,9 +22,10 @@ const getValue = (cell: SimpleData, column: PersonFieldViewColumn) => {
   }
 };
 
-export default class PersonFieldColumnType
-  implements IColumnType<ZetkinViewColumn, SimpleData>
-{
+export default class PersonFieldColumnType implements IColumnType<
+  ZetkinViewColumn,
+  SimpleData
+> {
   cellToString(cell: SimpleData, column: PersonFieldViewColumn): string {
     return getValue(cell, column);
   }
@@ -66,11 +67,14 @@ export default class PersonFieldColumnType
       },
       type: isDate ? 'date' : undefined,
       valueGetter: (value: SimpleData) => {
-        if (isDate && typeof value === 'string') {
-          // For date fields, MUI expects a Date object
-          return new Date(value);
+        if (isDate) {
+          if (!value) {
+            return null;
+          } else if (typeof value === 'string') {
+            // For date fields, MUI expects a Date object
+            return new Date(value);
+          }
         }
-
         return getValue(value, column);
       },
     };

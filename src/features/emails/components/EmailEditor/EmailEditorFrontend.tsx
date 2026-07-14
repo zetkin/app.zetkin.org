@@ -137,6 +137,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         }
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -157,6 +158,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     return () => {
       clearInterval(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const styleSheet: CSSStyleSheet = new CSSStyleSheet();

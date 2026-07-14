@@ -72,6 +72,7 @@ const MergeModal: FC<Props> = ({
 
   useEffect(() => {
     setSelectedIds(persons.map((person) => person.id) ?? []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (

@@ -58,7 +58,7 @@ const createNewInstance = async (
     const putTags = async (tags: ZetkinTag[]) => {
       await Promise.all(
         tags.map((tag: ZetkinTag) => {
-          apiFetch(
+          return apiFetch(
             `/orgs/${orgId}/journey_instances/${instId}/tags/${tag.id}`,
             { method: 'PUT' }
           );

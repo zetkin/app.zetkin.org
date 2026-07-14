@@ -6,11 +6,6 @@ export default makeMessages('feat.duplicates', {
     fieldSettings: {
       data: m('Data'),
       field: m('Field'),
-      gender: {
-        f: m('Female'),
-        m: m('Male'),
-        o: m('Other'),
-      },
       noValue: m('No value'),
       title: m('Data to merge'),
     },

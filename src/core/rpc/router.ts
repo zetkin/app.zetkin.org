@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { RPCRouteDef } from './types';
+import { ApiClientError } from 'core/api/errors';
 
 export class RPCRouter {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,11 +34,19 @@ export class RPCRouter {
 
     const apiClient = new BackendApiClient(req.headers);
 
-    const result = await def.handler(inputParams.data, apiClient, req);
+    try {
+      const result = await def.handler(inputParams.data, apiClient, req);
 
-    res.status(200).json({
-      result,
-    });
+      res.status(200).json({
+        result,
+      });
+    } catch (e) {
+      res.status(e instanceof ApiClientError ? e.status : 500).json({
+        error: {
+          title: 'Unknown Error',
+        },
+      });
+    }
   }
 
   register<ParamsType, ResultType>(

@@ -290,8 +290,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               ]}
             />
           );
-        } else if (type == 'booked') {
-          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
+        } else if (event && type == 'booked') {
+          const eventStart = new Date(removeOffset(event.start_time));
+          const anHourFromNow = new Date(
+            new Date().setHours(new Date().getHours() + 1)
+          );
+          const canTakeAttendance = eventStart < anHourFromNow;
+
+          if (canTakeAttendance) {
             const options: ButtonOption[] = [
               {
                 callback: () => {
@@ -420,7 +426,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         rows={
           filterString
             ? filterSignupOrParticipantRows(rows, filterString)
-            : rows ?? []
+            : (rows ?? [])
         }
         sx={{
           '& .MuiDataGrid-row:hover': {

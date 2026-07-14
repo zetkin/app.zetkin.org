@@ -54,6 +54,14 @@ You should now be able to access the app on http://localhost:3000. It will
 communicate with the Zetkin API running on our public development server. See
 below for login credentials.
 
+#### Setting up MongoDB for local development
+
+Experimental features might require a running MongoDB. It does not need to be seeded and port is set with .env variable `MONGODB_URL`.
+
+```bash
+docker run --rm -ti -p27017:27017 mongo
+```
+
 ### Running the code (Docker)
 
 As **an alternative to the normal development setup**, you can also run the provided

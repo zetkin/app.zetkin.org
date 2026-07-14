@@ -3,11 +3,14 @@ import { ZetkinEventParticipant } from 'utils/types/zetkin';
 import {
   participantAdded,
   participantDeleted,
+  participantsAdded,
   participantsRemind,
   participantsReminded,
   participantUpdated,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
+import { ZetkinEventReminder } from '../types';
+import addParticipantsRPC from '../rpc/addParticipants';
 
 export enum participantStatus {
   ATTENDED = 'attended',
@@ -17,6 +20,7 @@ export enum participantStatus {
 
 type useEventParticipantsMutationsMutationsReturn = {
   addParticipant: (personId: number) => void;
+  addParticipants: (personIds: number[]) => Promise<void>;
   deleteParticipant: (participantId: number) => void;
   sendReminders: (eventId: number) => void;
   setParticipantStatus: (
@@ -46,6 +50,15 @@ export default function useEventParticipantsMutations(
     dispatch(participantAdded([eventId, participant]));
   };
 
+  const addParticipants = async (verifiedSignedUpParticipantIds: number[]) => {
+    const participants = await apiClient.rpc(addParticipantsRPC, {
+      eventId,
+      orgId,
+      participantIds: verifiedSignedUpParticipantIds,
+    });
+    dispatch(participantsAdded([eventId, participants]));
+  };
+
   const deleteParticipant = async (participantId: number) => {
     await apiClient.delete(
       `/api/orgs/${orgId}/actions/${eventId}/participants/${participantId}`
@@ -71,8 +84,11 @@ export default function useEventParticipantsMutations(
 
   const sendReminders = async (eventId: number) => {
     dispatch(participantsRemind(eventId));
-    await apiClient.post(`/api/orgs/${orgId}/actions/${eventId}/reminders`, {});
-    dispatch(participantsReminded(eventId));
+    const reminders = await apiClient.post<ZetkinEventReminder[], null>(
+      `/api/orgs/${orgId}/actions/${eventId}/reminders`,
+      null
+    );
+    dispatch(participantsReminded([eventId, reminders]));
   };
 
   const setReqParticipants = (reqParticipants: number) => {
@@ -92,6 +108,7 @@ export default function useEventParticipantsMutations(
 
   return {
     addParticipant,
+    addParticipants,
     deleteParticipant,
     sendReminders,
     setParticipantStatus,

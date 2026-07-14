@@ -55,6 +55,7 @@ export default function useModelsFromQueryString(): UseModelsFromQueryString {
         shallow: true,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterModel, sortModel]);
 
   // Update model when router URL changes
@@ -69,6 +70,7 @@ export default function useModelsFromQueryString(): UseModelsFromQueryString {
     if (!isEqual(routerSortModel, sortModel)) {
       setSortModel(routerSortModel);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
   return {
