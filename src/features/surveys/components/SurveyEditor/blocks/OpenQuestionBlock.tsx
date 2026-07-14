@@ -17,6 +17,7 @@ import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
+import RequiredCheckbox from '../elements/RequiredCheckbox';
 
 interface OpenQuestionBlockProps {
   editable: boolean;
@@ -122,6 +123,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           label={messages.blocks.open.label()}
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.open.empty()}
+          required={element.question.required}
           value={title}
           variant="header"
         />
@@ -133,6 +135,13 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           value={description}
           variant="content"
         />
+        {editable && (
+          <RequiredCheckbox
+            orgId={orgId}
+            surveyId={surveyId}
+            surveyQuestionElement={element}
+          />
+        )}
         <ZUIPreviewableInput
           {...previewableProps}
           renderInput={() => (
