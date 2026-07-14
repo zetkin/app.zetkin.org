@@ -1,4 +1,5 @@
 import {
+  getItemId,
   Id,
   RemoteData,
   RemoteItem,
@@ -10,9 +11,7 @@ export function findOrAddItem<DataType extends RemoteData | Id>(
   list: RemoteList<DataType>,
   id: number | string
 ): RemoteItem<DataType> {
-  const existingItem = list.items.find((item) =>
-    typeof item === 'object' ? item.id == id : item
-  );
+  const existingItem = list.items.find((item) => getItemId(item) === id);
   if (existingItem) {
     return existingItem;
   } else {
