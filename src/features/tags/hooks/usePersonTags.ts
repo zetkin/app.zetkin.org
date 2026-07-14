@@ -15,11 +15,7 @@ export default function usePersonTags(orgId: number, personId: number) {
   const tagsById = useAppSelector((state) => state.tags.tagsById);
 
   const appliedTagList = useMemo(() => {
-    if (typeof personTags === 'undefined') {
-      return personTags;
-    }
-
-    if (!personTags.items) {
+    if (!personTags?.items) {
       return undefined;
     }
 
