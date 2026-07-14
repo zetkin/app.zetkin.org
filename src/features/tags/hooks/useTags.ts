@@ -25,7 +25,8 @@ export default function useTags(orgId: number): IFuture<ZetkinTag[]> {
             ? {
                 ...tagItem.data,
                 group: tagItem.data.group
-                  ? (groupsById[tagItem.data.group.id]?.data ?? null)
+                  ? (groupsById[tagItem.data.group.id]?.data ??
+                    tagItem.data.group)
                   : null,
               }
             : null,
