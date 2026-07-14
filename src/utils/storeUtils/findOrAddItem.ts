@@ -1,15 +1,17 @@
 import {
+  getItemId,
+  Id,
   RemoteData,
   RemoteItem,
   remoteItem,
   RemoteList,
 } from 'utils/storeUtils';
 
-export function findOrAddItem<DataType extends RemoteData>(
+export function findOrAddItem<DataType extends RemoteData | Id>(
   list: RemoteList<DataType>,
   id: number | string
 ): RemoteItem<DataType> {
-  const existingItem = list.items.find((item) => item.id == id);
+  const existingItem = list.items.find((item) => getItemId(item) === id);
   if (existingItem) {
     return existingItem;
   } else {
@@ -30,7 +32,7 @@ export function findOrAddItem<DataType extends RemoteData>(
  * @param mutating THe fields on the item being updated.
  * @returns The existing or newly created mutating RemoteItem.
  */
-export function remoteItemUpdate<DataType extends RemoteData>(
+export function remoteItemUpdate<DataType extends RemoteData | Id>(
   list: RemoteList<DataType>,
   id: number | string,
   mutating: string[]
@@ -49,7 +51,7 @@ export function remoteItemUpdate<DataType extends RemoteData>(
  * @param id ID of a RemoteItem, which might or might not exist in cache.
  * @returns The existing or newly created RemoteItem.
  */
-export function remoteItemLoad<DataType extends RemoteData>(
+export function remoteItemLoad<DataType extends RemoteData | Id>(
   list: RemoteList<DataType>,
   id: number | string
 ): RemoteItem<DataType> {
