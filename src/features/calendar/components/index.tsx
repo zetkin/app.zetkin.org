@@ -120,7 +120,7 @@ const Calendar = () => {
           )}
           {timeScale === TimeScale.WEEK && (
             <CalendarWeekView
-              focusDate={focusDate}
+              focusDate={plainDateFromLegacyDate(focusDate)}
               onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
             />
           )}

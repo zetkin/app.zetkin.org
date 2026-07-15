@@ -1,7 +1,4 @@
 import { Box, lighten } from '@mui/system';
-import dayjs from 'dayjs';
-import { FormattedTime } from 'react-intl';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import {
   ListItemIcon,
@@ -18,7 +15,7 @@ import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
 import EventShiftModal from '../EventShiftModal';
 import HeaderWeekNumber from './HeaderWeekNumber';
-import { isSameDate } from 'utils/dateUtils';
+import { legacyDateFromPlainDate } from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
@@ -28,20 +25,16 @@ import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 
-dayjs.extend(isoWeek);
-
 const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '60px';
 
 const CurrentTimeCircleMarker = ({
   currentTime,
 }: {
-  currentTime: dayjs.Dayjs;
+  currentTime: Temporal.PlainTime;
 }) => {
   const topOffset =
-    (currentTime.hour() +
-      currentTime.minute() / 60 +
-      currentTime.second() / 60 / 60) *
+    currentTime.since({ hour: 0, minute: 0, second: 0 }).total('hours') *
     HOUR_HEIGHT;
   return (
     <Box
@@ -63,12 +56,10 @@ const CurrentTimeCircleMarker = ({
 const CurrentTimeLineMarker = ({
   currentTime,
 }: {
-  currentTime: dayjs.Dayjs;
+  currentTime: Temporal.PlainTime;
 }) => {
   const topOffset =
-    (currentTime.hour() +
-      currentTime.minute() / 60 +
-      currentTime.second() / 60 / 60) *
+    currentTime.since({ hour: 0, minute: 0, second: 0 }).total('hours') *
     HOUR_HEIGHT;
   return (
     <Box
@@ -88,43 +79,45 @@ const CurrentTimeLineMarker = ({
 };
 
 export interface CalendarWeekViewProps {
-  focusDate: Date;
+  focusDate: Temporal.PlainDate;
   onClickDay: (date: Date) => void;
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
-  const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
+  const [pendingEvent, setPendingEvent] = useState<
+    [Temporal.PlainDateTime, Temporal.PlainDateTime] | null
+  >(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
   );
   const { orgId, projectId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
-  const focusWeekStartDay =
-    dayjs(focusDate).isoWeekday() == 7
-      ? dayjs(focusDate).add(-1, 'day')
-      : dayjs(focusDate);
+  const focusWeekStartDay = focusDate.subtract({
+    days: focusDate.dayOfWeek - 1,
+  });
 
   const dayDates = range(7).map((weekday) => {
-    return focusWeekStartDay.day(weekday + 1).toDate();
+    return focusWeekStartDay.add({ days: weekday });
   });
 
   const dstChange = useMemo(
-    () =>
-      dayDates.map((d) => dayjs(d)).find((date) => getDstChangeAtDate(date)),
+    () => dayDates.find(getDstChangeAtDate),
     [dayDates]
   );
 
   const eventsByDate = useWeekCalendarEvents({
-    dates: dayDates,
+    dates: dayDates.map(legacyDateFromPlainDate),
     orgId,
     projectId,
   });
 
-  const [currentTime, setCurrentTime] = useState<dayjs.Dayjs>(dayjs());
+  const [currentTime, setCurrentTime] = useState<Temporal.PlainDateTime>(
+    Temporal.Now.plainDateTimeISO()
+  );
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(dayjs());
+      setCurrentTime(Temporal.Now.plainDateTimeISO());
     }, 1000);
     return () => {
       clearInterval(timer);
@@ -156,16 +149,14 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         position="relative"
       >
         {/* Empty */}
-        <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
-        {dayDates.map((weekdayDate: Date, weekday: number) => {
+        <HeaderWeekNumber weekNr={dayDates[0].weekOfYear!} />
+        {dayDates.map((weekdayDate: Temporal.PlainDate, weekday: number) => {
           return (
             <Box key={`weekday-${weekday}`} position="relative">
               <DayHeader
                 date={weekdayDate}
-                focused={
-                  new Date().toDateString() == weekdayDate.toDateString()
-                }
-                onClick={() => onClickDay(weekdayDate)}
+                focused={Temporal.Now.plainDateISO().equals(weekdayDate)}
+                onClick={() => onClickDay(legacyDateFromPlainDate(weekdayDate))}
               />
               <Box
                 sx={{
@@ -204,7 +195,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         {/* Hours column */}
         <Box>
           {range(24).map((hour: number) => {
-            const time = dayjs().set('hour', hour).set('minute', 0).toString();
+            const time = Temporal.PlainTime.from({ hour });
             return (
               <Box
                 key={`hour-${hour}`}
@@ -213,23 +204,22 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 justifyContent="flex-end"
               >
                 <Typography color="textDisabled" variant="caption">
-                  <FormattedTime hour="numeric" minute="numeric" value={time} />
+                  {time.toLocaleString(undefined, {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  })}
                 </Typography>
               </Box>
             );
           })}
         </Box>
         {/* Day columns */}
-        {dayDates.map((date: Date, index: number) => {
+        {dayDates.map((date: Temporal.PlainDate, index: number) => {
           const pendingTop = pendingEvent
-            ? (pendingEvent[0].getUTCHours() * 60 +
-                pendingEvent[0].getMinutes()) /
-              (24 * 60)
+            ? (pendingEvent[0].hour * 60 + pendingEvent[0].minute) / (24 * 60)
             : 0;
           const pendingHeight = pendingEvent
-            ? (pendingEvent[1].getUTCHours() * 60 +
-                pendingEvent[1].getMinutes()) /
-                (24 * 60) -
+            ? (pendingEvent[1].hour * 60 + pendingEvent[1].minute) / (24 * 60) -
               pendingTop
             : 0;
 
@@ -237,7 +227,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
 
           return (
             <Box
-              key={date.toISOString()}
+              key={date.toString()}
               ref={(elm: HTMLDivElement | null) => {
                 laneHeight = elm?.clientHeight ?? 0;
               }}
@@ -249,11 +239,14 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
               }}
             >
               {index === 0 && (
-                <CurrentTimeLineMarker currentTime={currentTime} />
+                <CurrentTimeLineMarker
+                  currentTime={currentTime.toPlainTime()}
+                />
               )}
-              {currentTime.toISOString().substring(0, 10) ===
-                date.toISOString().substring(0, 10) && (
-                <CurrentTimeCircleMarker currentTime={currentTime} />
+              {currentTime.toPlainDate().equals(date) && (
+                <CurrentTimeCircleMarker
+                  currentTime={currentTime.toPlainTime()}
+                />
               )}
               <Box
                 ref={(elm: HTMLDivElement) => {
@@ -268,25 +261,14 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
               >
                 <EventDayLane
                   onCreate={(startTime, endTime) => {
-                    const startDate = new Date(
-                      Date.UTC(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        startTime[0],
-                        startTime[1]
-                      )
-                    );
-
-                    const endDate = new Date(
-                      Date.UTC(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        endTime[0] >= 24 ? 23 : endTime[0],
-                        endTime[0] >= 24 ? 59 : endTime[1]
-                      )
-                    );
+                    const startDate = date.toPlainDateTime({
+                      hour: startTime[0],
+                      minute: startTime[1],
+                    });
+                    const endDate = date.toPlainDateTime({
+                      hour: endTime[0] >= 24 ? 23 : endTime[0],
+                      minute: endTime[0] >= 24 ? 59 : endTime[1],
+                    });
 
                     setPendingEvent([startDate, endDate]);
                   }}
@@ -339,80 +321,84 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                       );
                     });
                   })}
-                  {pendingEvent && isSameDate(date, pendingEvent[0]) && (
-                    <>
-                      <EventGhost
-                        ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
-                        height={pendingHeight * 100 + '%'}
-                        y={pendingTop * 100 + '%'}
-                      />
-                      {ghostAnchorEl && !creating && (
-                        <Menu
-                          anchorEl={ghostAnchorEl}
-                          anchorOrigin={{
-                            horizontal: index > 3 ? 'left' : 'right',
-                            vertical: 'bottom',
-                          }}
-                          onClose={() => {
-                            setPendingEvent(null);
-                            setGhostAnchorEl(null);
-                          }}
-                          open={true}
-                          transformOrigin={{
-                            horizontal: index > 3 ? 'right' : 'left',
-                            vertical: 'top',
-                          }}
-                        >
-                          <MenuItem
-                            onClick={async () => {
-                              setCreating(true);
-                              setGhostAnchorEl(null);
-                              await createEvent({
-                                activity_id: null,
-                                campaign_id: projectId,
-                                end_time: pendingEvent[1].toISOString(),
-                                location_id: null,
-                                start_time: pendingEvent[0].toISOString(),
-                                title: null,
-                              });
+                  {pendingEvent &&
+                    date.equals(pendingEvent[0].toPlainDate()) && (
+                      <>
+                        <EventGhost
+                          ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
+                          height={pendingHeight * 100 + '%'}
+                          y={pendingTop * 100 + '%'}
+                        />
+                        {ghostAnchorEl && !creating && (
+                          <Menu
+                            anchorEl={ghostAnchorEl}
+                            anchorOrigin={{
+                              horizontal: index > 3 ? 'left' : 'right',
+                              vertical: 'bottom',
+                            }}
+                            onClose={() => {
                               setPendingEvent(null);
-                              setCreating(false);
-                            }}
-                          >
-                            <ListItemIcon>
-                              <Event />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Msg id={messageIds.createMenu.singleEvent} />
-                            </ListItemText>
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => {
-                              setCreating(true);
                               setGhostAnchorEl(null);
-                              setShiftModalOpen(true);
+                            }}
+                            open={true}
+                            transformOrigin={{
+                              horizontal: index > 3 ? 'right' : 'left',
+                              vertical: 'top',
                             }}
                           >
-                            <ListItemIcon>
-                              <SplitscreenOutlined />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Msg id={messageIds.createMenu.shiftEvent} />
-                            </ListItemText>
-                          </MenuItem>
-                        </Menu>
-                      )}
-                      <EventShiftModal
-                        close={() => {
-                          setShiftModalOpen(false);
-                          setPendingEvent(null);
-                          setCreating(false);
-                        }}
-                        dates={pendingEvent}
-                        open={shiftModalOpen}
-                      />
-                    </>
-                  )}
+                            <MenuItem
+                              onClick={async () => {
+                                setCreating(true);
+                                setGhostAnchorEl(null);
+                                await createEvent({
+                                  activity_id: null,
+                                  campaign_id: projectId,
+                                  end_time: pendingEvent[1].toString(),
+                                  location_id: null,
+                                  start_time: pendingEvent[0].toString(),
+                                  title: null,
+                                });
+                                setPendingEvent(null);
+                                setCreating(false);
+                              }}
+                            >
+                              <ListItemIcon>
+                                <Event />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Msg id={messageIds.createMenu.singleEvent} />
+                              </ListItemText>
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                setCreating(true);
+                                setGhostAnchorEl(null);
+                                setShiftModalOpen(true);
+                              }}
+                            >
+                              <ListItemIcon>
+                                <SplitscreenOutlined />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Msg id={messageIds.createMenu.shiftEvent} />
+                              </ListItemText>
+                            </MenuItem>
+                          </Menu>
+                        )}
+                        <EventShiftModal
+                          close={() => {
+                            setShiftModalOpen(false);
+                            setPendingEvent(null);
+                            setCreating(false);
+                          }}
+                          dates={[
+                            legacyDateFromPlainDateTime(pendingEvent[0]),
+                            legacyDateFromPlainDateTime(pendingEvent[1]),
+                          ]}
+                          open={shiftModalOpen}
+                        />
+                      </>
+                    )}
                   {/* TODO: Put events here */}
                 </EventDayLane>
               </Box>
@@ -423,5 +409,8 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     </>
   );
 };
+
+const legacyDateFromPlainDateTime = (date: Temporal.PlainDateTime): Date =>
+  new Date(date.toZonedDateTime(Temporal.Now.timeZoneId()).epochMilliseconds);
 
 export default CalendarWeekView;

@@ -1,7 +1,5 @@
-import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
-import dayjs from 'dayjs';
 
 import oldTheme from 'theme';
 import { getDstChangeAtDate } from '../utils';
@@ -9,13 +7,13 @@ import { Msg } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
 
 export interface DayHeaderProps {
-  date: Date;
+  date: Temporal.PlainDate;
   focused: boolean;
   onClick: () => void;
 }
 
 const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
-  const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
+  const dstChange = useMemo(() => getDstChangeAtDate(date), [date]);
 
   return (
     <Box
@@ -31,7 +29,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       {/* Day string */}
       <Box alignItems="center" display="flex" justifyContent="flex-start">
         <Typography color={oldTheme.palette.grey[500]} variant="subtitle2">
-          <FormattedDate value={date} weekday="short" />
+          {date.toLocaleString(undefined, { weekday: 'short' })}
         </Typography>
       </Box>
       {/* Day number */}
@@ -50,7 +48,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
           }}
         >
           <Typography color={focused ? 'white' : 'inherit'} fontSize="1.2em">
-            <FormattedDate day="numeric" value={date} />
+            {date.toLocaleString(undefined, { day: 'numeric' })}
           </Typography>
         </Box>
       </Box>
