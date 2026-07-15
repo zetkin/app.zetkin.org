@@ -31,9 +31,14 @@ export type EnvVars = {
   MAPLIBRE_STYLE?: string;
   MUIX_LICENSE_KEY?: string;
   TILESERVER?: string;
+  ZETKIN_API_HOST?: string;
+  ZETKIN_API_PORT?: string;
   ZETKIN_APP_DOMAIN?: string;
+  ZETKIN_APP_HOST?: string;
+  ZETKIN_CLIENT_ID?: string;
   ZETKIN_GEN2_ORGANIZE_URL?: string;
   ZETKIN_PRIVACY_POLICY_LINK?: string;
+  ZETKIN_USE_TLS?: string;
 };
 
 /**
