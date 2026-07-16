@@ -6,13 +6,6 @@ import { useAppDispatch } from '.';
 import usePromiseCache from './usePromiseCache';
 import { IFuture, LoadingFuture, RemoteListFuture } from 'core/caching/futures';
 
-/**
- * Non-suspending variant of {@link useRemoteList}: identical loading and
- * caching behavior, but returns an {@link IFuture} instead of throwing the
- * fetch promise. Use it on paths that render on first mount, where committing
- * a Suspense fallback is undesirable (React 19 throttles fallback reveals by
- * up to 300ms, and suspending above a page-level boundary blanks the app).
- */
 export default function useRemoteListFuture<
   DataType,
   OnLoadPayload = void,
@@ -38,7 +31,7 @@ export default function useRemoteListFuture<
   const { cache, getExistingPromise } = usePromiseCache(promiseKey);
   const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
-  const fireLoadIfNotInFlight = () => {
+  const loadOnce = () => {
     if (getExistingPromise()) {
       return;
     }
@@ -65,12 +58,12 @@ export default function useRemoteListFuture<
   };
 
   if (notLoaded) {
-    fireLoadIfNotInFlight();
+    loadOnce();
     return new LoadingFuture();
   }
 
   if (loadIsNecessary) {
-    fireLoadIfNotInFlight();
+    loadOnce();
 
     const hasData = !!remoteList.items?.length;
     if (!hasData || !staleWhileRevalidate) {

@@ -32,7 +32,6 @@ describe('useRemoteItemFuture()', () => {
 
     const { queryByText } = render();
 
-    // No Suspense boundary exists: the hook must not suspend
     expect(queryByText('loading')).not.toBeNull();
     expect(queryByText('loaded')).toBeNull();
 

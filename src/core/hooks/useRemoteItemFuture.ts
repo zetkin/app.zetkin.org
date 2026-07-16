@@ -6,13 +6,6 @@ import { useAppDispatch } from '.';
 import usePromiseCache from './usePromiseCache';
 import { IFuture, LoadingFuture, RemoteItemFuture } from 'core/caching/futures';
 
-/**
- * Non-suspending variant of {@link useRemoteItem}: identical loading and
- * caching behavior, but returns an {@link IFuture} instead of throwing the
- * fetch promise. Use it on paths that render on first mount, where committing
- * a Suspense fallback is undesirable (React 19 throttles fallback reveals by
- * up to 300ms, and suspending above a page-level boundary blanks the app).
- */
 export default function useRemoteItemFuture<
   DataType,
   OnLoadPayload = void,
@@ -37,7 +30,7 @@ export default function useRemoteItemFuture<
   const { cache, getExistingPromise } = usePromiseCache(promiseKey);
   const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
-  const fireLoadIfNotInFlight = (dispatchLoadAction: boolean) => {
+  const loadOnce = (dispatchLoadAction: boolean) => {
     if (getExistingPromise()) {
       return;
     }
@@ -66,18 +59,17 @@ export default function useRemoteItemFuture<
   };
 
   if (!remoteItem) {
-    fireLoadIfNotInFlight(true);
+    loadOnce(true);
     return new LoadingFuture();
   }
 
   if (remoteItem.isLoading && !remoteItem.data) {
-    // No need to dispatch actionOnLoad: already loading
-    fireLoadIfNotInFlight(false);
+    loadOnce(false);
     return new LoadingFuture();
   }
 
   if (loadIsNecessary) {
-    fireLoadIfNotInFlight(true);
+    loadOnce(true);
 
     if (!remoteItem.data || !staleWhileRevalidate) {
       return new LoadingFuture();

@@ -6,7 +6,7 @@ import { userEventsLoad, userEventsLoaded } from '../../events/store';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/public/types';
 
-function useMyEventsListWithHooks() {
+function useMyEventsList() {
   const apiClient = useApiClient();
   const list = useAppSelector((state) => state.events.userEventList);
 
@@ -59,11 +59,11 @@ function useMyEventsListWithHooks() {
 }
 
 export default function useMyEvents() {
-  const { hooks, list } = useMyEventsListWithHooks();
+  const { hooks, list } = useMyEventsList();
   return useRemoteList(list, hooks);
 }
 
 export function useMyEventsFuture(): IFuture<ZetkinEventWithStatus[]> {
-  const { hooks, list } = useMyEventsListWithHooks();
+  const { hooks, list } = useMyEventsList();
   return useRemoteListFuture(list, hooks);
 }

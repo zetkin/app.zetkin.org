@@ -31,7 +31,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
-import CenteredLoadingIndicator from 'features/my/components/CenteredLoadingIndicator';
+import LoadingIndicator from 'features/my/components/LoadingIndicator';
 
 const AllEventsList: FC = () => {
   const intl = useIntl();
@@ -130,7 +130,7 @@ const AllEventsList: FC = () => {
   });
 
   if (allEventsFuture.isLoading) {
-    return <CenteredLoadingIndicator />;
+    return <LoadingIndicator />;
   }
 
   const orgs = [

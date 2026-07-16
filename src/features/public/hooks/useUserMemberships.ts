@@ -8,7 +8,7 @@ import {
 } from 'features/organizations/store';
 import { ZetkinMembership } from 'utils/types/zetkin';
 
-function useListWithHooks() {
+function useMembershipsList() {
   const apiClient = useApiClient();
   const list = useAppSelector(
     (state) => state.organizations.userMembershipList
@@ -29,11 +29,11 @@ function useListWithHooks() {
 }
 
 export default function useUserMemberships() {
-  const { hooks, list } = useListWithHooks();
+  const { hooks, list } = useMembershipsList();
   return useRemoteList(list, hooks);
 }
 
 export function useUserMembershipsFuture(): IFuture<ZetkinMembership[]> {
-  const { hooks, list } = useListWithHooks();
+  const { hooks, list } = useMembershipsList();
   return useRemoteListFuture(list, hooks);
 }

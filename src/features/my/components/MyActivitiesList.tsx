@@ -15,7 +15,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import AreaAssignmentListItem from 'features/public/components/AreaAssignmentListItem';
-import CenteredLoadingIndicator from 'features/my/components/CenteredLoadingIndicator';
+import LoadingIndicator from 'features/my/components/LoadingIndicator';
 
 const MyActivitiesList: FC = () => {
   const activitiesFuture = useMyActivities();
@@ -26,7 +26,7 @@ const MyActivitiesList: FC = () => {
   const nextDelay = useIncrementalDelay();
 
   if (activitiesFuture.isLoading) {
-    return <CenteredLoadingIndicator />;
+    return <LoadingIndicator />;
   }
 
   const activities = activitiesFuture.data || [];

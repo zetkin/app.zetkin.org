@@ -6,14 +6,14 @@ import { Box, Fade } from '@mui/material';
 import MyOrgsListItem from './MyOrgsListItem';
 import { useUserMembershipsFuture } from 'features/public/hooks/useUserMemberships';
 import useIncrementalDelay from 'features/public/hooks/useIncrementalDelay';
-import CenteredLoadingIndicator from './CenteredLoadingIndicator';
+import LoadingIndicator from './LoadingIndicator';
 
 const MyOrgsList: FC = () => {
   const membershipsFuture = useUserMembershipsFuture();
   const nextDelay = useIncrementalDelay();
 
   if (membershipsFuture.isLoading) {
-    return <CenteredLoadingIndicator />;
+    return <LoadingIndicator />;
   }
 
   const sortedMemberships = (membershipsFuture.data || []).sort((m0, m1) =>

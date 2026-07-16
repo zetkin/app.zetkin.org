@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
-const CenteredLoadingIndicator: FC = () => {
+const LoadingIndicator: FC = () => {
   return (
     <Box
       alignItems="center"
@@ -17,4 +17,4 @@ const CenteredLoadingIndicator: FC = () => {
   );
 };
 
-export default CenteredLoadingIndicator;
+export default LoadingIndicator;
