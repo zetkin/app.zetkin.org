@@ -11,7 +11,10 @@ import CalendarWeekView from './CalendarWeekView';
 import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
 import useTimeScale from '../hooks/useTimeScale';
-import { plainDateFromLegacyDate } from 'utils/dateUtils';
+import {
+  legacyDateFromPlainDate,
+  plainDateFromLegacyDate,
+} from 'utils/dateUtils';
 
 dayjs.extend(utc);
 
@@ -76,9 +79,9 @@ const Calendar = () => {
   return (
     <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
       <CalendarNavBar
-        focusDate={focusDate}
+        focusDate={plainDateFromLegacyDate(focusDate)}
         onChangeFocusDate={(date) => {
-          setFocusDate(date);
+          setFocusDate(legacyDateFromPlainDate(date));
         }}
         onChangeTimeScale={(timeScale) => {
           setPersistentTimeScale(timeScale);

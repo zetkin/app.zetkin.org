@@ -1,37 +1,30 @@
-import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
 import { MenuItem, Select } from '@mui/material';
 
 import range from 'utils/range';
 
 export interface YearSelectProps {
-  focusDate: Date;
-  onChange: (date: Date) => void;
+  focusDate: Temporal.PlainDate;
+  onChange: (date: Temporal.PlainDate) => void;
 }
 
 const YearSelect = ({ focusDate, onChange }: YearSelectProps) => {
   const amountOfYears = 18;
-  const startYear = focusDate.getFullYear() - 8;
+  const startYear = focusDate.year - 8;
 
   return (
     <Select
       disableUnderline
       onChange={(event) => {
-        const newYear =
-          typeof event.target.value === 'number'
-            ? event.target.value
-            : parseInt(event.target.value);
-        const newDate = dayjs(focusDate).year(newYear);
-        onChange(newDate.toDate());
+        onChange(Temporal.PlainDate.from(event.target.value.toString()));
       }}
-      value={focusDate.getFullYear()}
+      value={focusDate.toString()}
       variant="standard"
     >
       {range(amountOfYears).map((index) => {
-        const year = dayjs(focusDate).year(startYear + index);
+        const year = focusDate.with({ year: startYear + index });
         return (
-          <MenuItem key={index} value={year.year()}>
-            <FormattedDate value={year.toDate()} year="numeric" />
+          <MenuItem key={index} value={year.toString()}>
+            {year.toLocaleString(undefined, { year: 'numeric' })}
           </MenuItem>
         );
       })}
