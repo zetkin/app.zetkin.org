@@ -71,7 +71,7 @@ const DisplayEmailClick = ({ filter }: DisplayEmailClickProps): JSX.Element => {
               ...new Map(
                 linkList
                   ?.filter((item) => filter.config.links?.includes(item.id))
-                  .map((link) => [link.url, link]) ?? []
+                  .map((link) => [link.tag, link]) ?? []
               ).values(),
             ].map((link) => {
               return (

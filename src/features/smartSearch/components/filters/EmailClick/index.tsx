@@ -60,10 +60,10 @@ const EmailClick = ({
       operator: 'clicked',
     });
   const linkList = useEmailLinks(orgId, filter.config?.email).data || [];
-  const linkListFilteredByUniqueURL = [
-    ...new Map(linkList.map(link => [link.url, link])).values()
-  ];
-  const linkListSorted = linkListFilteredByUniqueURL.sort((l1, l2) => {
+  const linkListFilteredByUniqueTag = linkList.filter(
+    (link, index, self) => self.findIndex((l) => l.tag === link.tag) === index
+  );
+  const linkListSorted = linkListFilteredByUniqueTag.sort((l1, l2) => {
     return l1.url.localeCompare(l2.url);
   });
 
@@ -191,7 +191,7 @@ const EmailClick = ({
                             label={link.url.split('://')[1]}
                             onDelete={() => {
                               const idsToRemove = linkList
-                                .filter((l) => l.url === link.url)
+                                .filter((l) => l.tag === link.tag)
                                 .map((l) => l.id);
                               setValueToKey(
                                 'links',
@@ -226,24 +226,24 @@ const EmailClick = ({
                       )
                     }
                     onChange={(_, value) => {
-                      const selectedUrls = new Set(
+                      const selectedTags = new Set(
                         value.map(
                           (selected) =>
-                            linkListFilteredByUniqueURL.find(
+                            linkListFilteredByUniqueTag.find(
                               (l) => l.id === selected.id
-                            )?.url
+                            )?.tag
                         )
                       );
                       const allIds = linkList
-                        .filter((link) => selectedUrls.has(link.url))
+                        .filter((link) => selectedTags.has(link.tag))
                         .map((link) => link.id);
                       setValueToKey('links', allIds);
                     }}
-                    options={linkListFilteredByUniqueURL.map((link) => ({
+                    options={linkListFilteredByUniqueTag.map((link) => ({
                       id: link.id,
                       title: link.url.split('://')[1],
                     }))}
-                    value={linkListFilteredByUniqueURL
+                    value={linkListFilteredByUniqueTag
                       .filter(
                         (link) =>
                           filter.config.links?.includes(link.id) || false
