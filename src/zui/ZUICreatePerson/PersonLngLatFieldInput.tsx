@@ -73,7 +73,7 @@ const PersonLngLatFieldInput: FC<PersonLngLatFieldInputProps> = ({
                     //Hardcoding a hex value here to match MUI textfield border color
                     border: '1px solid #c4c4c4',
                     borderRadius: 1,
-                    cursor: !disabled ? 'pointer' : 'default',
+                    cursor: !disabled ? 'pointer' : 'not-allowed',
                     display: 'flex',
                     //Hardcoding weird height here to match MUI textfield height
                     height: '56px',
