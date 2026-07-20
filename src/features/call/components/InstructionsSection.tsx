@@ -103,6 +103,7 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
         return <Instructions instructions={instructions} />;
       }}
       title={messages.instructions.title()}
+      titleComponent="h2"
     />
   );
 };

@@ -1,5 +1,5 @@
 import { Box } from '@mui/system';
-import { FC, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { ChevronLeft } from '@mui/icons-material';
 
 import { ZetkinSurvey } from 'utils/types/zetkin';
@@ -28,6 +28,11 @@ const Survey: FC<Props> = ({ survey }) => {
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
   const formRef = useRef<HTMLFormElement | null>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    titleRef.current?.focus();
+  }, []);
 
   return (
     <Box
@@ -80,11 +85,13 @@ const Survey: FC<Props> = ({ survey }) => {
           }}
         >
           <Box
+            ref={titleRef}
             sx={{
               alignItems: 'center',
               display: 'flex',
               justifyContent: 'space-between',
             }}
+            tabIndex={-1}
           >
             <ZUIText variant="headingMd">{survey.title}</ZUIText>
           </Box>
