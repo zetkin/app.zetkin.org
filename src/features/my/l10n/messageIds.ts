@@ -34,6 +34,7 @@ export default makeMessages('feat.home', {
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
       ),
+      selectDate: m('Select a date'),
       thisWeek: m('This week'),
       today: m('Today'),
       tomorrow: m('Tomorrow'),

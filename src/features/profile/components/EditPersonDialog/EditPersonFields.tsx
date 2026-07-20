@@ -252,12 +252,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           field.enum_choices
         ) {
           return (
-            <Box
-              key={field.slug}
-              alignItems="flex-start"
-              display="flex"
-              flex={1}
-            >
+            <Box key={field.slug} display="flex">
               <FormControl disabled={!isFieldWritable} fullWidth>
                 <InputLabel>{field.title}</InputLabel>
                 <Select
@@ -289,12 +284,17 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                   </FormHelperText>
                 )}
               </FormControl>
+              {field.slug in fieldsToUpdate && (
+                <IconButton onClick={() => onReset(field.slug)}>
+                  <UndoIcon />
+                </IconButton>
+              )}
             </Box>
           );
         } else if (field.type === CUSTOM_FIELD_TYPE.LNGLAT) {
           const hasChanges = field.slug in fieldsToUpdate;
 
-          let value = null;
+          let value: ZetkinLngLatFieldValue | null = null;
           if (hasChanges) {
             if (field.slug) {
               value = fieldsToUpdate[
@@ -302,7 +302,14 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               ] as unknown as ZetkinLngLatFieldValue;
             }
           } else if (fieldValue) {
-            value = fieldValue as unknown as ZetkinLngLatFieldValue;
+            const fieldValueIsValidLngLat =
+              typeof fieldValue === 'object' &&
+              'lat' in fieldValue &&
+              'lng' in fieldValue;
+
+            if (fieldValueIsValidLngLat) {
+              value = fieldValue as unknown as ZetkinLngLatFieldValue;
+            }
           }
 
           return (

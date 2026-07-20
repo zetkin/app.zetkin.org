@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   ComponentType,
-  FC,
   HTMLAttributes,
   useCallback,
   useEffect,
@@ -29,7 +28,7 @@ import {
   AutocompleteChangeDetails,
   AutocompleteChangeReason,
   AutocompleteValue,
-} from '@mui/material/useAutocomplete/useAutocomplete';
+} from '@mui/material/useAutocomplete';
 import { SystemStyleObject } from '@mui/system';
 
 const LISTBOX_PADDING = 8; // px
@@ -204,23 +203,26 @@ type Item = {
   label: string;
 };
 
-type Props = {
+export { type Item as AutocompleteItem };
+
+type Props<I extends Item> = {
   clearable?: boolean;
-  items: Item[];
+  items: I[];
   label?: string;
   minWidth?: string;
   onChange?: (
     event: React.SyntheticEvent & { target: { value: string } },
-    value: AutocompleteValue<Item, false, boolean, false>,
+    value: AutocompleteValue<I, false, boolean, false>,
     reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<Item>
+    details?: AutocompleteChangeDetails<I>
   ) => void;
+  sorting?: (item0: I, item1: I) => number;
   sx?: SystemStyleObject<Theme>;
   value?: string | number;
 };
 
-const StyledAutocomplete: FC<Props> = (props) => {
-  const options: Item[] = useMemo(
+function StyledAutocomplete<I extends Item>(props: Props<I>) {
+  const options: I[] = useMemo(
     () =>
       props.items
         .sort((item0, item1) => {
@@ -237,6 +239,10 @@ const StyledAutocomplete: FC<Props> = (props) => {
 
           const ret = group0.localeCompare(group1);
           if (ret === 0) {
+            if (props.sorting) {
+              return props.sorting(item0, item1);
+            }
+
             return item0.label.localeCompare(item1.label);
           }
 
@@ -246,7 +252,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
           ...item,
           label: item.label.trim(),
         })),
-    [props.items]
+    [props]
   );
 
   const valueItem = useMemo(() => {
@@ -303,9 +309,9 @@ const StyledAutocomplete: FC<Props> = (props) => {
   const onChange = useCallback(
     (
       event: React.SyntheticEvent,
-      value: AutocompleteValue<Item, false, boolean, false>,
+      value: AutocompleteValue<I, false, boolean, false>,
       reason: AutocompleteChangeReason,
-      details?: AutocompleteChangeDetails<Item>
+      details?: AutocompleteChangeDetails<I>
     ) => {
       props.onChange?.(
         {
@@ -381,7 +387,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         } as SlotProps<
           ComponentType<HTMLAttributes<HTMLUListElement>>,
           unknown,
-          AutocompleteOwnerState<Item, false, boolean, false, 'div'>
+          AutocompleteOwnerState<I, false, boolean, false, 'div'>
         >,
         popper: {
           placement: 'bottom-start',
@@ -415,6 +421,6 @@ const StyledAutocomplete: FC<Props> = (props) => {
       value={valueItem}
     />
   );
-};
+}
 
 export default StyledAutocomplete;

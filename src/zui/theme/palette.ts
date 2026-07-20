@@ -634,9 +634,9 @@ export const darkPalette: Omit<
   },
   error: {
     contrastText: uiSwatches.basic.white,
-    dark: uiSwatches.red[800],
-    light: uiSwatches.red[400],
-    main: uiSwatches.red[600],
+    dark: uiSwatches.red[600],
+    light: uiSwatches.red[200],
+    main: uiSwatches.red[500],
   },
   //TODO: Remove when use of theses color have been replaced everywhere.
   filterCategoryColors: {
@@ -669,9 +669,9 @@ export const darkPalette: Omit<
   },
   info: {
     contrastText: uiSwatches.basic.white,
-    dark: uiSwatches.blue[800],
-    light: uiSwatches.blue[400],
-    main: uiSwatches.blue[600],
+    dark: uiSwatches.blue[600],
+    light: uiSwatches.blue[200],
+    main: uiSwatches.blue[400],
   },
   mode: 'dark',
   //TODO: Remove when use of these colors have been replaced everywhere.
@@ -686,7 +686,7 @@ export const darkPalette: Omit<
   },
   primary: {
     contrastText: uiSwatches.basic.black,
-    dark: uiSwatches.basic.black,
+    dark: uiSwatches.grey[200],
     focus: alpha(uiSwatches.basic.white, 0.12),
     focusVisible: alpha(uiSwatches.basic.white, 0.3),
     hover: alpha(uiSwatches.basic.white, 0.04),
@@ -711,9 +711,9 @@ export const darkPalette: Omit<
   },
   success: {
     contrastText: uiSwatches.basic.white,
-    dark: uiSwatches.green[800],
-    light: uiSwatches.green[400],
-    main: uiSwatches.green[600],
+    dark: uiSwatches.green[600],
+    light: uiSwatches.green[200],
+    main: uiSwatches.green[400],
   },
   swatches: swatches,
   text: {

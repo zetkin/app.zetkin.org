@@ -13,7 +13,7 @@ import { Latitude, Longitude } from 'features/areas/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import useMapMarkerClick from '../hooks/useMapMarkerClick';
 
-const defaultFitBoundOptions = { padding: 80 };
+const defaultFitBoundOptions = { maxZoom: 16, padding: 80 };
 
 export const ActivistPortalEventMap: FC<{
   events: ZetkinEventWithStatus[];
@@ -41,7 +41,6 @@ export const ActivistPortalEventMap: FC<{
         map.fitBounds(bounds, {
           animate: true,
           duration: 1200,
-          maxZoom: 16,
           ...defaultFitBoundOptions,
         });
       }

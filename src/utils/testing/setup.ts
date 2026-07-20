@@ -1,4 +1,10 @@
 import { jest } from '@jest/globals';
+import 'temporal-polyfill/global';
+
+if (!global.structuredClone) {
+  global.structuredClone = <T>(value: T): T =>
+    JSON.parse(JSON.stringify(value));
+}
 
 jest.mock('next/font/google', () => ({
   Figtree: () => ({

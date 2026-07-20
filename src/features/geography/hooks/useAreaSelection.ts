@@ -1,4 +1,4 @@
-import area from '@turf/area';
+import { area } from '@turf/turf';
 import { useEffect, useState } from 'react';
 import { MapLayerMouseEvent, Map as MapType } from 'maplibre-gl';
 

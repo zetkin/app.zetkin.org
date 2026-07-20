@@ -9,6 +9,11 @@ import {
 } from 'utils/storeUtils';
 import { ZetkinEmail, ZetkinEmailConfig, ZetkinLink } from 'utils/types/zetkin';
 
+type SerializedError = {
+  message: string;
+  name: string;
+};
+
 export interface EmailStoreSlice {
   configList: RemoteList<ZetkinEmailConfig>;
   emailList: RemoteList<ZetkinEmail>;
@@ -16,6 +21,9 @@ export interface EmailStoreSlice {
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
   statsById: Record<number, RemoteItem<ZetkinEmailStats>>;
   insightsByEmailId: Record<number, RemoteItem<EmailInsights>>;
+  themeUpdateError: SerializedError | null;
+  themeJsonError: Record<'block_attributes' | 'css' | 'frame_mjml', boolean>;
+  themeEditorValue: Record<'block_attributes' | 'css' | 'frame_mjml', string>;
 }
 
 const initialState: EmailStoreSlice = {
@@ -24,7 +32,10 @@ const initialState: EmailStoreSlice = {
   insightsByEmailId: {},
   linksByEmailId: {},
   statsById: {},
+  themeEditorValue: { block_attributes: '', css: '', frame_mjml: '' },
+  themeJsonError: { block_attributes: false, css: false, frame_mjml: false },
   themeList: remoteList(),
+  themeUpdateError: null,
 };
 
 const emailsSlice = createSlice({
@@ -42,6 +53,11 @@ const emailsSlice = createSlice({
       state.emailList.isLoading = true;
     },
     emailCreated: (state, action: PayloadAction<ZetkinEmail>) => {
+      const email = action.payload;
+      state.emailList.isLoading = false;
+      state.emailList.items.push(remoteItem(email.id, { data: email }));
+    },
+    emailCreatedNoRedirect: (state, action: PayloadAction<ZetkinEmail>) => {
       const email = action.payload;
       state.emailList.isLoading = false;
       state.emailList.items.push(remoteItem(email.id, { data: email }));
@@ -179,6 +195,101 @@ const emailsSlice = createSlice({
         }
       );
     },
+    themeCreate: (state) => {
+      state.themeList.isLoading = true;
+    },
+    themeCreated: (state, action: PayloadAction<[EmailTheme, number]>) => {
+      const [theme, orgId] = action.payload;
+      const themeWithOrgId = { ...theme, orgId };
+      state.themeList.isLoading = false;
+      state.themeList.items.push(
+        remoteItem(theme.id, { data: themeWithOrgId })
+      );
+      state.themeEditorValue = {
+        block_attributes: JSON.stringify(theme.block_attributes, null, 2),
+        css: theme.css || '',
+        frame_mjml: JSON.stringify(theme.frame_mjml, null, 2),
+      };
+    },
+    themeDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [, themeId] = action.payload;
+      const item = state.themeList.items.find((item) => item.id === themeId);
+      if (item) {
+        item.deleted = true;
+        state.themeList.isStale = true;
+      }
+    },
+    themeEditorValueChanged: (
+      state,
+      action: PayloadAction<['block_attributes' | 'css' | 'frame_mjml', string]>
+    ) => {
+      const [section, newValue] = action.payload;
+      state.themeEditorValue = {
+        ...state.themeEditorValue,
+        [section]: newValue,
+      };
+
+      if (section !== 'css') {
+        try {
+          JSON.parse(newValue);
+          state.themeJsonError[section] = false;
+        } catch {
+          state.themeJsonError[section] = true;
+        }
+      }
+    },
+    themeLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.themeList.items.find((item) => item.id == id);
+      state.themeList.items = state.themeList.items
+        .filter((item) => item.id != id)
+        .concat([remoteItem(id, { data: item?.data, isLoading: true })]);
+    },
+    themeLoaded: (state, action: PayloadAction<EmailTheme>) => {
+      const theme = action.payload;
+      const item = state.themeList.items.find((item) => item.id == theme.id);
+      if (item) {
+        item.data = action.payload;
+        item.loaded = new Date().toISOString();
+        item.isLoading = false;
+        item.isStale = false;
+      }
+      state.themeEditorValue = {
+        block_attributes: JSON.stringify(theme.block_attributes, null, 2),
+        css: theme.css || '',
+        frame_mjml: JSON.stringify(theme.frame_mjml, null, 2),
+      };
+    },
+    themeUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [id, mutating] = action.payload;
+      const item = state.themeList.items.find((item) => item.id == id);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    themeUpdateErrorAdded: (state, action: PayloadAction<SerializedError>) => {
+      state.themeUpdateError = action.payload;
+    },
+    themeUpdateErrorRemoved: (state) => {
+      state.themeUpdateError = null;
+    },
+    themeUpdated: (state, action: PayloadAction<[EmailTheme, string[]]>) => {
+      const [theme, mutating] = action.payload;
+      const item = state.themeList.items.find((item) => item.id == theme.id);
+
+      if (item) {
+        item.mutating = item.mutating.filter(
+          (attr) => !mutating.includes(attr)
+        );
+        if (item.data) {
+          item.data = theme;
+        }
+      }
+
+      state.themeList.items = state.themeList.items.concat([
+        remoteItem(theme.id, { data: theme }),
+      ]);
+    },
     themesLoad: (state) => {
       state.themeList.isLoading = true;
     },
@@ -198,6 +309,7 @@ export const {
   configsLoaded,
   emailCreate,
   emailCreated,
+  emailCreatedNoRedirect,
   emailDeleted,
   emailLinksLoad,
   emailLinksLoaded,
@@ -209,8 +321,18 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
+  themeCreate,
+  themeCreated,
+  themeDeleted,
+  themeLoad,
+  themeLoaded,
+  themeUpdate,
+  themeUpdated,
   themesLoad,
   themesLoaded,
   statsLoad,
   statsLoaded,
+  themeUpdateErrorAdded,
+  themeUpdateErrorRemoved,
+  themeEditorValueChanged,
 } = emailsSlice.actions;
