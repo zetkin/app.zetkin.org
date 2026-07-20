@@ -27,15 +27,20 @@ export default async function RootLayout({
   const lang =
     user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
   const messages = await getMessages(lang);
+  const nonce = headers().get('x-nonce') ?? undefined;
 
   return (
     <html lang="en">
+      <head>
+        <meta content={nonce} property={'csp-nonce'} />
+      </head>
       <body>
         <AppRouterCacheProvider>
           <ClientContext
             envVars={{
               FEAT_AREAS: process.env.FEAT_AREAS,
               FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
+              FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
               FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
               FEAT_TASKS: process.env.FEAT_TASKS,
               FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
@@ -52,6 +57,7 @@ export default async function RootLayout({
             headers={headersObject}
             lang={lang}
             messages={messages}
+            nonce={nonce}
             user={user}
           >
             {children}
@@ -61,3 +67,5 @@ export default async function RootLayout({
     </html>
   );
 }
+
+export const dynamic = 'force-dynamic';

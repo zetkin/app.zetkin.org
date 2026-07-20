@@ -129,10 +129,10 @@ export default makeMessages('feat.emails', {
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
   },
-  emailChangeCampaignDialog: {
+  emailChangeProjectDialog: {
     error: m('Error: Could not move the email to the selected project'),
-    success: m<{ campaignTitle: string; emailTitle: string }>(
-      'Email "{emailTitle}" moved to "{campaignTitle}"'
+    success: m<{ emailTitle: string; projectTitle: string }>(
+      'Email "{emailTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move email'),
   },
@@ -245,65 +245,18 @@ export default makeMessages('feat.emails', {
     unlockButton: m('Unlock'),
     viewButton: m('View target group'),
   },
-  themes: {
-    addTheme: m('Create new theme'),
-    duplicateTheme: m('Duplicate theme'),
-    themeCard: {
-      delete: m('Delete'),
-      deleteWarning: m<{ themeId: number }>(
-        'Are you sure you want to delete theme {themeId}? It cannot be undone.'
-      ),
-      duplicate: m('Duplicate'),
-      edit: m('Edit'),
-      title: m<{ themeId: number }>('Theme {themeId}'),
-    },
-    themeEditor: {
-      jsonError: m('Invalid JSON'),
-      previewTitle: m('Preview'),
-      saveButton: m('Save'),
-      tabs: {
-        block: m('Block'),
-        css: m('CSS'),
-        frame: m('Frame'),
-      },
-      title: m<{ themeId: number }>('Theme {themeId}'),
-      unsavedChangesConfirm: m('Leave without saving'),
-      unsavedChangesWarning: m(
-        'You have unsaved changes, are you sure you want to leave?'
-      ),
-    },
-    themePreview: {
-      button: m('Register here'),
-      heading: {
-        paragraphPart1: m('Hello'),
-        paragraphPart2: m('We are pleased to invite you to a panel on May 1st'),
-        paragraphPart3: m('Here is what to expect:'),
-      },
-      paragraph: {
-        paragraph1: m(
-          'A specter is haunting Europe—the specter of Communism. All the powers of old Europe have entered into a holy alliance to exorcise this specter; Pope and Czar, Metternich and Guizot, French radicals and German police spies.'
-        ),
-        paragraph2: m(
-          'Where is the party in opposition that has not been decried as Communistic by its opponents in power? Where the opposition that has not hurled back the branding reproach of Communism, against the more advanced opposition parties, as well as against its reactionary adversaries?'
-        ),
-        paragraph3: m('Two things result from this fact:'),
-        paragraph4: m(
-          'Communism is already acknowledged by all European powers to be in itself a power.'
-        ),
-        paragraph5: m(
-          'It is high time that Communists should openly, in the face of the whole world, publish their views, their aims, their tendencies, and meet this nursery tale of the Specter of Communism with a Manifesto of the party itself.'
-        ),
-        paragraph6: m('To read the full manifesto, click '),
-        paragraph7: m('here'),
-      },
-    },
-    title: m('Themes'),
-  },
   unsubscribePage: {
     consent: m('I understand'),
     h: m<{ org: string }>('Unsubscribe from {org}'),
     info: m(
       'After you unsubscribe you will no longer receive mass email from this organization. You may still receive reminders and other email sent specifically to you as part of work you do in the organization.'
+    ),
+    senderDetails: m<{ senderEmail: string; senderName: string }>(
+      '{senderName} <{senderEmail}>'
+    ),
+    senderH: m('Unsubscribe from:'),
+    senderInfo: m(
+      'After you unsubscribe you will no longer receive emails from this sender. You may still receive emails from other senders in this organization and other email sent specifically to you as part of work you do in the organization.'
     ),
     unsubButton: m('Unsubscribe me'),
   },
@@ -311,6 +264,9 @@ export default makeMessages('feat.emails', {
     h: m('Unsubscribed!'),
     info: m<{ org: string }>(
       'You have been unsubscribed from mass email from {org}.'
+    ),
+    senderInfo: m<{ senderEmail: string; senderName: string }>(
+      'You have been unsubscribed from emails from {senderName} <{senderEmail}>.'
     ),
   },
   urlCard: {

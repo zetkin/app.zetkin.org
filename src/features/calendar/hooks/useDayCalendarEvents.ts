@@ -44,7 +44,7 @@ export default function useDayCalendarEvents(
   }, [focusDate.toISOString()]);
 
   // When a new lastDate is set, load the next last date
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
   const apiClient = useApiClient();
   useEffect(() => {
     async function loadNextLastDate() {
@@ -52,8 +52,8 @@ export default function useDayCalendarEvents(
       afterDate.setDate(afterDate.getDate() + 1);
       const nextLastDateStr = await apiClient.rpc(getNextEventDay, {
         afterDate: afterDate.toISOString(),
-        campaignId: campId,
         orgId,
+        projectId,
       });
 
       setNextLastDate(nextLastDateStr ? new Date(nextLastDateStr) : null);
@@ -70,12 +70,9 @@ export default function useDayCalendarEvents(
   // and the useEffect() above will soon update the lastDate.
   const lastDateToLoad = lastDate > focusDate ? lastDate : focusDate;
 
-  const activities = useEventsFromDateRange(
-    focusDate,
-    lastDateToLoad,
-    orgId,
-    campId
-  );
+  const activities =
+    useEventsFromDateRange(focusDate, lastDateToLoad, orgId, projectId).data ||
+    [];
   const filtered = useFilteredEventActivities(activities);
   const activitiesByDay = getActivitiesByDay(filtered);
 

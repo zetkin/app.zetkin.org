@@ -2,7 +2,7 @@ import AllInSuborg from '../filters/AllInSubOrg';
 import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
-import CampaignParticipation from '../filters/CampaignParticipation';
+import ProjectParticipation from '../filters/ProjectParticipation';
 import EmailBlacklist from '../filters/EmailBlacklist';
 import EmailClick from '../filters/EmailClick';
 import EmailHistory from '../filters/EmailHistory';
@@ -28,6 +28,7 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+import EventParticipation from '../filters/EventParticipation';
 
 interface FilterEditorProps {
   onCancelSubmitFilter: () => void;
@@ -72,8 +73,8 @@ const FilterEditor = ({
           onSubmit={onSubmitFilter}
         />
       )}
-      {filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && (
-        <CampaignParticipation
+      {filter.type === FILTER_TYPE.PROJECT_PARTICIPATION && (
+        <ProjectParticipation
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
@@ -102,6 +103,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.MOST_ACTIVE && (
         <MostActive
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.EVENT_PARTICIPATION && (
+        <EventParticipation
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

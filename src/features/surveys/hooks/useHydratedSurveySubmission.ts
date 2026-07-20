@@ -6,9 +6,19 @@ import {
   ZetkinSurveyExtended,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
-import { extendedSurveyLoad, extendedSurveyLoaded } from '../store';
-import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
+import {
+  extendedSurveyError,
+  extendedSurveyLoad,
+  extendedSurveyLoaded,
+} from '../store';
+import {
+  ErrorFuture,
+  IFuture,
+  LoadingFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 type HydratedQuestionBase = {
   description: string | null;
@@ -51,7 +61,7 @@ type HydratedElement =
 
 export interface HydratedSurveySubmission {
   id: number;
-  campaign: ZetkinSurveyExtended['campaign'];
+  project: ZetkinSurveyExtended['campaign'];
   respondent: ZetkinSurveySubmission['respondent'];
   organization: ZetkinSurveySubmission['organization'];
   elements: HydratedElement[];
@@ -68,6 +78,10 @@ export default function useHydratedSurveySubmission(
   const submissionFuture = useSurveySubmission(orgId, submissionId);
   const surveysSlice = useAppSelector((state) => state.surveys);
 
+  if (submissionFuture.error) {
+    return new ErrorFuture(submissionFuture.error);
+  }
+
   if (!submissionFuture.data) {
     return new LoadingFuture();
   }
@@ -81,6 +95,8 @@ export default function useHydratedSurveySubmission(
     number,
     [number, ZetkinSurveyExtended]
   >(survey, dispatch, {
+    actionOnError: (err) =>
+      extendedSurveyError([surveyId, serializeError(err)]),
     actionOnLoad: () => extendedSurveyLoad(surveyId),
     actionOnSuccess: (survey) => extendedSurveyLoaded([surveyId, survey]),
     loader: async () => {
@@ -90,6 +106,10 @@ export default function useHydratedSurveySubmission(
       return survey;
     },
   });
+
+  if (surveyElementsFuture.error) {
+    return new ErrorFuture(surveyElementsFuture.error);
+  }
 
   if (!surveyElementsFuture.data) {
     return new LoadingFuture();
@@ -158,10 +178,10 @@ export default function useHydratedSurveySubmission(
   });
 
   return new ResolvedFuture({
-    campaign: surveyElementsFuture.data.campaign,
     elements,
     id: submission.id,
     organization: submission.organization,
+    project: surveyElementsFuture.data.campaign,
     respondent: submission.respondent,
     submitted: submission.submitted,
     survey: submission.survey,

@@ -11,6 +11,7 @@ import CalendarWeekView from './CalendarWeekView';
 import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
 import useTimeScale from '../hooks/useTimeScale';
+import { plainDateFromLegacyDate } from 'utils/dateUtils';
 
 dayjs.extend(utc);
 
@@ -35,7 +36,7 @@ const Calendar = () => {
   const router = useRouter();
 
   const orgId = router.query.orgId;
-  const campId = router.query.campId;
+  const projectId = router.query.projectId;
 
   const focusDateStr = router.query.focusDate as string;
   const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
@@ -55,7 +56,7 @@ const Calendar = () => {
       {
         pathname: undefined,
         query: {
-          ...(campId && { campId: campId }),
+          ...(projectId && { projectId }),
           focusDate: focusedDate,
           orgId: orgId,
           timeScale: timeScale,
@@ -125,7 +126,7 @@ const Calendar = () => {
           )}
           {timeScale === TimeScale.MONTH && (
             <CalendarMonthView
-              focusDate={focusDate}
+              focusDate={plainDateFromLegacyDate(focusDate)}
               onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
               onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
             />

@@ -159,6 +159,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     },
     {
       active: dateFilterState === 'custom',
+      ariaLabel: messages.allEventsList.filterButtonLabels.selectDate(),
       key: 'custom',
       label:
         dateFilterState === 'custom' && customDatesToFilterBy[0]
@@ -342,6 +343,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
             <ZUIFilterButton
               key={filter.key}
               active={filter.active}
+              ariaLabel={filter.ariaLabel}
               label={filter.label}
               onClick={filter.onClick}
             />
