@@ -44,6 +44,7 @@ import ZUISection from 'zui/components/ZUISection';
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import ZUITextField from 'zui/components/ZUITextField';
+import useDebounce from 'utils/hooks/useDebounce';
 
 type Filter = {
   active: boolean;
@@ -76,6 +77,8 @@ const Activities: FC<ActivitiesProps> = ({
   target,
 }) => {
   const [searchString, setSearchString] = useState<string>('');
+  const [debouncedSearchString, setDebouncedSearchString] =
+    useState<string>('');
   const fuse = useMemo(() => {
     return new Fuse(activities, {
       keys: [
@@ -88,20 +91,36 @@ const Activities: FC<ActivitiesProps> = ({
       threshold: 0.4,
     });
   }, [activities]);
+
+  const debouncedSetSearchString = useDebounce(async (value: string) => {
+    setDebouncedSearchString(value);
+  }, 300);
+
+  const handleSearchStringChange = (value: string) => {
+    setSearchString(value);
+    debouncedSetSearchString(value);
+  };
+
+  const clearSearchString = () => {
+    setSearchString('');
+    setDebouncedSearchString('');
+  };
+
   const filteredActivities = useMemo(
     () =>
-      searchString
+      debouncedSearchString
         ? fuse
-            .search(searchString)
+            .search(debouncedSearchString)
             .map((fuseResult) => fuseResult.item)
             .sort((a, b) => a.data.id - b.data.id)
         : [...activities.sort((a, b) => a.data.id - b.data.id)],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activities, searchString]
+    [activities, debouncedSearchString]
   );
 
   useEffect(() => {
-    setSearchString('');
+    clearSearchString();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
 
   if (!target) {
@@ -183,9 +202,9 @@ const Activities: FC<ActivitiesProps> = ({
           endIcon={Close}
           fullWidth
           onChange={(newValue) => {
-            setSearchString(newValue);
+            handleSearchStringChange(newValue);
           }}
-          onEndIconClick={() => setSearchString('')}
+          onEndIconClick={() => clearSearchString()}
           startIcon={Search}
           value={searchString}
         />
