@@ -162,7 +162,7 @@ const PersonLngLatFieldInput: FC<PersonLngLatFieldInputProps> = ({
             }}
             RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
             style={{
-              cursor: !disabled ? 'pointer' : 'default',
+              cursor: !disabled ? 'pointer' : 'not-allowed',
               height: 200,
               width: '100%',
             }}
