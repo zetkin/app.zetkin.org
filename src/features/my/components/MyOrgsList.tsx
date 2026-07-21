@@ -4,14 +4,19 @@ import { FC } from 'react';
 import { Box, Fade } from '@mui/material';
 
 import MyOrgsListItem from './MyOrgsListItem';
-import useUserMemberships from 'features/public/hooks/useUserMemberships';
+import { useUserMembershipsFuture } from 'features/public/hooks/useUserMemberships';
 import useIncrementalDelay from 'features/public/hooks/useIncrementalDelay';
+import LoadingIndicator from './LoadingIndicator';
 
 const MyOrgsList: FC = () => {
-  const memberships = useUserMemberships();
+  const membershipsFuture = useUserMembershipsFuture();
   const nextDelay = useIncrementalDelay();
 
-  const sortedMemberships = memberships.sort((m0, m1) =>
+  if (membershipsFuture.isLoading) {
+    return <LoadingIndicator />;
+  }
+
+  const sortedMemberships = (membershipsFuture.data || []).sort((m0, m1) =>
     m0.organization.title.localeCompare(m1.organization.title)
   );
 

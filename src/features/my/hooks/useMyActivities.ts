@@ -1,30 +1,41 @@
-import useMyAreaAssignments from 'features/canvass/hooks/useMyAreaAssignments';
+import { useMyAreaAssignmentsFuture } from 'features/canvass/hooks/useMyAreaAssignments';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
-import useMyEvents from 'features/my/hooks/useMyEvents';
+import { useMyEventsFuture } from 'features/my/hooks/useMyEvents';
+import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { MyActivity } from 'features/public/types';
 
-export default function useMyActivities() {
-  const areaAssignments = useMyAreaAssignments();
-  const callAssignments = useMyCallAssignments();
-  const events = useMyEvents();
+export default function useMyActivities(): IFuture<MyActivity[]> {
+  const areaAssignmentsFuture = useMyAreaAssignmentsFuture();
+  const callAssignmentsFuture = useMyCallAssignments();
+  const eventsFuture = useMyEventsFuture();
+
+  if (
+    !areaAssignmentsFuture.data ||
+    !callAssignmentsFuture.data ||
+    !eventsFuture.data
+  ) {
+    return new LoadingFuture();
+  }
 
   const activities: MyActivity[] = [
-    ...areaAssignments.map<MyActivity>((data) => ({
+    ...areaAssignmentsFuture.data.map<MyActivity>((data) => ({
       data,
       kind: 'canvass',
       start: new Date(data.start_date || 0),
     })),
-    ...callAssignments.map<MyActivity>((data) => ({
+    ...callAssignmentsFuture.data.map<MyActivity>((data) => ({
       data,
       kind: 'call',
       start: new Date(data.start_date || 0),
     })),
-    ...events.map<MyActivity>((data) => ({
+    ...eventsFuture.data.map<MyActivity>((data) => ({
       data,
       kind: 'event',
       start: new Date(data.start_time || 0),
     })),
   ];
 
-  return activities.sort((a, b) => a.start.getTime() - b.start.getTime());
+  return new ResolvedFuture(
+    activities.sort((a, b) => a.start.getTime() - b.start.getTime())
+  );
 }
