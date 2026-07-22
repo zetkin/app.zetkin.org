@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import { MenuItem, Select } from '@mui/material';
 
 import range from 'utils/range';
@@ -8,6 +9,7 @@ export interface MonthSelectProps {
 }
 
 const MonthSelect = ({ focusDate, onChange }: MonthSelectProps) => {
+  const intl = useIntl();
   return (
     <Select
       disableUnderline
@@ -21,7 +23,7 @@ const MonthSelect = ({ focusDate, onChange }: MonthSelectProps) => {
         const month = focusDate.with({ month: index + 1 });
         return (
           <MenuItem key={index} value={month.toString()}>
-            {month.toLocaleString(undefined, { month: 'long' })}
+            {month.toLocaleString(intl.locale, { month: 'long' })}
           </MenuItem>
         );
       })}

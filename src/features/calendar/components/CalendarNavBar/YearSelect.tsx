@@ -24,7 +24,7 @@ const YearSelect = ({ focusDate, onChange }: YearSelectProps) => {
         const year = focusDate.with({ year: startYear + index });
         return (
           <MenuItem key={index} value={year.toString()}>
-            {year.toLocaleString(undefined, { year: 'numeric' })}
+            {year.year}
           </MenuItem>
         );
       })}
