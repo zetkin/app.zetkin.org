@@ -1,4 +1,5 @@
 import { Box, lighten } from '@mui/system';
+import { useIntl } from 'react-intl';
 import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import {
   ListItemIcon,
@@ -15,7 +16,10 @@ import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
 import EventShiftModal from '../EventShiftModal';
 import HeaderWeekNumber from './HeaderWeekNumber';
-import { legacyDateFromPlainDate } from 'utils/dateUtils';
+import {
+  legacyDateFromPlainDate,
+  legacyDateFromPlainDateTime,
+} from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
@@ -83,6 +87,7 @@ export interface CalendarWeekViewProps {
   onClickDay: (date: Date) => void;
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
+  const intl = useIntl();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<
@@ -204,7 +209,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 justifyContent="flex-end"
               >
                 <Typography color="textDisabled" variant="caption">
-                  {time.toLocaleString(undefined, {
+                  {time.toLocaleString(intl.locale, {
                     hour: 'numeric',
                     minute: 'numeric',
                   })}
@@ -409,8 +414,5 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     </>
   );
 };
-
-const legacyDateFromPlainDateTime = (date: Temporal.PlainDateTime): Date =>
-  new Date(date.toZonedDateTime(Temporal.Now.timeZoneId()).epochMilliseconds);
 
 export default CalendarWeekView;
