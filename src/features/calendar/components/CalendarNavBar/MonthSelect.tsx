@@ -1,34 +1,29 @@
-import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { MenuItem, Select } from '@mui/material';
 
 import range from 'utils/range';
 
 export interface MonthSelectProps {
-  focusDate: Date;
-  onChange: (date: Date) => void;
+  focusDate: Temporal.PlainDate;
+  onChange: (date: Temporal.PlainDate) => void;
 }
 
 const MonthSelect = ({ focusDate, onChange }: MonthSelectProps) => {
+  const intl = useIntl();
   return (
     <Select
       disableUnderline
       onChange={(event) => {
-        const selectedMonth =
-          typeof event.target.value === 'number'
-            ? event.target.value
-            : parseInt(event.target.value);
-        const newFocusDate = dayjs(focusDate).month(selectedMonth).toDate();
-        onChange(newFocusDate);
+        onChange(Temporal.PlainDate.from(event.target.value.toString()));
       }}
-      value={focusDate.getMonth()}
+      value={focusDate.toString()}
       variant="standard"
     >
       {range(12).map((index) => {
-        const month = dayjs().day(0).month(index).toDate();
+        const month = focusDate.with({ month: index + 1 });
         return (
-          <MenuItem key={index} value={index}>
-            <FormattedDate month="long" value={month} />
+          <MenuItem key={index} value={month.toString()}>
+            {month.toLocaleString(intl.locale, { month: 'long' })}
           </MenuItem>
         );
       })}
