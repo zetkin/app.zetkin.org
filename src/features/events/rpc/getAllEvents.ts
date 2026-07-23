@@ -95,33 +95,74 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   );
   const events = eventsByOrg.flat();
 
-  const filteredEvents = await Promise.all(
-    events.map(async (event) => {
-      let isPublished = false;
-      if (event.published) {
-        isPublished = new Date(event.published) < new Date();
+  const followedOrgs = allMemberships
+    .filter((mem) => mem.follow)
+    .reduce((prev, mem) => {
+      prev.add(mem.organization.id);
+      return prev;
+    }, new Set<number>());
+
+  const validEvents = events.filter((event) => {
+    if (!followedOrgs.has(event.organization.id)) {
+      return false;
+    }
+    const isPublished =
+      event.published && new Date(event.published) < new Date();
+    const state = getEventState(event);
+    return (
+      (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
+    );
+  });
+
+  const projectsToFetch = validEvents.reduce(
+    (prev, event) => {
+      if (!event.campaign) {
+        return prev;
       }
-      if (event.campaign && isPublished) {
-        const project = await apiClient
-          .get<ZetkinProject>(
-            `/api/orgs/${event.organization.id}/campaigns/${event.campaign.id}`
-          )
-          .catch(() => null);
-        isPublished =
-          !!project &&
-          !project.archived &&
-          project.published &&
-          project.visibility == 'open';
-      }
-      const state = getEventState(event);
-      return (
-        (state == EventState.OPEN || state == EventState.SCHEDULED) &&
-        isPublished
-      );
-    })
+      prev[event.campaign.id] = {
+        orgId: event.organization.id,
+        projId: event.campaign.id,
+      };
+      return prev;
+    },
+    {} as Record<number, { orgId: number; projId: number }>
   );
 
-  return events.filter((event, i) => {
-    return filteredEvents[i];
+  const projects = await Promise.all(
+    Object.values(projectsToFetch).map((project) =>
+      apiClient
+        .get<ZetkinProject>(
+          `/api/orgs/${project.orgId}/campaigns/${project.projId}`
+        )
+        .catch(() => null)
+    )
+  );
+
+  const projectsById = projects.reduce(
+    (prev, project) => {
+      if (!project) {
+        return prev;
+      }
+      prev[project.id] = project;
+      return prev;
+    },
+    {} as Record<number, ZetkinProject>
+  );
+
+  const publicEvents = validEvents.filter((event) => {
+    if (!event.campaign) {
+      return true;
+    }
+
+    const project = projectsById[event.campaign.id];
+
+    return (
+      !!project &&
+      !project.archived &&
+      project.published &&
+      project.visibility == 'open'
+    );
   });
+
+  return publicEvents;
 }
