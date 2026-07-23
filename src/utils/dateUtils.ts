@@ -114,3 +114,8 @@ export const legacyDateFromPlainDate = (plainDate: Temporal.PlainDate): Date =>
   new Date(
     plainDate.toZonedDateTime(Temporal.Now.timeZoneId()).epochMilliseconds
   );
+
+export const legacyDateFromPlainDateTime = (
+  date: Temporal.PlainDateTime
+): Date =>
+  new Date(date.toZonedDateTime(Temporal.Now.timeZoneId()).epochMilliseconds);
