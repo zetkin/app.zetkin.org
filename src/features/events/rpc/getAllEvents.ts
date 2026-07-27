@@ -1,3 +1,4 @@
+import 'temporal-polyfill/global';
 import { z } from 'zod';
 
 import { makeRPCDef } from 'core/rpc/types';
@@ -83,13 +84,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     { filteredMemberships: [], orgs: [] }
   );
 
-  const now = new Date().toISOString();
+  const now = Temporal.Now.instant();
 
   const eventsByOrg = await Promise.all(
     filteredMemberships.map(
       async (membership) =>
         await apiClient.get<ZetkinEvent[]>(
-          `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}&recursive`
+          `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now.toString({ smallestUnit: 'millisecond' })}&recursive`
         )
     )
   );
@@ -107,7 +108,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       return false;
     }
     const isPublished =
-      event.published && new Date(event.published) < new Date();
+      event.published &&
+      Temporal.Instant.compare(Temporal.Instant.from(event.published), now) <=
+        0;
     const state = getEventState(event);
     return (
       (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
