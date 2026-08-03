@@ -454,6 +454,9 @@ const surveysSlice = createSlice({
         }
       }
     },
+    surveysInvalidated: (state) => {
+      state.surveyList.isStale = true;
+    },
     surveysLoad: (state) => {
       state.surveyList.isLoading = true;
     },
@@ -583,6 +586,7 @@ export const {
   surveySubmissionUpdated,
   surveySubmissionsLoad,
   surveySubmissionsLoaded,
+  surveysInvalidated,
   surveysLoad,
   surveysLoaded,
   surveyUpdate,

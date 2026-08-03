@@ -451,6 +451,9 @@ const CallSlice = createSlice({
       state.unfinishedCalls = remoteList(action.payload);
       state.unfinishedCalls.loaded = new Date().toISOString();
     },
+    upcomingEventsInvalidated: (state) => {
+      state.upcomingEventsList.isStale = true;
+    },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
       const activeLane = state.lanes[state.activeLaneIndex];
@@ -480,6 +483,7 @@ export const {
   clearReport,
   eventsLoad,
   eventsLoaded,
+  upcomingEventsInvalidated,
   allocateCallError,
   eventResponseAdded,
   eventResponseRemoved,

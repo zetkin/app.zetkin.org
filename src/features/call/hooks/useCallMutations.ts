@@ -7,14 +7,25 @@ import {
   allocateCallError,
   switchedToUnfinishedCall,
   allocatePreviousCall,
+  upcomingEventsInvalidated,
 } from '../store';
 import { UnfinishedCall } from '../types';
 import useMyAssignments from './useMyAssignments';
+import { surveysInvalidated } from 'features/surveys/store';
 
 export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const assignments = useMyAssignments();
+
+  // Activities are cached per org, so switching to a call in another org
+  // must invalidate them or the previous org's activities would linger.
+  const invalidateActivitiesOnOrgChange = (targetOrgId: number) => {
+    if (targetOrgId != orgId) {
+      dispatch(upcomingEventsInvalidated());
+      dispatch(surveysInvalidated());
+    }
+  };
 
   const abandonUnfinishedCall = async (
     assignmentId: number,
@@ -79,11 +90,19 @@ export default function useCallMutations(orgId: number) {
         }
       );
       dispatch(allocatePreviousCall(newCall));
+      invalidateActivitiesOnOrgChange(assignment.organization.id);
     }
   };
 
   const switchToUnfinishedCall = (callId: number, assignmentId: number) => {
     dispatch(switchedToUnfinishedCall([callId, assignmentId]));
+
+    const assignment = assignments.find(
+      (assignment) => assignment.id == assignmentId
+    );
+    if (assignment) {
+      invalidateActivitiesOnOrgChange(assignment.organization.id);
+    }
   };
 
   return {
