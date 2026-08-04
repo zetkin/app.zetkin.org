@@ -13,7 +13,7 @@ import useUser from 'core/hooks/useUser';
 import { useMessages } from 'core/i18n';
 import ZUIMenu, { MenuItem } from 'zui/components/ZUIMenu';
 import ZUIButton from 'zui/components/ZUIButton';
-import useUserMemberships from 'features/public/hooks/useUserMemberships';
+import { useUserMembershipsFuture } from 'features/public/hooks/useUserMemberships';
 
 type Props = {
   button?: JSX.Element;
@@ -40,8 +40,10 @@ const ActivistPortalHeader: FC<Props> = ({
     useState<HTMLButtonElement | null>(null);
   const router = useRouter();
 
-  const memberships = useUserMemberships();
-  const isOfficial = memberships.find((membership) => membership.role != null);
+  const membershipsFuture = useUserMembershipsFuture();
+  const isOfficial = !!membershipsFuture.data?.find(
+    (membership) => membership.role != null
+  );
 
   const menuItems: MenuItem[] = useMemo(
     () => [

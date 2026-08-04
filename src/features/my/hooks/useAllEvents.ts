@@ -1,18 +1,19 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
-import useRemoteList from 'core/hooks/useRemoteList';
+import useRemoteListFuture from 'core/hooks/useRemoteListFuture';
+import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { allEventsLoad, allEventsLoaded } from '../../events/store';
 import getAllEvents from '../../events/rpc/getAllEvents';
 import sortEventsByStartTime from '../../events/utils/sortEventsByStartTime';
 import { ZetkinEventWithStatus } from 'features/public/types';
-import useMyEvents from './useMyEvents';
+import { useMyEventsFuture } from './useMyEvents';
 
-export default function useAllEvents() {
+export default function useAllEvents(): IFuture<ZetkinEventWithStatus[]> {
   const apiClient = useApiClient();
   const allEventsList = useAppSelector((state) => state.events.allEventsList);
 
-  const myEvents = useMyEvents();
+  const myEventsFuture = useMyEventsFuture();
 
-  const events = useRemoteList(allEventsList, {
+  const eventsFuture = useRemoteListFuture(allEventsList, {
     actionOnLoad: () => allEventsLoad(),
     actionOnSuccess: (data) => {
       const sorted = data.sort(sortEventsByStartTime);
@@ -21,14 +22,22 @@ export default function useAllEvents() {
     loader: () => apiClient.rpc(getAllEvents, {}),
   });
 
-  return events.map<ZetkinEventWithStatus>((event) => {
-    const myEvent = myEvents.find((candidate) => candidate.id == event.id);
+  if (!eventsFuture.data || !myEventsFuture.data) {
+    return new LoadingFuture();
+  }
 
-    return (
-      myEvent || {
-        ...event,
-        status: null,
-      }
-    );
-  });
+  const myEvents = myEventsFuture.data;
+
+  return new ResolvedFuture(
+    eventsFuture.data.map<ZetkinEventWithStatus>((event) => {
+      const myEvent = myEvents.find((candidate) => candidate.id == event.id);
+
+      return (
+        myEvent || {
+          ...event,
+          status: null,
+        }
+      );
+    })
+  );
 }
