@@ -162,7 +162,6 @@ const Activities: FC<ActivitiesProps> = ({
               style={{ display: 'contents' }}
             >
               <ZUIFilterButton
-                key={filter.key}
                 active={filter.active}
                 label={filter.label}
                 onClick={filter.onClick}
