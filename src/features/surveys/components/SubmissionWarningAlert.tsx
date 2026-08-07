@@ -1,25 +1,35 @@
 import NextLink from 'next/link';
-import { Alert, AlertTitle, Box, Link } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Link,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useSurveyStats from '../hooks/useSurveyStats';
 import ZUIFuture from 'zui/ZUIFuture';
+import { AutoLinkSubmissionsDialog } from 'features/surveys/components/AutoLinkSubmissionsDialog';
 
 type SubmissionWarningAlertProps = {
-  campId: number | 'standalone' | 'shared';
   orgId: number;
+  projectId: number | 'standalone' | 'shared';
   showUnlinkedOnly: boolean;
   surveyId: number;
 };
 const SubmissionWarningAlert = ({
-  campId,
+  projectId,
   showUnlinkedOnly,
   orgId,
   surveyId,
 }: SubmissionWarningAlertProps) => {
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(orgId, surveyId);
+  const [autoLinkModalOpen, setAutoLinkModalOpen] = useState(false);
 
   return (
     <ZUIFuture future={statsFuture}>
@@ -44,7 +54,7 @@ const SubmissionWarningAlert = ({
                 })}
             <Box>
               <NextLink
-                href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions${
+                href={`/organize/${orgId}/projects/${projectId}/surveys/${surveyId}/submissions${
                   showUnlinkedOnly ? '' : '?filter=linked'
                 }`}
                 legacyBehavior
@@ -56,6 +66,34 @@ const SubmissionWarningAlert = ({
                     : messages.unlinkedWarningAlert.default.viewUnlinked()}
                 </Link>
               </NextLink>
+            </Box>
+            <Box>
+              <Typography
+                sx={{
+                  my: '5px',
+                }}
+                variant={'body2'}
+              >
+                {messages.unlinkedWarningAlert.autoLink.canBeAutoLinkedText({
+                  countStr: sub.autoLinkableSubmissionCount,
+                })}
+              </Typography>
+              <Button
+                disabled={sub.autoLinkableSubmissionCount === '0'}
+                onClick={() => setAutoLinkModalOpen(true)}
+                size={'small'}
+                variant={'outlined'}
+              >
+                {messages.unlinkedWarningAlert.autoLink.openDialogButton()}
+              </Button>
+              {autoLinkModalOpen && (
+                <AutoLinkSubmissionsDialog
+                  onClose={() => setAutoLinkModalOpen(false)}
+                  open={autoLinkModalOpen}
+                  orgId={orgId}
+                  surveyId={surveyId}
+                />
+              )}
             </Box>
           </Alert>
         );

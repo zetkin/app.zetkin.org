@@ -14,7 +14,7 @@ import {
 } from '@mui/icons-material';
 
 import ArbitraryCluster from './ArbitraryCluster';
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import messageIds from 'features/events/l10n/messageIds';
 import MultiLocationCluster from './MultiLocationCluster';
 import MultiLocationIcon from 'zui/icons/MultiLocation';

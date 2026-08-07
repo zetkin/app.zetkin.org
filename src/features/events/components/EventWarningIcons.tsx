@@ -6,7 +6,7 @@ import {
   MailOutline,
 } from '@mui/icons-material';
 
-import messageIds from 'features/campaigns/l10n/messageIds';
+import messageIds from 'features/projects/l10n/messageIds';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';

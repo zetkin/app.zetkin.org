@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinCampaign, ZetkinEvent, ZetkinSurvey } from 'utils/types/zetkin';
+import { ZetkinProject, ZetkinEvent, ZetkinSurvey } from 'utils/types/zetkin';
 
 const getUrlsXml = <T>(ts: T[], urlGen: (t: T) => string) => {
   return ts
@@ -33,8 +33,8 @@ export async function GET(
       .get<ZetkinEvent[]>(`/api/orgs/${params.orgId}/actions`)
       .catch(() => [] as ZetkinEvent[]),
     apiClient
-      .get<ZetkinCampaign[]>(`/api/orgs/${params.orgId}/campaigns`)
-      .catch(() => [] as ZetkinCampaign[]),
+      .get<ZetkinProject[]>(`/api/orgs/${params.orgId}/campaigns`)
+      .catch(() => [] as ZetkinProject[]),
     apiClient
       .get<ZetkinSurvey[]>(`/api/orgs/${params.orgId}/surveys`)
       .catch(() => [] as ZetkinSurvey[]),

@@ -10,8 +10,8 @@ import { TimeScale } from '../index';
 import YearSelect from './YearSelect';
 
 export interface CalendarNavBarProps {
-  focusDate: Date;
-  onChangeFocusDate: (date: Date) => void;
+  focusDate: Temporal.PlainDate;
+  onChangeFocusDate: (date: Temporal.PlainDate) => void;
   onChangeTimeScale: (timeScale: TimeScale) => void;
   onStepBackward: () => void;
   onStepForward: () => void;
@@ -33,7 +33,7 @@ const CalendarNavBar = ({
       <Box alignItems="center" display="flex" gap="4px">
         <Button
           color="primary"
-          onClick={() => onChangeFocusDate(new Date())}
+          onClick={() => onChangeFocusDate(Temporal.Now.plainDateISO())}
           variant="outlined"
         >
           <Msg id={messageIds.today} />

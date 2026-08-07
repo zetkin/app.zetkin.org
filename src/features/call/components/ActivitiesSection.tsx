@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -11,13 +11,16 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useIntl } from 'react-intl';
 import {
   CalendarMonthOutlined,
+  Close,
   Chair,
   Clear,
   GroupWork,
   Hotel,
+  Search,
 } from '@mui/icons-material';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { partition } from 'lodash';
+import Fuse from 'fuse.js';
 
 import EventCard from './EventCard';
 import { LaneStep, ZetkinCallTarget } from '../types';
@@ -33,13 +36,15 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
-import { ACTIVITIES } from 'features/campaigns/types';
+import { ACTIVITIES } from 'features/projects/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
 import ZUISection from 'zui/components/ZUISection';
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import ZUITextField from 'zui/components/ZUITextField';
+import useDebounce from 'utils/hooks/useDebounce';
 
 type Filter = {
   active: boolean;
@@ -72,6 +77,53 @@ const Activities: FC<ActivitiesProps> = ({
   showNoSignups,
   target,
 }) => {
+  const [searchString, setSearchString] = useState<string>('');
+  const [debouncedSearchString, setDebouncedSearchString] =
+    useState<string>('');
+  const fuse = useMemo(() => {
+    return new Fuse(activities, {
+      keys: [
+        'data.campaign.title',
+        'data.organization.title',
+        'data.location.title',
+        'data.title',
+        'data.activity.title',
+      ],
+      threshold: 0.4,
+    });
+  }, [activities]);
+
+  const debouncedSetSearchString = useDebounce(async (value: string) => {
+    setDebouncedSearchString(value);
+  }, 300);
+
+  const handleSearchStringChange = (value: string) => {
+    setSearchString(value);
+    debouncedSetSearchString(value);
+  };
+
+  const clearSearchString = () => {
+    setSearchString('');
+    setDebouncedSearchString('');
+  };
+
+  const filteredActivities = useMemo(
+    () =>
+      debouncedSearchString
+        ? fuse
+            .search(debouncedSearchString)
+            .map((fuseResult) => fuseResult.item)
+            .sort((a, b) => a.data.id - b.data.id)
+        : [...activities.sort((a, b) => a.data.id - b.data.id)],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activities, debouncedSearchString]
+  );
+
+  useEffect(() => {
+    clearSearchString();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target]);
+
   if (!target) {
     return null;
   }
@@ -152,7 +204,19 @@ const Activities: FC<ActivitiesProps> = ({
           </ZUIText>
         </Box>
       )}
-      {activities.map((activity) => {
+      {activities.length !== 0 && (
+        <ZUITextField
+          endIcon={Close}
+          fullWidth
+          onChange={(newValue) => {
+            handleSearchStringChange(newValue);
+          }}
+          onEndIconClick={() => clearSearchString()}
+          startIcon={Search}
+          value={searchString}
+        />
+      )}
+      {filteredActivities.map((activity) => {
         if (target && activity.kind == ACTIVITIES.EVENT) {
           return (
             <EventCard
@@ -244,30 +308,27 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const surveysWithCampaign = surveys.filter((survey) => !!survey.campaign);
-  const eventsWithCampaign = events.filter((event) => !!event.campaign);
+  const surveysWithProject = surveys.filter((survey) => !!survey.campaign);
+  const eventsWithProject = events.filter((event) => !!event.campaign);
 
-  const activitiesWithCampaign = [
-    ...surveysWithCampaign,
-    ...eventsWithCampaign,
-  ];
+  const activitiesWithProject = [...surveysWithProject, ...eventsWithProject];
 
   const projects: { id: 'noProject' | number; title: string }[] = [
     ...new Map(
-      eventsWithCampaign
+      eventsWithProject
         .map((event) => event.campaign)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
     ...new Map(
-      surveysWithCampaign
+      surveysWithProject
         .map((survey) => survey.campaign)
         .filter(notEmpty)
-        .map((campaign) => [campaign['title'], campaign])
+        .map((project) => [project['title'], project])
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  if (activitiesWithCampaign.length != surveys.length + events.length) {
+  if (activitiesWithProject.length != surveys.length + events.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
 
@@ -521,14 +582,14 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   ];
 
   useEffect(() => {
-    const campaign = assignment.campaign;
-    const campaignHasActivities =
-      !!campaign && projectIdsWithActivities.includes(campaign.id);
+    const project = assignment.campaign;
+    const projectHasActivities =
+      !!project && projectIdsWithActivities.includes(project.id);
 
-    if (campaignHasActivities) {
+    if (projectHasActivities) {
       dispatch(
         filtersUpdated({
-          projectIdsToFilterActivitiesBy: [campaign.id],
+          projectIdsToFilterActivitiesBy: [project.id],
         })
       );
     }

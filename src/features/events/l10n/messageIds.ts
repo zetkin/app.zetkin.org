@@ -22,6 +22,10 @@ export default makeMessages('feat.events', {
     move: m('Move'),
     publish: m('Publish'),
     restore: m('Restore'),
+    sendEmailToParticipants: {
+      buttonTitle: m('Send email to participants'),
+      emailSubject: m<{ eventTitle: string }>('Re: {eventTitle}'),
+    },
     unpublish: m('Unpublish'),
     warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
     warningCancel: m<{ eventTitle: string }>(
@@ -31,10 +35,10 @@ export default makeMessages('feat.events', {
       '"{eventTitle}" will be restored.'
     ),
   },
-  eventChangeCampaignDialog: {
+  eventChangeProjectDialog: {
     error: m('Error: Could not move the event to the selected project'),
-    success: m<{ campaignTitle: string; eventTitle: string }>(
-      'Event "{eventTitle}" moved to "{campaignTitle}"'
+    success: m<{ eventTitle: string; projectTitle: string }>(
+      'Event "{eventTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move event'),
   },

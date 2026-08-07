@@ -8,6 +8,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import { scaffold } from 'utils/next';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'core/l10n/messageIds';
+import { useNonce } from 'core/hooks/useNonce';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (context) => {
@@ -35,6 +36,7 @@ interface LegacyPageProps {
 const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
   const messages = useMessages(messageIds);
   const router = useRouter();
+  const nonce = useNonce();
 
   return (
     <>
@@ -46,6 +48,7 @@ const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
         html, body, body > div { height: 100%; padding: 0; margin: 0; }
         `,
           }}
+          nonce={nonce}
         />
       </Head>
       <Box

@@ -1,7 +1,7 @@
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
 
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import MultiEventPopper from './MultiEventPopper';
 import SingleEventPopper from './SingleEventPopper';
 

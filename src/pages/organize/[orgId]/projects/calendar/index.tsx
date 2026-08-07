@@ -1,10 +1,10 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
+import AllProjectsLayout from 'features/projects/layout/AllProjectsLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import Calendar from 'features/calendar/components';
-import messageIds from 'features/campaigns/l10n/messageIds';
+import messageIds from 'features/projects/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-const AllCampaignsCalendarPage: PageWithLayout = () => {
+const AllProjectsCalendarPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
 
   const isOnServer = useServerSide();
@@ -55,8 +55,8 @@ const AllCampaignsCalendarPage: PageWithLayout = () => {
   );
 };
 
-AllCampaignsCalendarPage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout fixedHeight>{page}</AllCampaignsLayout>;
+AllProjectsCalendarPage.getLayout = function getLayout(page) {
+  return <AllProjectsLayout fixedHeight>{page}</AllProjectsLayout>;
 };
 
-export default AllCampaignsCalendarPage;
+export default AllProjectsCalendarPage;

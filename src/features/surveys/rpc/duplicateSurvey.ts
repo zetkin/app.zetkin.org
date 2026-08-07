@@ -13,8 +13,8 @@ import IApiClient from 'core/api/client/IApiClient';
 import { ZetkinSurveyElementPostBody } from '../hooks/useSurveyMutations';
 
 const paramsSchema = z.object({
-  campId: z.number(),
   orgId: z.number(),
+  projectId: z.number(),
   surveyId: z.number(),
 });
 
@@ -34,7 +34,7 @@ async function handle(
   params: Params,
   apiClient: IApiClient
 ): Promise<ZetkinSurveyExtended> {
-  const { orgId, surveyId, campId } = params;
+  const { orgId, surveyId, projectId } = params;
 
   if (orgId === undefined || surveyId === undefined) {
     throw new Error('orgId and surveyId must be defined');
@@ -96,7 +96,7 @@ async function handle(
   };
 
   const newSurvey = await apiClient.post<ZetkinSurvey, ZetkinSurveyPostBody>(
-    `/api/orgs/${orgId}/campaigns/${campId}/surveys`,
+    `/api/orgs/${orgId}/campaigns/${projectId}/surveys`,
     body
   );
 

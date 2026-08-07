@@ -15,7 +15,7 @@ import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
-import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
 
 interface EmailActionButtonsProp {
   email: ZetkinEmail;
@@ -39,16 +39,16 @@ const EmailActionButtons = ({
     setIsMoveDialogOpen(true);
   }
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedEmail = await updateEmail({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedEmail = await updateEmail({ campaign_id: projectId });
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/emails/${email.id}`
+      `/organize/${orgId}/projects/${projectId}/emails/${email.id}`
     );
     showSnackbar(
       'success',
-      messages.emailChangeCampaignDialog.success({
-        campaignTitle: updatedEmail.campaign!.title,
+      messages.emailChangeProjectDialog.success({
         emailTitle: email.title!,
+        projectTitle: updatedEmail.campaign!.title,
       })
     );
   };
@@ -111,12 +111,12 @@ const EmailActionButtons = ({
           },
         ]}
       />
-      <ChangeCampaignDialog
-        errorMessage={messages.emailChangeCampaignDialog.error()}
-        onCampaignSelected={handleOnCampaignSelected}
+      <ChangeProjectDialog
+        errorMessage={messages.emailChangeProjectDialog.error()}
         onClose={() => setIsMoveDialogOpen(false)}
+        onProjectSelected={handleOnProjectSelected}
         open={isMoveDialogOpen}
-        title={messages.emailChangeCampaignDialog.title()}
+        title={messages.emailChangeProjectDialog.title()}
       />
     </Box>
   );

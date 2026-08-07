@@ -23,22 +23,22 @@ import { Close, Search } from '@mui/icons-material';
 
 import ActivitiesOverview, {
   ActivitiesOverviewSkeleton,
-} from 'features/campaigns/components/ActivitiesOverview';
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
+} from 'features/projects/components/ActivitiesOverview';
+import AllProjectsLayout from 'features/projects/layout/AllProjectsLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import CampaignCard from 'features/campaigns/components/CampaignCard';
-import messageIds from 'features/campaigns/l10n/messageIds';
+import ProjectCard from 'features/projects/components/ProjectCard';
+import messageIds from 'features/projects/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SharedCard from 'features/campaigns/components/SharedCard';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import SharedCard from 'features/projects/components/SharedCard';
+import useProjects from 'features/projects/hooks/useProjects';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 import { Msg, useMessages } from 'core/i18n';
 import ZUINumberChip from 'zui/ZUINumberChip';
-import { ZetkinCampaign } from 'utils/types/zetkin';
-import useActivitiyOverview from 'features/campaigns/hooks/useActivityOverview';
+import { ZetkinProject } from 'utils/types/zetkin';
+import useActivitiyOverview from 'features/projects/hooks/useActivityOverview';
 import ZUIFutures from 'zui/ZUIFutures';
 import { IFuture } from 'core/caching/futures';
 
@@ -47,7 +47,7 @@ const scaffoldOptions = {
   localeScope: [
     'layout.organize',
     'misc.breadcrumbs',
-    'pages.organizeAllCampaigns',
+    'pages.organizeAllProjects',
     'misc.formDialog',
   ],
 };
@@ -75,7 +75,7 @@ const LoadingPageIndicator = () => {
   return (
     <>
       <Head>
-        <title>{messages.layout.allCampaigns()}</title>
+        <title>{messages.layout.allProjects()}</title>
       </Head>
       <ActivitiesOverviewSkeleton />
       <Box
@@ -105,7 +105,7 @@ const LoadingPageIndicator = () => {
           </Typography>
         </Box>
         <Grid container spacing={2}>
-          {new Array(8).fill(0).map((campaign, index) => (
+          {new Array(8).fill(0).map((project, index) => (
             <Grid key={index} size={{ lg: 3, md: 4, xs: 12 }}>
               <Skeleton sx={{ height: '117px' }} variant={'rounded'} />
             </Grid>
@@ -132,17 +132,17 @@ function LoadingBoundary<G extends Record<string, unknown>>({
   );
 }
 
-const AllCampaignsSummaryPage: PageWithLayout = () => {
+const AllProjectsSummaryPage: PageWithLayout = () => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
 
-  const campaignsFuture = useCampaigns(orgId);
+  const projectsFuture = useProjects(orgId);
   const surveysFuture = useSurveys(orgId);
   const activityOverviewFuture = useActivitiyOverview(orgId);
 
-  const campaigns = campaignsFuture.data || [];
-  campaigns.reverse();
+  const projects = projectsFuture.data || [];
+  projects.reverse();
   const [searchString, setSearchString] = useState('');
   const [showArchived, setShowArchived] = useState(false);
 
@@ -158,7 +158,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   const surveys = surveysFuture.data ?? [];
 
   const search = () => {
-    const fuse = new Fuse(campaigns, {
+    const fuse = new Fuse(projects, {
       keys: ['title', 'info_text'],
       threshold: 0.4,
     });
@@ -167,27 +167,23 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const campaignsThatMatchSearch = useMemo(() => search(), [searchString]);
+  const projectsThatMatchSearch = useMemo(() => search(), [searchString]);
 
-  const [activeCampaigns, archivedCampaigns] = useMemo(() => {
-    let archived: ZetkinCampaign[] = [];
-    let active: ZetkinCampaign[] = [];
+  const [activeProjects, archivedProjects] = useMemo(() => {
+    let archived: ZetkinProject[] = [];
+    let active: ZetkinProject[] = [];
 
     if (searchString) {
-      active = campaignsThatMatchSearch.filter(
-        (campaign) => !campaign.archived
-      );
-      archived = campaignsThatMatchSearch.filter(
-        (campaign) => campaign.archived
-      );
+      active = projectsThatMatchSearch.filter((project) => !project.archived);
+      archived = projectsThatMatchSearch.filter((project) => project.archived);
     } else {
-      active = campaigns.filter((campaign) => !campaign.archived);
-      archived = campaigns.filter((campaign) => campaign.archived);
+      active = projects.filter((project) => !project.archived);
+      archived = projects.filter((project) => project.archived);
     }
 
     return [active, archived];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaigns, searchString]);
+  }, [projects, searchString]);
 
   if (onServer) {
     return null;
@@ -203,13 +199,13 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
     <LoadingBoundary
       futures={{
         activityOverviewFuture,
-        campaignsFuture,
+        projectsFuture,
         surveysFuture,
       }}
     >
       <>
         <Head>
-          <title>{messages.layout.allCampaigns()}</title>
+          <title>{messages.layout.allProjects()}</title>
         </Head>
         <ActivitiesOverview orgId={orgId} />
         <Box
@@ -227,7 +223,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             onChange={(evt) => {
               setSearchString(evt.target.value);
             }}
-            placeholder={messages.all.campaignFilterPlaceholder()}
+            placeholder={messages.all.projectFilterPlaceholder()}
             slotProps={{
               input: {
                 endAdornment: searchString ? (
@@ -255,7 +251,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             }}
           >
             <Typography mb={2} variant="h5">
-              <Msg id={messageIds.activeCampaigns.header} />
+              <Msg id={messageIds.activeProjects.header} />
             </Typography>
           </Box>
           <Grid container spacing={2}>
@@ -264,14 +260,14 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
                 <SharedCard />
               </Grid>
             )}
-            {activeCampaigns.map((campaign) => (
-              <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
-                <CampaignCard campaign={campaign} />
+            {activeProjects.map((project) => (
+              <Grid key={project.id} size={{ lg: 3, md: 4, xs: 12 }}>
+                <ProjectCard project={project} />
               </Grid>
             ))}
           </Grid>
         </Box>
-        {archivedCampaigns.length > 0 && (
+        {archivedProjects.length > 0 && (
           <Box component="section" sx={{ marginBottom: 16, marginTop: 4 }}>
             <Box
               component="header"
@@ -284,12 +280,12 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             >
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
                 <Typography variant="h5">
-                  <Msg id={messageIds.archivedCampaigns.header} />
+                  <Msg id={messageIds.archivedProjects.header} />
                 </Typography>
                 <ZUINumberChip
                   color={theme.palette.grey[200]}
                   size="sm"
-                  value={archivedCampaigns.length}
+                  value={archivedProjects.length}
                 />
               </Box>
               <Button
@@ -300,17 +296,17 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
                 <Msg
                   id={
                     showArchived
-                      ? messageIds.archivedCampaigns.hideShowButton.hide
-                      : messageIds.archivedCampaigns.hideShowButton.show
+                      ? messageIds.archivedProjects.hideShowButton.hide
+                      : messageIds.archivedProjects.hideShowButton.show
                   }
                 />
               </Button>
             </Box>
             {showArchived && (
               <Grid ref={archivedRef} container spacing={2}>
-                {archivedCampaigns.map((campaign) => (
-                  <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
-                    <CampaignCard campaign={campaign} />
+                {archivedProjects.map((project) => (
+                  <Grid key={project.id} size={{ lg: 3, md: 4, xs: 12 }}>
+                    <ProjectCard project={project} />
                   </Grid>
                 ))}
               </Grid>
@@ -322,8 +318,8 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   );
 };
 
-AllCampaignsSummaryPage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
+AllProjectsSummaryPage.getLayout = function getLayout(page) {
+  return <AllProjectsLayout>{page}</AllProjectsLayout>;
 };
 
-export default AllCampaignsSummaryPage;
+export default AllProjectsSummaryPage;
