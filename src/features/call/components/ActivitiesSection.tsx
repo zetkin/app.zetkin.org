@@ -155,9 +155,10 @@ const Activities: FC<ActivitiesProps> = ({
         {partition([...baseFilters, ...eventFilters], (filter) => filter.active)
           .flat()
           .map((filter) => (
-            <span
+            <Box
               key={filter.key}
               ref={filter.wrapperRef}
+              component="span"
               style={{ display: 'contents' }}
             >
               <ZUIFilterButton
@@ -166,7 +167,7 @@ const Activities: FC<ActivitiesProps> = ({
                 label={filter.label}
                 onClick={filter.onClick}
               />
-            </span>
+            </Box>
           ))}
       </Box>
       {showNoActivities && (
