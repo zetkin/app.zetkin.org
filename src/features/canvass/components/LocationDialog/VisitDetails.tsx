@@ -36,9 +36,9 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
               alignItems="center"
               display="flex"
               flexDirection="row"
-              gap={1}
+              gap={2}
             >
-              <Box flexShrink={0} width={'30px'}>
+              <Box display="flex" flexShrink={0}>
                 <MetricIcon
                   iconRatings={true}
                   metric={metric}
