@@ -190,7 +190,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
           {selectedHouseholdId && (
             <HouseholdPage
               householdId={selectedHouseholdId}
+              lastVisit={lastVisitByHouseholdId[selectedHouseholdId] || null}
               location={location}
+              metrics={metrics}
               onBack={() => back()}
               onClose={onClose}
               onDelete={() => {
@@ -209,9 +211,6 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onHouseholdVisitStart={() => {
                 goto('householdVisit');
               }}
-              visitedInThisAssignment={
-                !!lastVisitByHouseholdId[selectedHouseholdId]
-              }
             />
           )}
         </Box>

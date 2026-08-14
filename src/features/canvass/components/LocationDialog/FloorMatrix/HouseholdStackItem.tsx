@@ -7,7 +7,7 @@ import messageIds from 'features/canvass/l10n/messageIds';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { HouseholdItem } from './types';
 import HouseholdSquare from './HouseholdSquare';
-import { MetricIcon } from 'features/canvass/components/LocationDialog/FloorMatrix/MetricIcon';
+import { MetricIcon } from 'features/canvass/components/MetricIcon';
 
 type Props = {
   delay: number;
@@ -108,7 +108,7 @@ const HouseholdStackItem: FC<Props> = ({
                       <Box key={metric.id} width="20px">
                         <MetricIcon
                           metric={metric}
-                          response={lastVisitMetric?.response || null}
+                          response={lastVisitMetric?.response ?? null}
                         />
                       </Box>
                     );

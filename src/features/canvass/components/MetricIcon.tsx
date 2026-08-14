@@ -10,24 +10,39 @@ import { ZetkinMetric } from 'features/areaAssignments/types';
 type Props = {
   metric: ZetkinMetric;
   response: MetricResponse['response'] | null;
+  size?: 'large' | 'medium' | 'small';
 };
 
-export const MetricIcon: FC<Props> = ({ metric, response }) => {
+export const MetricIcon: FC<Props> = ({
+  metric,
+  response,
+  size: optionalSize,
+}) => {
+  const size = optionalSize ?? 'small';
+
   if (response === null) {
-    return <RemoveIcon color="disabled" fontSize="small" />;
+    return <RemoveIcon color="disabled" fontSize={size} />;
   }
 
   if (metric.type === 'bool') {
     return response === 'yes' ? (
-      <CheckIcon fontSize="small" />
+      <CheckIcon fontSize={size} />
     ) : (
-      <CloseIcon fontSize="small" />
+      <CloseIcon fontSize={size} />
     );
   } else {
     return (
-      <Typography fontSize="medium" mx="5px">
+      <Typography fontSize={numericResponseFontSize(size)} mx="5px">
         {response}
       </Typography>
     );
   }
 };
+
+function numericResponseFontSize(size: 'large' | 'medium' | 'small') {
+  if (size === 'small') {
+    return 'medium';
+  }
+
+  return 'large';
+}

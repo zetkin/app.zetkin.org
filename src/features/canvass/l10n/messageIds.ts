@@ -87,9 +87,14 @@ export default makeMessages('feat.canvass', {
       header: m('Households'),
     },
     single: {
+      definesSuccess: m('Defines success'),
       logVisitButtonLabel: m('Log visit'),
+      notAnswered: m('Not answered'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
-      wasVisited: m('This household has been visited in this assignment'),
+      visit: m('Visit'),
+      wasNotVisited: m(
+        'This household has not been visited in this assignment'
+      ),
     },
     stackItem: {
       detailsButtonLabel: m('Details'),
