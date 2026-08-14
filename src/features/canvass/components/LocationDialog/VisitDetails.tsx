@@ -40,6 +40,7 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
             >
               <Box flexShrink={0} width={'30px'}>
                 <MetricIcon
+                  iconRatings={true}
                   metric={metric}
                   response={response?.response ?? null}
                   size={'medium'}
