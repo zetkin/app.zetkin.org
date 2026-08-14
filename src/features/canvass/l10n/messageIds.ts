@@ -89,7 +89,7 @@ export default makeMessages('feat.canvass', {
     single: {
       definesSuccess: m('Defines success'),
       logVisitButtonLabel: m('Log visit'),
-      notAnswered: m('Not answered'),
+      skipped: m('skipped'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       visit: m('Visit'),
       wasNotVisited: m(

@@ -70,7 +70,7 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
                   {response ? (
                     response.response
                   ) : (
-                    <Msg id={messageIds.households.single.notAnswered} />
+                    <Msg id={messageIds.households.single.skipped} />
                   )}
                 </Typography>
               </Box>
