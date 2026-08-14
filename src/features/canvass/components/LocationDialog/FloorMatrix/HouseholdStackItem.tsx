@@ -86,7 +86,7 @@ const HouseholdStackItem: FC<Props> = ({
             sx={{
               alignItems: 'center',
               display: 'flex',
-              gap: 1,
+              paddingRight: 1,
             }}
           >
             <Button
