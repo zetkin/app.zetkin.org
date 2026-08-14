@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { FC } from 'react';
 
 import { Msg } from 'core/i18n';
@@ -93,9 +94,8 @@ const HouseholdStackItem: FC<Props> = ({
                 ev.stopPropagation();
                 onClickDetails();
               }}
-              variant="outlined"
             >
-              <Msg id={messageIds.households.stackItem.detailsButtonLabel} />
+              <InfoIcon />
             </Button>
             <Button
               onClick={(ev) => {
