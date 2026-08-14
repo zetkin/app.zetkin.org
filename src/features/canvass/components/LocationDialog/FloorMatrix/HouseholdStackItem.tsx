@@ -52,6 +52,10 @@ const HouseholdStackItem: FC<Props> = ({
       />
       {expanded && (
         <Box
+          onClick={(ev) => {
+            ev.stopPropagation();
+            onClickDetails();
+          }}
           sx={{
             '@keyframes enter': {
               from: {
