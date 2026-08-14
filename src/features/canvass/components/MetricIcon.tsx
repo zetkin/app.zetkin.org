@@ -41,9 +41,9 @@ export const MetricIcon: FC<Props> = ({
 
   if (metric.type === 'bool') {
     return response === 'yes' ? (
-      <CheckIcon fontSize={size} />
+      <CheckIcon color="success" fontSize={size} />
     ) : (
-      <CloseIcon fontSize={size} />
+      <CloseIcon color="error" fontSize={size} />
     );
   } else if (!iconRatings || typeof response === 'string') {
     return (
