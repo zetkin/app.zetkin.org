@@ -15,7 +15,7 @@ type Props = {
 
 export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" gap={1}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="headingLg">
           <Msg id={messageIds.households.single.visit} />
@@ -43,7 +43,7 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
                   iconRatings={true}
                   metric={metric}
                   response={response?.response ?? null}
-                  size={'medium'}
+                  size={'large'}
                 />
               </Box>
               <Box display="flex" flexDirection="column">
