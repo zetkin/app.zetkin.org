@@ -197,8 +197,12 @@ const FloorMatrix: FC<Props> = ({
 
               return {
                 household,
+                lastVisitMetrics: mostRecentVisit
+                  ? mostRecentVisit.metrics
+                  : null,
                 lastVisitSuccess,
                 lastVisitTime: mostRecentVisit?.created ?? null,
+                metrics,
               };
             });
 
