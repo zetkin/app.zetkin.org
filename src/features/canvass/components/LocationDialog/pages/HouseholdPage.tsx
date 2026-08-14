@@ -6,7 +6,6 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
 import useHousehold from 'features/canvass/hooks/useHousehold';
-import { MetricResponse } from 'features/canvass/types';
 import { VisitDetails } from 'features/canvass/components/LocationDialog/VisitDetails';
 import { HouseholdVisit } from 'features/canvass/hooks/useVisitReporting';
 
