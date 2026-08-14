@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 
 import test from '../../../../fixtures/next';
-import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import SpeakToFriend from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures';
+import SpeakToFriend from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Task detail pagee', async () => {
   test.beforeEach(async ({ login, moxy }) => {

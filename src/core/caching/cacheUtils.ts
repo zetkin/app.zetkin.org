@@ -21,7 +21,7 @@ import { RemoteItem, RemoteList } from 'utils/storeUtils';
  *   actionOnSuccess: (data) => tasksLoaded(data),
  *   loader: () =>
  *     apiClient.get<ZetkinTask[]>(
- *       `/api/orgs/${orgId}/campaigns/${campId}/tasks`
+ *       `/api/orgs/${orgId}/campaigns/${projectId}/tasks`
  *     ),
  * });
  * ```

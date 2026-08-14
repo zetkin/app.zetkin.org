@@ -3,7 +3,7 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
-  ZetkinCampaign,
+  ZetkinProject,
   ZetkinEvent,
   ZetkinOrganization,
   ZetkinSmartSearchFilter,
@@ -66,7 +66,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
             state: 'booked',
           },
           op: OPERATION.ADD,
-          type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+          type: FILTER_TYPE.PROJECT_PARTICIPATION,
         },
       ],
     }),
@@ -75,7 +75,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       `/api/orgs/${orgId}/survey_submissions?recursive`
     ),
     apiClient.get<ZetkinView[]>(`/api/orgs/${orgId}/people/views?recursive`),
-    apiClient.get<ZetkinCampaign[]>(`/api/orgs/${orgId}/campaigns?recursive`),
+    apiClient.get<ZetkinProject[]>(`/api/orgs/${orgId}/campaigns?recursive`),
     apiClient.get<ZetkinEvent[]>(
       `/api/orgs/${orgId}/actions?recursive&filter=start_time>=${thirtyDaysAgo
         .toISOString()

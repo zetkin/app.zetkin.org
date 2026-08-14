@@ -48,7 +48,6 @@ feat:
       calendar: Kalender
       callassignments: Bel opdrachten
       callers: Bellers
-      campaigns: Projecten
       closed: Gesloten
       compose: Samenstellen
       conversation: Gesprek
@@ -250,7 +249,7 @@ feat:
       editButton: Pas target-groep aan
       subtitle: Gebruik slim-zoeken om de targets voor deze opdracht te definiëren.
       title: Targets
-  campaigns:
+  projects:
     activitiesOverview:
       button: Doorzoek alle activiteiten
       empty: Op deze dag staat niets gepland
@@ -312,17 +311,17 @@ feat:
     form:
       createCallAssignment:
         newCallAssignment: Mijn bel-opdracht
-      createCampaign:
+      createProject:
         create: Project maken
         error: Er is een fout opgetreden bij het aanmaken van het project
-        newCampaign: Mijn project
+        newProject: Mijn project
       createEmail:
         newEmail: E-mail zonder titel
       createSurvey:
         newSurvey: Mijn vragenlijst
       createTask:
         title: Taak aanmaken
-      deleteCampaign:
+      deleteProject:
         cancel: Annuleren
         error: Er is een error opgetreden tijdens het verwijderen van het project
         submitButton: Bevestig verwijdering
@@ -331,7 +330,7 @@ feat:
           je niet ongedaan maken.
       description: Beschrijving
       edit: Bewerk project
-      editCampaignTitle:
+      editProjectTitle:
         error: Error updaten project titel
         success: Project titel geüpdatet
       manager:
@@ -350,7 +349,7 @@ feat:
     indefinite: Nog onbepaalde tijdlijn
     layout:
       activities: Activiteiten
-      allCampaigns: Alle Projecten & Activiteiten
+      allProjects: Alle Projecten & Activiteiten
       archive: Archiveren
       calendar: Kalender
       insights: Inzichten
@@ -630,10 +629,10 @@ feat:
       warning: '"{eventTitle}" zal verwijderd worden.'
       warningCancel: '"{eventTitle}" zal geannuleerd worden.'
       warningRestore: '"{eventTitle}" zal hersteld worden'
-    eventChangeCampaignDialog:
+    eventChangeProjectDialog:
       error: 'Foutsituatie: Kan gebeurtenis niet verplaatsen naar het geselecteerde
         project'
-      success: Gebeurtenis verplaatst naar "{campaignTitle}"
+      success: Gebeurtenis verplaatst naar "{projectTitle}"
     eventContactCard:
       header: Contacteer
       noContact: Geen contactpersoon toegewezen!
@@ -1456,7 +1455,7 @@ feat:
         call_history:
           description: Zoek naar mensen die gebeld, bereikt of geprobeerd zijn te bereiken.
           title: Belgeschiedenis
-        campaign_participation:
+        project_participation:
           description: Wie heeft zich aangemeld? Geboekt? Wie niet? Vind ze!
           title: Deelname bij gebeurtenissen
         email_blacklist:
@@ -1534,16 +1533,16 @@ feat:
           {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes, plural, one {once} other {# times}}'
         minTimesInput: tenminste {input} {minTimes, plural, one {time} other {times}}
-      campaignParticipation:
+      projectParticipation:
         activitySelect:
           activity: type "{activity}"
           any: elk type
         bookedSelect:
           booked: is geboekt
           signed_up: aangemeld
-        campaignSelect:
+        projectSelect:
           any: elk project
-          campaign: project "{campaign}"
+          project: project "{project}"
         examples:
           one: Voeg mensen toe die zich aanmeldden voor gebeurtenissen in elk project of
             van elk type op locatie 'De Dam' op elke tijd mogelijk
@@ -1779,9 +1778,9 @@ feat:
           none: Deze organisatie heeft nog geen vragenlijsten
           survey: Vragenlijst "{surveyTitle}"
       task:
-        campaignSelect:
+        projectSelect:
           any: elk project
-          campaign: project "{campaign}"
+          project: project "{project}"
           in: in
         examples:
           one: Voeg mensen toe die de taak "Vertel het je vrienden" minstens één keer
@@ -1789,7 +1788,7 @@ feat:
           two: Voeg mensen toe die vóór vandaag 2 tot 5 keer een taak in een project
             hebben genegeerd
         inputString: '{addRemoveSelect} people who have {taskStatusSelect}
-          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
+          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: elke taak
           task: taak "{task}"
@@ -2183,7 +2182,7 @@ feat:
       title: Bewerk taak
     form:
       fields:
-        campaign: Campagne
+        project: Campagne
         deadline: Deadline voor completering
         expires: Verloopdatum
         instructions: Instructies

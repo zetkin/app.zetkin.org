@@ -20,9 +20,9 @@ export default async function Page({ params }: PageProps) {
   const apiClient = new BackendApiClient(headersObject);
 
   try {
-    await apiClient.get<ZetkinOrganization>(`/api/users/me`);
+    const me = await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <CanvassSelectAreaPage areaAssId={areaAssId} />;
+    return <CanvassSelectAreaPage areaAssId={areaAssId} myUserId={me.id} />;
   } catch (err) {
     if (err instanceof ApiClientError && err.status === 401) {
       return redirect(`/login?redirect=/canvass/${areaAssId}`);

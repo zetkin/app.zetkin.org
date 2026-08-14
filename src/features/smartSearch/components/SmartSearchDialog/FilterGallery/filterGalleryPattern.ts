@@ -89,7 +89,7 @@ export default function filterGalleryPattern(
 
   if (slug === FILTER_TYPE.CALL_HISTORY) {
     pattern = PATTERN_TEMPLATES.pattern0;
-  } else if (slug === FILTER_TYPE.CAMPAIGN_PARTICIPATION) {
+  } else if (slug === FILTER_TYPE.PROJECT_PARTICIPATION) {
     pattern = PATTERN_TEMPLATES.pattern1;
   } else if (slug === FILTER_TYPE.PERSON_DATA) {
     pattern = PATTERN_TEMPLATES.pattern2;

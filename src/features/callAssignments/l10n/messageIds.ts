@@ -26,10 +26,10 @@ export default makeMessages('feat.callAssignments', {
     title: m('Blocked'),
     viewSheetButton: m('View list'),
   },
-  callAssignmentChangeCampaignDialog: {
+  callAssignmentChangeProjectDialog: {
     error: m('Error: Could not move the assignment to the selected project'),
-    success: m<{ assignmentTitle: string; campaignTitle: string }>(
-      'Assignment "{assignmentTitle}" moved to "{campaignTitle}"'
+    success: m<{ assignmentTitle: string; projectTitle: string }>(
+      'Assignment "{assignmentTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move assignment'),
   },

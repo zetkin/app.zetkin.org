@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Divider } from '@mui/material';
 
-import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
+import { CLUSTER_TYPE } from 'features/projects/hooks/useClusteredActivities';
 import ClusterBody from './ClusterBody';
 import ClusterHeader from './ClusterHeader';
 import MultiEventListItem from './MultiEventListItem';

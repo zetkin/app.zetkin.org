@@ -24,7 +24,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   );
 
   const messages = useMessages(messageIds);
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const [type, setType] = useState<ZetkinEvent['activity']>(null);
@@ -65,23 +65,32 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               ? dayjs(eventShifts[index + 1])
               : dayjs(eventEndTime);
 
-          let startDate: Dayjs = dayjs(eventDate);
-          startDate = startDate
-            .set('hour', shift.hour() + 2)
-            .set('minute', shift.minute());
+          const startDate = new Date(
+            Date.UTC(
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
+              shift.hour(),
+              shift.minute()
+            )
+          );
 
-          let endDate: Dayjs = dayjs(eventDate);
-          endDate = endDate
-            .set('hour', endTime.hour() + 2)
-            .set('minute', endTime.minute());
-
-          const now = dayjs();
+          const endDate = new Date(
+            Date.UTC(
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
+              endTime.hour(),
+              endTime.minute()
+            )
+          );
+          const now = new Date();
           const published = startDate < now ? startDate : now;
 
           return createEvent(
             {
               activity_id: type ? type.id : null,
-              campaign_id: campId,
+              campaign_id: projectId,
               end_time: endDate.toISOString(),
               info_text: eventDescription,
               location_id: locationId,

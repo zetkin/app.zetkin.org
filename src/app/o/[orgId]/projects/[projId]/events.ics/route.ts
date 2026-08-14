@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import {
-  ZetkinCampaign,
+  ZetkinProject,
   ZetkinEvent,
   ZetkinOrganization,
   ZetkinUser,
@@ -39,7 +39,7 @@ export async function GET(
   );
 
   const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
-  const campaign = await apiClient.get<ZetkinCampaign>(
+  const project = await apiClient.get<ZetkinProject>(
     `/api/orgs/${orgId}/campaigns/${projId}`
   );
 
@@ -54,7 +54,7 @@ export async function GET(
   const lang =
     user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
 
-  const ics = await icsFromEvents(campaign.title, events, org, lang);
+  const ics = await icsFromEvents(project.title, events, org, lang);
 
   return new Response(ics, {
     headers: { 'Content-Type': 'text/calendar' },

@@ -145,6 +145,7 @@ export default makeMessages('feat.canvass', {
     ),
   },
   selectArea: {
+    assignedToMe: m('Assigned to me'),
     noAreas: m('No areas available'),
   },
   sidebar: {

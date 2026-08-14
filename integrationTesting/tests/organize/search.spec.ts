@@ -3,9 +3,9 @@ import { expect } from '@playwright/test';
 import test from '../../fixtures/next';
 import ClarasOnboarding from '../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 import KPD from '../../mockData/orgs/KPD';
-import ReferendumSignatures from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import ReferendumSignatures from '../../mockData/orgs/KPD/projects/ReferendumSignatures';
 import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
-import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Search', async () => {
   test.beforeEach(async ({ login, moxy }) => {
@@ -94,7 +94,7 @@ test.describe('Search', async () => {
       'post',
       [RosaLuxemburg]
     );
-    const campaignSearchReq = moxy.setZetkinApiMock(
+    const projectSearchReq = moxy.setZetkinApiMock(
       '/orgs/1/search/campaign',
       'post',
       [ReferendumSignatures]
@@ -121,7 +121,7 @@ test.describe('Search', async () => {
 
     // Check that requests were made
     expect(personSearchReq.log()[0].mocked).toEqual(true);
-    expect(campaignSearchReq.log()[0].mocked).toEqual(true);
+    expect(projectSearchReq.log()[0].mocked).toEqual(true);
     expect(taskSearchReq.log()[0].mocked).toEqual(true);
     expect(journeyInstanceSearchReq.log()[0].mocked).toEqual(true);
 

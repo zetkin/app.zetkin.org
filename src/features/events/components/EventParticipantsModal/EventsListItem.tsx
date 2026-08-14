@@ -7,7 +7,7 @@ import getEventState from 'features/events/utils/getEventState';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
-import { STATUS_COLORS } from 'features/campaigns/components/ActivityList/items/ActivityListItem';
+import { STATUS_COLORS } from 'features/projects/components/ActivityList/items/ActivityListItem';
 import useEvent from 'features/events/hooks/useEvent';
 import useEventParticipantsWithChanges from 'features/events/hooks/useEventParticipantsWithChanges';
 import { useMessages } from 'core/i18n';
