@@ -13,7 +13,7 @@ export default function useAreaAssignees(orgId: number, areaAssId: number) {
 
   return loadListIfNecessary(sessions, dispatch, {
     actionOnLoad: () => assigneesLoad(areaAssId),
-
+    actionOnError: () => assigneesLoaded([areaAssId, []]),
     actionOnSuccess: (data) => assigneesLoaded([areaAssId, data]),
     loader: () =>
       fetchAllPaginated(
