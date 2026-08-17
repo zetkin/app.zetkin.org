@@ -13,6 +13,8 @@ type Props = {
   visit: HouseholdVisit;
 };
 
+const METRIC_ICON_COLUMN_WIDTH = '50px';
+
 export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
   return (
     <Box display="flex" flexDirection="column" gap={1}>
@@ -31,22 +33,21 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
           );
 
           return (
-            <Box
-              key={metric.id}
-              alignItems="center"
-              display="flex"
-              flexDirection="row"
-              gap={2}
-            >
-              <Box display="flex" flexShrink={0}>
-                <MetricIcon
-                  iconRatings={true}
-                  metric={metric}
-                  response={response?.response ?? null}
-                  size={'large'}
-                />
-              </Box>
-              <Box display="flex" flexDirection="column">
+            <Box key={metric.id} display="flex" flexDirection="column">
+              <Box display="flex" flexDirection="row">
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flexShrink={0}
+                  width={METRIC_ICON_COLUMN_WIDTH}
+                >
+                  <MetricIcon
+                    iconRatings={true}
+                    metric={metric}
+                    response={response?.response ?? null}
+                    size={'large'}
+                  />
+                </Box>
                 <Box
                   alignItems="center"
                   display="flex"
@@ -66,6 +67,14 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
                     </Typography>
                   )}
                 </Box>
+              </Box>
+              <Box display="flex" flexDirection="row">
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flexShrink={0}
+                  width={METRIC_ICON_COLUMN_WIDTH}
+                />
                 <Typography fontWeight="bold" variant="body2">
                   {response ? (
                     response.response
