@@ -7,6 +7,10 @@ import { AppSession } from 'utils/types';
 
 const protectedRoutes = ['/my', '/call'];
 
+const staticallyBuiltSitePath = /^\/(storybook|docs)(\/|$)/;
+
+const storybookGoogleFontHost = 'https://fonts.gstatic.com';
+
 function extractRootUrl(urlStr: string): string {
   const url = new URL(urlStr);
   return `https://${url.host}`;
@@ -16,6 +20,26 @@ function sanitizeUrl(urlStr: string): string {
   return new URL(urlStr).toString();
 }
 
+function setupStaticSiteCsp(nonce: string): string {
+  const externalizedInlineScripts = "'self'";
+  const nonceForNextErrorPages = `'nonce-${nonce}'`;
+
+  const cspHeader = `
+  default-src 'self';
+  script-src ${externalizedInlineScripts} ${nonceForNextErrorPages};
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' blob: data:;
+  font-src 'self' ${storybookGoogleFontHost};
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'self';
+  upgrade-insecure-requests;
+`;
+
+  return cspHeader.replace(/\s{2,}/g, ' ').trim();
+}
+
 function setupCsp(path: string) {
   if (process.env.PLAYWRIGHT === '1') {
     return ['', "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:"];
@@ -23,6 +47,10 @@ function setupCsp(path: string) {
 
   const isDev = process.env.NODE_ENV === 'development';
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+
+  if (staticallyBuiltSitePath.test(path)) {
+    return [nonce, setupStaticSiteCsp(nonce)] as const;
+  }
 
   if (!process.env.MAPLIBRE_STYLE) {
     throw new Error('Unexpected undefined MAPLIBRE_STYLE.');
