@@ -7,7 +7,7 @@ import Looks3Icon from '@mui/icons-material/Looks3';
 import Looks4Icon from '@mui/icons-material/Looks4';
 import Looks5Icon from '@mui/icons-material/Looks5';
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, useTheme } from '@mui/material';
 
 import { MetricResponse } from 'features/canvass/types';
 import { ZetkinMetric } from 'features/areaAssignments/types';
@@ -33,6 +33,7 @@ export const MetricIcon: FC<Props> = ({
   response,
   size: optionalSize,
 }) => {
+  const theme = useTheme();
   const size = optionalSize ?? 'small';
 
   if (response === null) {
@@ -47,7 +48,12 @@ export const MetricIcon: FC<Props> = ({
     );
   } else if (!iconRatings || typeof response === 'string') {
     return (
-      <Typography fontSize={numericResponseFontSize(size)} mx="5px">
+      <Typography
+        color={theme.palette.grey[600]}
+        fontSize="0.9rem"
+        fontWeight="bold"
+        mx="5px"
+      >
         {response}
       </Typography>
     );
@@ -57,14 +63,13 @@ export const MetricIcon: FC<Props> = ({
       return null;
     }
 
-    return <Icon fontSize={size} />;
+    return (
+      <Icon
+        fontSize={size}
+        sx={{
+          color: theme.palette.grey[600],
+        }}
+      />
+    );
   }
 };
-
-function numericResponseFontSize(size: 'large' | 'medium' | 'small') {
-  if (size === 'small') {
-    return 'medium';
-  }
-
-  return 'large';
-}
