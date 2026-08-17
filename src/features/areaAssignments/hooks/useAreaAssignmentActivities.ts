@@ -35,7 +35,7 @@ export default function useAreaAssignmentActivities(
     loader: () =>
       fetchAllPaginated<ZetkinAreaAssignment>((page) =>
         apiClient.get(
-          `/api2/orgs/${orgId}/area_assignments?size=100&page=${page}`
+          `/api2/orgs/${orgId}/area_assignments?size=${size}&page=${page}`
         )
       ),
   });
