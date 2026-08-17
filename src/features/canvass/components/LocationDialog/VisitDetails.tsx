@@ -19,7 +19,7 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Typography variant="headingLg">
+        <Typography fontWeight="bold" variant="headingLg">
           <Msg id={messageIds.households.single.visit} />
         </Typography>
         <Typography color="secondary" variant="body2">
