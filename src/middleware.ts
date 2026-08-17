@@ -7,7 +7,7 @@ import { AppSession } from 'utils/types';
 
 const protectedRoutes = ['/my', '/call'];
 
-const staticallyBuiltSitePath = /^\/(storybook|docs)(\/|$)/;
+const staticallyBuiltSitePath = /^\/(storybook)(\/|$)/;
 
 const storybookGoogleFontHost = 'https://fonts.gstatic.com';
 
