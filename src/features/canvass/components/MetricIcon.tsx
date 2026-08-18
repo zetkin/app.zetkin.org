@@ -19,11 +19,12 @@ type Props = {
 
 export const MetricIconIcon: FC<Props> = ({ metric, response, variant }) => {
   const theme = useTheme();
+  const dark = metric.defines_success;
 
   const color =
-    variant === 'small'
-      ? theme.palette.text.disabled
-      : theme.palette.background.default;
+    variant === 'large' || dark
+      ? theme.palette.background.default
+      : theme.palette.text.disabled;
   const iconSize = variant === 'small' ? 'small' : 'medium';
   const iconStyle: SxProps<Theme> = { color };
 
@@ -56,15 +57,19 @@ export const MetricIcon: FC<
     first?: boolean;
     last?: boolean;
   }
-> = ({ first, last, variant, ...props }) => {
+> = (props) => {
+  const { first, last, variant, metric } = props;
   const theme = useTheme();
+  const dark = metric.defines_success;
 
   if (variant === 'large') {
     return (
       <Box
         sx={{
           alignItems: 'center',
-          backgroundColor: theme.palette.grey[400],
+          backgroundColor: dark
+            ? theme.palette.secondary.main
+            : theme.palette.grey[400],
           borderRadius: '15px',
           display: 'flex',
           flexDirection: 'row',
@@ -73,7 +78,7 @@ export const MetricIcon: FC<
           width: '30px',
         }}
       >
-        <MetricIconIcon variant={variant} {...props} />
+        <MetricIconIcon {...props} />
       </Box>
     );
   }
@@ -82,7 +87,9 @@ export const MetricIcon: FC<
     <Box
       sx={{
         alignItems: 'center',
-        backgroundColor: theme.palette.grey[300],
+        backgroundColor: dark
+          ? theme.palette.secondary.main
+          : theme.palette.grey[300],
         borderBottomLeftRadius: first ? BORDER_RADIUS : 0,
         borderBottomRightRadius: last ? BORDER_RADIUS : 0,
         borderTopLeftRadius: first ? BORDER_RADIUS : 0,
@@ -93,7 +100,7 @@ export const MetricIcon: FC<
         width: '20px',
       }}
     >
-      <MetricIconIcon variant={variant} {...props} />
+      <MetricIconIcon {...props} />
     </Box>
   );
 };
