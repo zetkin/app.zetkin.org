@@ -191,6 +191,10 @@ const areaAssignmentSlice = createSlice({
         state.assigneesByAssignmentId[assignmentId]
       );
     },
+    assigneesLoadError: (state, action: PayloadAction<[number, unknown]>) => {
+      const [areaAssId, error] = action.payload;
+      state.assigneesByAssignmentId[areaAssId].error = error;
+    },
     assigneesLoaded: (
       state,
       action: PayloadAction<[number, ZetkinAreaAssignee[]]>
@@ -354,6 +358,7 @@ export const {
   areaAssignmentsLoaded,
   assigneeAdded,
   assigneesLoad,
+  assigneesLoadError,
   assigneesLoaded,
   assignmentAreasLoad,
   assignmentAreasLoaded,
