@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 
 import { ZetkinMetric } from 'features/areaAssignments/types';
 import { HouseholdVisit } from 'features/canvass/hooks/useVisitReporting';
@@ -16,6 +16,8 @@ type Props = {
 const METRIC_ICON_COLUMN_WIDTH = '50px';
 
 export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
+  const theme = useTheme();
+
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -42,10 +44,9 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
                   width={METRIC_ICON_COLUMN_WIDTH}
                 >
                   <MetricIcon
-                    iconRatings={true}
                     metric={metric}
                     response={response?.response ?? null}
-                    size={'large'}
+                    variant={'large'}
                   />
                 </Box>
                 <Box
@@ -74,7 +75,15 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
                   flexDirection="column"
                   flexShrink={0}
                   width={METRIC_ICON_COLUMN_WIDTH}
-                />
+                >
+                  <Box
+                    flexGrow={1}
+                    marginLeft={'14px'}
+                    marginTop={'5px'}
+                    sx={{ backgroundColor: theme.palette.grey[300] }}
+                    width={'2px'}
+                  />
+                </Box>
                 <Typography fontWeight="bold" variant="body2">
                   {response ? (
                     response.response

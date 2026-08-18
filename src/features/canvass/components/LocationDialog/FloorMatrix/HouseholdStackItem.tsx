@@ -100,17 +100,19 @@ const HouseholdStackItem: FC<Props> = ({
             >
               {!!lastVisitMetrics && (
                 <Box display="flex" flexShrink="0" gap={0.2}>
-                  {metrics.map((metric) => {
+                  {metrics.map((metric, i) => {
                     const lastVisitMetric = lastVisitMetrics.find(
                       (metricResponse) => metric.id === metricResponse.metric_id
                     );
                     return (
-                      <Box key={metric.id} width="20px">
-                        <MetricIcon
-                          metric={metric}
-                          response={lastVisitMetric?.response ?? null}
-                        />
-                      </Box>
+                      <MetricIcon
+                        key={metric.id}
+                        first={i === 0}
+                        last={i === metrics.length - 1}
+                        metric={metric}
+                        response={lastVisitMetric?.response ?? null}
+                        variant={'small'}
+                      />
                     );
                   })}
                 </Box>
