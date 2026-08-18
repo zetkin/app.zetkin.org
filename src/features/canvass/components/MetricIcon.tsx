@@ -9,7 +9,9 @@ import { Theme } from '@mui/material/styles';
 import { MetricResponse } from 'features/canvass/types';
 import { ZetkinMetric } from 'features/areaAssignments/types';
 
-const BORDER_RADIUS = '5px';
+export const METRIC_ICON_BORDER_RADIUS = 5; // px
+export const METRIC_ICON_LARGE_SIZE = 30; // px
+export const METRIC_ICON_SMALL_SIZE = 20; // px
 
 type Props = {
   metric: ZetkinMetric;
@@ -73,9 +75,9 @@ export const MetricIcon: FC<
           borderRadius: '15px',
           display: 'flex',
           flexDirection: 'row',
-          height: '30px',
+          height: `${METRIC_ICON_LARGE_SIZE}px`,
           justifyContent: 'center',
-          width: '30px',
+          width: `${METRIC_ICON_LARGE_SIZE}px`,
         }}
       >
         <MetricIconIcon {...props} />
@@ -90,14 +92,15 @@ export const MetricIcon: FC<
         backgroundColor: dark
           ? theme.palette.secondary.main
           : theme.palette.grey[300],
-        borderBottomLeftRadius: first ? BORDER_RADIUS : 0,
-        borderBottomRightRadius: last ? BORDER_RADIUS : 0,
-        borderTopLeftRadius: first ? BORDER_RADIUS : 0,
-        borderTopRightRadius: last ? BORDER_RADIUS : 0,
+        borderBottomLeftRadius: first ? `${METRIC_ICON_BORDER_RADIUS}px` : 0,
+        borderBottomRightRadius: last ? `${METRIC_ICON_BORDER_RADIUS}px` : 0,
+        borderTopLeftRadius: first ? `${METRIC_ICON_BORDER_RADIUS}px` : 0,
+        borderTopRightRadius: last ? `${METRIC_ICON_BORDER_RADIUS}px` : 0,
         display: 'flex',
         flexDirection: 'row',
+        height: `${METRIC_ICON_SMALL_SIZE}px`,
         justifyContent: 'center',
-        width: '20px',
+        width: `${METRIC_ICON_SMALL_SIZE}px`,
       }}
     >
       <MetricIconIcon {...props} />

@@ -6,14 +6,20 @@ import { HouseholdVisit } from 'features/canvass/hooks/useVisitReporting';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { MetricIcon } from 'features/canvass/components/MetricIcon';
+import {
+  METRIC_ICON_LARGE_SIZE,
+  MetricIcon,
+} from 'features/canvass/components/MetricIcon';
 
 type Props = {
   metrics: ZetkinMetric[];
   visit: HouseholdVisit;
 };
 
-const METRIC_ICON_COLUMN_WIDTH = '50px';
+const METRIC_ICON_COLUMN_WIDTH = 50; // px
+const METRIC_ICON_COLUMN_LINE_WIDTH = 2; // px
+const METRIC_ICON_COLUMN_LINE_OFFSET =
+  (METRIC_ICON_LARGE_SIZE - METRIC_ICON_COLUMN_LINE_WIDTH) / 2; // px
 
 export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
   const theme = useTheme();
@@ -41,7 +47,7 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
                   display="flex"
                   flexDirection="column"
                   flexShrink={0}
-                  width={METRIC_ICON_COLUMN_WIDTH}
+                  width={`${METRIC_ICON_COLUMN_WIDTH}px`}
                 >
                   <MetricIcon
                     metric={metric}
@@ -74,14 +80,14 @@ export const VisitDetails: FC<Props> = ({ metrics, visit }) => {
                   display="flex"
                   flexDirection="column"
                   flexShrink={0}
-                  width={METRIC_ICON_COLUMN_WIDTH}
+                  width={`${METRIC_ICON_COLUMN_WIDTH}px`}
                 >
                   <Box
                     flexGrow={1}
-                    marginLeft={'14px'}
+                    marginLeft={`${METRIC_ICON_COLUMN_LINE_OFFSET}px`}
                     marginTop={'5px'}
                     sx={{ backgroundColor: theme.palette.grey[300] }}
-                    width={'2px'}
+                    width={`${METRIC_ICON_COLUMN_LINE_WIDTH}px`}
                   />
                 </Box>
                 <Typography fontWeight="bold" variant="body2">
