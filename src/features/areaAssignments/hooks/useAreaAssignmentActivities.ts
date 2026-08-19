@@ -12,6 +12,7 @@ import { ACTIVITIES, ProjectActivity } from 'features/projects/types';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS } from 'utils/featureFlags';
 import { getUTCDateWithoutTime } from '../../../utils/dateUtils';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
 export default function useAreaAssignmentActivities(
   orgId: number,
@@ -32,8 +33,10 @@ export default function useAreaAssignmentActivities(
     actionOnLoad: () => areaAssignmentsLoad(),
     actionOnSuccess: (data) => areaAssignmentsLoaded(data),
     loader: () =>
-      apiClient.get<ZetkinAreaAssignment[]>(
-        `/api2/orgs/${orgId}/area_assignments`
+      fetchAllPaginated<ZetkinAreaAssignment>((page) =>
+        apiClient.get(
+          `/api2/orgs/${orgId}/area_assignments?size=100&page=${page}`
+        )
       ),
   });
 
