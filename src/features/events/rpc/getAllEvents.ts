@@ -107,10 +107,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     if (!followedOrgs.has(event.organization.id)) {
       return false;
     }
+    let publishDate = event.published;
+    if (publishDate && !publishDate.endsWith('Z')) {
+      publishDate += 'Z';
+    }
     const isPublished =
-      event.published &&
-      Temporal.Instant.compare(Temporal.Instant.from(event.published), now) <=
-        0;
+      publishDate &&
+      Temporal.Instant.compare(Temporal.Instant.from(publishDate), now) <= 0;
     const state = getEventState(event);
     return (
       (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
