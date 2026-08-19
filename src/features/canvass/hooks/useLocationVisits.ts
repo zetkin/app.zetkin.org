@@ -17,7 +17,7 @@ export default function useLocationVisits(
   const visits = useRemoteList(visitList, {
     actionOnLoad: () => visitsLoad(assignmentId),
     actionOnSuccess: (items) => visitsLoaded([assignmentId, items]),
-    loader: async () =>
+    loader: () =>
       fetchAllPaginated<ZetkinLocationVisit>((page) =>
         apiClient.get(
           `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/visits?size=100&page=${page}`

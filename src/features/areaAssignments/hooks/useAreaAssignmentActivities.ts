@@ -32,7 +32,7 @@ export default function useAreaAssignmentActivities(
   const future = loadListIfNecessary(list, dispatch, {
     actionOnLoad: () => areaAssignmentsLoad(),
     actionOnSuccess: (data) => areaAssignmentsLoaded(data),
-    loader: async () =>
+    loader: () =>
       fetchAllPaginated<ZetkinAreaAssignment>((page) =>
         apiClient.get(
           `/api2/orgs/${orgId}/area_assignments?size=100&page=${page}`

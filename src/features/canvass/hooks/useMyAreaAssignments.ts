@@ -11,7 +11,7 @@ export default function useMyAreaAssignments() {
   const assignments = useRemoteList(list, {
     actionOnLoad: () => myAssignmentsLoad(),
     actionOnSuccess: (data) => myAssignmentsLoaded(data),
-    loader: async () =>
+    loader: () =>
       fetchAllPaginated<ZetkinAreaAssignment>((page) =>
         apiClient.get(`/api2/users/me/area_assignments?size=100&page=${page}`)
       ),

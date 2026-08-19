@@ -13,7 +13,7 @@ export default function useAssignmentAreas(orgId: number, areaAssId: number) {
   return useRemoteList(list, {
     actionOnLoad: () => assignmentAreasLoad(areaAssId),
     actionOnSuccess: (data) => assignmentAreasLoaded([areaAssId, data]),
-    loader: async () =>
+    loader: () =>
       fetchAllPaginated<Zetkin2Area>((page) =>
         apiClient.get(
           `/api2/orgs/${orgId}/area_assignments/${areaAssId}/areas?size=100&page=${page}`
