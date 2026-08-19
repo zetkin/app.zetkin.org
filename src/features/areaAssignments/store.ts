@@ -188,6 +188,9 @@ const areaAssignmentSlice = createSlice({
     assigneesError: (state, action: PayloadAction<[number, unknown]>) => {
       const [areaAssId, error] = action.payload;
       state.assigneesByAssignmentId[areaAssId].error = error;
+      state.assigneesByAssignmentId[areaAssId].isLoading = false;
+      state.assigneesByAssignmentId[areaAssId].loaded =
+        new Date().toISOString();
     },
     assigneesLoad: (state, action: PayloadAction<number>) => {
       const assignmentId = action.payload;
