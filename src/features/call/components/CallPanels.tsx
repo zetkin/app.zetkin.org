@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { Box, List, ListItem } from '@mui/material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -47,6 +47,15 @@ const CallPanels: FC<Props> = ({
 
   const queueError = useAppSelector((state) => state.call.queueError);
 
+  const summaryRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (lane.step != LaneStep.SUMMARY) {
+      summaryRef.current?.setAttribute('inert', '');
+    } else {
+      summaryRef.current?.removeAttribute('inert');
+    }
+  }, [lane.step]);
+
   return (
     <>
       {queueError && (
@@ -73,6 +82,7 @@ const CallPanels: FC<Props> = ({
         <ZUISection
           borders={false}
           fullHeight
+          inert={lane.step !== LaneStep.START}
           renderContent={() => (
             <Box
               sx={{
@@ -82,13 +92,13 @@ const CallPanels: FC<Props> = ({
                 paddingBottom: 10,
               }}
             >
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.start.title} />
               </ZUIText>
               <ZUIText>
                 <Msg id={messageIds.callingInfo.tutorial.start.description} />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.personInfo.title} />
               </ZUIText>
               <ZUIText>
@@ -96,19 +106,19 @@ const CallPanels: FC<Props> = ({
                   id={messageIds.callingInfo.tutorial.personInfo.description}
                 />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.call.title} />
               </ZUIText>
               <ZUIText>
                 <Msg id={messageIds.callingInfo.tutorial.call.description} />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.report.title} />
               </ZUIText>
               <ZUIText>
                 <Msg id={messageIds.callingInfo.tutorial.report.description} />
               </ZUIText>
-              <ZUIText variant="headingMd">
+              <ZUIText component="h3" variant="headingMd">
                 <Msg id={messageIds.callingInfo.tutorial.oldCalls.title} />
               </ZUIText>
               <ZUIText>
@@ -119,6 +129,7 @@ const CallPanels: FC<Props> = ({
             </Box>
           )}
           title={messages.callingInfo.title()}
+          titleComponent="h2"
         />
       </Box>
       <Box
@@ -250,6 +261,7 @@ const CallPanels: FC<Props> = ({
         <ZUISection
           borders={false}
           fullHeight
+          inert={lane.step != LaneStep.REPORT ? true : false}
           renderContent={() => {
             if (!call) {
               return <Box sx={{ height: '200px' }} />;
@@ -269,6 +281,7 @@ const CallPanels: FC<Props> = ({
         />
       </Box>
       <Box
+        ref={summaryRef}
         sx={{
           '@keyframes summaryOut': {
             '0%': { left: 'calc(100% / 3)' },

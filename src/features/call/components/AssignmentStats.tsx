@@ -99,6 +99,7 @@ const AssignmentStats: FC<Props> = ({ orgId, assignmentId }) => {
       )}
       subtitle={messages.stats.description()}
       title={messages.stats.title()}
+      titleComponent="h2"
     />
   );
 };
