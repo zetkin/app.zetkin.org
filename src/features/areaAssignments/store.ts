@@ -185,15 +185,15 @@ const areaAssignmentSlice = createSlice({
         };
       }
     },
+    assigneesError: (state, action: PayloadAction<[number, unknown]>) => {
+      const [areaAssId, error] = action.payload;
+      state.assigneesByAssignmentId[areaAssId].error = error;
+    },
     assigneesLoad: (state, action: PayloadAction<number>) => {
       const assignmentId = action.payload;
       state.assigneesByAssignmentId[assignmentId] = remoteListLoad(
         state.assigneesByAssignmentId[assignmentId]
       );
-    },
-    assigneesLoadError: (state, action: PayloadAction<[number, unknown]>) => {
-      const [areaAssId, error] = action.payload;
-      state.assigneesByAssignmentId[areaAssId].error = error;
     },
     assigneesLoaded: (
       state,
@@ -358,7 +358,7 @@ export const {
   areaAssignmentsLoaded,
   assigneeAdded,
   assigneesLoad,
-  assigneesLoadError,
+  assigneesError,
   assigneesLoaded,
   assignmentAreasLoad,
   assignmentAreasLoaded,
