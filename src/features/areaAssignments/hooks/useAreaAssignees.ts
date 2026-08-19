@@ -4,7 +4,7 @@ import { ZetkinAreaAssignee } from '../types';
 import { assigneesLoad, assigneesLoaded, assigneesLoadError } from '../store';
 import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
-export default function useAreaAssigneecs(orgId: number, areaAssId: number) {
+export default function useAreaAssignees(orgId: number, areaAssId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const sessions = useAppSelector(
