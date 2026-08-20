@@ -27,12 +27,10 @@ export default makeRPCDef<Params, Result>(loadLocationHouseholdVisitsDef.name);
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { assignmentId, locationId, orgId } = params;
 
-  const households = await fetchAllPaginated<Zetkin2Household>(
-    (page) =>
-      apiClient.get(
-        `/api2/orgs/${orgId}/locations/${locationId}/households?size=100&page=${page}`
-      ),
-    100
+  const households = await fetchAllPaginated<Zetkin2Household>((page, size) =>
+    apiClient.get(
+      `/api2/orgs/${orgId}/locations/${locationId}/households?size=${size}&page=${page}`
+    )
   );
   const visits: ZetkinHouseholdVisit[] = [];
   for await (const household of households) {
