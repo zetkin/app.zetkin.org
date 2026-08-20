@@ -1,6 +1,6 @@
 import { useSearchParams } from 'next/navigation';
 import { useStore } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useAppDispatch } from 'core/hooks';
 import { initiateAssignment, initiateWithoutAssignment } from '../store';
@@ -49,32 +49,39 @@ export default function useCallInitialization() {
 
   const assignmentIdFromQuery = queryParams?.get('assignment');
 
-  const lanesAssignedToUser =
-    callLanes && callLanes.version == CURRENT_CALL_LANES_VERSION
-      ? callLanes.lanes.filter((lane) =>
-          userCallAssignments.some(
-            (assignment) => assignment.id == lane.assignmentId
+  const lanesAssignedToUser = useMemo(
+    () =>
+      callLanes && callLanes.version == CURRENT_CALL_LANES_VERSION
+        ? callLanes.lanes.filter((lane) =>
+            userCallAssignments.some(
+              (assignment) => assignment.id == lane.assignmentId
+            )
           )
-        )
-      : [];
+        : [],
+    [callLanes, userCallAssignments]
+  );
 
-  const activeLanes = lanesAssignedToUser.filter((lane) => {
-    const assignment = userCallAssignments.find(
-      (assignment) => assignment.id == lane.assignmentId
-    );
+  const activeLanes = useMemo(
+    () =>
+      lanesAssignedToUser.filter((lane) => {
+        const assignment = userCallAssignments.find(
+          (assignment) => assignment.id == lane.assignmentId
+        );
 
-    if (assignment) {
-      const startDate = assignment.start_date;
-      const endDate = assignment.end_date;
-      const now = new Date();
+        if (assignment) {
+          const startDate = assignment.start_date;
+          const endDate = assignment.end_date;
+          const now = new Date();
 
-      const hasStarted = startDate && new Date(startDate) < now;
-      const isOngoing = !endDate || (endDate && new Date(endDate) > now);
-      return assignment && hasStarted && isOngoing;
-    }
+          const hasStarted = startDate && new Date(startDate) < now;
+          const isOngoing = !endDate || (endDate && new Date(endDate) > now);
+          return assignment && hasStarted && isOngoing;
+        }
 
-    return false;
-  });
+        return false;
+      }),
+    [lanesAssignedToUser, userCallAssignments]
+  );
 
   let canInitialize = false;
   if (assignmentIdFromQuery) {

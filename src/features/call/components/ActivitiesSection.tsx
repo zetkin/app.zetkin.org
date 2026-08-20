@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -96,15 +96,18 @@ const Activities: FC<ActivitiesProps> = ({
     setDebouncedSearchString(value);
   }, 300);
 
-  const handleSearchStringChange = (value: string) => {
-    setSearchString(value);
-    debouncedSetSearchString(value);
-  };
+  const handleSearchStringChange = useCallback(
+    (value: string) => {
+      setSearchString(value);
+      debouncedSetSearchString(value);
+    },
+    [debouncedSetSearchString]
+  );
 
-  const clearSearchString = () => {
+  const clearSearchString = useCallback(() => {
     setSearchString('');
     setDebouncedSearchString('');
-  };
+  }, []);
 
   const filteredActivities = useMemo(
     () =>
@@ -263,27 +266,35 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     },
   } = useAppSelector((state) => state.call.lanes[state.call.activeLaneIndex]);
 
-  const respondedSurveyIds = Object.keys(submissionDataBySurveyId);
+  const respondedSurveyIds = useMemo(
+    () => Object.keys(submissionDataBySurveyId),
+    [submissionDataBySurveyId]
+  );
 
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | 'context' | null
   >(null);
-  const selectedSurvey =
-    surveys.find((survey) => survey.id == selectedSurveyId) || null;
+  const selectedSurvey = useMemo(
+    () => surveys.find((survey) => survey.id == selectedSurveyId) || null,
+    [surveys, selectedSurveyId]
+  );
 
-  const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
-    if (!end) {
-      return intl.formatDate(start.toDate(), {
-        day: 'numeric',
-        month: 'short',
-      });
-    } else {
-      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
-        day: 'numeric',
-        month: 'short',
-      });
-    }
-  };
+  const getDatesFilteredBy = useCallback(
+    (end: Dayjs | null, start: Dayjs) => {
+      if (!end) {
+        return intl.formatDate(start.toDate(), {
+          day: 'numeric',
+          month: 'short',
+        });
+      } else {
+        return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+          day: 'numeric',
+          month: 'short',
+        });
+      }
+    },
+    [intl]
+  );
 
   const isFiltered =
     filterState.alreadyIn ||
@@ -294,71 +305,96 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const showAll =
     !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
-  const orgs = [
-    ...new Map(
-      events.map((event) => event.organization).map((org) => [org['id'], org])
-    ).values(),
-  ].sort((a, b) => a.title.localeCompare(b.title));
+  const orgs = useMemo(
+    () =>
+      [
+        ...new Map(
+          events
+            .map((event) => event.organization)
+            .map((org) => [org['id'], org])
+        ).values(),
+      ].sort((a, b) => a.title.localeCompare(b.title)),
+    [events]
+  );
 
-  const surveysWithProject = surveys.filter((survey) => !!survey.campaign);
-  const eventsWithProject = events.filter((event) => !!event.campaign);
+  const surveysWithProject = useMemo(
+    () => surveys.filter((survey) => !!survey.campaign),
+    [surveys]
+  );
+  const eventsWithProject = useMemo(
+    () => events.filter((event) => !!event.campaign),
+    [events]
+  );
 
-  const activitiesWithProject = [...surveysWithProject, ...eventsWithProject];
+  const activitiesWithProject = useMemo(
+    () => [...surveysWithProject, ...eventsWithProject],
+    [eventsWithProject, surveysWithProject]
+  );
 
-  const projects: { id: 'noProject' | number; title: string }[] = [
-    ...new Map(
-      eventsWithProject
-        .map((event) => event.campaign)
-        .filter(notEmpty)
-        .map((project) => [project['title'], project])
-    ).values(),
-    ...new Map(
-      surveysWithProject
-        .map((survey) => survey.campaign)
-        .filter(notEmpty)
-        .map((project) => [project['title'], project])
-    ).values(),
-  ].sort((a, b) => a.title.localeCompare(b.title));
+  const projects: { id: 'noProject' | number; title: string }[] = useMemo(
+    () =>
+      [
+        ...new Map(
+          eventsWithProject
+            .map((event) => event.campaign)
+            .filter(notEmpty)
+            .map((project) => [project['title'], project])
+        ).values(),
+        ...new Map(
+          surveysWithProject
+            .map((survey) => survey.campaign)
+            .filter(notEmpty)
+            .map((project) => [project['title'], project])
+        ).values(),
+      ].sort((a, b) => a.title.localeCompare(b.title)),
+    [eventsWithProject, surveysWithProject]
+  );
 
   if (activitiesWithProject.length != surveys.length + events.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
 
-  const orgIdsWithEvents = events.reduce<number[]>((orgIds, event) => {
-    if (!orgIds.includes(event.organization.id)) {
-      orgIds = [...orgIds, event.organization.id];
-    }
-    return orgIds;
-  }, []);
-
-  const projectIdsWithSurveys = surveys.reduce<(number | 'noProject')[]>(
-    (projectIds, survey) => {
-      if (survey.campaign && !projectIds.includes(survey.campaign.id)) {
-        projectIds = [...projectIds, survey.campaign.id];
-      } else if (!survey.campaign && !projectIds.includes('noProject')) {
-        projectIds = [...projectIds, 'noProject'];
-      }
-      return projectIds;
-    },
-    []
+  const orgIdsWithEvents = useMemo(
+    () =>
+      events.reduce<number[]>((orgIds, event) => {
+        if (!orgIds.includes(event.organization.id)) {
+          orgIds = [...orgIds, event.organization.id];
+        }
+        return orgIds;
+      }, []),
+    [events]
   );
 
-  const projectIdsWithEvents = events.reduce<(number | 'noProject')[]>(
-    (projectIds, event) => {
-      if (event.campaign && !projectIds.includes(event.campaign.id)) {
-        projectIds = [...projectIds, event.campaign.id];
-      } else if (!event.campaign && !projectIds.includes('noProject')) {
-        projectIds = [...projectIds, 'noProject'];
-      }
-      return projectIds;
-    },
-    []
+  const projectIdsWithSurveys = useMemo(
+    () =>
+      surveys.reduce<(number | 'noProject')[]>((projectIds, survey) => {
+        if (survey.campaign && !projectIds.includes(survey.campaign.id)) {
+          projectIds = [...projectIds, survey.campaign.id];
+        } else if (!survey.campaign && !projectIds.includes('noProject')) {
+          projectIds = [...projectIds, 'noProject'];
+        }
+        return projectIds;
+      }, []),
+    [surveys]
   );
 
-  const projectIdsWithActivities = [
-    ...projectIdsWithEvents,
-    ...projectIdsWithSurveys,
-  ];
+  const projectIdsWithEvents = useMemo(
+    () =>
+      events.reduce<(number | 'noProject')[]>((projectIds, event) => {
+        if (event.campaign && !projectIds.includes(event.campaign.id)) {
+          projectIds = [...projectIds, event.campaign.id];
+        } else if (!event.campaign && !projectIds.includes('noProject')) {
+          projectIds = [...projectIds, 'noProject'];
+        }
+        return projectIds;
+      }, []),
+    [events]
+  );
+
+  const projectIdsWithActivities = useMemo(
+    () => [...projectIdsWithEvents, ...projectIdsWithSurveys],
+    [projectIdsWithEvents, projectIdsWithSurveys]
+  );
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
   const moreThanOneProjectHasActivities = projectIdsWithActivities.length > 1;
