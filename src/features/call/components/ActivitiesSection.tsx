@@ -360,39 +360,31 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   ]);
 
   const orgIdsWithEvents = useMemo(
-    () =>
-      events.reduce<number[]>((orgIds, event) => {
-        if (!orgIds.includes(event.organization.id)) {
-          orgIds = [...orgIds, event.organization.id];
-        }
-        return orgIds;
-      }, []),
+    () => Array.from(new Set(events.map((event) => event.organization.id))),
     [events]
   );
 
   const projectIdsWithSurveys = useMemo(
     () =>
-      surveys.reduce<(number | 'noProject')[]>((projectIds, survey) => {
-        if (survey.campaign && !projectIds.includes(survey.campaign.id)) {
-          projectIds = [...projectIds, survey.campaign.id];
-        } else if (!survey.campaign && !projectIds.includes('noProject')) {
-          projectIds = [...projectIds, 'noProject'];
-        }
-        return projectIds;
-      }, []),
+      Array.from(
+        new Set(
+          surveys.map((survey) =>
+            survey.campaign ? survey.campaign.id : 'noProject'
+          )
+        )
+      ),
     [surveys]
   );
 
   const projectIdsWithEvents = useMemo(
     () =>
-      events.reduce<(number | 'noProject')[]>((projectIds, event) => {
-        if (event.campaign && !projectIds.includes(event.campaign.id)) {
-          projectIds = [...projectIds, event.campaign.id];
-        } else if (!event.campaign && !projectIds.includes('noProject')) {
-          projectIds = [...projectIds, 'noProject'];
-        }
-        return projectIds;
-      }, []),
+      Array.from(
+        new Set(
+          events.map((event) =>
+            event.campaign ? event.campaign.id : 'noProject'
+          )
+        )
+      ),
     [events]
   );
 
