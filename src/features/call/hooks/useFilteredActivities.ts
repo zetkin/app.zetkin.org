@@ -53,7 +53,7 @@ export default function useFilteredActivities(orgId: number) {
       ({ published, expires }) =>
         published && (!expires || new Date(expires) >= today)
     );
-  }, [surveysFuture]);
+  }, [surveysFuture.data]);
 
   const getDateRange = useCallback((): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
