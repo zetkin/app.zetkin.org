@@ -1,6 +1,6 @@
 import { useSearchParams } from 'next/navigation';
 import { useStore } from 'react-redux';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useAppDispatch } from 'core/hooks';
 import { initiateAssignment, initiateWithoutAssignment } from '../store';
@@ -96,16 +96,16 @@ export default function useCallInitialization() {
     canInitialize = thisUserHasSavedLanes && savedLanesAreFresh;
   }
 
-  const clearStaleCallLanes = () => {
+  const clearStaleCallLanes = useCallback(() => {
     const callLanesAreStale =
       callLanes && callLanes.timestamp < new Date().getTime() - LANES_TTL;
 
     if (callLanesAreStale) {
       setLanes(null);
     }
-  };
+  }, [callLanes, setLanes]);
 
-  const initialize = () => {
+  const initialize = useCallback(() => {
     if (assignmentIdFromQuery) {
       const thisUserHasSavedLanes =
         activeLanes.length > 0 && !!user && callLanes?.userId == user.id;
@@ -127,7 +127,7 @@ export default function useCallInitialization() {
         initiateWithoutAssignment([callLanes.activeLaneIndex, activeLanes])
       );
     }
-  };
+  }, [assignmentIdFromQuery, activeLanes, callLanes, dispatch, user]);
 
   return {
     canInitialize,
