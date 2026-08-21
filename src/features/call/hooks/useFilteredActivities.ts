@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import { useAppSelector } from 'core/hooks';
 import useUpcomingEvents from './useUpcomingEvents';
@@ -45,13 +45,13 @@ export default function useFilteredActivities(orgId: number) {
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
   const target = useCurrentCall()?.target ?? null;
+  const todayRef = useRef(new Date());
 
   const activeSurveys = useMemo(() => {
     const surveys = surveysFuture.data || [];
-    const today = new Date();
     return surveys.filter(
       ({ published, expires }) =>
-        published && (!expires || new Date(expires) >= today)
+        published && (!expires || new Date(expires) >= todayRef.current)
     );
   }, [surveysFuture.data]);
 
