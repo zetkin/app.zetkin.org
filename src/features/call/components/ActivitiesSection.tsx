@@ -331,28 +331,33 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     [eventsWithProject, surveysWithProject]
   );
 
-  const projects: { id: 'noProject' | number; title: string }[] = useMemo(
-    () =>
-      [
-        ...new Map(
-          eventsWithProject
-            .map((event) => event.campaign)
-            .filter(notEmpty)
-            .map((project) => [project['title'], project])
-        ).values(),
-        ...new Map(
-          surveysWithProject
-            .map((survey) => survey.campaign)
-            .filter(notEmpty)
-            .map((project) => [project['title'], project])
-        ).values(),
-      ].sort((a, b) => a.title.localeCompare(b.title)),
-    [eventsWithProject, surveysWithProject]
-  );
+  const projectOptions = useMemo(() => {
+    const projects: { id: 'noProject' | number; title: string }[] = [
+      ...new Map(
+        eventsWithProject
+          .map((event) => event.campaign)
+          .filter(notEmpty)
+          .map((project) => [project['title'], project])
+      ).values(),
+      ...new Map(
+        surveysWithProject
+          .map((survey) => survey.campaign)
+          .filter(notEmpty)
+          .map((project) => [project['title'], project])
+      ).values(),
+    ].sort((a, b) => a.title.localeCompare(b.title));
 
-  if (activitiesWithProject.length != surveys.length + events.length) {
-    projects.push({ id: 'noProject', title: 'noProject' });
-  }
+    if (activitiesWithProject.length != surveys.length + events.length) {
+      projects.push({ id: 'noProject', title: 'noProject' });
+    }
+    return projects;
+  }, [
+    eventsWithProject,
+    surveysWithProject,
+    activitiesWithProject.length,
+    surveys.length,
+    events.length,
+  ]);
 
   const orgIdsWithEvents = useMemo(
     () =>
@@ -495,7 +500,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 ? messages.activities.filters.projects({
                     numProjects: projectIdsToFilterActivitiesBy.length,
                   })
-                : projects.find(
+                : projectOptions.find(
                     (project) => project.id == projectIdsToFilterActivitiesBy[0]
                   )?.title ||
                   messages.activities.filters.projects({ numProjects: 0 }),
@@ -785,27 +790,27 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
         open={drawerContent == 'context'}
       >
         <List>
-          {projects.map((project) => (
-            <ListItem key={project.id} sx={{ justifyContent: 'space-between' }}>
+          {projectOptions.map((option) => (
+            <ListItem key={option.id} sx={{ justifyContent: 'space-between' }}>
               <Box alignItems="center" display="flex">
                 <ListItemAvatar>
                   <GroupWork />
                 </ListItemAvatar>
                 <ZUIText>
-                  {project.id == 'noProject'
+                  {option.id == 'noProject'
                     ? messages.activities.projects.wihoutProjectLabel()
-                    : project.title}
+                    : option.title}
                 </ZUIText>
               </Box>
               <Switch
-                checked={projectIdsToFilterActivitiesBy.includes(project.id)}
+                checked={projectIdsToFilterActivitiesBy.includes(option.id)}
                 onChange={(_event, checked) => {
                   if (checked) {
                     dispatch(
                       filtersUpdated({
                         projectIdsToFilterActivitiesBy: [
                           ...projectIdsToFilterActivitiesBy,
-                          project.id,
+                          option.id,
                         ],
                       })
                     );
@@ -814,7 +819,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                       filtersUpdated({
                         projectIdsToFilterActivitiesBy:
                           projectIdsToFilterActivitiesBy.filter(
-                            (id) => id != project.id
+                            (id) => id != option.id
                           ),
                       })
                     );
