@@ -1,3 +1,5 @@
+import { useCallback, useMemo, useRef } from 'react';
+
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { FinishedCall } from '../types';
 import { finishedCallsLoad, finishedCallsLoaded } from '../store';
@@ -10,31 +12,43 @@ export default function useFinishedCalls() {
 
   const finishedCallsList = useAppSelector((state) => state.call.finishedCalls);
 
-  let allLoadedCalls: FinishedCall[] = [];
+  const allLoadedCallsRef = useRef<FinishedCall[]>([]);
 
-  const loadPage = async (pageNumber: number) => {
-    dispatch(finishedCallsLoad());
-    const newLoadedFinishedCalls = await apiClient.get<FinishedCall[]>(
-      `/api/users/me/outgoing_calls?p=${pageNumber}&pp=20&filter=state!=0`
-    );
+  const loadPage = useCallback(
+    async (pageNumber: number) => {
+      dispatch(finishedCallsLoad());
+      const newLoadedFinishedCalls = await apiClient.get<FinishedCall[]>(
+        `/api/users/me/outgoing_calls?p=${pageNumber}&pp=20&filter=state!=0`
+      );
 
-    allLoadedCalls = [...allLoadedCalls, ...newLoadedFinishedCalls];
-    dispatch(finishedCallsLoaded(allLoadedCalls));
+      allLoadedCallsRef.current = [
+        ...allLoadedCallsRef.current,
+        ...newLoadedFinishedCalls,
+      ];
+      dispatch(finishedCallsLoaded(allLoadedCallsRef.current));
 
-    if (newLoadedFinishedCalls.length > 0) {
-      loadPage(pageNumber + 1);
-    }
-  };
+      if (newLoadedFinishedCalls.length > 0) {
+        loadPage(pageNumber + 1);
+      }
+    },
+    [apiClient, dispatch]
+  );
 
   if (shouldLoad(finishedCallsList)) {
     loadPage(0);
   }
 
+  const filteredFinishedCalls = useMemo(
+    () =>
+      finishedCallsList.items
+        .filter((item) => !item.deleted)
+        .map((item) => item.data)
+        .filter(notEmpty),
+    [finishedCallsList.items]
+  );
+
   return {
-    finishedCalls: finishedCallsList.items
-      .filter((item) => !item.deleted)
-      .map((item) => item.data)
-      .filter(notEmpty),
+    finishedCalls: filteredFinishedCalls,
     isLoading: finishedCallsList.isLoading,
   };
 }

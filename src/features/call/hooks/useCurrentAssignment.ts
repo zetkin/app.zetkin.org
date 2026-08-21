@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { useAppSelector } from 'core/hooks';
 import useMyAssignments from 'features/call/hooks/useMyAssignments';
 
@@ -7,8 +9,10 @@ export default function useCurrentAssignment() {
   );
   const userAssignments = useMyAssignments();
 
-  const assignment = userAssignments.find(
-    (assignment) => assignment.id == lane.assignmentId
+  const assignment = useMemo(
+    () =>
+      userAssignments.find((assignment) => assignment.id == lane.assignmentId),
+    [lane.assignmentId, userAssignments]
   );
 
   if (!assignment) {
