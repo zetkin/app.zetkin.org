@@ -112,7 +112,7 @@ function ZUIFuture<DataType>(props: ZUIFutureProps<DataType>): ReturnType<FC> {
     }
   } else if (future.isLoading) {
     return skeleton;
-  } else {
+  } else if (future.error) {
     return (
       errorIndicator || (
         <Box
