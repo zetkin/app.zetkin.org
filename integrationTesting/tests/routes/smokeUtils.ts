@@ -16,6 +16,9 @@ import AllCustomFields from '../../mockData/orgs/KPD/people/views/AllMembers/fie
 import AllMembers from '../../mockData/orgs/KPD/people/views/AllMembers';
 import AllMembersColumns from '../../mockData/orgs/KPD/people/views/AllMembers/columns';
 import AllMembersRows from '../../mockData/orgs/KPD/people/views/AllMembers/rows';
+import CallBlocked from '../../mockData/orgs/KPD/people/views/CallBlocked';
+import CallBlockedColumns from '../../mockData/orgs/KPD/people/views/CallBlocked/columns';
+import CanvassAssignment from '../../mockData/orgs/KPD/projects/ReferendumSignatures/areaAssignments/CanvassAssignment';
 import ClaraZetkin from '../../mockData/orgs/KPD/people/ClaraZetkin';
 import ClarasOnboarding from '../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 import KPD from '../../mockData/orgs/KPD';
@@ -25,211 +28,25 @@ import Memberships from '../../mockData/orgs/KPD/Memberships';
 import OrganizerTag from '../../mockData/orgs/KPD/tags/Organizer';
 import ReferendumSignatures from '../../mockData/orgs/KPD/projects/ReferendumSignatures';
 import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
+import SmokeArea from '../../mockData/orgs/KPD/areas/SmokeArea';
+import SmokeCallAssignment from '../../mockData/orgs/KPD/projects/ReferendumSignatures/callAssignments/SmokeCallAssignment';
+import SmokeEmail from '../../mockData/orgs/KPD/projects/ReferendumSignatures/emails/SmokeEmail';
+import SmokeEvent from '../../mockData/orgs/KPD/projects/ReferendumSignatures/events/SmokeEvent';
+import SmokeFolder from '../../mockData/orgs/KPD/people/viewFolders/SmokeFolder';
+import SmokeJoinForm from '../../mockData/orgs/KPD/joinForms/SmokeJoinForm';
+import SmokeLocation from '../../mockData/orgs/KPD/areas/SmokeLocation';
 import SpeakToFriend from '../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 import WelcomeNewMembers from '../../mockData/orgs/KPD/projects/WelcomeNewMembers';
 
 const SESSION_PASSWORD = 'thisispasswordandshouldbelongerthan32characters';
 const ORG_ID = KPD.id;
-const AREA_ASSIGNMENT_ID = 1;
-const AREA_ID = 1;
-const CALL_ASSIGNMENT_ID = 1;
-const CAMPAIGN_ID = ReferendumSignatures.id;
-const EMAIL_ID = 1;
-const EVENT_ID = 1;
-const FOLDER_ID = 1;
-const JOIN_FORM_ID = 1;
-const CALL_BLOCKED_VIEW_ID = 2;
-
-const areaAssignment = {
-  end_date: null,
-  id: AREA_ASSIGNMENT_ID,
-  instructions: '',
-  organization_id: ORG_ID,
-  project_id: CAMPAIGN_ID,
-  reporting_level: 'location',
-  start_date: '2020-01-01',
-  title: 'Canvass assignment',
-};
-
-const assignmentArea = {
-  boundary: {
-    coordinates: [
-      [
-        [13.37, 52.5],
-        [13.38, 52.5],
-        [13.38, 52.51],
-        [13.37, 52.51],
-        [13.37, 52.5],
-      ],
-    ],
-    type: 'Polygon',
-  },
-  description: '',
-  id: AREA_ID,
-  organization_id: ORG_ID,
-  title: 'Smoke area',
-};
-
-const callAssignment = {
-  campaign: {
-    id: CAMPAIGN_ID,
-    title: ReferendumSignatures.title,
-  },
-  cooldown: 0,
-  description: '',
-  disable_caller_notes: false,
-  end_date: null,
-  expose_target_details: false,
-  goal: {
-    filter_spec: [],
-    id: 2,
-    title: 'Goal',
-  },
-  id: CALL_ASSIGNMENT_ID,
-  instructions: '',
-  organization: KPD,
-  start_date: '2020-01-01',
-  target: {
-    filter_spec: [],
-    id: 1,
-    title: 'Target',
-  },
-  title: 'Smoke call assignment',
-};
-
-const email = {
-  campaign: {
-    id: CAMPAIGN_ID,
-    title: ReferendumSignatures.title,
-  },
-  config: {
-    config: {},
-    id: 1,
-    no_reply: false,
-    organization: KPD,
-    sender_email: 'info@example.com',
-    sender_name: 'KPD',
-  },
-  content: JSON.stringify({ blocks: [] }),
-  id: EMAIL_ID,
-  locked: null,
-  organization: KPD,
-  processed: null,
-  published: null,
-  subject: 'Smoke email',
-  target: {
-    filter_spec: [],
-    id: 1,
-    title: 'Target',
-  },
-  theme: null,
-  title: 'Smoke email',
-  uuid: 'smoke-email',
-};
-
-const event = {
-  activity: null,
-  campaign: {
-    id: CAMPAIGN_ID,
-    title: ReferendumSignatures.title,
-  },
-  cancelled: null,
-  contact: null,
-  cover_file: null,
-  end_time: '2030-01-01T12:00:00+00:00',
-  id: EVENT_ID,
-  info_text: 'Smoke event',
-  location: null,
-  num_participants_available: 0,
-  num_participants_required: 10,
-  organization: KPD,
-  published: '2020-01-01T00:00:00+00:00',
-  start_time: '2030-01-01T10:00:00+00:00',
-  title: 'Smoke event',
-};
 
 const campaignSurvey = {
   ...KPDMembershipSurvey,
   campaign: {
-    id: CAMPAIGN_ID,
+    id: ReferendumSignatures.id,
     title: ReferendumSignatures.title,
   },
-};
-
-const folder = {
-  id: FOLDER_ID,
-  organization: KPD,
-  title: 'Smoke folder',
-};
-
-const callBlockedView = {
-  ...AllMembers,
-  content_query: {
-    filter_spec: [
-      {
-        config: {
-          reason: 'organizer_action_needed',
-        },
-        type: 'call_blocked',
-      },
-    ],
-    id: CALL_BLOCKED_VIEW_ID,
-  },
-  id: CALL_BLOCKED_VIEW_ID,
-  title: 'People who need organizer action',
-};
-
-const callBlockedColumns = [
-  {
-    config: { field: 'first_name' },
-    id: 4,
-    title: 'First name',
-    type: 'person_field',
-  },
-  {
-    config: { field: 'last_name' },
-    id: 5,
-    title: 'Last name',
-    type: 'person_field',
-  },
-  {
-    config: { state: 'any' },
-    id: 6,
-    title: 'Organizer action',
-    type: 'organizer_action',
-  },
-];
-
-const joinForm = {
-  description: '',
-  embeddable: true,
-  fields: ['first_name', 'last_name'],
-  id: JOIN_FORM_ID,
-  org_access: 'sameorg',
-  organization: KPD,
-  renderable: true,
-  requires_email_verification: false,
-  submit_token: 'join-form-token',
-  tags: [],
-  title: 'Smoke join form',
-};
-
-const location = {
-  created: '2020-01-01T00:00:00+00:00',
-  created_by_user_id: null,
-  description: '',
-  id: 1,
-  latitude: 52.505,
-  longitude: 13.375,
-  num_estimated_households: 0,
-  num_households_successful: null,
-  num_households_visited: null,
-  num_known_households: 0,
-  num_successful_visits: 0,
-  num_visits: 0,
-  organization_id: ORG_ID,
-  title: 'Smoke location',
-  type: 'assignment',
 };
 
 export type SmokeRoute = {
@@ -246,9 +63,9 @@ async function makeEmbeddedJoinFormPath() {
   const formData = await Iron.seal(
     {
       fields: [{ s: 'first_name' }, { s: 'last_name' }],
-      formId: JOIN_FORM_ID,
+      formId: SmokeJoinForm.id,
       orgId: ORG_ID,
-      token: joinForm.submit_token,
+      token: SmokeJoinForm.submit_token,
     },
     SESSION_PASSWORD,
     Iron.defaults
@@ -360,18 +177,18 @@ function templatesForBucket(bucket: RouteBucket): string[] {
 }
 
 const ROUTE_PARAM_VALUES: Record<string, string> = {
-  areaAssId: String(AREA_ASSIGNMENT_ID),
-  areaId: String(AREA_ID),
-  callAssId: String(CALL_ASSIGNMENT_ID),
-  emailId: String(EMAIL_ID),
-  eventId: String(EVENT_ID),
-  folderId: String(FOLDER_ID),
+  areaAssId: String(CanvassAssignment.id),
+  areaId: String(SmokeArea.id),
+  callAssId: String(SmokeCallAssignment.id),
+  emailId: String(SmokeEmail.id),
+  eventId: String(SmokeEvent.id),
+  folderId: String(SmokeFolder.id),
   instanceId: String(ClarasOnboarding.id),
   journeyId: String(MemberOnboarding.id),
   orgId: String(ORG_ID),
   personId: String(ClaraZetkin.id),
-  projId: String(CAMPAIGN_ID),
-  projectId: String(CAMPAIGN_ID),
+  projId: String(ReferendumSignatures.id),
+  projectId: String(ReferendumSignatures.id),
   surveyId: String(KPDMembershipSurvey.id),
   taskId: String(SpeakToFriend.id),
   themeId: '1',
@@ -504,8 +321,8 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   moxy.setMock('/v1/users/1/avatar', 'get', { status: 404 });
   moxy.setMock('/v1/orgs/1/people/1/avatar', 'get', { status: 404 });
   moxy.setMock('/v1/orgs/1/people/2/avatar', 'get', { status: 404 });
-  moxy.setZetkinApiMock('/orgs/1/actions', 'get', [event]);
-  moxy.setZetkinApiMock('/orgs/1/actions/1', 'get', event);
+  moxy.setZetkinApiMock('/orgs/1/actions', 'get', [SmokeEvent]);
+  moxy.setZetkinApiMock('/orgs/1/actions/1', 'get', SmokeEvent);
   moxy.setZetkinApiMock('/orgs/1/actions/1/participants', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/actions/1/responses', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/actions/1/stats', 'get', {
@@ -515,10 +332,16 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     num_signups: 0,
   });
   moxy.setZetkinApiMock('/orgs/1/activities', 'get', []);
-  moxy.setZetkinApiMock('/orgs/1/area_assignments', 'get', [areaAssignment]);
-  moxy.setZetkinApiMock('/orgs/1/area_assignments/1', 'get', areaAssignment);
-  moxy.setZetkinApiMock('/orgs/1/call_assignments', 'get', [callAssignment]);
-  moxy.setZetkinApiMock('/orgs/1/call_assignments/1', 'get', callAssignment);
+  moxy.setZetkinApiMock('/orgs/1/area_assignments', 'get', [CanvassAssignment]);
+  moxy.setZetkinApiMock('/orgs/1/area_assignments/1', 'get', CanvassAssignment);
+  moxy.setZetkinApiMock('/orgs/1/call_assignments', 'get', [
+    SmokeCallAssignment,
+  ]);
+  moxy.setZetkinApiMock(
+    '/orgs/1/call_assignments/1',
+    'get',
+    SmokeCallAssignment
+  );
   moxy.setZetkinApiMock('/orgs/1/call_assignments/1/callers', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/call_assignments/1/calls', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/call_assignments/1/stats', 'get', {
@@ -541,16 +364,16 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     WelcomeNewMembers,
   ]);
   moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
-  moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', [event]);
+  moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', [SmokeEvent]);
   moxy.setZetkinApiMock('/orgs/1/campaigns/1/call_assignments', 'get', [
-    callAssignment,
+    SmokeCallAssignment,
   ]);
   moxy.setZetkinApiMock('/orgs/1/campaigns/1/surveys', 'get', [
     KPDMembershipSurvey,
   ]);
   moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', [SpeakToFriend]);
-  moxy.setZetkinApiMock('/orgs/1/emails', 'get', [email]);
-  moxy.setZetkinApiMock('/orgs/1/emails/1', 'get', email);
+  moxy.setZetkinApiMock('/orgs/1/emails', 'get', [SmokeEmail]);
+  moxy.setZetkinApiMock('/orgs/1/emails/1', 'get', SmokeEmail);
   moxy.setZetkinApiMock('/orgs/1/emails/1/links', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/emails/1/recipients', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/emails/1/stats', 'get', {
@@ -561,14 +384,14 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     sent: 0,
     targets: 0,
   });
-  moxy.setZetkinApiMock('/orgs/1/emails/configs', 'get', [email.config]);
+  moxy.setZetkinApiMock('/orgs/1/emails/configs', 'get', [SmokeEmail.config]);
   moxy.setZetkinApiMock('/orgs/1/email_themes', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/email_themes/1', 'get', {
     frame_mjml: null,
     id: 1,
   });
-  moxy.setZetkinApiMock('/orgs/1/join_forms', 'get', [joinForm]);
-  moxy.setZetkinApiMock('/orgs/1/join_forms/1', 'get', joinForm);
+  moxy.setZetkinApiMock('/orgs/1/join_forms', 'get', [SmokeJoinForm]);
+  moxy.setZetkinApiMock('/orgs/1/join_forms/1', 'get', SmokeJoinForm);
   moxy.setZetkinApiMock('/orgs/1/join_submissions', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/journeys', 'get', [MemberOnboarding]);
   moxy.setZetkinApiMock('/orgs/1/journeys/1', 'get', MemberOnboarding);
@@ -611,11 +434,11 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     ActivistTag,
     OrganizerTag,
   ]);
-  moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', [folder]);
-  moxy.setZetkinApiMock('/orgs/1/people/view_folders/1', 'get', folder);
+  moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', [SmokeFolder]);
+  moxy.setZetkinApiMock('/orgs/1/people/view_folders/1', 'get', SmokeFolder);
   moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [
     AllMembers,
-    callBlockedView,
+    CallBlocked,
   ]);
   moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
   moxy.setZetkinApiMock('/orgs/1/people/views/1/access', 'get', []);
@@ -625,12 +448,12 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     AllMembersColumns
   );
   moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
-  moxy.setZetkinApiMock('/orgs/1/people/views/2', 'get', callBlockedView);
+  moxy.setZetkinApiMock('/orgs/1/people/views/2', 'get', CallBlocked);
   moxy.setZetkinApiMock('/orgs/1/people/views/2/access', 'get', []);
   moxy.setZetkinApiMock(
     '/orgs/1/people/views/2/columns',
     'get',
-    callBlockedColumns
+    CallBlockedColumns
   );
   moxy.setZetkinApiMock('/orgs/1/people/views/2/rows', 'get', AllMembersRows);
   moxy.setZetkinApiMock('/orgs/1/officials', 'get', []);
@@ -659,7 +482,9 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   moxy.setZetkinApiMock('/orgs/1/tasks/1/assigned', 'get', []);
   moxy.setZetkinApiMock('/users/me/action_responses', 'get', []);
   moxy.setZetkinApiMock('/users/me/actions', 'get', []);
-  moxy.setZetkinApiMock('/users/me/call_assignments', 'get', [callAssignment]);
+  moxy.setZetkinApiMock('/users/me/call_assignments', 'get', [
+    SmokeCallAssignment,
+  ]);
   moxy.setZetkinApiMock('/users/me/outgoing_calls', 'get', []);
   moxy.setZetkinApiMock('/users/me/following', 'get', Memberships);
   moxy.setZetkinApiMock('/users/me/memberships/1', 'get', Memberships[0]);
@@ -671,10 +496,10 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   );
 
   moxy.setMock('/v2/users/me/area_assignments', 'get', {
-    data: { data: [areaAssignment] },
+    data: { data: [CanvassAssignment] },
   });
   moxy.setMock('/v2/orgs/1/area_assignments', 'get', {
-    data: { data: [areaAssignment] },
+    data: { data: [CanvassAssignment] },
   });
   moxy.setMock('/v2/orgs/1/areas', 'get', {
     data: { data: [] },
@@ -683,16 +508,16 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     data: { data: [] },
   });
   moxy.setMock('/v2/orgs/1/area_assignments/1', 'get', {
-    data: { data: areaAssignment },
+    data: { data: CanvassAssignment },
   });
   moxy.setMock('/v2/orgs/1/area_assignments/1/areas', 'get', {
-    data: { data: [assignmentArea] },
+    data: { data: [SmokeArea] },
   });
   moxy.setMock('/v2/orgs/1/area_assignments/1/assignees', 'get', {
     data: { data: [] },
   });
   moxy.setMock('/v2/orgs/1/area_assignments/1/locations', 'get', {
-    data: { data: [location] },
+    data: { data: [SmokeLocation] },
   });
   moxy.setMock('/v2/orgs/1/area_assignments/1/metrics', 'get', {
     data: { data: [] },
