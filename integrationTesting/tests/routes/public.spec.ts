@@ -29,12 +29,7 @@ test.describe('public route smoke tests', () => {
 
     for (const route of PUBLIC_PAGE_ROUTES) {
       const path = await routePath(route);
-      await expectRouteHealthy(
-        page,
-        appUri,
-        path,
-        route.template === '/[...rest]' ? 404 : 200
-      );
+      await expectRouteHealthy(page, appUri, path, route.expectedStatus);
     }
   });
 });

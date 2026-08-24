@@ -233,7 +233,7 @@ const location = {
 };
 
 export type SmokeRoute = {
-  coverPageTemplate?: boolean;
+  expectedStatus?: number;
   path: string | (() => Promise<string>);
   template: string;
 };
@@ -242,327 +242,19 @@ function encodePathSegment(value: string) {
   return encodeURIComponent(value).replace(/\*/g, '%2A');
 }
 
-export const REDIRECT_ROUTES: SmokeRoute[] = [
-  { path: '/', template: '/' },
-  { path: '/?code=test', template: '/' },
-  { path: '/login', template: '/login' },
-  { path: '/logout', template: '/logout' },
-];
-
-export const PUBLIC_PAGE_ROUTES: SmokeRoute[] = [
-  { path: '/legacy', template: '/legacy' },
-  { path: '/lost-password', template: '/lost-password' },
-  { path: '/o/1', template: '/o/[orgId]' },
-  { path: '/o/1/suborgs', template: '/o/[orgId]/suborgs' },
-  {
-    path: makeEmbeddedJoinFormPath,
-    template: '/o/[orgId]/embedjoinform/[formData]',
-  },
-  { path: '/o/1/events/1', template: '/o/[orgId]/events/[eventId]' },
-  { path: '/o/1/joinformverified', template: '/o/[orgId]/joinformverified' },
-  { path: '/o/1/projects/1', template: '/o/[orgId]/projects/[projId]' },
-  { path: '/o/1/surveys/1', template: '/o/[orgId]/surveys/[surveyId]' },
-  {
-    path: '/o/1/unsubscribe?unsub=https%3A%2F%2Fexample.com%2Funsubscribe',
-    template: '/o/[orgId]/unsubscribe',
-  },
-  { path: '/o/1/unsubscribed', template: '/o/[orgId]/unsubscribed' },
-  { path: '/o/1/viewmail/1', template: '/o/[orgId]/viewmail/[emailId]' },
-  { path: '/register', template: '/register' },
-  { path: '/reset-password', template: '/reset-password' },
-  { path: '/nonexistent-page', template: '/[...rest]' },
-];
-
-export const AUTHENTICATED_PAGE_ROUTES: SmokeRoute[] = [
-  { path: '/call', template: '/call' },
-  { path: '/call/1', template: '/call/[callAssId]' },
-  { path: '/canvass/1', template: '/canvass/[areaAssId]' },
-  { path: '/canvass/1/areas', template: '/canvass/[areaAssId]/areas' },
-  {
-    path: '/canvass/1/areas/1',
-    template: '/canvass/[areaAssId]/areas/[areaId]',
-  },
-  { path: '/my/feed', template: '/my/feed' },
-  { path: '/my/home', template: '/my/home' },
-  { path: '/my/orgs', template: '/my/orgs' },
-  { path: '/my/settings', template: '/my/settings' },
-  { path: '/organize', template: '/organize' },
-  { path: '/organize/1/geography', template: '/organize/[orgId]/geography' },
-  { path: '/organize/1/journeys', template: '/organize/[orgId]/journeys' },
-  {
-    path: '/organize/1/journeys/1',
-    template: '/organize/[orgId]/journeys/[journeyId]',
-  },
-  {
-    path: '/organize/1/journeys/1/1',
-    template: '/organize/[orgId]/journeys/[journeyId]/[instanceId]',
-  },
-  {
-    path: '/organize/1/journeys/1/1/milestones',
-    template: '/organize/[orgId]/journeys/[journeyId]/[instanceId]/milestones',
-  },
-  {
-    path: '/organize/1/journeys/1/closed',
-    template: '/organize/[orgId]/journeys/[journeyId]/closed',
-  },
-  {
-    path: '/organize/1/journeys/1/new',
-    template: '/organize/[orgId]/journeys/[journeyId]/new',
-  },
-  { path: '/organize/1/people', template: '/organize/[orgId]/people' },
-  {
-    path: '/organize/1/people/1',
-    template: '/organize/[orgId]/people/[personId]',
-  },
-  {
-    path: '/organize/1/people/1/manage',
-    template: '/organize/[orgId]/people/[personId]/manage',
-  },
-  {
-    path: '/organize/1/people/duplicates',
-    template: '/organize/[orgId]/people/duplicates',
-  },
-  {
-    path: '/organize/1/people/folders/1',
-    template: '/organize/[orgId]/people/folders/[folderId]',
-  },
-  {
-    path: '/organize/1/people/incoming',
-    template: '/organize/[orgId]/people/incoming',
-  },
-  {
-    path: '/organize/1/people/joinforms',
-    template: '/organize/[orgId]/people/joinforms',
-  },
-  {
-    path: '/organize/1/people/lists/1',
-    template: '/organize/[orgId]/people/lists/[viewId]',
-  },
-  {
-    path: '/organize/1/people/lists/1/shared',
-    template: '/organize/[orgId]/people/lists/[viewId]/shared',
-  },
-  {
-    path: '/organize/1/people/lists/callblocked',
-    template: '/organize/[orgId]/people/lists/callblocked',
-  },
-  { path: '/organize/1/projects', template: '/organize/[orgId]/projects' },
-  {
-    path: '/organize/1/projects/1',
-    template: '/organize/[orgId]/projects/[projectId]',
-  },
-  {
-    path: '/organize/1/projects/1/activities',
-    template: '/organize/[orgId]/projects/[projectId]/activities',
-  },
-  {
-    path: '/organize/1/projects/1/archive',
-    template: '/organize/[orgId]/projects/[projectId]/archive',
-  },
-  {
-    path: '/organize/1/projects/1/areaassignments/1',
-    template:
-      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]',
-  },
-  {
-    path: '/organize/1/projects/1/areaassignments/1/instructions',
-    template:
-      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]/instructions',
-  },
-  {
-    path: '/organize/1/projects/1/areaassignments/1/map',
-    template:
-      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]/map',
-  },
-  {
-    path: '/organize/1/projects/1/areaassignments/1/report',
-    template:
-      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]/report',
-  },
-  {
-    path: '/organize/1/projects/1/calendar',
-    template: '/organize/[orgId]/projects/[projectId]/calendar',
-  },
-  {
-    path: '/organize/1/projects/1/calendar/tasks/1',
-    template: '/organize/[orgId]/projects/[projectId]/calendar/tasks/[taskId]',
-  },
-  {
-    path: '/organize/1/projects/1/callassignments/1',
-    template:
-      '/organize/[orgId]/projects/[projectId]/callassignments/[callAssId]',
-  },
-  {
-    path: '/organize/1/projects/1/callassignments/1/callers',
-    template:
-      '/organize/[orgId]/projects/[projectId]/callassignments/[callAssId]/callers',
-  },
-  {
-    path: '/organize/1/projects/1/callassignments/1/conversation',
-    template:
-      '/organize/[orgId]/projects/[projectId]/callassignments/[callAssId]/conversation',
-  },
-  {
-    path: '/organize/1/projects/1/emails',
-    template: '/organize/[orgId]/projects/[projectId]/emails',
-  },
-  {
-    path: '/organize/1/projects/1/emails/1',
-    template: '/organize/[orgId]/projects/[projectId]/emails/[emailId]',
-  },
-  {
-    path: '/organize/1/projects/1/emails/1/compose',
-    template: '/organize/[orgId]/projects/[projectId]/emails/[emailId]/compose',
-  },
-  {
-    path: '/organize/1/projects/1/emails/1/insights',
-    template:
-      '/organize/[orgId]/projects/[projectId]/emails/[emailId]/insights',
-  },
-  {
-    path: '/organize/1/projects/1/events',
-    template: '/organize/[orgId]/projects/[projectId]/events',
-  },
-  {
-    path: '/organize/1/projects/1/events/1',
-    template: '/organize/[orgId]/projects/[projectId]/events/[eventId]',
-  },
-  {
-    path: '/organize/1/projects/1/events/1/participants',
-    template:
-      '/organize/[orgId]/projects/[projectId]/events/[eventId]/participants',
-  },
-  {
-    path: '/organize/1/projects/1/surveys/1',
-    template: '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]',
-  },
-  {
-    path: '/organize/1/projects/1/surveys/1/insights',
-    template:
-      '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]/insights',
-  },
-  {
-    path: '/organize/1/projects/1/surveys/1/questions',
-    template:
-      '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]/questions',
-  },
-  {
-    path: '/organize/1/projects/1/surveys/1/submissions',
-    template:
-      '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]/submissions',
-  },
-  {
-    path: '/organize/1/projects/1/tasks',
-    template: '/organize/[orgId]/projects/[projectId]/tasks',
-  },
-  {
-    path: '/organize/1/projects/1/tasks/1',
-    template: '/organize/[orgId]/projects/[projectId]/tasks/[taskId]',
-  },
-  {
-    path: '/organize/1/projects/1/tasks/1/assignees',
-    template: '/organize/[orgId]/projects/[projectId]/tasks/[taskId]/assignees',
-  },
-  {
-    path: '/organize/1/projects/1/tasks/1/insights',
-    template: '/organize/[orgId]/projects/[projectId]/tasks/[taskId]/insights',
-  },
-  {
-    path: '/organize/1/projects/activities',
-    template: '/organize/[orgId]/projects/activities',
-  },
-  {
-    path: '/organize/1/projects/archive',
-    template: '/organize/[orgId]/projects/archive',
-  },
-  {
-    path: '/organize/1/projects/calendar',
-    template: '/organize/[orgId]/projects/calendar',
-  },
-  {
-    path: '/organize/1/projects/shared',
-    template: '/organize/[orgId]/projects/shared',
-  },
-  {
-    path: '/organize/1/projects/shared/activities',
-    template: '/organize/[orgId]/projects/shared/activities',
-  },
-  {
-    path: '/organize/1/projects/shared/archive',
-    template: '/organize/[orgId]/projects/shared/archive',
-  },
-  { path: '/organize/1/settings', template: '/organize/[orgId]/settings' },
-  {
-    path: '/organize/1/settings/email',
-    template: '/organize/[orgId]/settings/email',
-  },
-  {
-    path: '/organize/1/settings/email/themes',
-    template: '/organize/[orgId]/settings/email/themes',
-  },
-  {
-    path: '/organize/1/settings/email/themes/1',
-    template: '/organize/[orgId]/settings/email/themes/[themeId]',
-  },
-  {
-    path: '/organize/1/settings/fields',
-    template: '/organize/[orgId]/settings/fields',
-  },
-  {
-    path: '/organize/1/suborgOverview',
-    template: '/organize/[orgId]/suborgOverview',
-  },
-  { path: '/organize/1/tags', template: '/organize/[orgId]/tags' },
-  { path: '/verify', template: '/verify' },
-  { path: '/verify/test-token', template: '/verify/[token]' },
-];
-
-export async function mockBetaRouteHandlers(page: Page) {
-  // The /beta route handlers need MongoDB, which isn't available here or in CI
-  await page.route('**/beta/**', async (route) => {
-    if (route.request().method() === 'GET') {
-      await route.fulfill({
-        body: JSON.stringify({ data: [] }),
-        contentType: 'application/json',
-        status: 200,
-      });
-    } else {
-      await route.fallback();
-    }
-  });
-}
-
-export async function addSessionCookie(
-  context: BrowserContext,
-  appUri: string
-) {
-  const url = new URL(appUri);
-  const sealedSession = await sealData(
+async function makeEmbeddedJoinFormPath() {
+  const formData = await Iron.seal(
     {
-      memberships: [KPD.id],
-      redirAfterLogin: null,
-      tokenData: {
-        access_token: 'test-access-token',
-        expires_in: 3600,
-        refresh_token: 'test-refresh-token',
-        token_type: 'bearer',
-      },
+      fields: [{ s: 'first_name' }, { s: 'last_name' }],
+      formId: JOIN_FORM_ID,
+      orgId: ORG_ID,
+      token: joinForm.submit_token,
     },
-    {
-      password: SESSION_PASSWORD,
-    }
+    SESSION_PASSWORD,
+    Iron.defaults
   );
 
-  await context.addCookies([
-    {
-      domain: url.hostname,
-      httpOnly: true,
-      name: 'zsid',
-      path: '/',
-      sameSite: 'Lax',
-      value: sealedSession,
-    },
-  ]);
+  return `/o/${ORG_ID}/embedjoinform/${encodePathSegment(formData)}`;
 }
 
 function collectFiles(dir: string): string[] {
@@ -573,6 +265,10 @@ function collectFiles(dir: string): string[] {
     }
     return entry.isFile() ? [entryPath] : [];
   });
+}
+
+function normalizeTemplate(template: string): string {
+  return template.replace(/\/+/g, '/') || '/';
 }
 
 function collectAppPageTemplates(): string[] {
@@ -621,34 +317,174 @@ export function collectPageRouteTemplates(): string[] {
   ).sort();
 }
 
-function normalizeTemplate(template: string): string {
-  return template.replace(/\/+/g, '/') || '/';
+type RouteBucket = 'authenticated' | 'public' | 'redirect';
+
+const ROUTE_BUCKET_RULES: [pattern: string, bucket: RouteBucket][] = [
+  ['/', 'redirect'],
+  ['/login', 'redirect'],
+  ['/logout', 'redirect'],
+  ['/call/*', 'authenticated'],
+  ['/canvass/*', 'authenticated'],
+  ['/my/*', 'authenticated'],
+  ['/organize/*', 'authenticated'],
+  ['/verify/*', 'authenticated'],
+  ['/legacy', 'public'],
+  ['/lost-password', 'public'],
+  ['/o/*', 'public'],
+  ['/register', 'public'],
+  ['/reset-password', 'public'],
+];
+
+function matchesBucketPattern(template: string, pattern: string): boolean {
+  if (!pattern.endsWith('/*')) {
+    return template === pattern;
+  }
+
+  const base = pattern.slice(0, -2);
+  return template === base || template.startsWith(`${base}/`);
 }
 
-export function expectedPageTemplates(): string[] {
-  return Array.from(
-    new Set(
-      [...REDIRECT_ROUTES, ...PUBLIC_PAGE_ROUTES, ...AUTHENTICATED_PAGE_ROUTES]
-        .filter((route) => route.coverPageTemplate !== false)
-        .filter((route) => route.template !== '/[...rest]')
-        .map((route) => route.template)
-    )
-  ).sort();
+export function classifyTemplate(template: string): RouteBucket | null {
+  const rule = ROUTE_BUCKET_RULES.find(([pattern]) =>
+    matchesBucketPattern(template, pattern)
+  );
+  return rule ? rule[1] : null;
 }
 
-async function makeEmbeddedJoinFormPath() {
-  const formData = await Iron.seal(
+const ALL_PAGE_TEMPLATES = collectPageRouteTemplates();
+
+function templatesForBucket(bucket: RouteBucket): string[] {
+  return ALL_PAGE_TEMPLATES.filter(
+    (template) => classifyTemplate(template) === bucket
+  );
+}
+
+const ROUTE_PARAM_VALUES: Record<string, string> = {
+  areaAssId: String(AREA_ASSIGNMENT_ID),
+  areaId: String(AREA_ID),
+  callAssId: String(CALL_ASSIGNMENT_ID),
+  emailId: String(EMAIL_ID),
+  eventId: String(EVENT_ID),
+  folderId: String(FOLDER_ID),
+  instanceId: String(ClarasOnboarding.id),
+  journeyId: String(MemberOnboarding.id),
+  orgId: String(ORG_ID),
+  personId: String(ClaraZetkin.id),
+  projId: String(CAMPAIGN_ID),
+  projectId: String(CAMPAIGN_ID),
+  surveyId: String(KPDMembershipSurvey.id),
+  taskId: String(SpeakToFriend.id),
+  themeId: '1',
+  token: 'test-token',
+  viewId: String(AllMembers.id),
+};
+
+function fillRouteTemplate(template: string): string {
+  return template
+    .split('/')
+    .map((segment) => {
+      const param = segment.match(/^\[(\w+)\]$/)?.[1];
+      if (!param) {
+        return segment;
+      }
+
+      const value = ROUTE_PARAM_VALUES[param];
+      if (value === undefined) {
+        throw new Error(
+          `smokeUtils: no route param value configured for "${param}" (template: ${template})`
+        );
+      }
+
+      return value;
+    })
+    .join('/');
+}
+
+type RouteOverride = {
+  expectedStatus?: number;
+  path?: SmokeRoute['path'];
+};
+
+const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
+  '/o/[orgId]/embedjoinform/[formData]': { path: makeEmbeddedJoinFormPath },
+  '/o/[orgId]/unsubscribe': {
+    path: `/o/${ORG_ID}/unsubscribe?unsub=${encodeURIComponent(
+      'https://example.com/unsubscribe'
+    )}`,
+  },
+};
+
+function buildRoutes(templates: string[]): SmokeRoute[] {
+  return templates.map((template) => {
+    const override = ROUTE_OVERRIDES[template];
+    return {
+      expectedStatus: override?.expectedStatus,
+      path: override?.path ?? fillRouteTemplate(template),
+      template,
+    };
+  });
+}
+
+export const REDIRECT_ROUTES: SmokeRoute[] = [
+  ...buildRoutes(templatesForBucket('redirect')),
+  { path: '/?code=test', template: '/' },
+];
+
+export const PUBLIC_PAGE_ROUTES: SmokeRoute[] = [
+  ...buildRoutes(templatesForBucket('public')),
+  { expectedStatus: 404, path: '/nonexistent-page', template: '/[...rest]' },
+];
+
+export const AUTHENTICATED_PAGE_ROUTES: SmokeRoute[] = buildRoutes(
+  templatesForBucket('authenticated')
+);
+
+export async function mockBetaRouteHandlers(page: Page) {
+  // The /beta route handlers need MongoDB, which isn't available here or in CI
+  await page.route('**/beta/**', async (route) => {
+    if (route.request().method() === 'GET') {
+      await route.fulfill({
+        body: JSON.stringify({ data: [] }),
+        contentType: 'application/json',
+        status: 200,
+      });
+    } else {
+      await route.fallback();
+    }
+  });
+}
+
+export async function addSessionCookie(
+  context: BrowserContext,
+  appUri: string
+) {
+  const url = new URL(appUri);
+  const sealedSession = await sealData(
     {
-      fields: [{ s: 'first_name' }, { s: 'last_name' }],
-      formId: JOIN_FORM_ID,
-      orgId: ORG_ID,
-      token: joinForm.submit_token,
+      memberships: [KPD.id],
+      redirAfterLogin: null,
+      tokenData: {
+        access_token: 'test-access-token',
+        expires_in: 3600,
+        refresh_token: 'test-refresh-token',
+        token_type: 'bearer',
+      },
     },
-    SESSION_PASSWORD,
-    Iron.defaults
+    {
+      password: SESSION_PASSWORD,
+    }
   );
 
-  return `/o/${ORG_ID}/embedjoinform/${encodePathSegment(formData)}`;
+  await context.addCookies([
+    {
+      domain: url.hostname,
+      httpOnly: true,
+      name: 'zsid',
+      path: '/',
+      sameSite: 'Lax',
+      value: sealedSession,
+    },
+  ]);
 }
 
 export function setupFeatureFlags() {
