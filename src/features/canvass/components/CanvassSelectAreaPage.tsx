@@ -151,10 +151,11 @@ const Page: FC<{
                               {showAssignedToMeChip && (
                                 <Chip
                                   label={messages.selectArea.assignedToMe()}
-                                  sx={{
-                                    backgroundColor: '#f2c71b',
+                                  sx={(theme) => ({
+                                    backgroundColor: theme.palette.info.light,
+                                    color: theme.palette.common.white,
                                     marginRight: 2,
-                                  }}
+                                  })}
                                 />
                               )}
                               <ArrowForwardIos fontSize="small" />
