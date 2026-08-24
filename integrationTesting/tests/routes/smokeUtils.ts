@@ -888,7 +888,7 @@ function watchRouteErrors(page: Page) {
     const text = message.text();
     if (
       message.type() === 'error' &&
-      /(MISSING_MESSAGE|Missing translation|IntlError)/.test(text)
+      /@formatjs\/intl Error|Missing message:/.test(text)
     ) {
       errors.push(text);
     }
@@ -927,9 +927,9 @@ export async function expectRouteHealthy(
       .catch(() => {});
     await page.waitForTimeout(250);
 
-    expect(response, routePath).not.toBeNull();
-    expect(response?.status(), routePath).toBe(expectedStatus);
-    expect(routeErrors.errors, routePath).toEqual([]);
+    expect.soft(response, routePath).not.toBeNull();
+    expect.soft(response?.status(), routePath).toBe(expectedStatus);
+    expect.soft(routeErrors.errors, routePath).toEqual([]);
   } finally {
     await page.unroute('**/_next/image**', imageHandler);
     routeErrors.dispose();
