@@ -666,6 +666,8 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
   moxy.setMock('/v1/orgs/1/avatar', 'get', { status: 404 });
   moxy.setMock('/v1/users/1/avatar', 'get', { status: 404 });
+  moxy.setMock('/v1/orgs/1/people/1/avatar', 'get', { status: 404 });
+  moxy.setMock('/v1/orgs/1/people/2/avatar', 'get', { status: 404 });
   moxy.setZetkinApiMock('/orgs/1/actions', 'get', [event]);
   moxy.setZetkinApiMock('/orgs/1/actions/1', 'get', event);
   moxy.setZetkinApiMock('/orgs/1/actions/1/participants', 'get', []);
@@ -804,6 +806,7 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     RosaLuxemburg,
   ]);
   moxy.setZetkinApiMock('/orgs/1/search/survey', 'post', []);
+  moxy.setZetkinApiMock('/orgs/1/search/surveysubmission', 'post', []);
   moxy.setZetkinApiMock('/orgs/1/search/task', 'post', []);
   moxy.setZetkinApiMock('/orgs/1/search/view', 'post', []);
   moxy.setZetkinApiMock('/orgs/1/sub_organizations', 'get', []);
