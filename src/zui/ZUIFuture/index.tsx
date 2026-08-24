@@ -131,6 +131,8 @@ function ZUIFuture<DataType>(props: ZUIFutureProps<DataType>): ReturnType<FC> {
         </Box>
       )
     );
+  } else {
+    return null;
   }
 }
 
