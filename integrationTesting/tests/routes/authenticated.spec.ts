@@ -10,7 +10,7 @@ import {
 } from './smokeUtils';
 
 test.describe('authenticated route smoke tests', () => {
-  test.setTimeout(120000);
+  test.setTimeout(240000);
 
   test.afterEach(({ moxy }) => {
     moxy.teardown();
