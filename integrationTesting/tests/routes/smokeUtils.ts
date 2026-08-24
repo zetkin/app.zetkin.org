@@ -576,11 +576,11 @@ function collectFiles(dir: string): string[] {
 }
 
 function collectAppPageTemplates(): string[] {
-  const appLocaleDir = path.join(process.cwd(), 'src', 'app', '[locale]');
-  return collectFiles(appLocaleDir)
+  const appDir = path.join(process.cwd(), 'src', 'app');
+  return collectFiles(appDir)
     .filter((filePath) => filePath.endsWith(`${path.sep}page.tsx`))
     .map((filePath) => {
-      const relativePath = path.relative(appLocaleDir, filePath);
+      const relativePath = path.relative(appDir, filePath);
       const segments = relativePath
         .split(path.sep)
         .slice(0, -1)
@@ -598,7 +598,8 @@ function collectPagesRouterTemplates(): string[] {
       const relativePath = path.relative(pagesDir, filePath);
       return (
         !relativePath.startsWith(`api${path.sep}`) &&
-        !relativePath.startsWith('_')
+        !relativePath.startsWith('_') &&
+        relativePath !== '404.tsx'
       );
     })
     .map((filePath) => {
