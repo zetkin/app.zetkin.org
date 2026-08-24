@@ -23,10 +23,10 @@ import KPDMembershipSurvey from '../../mockData/orgs/KPD/surveys/MembershipSurve
 import MemberOnboarding from '../../mockData/orgs/KPD/journeys/MemberOnboarding';
 import Memberships from '../../mockData/orgs/KPD/Memberships';
 import OrganizerTag from '../../mockData/orgs/KPD/tags/Organizer';
-import ReferendumSignatures from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import ReferendumSignatures from '../../mockData/orgs/KPD/projects/ReferendumSignatures';
 import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
-import SpeakToFriend from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
-import WelcomeNewMembers from '../../mockData/orgs/KPD/campaigns/WelcomeNewMembers';
+import SpeakToFriend from '../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
+import WelcomeNewMembers from '../../mockData/orgs/KPD/projects/WelcomeNewMembers';
 
 const SESSION_PASSWORD = 'thisispasswordandshouldbelongerthan32characters';
 const ORG_ID = KPD.id;
@@ -255,7 +255,6 @@ export const PUBLIC_PAGE_ROUTES: SmokeRoute[] = [
   { path: '/o/1', template: '/o/[orgId]' },
   { path: '/o/1/suborgs', template: '/o/[orgId]/suborgs' },
   {
-    coverPageTemplate: false,
     path: makeEmbeddedJoinFormPath,
     template: '/o/[orgId]/embedjoinform/[formData]',
   },
@@ -350,119 +349,123 @@ export const AUTHENTICATED_PAGE_ROUTES: SmokeRoute[] = [
   { path: '/organize/1/projects', template: '/organize/[orgId]/projects' },
   {
     path: '/organize/1/projects/1',
-    template: '/organize/[orgId]/projects/[campId]',
+    template: '/organize/[orgId]/projects/[projectId]',
   },
   {
     path: '/organize/1/projects/1/activities',
-    template: '/organize/[orgId]/projects/[campId]/activities',
+    template: '/organize/[orgId]/projects/[projectId]/activities',
   },
   {
     path: '/organize/1/projects/1/archive',
-    template: '/organize/[orgId]/projects/[campId]/archive',
+    template: '/organize/[orgId]/projects/[projectId]/archive',
   },
   {
     path: '/organize/1/projects/1/areaassignments/1',
-    template: '/organize/[orgId]/projects/[campId]/areaassignments/[areaAssId]',
+    template:
+      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]',
   },
   {
     path: '/organize/1/projects/1/areaassignments/1/instructions',
     template:
-      '/organize/[orgId]/projects/[campId]/areaassignments/[areaAssId]/instructions',
+      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]/instructions',
   },
   {
     path: '/organize/1/projects/1/areaassignments/1/map',
     template:
-      '/organize/[orgId]/projects/[campId]/areaassignments/[areaAssId]/map',
+      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]/map',
   },
   {
     path: '/organize/1/projects/1/areaassignments/1/report',
     template:
-      '/organize/[orgId]/projects/[campId]/areaassignments/[areaAssId]/report',
+      '/organize/[orgId]/projects/[projectId]/areaassignments/[areaAssId]/report',
   },
   {
     path: '/organize/1/projects/1/calendar',
-    template: '/organize/[orgId]/projects/[campId]/calendar',
+    template: '/organize/[orgId]/projects/[projectId]/calendar',
   },
   {
     path: '/organize/1/projects/1/calendar/tasks/1',
-    template: '/organize/[orgId]/projects/[campId]/calendar/tasks/[taskId]',
+    template: '/organize/[orgId]/projects/[projectId]/calendar/tasks/[taskId]',
   },
   {
     path: '/organize/1/projects/1/callassignments/1',
-    template: '/organize/[orgId]/projects/[campId]/callassignments/[callAssId]',
+    template:
+      '/organize/[orgId]/projects/[projectId]/callassignments/[callAssId]',
   },
   {
     path: '/organize/1/projects/1/callassignments/1/callers',
     template:
-      '/organize/[orgId]/projects/[campId]/callassignments/[callAssId]/callers',
+      '/organize/[orgId]/projects/[projectId]/callassignments/[callAssId]/callers',
   },
   {
     path: '/organize/1/projects/1/callassignments/1/conversation',
     template:
-      '/organize/[orgId]/projects/[campId]/callassignments/[callAssId]/conversation',
+      '/organize/[orgId]/projects/[projectId]/callassignments/[callAssId]/conversation',
   },
   {
     path: '/organize/1/projects/1/emails',
-    template: '/organize/[orgId]/projects/[campId]/emails',
+    template: '/organize/[orgId]/projects/[projectId]/emails',
   },
   {
     path: '/organize/1/projects/1/emails/1',
-    template: '/organize/[orgId]/projects/[campId]/emails/[emailId]',
+    template: '/organize/[orgId]/projects/[projectId]/emails/[emailId]',
   },
   {
     path: '/organize/1/projects/1/emails/1/compose',
-    template: '/organize/[orgId]/projects/[campId]/emails/[emailId]/compose',
+    template: '/organize/[orgId]/projects/[projectId]/emails/[emailId]/compose',
   },
   {
     path: '/organize/1/projects/1/emails/1/insights',
-    template: '/organize/[orgId]/projects/[campId]/emails/[emailId]/insights',
+    template:
+      '/organize/[orgId]/projects/[projectId]/emails/[emailId]/insights',
   },
   {
     path: '/organize/1/projects/1/events',
-    template: '/organize/[orgId]/projects/[campId]/events',
+    template: '/organize/[orgId]/projects/[projectId]/events',
   },
   {
     path: '/organize/1/projects/1/events/1',
-    template: '/organize/[orgId]/projects/[campId]/events/[eventId]',
+    template: '/organize/[orgId]/projects/[projectId]/events/[eventId]',
   },
   {
     path: '/organize/1/projects/1/events/1/participants',
     template:
-      '/organize/[orgId]/projects/[campId]/events/[eventId]/participants',
+      '/organize/[orgId]/projects/[projectId]/events/[eventId]/participants',
   },
   {
     path: '/organize/1/projects/1/surveys/1',
-    template: '/organize/[orgId]/projects/[campId]/surveys/[surveyId]',
+    template: '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]',
   },
   {
     path: '/organize/1/projects/1/surveys/1/insights',
-    template: '/organize/[orgId]/projects/[campId]/surveys/[surveyId]/insights',
+    template:
+      '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]/insights',
   },
   {
     path: '/organize/1/projects/1/surveys/1/questions',
     template:
-      '/organize/[orgId]/projects/[campId]/surveys/[surveyId]/questions',
+      '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]/questions',
   },
   {
     path: '/organize/1/projects/1/surveys/1/submissions',
     template:
-      '/organize/[orgId]/projects/[campId]/surveys/[surveyId]/submissions',
+      '/organize/[orgId]/projects/[projectId]/surveys/[surveyId]/submissions',
   },
   {
     path: '/organize/1/projects/1/tasks',
-    template: '/organize/[orgId]/projects/[campId]/tasks',
+    template: '/organize/[orgId]/projects/[projectId]/tasks',
   },
   {
     path: '/organize/1/projects/1/tasks/1',
-    template: '/organize/[orgId]/projects/[campId]/tasks/[taskId]',
+    template: '/organize/[orgId]/projects/[projectId]/tasks/[taskId]',
   },
   {
     path: '/organize/1/projects/1/tasks/1/assignees',
-    template: '/organize/[orgId]/projects/[campId]/tasks/[taskId]/assignees',
+    template: '/organize/[orgId]/projects/[projectId]/tasks/[taskId]/assignees',
   },
   {
     path: '/organize/1/projects/1/tasks/1/insights',
-    template: '/organize/[orgId]/projects/[campId]/tasks/[taskId]/insights',
+    template: '/organize/[orgId]/projects/[projectId]/tasks/[taskId]/insights',
   },
   {
     path: '/organize/1/projects/activities',
@@ -490,16 +493,20 @@ export const AUTHENTICATED_PAGE_ROUTES: SmokeRoute[] = [
   },
   { path: '/organize/1/settings', template: '/organize/[orgId]/settings' },
   {
+    path: '/organize/1/settings/email',
+    template: '/organize/[orgId]/settings/email',
+  },
+  {
+    path: '/organize/1/settings/email/themes',
+    template: '/organize/[orgId]/settings/email/themes',
+  },
+  {
+    path: '/organize/1/settings/email/themes/1',
+    template: '/organize/[orgId]/settings/email/themes/[themeId]',
+  },
+  {
     path: '/organize/1/settings/fields',
     template: '/organize/[orgId]/settings/fields',
-  },
-  {
-    path: '/organize/1/settings/themes',
-    template: '/organize/[orgId]/settings/themes',
-  },
-  {
-    path: '/organize/1/settings/themes/1',
-    template: '/organize/[orgId]/settings/themes/[themeId]',
   },
   {
     path: '/organize/1/suborgOverview',
