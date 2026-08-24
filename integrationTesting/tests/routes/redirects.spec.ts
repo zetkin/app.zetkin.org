@@ -6,7 +6,7 @@ import { REDIRECT_ROUTES, routePath } from './smokeUtils';
 test.describe('redirect route smoke tests', () => {
   test.setTimeout(120000);
 
-  test('keeps redirect-only Pages Router routes outside next-intl rewrites', async ({
+  test('sends unauthenticated redirect-only routes to a 3xx response', async ({
     appUri,
     page,
   }) => {
