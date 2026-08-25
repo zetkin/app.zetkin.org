@@ -1,1631 +1,2885 @@
 glob:
   accessLevels:
-    configure: Rediger
-    edit: Redigerer
-    readonly: Skrivebeskyttet
+    configure:
+      text: Rediger
+    edit:
+      text: Redigerer
+    readonly:
+      text: Skrivebeskyttet
   personFields:
-    alt_phone: Andet telefonnummer
-    city: By
-    co_address: C/O Adresse
-    country: Land
-    email: Email
-    ext_id: Eksternt ID
-    first_name: Fornavn
-    gender: Køn
-    id: ID
-    is_user: Er bruger
-    last_name: Efternavn
-    phone: Telefonnummer
-    street_address: Adresse
-    zip_code: Postnummer
+    alt_phone:
+      text: Andet telefonnummer
+    city:
+      text: By
+    co_address:
+      text: C/O Adresse
+    country:
+      text: Land
+    email:
+      text: Email
+    ext_id:
+      text: Eksternt ID
+    first_name:
+      text: Fornavn
+    gender:
+      text: Køn
+    id:
+      text: ID
+    is_user:
+      text: Er bruger
+    last_name:
+      text: Efternavn
+    phone:
+      text: Telefonnummer
+    street_address:
+      text: Adresse
+    zip_code:
+      text: Postnummer
   roles:
-    admin: Administrator
-    organizer: Organisator
+    admin:
+      text: Administrator
+    organizer:
+      text: Organisator
 core:
   err404:
-    backToHomePage: Tilbage til forsiden
-    pageNotFound: Siden kan ikke findes
+    backToHomePage:
+      text: Tilbage til forsiden
+    pageNotFound:
+      text: Siden kan ikke findes
   home:
-    welcome: Dette vil blive Zetkin
+    welcome:
+      text: Dette vil blive Zetkin
   legacy:
-    continueButton: Fortsæt til det gamle Zetkin
-    header: Du bliver omdirigeret
-    info: Du bruger en prerelease version af Zetkin, der ikke understøtter den
-      funktion du vil bruge. Du bliver omdirigeret til en ældre version af
-      Zetkin, der understøtter den funktion.
+    continueButton:
+      text: Fortsæt til det gamle Zetkin
+    header:
+      text: Du bliver omdirigeret
+    info:
+      text: Du bruger en prerelease version af Zetkin, der ikke understøtter den
+        funktion du vil bruge. Du bliver omdirigeret til en ældre version af
+        Zetkin, der understøtter den funktion.
 feat:
   breadcrumbs:
     elements:
-      activities: Aktiviteter
-      archive: Arkiv
-      assignees: Ansvarlige
-      calendar: Kalender
-      callassignments: Ringeopgaver
-      callers: Ringere
-      closed: Lukket
-      conversation: Samtale
-      events: Begivenheder
-      folders: Lister
-      insights: Indsigter
-      instances: Forekomster
-      manage: Administrer
-      milestones: Milepæle
-      new: Ny
-      organize: Organiser
-      participants: Deltagere
-      people: Personer
-      projects: Projekter
-      questions: Spørgsmål
-      submissions: Besvarelser
-      surveys: Spørgeskema
-      tasks: Opgaver
-      untitledEvent: Unnavngiven begivenhed
-      views: Lister
+      activities:
+        text: Aktiviteter
+      archive:
+        text: Arkiv
+      assignees:
+        text: Ansvarlige
+      calendar:
+        text: Kalender
+      callassignments:
+        text: Ringeopgaver
+      callers:
+        text: Ringere
+      closed:
+        text: Lukket
+      conversation:
+        text: Samtale
+      events:
+        text: Begivenheder
+      folders:
+        text: Lister
+      insights:
+        text: Indsigter
+      instances:
+        text: Forekomster
+      manage:
+        text: Administrer
+      milestones:
+        text: Milepæle
+      new:
+        text: Ny
+      organize:
+        text: Organiser
+      participants:
+        text: Deltagere
+      people:
+        text: Personer
+      projects:
+        text: Projekter
+      questions:
+        text: Spørgsmål
+      submissions:
+        text: Besvarelser
+      surveys:
+        text: Spørgeskema
+      tasks:
+        text: Opgaver
+      untitledEvent:
+        text: Unnavngiven begivenhed
+      views:
+        text: Lister
   calendar:
     createMenu:
-      singleEvent: Opret enkel begivenhed
+      singleEvent:
+        text: Opret enkel begivenhed
     event:
-      differentLocations: '{numLocations} forskellige lokationer'
-      events: Begivenheder
-      noContactSelected: Ingen kontakt valgt
-      remindersNotSent: '{numNotSent} Påmindelser ikke sendt'
-      unbookedSignups: '{numUnbooked} Ikke-bookede tilmeldinger'
-      underbooked: '{numUnderbooked} Underbookede begivenheder'
-      withSignups: '{numWithSignups} Med tilmeldinger'
-      withoutContact: '{numWithoutContact} Uden kontakt'
+      differentLocations:
+        text: '{numLocations} forskellige lokationer'
+      events:
+        text: Begivenheder
+      noContactSelected:
+        text: Ingen kontakt valgt
+      remindersNotSent:
+        text: '{numNotSent} Påmindelser ikke sendt'
+      unbookedSignups:
+        text: '{numUnbooked} Ikke-bookede tilmeldinger'
+      underbooked:
+        text: '{numUnderbooked} Underbookede begivenheder'
+      withSignups:
+        text: '{numWithSignups} Med tilmeldinger'
+      withoutContact:
+        text: '{numWithoutContact} Uden kontakt'
     eventFilter:
-      collapse: Skjul
-      expand: '{numOfOptions, plural, one {+ 1 begivenhedstype mere} other {+ # flere
-        begivenhedstyper}}'
-      filter: Filtrer
+      collapse:
+        text: Skjul
+      expand:
+        text: '{numOfOptions, plural, one {+ 1 begivenhedstype mere} other {+ # flere
+          begivenhedstyper}}'
+      filter:
+        text: Filtrer
       filterOptions:
         actionFilters:
-          missing: Mangler kontaktperson
-          overbooked: Overbooket
-          pending: Verserende tilmeldinger
-          title: Filtrer efter handling påkrævet
-          underbooked: Underbooket
-          unsent: Usendte notifikationer
+          missing:
+            text: Mangler kontaktperson
+          overbooked:
+            text: Overbooket
+          pending:
+            text: Verserende tilmeldinger
+          title:
+            text: Filtrer efter handling påkrævet
+          underbooked:
+            text: Underbooket
+          unsent:
+            text: Usendte notifikationer
         eventTypes:
-          title: Filtrer efter begivenhedstyper
+          title:
+            text: Filtrer efter begivenhedstyper
         stateFilters:
-          cancelled: Aflyst
-          draft: Udkast
-          published: Offentliggjort
-          scheduled: Planlagt
-          title: filtrer efter publiceringsstatus
-      reset: Nulstil filtre
+          cancelled:
+            text: Aflyst
+          draft:
+            text: Udkast
+          published:
+            text: Offentliggjort
+          scheduled:
+            text: Planlagt
+          title:
+            text: filtrer efter publiceringsstatus
+      reset:
+        text: Nulstil filtre
       toggle:
-        all: Alle
-        none: Ingen
-      type: Skriv for at filtrere indhold
-    lastDayWithEvents: Der {numEvents, plural, one {var en begivenhed} other {var
-      {numEvents} begivenheder}} på den sidste aktive dag
-    loadMore: Indlæs mere
-    moreEvents: '{numEvents, plural, one {# begivenhed mere} other {# flere begivenheder}}'
-    next: NÆSTE
-    prev: FORRIGE
-    rangeLabel: Vælg en mulighed
+        all:
+          text: Alle
+        none:
+          text: Ingen
+      type:
+        text: Skriv for at filtrere indhold
+    lastDayWithEvents:
+      text: Der {numEvents, plural, one {var en begivenhed} other {var {numEvents}
+        begivenheder}} på den sidste aktive dag
+    loadMore:
+      text: Indlæs mere
+    moreEvents:
+      text: '{numEvents, plural, one {# begivenhed mere} other {# flere
+        begivenheder}}'
+    next:
+      text: NÆSTE
+    prev:
+      text: FORRIGE
+    rangeLabel:
+      text: Vælg en mulighed
     ranges:
-      day: Dag
-      month: Måned
-      week: Uge
+      day:
+        text: Dag
+      month:
+        text: Måned
+      week:
+        text: Uge
     selectionBar:
-      deselect: Fravælg
-      editEvents: Rediger begivenheder
+      deselect:
+        text: Fravælg
+      editEvents:
+        text: Rediger begivenheder
       ellipsisMenu:
-        cancel: Aflys
-        cancelWarning: Hvis du gør, så husk at informere alle deltagere og tilmeldte, at
-          begivenheden er blevet aflyst!
-        confirmCancel: Er du sikker, at du vil aflyse de valgte begivenheder?
-        confirmDelete: Er du sikker, at du vil slette de valgte begivenheder?
-        delete: Slet
-        deleteWarning: Når begivenhederne er blevet slettet, er det ikke muligt at tilgå
-          dem igen.
-        print: Print skema
-        publish: Offentliggør nu
-        unpublish: Tilbagetræk offentliggørelse
-    showMore: Vis
-    today: I dag
+        cancel:
+          text: Aflys
+        cancelWarning:
+          text: Hvis du gør, så husk at informere alle deltagere og tilmeldte, at
+            begivenheden er blevet aflyst!
+        confirmCancel:
+          text: Er du sikker, at du vil aflyse de valgte begivenheder?
+        confirmDelete:
+          text: Er du sikker, at du vil slette de valgte begivenheder?
+        delete:
+          text: Slet
+        deleteWarning:
+          text: Når begivenhederne er blevet slettet, er det ikke muligt at tilgå dem
+            igen.
+        print:
+          text: Print skema
+        publish:
+          text: Offentliggør nu
+        unpublish:
+          text: Tilbagetræk offentliggørelse
+    showMore:
+      text: Vis
+    today:
+      text: I dag
   callAssignments:
     actions:
-      end: Afslut opgave
-      start: Påbegynd opgave
+      end:
+        text: Afslut opgave
+      start:
+        text: Påbegynd opgave
     blocked:
-      callBackLater: Bad os ringe tilbage senere
-      calledTooRecently: Ringet til for nylig
-      cooldownHelperText: Sæt minimums tid mellem forsøg på at nå en person
-      cooldownLabel: Cooldown-periode i timer
-      hours: '{cooldown, plural, =0 {ingen} =1 {# time} other {# timer}}'
-      missingPhoneNumber: Mangler telefonnummer
-      organizerActionNeeded: Handling fra organisator påkrævet
-      subtitle: Person ikke klar til at blive ringet op
-      title: Blokeret
-      viewSheetButton: Se ark
+      callBackLater:
+        text: Bad os ringe tilbage senere
+      calledTooRecently:
+        text: Ringet til for nylig
+      cooldownHelperText:
+        text: Sæt minimums tid mellem forsøg på at nå en person
+      cooldownLabel:
+        text: Cooldown-periode i timer
+      hours:
+        text: '{cooldown, plural, =0 {ingen} =1 {# time} other {# timer}}'
+      missingPhoneNumber:
+        text: Mangler telefonnummer
+      organizerActionNeeded:
+        text: Handling fra organisator påkrævet
+      subtitle:
+        text: Person ikke klar til at blive ringet op
+      title:
+        text: Blokeret
+      viewSheetButton:
+        text: Se ark
     callers:
       actions:
-        customize: Tilpas kø
-        remove: Fjern fra opgave
+        customize:
+          text: Tilpas kø
+        remove:
+          text: Fjern fra opgave
       add:
-        alreadyAdded: Allerede tilføjet
+        alreadyAdded:
+          text: Allerede tilføjet
       customize:
         exclude:
-          h: Udelukkede etiketter
-          intro: Ring aldrig til personer med disse etiketter
+          h:
+            text: Udelukkede etiketter
+          intro:
+            text: Ring aldrig til personer med disse etiketter
         prioritize:
-          h: Prioriterede etiketter
-          intro: Ring først til personer med disse etiketter
-        title: Tilpas kø for {name}
-      customizeButton: Tilpas
-      excludedTagsColumn: Udelukkede etiketter
-      nameColumn: Navn
-      prioritizedTagsColumn: Prioriterede etiketter
-      searchBox: Søg
-      title: Ringere
+          h:
+            text: Prioriterede etiketter
+          intro:
+            text: Ring først til personer med disse etiketter
+        title:
+          text: Tilpas kø for {name}
+      customizeButton:
+        text: Tilpas
+      excludedTagsColumn:
+        text: Udelukkede etiketter
+      nameColumn:
+        text: Navn
+      prioritizedTagsColumn:
+        text: Prioriterede etiketter
+      searchBox:
+        text: Søg
+      title:
+        text: Ringere
     conversation:
       instructions:
-        confirm: Vil du slette alt data, der ikke er gemt og gå tilbage til de
-          instruktioner, der er gemt?
-        editorPlaceholder: Tilføj instruktion til dine ringere
-        revertLink: Gå tilbage til tidligere gemt version?
-        saveButton: Gem
-        savedMessage: Alt er opdateret!
-        savingButton: Gemmer ...
-        title: Instruktion til ringere
-        unsavedMessage: Du har ændringer, som ikke er gemt
+        confirm:
+          text: Vil du slette alt data, der ikke er gemt og gå tilbage til de
+            instruktioner, der er gemt?
+        editorPlaceholder:
+          text: Tilføj instruktion til dine ringere
+        revertLink:
+          text: Gå tilbage til tidligere gemt version?
+        saveButton:
+          text: Gem
+        savedMessage:
+          text: Alt er opdateret!
+        savingButton:
+          text: Gemmer ...
+        title:
+          text: Instruktion til ringere
+        unsavedMessage:
+          text: Du har ændringer, som ikke er gemt
       settings:
         notes:
-          message: At deaktivere opkaldsnoter kan øge opkaldsraten, men kan medføre at
-            vigtige informationer går tabt.
-          title: Tillad ringere at skrive noter
+          message:
+            text: At deaktivere opkaldsnoter kan øge opkaldsraten, men kan medføre at
+              vigtige informationer går tabt.
+          title:
+            text: Tillad ringere at skrive noter
         targetData:
-          message: Målpersonens navn og telefonnumer er altid synlige for ringerne. At
-            aktivere yderelige måldata vil dele alle personfelter med ringerne.
-          title: Vis yderligere måldata
-        title: Samtale indstillinger
+          message:
+            text: Målpersonens navn og telefonnumer er altid synlige for ringerne. At
+              aktivere yderelige måldata vil dele alle personfelter med
+              ringerne.
+          title:
+            text: Vis yderligere måldata
+        title:
+          text: Samtale indstillinger
     done:
-      defineButton: Rediger færdige kriterier
-      subtitle: Målpersoner som opfylder de færdige kriterier
-      title: Færdig
+      defineButton:
+        text: Rediger færdige kriterier
+      subtitle:
+        text: Målpersoner som opfylder de færdige kriterier
+      title:
+        text: Færdig
     organizerActionPane:
-      markAsSolved: Markér som løst
-      markAsUnsolved: Marker som uløst
-      messagePlaceholder: Ringeren efterlod ikke en note
-      noteByCaller: Note af {person} {time}
-      subtitle: Noter om {person}
-      title: Administratorhandling nødvendig
+      markAsSolved:
+        text: Markér som løst
+      markAsUnsolved:
+        text: Marker som uløst
+      messagePlaceholder:
+        text: Ringeren efterlod ikke en note
+      noteByCaller:
+        text: Note af {person} {time}
+      subtitle:
+        text: Noter om {person}
+      title:
+        text: Administratorhandling nødvendig
     ready:
-      allocated: Målpersoner tildelt til ringer
-      queue: Målpersoner i kø
-      subtitle: Målpersoner som skal ringes op
-      title: Klar
+      allocated:
+        text: Målpersoner tildelt til ringer
+      queue:
+        text: Målpersoner i kø
+      subtitle:
+        text: Målpersoner som skal ringes op
+      title:
+        text: Klar
     state:
-      active: Aktiv
-      closed: Lukket
-      draft: Udkast
-      open: Åben
-      scheduled: Planlagt
+      active:
+        text: Aktiv
+      closed:
+        text: Lukket
+      draft:
+        text: Udkast
+      open:
+        text: Åben
+      scheduled:
+        text: Planlagt
     stats:
-      callers: '{numCallers, plural, =0 {ingen ringere} one {1 ringer} other {#
-        ringere}}'
-      targets: '{numTargets, plural, =0 {ingen målpersoner} one {1 målperson} other {#
-        målpersoner}}'
-    statusSectionTitle: Status
+      callers:
+        text: '{numCallers, plural, =0 {ingen ringere} one {1 ringer} other {#
+          ringere}}'
+      targets:
+        text: '{numTargets, plural, =0 {ingen målpersoner} one {1 målperson} other {#
+          målpersoner}}'
+    statusSectionTitle:
+      text: Status
     tabs:
-      callers: Ringere
-      conversation: Samtaler
-      overview: Overblik
+      callers:
+        text: Ringere
+      conversation:
+        text: Samtaler
+      overview:
+        text: Overblik
     targets:
-      defineButton: Definer målgruppen
-      editButton: Rediger målgruppen
-      subtitle: Brug smart søgning for at definere målgruppen til denne opgave
-      title: Målpersoner
-  projects:
-    activitiesOverview:
-      button: Søg i alle begivenheder
-      empty: Intet denne dag
-      endsTomorrow: slutter i morgen
-      extraActivities: + {numExtra} flere
-      goToActivities: Se alle opkommende aktiviteter
-      noActivities: Der er ingen opkommende aktiviter i denne uge
-      nothingTomorrow: Intet planlagt i morgen
-      startsTomorrow: starter i morgen
-      subtitles:
-        endsLater: Slutter {relative}
-        endsToday: Slutter i dag
-        startsLater: Starter {relative}
-        startsToday: Starter i dag
-      thisWeekCard: Også i denne uge
-      title: Kommende aktiviteter
-      todayCard: I dag
-      tomorrowCard: I morgen
-    activityList:
-      eventItem:
-        contact: Ingen kontaktperson er blevet tildelt
-        locations: '{count} lokationer'
-        reminders: '{numMissing, plural, =1 {en deltager} other {# deltagere}} har ikke
-          modtaget påmindelser'
-        signups: Der er verserende tilmeldinger
-    all:
-      cardCTA: Gå til projekt
-      create: Opret nyt projekt
-      filter:
-        calls: Ringeopgaver
-        filter: Filtrer resultater
-        standalones: Selvstændig begivenhed
-        surveys: Spørgeskemaer
-      indefinite: Ubestemt
-      unsorted: Usortede projekter
-      upcoming: '{numEvents, number} kommende begivenheder.'
-    allProjects:
-      noActivities: Hvis din organisation har aktiviteter, der ikke hører til et
-        projekt, bliver de vist her.
-      viewArchive: Vis arkiv
-    assigneeActions: Handlinger for ansvarlige
-    calendarView: Se alle i kalenderen
-    events: Begivenheder
-    feedback:
-      copy: Indsamling af feedback (under rundringninger eller enkeltstående) kan
-        hjælpe jer med at arbejde mere effektivt
-      create: Opret spørgeskema
-      heading: Feedback og spørgeskemaer (ingen konfigureret)
-    form:
-      createCallAssignment:
-        newCallAssignment: Mine ringeopgaver
-      createProject:
-        create: Opret projekt
-        error: Der er opstået en fejl under oprettelsen af projektet
-        newProject: Mit projekt
-      createSurvey:
-        newSurvey: Mit spørgeskema
-      createTask:
-        title: Opret opgave
-      deleteProject:
-        cancel: Afbryd
-        error: Der er opstået en fejl under sletningen af projektet
-        submitButton: Bekræft sletning
-        title: Slet projekt
-        warning: Er du sikker på, at du vil slette dette projekt? Denne handling er
-          permanent.
-      description: Beskrivelse
-      edit: Rediger projekt
-      editProjectTitle:
-        error: Fejl under opdateringen af projektetnavn
-        success: Projektnavn opdateret
-      manager:
-        label: Projektadministrator
-      name: Navn
-      requestError: Der er opstået en fejl. Prøv venligst igen
-      required: Påkrævet
-      status:
-        draft: Udkast
-        heading: Status
-        published: Offentliggjort
-      visibility:
-        heading: Synlighed
-        private: Privat
-        public: Offentlig
-    indefinite: Ubestemt tidslinje
-    layout:
-      activities: Aktiviteter
-      allProjects: Alle projekter & aktiviteter
-      archive: Arkiv
-      calendar: Kalender
-      insights: Indsigter
-      overview: Overblik
-    linkGroup:
-      createActivity: Opret aktivitet
-      createCallAssignment: Opret ringeopgave
-      createEvent: Opret begivenhed
-      createSurvey: Opret spørgeskema
-      createTask: Opret opgave
-      public: Offentlig Side
-      settings: Rediger indstillinger
-    mobilization:
-      copy: At organisere en telefonbank for at mobilisere din organisation vil øge
-        deltagelsen mangedobbelt
-      create: Opret ringeopgave
-      heading: Mobilisering og kontakt (ikke konfigureret)
-    noManager: Ingen Projektadminstrator
-    singleProject:
-      filterActivities: Skriv for at filtrere
-      noActivities: Der er ingen aktiviteter i dette projekt endnu.
-      noSearchResults: Din filtrering gav ingen resultater.
-      showPublicPage: Vis offentlig tilmeldingsside
-      viewArchive: Vis arkiv
-    taskLayout:
-      tabs:
-        assignees: Ansvarlige
-        insights: Indsigter
-        summary: Resumé
-    tasks: Opgaver
+      defineButton:
+        text: Definer målgruppen
+      editButton:
+        text: Rediger målgruppen
+      subtitle:
+        text: Brug smart søgning for at definere målgruppen til denne opgave
+      title:
+        text: Målpersoner
   events:
     addPerson:
-      addButton: Tilføj en person
-      addPlaceholder: Skriv her for at tilføje deltagere
+      addButton:
+        text: Tilføj en person
+      addPlaceholder:
+        text: Skriv her for at tilføje deltagere
       status:
-        booked: Allerede booket
-        signedUp: Tilmeldt
+        booked:
+          text: Allerede booket
+        signedUp:
+          text: Tilmeldt
     common:
-      allDay: Hele dagen
-      noActivity: Ukategoriseret
-      noLocation: Ingen fysisk lokation
-      noTitle: Unavngiven begivenhed
+      allDay:
+        text: Hele dagen
+      noActivity:
+        text: Ukategoriseret
+      noLocation:
+        text: Ingen fysisk lokation
+      noTitle:
+        text: Unavngiven begivenhed
     eventActionButtons:
-      cancel: Afbryd
-      delete: Slet
-      duplicate: Dupliker
-      publish: Offentliggør
-      restore: Gendan
-      unpublish: Tilbagetræk offentliggørelse
-      warning: '"{eventTitle}" slettes.'
-      warningCancel: '"{eventTitle}" aflyses.'
-      warningRestore: '"{eventTitle}" gendannes.'
+      cancel:
+        text: Afbryd
+      delete:
+        text: Slet
+      duplicate:
+        text: Dupliker
+      publish:
+        text: Offentliggør
+      restore:
+        text: Gendan
+      unpublish:
+        text: Tilbagetræk offentliggørelse
+      warning:
+        text: '"{eventTitle}" slettes.'
+      warningCancel:
+        text: '"{eventTitle}" aflyses.'
+      warningRestore:
+        text: '"{eventTitle}" gendannes.'
     eventContactCard:
-      header: Kontakt
-      noContact: Ingen Kontakt Tildelt!
-      removeButton: Fjern
-      selectPlaceholder: Vælg en kontaktperson
-      warningText: '{name} er ikke længere kontaktperson, men forbliver tilmeldt til
-        begivenheden'
+      header:
+        text: Kontakt
+      noContact:
+        text: Ingen Kontakt Tildelt!
+      removeButton:
+        text: Fjern
+      selectPlaceholder:
+        text: Vælg en kontaktperson
+      warningText:
+        text: '{name} er ikke længere kontaktperson, men forbliver tilmeldt til
+          begivenheden'
     eventOverviewCard:
-      buttonEndDate: + Slutdato
-      createLocation: Opret ny lokation
-      description: Beskrivelse
-      editButton: Rediger begivenhedsinformation
-      endDate: Afslut
-      endTime: Sluttidspunkt
-      location: Lokation
-      noLocation: Ingen fysisk lokation
-      startDate: Start
-      startTime: Starttidspunkt
-      url: Link
+      buttonEndDate:
+        text: + Slutdato
+      createLocation:
+        text: Opret ny lokation
+      description:
+        text: Beskrivelse
+      editButton:
+        text: Rediger begivenhedsinformation
+      endDate:
+        text: Afslut
+      endTime:
+        text: Sluttidspunkt
+      location:
+        text: Lokation
+      noLocation:
+        text: Ingen fysisk lokation
+      startDate:
+        text: Start
+      startTime:
+        text: Starttidspunkt
+      url:
+        text: Link
     eventParticipantsCard:
-      confirmed: Bekræftet fremmøde
-      contact: Kontakt
-      header: Deltagere
-      noContact: Ingen tildelt
-      participantList: Vis deltagere
-      pending: Verserende tilmeldinger
-      reqParticipantsHelperText: Det som minimum nødvendige antal deltagere
-      reqParticipantsLabel: Nødvendige deltagere
+      confirmed:
+        text: Bekræftet fremmøde
+      contact:
+        text: Kontakt
+      header:
+        text: Deltagere
+      noContact:
+        text: Ingen tildelt
+      participantList:
+        text: Vis deltagere
+      pending:
+        text: Verserende tilmeldinger
+      reqParticipantsHelperText:
+        text: Det som minimum nødvendige antal deltagere
+      reqParticipantsLabel:
+        text: Nødvendige deltagere
     eventParticipantsList:
-      attendance: Fremmøde
-      bookedParticipants: Bookede deltagere
-      buttonAttended: Deltog
-      buttonBook: Booke
-      buttonCancel: Aflys
-      buttonCancelled: Aflyst
-      buttonNoshow: No-show
-      cancelledParticipants: Aflyste deltagere
-      columnEmail: Email
-      columnName: Navn
-      columnNotified: Påmindet
-      columnPhone: Telefon
-      contactTooltip: Kontaktperson
-      descriptionBooked: Dette er personer som du har booket og satser på kommer. Hvis
-        de ønsker at annulere skal de kontakte dig, så kan du annulere for dem
-        manuelt
-      descriptionCancelled: Disse personer har annuleret deres deltagelse. De står
-        her, så du ikke forsøger at booke dem igen
-      descriptionSignups: Disse personer har tilmeldt sig gennem aktivistportalen. De
-        kan annulere deres deltagelse
-      dropDownAttended: Bekræftet fremmøde
-      dropDownNoshow: Mødte ikke op
-      participantTooltip: Gør til kontaktperson
-      signUps: Tilmeldte
+      attendance:
+        text: Fremmøde
+      bookedParticipants:
+        text: Bookede deltagere
+      buttonAttended:
+        text: Deltog
+      buttonBook:
+        text: Booke
+      buttonCancel:
+        text: Aflys
+      buttonCancelled:
+        text: Aflyst
+      buttonNoshow:
+        text: No-show
+      cancelledParticipants:
+        text: Aflyste deltagere
+      columnEmail:
+        text: Email
+      columnName:
+        text: Navn
+      columnNotified:
+        text: Påmindet
+      columnPhone:
+        text: Telefon
+      contactTooltip:
+        text: Kontaktperson
+      descriptionBooked:
+        text: Dette er personer som du har booket og satser på kommer. Hvis de ønsker at
+          annulere skal de kontakte dig, så kan du annulere for dem manuelt
+      descriptionCancelled:
+        text: Disse personer har annuleret deres deltagelse. De står her, så du ikke
+          forsøger at booke dem igen
+      descriptionSignups:
+        text: Disse personer har tilmeldt sig gennem aktivistportalen. De kan annulere
+          deres deltagelse
+      dropDownAttended:
+        text: Bekræftet fremmøde
+      dropDownNoshow:
+        text: Mødte ikke op
+      participantTooltip:
+        text: Gør til kontaktperson
+      signUps:
+        text: Tilmeldte
     eventPopper:
-      backToEvents: Tilbage til begivenhedslisten
-      backToLocations: Tilbage til lokationer
-      backToShifts: Tilbage til vagtplanen
-      booked: Booket
-      cancel: Annuller
-      cancelWarning: Hvis du gør, så husk at informere alle deltagere og tilmeldte, at
-        begivenheden er blevet aflyst!
-      confirmCancel: Er du sikker på, du vil aflyse denne begivenhed?
-      confirmDelete: Er du sikker på, du vil slette denne begivenhed?
-      contactPerson: Kontaktperson
-      dateAndTime: Dato & Tidspunkt
-      delete: Slet
-      deleteWarning: Når først begivenheden er blevet slettet, vil det ikke længere
-        være muligt at tilgå den.
-      description: Beskrivelse
-      duplicate: Dupliker
-      eventPageLink: Gå til begivenhedssiden
-      events: Begivenheder
-      location: Lokation
-      locations: Lokationer
-      multiEvent: Flere begivenheder
-      multiLocation: Multi-lokationsbegivenhed
-      multiShift: Begivenhed med flere lokationer
-      noContact: Ingen kontaktperson er blevet tildelt
-      notified: Informeret
-      pendingSignups: Der er verserende tilmeldinger
-      publish: Offentliggør
-      reminded: Påmindet
-      shifts: Vagter
-      signups: Tilmeldte
-      unsentReminders: '{numMissing, plural, =1 {en deltager} other {# deltagere}} har
-        ikke modtaget påmindelser endnu'
+      backToEvents:
+        text: Tilbage til begivenhedslisten
+      backToLocations:
+        text: Tilbage til lokationer
+      backToShifts:
+        text: Tilbage til vagtplanen
+      booked:
+        text: Booket
+      cancel:
+        text: Annuller
+      cancelWarning:
+        text: Hvis du gør, så husk at informere alle deltagere og tilmeldte, at
+          begivenheden er blevet aflyst!
+      confirmCancel:
+        text: Er du sikker på, du vil aflyse denne begivenhed?
+      confirmDelete:
+        text: Er du sikker på, du vil slette denne begivenhed?
+      contactPerson:
+        text: Kontaktperson
+      dateAndTime:
+        text: Dato & Tidspunkt
+      delete:
+        text: Slet
+      deleteWarning:
+        text: Når først begivenheden er blevet slettet, vil det ikke længere være muligt
+          at tilgå den.
+      description:
+        text: Beskrivelse
+      duplicate:
+        text: Dupliker
+      eventPageLink:
+        text: Gå til begivenhedssiden
+      events:
+        text: Begivenheder
+      location:
+        text: Lokation
+      locations:
+        text: Lokationer
+      multiEvent:
+        text: Flere begivenheder
+      multiLocation:
+        text: Multi-lokationsbegivenhed
+      multiShift:
+        text: Begivenhed med flere lokationer
+      noContact:
+        text: Ingen kontaktperson er blevet tildelt
+      notified:
+        text: Informeret
+      pendingSignups:
+        text: Der er verserende tilmeldinger
+      publish:
+        text: Offentliggør
+      reminded:
+        text: Påmindet
+      shifts:
+        text: Vagter
+      signups:
+        text: Tilmeldte
+      unsentReminders:
+        text: '{numMissing, plural, =1 {en deltager} other {# deltagere}} har ikke
+          modtaget påmindelser endnu'
     eventRelatedCard:
-      header: Relaterede begivenheder
+      header:
+        text: Relaterede begivenheder
     eventStatus:
-      cancelled: Aflyst
-      draft: Udkast
-      ended: Sluttet
-      open: Åben
-      scheduled: Planlagt
-      unknown: Ukendt
+      cancelled:
+        text: Aflyst
+      draft:
+        text: Udkast
+      ended:
+        text: Sluttet
+      open:
+        text: Åben
+      scheduled:
+        text: Planlagt
+      unknown:
+        text: Ukendt
     list:
-      events: Begivenheder
-      noEvents: Ingen Begivenheder...
+      events:
+        text: Begivenheder
+      noEvents:
+        text: Ingen Begivenheder...
     locationModal:
-      cancel: Afbryd
-      createLocation: Opret ny loaktion
-      description: Beskrivelse
-      infoText: For at bevæge kortet klik og brug en finger, for at zoome klik og brug
-        to fingre eller scroll-funktionen. For at oprette en ny lokation kan du
-        klikke på et tomt sted på kortet.
-      move: Flyt
-      moveInstructions: Træk markøren for at vælge en lokation.
-      noDescription: Ingen beskrivelse
-      noRelatedEvents: Der sker ingen andre begivenheder omkring dette tidspunkt
-      relatedEvents: Der er andre begivenheder omkring dette tidspunkt
-      save: Gem
-      saveLocation: Gem lokation
-      searchBox: Fin lokation
-      title: Lokationens navn
-      useLocation: Anvend lokation
+      cancel:
+        text: Afbryd
+      createLocation:
+        text: Opret ny loaktion
+      description:
+        text: Beskrivelse
+      infoText:
+        text: For at bevæge kortet klik og brug en finger, for at zoome klik og brug to
+          fingre eller scroll-funktionen. For at oprette en ny lokation kan du
+          klikke på et tomt sted på kortet.
+      move:
+        text: Flyt
+      moveInstructions:
+        text: Træk markøren for at vælge en lokation.
+      noDescription:
+        text: Ingen beskrivelse
+      noRelatedEvents:
+        text: Der sker ingen andre begivenheder omkring dette tidspunkt
+      relatedEvents:
+        text: Der er andre begivenheder omkring dette tidspunkt
+      save:
+        text: Gem
+      saveLocation:
+        text: Gem lokation
+      searchBox:
+        text: Fin lokation
+      title:
+        text: Lokationens navn
+      useLocation:
+        text: Anvend lokation
     participantSummaryCard:
-      bookButton: Book alle
-      booked: Notifikationer
-      cancelled: Aflyste
-      confirmed: Bekræftet Fremmøde
-      header: Deltagere
-      noshow: ({noshows, plural, =1 {1 no-show} other {# no-shows}})
-      pending: Verserende tilmeldinger
-      recordButton: Tag fremmøde
-      remindButton: Påmind alle
-      remindButtondisabledTooltip: Du skal angive en kontaktperson, før du kan sende påmindelser
-      reqParticipantsHelperText: Minimum antal deltagere nødvendige
-      reqParticipantsLabel: Nødvendige deltagere
-    search: Søg
+      bookButton:
+        text: Book alle
+      booked:
+        text: Notifikationer
+      cancelled:
+        text: Aflyste
+      confirmed:
+        text: Bekræftet Fremmøde
+      header:
+        text: Deltagere
+      noshow:
+        text: ({noshows, plural, =1 {1 no-show} other {# no-shows}})
+      pending:
+        text: Verserende tilmeldinger
+      recordButton:
+        text: Tag fremmøde
+      remindButton:
+        text: Påmind alle
+      remindButtondisabledTooltip:
+        text: Du skal angive en kontaktperson, før du kan sende påmindelser
+      reqParticipantsHelperText:
+        text: Minimum antal deltagere nødvendige
+      reqParticipantsLabel:
+        text: Nødvendige deltagere
+    search:
+      text: Søg
     state:
-      cancelled: Aflyst
-      draft: Udkast
-      ended: Sluttet
-      open: Offentliggjort
-      scheduled: Planlagt
+      cancelled:
+        text: Aflyst
+      draft:
+        text: Udkast
+      ended:
+        text: Sluttet
+      open:
+        text: Offentliggjort
+      scheduled:
+        text: Planlagt
     stats:
-      participants: '{participants, plural, one {1 deltager} other {# deltagere}}'
+      participants:
+        text: '{participants, plural, one {1 deltager} other {# deltagere}}'
     tabs:
-      overview: Overblik
-      participants: Deltagere
-    tooltipContent: På unavngivne begivenheder vil begivenhedstypen vises som titel
+      overview:
+        text: Overblik
+      participants:
+        text: Deltagere
+    tooltipContent:
+      text: På unavngivne begivenheder vil begivenhedstypen vises som titel
     type:
-      createType: Opret "{type}"
-      tooltip: Klik for at ændre begivenhedstypen
-      uncategorized: Ikke kategoriseret
+      createType:
+        text: Opret "{type}"
+      tooltip:
+        text: Klik for at ændre begivenhedstypen
+      uncategorized:
+        text: Ikke kategoriseret
   journeys:
     instance:
-      addAssigneeButton: Tilføj ansvarlig
-      addSubjectButton: Tilføj person
-      addSubjectLabel: Tilføj person
-      assignPersonLabel: Tildel person
+      addAssigneeButton:
+        text: Tilføj ansvarlig
+      addSubjectButton:
+        text: Tilføj person
+      addSubjectLabel:
+        text: Tilføj person
+      assignPersonLabel:
+        text: Tildel person
       closeButton:
-        error: Der er opstået en fejl ved lukningen af {singularLabel}
-        label: Luk {singularLabel}
-      collapseButton: Skjul
-      editButton: Rediger
+        error:
+          text: Der er opstået en fejl ved lukningen af {singularLabel}
+        label:
+          text: Luk {singularLabel}
+      collapseButton:
+        text: Skjul
+      editButton:
+        text: Rediger
     instances:
       export:
         headers:
-          unsortedTags: Ikke-grupperede etiketter
+          unsortedTags:
+            text: Ikke-grupperede etiketter
   organizations:
     page:
-      title: 'Vælg organisation:'
+      title:
+        text: 'Vælg organisation:'
   profile:
     delete:
-      button: Fjern person
-      title: Slet profil
-      warning: Dette kan ikke gøres om!
+      button:
+        text: Fjern person
+      title:
+        text: Slet profil
+      warning:
+        text: Dette kan ikke gøres om!
     details:
-      title: Detaljer
-    editButton: Rediger {title}
-    editButtonClose: Afbryd redigeringen af {title}
-    editButtonLabel: Rediger Detaljer
+      title:
+        text: Detaljer
+    editButton:
+      text: Rediger {title}
+    editButtonClose:
+      text: Afbryd redigeringen af {title}
+    editButtonLabel:
+      text: Rediger Detaljer
     genders:
-      f: Kvinde
-      m: Mand
-      o: Andet
-      unknown: Ukendt
+      f:
+        text: Kvinde
+      m:
+        text: Mand
+      o:
+        text: Andet
+      unknown:
+        text: Ukendt
     organizations:
-      add: Tilføj ny underorganisation
-      addError: Denne organisation kunne ikke blive tilføjet
-      removeError: Denne organisation kunne ikke blive fjernet
-      title: Organisationer
+      add:
+        text: Tilføj ny underorganisation
+      addError:
+        text: Denne organisation kunne ikke blive tilføjet
+      removeError:
+        text: Denne organisation kunne ikke blive fjernet
+      title:
+        text: Organisationer
     tabs:
-      manage: Håndtér
-      profile: Profil
-      timeline: Tidslinje
+      manage:
+        text: Håndtér
+      profile:
+        text: Profil
+      timeline:
+        text: Tidslinje
+  projects:
+    activitiesOverview:
+      button:
+        state: PUBLISHED
+        text: Søg i alle begivenheder
+      empty:
+        state: PUBLISHED
+        text: Intet denne dag
+      endsTomorrow:
+        state: PUBLISHED
+        text: slutter i morgen
+      extraActivities:
+        state: PUBLISHED
+        text: + {numExtra} flere
+      goToActivities:
+        state: PUBLISHED
+        text: Se alle opkommende aktiviteter
+      noActivities:
+        state: PUBLISHED
+        text: Der er ingen opkommende aktiviter i denne uge
+      nothingTomorrow:
+        state: PUBLISHED
+        text: Intet planlagt i morgen
+      startsTomorrow:
+        state: PUBLISHED
+        text: starter i morgen
+      subtitles:
+        endsLater:
+          state: PUBLISHED
+          text: Slutter {relative}
+        endsToday:
+          state: PUBLISHED
+          text: Slutter i dag
+        startsLater:
+          state: PUBLISHED
+          text: Starter {relative}
+        startsToday:
+          state: PUBLISHED
+          text: Starter i dag
+      thisWeekCard:
+        state: PUBLISHED
+        text: Også i denne uge
+      title:
+        state: PUBLISHED
+        text: Kommende aktiviteter
+      todayCard:
+        state: PUBLISHED
+        text: I dag
+      tomorrowCard:
+        state: PUBLISHED
+        text: I morgen
+    activityList:
+      eventItem:
+        contact:
+          state: PUBLISHED
+          text: Ingen kontaktperson er blevet tildelt
+        locations:
+          state: PUBLISHED
+          text: '{count} lokationer'
+        reminders:
+          state: PUBLISHED
+          text: '{numMissing, plural, =1 {en deltager} other {# deltagere}} har ikke
+            modtaget påmindelser'
+        signups:
+          state: PUBLISHED
+          text: Der er verserende tilmeldinger
+    all:
+      cardCTA:
+        state: PUBLISHED
+        text: Gå til projekt
+      create:
+        state: PUBLISHED
+        text: Opret nyt projekt
+      filter:
+        calls:
+          state: PUBLISHED
+          text: Ringeopgaver
+        filter:
+          state: PUBLISHED
+          text: Filtrer resultater
+        standalones:
+          state: PUBLISHED
+          text: Selvstændig begivenhed
+        surveys:
+          state: PUBLISHED
+          text: Spørgeskemaer
+      indefinite:
+        state: PUBLISHED
+        text: Ubestemt
+      unsorted:
+        state: PUBLISHED
+        text: Usortede projekter
+      upcoming:
+        state: PUBLISHED
+        text: '{numEvents, number} kommende begivenheder.'
+    allProjects:
+      noActivities:
+        state: PUBLISHED
+        text: Hvis din organisation har aktiviteter, der ikke hører til et projekt,
+          bliver de vist her.
+      viewArchive:
+        state: PUBLISHED
+        text: Vis arkiv
+    assigneeActions:
+      state: PUBLISHED
+      text: Handlinger for ansvarlige
+    calendarView:
+      state: PUBLISHED
+      text: Se alle i kalenderen
+    events:
+      state: PUBLISHED
+      text: Begivenheder
+    feedback:
+      copy:
+        state: PUBLISHED
+        text: Indsamling af feedback (under rundringninger eller enkeltstående) kan
+          hjælpe jer med at arbejde mere effektivt
+      create:
+        state: PUBLISHED
+        text: Opret spørgeskema
+      heading:
+        state: PUBLISHED
+        text: Feedback og spørgeskemaer (ingen konfigureret)
+    form:
+      createCallAssignment:
+        newCallAssignment:
+          state: PUBLISHED
+          text: Mine ringeopgaver
+      createProject:
+        create:
+          state: PUBLISHED
+          text: Opret projekt
+        error:
+          state: PUBLISHED
+          text: Der er opstået en fejl under oprettelsen af projektet
+        newProject:
+          state: PUBLISHED
+          text: Mit projekt
+      createSurvey:
+        newSurvey:
+          state: PUBLISHED
+          text: Mit spørgeskema
+      createTask:
+        title:
+          state: PUBLISHED
+          text: Opret opgave
+      deleteProject:
+        cancel:
+          state: PUBLISHED
+          text: Afbryd
+        error:
+          state: PUBLISHED
+          text: Der er opstået en fejl under sletningen af projektet
+        submitButton:
+          state: PUBLISHED
+          text: Bekræft sletning
+        title:
+          state: PUBLISHED
+          text: Slet projekt
+        warning:
+          state: PUBLISHED
+          text: Er du sikker på, at du vil slette dette projekt? Denne handling er
+            permanent.
+      description:
+        state: PUBLISHED
+        text: Beskrivelse
+      edit:
+        state: PUBLISHED
+        text: Rediger projekt
+      editProjectTitle:
+        error:
+          state: PUBLISHED
+          text: Fejl under opdateringen af projektetnavn
+        success:
+          state: PUBLISHED
+          text: Projektnavn opdateret
+      manager:
+        label:
+          state: PUBLISHED
+          text: Projektadministrator
+      name:
+        state: PUBLISHED
+        text: Navn
+      requestError:
+        state: PUBLISHED
+        text: Der er opstået en fejl. Prøv venligst igen
+      required:
+        state: PUBLISHED
+        text: Påkrævet
+      status:
+        draft:
+          state: PUBLISHED
+          text: Udkast
+        heading:
+          state: PUBLISHED
+          text: Status
+        published:
+          state: PUBLISHED
+          text: Offentliggjort
+      visibility:
+        heading:
+          state: PUBLISHED
+          text: Synlighed
+        private:
+          state: PUBLISHED
+          text: Privat
+        public:
+          state: PUBLISHED
+          text: Offentlig
+    indefinite:
+      state: PUBLISHED
+      text: Ubestemt tidslinje
+    layout:
+      activities:
+        state: PUBLISHED
+        text: Aktiviteter
+      allProjects:
+        state: PUBLISHED
+        text: Alle projekter & aktiviteter
+      archive:
+        state: PUBLISHED
+        text: Arkiv
+      calendar:
+        state: PUBLISHED
+        text: Kalender
+      insights:
+        state: PUBLISHED
+        text: Indsigter
+      overview:
+        state: PUBLISHED
+        text: Overblik
+    linkGroup:
+      createActivity:
+        state: PUBLISHED
+        text: Opret aktivitet
+      createCallAssignment:
+        state: PUBLISHED
+        text: Opret ringeopgave
+      createEvent:
+        state: PUBLISHED
+        text: Opret begivenhed
+      createSurvey:
+        state: PUBLISHED
+        text: Opret spørgeskema
+      createTask:
+        state: PUBLISHED
+        text: Opret opgave
+      public:
+        state: PUBLISHED
+        text: Offentlig Side
+      settings:
+        state: PUBLISHED
+        text: Rediger indstillinger
+    mobilization:
+      copy:
+        state: PUBLISHED
+        text: At organisere en telefonbank for at mobilisere din organisation vil øge
+          deltagelsen mangedobbelt
+      create:
+        state: PUBLISHED
+        text: Opret ringeopgave
+      heading:
+        state: PUBLISHED
+        text: Mobilisering og kontakt (ikke konfigureret)
+    noManager:
+      state: PUBLISHED
+      text: Ingen Projektadminstrator
+    singleProject:
+      filterActivities:
+        state: PUBLISHED
+        text: Skriv for at filtrere
+      noActivities:
+        state: PUBLISHED
+        text: Der er ingen aktiviteter i dette projekt endnu.
+      noSearchResults:
+        state: PUBLISHED
+        text: Din filtrering gav ingen resultater.
+      showPublicPage:
+        state: PUBLISHED
+        text: Vis offentlig tilmeldingsside
+      viewArchive:
+        state: PUBLISHED
+        text: Vis arkiv
+    taskLayout:
+      tabs:
+        assignees:
+          state: PUBLISHED
+          text: Ansvarlige
+        insights:
+          state: PUBLISHED
+          text: Indsigter
+        summary:
+          state: PUBLISHED
+          text: Resumé
+    tasks:
+      state: PUBLISHED
+      text: Opgaver
   search:
-    error: Der er sket en fejl
-    label: Søg
-    noResults: Ingen resultater
-    placeholder: Skriv for at søge
+    error:
+      text: Der er sket en fejl
+    label:
+      text: Søg
+    noResults:
+      text: Ingen resultater
+    placeholder:
+      text: Skriv for at søge
     results:
-      callassignment: Ringeopgave
-      people: Personer
-      person: Person
-      survey: Spørgeskema
-      task: Opgave
-      view: Lister
+      callassignment:
+        text: Ringeopgave
+      people:
+        text: Personer
+      person:
+        text: Person
+      survey:
+        text: Spørgeskema
+      task:
+        text: Opgave
+      view:
+        text: Lister
   smartSearch:
     buttonLabels:
-      add: Gem valgte
-      addNewFilter: Tilføj / fjern personer
-      cancel: Afbryd
-      close: Luk
-      goBack: Gå tilbage til søgningen
-      save: Gem
+      add:
+        text: Gem valgte
+      addNewFilter:
+        text: Tilføj / fjern personer
+      cancel:
+        text: Afbryd
+      close:
+        text: Luk
+      goBack:
+        text: Gå tilbage til søgningen
+      save:
+        text: Gem
     filters:
       all:
-        inputString: Start med {startWithSelect}.
+        inputString:
+          text: Start med {startWithSelect}.
         startWithSelect:
-          'false': en tom liste
-          'true': en liste med alle personer i organisationen
+          'false':
+            text: en tom liste
+          'true':
+            text: en liste med alle personer i organisationen
       callBlocked:
-        inputString: '{addRemoveSelect} personer som er blokeret fra at ringe af en
-          hvilken som helst grund'
+        inputString:
+          text: '{addRemoveSelect} personer som er blokeret fra at ringe af en hvilken som
+            helst grund'
       callHistory:
         assignmentSelect:
-          any: hvilken som helst opgave
-          assignment: opgave "{assignmentTitle}"
-          none: Denne organisation har ingen ringeopgaver endnu
+          any:
+            text: hvilken som helst opgave
+          assignment:
+            text: opgave "{assignmentTitle}"
+          none:
+            text: Denne organisation har ingen ringeopgaver endnu
         callSelect:
-          called: er blevet ringet op
-          reached: er nået med succes
+          called:
+            text: er blevet ringet op
+          reached:
+            text: er nået med succes
         examples:
-          one: Tilføj personer som vi har nået mindst to gange nogensinde i hvilken som
-            helst opgave til.
-          two: Fjern personer, der er blevet ringet op mindst 1 gang i opgaven 'Aktiver
-            gamle medlemmer' i løbet af de sidste 30 dage.
-        minTimes: '{minTimes} {minTimes, plural, one {gang} other {gange}}'
-      projectParticipation:
-        activitySelect:
-          activity: type "{activity}"
-          any: enhver type
-        bookedSelect:
-          booked: blevet booket
-          signed_up: tilmeldt
-        projectSelect:
-          any: hvilket som helst projekt
-          project: projekt "{project}"
-        examples:
-          one: Tilføj personer, der har tilmeldt sig begivenheder på lokationen
-            'Dorfplatz' uanset type, projekt eller tidspunkt
-          two: Fjern personer, der til dags dato ikke er blevet booket til begivenheder af
-            typen 'Sæt plakater op' i et hvilket som helst projekt, på en
-            hvilken som helst lokation.
-        haveSelect:
-          in: har
-          notin: har ikke
-        inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} til
-          begivenheden i {projectSelect} af {activitySelect} på
-          {locationSelect} {timeFrame}'
-        locationSelect:
-          any: enhver lokation
-          location: lokation "{location}"
+          one:
+            text: Tilføj personer som vi har nået mindst to gange nogensinde i hvilken som
+              helst opgave til.
+          two:
+            text: Fjern personer, der er blevet ringet op mindst 1 gang i opgaven 'Aktiver
+              gamle medlemmer' i løbet af de sidste 30 dage.
+        minTimes:
+          text: '{minTimes} {minTimes, plural, one {gang} other {gange}}'
       mostActive:
         examples:
-          one: Tilføj de 100 mest aktive medlemmer af organisationen før dags dato.
-          two: Fjern de fem mest aktive medlemmer af organisationen nogensinde.
-        inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople} i
-          organisationen {timeFrame}.'
-        numPeople: '{numPeople, plural, one {person} other {personer}}'
-        numPeopleSelect: '{numPeopleSelect}'
+          one:
+            text: Tilføj de 100 mest aktive medlemmer af organisationen før dags dato.
+          two:
+            text: Fjern de fem mest aktive medlemmer af organisationen nogensinde.
+        inputString:
+          text: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople} i
+            organisationen {timeFrame}.'
+        numPeople:
+          text: '{numPeople, plural, one {person} other {personer}}'
+        numPeopleSelect:
+          text: '{numPeopleSelect}'
       personData:
-        ellipsis: ...
+        ellipsis:
+          text: ...
         examples:
-          one: Tilføj alle personer, hvis fornavn er 'Clara' og hvis efternavn er
-            'Zetkin'.
-          two: Fjern enhver person, hvis by er København.
-        fieldMatches: '{field} matcher {value}'
+          one:
+            text: Tilføj alle personer, hvis fornavn er 'Clara' og hvis efternavn er
+              'Zetkin'.
+          two:
+            text: Fjern enhver person, hvis by er København.
+        fieldMatches:
+          text: '{field} matcher {value}'
         fieldSelect:
-          alt_phone: alternativt telefonnummer
-          city: by
-          co_address: CO/adresse
-          email: email
-          first_name: fornavn
-          gender: køn
-          last_name: efternavn
-          phone: telefonnummer
-          remove: Fjern dette kriterie
-          street_address: gadenavn
-          zip_code: postnummer
-        fieldTuple: '{first} og {second}'
-        inputString: '{addRemoveSelect} alle der {criteria}.'
+          alt_phone:
+            text: alternativt telefonnummer
+          city:
+            text: by
+          co_address:
+            text: CO/adresse
+          email:
+            text: email
+          first_name:
+            text: fornavn
+          gender:
+            text: køn
+          last_name:
+            text: efternavn
+          phone:
+            text: telefonnummer
+          remove:
+            text: Fjern dette kriterie
+          street_address:
+            text: gadenavn
+          zip_code:
+            text: postnummer
+        fieldTuple:
+          text: '{first} og {second}'
+        inputString:
+          text: '{addRemoveSelect} alle der {criteria}.'
       personField:
         edit:
-          date: '{fieldSelect} er {timeFrame}'
-          none: Denne organisation har ingen brugerdefinerede felter endnu.
-          text: '{fieldSelect} matcher "{freeTextInput}"'
-          url: '{fieldSelect} matcher "{freeTextInput}"'
+          date:
+            text: '{fieldSelect} er {timeFrame}'
+          none:
+            text: Denne organisation har ingen brugerdefinerede felter endnu.
+          text:
+            text: '{fieldSelect} matcher "{freeTextInput}"'
+          url:
+            text: '{fieldSelect} matcher "{freeTextInput}"'
         fieldSelect:
-          any: brugerdefinerede felter
-        inputString: '{addRemoveSelect} alle personer der {field}.'
+          any:
+            text: brugerdefinerede felter
+        inputString:
+          text: '{addRemoveSelect} alle personer der {field}.'
         preview:
-          date: '{fieldName} er {timeFrame}'
-          text: '{fieldName} matcher "{searchTerm}"'
-          url: '{fieldName} matcher "{searchTerm}"'
+          date:
+            text: '{fieldName} er {timeFrame}'
+          text:
+            text: '{fieldName} matcher "{searchTerm}"'
+          url:
+            text: '{fieldName} matcher "{searchTerm}"'
       personTags:
         condition:
           conditionSelect:
-            all: alle
-            any: hvilke som helst
-            none: ingen
+            all:
+              text: alle
+            any:
+              text: hvilke som helst
+            none:
+              text: ingen
           edit:
-            all: '{conditionSelect}'
-            any: '{conditionSelect}'
-            none: '{conditionSelect}'
+            all:
+              text: '{conditionSelect}'
+            any:
+              text: '{conditionSelect}'
+            none:
+              text: '{conditionSelect}'
           preview:
-            all: alle
-            any: hvilke som helst
-            none: ingen
+            all:
+              text: alle
+            any:
+              text: hvilke som helst
+            none:
+              text: ingen
         examples:
-          one: "Tilføj personer med mindst en af de følgende etiketter: 'medlem', 'aktivist'"
-          two: "Fjern mennesker med de følgende etiketter: 'Bestyrelsesmedlem'"
-        inputString: '{addRemoveSelect} personer med {condition} af de følgende
-          etiketter: {tags}'
+          one:
+            text: "Tilføj personer med mindst en af de følgende etiketter: 'medlem', 'aktivist'"
+          two:
+            text: "Fjern mennesker med de følgende etiketter: 'Bestyrelsesmedlem'"
+        inputString:
+          text: '{addRemoveSelect} personer med {condition} af de følgende etiketter:
+            {tags}'
       personView:
         examples:
-          one: Tilføj personer, der er på listen "Aktive Medlemmer 2022".
-          two: Fjern personer, der ikke er på listen "Aktive Medlemmer 2022".
+          one:
+            text: Tilføj personer, der er på listen "Aktive Medlemmer 2022".
+          two:
+            text: Fjern personer, der ikke er på listen "Aktive Medlemmer 2022".
         inSelect:
-          in: i
-          notin: ikke i
-        inputString: '{addRemoveSelect} personer der er {inSelect} på listen {viewSelect}.'
+          in:
+            text: i
+          notin:
+            text: ikke i
+        inputString:
+          text: '{addRemoveSelect} personer der er {inSelect} på listen {viewSelect}.'
         viewSelect:
-          none: Denne organisation har ingen lister endnu
+          none:
+            text: Denne organisation har ingen lister endnu
+      projectParticipation:
+        activitySelect:
+          activity:
+            state: PUBLISHED
+            text: type "{activity}"
+          any:
+            state: PUBLISHED
+            text: enhver type
+        bookedSelect:
+          booked:
+            state: PUBLISHED
+            text: blevet booket
+          signed_up:
+            state: PUBLISHED
+            text: tilmeldt
+        examples:
+          one:
+            state: PUBLISHED
+            text: Tilføj personer, der har tilmeldt sig begivenheder på lokationen
+              'Dorfplatz' uanset type, projekt eller tidspunkt
+          two:
+            state: PUBLISHED
+            text: Fjern personer, der til dags dato ikke er blevet booket til begivenheder
+              af typen 'Sæt plakater op' i et hvilket som helst projekt, på en
+              hvilken som helst lokation.
+        haveSelect:
+          in:
+            state: PUBLISHED
+            text: har
+          notin:
+            state: PUBLISHED
+            text: har ikke
+        inputString:
+          state: PUBLISHED
+          text: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} til
+            begivenheden i {projectSelect} af {activitySelect} på
+            {locationSelect} {timeFrame}'
+        locationSelect:
+          any:
+            state: PUBLISHED
+            text: enhver lokation
+          location:
+            state: PUBLISHED
+            text: lokation "{location}"
+        projectSelect:
+          any:
+            state: PUBLISHED
+            text: hvilket som helst projekt
+          project:
+            state: PUBLISHED
+            text: projekt "{project}"
       random:
         addLimitRemoveSelect:
-          add: tilføj
-          sub: fjern
+          add:
+            text: tilføj
+          sub:
+            text: fjern
         examples:
-          one: Tilføj 20 tilfældige personer fra organisationen.
-          two: Fjern tilfældige 15% af personerne fra organisationen.
-        inputString: '{addRemoveSelect} Tilfældige {quantity} fra organisationen.'
+          one:
+            text: Tilføj 20 tilfældige personer fra organisationen.
+          two:
+            text: Fjern tilfældige 15% af personerne fra organisationen.
+        inputString:
+          text: '{addRemoveSelect} Tilfældige {quantity} fra organisationen.'
       subQuery:
         examples:
-          one: Fjern personer, der matcher Smart Søgningen 'Personer, der bor i
-            Stockholm'.
-          two: Tilføj personer der matcher målgruppen til ringeopgaven 'Ringeopgave et'.
-        inputString: '{addRemoveSelect} personer der {matchSelect} {query}.'
+          one:
+            text: Fjern personer, der matcher Smart Søgningen 'Personer, der bor i
+              Stockholm'.
+          two:
+            text: Tilføj personer der matcher målgruppen til ringeopgaven 'Ringeopgave et'.
+        inputString:
+          text: '{addRemoveSelect} personer der {matchSelect} {query}.'
         matchSelect:
-          in: match
-          notin: match ikke
+          in:
+            text: match
+          notin:
+            text: match ikke
         query:
           edit:
-            callassignment_goal: '{querySelect} fra ringeopgaven "{titleSelect}"'
-            callassignment_target: '{querySelect} fra ringeopgaven "{titleSelect}"'
-            none: '{querySelect}'
-            standalone: '{querySelect} "{titleSelect}"'
+            callassignment_goal:
+              text: '{querySelect} fra ringeopgaven "{titleSelect}"'
+            callassignment_target:
+              text: '{querySelect} fra ringeopgaven "{titleSelect}"'
+            none:
+              text: '{querySelect}'
+            standalone:
+              text: '{querySelect} "{titleSelect}"'
           preview:
-            callassignment_goal: formålet ved gruppe-ringeopgaven "{queryTitle}"
-            callassignment_target: målgruppen til ringeopgaven "{queryTitle}"
-            none: '{queryTitle}'
-            standalone: Smart Søgningen "{queryTitle}"
+            callassignment_goal:
+              text: formålet ved gruppe-ringeopgaven "{queryTitle}"
+            callassignment_target:
+              text: målgruppen til ringeopgaven "{queryTitle}"
+            none:
+              text: '{queryTitle}'
+            standalone:
+              text: Smart Søgningen "{queryTitle}"
           selectLabel:
-            callassignment_goal: formålsgruppen
-            callassignment_target: målgruppen
-            none: en Smart Søgning
-            standalone: Smart Søgning
+            callassignment_goal:
+              text: formålsgruppen
+            callassignment_target:
+              text: målgruppen
+            none:
+              text: en Smart Søgning
+            standalone:
+              text: Smart Søgning
           selectOptions:
-            callassignment_goal: formålsgruppen for denne ringeopgave
-            callassignment_target: målgruppen for denne ringeopgave
-            none: Denne organisation har ingen ringeopgaver eller Smarte Søgninger endnu.
-            standalone: en enkeltstående Smart Søgning
+            callassignment_goal:
+              text: formålsgruppen for denne ringeopgave
+            callassignment_target:
+              text: målgruppen for denne ringeopgave
+            none:
+              text: Denne organisation har ingen ringeopgaver eller Smarte Søgninger endnu.
+            standalone:
+              text: en enkeltstående Smart Søgning
       surveyOption:
         conditionSelect:
-          all: alle
-          any: hvilke som helst
-          none: ingen
+          all:
+            text: alle
+          any:
+            text: hvilke som helst
+          none:
+            text: ingen
         examples:
-          one: "Fjern alle personer som har valgt en af følgende svarmuligheder i spørgeskemaet 'medlemsspørgeskema 2020' (question 'Question one'): 'Nogle gange', 'Aldrig'"
-          two: "Tilføj alle personer som har valgt en af følgende svarmuligheder i spørgeskemaet 'Medlemsspørgeskema' (question 'Question one'): 'Svarmulighed to'"
-        inputString: '{addRemoveSelect} personer som har valgt {conditionSelect} en af
-          de følgende svarmuligheder {surveySelect} ({questionSelect}):
-          {options}'
+          one:
+            text: "Fjern alle personer som har valgt en af følgende svarmuligheder i spørgeskemaet 'medlemsspørgeskema 2020' (question 'Question one'): 'Nogle gange', 'Aldrig'"
+          two:
+            text: "Tilføj alle personer som har valgt en af følgende svarmuligheder i spørgeskemaet 'Medlemsspørgeskema' (question 'Question one'): 'Svarmulighed to'"
+        inputString:
+          text: '{addRemoveSelect} personer som har valgt {conditionSelect} en af de
+            følgende svarmuligheder {surveySelect} ({questionSelect}):
+            {options}'
         questionSelect:
-          any: et spørgsmål
-          none: Der er ingen spørgsmål med svarmuligheder i dette spørgeskema
-          question: spørgsmål "{question}"
+          any:
+            text: et spørgsmål
+          none:
+            text: Der er ingen spørgsmål med svarmuligheder i dette spørgeskema
+          question:
+            text: spørgsmål "{question}"
         surveySelect:
-          any: et spørgeskema
-          none: Denne organisation har ingen spørgeskemaer endnu
-          survey: spørgeskema "{surveyTitle}"
+          any:
+            text: et spørgeskema
+          none:
+            text: Denne organisation har ingen spørgeskemaer endnu
+          survey:
+            text: spørgeskema "{surveyTitle}"
       surveyResponse:
         examples:
-          one: Personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
-            'Question one') indeholder 'organizer'
-          two: Personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
-            'Question one') matcher nøjagtigt 'organizer'.
-        inputString: '{addRemoveSelect} personer hvis svar på {surveySelect}
-          ({questionSelect}) {matchSelect} "{freeTextInput}"'
+          one:
+            text: Personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
+              'Question one') indeholder 'organizer'
+          two:
+            text: Personer hvis svar på spørgeskemaet 'medlemsspørgeskema' (question
+              'Question one') matcher nøjagtigt 'organizer'.
+        inputString:
+          text: '{addRemoveSelect} personer hvis svar på {surveySelect} ({questionSelect})
+            {matchSelect} "{freeTextInput}"'
         matchSelect:
-          eq: matcher nøjagtigt
-          in: indeholder
-          noteq: er ikke
-          notin: indeholder ikke
+          eq:
+            text: matcher nøjagtigt
+          in:
+            text: indeholder
+          noteq:
+            text: er ikke
+          notin:
+            text: indeholder ikke
         questionSelect:
-          any: hvilket som helst spørgsmål
-          none: Der er ingen fritekstspørgsmål i dette spørgeskema
-          question: spørgsmål "{question}"
+          any:
+            text: hvilket som helst spørgsmål
+          none:
+            text: Der er ingen fritekstspørgsmål i dette spørgeskema
+          question:
+            text: spørgsmål "{question}"
         surveySelect:
-          any: et spørgeskema
-          none: Denne organisation har ingen spørgeskemaer endnu
-          survey: spørgeskema "{surveyTitle}"
+          any:
+            text: et spørgeskema
+          none:
+            text: Denne organisation har ingen spørgeskemaer endnu
+          survey:
+            text: spørgeskema "{surveyTitle}"
       surveySubmission:
         examples:
-          one: Personer, der har afgivet svar på spørgeskemaet 'Medlemsspørgeskema 2020'
-            før i dag.
-          two: Personer som har besvaret spørgeskemaet 'Medlemsspørgeskema 2020' inden for
-            de sidste 30 dage.
-        inputString: '{addRemoveSelect} personer som har besvaret {surveySelect}
-          {timeFrame}.'
+          one:
+            text: Personer, der har afgivet svar på spørgeskemaet 'Medlemsspørgeskema 2020'
+              før i dag.
+          two:
+            text: Personer som har besvaret spørgeskemaet 'Medlemsspørgeskema 2020' inden
+              for de sidste 30 dage.
+        inputString:
+          text: '{addRemoveSelect} personer som har besvaret {surveySelect} {timeFrame}.'
         surveySelect:
-          any: et spørgeskema
-          none: Denne organisation har ingen spørgeskemaer endnu
-          survey: spørgeskema "{surveyTitle}"
+          any:
+            text: et spørgeskema
+          none:
+            text: Denne organisation har ingen spørgeskemaer endnu
+          survey:
+            text: spørgeskema "{surveyTitle}"
       task:
-        projectSelect:
-          any: et hvilket som helst projekt
-          project: projekt "{project}"
-          in: i
         examples:
-          one: Tilføj personer, der har fuldført opgaven "Fortæl dine venner" mindst én
-            gang på et hvilket som helst tidspunkt
-          two: Tilføj personer, der har ignoreret en opgave i et projekt mellem 2 og 5
-            gange før dags dato
-        inputString: '{addRemoveSelect} personer som har {taskStatusSelect}
-          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
+          one:
+            text: Tilføj personer, der har fuldført opgaven "Fortæl dine venner" mindst én
+              gang på et hvilket som helst tidspunkt
+          two:
+            text: Tilføj personer, der har ignoreret en opgave i et projekt mellem 2 og 5
+              gange før dags dato
+        inputString:
+          text: '{addRemoveSelect} personer som har {taskStatusSelect}
+            {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
+        projectSelect:
+          any:
+            state: PUBLISHED
+            text: et hvilket som helst projekt
+          in:
+            state: PUBLISHED
+            text: i
+          project:
+            state: PUBLISHED
+            text: projekt "{project}"
         taskSelect:
-          any: enhver opgave
-          task: opgave "{task}"
+          any:
+            text: enhver opgave
+          task:
+            text: opgave "{task}"
         taskStatusSelect:
-          assigned: blevet tildelt
-          completed: afsluttet
-          ignored: ignoreret
+          assigned:
+            text: blevet tildelt
+          completed:
+            text: afsluttet
+          ignored:
+            text: ignoreret
       user:
         connectedSelect:
-          'false': ikke tilknyttet
-          'true': tilknyttet
+          'false':
+            text: ikke tilknyttet
+          'true':
+            text: tilknyttet
         examples:
-          one: Fjern alle personer, der er tilknyttet en Zetkin-bruger.
-          two: Tilføj alle personer som ikke er tilknyttet en Zetkin-bruger.
-        inputString: '{addRemoveSelect} alle personer som er {connectedSelect} til en
-          Zetkinprofil.'
+          one:
+            text: Fjern alle personer, der er tilknyttet en Zetkin-bruger.
+          two:
+            text: Tilføj alle personer som ikke er tilknyttet en Zetkin-bruger.
+        inputString:
+          text: '{addRemoveSelect} alle personer som er {connectedSelect} til en
+            Zetkinprofil.'
     headers:
-      examples: Eksempler
-      gallery: Hvordan ønsker du at udvælge personer?
+      examples:
+        text: Eksempler
+      gallery:
+        text: Hvordan ønsker du at udvælge personer?
     matching:
       edit:
-        between: '{matchingSelect} {minInput} og {maxInput} gange'
-        max: '{matchingSelect} {maxInput} {max, plural, one {gang} other {gange}}'
-        min: '{matchingSelect} {minInput} {min, plural, one {gang} other {gange}}'
-        once: '{matchingSelect}'
+        between:
+          text: '{matchingSelect} {minInput} og {maxInput} gange'
+        max:
+          text: '{matchingSelect} {maxInput} {max, plural, one {gang} other {gange}}'
+        min:
+          text: '{matchingSelect} {minInput} {min, plural, one {gang} other {gange}}'
+        once:
+          text: '{matchingSelect}'
       labels:
-        between: mellem
-        max: maksimalt
-        min: mindst
-        once: mindst en gang
+        between:
+          text: mellem
+        max:
+          text: maksimalt
+        min:
+          text: mindst
+        once:
+          text: mindst en gang
       options:
-        between: mellem
-        max: maksimalt
-        min: mindst
-        once: mindst en gang
+        between:
+          text: mellem
+        max:
+          text: maksimalt
+        min:
+          text: mindst
+        once:
+          text: mindst en gang
       preview:
-        between: mellem {min} og {max} gange
-        max: maksimalt {max} {max, plural, one {gang} other {gange}}
-        min: mindst {min} {max, plural, one {gang} other {gange}}
-        once: mindst en gang
+        between:
+          text: mellem {min} og {max} gange
+        max:
+          text: maksimalt {max} {max, plural, one {gang} other {gange}}
+        min:
+          text: mindst {min} {max, plural, one {gang} other {gange}}
+        once:
+          text: mindst en gang
     misc:
-      noOptions: Ingen matchende etiketter
+      noOptions:
+        text: Ingen matchende etiketter
     operators:
-      add: Tilføj
-      sub: Fjern
+      add:
+        text: Tilføj
+      sub:
+        text: Fjern
     quantity:
       edit:
-        integer: '{numInput} {quantitySelect}'
-        percent: '{numInput} {quantitySelect}'
+        integer:
+          text: '{numInput} {quantitySelect}'
+        percent:
+          text: '{numInput} {quantitySelect}'
       preview:
-        integer: '{people} {people, plural, one {person} other {personer}}'
-        percent: '{people} % af personerne'
+        integer:
+          text: '{people} {people, plural, one {person} other {personer}}'
+        percent:
+          text: '{people} % af personerne'
       quantitySelectLabel:
-        integer: '{people, plural, one {person} other {personer}}'
-        percent: '% af personerne'
+        integer:
+          text: '{people, plural, one {person} other {personer}}'
+        percent:
+          text: '% af personerne'
       quantitySelectOptions:
-        integer: et antal personer
-        percent: en procentdel af mennesker
-    readOnly: Denne Smart Søgningen er i skrivebeskyttet tilstand og kan ikke redigeres.
+        integer:
+          text: et antal personer
+        percent:
+          text: en procentdel af mennesker
+    readOnly:
+      text: Denne Smart Søgningen er i skrivebeskyttet tilstand og kan ikke redigeres.
     resultHint:
-      countLabel: '{count, plural, =1 {en person} other {# personer}}'
-      hint: Denne Smart Søgning vil på nuværende tidspunkt returnere  {count}.
-    smartSearch: Smart Søgning
+      countLabel:
+        text: '{count, plural, =1 {en person} other {# personer}}'
+      hint:
+        text: Denne Smart Søgning vil på nuværende tidspunkt returnere  {count}.
+    smartSearch:
+      text: Smart Søgning
     statsPopper:
-      change: ændr
-      details: Smart Søgning er dynamisk. Det betyder, at over tid kan antallet af
-        matches variere. Andre brugere kan se forskellige resultater, hvis de
-        har adgang til flere eller færre personer.
-      exit: Resultat
-      headline: Indvirkning på udvalg
-      info: Dette er et dynamisk valg, og tallene kan ændre sig over tid.
-      input: før
-      matches: fundet
-      output: efter
+      change:
+        text: ændr
+      details:
+        text: Smart Søgning er dynamisk. Det betyder, at over tid kan antallet af
+          matches variere. Andre brugere kan se forskellige resultater, hvis de
+          har adgang til flere eller færre personer.
+      exit:
+        text: Resultat
+      headline:
+        text: Indvirkning på udvalg
+      info:
+        text: Dette er et dynamisk valg, og tallene kan ændre sig over tid.
+      input:
+        text: før
+      matches:
+        text: fundet
+      output:
+        text: efter
     timeFrame:
       edit:
-        afterDate: '{timeFrameSelect} {afterDateSelect}'
-        beforeDate: '{timeFrameSelect} {beforeDateSelect}'
-        beforeToday: '{timeFrameSelect}'
-        between: '{timeFrameSelect} {afterDateSelect} og {beforeDateSelect}'
-        ever: '{timeFrameSelect}'
-        future: '{timeFrameSelect}'
-        lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {dag} other {dage}}'
+        afterDate:
+          text: '{timeFrameSelect} {afterDateSelect}'
+        beforeDate:
+          text: '{timeFrameSelect} {beforeDateSelect}'
+        beforeToday:
+          text: '{timeFrameSelect}'
+        between:
+          text: '{timeFrameSelect} {afterDateSelect} og {beforeDateSelect}'
+        ever:
+          text: '{timeFrameSelect}'
+        future:
+          text: '{timeFrameSelect}'
+        lastFew:
+          text: '{timeFrameSelect} {daysInput} {days, plural, one {dag} other {dage}}'
       preview:
-        afterDate: efter {afterDate}
-        beforeDate: før {beforeDate}
-        beforeToday: før i dag
-        between: mellem {afterDate} og {beforeDate}
-        ever: på et hvilket som helst tidspunkt
-        future: i fremtiden
-        lastFew: indenfor de sidste {days} {days, plural, one {dag} other {dage}}
+        afterDate:
+          text: efter {afterDate}
+        beforeDate:
+          text: før {beforeDate}
+        beforeToday:
+          text: før i dag
+        between:
+          text: mellem {afterDate} og {beforeDate}
+        ever:
+          text: på et hvilket som helst tidspunkt
+        future:
+          text: i fremtiden
+        lastFew:
+          text: indenfor de sidste {days} {days, plural, one {dag} other {dage}}
       timeFrameSelectLabel:
-        afterDate: efter
-        beforeDate: før
-        beforeToday: før i dag
-        between: mellem
-        ever: på et hvilket som helst tidspunkt
-        future: i fremtiden
-        lastFew: indenfor de sidste
+        afterDate:
+          text: efter
+        beforeDate:
+          text: før
+        beforeToday:
+          text: før i dag
+        between:
+          text: mellem
+        ever:
+          text: på et hvilket som helst tidspunkt
+        future:
+          text: i fremtiden
+        lastFew:
+          text: indenfor de sidste
       timeFrameSelectOptions:
-        afterDate: efter en given dato
-        beforeDate: før en given dato
-        beforeToday: før i dag
-        between: mellem to datoer
-        ever: på hvilket som helst tidspunkt
-        future: i fremtiden
-        lastFew: for nyeligt
+        afterDate:
+          text: efter en given dato
+        beforeDate:
+          text: før en given dato
+        beforeToday:
+          text: før i dag
+        between:
+          text: mellem to datoer
+        ever:
+          text: på hvilket som helst tidspunkt
+        future:
+          text: i fremtiden
+        lastFew:
+          text: for nyeligt
   surveys:
     addBlocks:
-      choiceQuestionButton: Multiple choice spørgsmål
-      openQuestionButton: Åbent spørgsmål
-      textButton: Tekst
-      title: Vælg en bloktype for at tilføje mere indhold til dit spørgeskema
+      choiceQuestionButton:
+        text: Multiple choice spørgsmål
+      openQuestionButton:
+        text: Åbent spørgsmål
+      textButton:
+        text: Tekst
+      title:
+        text: Vælg en bloktype for at tilføje mere indhold til dit spørgeskema
     blocks:
       choice:
-        addOption: Tilføj svarmulighed
-        addOptionsBulk: Tilføj flere svarmuligheder på én gang
+        addOption:
+          text: Tilføj svarmulighed
+        addOptionsBulk:
+          text: Tilføj flere svarmuligheder på én gang
         bulk:
-          cancelButton: Afbryd
-          placeholder: Indtast eller indsæt én indstilling pr. linje
-          submitButton: Tilføj alle
-        description: Beskrivelse
-        emptyDescription: Beskrivelse
-        emptyOption: Tom svarmulighed
-        emptyQuestion: Titel
-        question: Spørgsmål
-        widget: Widget
+          cancelButton:
+            text: Afbryd
+          placeholder:
+            text: Indtast eller indsæt én indstilling pr. linje
+          submitButton:
+            text: Tilføj alle
+        description:
+          text: Beskrivelse
+        emptyDescription:
+          text: Beskrivelse
+        emptyOption:
+          text: Tom svarmulighed
+        emptyQuestion:
+          text: Titel
+        question:
+          text: Spørgsmål
+        widget:
+          text: Widget
         widgets:
-          checkbox: Multi-choice (afkrydsningsfelter)
-          radio: Enkeltvalg (alternativknapper)
-          select: Enkeltvalg (rullemenu)
+          checkbox:
+            text: Multi-choice (afkrydsningsfelter)
+          radio:
+            text: Enkeltvalg (alternativknapper)
+          select:
+            text: Enkeltvalg (rullemenu)
       deleteBlockDialog:
-        title: Slet spørgsmål
-        warningText: Er du sikker på, at du vil slette dette spørgsmål? Denne handling
-          er permanent og kan ikke fortrydes.
+        title:
+          text: Slet spørgsmål
+        warningText:
+          text: Er du sikker på, at du vil slette dette spørgsmål? Denne handling er
+            permanent og kan ikke fortrydes.
       deleteOptionDialog:
-        title: Slet svarmulighed
-        warningText: Er du sikker på, at du vil slette denne svarmulighed? Denne
-          handling er permanent og kan ikke fortrydes.
+        title:
+          text: Slet svarmulighed
+        warningText:
+          text: Er du sikker på, at du vil slette denne svarmulighed? Denne handling er
+            permanent og kan ikke fortrydes.
       open:
-        description: Beskrivelse
-        empty: Unavngivent åbent spørgsmål
-        fieldTypePreview: tekstfelt
-        label: Titel
-        multiLine: Multi-line
-        singleLine: Enkeltlinje
-        textFieldType: Tekstfelttype
+        description:
+          text: Beskrivelse
+        empty:
+          text: Unavngivent åbent spørgsmål
+        fieldTypePreview:
+          text: tekstfelt
+        label:
+          text: Titel
+        multiLine:
+          text: Multi-line
+        singleLine:
+          text: Enkeltlinje
+        textFieldType:
+          text: Tekstfelttype
       text:
-        content: Beskrivelse
-        empty: Unavngiven blok
-        header: Titel
+        content:
+          text: Beskrivelse
+        empty:
+          text: Unavngiven blok
+        header:
+          text: Titel
     chart:
-      header: Spørgeskemabesvarelser
-      placeholder: Start med at indhente besvarleser for at se udviklingen her
-      subheader: Akkumulerede besvarelser over over de sidste {days, plural, =1 {dag}
-        other {# dage}}
+      header:
+        text: Spørgeskemabesvarelser
+      placeholder:
+        text: Start med at indhente besvarleser for at se udviklingen her
+      subheader:
+        text: Akkumulerede besvarelser over over de sidste {days, plural, =1 {dag} other
+          {# dage}}
       tooltip:
-        submissions: '{count, plural, =1 {1 besvarelse} other {# besvarelser}}'
+        submissions:
+          text: '{count, plural, =1 {1 besvarelse} other {# besvarelser}}'
     editWarning:
       editing:
-        header: Spørgeskemaet kan redigeres
+        header:
+          text: Spørgeskemaet kan redigeres
         safe:
-          bullet1: Ret stavefejl
-          bullet2: Omarrangering af blokke
-          bullet3: Skjule spørgsmål
-          bullet4: Tilføje spørgsmål eller svarmuligheder
-          header: Sikker
-        subheader: Pas på ikke at foretage ændringer, der kan medføre, at svardata går
-          tabt eller beskadiges.
+          bullet1:
+            text: Ret stavefejl
+          bullet2:
+            text: Omarrangering af blokke
+          bullet3:
+            text: Skjule spørgsmål
+          bullet4:
+            text: Tilføje spørgsmål eller svarmuligheder
+          header:
+            text: Sikker
+        subheader:
+          text: Pas på ikke at foretage ændringer, der kan medføre, at svardata går tabt
+            eller beskadiges.
         unsafe:
-          bullet1: Slet spørgsmål (skjul i stedet)
-          bullet2: Omdøbning af spørgsmål eller svarmuligheder på måder, der ændrer deres
-            betydning
-          header: Usikker
+          bullet1:
+            text: Slet spørgsmål (skjul i stedet)
+          bullet2:
+            text: Omdøbning af spørgsmål eller svarmuligheder på måder, der ændrer deres
+              betydning
+          header:
+            text: Usikker
       locked:
-        header: Spørgeskema låst
-        subheader: Denne undersøgelse er begyndt at modtage besvarelser. Redigering af
-          undersøgelsen kan forårsage problemer med dataene. Fortsæt med
-          forsigtighed.
+        header:
+          text: Spørgeskema låst
+        subheader:
+          text: Denne undersøgelse er begyndt at modtage besvarelser. Redigering af
+            undersøgelsen kan forårsage problemer med dataene. Fortsæt med
+            forsigtighed.
     layout:
       actions:
-        publish: Offentliggør spørgeskema
-        unpublish: Ikke offentliggjort spørgeskema
+        publish:
+          text: Offentliggør spørgeskema
+        unpublish:
+          text: Ikke offentliggjort spørgeskema
       stats:
-        questions: '{numQuestions, plural, one {1 spørgsmål} other {# spørgsmål}}'
-        submissions: '{numSubmissions, plural, one {1 besvarelse} other {# besvarelser}}'
+        questions:
+          text: '{numQuestions, plural, one {1 spørgsmål} other {# spørgsmål}}'
+        submissions:
+          text: '{numSubmissions, plural, one {1 besvarelse} other {# besvarelser}}'
     optionCollapse:
-      collapse: Skjul
-      more: '{numOfOptions, plural, one {Vis 1 svarmulighed mere} other {Vis # flere
-        svarmuligheder}}'
+      collapse:
+        text: Skjul
+      more:
+        text: '{numOfOptions, plural, one {Vis 1 svarmulighed mere} other {Vis # flere
+          svarmuligheder}}'
     organizerActionPane:
-      subtitle: Noter ved opkald til {person}
-      title: Administrator Handling Påkrævet
+      subtitle:
+        text: Noter ved opkald til {person}
+      title:
+        text: Administrator Handling Påkrævet
     overview:
       noQuestions:
-        button: Opret spørgsmål
-        title: Der er ingen spørgsmål i dette spørgeskema endnu
+        button:
+          text: Opret spørgsmål
+        title:
+          text: Der er ingen spørgsmål i dette spørgeskema endnu
     shareSuborgsCard:
-      caption: Når dette er aktiveret, kan oficielle i underorganisationer læse og
-        søge i spørgeskemaer indsendt af personer, der er forbundet med deres
-        organisation.
-      title: Del med underorganisationer
+      caption:
+        text: Når dette er aktiveret, kan oficielle i underorganisationer læse og søge i
+          spørgeskemaer indsendt af personer, der er forbundet med deres
+          organisation.
+      title:
+        text: Del med underorganisationer
     state:
-      draft: Udkast
-      published: Offentliggjort
-      scheduled: Planlagt
-      unpublished: Ikke offentliggjort
+      draft:
+        text: Udkast
+      published:
+        text: Offentliggjort
+      scheduled:
+        text: Planlagt
+      unpublished:
+        text: Ikke offentliggjort
     submissionPane:
-      anonymous: Anonym
-      hidden: Gemt
-      linked: Tilknyttet
-      subtitle: '{person} {date}'
+      anonymous:
+        text: Anonym
+      hidden:
+        text: Gemt
+      linked:
+        text: Tilknyttet
+      subtitle:
+        text: '{person} {date}'
     submissions:
-      anonymous: Anonym
-      dateColumn: Dato
-      emailColumn: Email
-      firstNameColumn: Fornavn
-      lastNameColumn: Efternavn
-      link: Tilknyt
-      personRecordColumn: Respondent
-      suggestedPeople: Forslåede personer
-      unlink: Fortryd tilknytning
+      anonymous:
+        text: Anonym
+      dateColumn:
+        text: Dato
+      emailColumn:
+        text: Email
+      firstNameColumn:
+        text: Fornavn
+      lastNameColumn:
+        text: Efternavn
+      link:
+        text: Tilknyt
+      personRecordColumn:
+        text: Respondent
+      suggestedPeople:
+        text: Forslåede personer
+      unlink:
+        text: Fortryd tilknytning
     tabs:
-      overview: Overblik
-      questions: Spørgsmål
-      submissions: Besvarelser
+      overview:
+        text: Overblik
+      questions:
+        text: Spørgsmål
+      submissions:
+        text: Besvarelser
     unlinkedCard:
-      description: Når nogen besvarer et spørgeskema uden at være logget ind, vil
-        denne besvarelse ikke været tilknyttet deres profil. Søgning efter
-        personer i Zetkin baseret på deres besvarekser fungerer ikke på
-        ikke-tilknyttede besvarelser.
-      header: Ikke-tilknyttede besvarelse
-      openLink: '{numUnlink, plural, one {tilknyt besvarelse nu} other {tilknyt
-        besvarelser nu}}'
+      description:
+        text: Når nogen besvarer et spørgeskema uden at være logget ind, vil denne
+          besvarelse ikke været tilknyttet deres profil. Søgning efter personer
+          i Zetkin baseret på deres besvarekser fungerer ikke på
+          ikke-tilknyttede besvarelser.
+      header:
+        text: Ikke-tilknyttede besvarelse
+      openLink:
+        text: '{numUnlink, plural, one {tilknyt besvarelse nu} other {tilknyt
+          besvarelser nu}}'
     unlinkedWarningAlert:
       default:
-        description: '{numUnlink, plural, one {en besvarelse er ikke knyttet til en
-          Zetkinprofil, hvilket betyder den ikke inkluderes under søgningen.}
-          other {Der er besvarelser, der ikke er knyttet til Zetkinprofiler,
-          hvilket betyder de ikke inkluderes under søgningen.}}'
-        header: Ikke-tilknyttede besvarelser
-        viewUnlinked: Vis kun ikke-tilknyttede
+        description:
+          text: '{numUnlink, plural, one {en besvarelse er ikke knyttet til en
+            Zetkinprofil, hvilket betyder den ikke inkluderes under søgningen.}
+            other {Der er besvarelser, der ikke er knyttet til Zetkinprofiler,
+            hvilket betyder de ikke inkluderes under søgningen.}}'
+        header:
+          text: Ikke-tilknyttede besvarelser
+        viewUnlinked:
+          text: Vis kun ikke-tilknyttede
       filtered:
-        description: Listen er filtreret og viser kun signerede spørgeskemabesvarelser,
-          der ikke er knyttet til en profil.
-        header: Viser kun ikke-tilknyttede
-        viewAll: Vis alle
+        description:
+          text: Listen er filtreret og viser kun signerede spørgeskemabesvarelser, der
+            ikke er knyttet til en profil.
+        header:
+          text: Viser kun ikke-tilknyttede
+        viewAll:
+          text: Vis alle
     urlCard:
-      nowAccepting: Modtager nu besvarelser gennem dette link
-      open: Åben for besvarelse
-      preview: Se forhåndsvisning af spørgeskemaet
-      previewPortal: Se forhåndsvisning af spørgeskemaet i aktivistportalen
-      visitPortal: Se spørgeskema i aktivistportalen
-      willAccept: Vil acceptere besvarelser gennem dette link
+      nowAccepting:
+        text: Modtager nu besvarelser gennem dette link
+      open:
+        text: Åben for besvarelse
+      preview:
+        text: Se forhåndsvisning af spørgeskemaet
+      previewPortal:
+        text: Se forhåndsvisning af spørgeskemaet i aktivistportalen
+      visitPortal:
+        text: Se spørgeskema i aktivistportalen
+      willAccept:
+        text: Vil acceptere besvarelser gennem dette link
   tags:
     dialog:
-      colorErrorText: Indtast venligst en gyldig hex-kode
-      colorLabel: Farve
-      createTitle: Opret etiket
-      editTitle: Rediger etiket
-      groupCreatePrompt: Tilføj "{groupName}"
-      groupLabel: Gruppe
-      groupSelectPlaceholder: Skriv for at søge eller oprette en gruppe
-      titleErrorText: Etiketnavn er påkrævet
-      titleLabel: Etiketnavn
-      typeLabel: Etikettype
+      colorErrorText:
+        text: Indtast venligst en gyldig hex-kode
+      colorLabel:
+        text: Farve
+      createTitle:
+        text: Opret etiket
+      editTitle:
+        text: Rediger etiket
+      groupCreatePrompt:
+        text: Tilføj "{groupName}"
+      groupLabel:
+        text: Gruppe
+      groupSelectPlaceholder:
+        text: Skriv for at søge eller oprette en gruppe
+      titleErrorText:
+        text: Etiketnavn er påkrævet
+      titleLabel:
+        text: Etiketnavn
+      typeLabel:
+        text: Etikettype
       types:
-        none: Basis (ingen værdier)
-        text: Tekstværdier
+        none:
+          text: Basis (ingen værdier)
+        text:
+          text: Tekstværdier
     manager:
-      addTag: Tilføj etiket
-      addValue: Tilføj værdi for "{tag}"
-      createNamedTag: 'Opret etiket: {name}'
-      createTag: Ny Etiket
-      groupTags: Grupper etiketter
-      title: Etiketter
-      ungroupedHeader: Ingen Gruppering
+      addTag:
+        text: Tilføj etiket
+      addValue:
+        text: Tilføj værdi for "{tag}"
+      createNamedTag:
+        text: 'Opret etiket: {name}'
+      createTag:
+        text: Ny Etiket
+      groupTags:
+        text: Grupper etiketter
+      title:
+        text: Etiketter
+      ungroupedHeader:
+        text: Ingen Gruppering
       valueTagForm:
-        typeHint: '{type, select, text {Tilføj tekst} other {Tilføj en værdi}} til
-          etiketten.'
+        typeHint:
+          text: '{type, select, text {Tilføj tekst} other {Tilføj en værdi}} til
+            etiketten.'
   tasks:
     assignees:
       completedStates:
-        completed: Afsluttet {time}
-        ignored: Ignoreret {time}
-        notCompleted: Ikke afsluttet endnu
+        completed:
+          text: Afsluttet {time}
+        ignored:
+          text: Ignoreret {time}
+        notCompleted:
+          text: Ikke afsluttet endnu
       links:
-        create: Opret Smart Søgning
-        edit: Rediger Smart Søgning
-        readOnly: Vis Smart Søgning
+        create:
+          text: Opret Smart Søgning
+        edit:
+          text: Rediger Smart Søgning
+        readOnly:
+          text: Vis Smart Søgning
       queryStates:
-        assigned: Denne opgave er blevet tildelt alle personer, der matcher den
-          målrettede Smart Søgning.
-        editable: Når denne opgave offentliggøres, tildeles den til de personer, der
-          matcher den målrettede Smart Søgning.
-        new: Denne opgave vil være målrettet personer, der matcher en Smart Søgning. Før
-          du kan offentliggøre, skal du oprette en målgruppe ved hjælp af Smart
-          Søgning.
-        published: Denne opgave tildels i øjeblikket alle, der matcher den målrettede
-          Smart Søgning...
-      title: Tildelt {numPeople, plural, one {# person} other {# personer}}
+        assigned:
+          text: Denne opgave er blevet tildelt alle personer, der matcher den målrettede
+            Smart Søgning.
+        editable:
+          text: Når denne opgave offentliggøres, tildeles den til de personer, der matcher
+            den målrettede Smart Søgning.
+        new:
+          text: Denne opgave vil være målrettet personer, der matcher en Smart Søgning.
+            Før du kan offentliggøre, skal du oprette en målgruppe ved hjælp af
+            Smart Søgning.
+        published:
+          text: Denne opgave tildels i øjeblikket alle, der matcher den målrettede Smart
+            Søgning...
+      title:
+        text: Tildelt {numPeople, plural, one {# person} other {# personer}}
     common:
-      notSet: Ikke indstillet
+      notSet:
+        text: Ikke indstillet
     configs:
       collectDemographics:
         fields:
-          demographic: Data at anmode om
+          demographic:
+            text: Data at anmode om
           dempographicOptions:
-            city: By
-            country: Land
-            email: Email Adresse
-            gender: Kønsidentitet
-            streetAddress: Gadenavn
-            zipCode: Postnummer
-        title: Konfigurer Indsamlingen af Demografiske data
+            city:
+              text: By
+            country:
+              text: Land
+            email:
+              text: Email Adresse
+            gender:
+              text: Kønsidentitet
+            streetAddress:
+              text: Gadenavn
+            zipCode:
+              text: Postnummer
+        title:
+          text: Konfigurer Indsamlingen af Demografiske data
       shareLink:
         fields:
-          defaultMessage: Standardbesked bruger vil sende
-          url: URL for at dele
-        title: Del Linkkonfiguration
+          defaultMessage:
+            text: Standardbesked bruger vil sende
+          url:
+            text: URL for at dele
+        title:
+          text: Del Linkkonfiguration
       visitLink:
         fields:
-          url: URL for at besøge
-        title: Besøg Linkkonfiguration
+          url:
+            text: URL for at besøge
+        title:
+          text: Besøg Linkkonfiguration
     deleteTask:
-      cancel: Afbryd
-      error: Der er opstået en fejl under slettelsen af opgaven
-      submitButton: Bekræft slettelse
-      title: Slet opgave
-      warning: Er du sikker på, at du vil slette denne opgave? Denne handling er
-        permanent og kan ikke fortrydes.
+      cancel:
+        text: Afbryd
+      error:
+        text: Der er opstået en fejl under slettelsen af opgaven
+      submitButton:
+        text: Bekræft slettelse
+      title:
+        text: Slet opgave
+      warning:
+        text: Er du sikker på, at du vil slette denne opgave? Denne handling er
+          permanent og kan ikke fortrydes.
     editTask:
-      title: Rediger opgave
+      title:
+        text: Rediger opgave
     form:
       fields:
-        project: Kampagne
-        deadline: Afslutningsfrist
-        expires: Udløbsdato
-        instructions: Instruktioner
-        published: Offentliggørelsestidspunkt
-        reassignInterval: Tildel påny efter afslutning
+        deadline:
+          text: Afslutningsfrist
+        expires:
+          text: Udløbsdato
+        instructions:
+          text: Instruktioner
+        project:
+          state: PUBLISHED
+          text: Kampagne
+        published:
+          text: Offentliggørelsestidspunkt
+        reassignInterval:
+          text: Tildel påny efter afslutning
         reassignIntervalOptions:
-          days: '{days, plural, =1 {Den næste dag} other {after # dage}}'
-          hours: Efter {hours, plural, =1 {en time} other {# timer}}
-          noReassign: Tildel aldrig påny
-        reassignLimit: 'Maksmalt antal gange den kan tildeles påny:'
-        timeEstimate: Forventet tid det tager at gennemføre
+          days:
+            text: '{days, plural, =1 {Den næste dag} other {after # dage}}'
+          hours:
+            text: Efter {hours, plural, =1 {en time} other {# timer}}
+          noReassign:
+            text: Tildel aldrig påny
+        reassignLimit:
+          text: 'Maksmalt antal gange den kan tildeles påny:'
+        timeEstimate:
+          text: Forventet tid det tager at gennemføre
         timeEstimateOptions:
-          hoursAndMinutes: '{hours, plural, =0{} one{# time} other{# timer}} {minutes,
-            plural, =0{} one {# minut} other {# minutter}}'
-          lessThanOneMinute: Mindre end et minut
-          noEstimate: Intet estimat
+          hoursAndMinutes:
+            text: '{hours, plural, =0{} one{# time} other{# timer}} {minutes, plural, =0{}
+              one {# minut} other {# minutter}}'
+          lessThanOneMinute:
+            text: Mindre end et minut
+          noEstimate:
+            text: Intet estimat
         timeValidationErrors:
-          deadlineNotSecond: Dette skal blive planlagt efter Offentliggørelsedatoen og før
-            Udløbsdatoen
-          expiresNotThird: Dette skal planlægges sidst
-          publishedNotFirst: Dette skal planlægges først
-        title: Titel
-        type: Opgavetype
+          deadlineNotSecond:
+            text: Dette skal blive planlagt efter Offentliggørelsedatoen og før Udløbsdatoen
+          expiresNotThird:
+            text: Dette skal planlægges sidst
+          publishedNotFirst:
+            text: Dette skal planlægges først
+        title:
+          text: Titel
+        type:
+          text: Opgavetype
         types:
-          demographic: Saml Demografi
-          offline: Offline
-          share_link: Del Link
-          visit_link: Gå Til Link
-          watch_video: Se Video
-      invalidUrl: Indtast venligst en gyldig URL
-      requestError: Der er opstået en fejl. Prøv venligst igen.
-      required: Påkrævet
-      title: Opret ny opgave
-    noTasksCreatePrompt: Ingen opgaver... Klik her for at oprette en.
+          demographic:
+            text: Saml Demografi
+          offline:
+            text: Offline
+          share_link:
+            text: Del Link
+          visit_link:
+            text: Gå Til Link
+          watch_video:
+            text: Se Video
+      invalidUrl:
+        text: Indtast venligst en gyldig URL
+      requestError:
+        text: Der er opstået en fejl. Prøv venligst igen.
+      required:
+        text: Påkrævet
+      title:
+        text: Opret ny opgave
+    noTasksCreatePrompt:
+      text: Ingen opgaver... Klik her for at oprette en.
     publishButton:
-      publish: Offentliggør
+      publish:
+        text: Offentliggør
       tooltip:
-        alreadyPublished: Allerede offentliggjort
-        missingAssignees: Mangler en ansvarlig
-        missingFields: Mangler påkrævede felter
-        missingFieldsAndAssignees: Mangler påkrævede felter og ansvarlige
+        alreadyPublished:
+          text: Allerede offentliggjort
+        missingAssignees:
+          text: Mangler en ansvarlig
+        missingFields:
+          text: Mangler påkrævede felter
+        missingFieldsAndAssignees:
+          text: Mangler påkrævede felter og ansvarlige
     publishTask:
-      cancel: Afbryd
-      submitButton: Offentliggør opgave nu
-      title: Offentliggør opgave
-      warning: Bekræft venligst, at du er klar til at offentliggøre denne opgave. Den
-        vil blive sendt til alle ansvarlige.
-    showExpiredTasksPrompt: Vis udløbne opgaver...
+      cancel:
+        text: Afbryd
+      submitButton:
+        text: Offentliggør opgave nu
+      title:
+        text: Offentliggør opgave
+      warning:
+        text: Bekræft venligst, at du er klar til at offentliggøre denne opgave. Den vil
+          blive sendt til alle ansvarlige.
+    showExpiredTasksPrompt:
+      text: Vis udløbne opgaver...
     statuses:
-      active: Aktiv
-      closed: Lukket
-      draft: Udkast
-      expired: Udløbet
-      scheduled: Planlagt
+      active:
+        text: Aktiv
+      closed:
+        text: Lukket
+      draft:
+        text: Udkast
+      expired:
+        text: Udløbet
+      scheduled:
+        text: Planlagt
     taskDetails:
-      deadlineTime: Deadline-tidspunkt
-      editButton: Rediger
-      expiresTime: Udløber Tid
-      instructionsLabel: Instruktioner
-      publishedTime: Offentliggørelsestidspunkt
+      deadlineTime:
+        text: Deadline-tidspunkt
+      editButton:
+        text: Rediger
+      expiresTime:
+        text: Udløber Tid
+      instructionsLabel:
+        text: Instruktioner
+      publishedTime:
+        text: Offentliggørelsestidspunkt
       reassignInterval:
-        label: Tildel intervallet påny
-        value: Tildeles påny {value, plural, =1{en time} other{# timer}} efter
-          gennemførelse
+        label:
+          text: Tildel intervallet påny
+        value:
+          text: Tildeles påny {value, plural, =1{en time} other{# timer}} efter
+            gennemførelse
       reassignLimit:
-        label: Tildelingsgrænse
-        value: Gentages maksimalt {value, plural, =1{en gang} other{# gange}} per person
-      statusLabel: Status
-      timeEstimateLabel: Forventet tid det tager at gennemføre
-      title: Opgave Detaljer
-      titleLabel: Titel
-      typeLabel: Type
+        label:
+          text: Tildelingsgrænse
+        value:
+          text: Gentages maksimalt {value, plural, =1{en gang} other{# gange}} per person
+      statusLabel:
+        text: Status
+      timeEstimateLabel:
+        text: Forventet tid det tager at gennemføre
+      title:
+        text: Opgave Detaljer
+      titleLabel:
+        text: Titel
+      typeLabel:
+        text: Type
     taskLayout:
       tabs:
-        assignees: Ansvarlige
-        insights: Indsigter
-        summary: Resumé
+        assignees:
+          text: Ansvarlige
+        insights:
+          text: Indsigter
+        summary:
+          text: Resumé
     taskListItem:
       relativeTimes:
-        active: Deadline {time}
-        closed: Lukket {time}
-        expired: Udløb {time}
-        expires: Udløber {time}
-        indefinite: Offentliggjort {time}
-        scheduled: Offentliggøres {time}
+        active:
+          text: Deadline {time}
+        closed:
+          text: Lukket {time}
+        expired:
+          text: Udløb {time}
+        expires:
+          text: Udløber {time}
+        indefinite:
+          text: Offentliggjort {time}
+        scheduled:
+          text: Offentliggøres {time}
     taskPreview:
-      addImage: Tilføj forsidebillede
-      sectionTitle: Forhåndsvisning
-      timeEstimate: '{minutes, plural, =0 {mindre end et minut} =1 {et minut} other {#
-        minutter}}'
+      addImage:
+        text: Tilføj forsidebillede
+      sectionTitle:
+        text: Forhåndsvisning
+      timeEstimate:
+        text: '{minutes, plural, =0 {mindre end et minut} =1 {et minut} other {#
+          minutter}}'
     taskTypeDetails:
       demographic:
-        title: Indsaml demografi-indstillinger
+        title:
+          text: Indsaml demografi-indstillinger
       share_link:
-        title: Del Linkindstillinger
+        title:
+          text: Del Linkindstillinger
       visit_link:
-        title: Gå Til Linkindstillinger
+        title:
+          text: Gå Til Linkindstillinger
     types:
-      demographic: Indsaml Demografi
-      offline: Offline
-      share_link: Del Link
-      visit_link: Gå til Link
-      watch_video: Se Video
+      demographic:
+        text: Indsaml Demografi
+      offline:
+        text: Offline
+      share_link:
+        text: Del Link
+      visit_link:
+        text: Gå til Link
+      watch_video:
+        text: Se Video
   views:
     actions:
-      createFolder: Opret mappe
-      createView: Opret liste
+      createFolder:
+        text: Opret mappe
+      createView:
+        text: Opret liste
     browser:
-      backToFolder: Tilbage til {folder}
-      backToRoot: Tilbage til alle lister
+      backToFolder:
+        text: Tilbage til {folder}
+      backToRoot:
+        text: Tilbage til alle lister
       confirmDelete:
         folder:
-          title: Slet mappe og indhold
-          warning: At slette denne mappe og alle lister den indeholder kan ikke fortrydes.
-            Er du sikker på du vil fortsætte?
+          title:
+            text: Slet mappe og indhold
+          warning:
+            text: At slette denne mappe og alle lister den indeholder kan ikke fortrydes. Er
+              du sikker på du vil fortsætte?
         view:
-          title: Slet liste
-          warning: At slette denne liste kan ikke fortrydes. Er du sikker på du vil
-            fortsætte?
+          title:
+            text: Slet liste
+          warning:
+            text: At slette denne liste kan ikke fortrydes. Er du sikker på du vil
+              fortsætte?
       menu:
-        rename: Omdøb
-      moveToFolder: Flyt til {folder}
-      moveToRoot: Flyt til alle lister
+        rename:
+          text: Omdøb
+      moveToFolder:
+        text: Flyt til {folder}
+      moveToRoot:
+        text: Flyt til alle lister
     browserLayout:
       tabs:
-        views: Lister
-      title: Personer
+        views:
+          text: Lister
+      title:
+        text: Personer
     cells:
       localPerson:
-        alreadyInView: Allerede i lister
-        clearLabel: Fortryd tildeling
-        otherPeople: Andre personer
-        restrictedMode: Kan ikke redigeres i delte lister
-        searchLabel: Vælg en person
+        alreadyInView:
+          text: Allerede i lister
+        clearLabel:
+          text: Fortryd tildeling
+        otherPeople:
+          text: Andre personer
+        restrictedMode:
+          text: Kan ikke redigeres i delte lister
+        searchLabel:
+          text: Vælg en person
       organizerAction:
-        actionNeeded: Administrator handling påkrævet
-        showDetails: Vis detaljer
-        solvedIssues: '{count, plural, =1 {1 løst problem} other {# løste problemer}}'
+        actionNeeded:
+          text: Administrator handling påkrævet
+        showDetails:
+          text: Vis detaljer
+        solvedIssues:
+          text: '{count, plural, =1 {1 løst problem} other {# løste problemer}}'
     columnDialog:
       categories:
         basic:
-          description: Simple felter med information om personer.
-          title: Basis information
+          description:
+            text: Simple felter med information om personer.
+          title:
+            text: Basis information
         categorizing:
-          description: Til gruppering, kategorisering eller shortlisting af personer,
-            vilkårligt eller baseret på data i Zetkin.
-          title: Kategorisering
+          description:
+            text: Til gruppering, kategorisering eller shortlisting af personer, vilkårligt
+              eller baseret på data i Zetkin.
+          title:
+            text: Kategorisering
         crossReferencing:
-          description: Krydstjek med data i Zetkin ved hjælp af Smart Søgning.
-          title: Krydstjekning
+          description:
+            text: Krydstjek med data i Zetkin ved hjælp af Smart Søgning.
+          title:
+            text: Krydstjekning
         outreach:
-          description: Planlæg, uddeleger og udfør kontaktarbejde og afrapporter når du er
-            færdig
-          title: Kontaktarbejde
+          description:
+            text: Planlæg, uddeleger og udfør kontaktarbejde og afrapporter når du er færdig
+          title:
+            text: Kontaktarbejde
         surveys:
-          description: Udforsk, søg og filtrer baseret på personernes
-            spørgeskemabesvarelser.
-          title: Spørgeskemaer
+          description:
+            text: Udforsk, søg og filtrer baseret på personernes spørgeskemabesvarelser.
+          title:
+            text: Spørgeskemaer
         utility:
-          description: Pålidelige kolonner, som du gerne vil genbruge i mange situationer
-          title: Brugbarhed
+          description:
+            text: Pålidelige kolonner, som du gerne vil genbruge i mange situationer
+          title:
+            text: Brugbarhed
       choices:
         delegate:
-          columnTitleAssignee: Ansvarlig
-          columnTitleContacted: Kontaktet
-          columnTitleNotes: Noter
-          columnTitleResponded: Svarede
-          description: Tilføjer kolonner, der almindeligvis bruges til at uddeleregere
-            kontaktarbejde til ansvarlige
-          title: Deleger
+          columnTitleAssignee:
+            text: Ansvarlig
+          columnTitleContacted:
+            text: Kontaktet
+          columnTitleNotes:
+            text: Noter
+          columnTitleResponded:
+            text: Svarede
+          description:
+            text: Tilføjer kolonner, der almindeligvis bruges til at uddeleregere
+              kontaktarbejde til ansvarlige
+          title:
+            text: Deleger
         email:
-          description: Tilføj en kolonne med e-mail addresser
-          keywords: e-mail
-          title: E-mail addresse
+          description:
+            text: Tilføj en kolonne med e-mail addresser
+          keywords:
+            text: e-mail
+          title:
+            text: E-mail addresse
         firstName:
-          description: Tilføj en kolonne med efternavne
-          keywords: fornavn
-          title: Fornavn
+          description:
+            text: Tilføj en kolonne med efternavne
+          keywords:
+            text: fornavn
+          title:
+            text: Fornavn
         followUp:
-          columnTitleCheckbox: Afkrydsningsfelt
-          columnTitleNotes: Noter
-          description: Tilføjer afkrydsningskolonne og en kolonne med noter
-          title: Opfølgning
+          columnTitleCheckbox:
+            text: Afkrydsningsfelt
+          columnTitleNotes:
+            text: Noter
+          description:
+            text: Tilføjer afkrydsningskolonne og en kolonne med noter
+          title:
+            text: Opfølgning
         fullName:
-          description: To kolonner med for- og efternavn
-          keywords: efternavn
-          title: Fulde navn
+          description:
+            text: To kolonner med for- og efternavn
+          keywords:
+            text: efternavn
+          title:
+            text: Fulde navn
         lastName:
-          description: Tilføj en kolonne med efternavne
-          keywords: efternavn
-          title: Efternavn
+          description:
+            text: Tilføj en kolonne med efternavne
+          keywords:
+            text: efternavn
+          title:
+            text: Efternavn
         localPerson:
-          columnTitle: Ansvarlig
-          description: Lader dig vælge en ansvarlig på hver række
-          title: Tildet Person
+          columnTitle:
+            text: Ansvarlig
+          description:
+            text: Lader dig vælge en ansvarlig på hver række
+          title:
+            text: Tildet Person
         localQuery:
-          columnTitle: I Smart Søgningen?
-          description: Se, om hver person matcher en Smart Søgning
-          title: Brugerdefineret krydsreference
+          columnTitle:
+            text: I Smart Søgningen?
+          description:
+            text: Se, om hver person matcher en Smart Søgning
+          title:
+            text: Brugerdefineret krydsreference
         localText:
-          columnTitle: Noter
-          description: Tilføj en kolonne for at skrive noter om en person.
-          title: Noter
+          columnTitle:
+            text: Noter
+          description:
+            text: Tilføj en kolonne for at skrive noter om en person.
+          title:
+            text: Noter
         personFields:
-          description: Tilføj dit udvalg af kolonner som email, telefonnummer, etc.
-          keywords: adresse postnummer by land
-          title: Vælg felter
+          description:
+            text: Tilføj dit udvalg af kolonner som email, telefonnummer, etc.
+          keywords:
+            text: adresse postnummer by land
+          title:
+            text: Vælg felter
         phone:
-          description: Tilføj en kolonne med telefonnumre
-          keywords: telefonnummer
-          title: Telefonnummer
+          description:
+            text: Tilføj en kolonne med telefonnumre
+          keywords:
+            text: telefonnummer
+          title:
+            text: Telefonnummer
         queryBooked:
-          columnTitle: Booket
-          description: Er de booket til fremtidige begivenheder?
-          keywords: aktivt booket
-          title: Har fremtidige bookinger
+          columnTitle:
+            text: Booket
+          description:
+            text: Er de booket til fremtidige begivenheder?
+          keywords:
+            text: aktivt booket
+          title:
+            text: Har fremtidige bookinger
         queryParticipated:
-          columnTitle: Deltog
-          description: Har de nogensinde været booket til en begivenhed?
-          keywords: aktivt booket
-          title: Har nogensinde deltaget
+          columnTitle:
+            text: Deltog
+          description:
+            text: Har de nogensinde været booket til en begivenhed?
+          keywords:
+            text: aktivt booket
+          title:
+            text: Har nogensinde deltaget
         queryReached:
-          columnTitle: Nået
-          description: Har vi nogensinde nået dem under rundringninger?
-          keywords: telefon
-          title: Nået via telefon
+          columnTitle:
+            text: Nået
+          description:
+            text: Har vi nogensinde nået dem under rundringninger?
+          keywords:
+            text: telefon
+          title:
+            text: Nået via telefon
         surveyResponse:
-          allOptions: Alle Svarmuligheder (Enkel Kolonne)
-          allOptionsHeader: Alle Svarmuligheder
-          allOptionsSeparated: Alle Svarmuligheder (Separate Colonner)
-          description: Inkluder svar til et spørgsmål fra et hvilket som helst spørgeskema.
-          keywords: flere felter
-          oneOption: En Svarmulighed
-          optionsLabel: Hvilke kolonner ønsker du at tilføje?
-          questionField: Spørgsmål
-          surveyField: Spørgeskemaer
-          textField: Svarene er fritekstsvar og vil blive vist i en enkelt kolonne
-          title: Enkelt undersøgelsesspørgsmål
+          allOptions:
+            text: Alle Svarmuligheder (Enkel Kolonne)
+          allOptionsHeader:
+            text: Alle Svarmuligheder
+          allOptionsSeparated:
+            text: Alle Svarmuligheder (Separate Colonner)
+          description:
+            text: Inkluder svar til et spørgsmål fra et hvilket som helst spørgeskema.
+          keywords:
+            text: flere felter
+          oneOption:
+            text: En Svarmulighed
+          optionsLabel:
+            text: Hvilke kolonner ønsker du at tilføje?
+          questionField:
+            text: Spørgsmål
+          surveyField:
+            text: Spørgeskemaer
+          textField:
+            text: Svarene er fritekstsvar og vil blive vist i en enkelt kolonne
+          title:
+            text: Enkelt undersøgelsesspørgsmål
         surveyResponses:
-          description: Inkluder svar fra flere spørgeskemaspørgsmål.
-          keywords: flere felter
-          questionField: Spørgsmål
-          surveyField: spørgeskemaer
-          title: Flere spørgsmål
+          description:
+            text: Inkluder svar fra flere spørgeskemaspørgsmål.
+          keywords:
+            text: flere felter
+          questionField:
+            text: Spørgsmål
+          surveyField:
+            text: spørgeskemaer
+          title:
+            text: Flere spørgsmål
         surveySubmitDate:
-          description: Se om en person har indsendt et spørgeskema og hvornår
-          noSurveys: Din organisation har ingen spørgeskemaer.
-          title: Spørgeskemaets indsendelsesdato
+          description:
+            text: Se om en person har indsendt et spørgeskema og hvornår
+          noSurveys:
+            text: Din organisation har ingen spørgeskemaer.
+          title:
+            text: Spørgeskemaets indsendelsesdato
         tag:
-          description: Vælg et etiket fra hver person på listen
-          title: Etiket
+          description:
+            text: Vælg et etiket fra hver person på listen
+          title:
+            text: Etiket
         toggle:
-          columnTitle: Skift
-          description: Afkrydsningskolonne
-          title: Skift
+          columnTitle:
+            text: Skift
+          description:
+            text: Afkrydsningskolonne
+          title:
+            text: Skift
       commonHeaders:
-        email: Email
-        first_name: Fornavn
-        last_name: Efternavn
-        phone: Telefonnummer
+        email:
+          text: Email
+        first_name:
+          text: Fornavn
+        last_name:
+          text: Efternavn
+        phone:
+          text: Telefonnummer
       editor:
-        alreadyInView: Allede på listen
+        alreadyInView:
+          text: Allede på listen
         buttonLabels:
-          addColumns: Tilføj {columns, plural, one {1 kolonne} other {{columns} kolonner}}
-          change: Ændr kolonnetype
-        defaultTitle: Ny Kolonne
+          addColumns:
+            text: Tilføj {columns, plural, one {1 kolonne} other {{columns} kolonner}}
+          change:
+            text: Ændr kolonnetype
+        defaultTitle:
+          text: Ny Kolonne
         fieldLabels:
-          field: Felt
-          question: Spørgsmål
-          smartSearch: Smart Søgning
-          survey: Spørgeskema
-          tag: Etiket
+          field:
+            text: Felt
+          question:
+            text: Spørgsmål
+          smartSearch:
+            text: Smart Søgning
+          survey:
+            text: Spørgeskema
+          tag:
+            text: Etiket
       gallery:
-        add: Tilføj
-        alreadyInView: Allerede på listen
-        columns: Kolonner
-        configure: Konfigurer
-        header: Tilføj kolonne til listen
-        noSearchResults: Der er ingen kolonnevalg, der matcher "{searchString}"
-        searchPlaceholder: Find en kolonne
-        searchResults: Resultater for "{searchString}"
+        add:
+          text: Tilføj
+        alreadyInView:
+          text: Allerede på listen
+        columns:
+          text: Kolonner
+        configure:
+          text: Konfigurer
+        header:
+          text: Tilføj kolonne til listen
+        noSearchResults:
+          text: Der er ingen kolonnevalg, der matcher "{searchString}"
+        searchPlaceholder:
+          text: Find en kolonne
+        searchResults:
+          text: Resultater for "{searchString}"
     columnMenu:
-      configure: Konfigurer kolonne
-      confirmDelete: Er du sikker på, at du vil fjerne denne kolonne? Den indeholder
-        data, der slettes permanent. Denne handling kan ikke fortrydes.
-      delete: Slet kolonne
-      rename: Omdøb kolonne
+      configure:
+        text: Konfigurer kolonne
+      confirmDelete:
+        text: Er du sikker på, at du vil fjerne denne kolonne? Den indeholder data, der
+          slettes permanent. Denne handling kan ikke fortrydes.
+      delete:
+        text: Slet kolonne
+      rename:
+        text: Omdøb kolonne
     columnRenameDialog:
-      save: Gem
-      title: Titel
+      save:
+        text: Gem
+      title:
+        text: Titel
     dataTableErrors:
-      create_column: Der opstod en fejl under oprettelsen af kolonnen
-      delete_column: Der opstod en fejl under sletning af kolonnen
-      modify_column: Der opstod en fejl under redigeringen af kolonnen
-      remove_rows: Der opstod en fejl under fjernelse af en eller flere rækker
+      create_column:
+        text: Der opstod en fejl under oprettelsen af kolonnen
+      delete_column:
+        text: Der opstod en fejl under sletning af kolonnen
+      modify_column:
+        text: Der opstod en fejl under redigeringen af kolonnen
+      remove_rows:
+        text: Der opstod en fejl under fjernelse af en eller flere rækker
     defaultColumnTitles:
-      local_bool: Skift
-      local_person: Personreference
-      organizer_action: Markerede opkald
-      person_notes: Noter
+      local_bool:
+        text: Skift
+      local_person:
+        text: Personreference
+      organizer_action:
+        text: Markerede opkald
+      person_notes:
+        text: Noter
     defaultViewTitles:
-      organizer_action: Administrator handling påkrævet
+      organizer_action:
+        text: Administrator handling påkrævet
     deleteDialog:
-      error: Det var ikke muligt at slette listen
-      title: Slet listen?
-      warningText: Vil du slette listen? Dette vil slette al data gemt i listen, som
-        noter og skift (men vil ikke slette personerne på listen fra databasen)?
+      error:
+        text: Det var ikke muligt at slette listen
+      title:
+        text: Slet listen?
+      warningText:
+        text: Vil du slette listen? Dette vil slette al data gemt i listen, som noter og
+          skift (men vil ikke slette personerne på listen fra databasen)?
     editViewTitleAlert:
-      error: Fejl. Titel ikke opdateret
-      success: Opdateret titel!
+      error:
+        text: Fejl. Titel ikke opdateret
+      success:
+        text: Opdateret titel!
     empty:
       dynamic:
-        configureButton: Konfigurer
-        description: Skal en dynamisk liste, hvor folk bliver tilføjet eller fjernet
-          automatisk ved hjem af Smart Søgning.
-        headline: Rediger Smart Søgning Liste
+        configureButton:
+          text: Konfigurer
+        description:
+          text: Skal en dynamisk liste, hvor folk bliver tilføjet eller fjernet automatisk
+            ved hjem af Smart Søgning.
+        headline:
+          text: Rediger Smart Søgning Liste
       notice:
-        dynamic: Dette er en Smart Søgning liste, men ingen personer passer søgningen
-        static: Du har ikke tilføjet nogle rækker endnu
+        dynamic:
+          text: Dette er en Smart Søgning liste, men ingen personer passer søgningen
+        static:
+          text: Du har ikke tilføjet nogle rækker endnu
       static:
-        description: Tilføj den første person her, for at skabe en statisk liste, hvor
-          folk skal tilføjes eller fjernes manuelt.
-        headline: Tilføj personer manuelt
+        description:
+          text: Tilføj den første person her, for at skabe en statisk liste, hvor folk
+            skal tilføjes eller fjernes manuelt.
+        headline:
+          text: Tilføj personer manuelt
     folder:
       summary:
-        empty: Tom
-        folderCount: '{count, plural, =1 {1 mappe} other {# mapper}}'
-        viewCount: '{count, plural, =1 {1 liste} other {# lister}}'
+        empty:
+          text: Tom
+        folderCount:
+          text: '{count, plural, =1 {1 mappe} other {# mapper}}'
+        viewCount:
+          text: '{count, plural, =1 {1 liste} other {# lister}}'
     footer:
-      addPlaceholder: Begynd at taste her, for at tilføje folk til listen
-      alreadyInView: Allerede på listen
-    newFolderTitle: Ny Mappe
+      addPlaceholder:
+        text: Begynd at taste her, for at tilføje folk til listen
+      alreadyInView:
+        text: Allerede på listen
+    newFolderTitle:
+      text: Ny Mappe
     newViewFields:
-      title: Ny Liste
+      title:
+        text: Ny Liste
     removeDialog:
-      action: Er du sikker på du vil fjerne disse rækker fra listen?
-      title: Fjern personer fra listen
+      action:
+        text: Er du sikker på du vil fjerne disse rækker fra listen?
+      title:
+        text: Fjern personer fra listen
     shareDialog:
       download:
         buttons:
-          csv: Download CSV-fil
-          xlsx: Download Excel-fil
-        shareLink: del data sikkert
-        tabLabel: Download
-        warning1: Undgå at exportere data fra Zetkin hvis muligt, for at sikre at dataen
-          holdes i orden.
-        warning2: Du kan {shareLink} internt i Zetkin. Eksport giver mening, hvis du vil
-          kopiere data til et andet system.
+          csv:
+            text: Download CSV-fil
+          xlsx:
+            text: Download Excel-fil
+        shareLink:
+          text: del data sikkert
+        tabLabel:
+          text: Download
+        warning1:
+          text: Undgå at exportere data fra Zetkin hvis muligt, for at sikre at dataen
+            holdes i orden.
+        warning2:
+          text: Du kan {shareLink} internt i Zetkin. Eksport giver mening, hvis du vil
+            kopiere data til et andet system.
       share:
-        addPlaceholder: Tilføj samarbejdspartnere
-        collabInstructions: Efter at have tilføjet samarbejdspartnere, kopier og send
-          dem dette {viewLink}
-        showOfficials: Vis officielle
-        statusLabel: Delt med {collaborators, plural, =1 {1 samarbejdspartner} other {#
-          samarbejdspartnere}}, {officials, plural, =1 {1 officiel} other {#
-          officielle}} can se alle lister.
-        tabLabel: Del
-        viewLink: begrænset link
-      title: Del "{title}"
+        addPlaceholder:
+          text: Tilføj samarbejdspartnere
+        collabInstructions:
+          text: Efter at have tilføjet samarbejdspartnere, kopier og send dem dette
+            {viewLink}
+        showOfficials:
+          text: Vis officielle
+        statusLabel:
+          text: Delt med {collaborators, plural, =1 {1 samarbejdspartner} other {#
+            samarbejdspartnere}}, {officials, plural, =1 {1 officiel} other {#
+            officielle}} can se alle lister.
+        tabLabel:
+          text: Del
+        viewLink:
+          text: begrænset link
+      title:
+        text: Del "{title}"
     suggested:
-      created: Oprettet af {name}
-      sectionTitle: Foreslået
+      created:
+        text: Oprettet af {name}
+      sectionTitle:
+        text: Foreslået
     surveyOptionCell:
-      notSelected: Ikke valgt
-      selected: Valgt
+      notSelected:
+        text: Ikke valgt
+      selected:
+        text: Valgt
     surveyPreview:
       mostRecent:
-        header: Nyeste
-        openButton: Vis hele besvarelsen
+        header:
+          text: Nyeste
+        openButton:
+          text: Vis hele besvarelsen
       older:
-        header: Ældre besvarelser
-        openButton: Vis
+        header:
+          text: Ældre besvarelser
+        openButton:
+          text: Vis
     toolbar:
-      createColumn: Ny kolonne
+      createColumn:
+        text: Ny kolonne
     viewLayout:
       actions:
-        share: Del
+        share:
+          text: Del
       ellipsisMenu:
-        delete: Slet liste
-        editQuery: Rediger Smart Søgning
-        makeDynamic: Konverter til Smart Søgnings liste
+        delete:
+          text: Slet liste
+        editQuery:
+          text: Rediger Smart Søgning
+        makeDynamic:
+          text: Konverter til Smart Søgnings liste
       jumpMenu:
-        placeholder: Begynd at taste her, for at finde en liste
+        placeholder:
+          text: Begynd at taste her, for at finde en liste
       subtitle:
-        collaborators: '{count, plural, =1 {1 ekstern samarbejdspartner} other {#
-          ekstern samarbejdspartnere}}'
-        columns: '{count, plural, =0 {ingen kolonner} =1 {1 kolonne} other {#
-          kolonner}}'
-        people: '{count, plural, =0 {tomt} =1 {1 person} other {# personer}}'
+        collaborators:
+          text: '{count, plural, =1 {1 ekstern samarbejdspartner} other {# ekstern
+            samarbejdspartnere}}'
+        columns:
+          text: '{count, plural, =0 {ingen kolonner} =1 {1 kolonne} other {# kolonner}}'
+        people:
+          text: '{count, plural, =0 {tomt} =1 {1 person} other {# personer}}'
     viewsList:
       columns:
-        created: Dato oprettet
-        owner: Ejer
-        title: Titel
-      empty: Du har ikke skabt nogle lister endnu.
+        created:
+          text: Dato oprettet
+        owner:
+          text: Ejer
+        title:
+          text: Titel
+      empty:
+        text: Du har ikke skabt nogle lister endnu.
 zui:
   timeline:
-    addNotePlaceholder: Skriv her for at efterlade en note
+    addNotePlaceholder:
+      text: Skriv her for at efterlade en note
     email:
       headers:
-        cc: CC
-        from: Fra
-        to: Til
-    expand: vis hele tidslinjen
+        cc:
+          text: CC
+        from:
+          text: Fra
+        to:
+          text: Til
+    expand:
+      text: vis hele tidslinjen
     filter:
       byType:
-        all: Alle
-        files: Filer
-        milestones: Milepæle
-        notes: Noter
-        people: Personer
-        tags: Etiketter
-      filterSelectLabel: 'Vis: {filter}'
-      warning: Tidslinjen bliver filtreret. Klick her for at fjerne filteret.
+        all:
+          text: Alle
+        files:
+          text: Filer
+        milestones:
+          text: Milepæle
+        notes:
+          text: Noter
+        people:
+          text: Personer
+        tags:
+          text: Etiketter
+      filterSelectLabel:
+        text: 'Vis: {filter}'
+      warning:
+        text: Tidslinjen bliver filtreret. Klick her for at fjerne filteret.
     updates:
       any:
-        addtags: '{actor} tilføjede {count, plural, =1 {en etiket} other {# etiketter}}'
-        removetags: '{actor} fjernede {count, plural, =1 {en etiket} other {# etiketter}}'
+        addtags:
+          text: '{actor} tilføjede {count, plural, =1 {en etiket} other {# etiketter}}'
+        removetags:
+          text: '{actor} fjernede {count, plural, =1 {en etiket} other {# etiketter}}'
       journeyinstance:
-        addassignee: '{actor} tildelt {assignee}'
-        addnote: '{actor} tilføjede en note'
-        removeassignee: '{actor} har fjernet {assignee}'
+        addassignee:
+          text: '{actor} tildelt {assignee}'
+        addnote:
+          text: '{actor} tilføjede en note'
+        removeassignee:
+          text: '{actor} har fjernet {assignee}'
         updatemilestone:
-          incomplete: '{actor} har markeret en milepæl som ufærdig'
+          incomplete:
+            text: '{actor} har markeret en milepæl som ufærdig'
   accessList:
-    added: Tilføjet af {sharer} {updated}
-    removeAccess: Fjern adgang
+    added:
+      text: Tilføjet af {sharer} {updated}
+    removeAccess:
+      text: Fjern adgang
   collapse:
-    collapse: Skjul
-    expand: Vis mere
+    collapse:
+      text: Skjul
+    expand:
+      text: Vis mere
   confirmDialog:
-    button: Bekræft
-    defaultTitle: Bekræft
-    defaultWarningText: Er du sikker på, at du vil udføre denne handling? Det kan ikke fortrydes.
+    button:
+      text: Bekræft
+    defaultTitle:
+      text: Bekræft
+    defaultWarningText:
+      text: Er du sikker på, at du vil udføre denne handling? Det kan ikke fortrydes.
   copyToClipboard:
-    copied: Kopieret
-    copiedValue: Kopieret "{value}"
-    copy: Kopiér
+    copied:
+      text: Kopieret
+    copiedValue:
+      text: Kopieret "{value}"
+    copy:
+      text: Kopiér
   dataTableSearch:
-    button: Søg
-    placeholder: Søg i denne tabel
-    placeholderWithIdSearch: "Søg - brug # til ID'er, f.eks. type #123"
-    title: Søg
+    button:
+      text: Søg
+    placeholder:
+      text: Søg i denne tabel
+    placeholderWithIdSearch:
+      text: "Søg - brug # til ID'er, f.eks. type #123"
+    title:
+      text: Søg
   dataTableSorting:
-    addButton: Tilføj sorteringskolonne
-    button: Sorter
-    hint: 'Tip: Hold {shiftKeyIcon} nede, mens du klikker på flere kolonner'
-    title: Sorter
+    addButton:
+      text: Tilføj sorteringskolonne
+    button:
+      text: Sorter
+    hint:
+      text: 'Tip: Hold {shiftKeyIcon} nede, mens du klikker på flere kolonner'
+    title:
+      text: Sorter
   dateRange:
-    draft: Ingen startdato
-    end: Slut
-    finite: Synlig fra {start} til {end}
-    indefinite: Synlig fra {start} og fremover
-    invisible: Ikke synligt eller planlagt
-    start: Start
+    draft:
+      text: Ingen startdato
+    end:
+      text: Slut
+    finite:
+      text: Synlig fra {start} til {end}
+    indefinite:
+      text: Synlig fra {start} og fremover
+    invisible:
+      text: Ikke synligt eller planlagt
+    start:
+      text: Start
   editTextInPlace:
     tooltip:
-      edit: Klik for at redigere
-      noEmpty: Dette felt må ikke være tomt
+      edit:
+        text: Klik for at redigere
+      noEmpty:
+        text: Dette felt må ikke være tomt
   futures:
-    errorLoading: Der er sket en fejl under indlæsningen af data.
+    errorLoading:
+      text: Der er sket en fejl under indlæsningen af data.
   header:
     collapseButton:
-      collapse: Skjul
-      expand: Vis mere
+      collapse:
+        text: Skjul
+      expand:
+        text: Vis mere
   lists:
-    showMore: Vis mere...
+    showMore:
+      text: Vis mere...
   organizeSidebar:
-    home: Hjem
-    people: Personer
-    projects: Projekter & Aktiviteter
-    signOut: Log af
-    userSettings: Brugerindstillinger
+    home:
+      text: Hjem
+    people:
+      text: Personer
+    projects:
+      text: Projekter & Aktiviteter
+    signOut:
+      text: Log af
+    userSettings:
+      text: Brugerindstillinger
   personGridEditCell:
-    keepTyping: Fortsæt med at skrive..
-    noResult: Ingen matchende person fundet
-    otherPeople: Andre personer
-    restrictedMode: Kan ikke redigeres i delte liste.
-    searchResults: Søgeresultater
+    keepTyping:
+      text: Fortsæt med at skrive..
+    noResult:
+      text: Ingen matchende person fundet
+    otherPeople:
+      text: Andre personer
+    restrictedMode:
+      text: Kan ikke redigeres i delte liste.
+    searchResults:
+      text: Søgeresultater
   personSelect:
-    keepTyping: Fortsæt med at skrive for at søge
-    noResult: Ingen matchende person fundet
-    search: Skriv for at starte søgning
-    searching: Søger...
+    keepTyping:
+      text: Fortsæt med at skrive for at søge
+    noResult:
+      text: Ingen matchende person fundet
+    search:
+      text: Skriv for at starte søgning
+    searching:
+      text: Søger...
   snackbar:
-    error: Åh nej, noget er gået galt
-    success: Success!
-    warning: Advarsel!
+    error:
+      text: Åh nej, noget er gået galt
+    success:
+      text: Success!
+    warning:
+      text: Advarsel!
   statusChip:
-    cancelled: Aflyst
-    closed: Lukket
+    cancelled:
+      text: Aflyst
+    closed:
+      text: Lukket
   submitOrCancel:
-    cancel: Afbryd
-    submit: Indsend
+    cancel:
+      text: Afbryd
+    submit:
+      text: Indsend
   suffixedNumber:
-    thousands: '{num}K'
+    thousands:
+      text: '{num}K'
   timeSpan:
-    multiDay: '{startDate}, {start} - {endDate}, {end}'
-    multiDayEndsToday: '{startDate}, {start} - I dag, {end}'
-    multiDayToday: I dag, {start} - {endDate}, {end}
-    singleDay: '{date}, {start} - {end}'
-    singleDayToday: I dag, {start} - {end}
+    multiDay:
+      text: '{startDate}, {start} - {endDate}, {end}'
+    multiDayEndsToday:
+      text: '{startDate}, {start} - I dag, {end}'
+    multiDayToday:
+      text: I dag, {start} - {endDate}, {end}
+    singleDay:
+      text: '{date}, {start} - {end}'
+    singleDayToday:
+      text: I dag, {start} - {end}
   timeZonePicker:
-    timeZone: Tidszone
+    timeZone:
+      text: Tidszone
