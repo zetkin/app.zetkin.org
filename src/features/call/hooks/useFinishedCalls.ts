@@ -21,6 +21,10 @@ export default function useFinishedCalls() {
         `/api/users/me/outgoing_calls?p=${pageNumber}&pp=20&filter=state!=0`
       );
 
+      if (pageNumber === 0) {
+        allLoadedCallsRef.current = [];
+      }
+
       allLoadedCallsRef.current = [
         ...allLoadedCallsRef.current,
         ...newLoadedFinishedCalls,
