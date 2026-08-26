@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 
 import messageIds from './l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -10,6 +10,7 @@ type ZUIDateSpanProps = {
 };
 
 const ZUIDateSpan: FC<ZUIDateSpanProps> = ({ end, start }) => {
+  const format = useFormatter();
   const isToday = start.toDateString() === new Date().toDateString();
   const endsOnSameDay = start.toDateString() === end.toDateString();
   const endsOnToday = end.toDateString() === new Date().toDateString();
@@ -24,7 +25,12 @@ const ZUIDateSpan: FC<ZUIDateSpanProps> = ({ end, start }) => {
               id={messageIds.dateSpan.multiDayToday}
               values={{
                 endDate: (
-                  <FormattedDate day="numeric" month="long" value={end} />
+                  <>
+                    {format.dateTime(end, {
+                      day: 'numeric',
+                      month: 'long',
+                    })}
+                  </>
                 ),
               }}
             />
@@ -38,7 +44,12 @@ const ZUIDateSpan: FC<ZUIDateSpanProps> = ({ end, start }) => {
               id={messageIds.dateSpan.singleDay}
               values={{
                 date: (
-                  <FormattedDate day="numeric" month="long" value={start} />
+                  <>
+                    {format.dateTime(start, {
+                      day: 'numeric',
+                      month: 'long',
+                    })}
+                  </>
                 ),
               }}
             />
@@ -50,7 +61,12 @@ const ZUIDateSpan: FC<ZUIDateSpanProps> = ({ end, start }) => {
                   id={messageIds.dateSpan.multiDayEndsToday}
                   values={{
                     startDate: (
-                      <FormattedDate day="numeric" month="long" value={start} />
+                      <>
+                        {format.dateTime(start, {
+                          day: 'numeric',
+                          month: 'long',
+                        })}
+                      </>
                     ),
                   }}
                 />
@@ -60,10 +76,20 @@ const ZUIDateSpan: FC<ZUIDateSpanProps> = ({ end, start }) => {
                   id={messageIds.dateSpan.multiDay}
                   values={{
                     endDate: (
-                      <FormattedDate day="numeric" month="long" value={end} />
+                      <>
+                        {format.dateTime(end, {
+                          day: 'numeric',
+                          month: 'long',
+                        })}
+                      </>
                     ),
                     startDate: (
-                      <FormattedDate day="numeric" month="long" value={start} />
+                      <>
+                        {format.dateTime(start, {
+                          day: 'numeric',
+                          month: 'long',
+                        })}
+                      </>
                     ),
                   }}
                 />

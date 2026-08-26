@@ -1,4 +1,4 @@
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Schedule } from '@mui/icons-material';
 import { Box, LinearProgress, Typography } from '@mui/material';
 
@@ -21,6 +21,7 @@ const JourneyMilestoneProgress = ({
   milestones: ZetkinJourneyMilestoneStatus[];
   next_milestone: ZetkinJourneyMilestoneStatus | null;
 }): JSX.Element => {
+  const format = useFormatter();
   const percentComplete = getCompletionPercentage(milestones);
 
   return (
@@ -52,12 +53,11 @@ const JourneyMilestoneProgress = ({
             {next_milestone.deadline && (
               <>
                 {': '}
-                <FormattedDate
-                  day="numeric"
-                  month="long"
-                  value={next_milestone.deadline}
-                  year="numeric"
-                />
+                {format.dateTime(new Date(next_milestone.deadline), {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
               </>
             )}
           </Typography>

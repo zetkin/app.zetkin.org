@@ -1,4 +1,4 @@
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { FunctionComponent } from 'react';
 import { Box } from '@mui/material';
 
@@ -23,6 +23,7 @@ const SingleProjectLayout: FunctionComponent<SingleProjectLayoutProps> = ({
   fixedHeight,
 }) => {
   const messages = useMessages(messageIds);
+  const format = useFormatter();
   const { orgId, projectId } = useNumericRouteParams();
   const { projectFuture: projectFuture } = useProject(orgId, projectId);
   const { firstEvent, lastEvent } = useProjectEvents(orgId, projectId);
@@ -45,18 +46,19 @@ const SingleProjectLayout: FunctionComponent<SingleProjectLayoutProps> = ({
           <Box>
             {firstEvent && lastEvent ? (
               <>
-                <FormattedDate
-                  day="2-digit"
-                  month="long"
-                  value={removeOffset(firstEvent.start_time)}
-                />
+                {format.dateTime(
+                  new Date(removeOffset(firstEvent.start_time)),
+                  {
+                    day: '2-digit',
+                    month: 'long',
+                  }
+                )}
                 {` - `}
-                <FormattedDate
-                  day="2-digit"
-                  month="long"
-                  value={removeOffset(lastEvent.end_time)}
-                  year="numeric"
-                />
+                {format.dateTime(new Date(removeOffset(lastEvent.end_time)), {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                })}
               </>
             ) : (
               <Msg id={messageIds.indefinite} />

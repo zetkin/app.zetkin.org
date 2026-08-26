@@ -1,5 +1,5 @@
 import { Box, lighten } from '@mui/system';
-import { useIntl } from 'react-intl';
+import { useLocale } from 'next-intl';
 import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import {
   ListItemIcon,
@@ -87,7 +87,7 @@ export interface CalendarWeekViewProps {
   onClickDay: (date: Date) => void;
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
-  const intl = useIntl();
+  const locale = useLocale();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<
@@ -209,7 +209,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 justifyContent="flex-end"
               >
                 <Typography color="textDisabled" variant="caption">
-                  {time.toLocaleString(intl.locale, {
+                  {time.toLocaleString(locale, {
                     hour: 'numeric',
                     minute: 'numeric',
                   })}

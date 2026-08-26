@@ -1,4 +1,4 @@
-import { FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import NextLink from 'next/link';
 import { Box, Link, Typography } from '@mui/material';
 import { People, PlaceOutlined, Schedule } from '@mui/icons-material';
@@ -18,6 +18,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 
 const Event = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
+  const format = useFormatter();
 
   const needsParticipants =
     event.num_participants_required > event.num_participants_available;
@@ -66,19 +67,17 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
                   </Typography>
                 ) : (
                   <>
-                    <FormattedTime
-                      hour="numeric"
-                      hour12={false}
-                      minute="numeric"
-                      value={removeOffset(event.start_time)}
-                    />
+                    {format.dateTime(new Date(removeOffset(event.start_time)), {
+                      hour: 'numeric',
+                      hour12: false,
+                      minute: 'numeric',
+                    })}
                     &nbsp;-&nbsp;
-                    <FormattedTime
-                      hour="numeric"
-                      hour12={false}
-                      minute="numeric"
-                      value={removeOffset(event.end_time)}
-                    />
+                    {format.dateTime(new Date(removeOffset(event.end_time)), {
+                      hour: 'numeric',
+                      hour12: false,
+                      minute: 'numeric',
+                    })}
                   </>
                 )}
               </Box>

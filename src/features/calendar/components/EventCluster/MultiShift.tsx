@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { ScheduleOutlined } from '@mui/icons-material';
 
 import calendarMessageIds from 'features/calendar/l10n/messageIds';
@@ -14,11 +14,10 @@ import { availableHeightByEvent, fieldsToPresent } from './utils';
 import Event, { Field, FIELD_PRESENTATION } from './Event';
 import { Msg, useMessages } from 'core/i18n';
 
-function createMultiShiftFieldGroups({
-  events,
-  remindersNotSent,
-  unbookedSignups,
-}: MultiShiftProps): Field[][] {
+function createMultiShiftFieldGroups(
+  { events, remindersNotSent, unbookedSignups }: MultiShiftProps,
+  format: ReturnType<typeof useFormatter>
+): Field[][] {
   const fieldGroups: Field[][] = events.map((event, index) => {
     const isFirstEvent = index === 0;
     let fields: (null | Field)[] = [];
@@ -40,9 +39,9 @@ function createMultiShiftFieldGroups({
           kind: 'ScheduledTime',
           message: (
             <>
-              <FormattedTime value={removeOffset(event.start_time)} />
+              {format.dateTime(new Date(removeOffset(event.start_time)))}
               {'-'}
-              <FormattedTime value={removeOffset(event.end_time)} />
+              {format.dateTime(new Date(removeOffset(event.end_time)))}
             </>
           ),
           requiresAction: false,
@@ -91,9 +90,9 @@ function createMultiShiftFieldGroups({
           kind: 'ScheduledTime',
           message: (
             <>
-              <FormattedTime value={removeOffset(event.start_time)} />
+              {format.dateTime(new Date(removeOffset(event.start_time)))}
               {'-'}
-              <FormattedTime value={removeOffset(event.end_time)} />
+              {format.dateTime(new Date(removeOffset(event.end_time)))}
             </>
           ),
           requiresAction: false,
@@ -158,6 +157,7 @@ const MultiShift: FC<MultiShiftProps> = ({
   width,
 }) => {
   const messages = useMessages(eventMessageIds);
+  const format = useFormatter();
   const firstEventTitle =
     events[0].title || events[0].activity?.title || messages.common.noTitle();
 
@@ -170,14 +170,17 @@ const MultiShift: FC<MultiShiftProps> = ({
     events.length
   );
 
-  const fieldGroups = createMultiShiftFieldGroups({
-    events,
-    height,
-    remindersNotSent,
-    showTopBadge,
-    unbookedSignups,
-    width,
-  }).map((group, groupIndex) => {
+  const fieldGroups = createMultiShiftFieldGroups(
+    {
+      events,
+      height,
+      remindersNotSent,
+      showTopBadge,
+      unbookedSignups,
+      width,
+    },
+    format
+  ).map((group, groupIndex) => {
     return fieldsToPresent(group, availableHeightPerFieldGroup[groupIndex]).map(
       (field) => {
         const fieldShouldBeCollapsed =

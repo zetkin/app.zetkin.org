@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Box, Typography } from '@mui/material';
 
 import oldTheme from 'theme';
 
 const DateLabel = ({ date }: { date: Date }) => {
+  const format = useFormatter();
   const isToday = dayjs(date).isSame(dayjs(), 'day');
   const isThePast = dayjs(date).isBefore(dayjs(), 'day');
   return (
@@ -31,13 +32,13 @@ const DateLabel = ({ date }: { date: Date }) => {
         }}
       >
         <Typography fontSize="1.4em" variant="h4">
-          <FormattedDate day="numeric" value={date} />
+          {format.dateTime(date, { day: 'numeric' })}
         </Typography>
       </Box>
       <Typography variant="body1">
-        <FormattedDate month="long" value={date} />
+        {format.dateTime(date, { month: 'long' })}
         ,&nbsp;
-        <FormattedDate value={date} weekday="short" />
+        {format.dateTime(date, { weekday: 'short' })}
       </Typography>
     </Box>
   );

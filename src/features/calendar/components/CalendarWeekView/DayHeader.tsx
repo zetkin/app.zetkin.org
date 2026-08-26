@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { useLocale } from 'next-intl';
 import { useMemo } from 'react';
 
 import oldTheme from 'theme';
@@ -14,7 +14,7 @@ export interface DayHeaderProps {
 }
 
 const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
-  const intl = useIntl();
+  const locale = useLocale();
   const dstChange = useMemo(() => getDstChangeAtDate(date), [date]);
 
   return (
@@ -31,7 +31,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       {/* Day string */}
       <Box alignItems="center" display="flex" justifyContent="flex-start">
         <Typography color={oldTheme.palette.grey[500]} variant="subtitle2">
-          {date.toLocaleString(intl.locale, { weekday: 'short' })}
+          {date.toLocaleString(locale, { weekday: 'short' })}
         </Typography>
       </Box>
       {/* Day number */}

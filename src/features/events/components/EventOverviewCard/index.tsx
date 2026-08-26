@@ -1,7 +1,7 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
-import { FormattedTime } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import MapIcon from '@mui/icons-material/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { TimeField } from '@mui/x-date-pickers-pro';
@@ -54,6 +54,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
   const locations = useEventLocations(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
   const messages = useMessages(messageIds);
+  const format = useFormatter();
   const [editable, setEditable] = useState(false);
   const [link, setLink] = useState(data.url);
   const [infoText, setInfoText] = useState(data.info_text);
@@ -237,7 +238,13 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     );
                   }}
                   renderPreview={() => {
-                    return <FormattedTime hour12={false} value={naiveStart} />;
+                    return (
+                      <>
+                        {format.dateTime(new Date(naiveStart), {
+                          hour12: false,
+                        })}
+                      </>
+                    );
                   }}
                   value={naiveStart}
                 />
@@ -351,7 +358,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     );
                   }}
                   renderPreview={() => {
-                    return <FormattedTime hour12={false} value={naiveEnd} />;
+                    return (
+                      <>
+                        {format.dateTime(new Date(naiveEnd), { hour12: false })}
+                      </>
+                    );
                   }}
                   value={naiveEnd}
                 />

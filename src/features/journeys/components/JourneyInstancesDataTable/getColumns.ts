@@ -1,4 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
+import { useFormatter } from 'next-intl';
 
 import { getStaticColumns } from './getStaticColumns';
 import getTagColumns from './getTagColumns';
@@ -10,9 +11,10 @@ import messageIds from 'features/journeys/l10n/messageIds';
 const getColumns = (
   messages: UseMessagesMap<typeof messageIds>,
   journeyInstances: ZetkinJourneyInstance[],
-  tagColumns: JourneyTagColumnData[]
+  tagColumns: JourneyTagColumnData[],
+  format: ReturnType<typeof useFormatter>
 ): GridColDef[] => {
-  const staticColumns = getStaticColumns(messages, journeyInstances);
+  const staticColumns = getStaticColumns(messages, journeyInstances, format);
   return (
     staticColumns
       .splice(0, 3)

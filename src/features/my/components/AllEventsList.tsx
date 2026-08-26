@@ -15,7 +15,7 @@ import {
   DateRangePickerDay,
 } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
-import { useIntl } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import useAllEvents from 'features/my/hooks/useAllEvents';
@@ -33,7 +33,7 @@ import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 
 const AllEventsList: FC = () => {
-  const intl = useIntl();
+  const format = useFormatter();
   const messages = useMessages(messageIds);
   const allEvents = useAllEvents();
   const nextDelay = useIncrementalDelay();
@@ -151,12 +151,12 @@ const AllEventsList: FC = () => {
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
-      return intl.formatDate(start.toDate(), {
+      return format.dateTime(start.toDate(), {
         day: 'numeric',
         month: 'short',
       });
     } else {
-      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+      return format.dateTimeRange(start.toDate(), end.toDate(), {
         day: 'numeric',
         month: 'short',
       });

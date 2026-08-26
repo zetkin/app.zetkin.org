@@ -1,4 +1,5 @@
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { useFormatter } from 'next-intl';
 import { FunctionComponent, useState } from 'react';
 
 import getColumns from './getColumns';
@@ -26,11 +27,17 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   storageKey = 'journeyInstances',
 }) => {
   const messages = useMessages(messageIds);
+  const format = useFormatter();
   const { gridProps: modelGridProps } = useModelsFromQueryString();
   const [quickSearch, setQuickSearch] = useState('');
   const rows = getRows({ journeyInstances, quickSearch });
 
-  const rawColumns = getColumns(messages, journeyInstances, tagColumnsData);
+  const rawColumns = getColumns(
+    messages,
+    journeyInstances,
+    tagColumnsData,
+    format
+  );
   const { columns, setColumnOrder, setColumnWidth } =
     useConfigurableDataGridColumns(storageKey, rawColumns);
 

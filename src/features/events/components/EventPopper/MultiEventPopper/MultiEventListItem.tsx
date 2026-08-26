@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useIntl } from 'react-intl';
+import { useFormatter } from 'next-intl';
 import { Box, Typography } from '@mui/material';
 import { ChevronRightOutlined, People } from '@mui/icons-material';
 
@@ -27,16 +27,22 @@ const MultiEventListItem: FC<MultiEventListItemProps> = ({
   event,
   onEventClick,
 }) => {
-  const intl = useIntl();
+  const format = useFormatter();
   const messages = useMessages(messageIds);
   const state = useEventState(event.organization.id, event.id);
-  const timeSpan = `${intl.formatTime(
-    removeOffset(
-      'originalStartTime' in event ? event.originalStartTime : event.start_time
+  const timeSpan = `${format.dateTime(
+    new Date(
+      removeOffset(
+        'originalStartTime' in event
+          ? event.originalStartTime
+          : event.start_time
+      )
     )
-  )}-${intl.formatTime(
-    removeOffset(
-      'originalEndTime' in event ? event.originalEndTime : event.end_time
+  )}-${format.dateTime(
+    new Date(
+      removeOffset(
+        'originalEndTime' in event ? event.originalEndTime : event.end_time
+      )
     )
   )}`;
 

@@ -1,21 +1,31 @@
-import { IntlShape } from 'react-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 
 import messageIds from 'zui/l10n/messageIds';
 import { isAllDay } from 'features/calendar/components/utils';
-import { injectIntl } from 'core/i18n/useMessages';
+import { injectTranslator } from 'core/i18n/useMessages';
+
+type Formatter = ReturnType<typeof useFormatter>;
+type TranslatorFunc = ReturnType<typeof useTranslations>;
 
 export function timeSpanToString(
   start: Date,
   end: Date,
-  intl: IntlShape
+  t: TranslatorFunc,
+  formatter: Formatter
 ): string {
-  const messages = injectIntl(messageIds.timeSpan, intl);
+  const messages = injectTranslator(messageIds.timeSpan, t);
   const isToday = start.toDateString() === new Date().toDateString();
   const endsOnSameDay = start.toDateString() === end.toDateString();
   const endsOnToday = end.toDateString() === new Date().toDateString();
 
-  const startTime = intl.formatTime(start);
-  const endTime = intl.formatTime(end);
+  const startTime = formatter.dateTime(start, {
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+  const endTime = formatter.dateTime(end, {
+    hour: 'numeric',
+    minute: 'numeric',
+  });
 
   if (isToday && isAllDay(start.toISOString(), end.toDateString())) {
     return messages.singleDayAllDay();
@@ -27,14 +37,14 @@ export function timeSpanToString(
     } else {
       return messages.multiDayToday({
         end: endTime,
-        endDate: intl.formatDate(end, { day: 'numeric', month: 'long' }),
+        endDate: formatter.dateTime(end, { day: 'numeric', month: 'long' }),
         start: startTime,
       });
     }
   } else {
     if (endsOnSameDay) {
       return messages.singleDay({
-        date: intl.formatDate(start, { day: 'numeric', month: 'long' }),
+        date: formatter.dateTime(start, { day: 'numeric', month: 'long' }),
         end: endTime,
         start: startTime,
       });
@@ -43,14 +53,20 @@ export function timeSpanToString(
         return messages.multiDayEndsToday({
           end: endTime,
           start: startTime,
-          startDate: intl.formatDate(start, { day: 'numeric', month: 'long' }),
+          startDate: formatter.dateTime(start, {
+            day: 'numeric',
+            month: 'long',
+          }),
         });
       } else {
         return messages.multiDay({
           end: endTime,
-          endDate: intl.formatDate(end, { day: 'numeric', month: 'long' }),
+          endDate: formatter.dateTime(end, { day: 'numeric', month: 'long' }),
           start: startTime,
-          startDate: intl.formatDate(start, { day: 'numeric', month: 'long' }),
+          startDate: formatter.dateTime(start, {
+            day: 'numeric',
+            month: 'long',
+          }),
         });
       }
     }
