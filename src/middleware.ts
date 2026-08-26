@@ -34,6 +34,7 @@ function setupCsp(path: string) {
   );
 
   const isEmbedJoinForm = /^\/o\/[^/]+\/embedjoinform(\/|$)/.test(path);
+  const isSurvey = /^\/o\/[^/]+\/surveys\/[^/]+(\/|$)/.test(path);
   const styleSrc = isEmbedJoinForm
     ? "* 'unsafe-inline'"
     : `'self' https://use.typekit.net https://p.typekit.net ${
@@ -54,7 +55,7 @@ function setupCsp(path: string) {
   object-src 'none';
   base-uri 'self';
   form-action 'self';
-  frame-ancestors ${isEmbedJoinForm ? '*' : "'none'"};
+  frame-ancestors ${isEmbedJoinForm || isSurvey ? '*' : "'none'"};
   upgrade-insecure-requests;
 `;
   const cspHeaderTrimmed = cspHeader.replace(/\s{2,}/g, ' ').trim();
