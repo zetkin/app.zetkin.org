@@ -226,6 +226,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
           >
             <Button
               color="inherit"
+              href={button.href}
               onClick={button.onClick}
               sx={(theme) => ({
                 boxShadow: 'none',
