@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useIntl } from 'react-intl';
+import { useTranslations, RichTranslationValues } from 'next-intl';
 
 import { InterpolatedMessage, PlainMessage, ValueRecord } from './messages';
 
@@ -21,18 +21,13 @@ function Msg<Values extends ValueRecord>({
   id,
   values,
 }: MsgProps<Values>): ReactNode {
-  const intl = useIntl();
+  const t = useTranslations();
 
-  const descriptor = {
-    defaultMessage: id._defaultMessage,
-    id: id._id,
-  };
+  if (values) {
+    return t.rich(id._id, values as RichTranslationValues);
+  }
 
-  const str = values
-    ? intl.formatMessage(descriptor, values)
-    : intl.formatMessage(descriptor);
-
-  return str;
+  return t(id._id);
 }
 
 export default Msg;

@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { IntlProvider } from 'react-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, Suspense, useRef } from 'react';
@@ -18,7 +18,6 @@ import 'dayjs/locale/nl';
 import Environment from './env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
-import { MessageList } from 'utils/locale';
 import { Store } from './store';
 import { oldThemeWithLocale } from '../theme';
 import { ZetkinUser } from 'utils/types/zetkin';
@@ -30,7 +29,7 @@ import { NonceContext } from 'core/hooks/useNonce';
 type ProviderData = {
   env: Environment;
   lang: string;
-  messages: MessageList;
+  messages: Record<string, unknown>;
   nonce?: string;
   store: Store;
   user: ZetkinUser;
@@ -86,11 +85,7 @@ const Providers: FC<ProvidersProps> = ({
                     adapterLocale={lang}
                     dateAdapter={AdapterDayjs}
                   >
-                    <IntlProvider
-                      defaultLocale="en"
-                      locale={lang}
-                      messages={messages}
-                    >
+                    <NextIntlClientProvider locale={lang} messages={messages}>
                       <ZUISnackbarProvider>
                         <ZUIConfirmDialogProvider>
                           <EventPopperProvider>
@@ -100,7 +95,7 @@ const Providers: FC<ProvidersProps> = ({
                           </EventPopperProvider>
                         </ZUIConfirmDialogProvider>
                       </ZUISnackbarProvider>
-                    </IntlProvider>
+                    </NextIntlClientProvider>
                   </LocalizationProvider>
                 </ThemeProvider>
               </NonceContext.Provider>

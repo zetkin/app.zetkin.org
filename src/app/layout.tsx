@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
 import { ZetkinUser } from 'utils/types/zetkin';
-import { getBrowserLanguage, getMessages } from 'utils/locale';
+import { getBrowserLanguage, getNestedMessages } from 'utils/locale';
 
 export default async function RootLayout({
   children,
@@ -26,7 +26,7 @@ export default async function RootLayout({
 
   const lang =
     user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
-  const messages = await getMessages(lang);
+  const messages = await getNestedMessages(lang);
   const nonce = headers().get('x-nonce') ?? undefined;
 
   return (

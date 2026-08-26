@@ -7,7 +7,7 @@ import {
 } from 'next';
 
 import { AppSession } from './types';
-import { getBrowserLanguage, getMessages } from './locale';
+import { getBrowserLanguage, getNestedMessages } from './locale';
 import getUserMemberships from './getUserMemberships';
 import requiredEnvVar from './requiredEnvVar';
 import { stringToBool } from './stringUtils';
@@ -30,7 +30,7 @@ type RegularProps = {
 export type ScaffoldedProps = RegularProps & {
   envVars: EnvVars;
   lang: string;
-  messages: Record<string, string>;
+  messages: Record<string, unknown>;
   user: ZetkinUser | null;
 };
 
@@ -219,7 +219,7 @@ export const scaffold =
     // TODO: Respect scope from options again
     //const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
     const localeScope: string[] = [];
-    const messages = await getMessages(lang, localeScope);
+    const messages = await getNestedMessages(lang, localeScope);
 
     if (hasProps(result)) {
       result.props = {

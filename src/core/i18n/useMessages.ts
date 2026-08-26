@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useTranslations } from 'next-intl';
 
-import { IntlShape, useIntl } from 'react-intl';
+import { AnyMessage, MessageMap } from './messages';
 
-import { Message, MessageMap } from './messages';
+type TranslatorFunc = ReturnType<typeof useTranslations>;
 
 /**
  * The useMessages() takes messages defined by the messages() function, and
@@ -18,49 +18,43 @@ import { Message, MessageMap } from './messages';
 export default function useMessages<MapType extends MessageMap>(
   messages: MapType
 ): UseMessagesMap<MapType> {
-  const intl = useIntl();
+  const t = useTranslations();
 
-  return injectIntl(messages, intl);
+  return injectTranslator(messages, t);
 }
 
-export function injectIntl<MapType extends MessageMap>(
+export function injectTranslator<MapType extends MessageMap>(
   map: MapType,
-  intl: IntlShape
+  t: TranslatorFunc
 ): UseMessagesMap<MapType> {
   const output: Record<
     string,
-    HookedMessageFunc<Message<any>> | UseMessagesMap<any>
+    HookedMessageFunc<AnyMessage> | UseMessagesMap<MessageMap>
   > = {};
 
   Object.entries(map).forEach(([key, val]) => {
     if (isMessage(val)) {
       output[key] = (values?: Record<string, string>) => {
-        return intl.formatMessage(
-          {
-            defaultMessage: val._defaultMessage,
-            id: val._id,
-          },
-          values
-        );
+        return values ? t(val._id, values) : t(val._id);
       };
     } else {
-      output[key] = injectIntl(val, intl) as UseMessagesMap<typeof val>;
+      output[key] = injectTranslator(val, t) as UseMessagesMap<typeof val>;
     }
   });
 
   return output as UseMessagesMap<MapType>;
 }
 
-export type HookedMessageFunc<MapEntry extends Message<any>> = (
+export type HookedMessageFunc<MapEntry extends AnyMessage> = (
   values: ReturnType<MapEntry['_typeFunc']>
 ) => string;
 
 export type UseMessagesMap<MapType> = {
-  [K in keyof MapType]: MapType[K] extends Message<any>
+  [K in keyof MapType]: MapType[K] extends AnyMessage
     ? HookedMessageFunc<MapType[K]>
     : UseMessagesMap<MapType[K]>;
 };
 
-function isMessage(val: MessageMap | Message<any>): val is Message<any> {
+function isMessage(val: MessageMap | AnyMessage): val is AnyMessage {
   return '_typeFunc' in val;
 }

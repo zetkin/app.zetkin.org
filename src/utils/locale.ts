@@ -104,6 +104,35 @@ export async function getMessages(
   }
 }
 
+type NestedMessages = { [key: string]: string | NestedMessages };
+
+// next-intl looks up translations by walking a nested object (e.g.
+// messages.feat.account.title), not by flat dot-notation keys. Unflatten
+// once per (lang, scope) call so providers can be handed a shape it expects.
+function unflattenObject(flat: MessageList): NestedMessages {
+  const nested: NestedMessages = {};
+  Object.entries(flat).forEach(([key, val]) => {
+    const parts = key.split('.');
+    let current = nested;
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!(parts[i] in current) || typeof current[parts[i]] === 'string') {
+        current[parts[i]] = {};
+      }
+      current = current[parts[i]] as NestedMessages;
+    }
+    current[parts[parts.length - 1]] = val;
+  });
+  return nested;
+}
+
+export async function getNestedMessages(
+  lang: string,
+  scope: string[] = []
+): Promise<NestedMessages> {
+  const flat = await getMessages(lang, scope);
+  return unflattenObject(flat);
+}
+
 export const getBrowserLanguage = (
   req: NextApiRequest | IncomingMessage | string
 ): SupportedLanguage => {

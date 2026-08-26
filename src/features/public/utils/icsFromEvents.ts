@@ -1,7 +1,7 @@
 'use server';
 
 import dayjs, { Dayjs } from 'dayjs';
-import { createIntl, createIntlCache } from 'react-intl';
+import IntlMessageFormat from 'intl-messageformat';
 
 import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
 import { getMessages } from 'utils/locale';
@@ -28,23 +28,14 @@ export default async function icsFromEvents(
   const joinEventCtaMsg =
     messages['ics.joinEvent'] || messageIds.ics.joinEvent._defaultMessage;
 
-  const intlCache = createIntlCache();
-  const intl = createIntl({ locale: lang }, intlCache);
-
   events
     .filter((event) => !event.cancelled && event.published)
     .forEach((event) => {
       const eventLink = `${stringToBool(process.env.ZETKIN_USE_TLS) ? 'https' : 'http'}://${process.env.ZETKIN_APP_HOST}/o/${org.id}/events/${event.id}`;
 
-      const joinEventCta = intl.formatMessage(
-        {
-          defaultMessage: joinEventCtaMsg,
-          id: 'feat.home.ics.joinEvent',
-        },
-        {
-          eventLink,
-        }
-      );
+      const joinEventCta = new IntlMessageFormat(joinEventCtaMsg, lang).format({
+        eventLink,
+      }) as string;
 
       vLines.push(`BEGIN:VEVENT`);
       vLines.push(`UID:${event.id}@${process.env.ZETKIN_APP_HOST}`);
