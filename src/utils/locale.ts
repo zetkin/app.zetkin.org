@@ -106,9 +106,7 @@ export async function getMessages(
 
 type NestedMessages = { [key: string]: string | NestedMessages };
 
-// next-intl looks up translations by walking a nested object (e.g.
-// messages.feat.account.title), not by flat dot-notation keys. Unflatten
-// once per (lang, scope) call so providers can be handed a shape it expects.
+// next-intl looks up messages in a nested object, not by flat dot-notation key.
 function unflattenObject(flat: MessageList): NestedMessages {
   const nested: NestedMessages = {};
   Object.entries(flat).forEach(([key, val]) => {

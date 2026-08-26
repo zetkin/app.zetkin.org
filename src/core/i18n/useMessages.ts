@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import IntlMessageFormat from 'intl-messageformat';
 
 import { AnyMessage, MessageMap } from './messages';
 
@@ -35,6 +36,9 @@ export function injectTranslator<MapType extends MessageMap>(
   Object.entries(map).forEach(([key, val]) => {
     if (isMessage(val)) {
       output[key] = (values?: Record<string, string>) => {
+        if (!t.has(val._id)) {
+          return formatDefaultMessage(val._defaultMessage, values);
+        }
         return values ? t(val._id, values) : t(val._id);
       };
     } else {
@@ -57,4 +61,11 @@ export type UseMessagesMap<MapType> = {
 
 function isMessage(val: MessageMap | AnyMessage): val is AnyMessage {
   return '_typeFunc' in val;
+}
+
+function formatDefaultMessage(
+  defaultMessage: string,
+  values?: Record<string, string>
+): string {
+  return new IntlMessageFormat(defaultMessage, 'en').format(values) as string;
 }
