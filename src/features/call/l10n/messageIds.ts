@@ -163,6 +163,13 @@ export default makeMessages('feat.call', {
     noInstructions: m('This assignment does not have any instructions.'),
     title: m('Instructions'),
   },
+  newUIAlert: {
+    goBackButton: m('Back to old version'),
+    subtitle: m(
+      'You can start using it right away, or go back to the old version if you prefer.'
+    ),
+    title: m('Welcome to the redesigned caller interface!'),
+  },
   report: {
     steps: {
       callBack: {

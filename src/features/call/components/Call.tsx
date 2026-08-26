@@ -20,6 +20,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
+import ZUIAlert from 'zui/components/ZUIAlert';
 
 type Props = {
   onResetAfterError: (urlToNavigateTo: string) => void;
@@ -83,6 +84,17 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
           overflow: 'hidden',
         })}
       >
+        {lane.step === LaneStep.START && (
+          <ZUIAlert
+            button={{
+              href: `${process.env.ZETKIN_GEN2_CALL_URL}/assignments/${assignment.id}/call`,
+              label: messages.newUIAlert.goBackButton(),
+            }}
+            description={messages.newUIAlert.subtitle()}
+            severity="info"
+            title={messages.newUIAlert.title()}
+          />
+        )}
         <CallHeader
           assignment={assignment}
           call={call}
