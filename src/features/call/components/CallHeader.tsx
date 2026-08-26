@@ -1,6 +1,6 @@
 import { SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import { Box, Link } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -24,6 +24,7 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useFilteredActivities from '../hooks/useFilteredActivities';
 import notEmpty from 'utils/notEmpty';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -152,9 +153,7 @@ const CallHeader: FC<Props> = ({
               {phoneNumbers.flatMap((phone, index) => {
                 return [
                   index > 0 ? '/' : null,
-                  <Link key={phone} href={`tel:${phone}`}>
-                    {phone}
-                  </Link>,
+                  <ZUILink key={phone} href={`tel:${phone}`} text={phone} />,
                 ];
               })}
             </ZUIText>
