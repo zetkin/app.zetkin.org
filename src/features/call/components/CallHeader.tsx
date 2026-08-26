@@ -1,6 +1,6 @@
 import { SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Link } from '@mui/material';
 
 import { LaneState, LaneStep, Report, UnfinishedCall } from '../types';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -68,6 +68,10 @@ const CallHeader: FC<Props> = ({
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
   const submitReport = useSubmitReport(assignment.organization.id);
+
+  const phoneNumbers = [call?.target.phone, call?.target.alt_phone].filter(
+    notEmpty
+  );
 
   return (
     <Box
@@ -145,9 +149,14 @@ const CallHeader: FC<Props> = ({
               sx={{ fontFamily: 'monospace' }}
               variant="headingLg"
             >
-              {[call.target.phone, call.target.alt_phone]
-                .filter(notEmpty)
-                .join('/')}
+              {phoneNumbers.flatMap((phone, index) => {
+                return [
+                  index > 0 ? '/' : null,
+                  <Link key={phone} href={`tel:${phone}`}>
+                    {phone}
+                  </Link>,
+                ];
+              })}
             </ZUIText>
           </>
         )}
