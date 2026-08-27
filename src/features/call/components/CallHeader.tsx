@@ -24,6 +24,7 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useFilteredActivities from '../hooks/useFilteredActivities';
 import notEmpty from 'utils/notEmpty';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -68,6 +69,10 @@ const CallHeader: FC<Props> = ({
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
   const submitReport = useSubmitReport(assignment.organization.id);
+
+  const phoneNumbers = [call?.target.phone, call?.target.alt_phone].filter(
+    notEmpty
+  );
 
   return (
     <Box
@@ -145,9 +150,12 @@ const CallHeader: FC<Props> = ({
               sx={{ fontFamily: 'monospace' }}
               variant="headingLg"
             >
-              {[call.target.phone, call.target.alt_phone]
-                .filter(notEmpty)
-                .join('/')}
+              {phoneNumbers.flatMap((phone, index) => {
+                return [
+                  index > 0 ? '/' : null,
+                  <ZUILink key={phone} href={`tel:${phone}`} text={phone} />,
+                ];
+              })}
             </ZUIText>
           </>
         )}
