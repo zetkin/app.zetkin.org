@@ -18,6 +18,7 @@ import 'dayjs/locale/nl';
 import Environment from './env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
+import useTimeZone from 'core/hooks/useTimeZone';
 import { Store } from './store';
 import { oldThemeWithLocale } from '../theme';
 import { ZetkinUser } from 'utils/types/zetkin';
@@ -73,6 +74,8 @@ const Providers: FC<ProvidersProps> = ({
     cache.current = createCache({ key: 'css', nonce: nonce, prepend: true });
   }
 
+  const timeZone = useTimeZone();
+
   return (
     <ReduxProvider store={store}>
       <EnvProvider env={env}>
@@ -85,7 +88,11 @@ const Providers: FC<ProvidersProps> = ({
                     adapterLocale={lang}
                     dateAdapter={AdapterDayjs}
                   >
-                    <NextIntlClientProvider locale={lang} messages={messages}>
+                    <NextIntlClientProvider
+                      locale={lang}
+                      messages={messages}
+                      timeZone={timeZone}
+                    >
                       <ZUISnackbarProvider>
                         <ZUIConfirmDialogProvider>
                           <EventPopperProvider>

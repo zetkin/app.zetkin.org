@@ -28,6 +28,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 import { NonceContext } from 'core/hooks/useNonce';
+import useTimeZone from 'core/hooks/useTimeZone';
 
 type ClientContextProps = {
   children: ReactNode;
@@ -71,6 +72,8 @@ const ClientContext: FC<ClientContextProps> = ({
     });
   }
 
+  const timeZone = useTimeZone();
+
   // MUI-X license
   if (env.vars.MUIX_LICENSE_KEY) {
     LicenseInfo.setLicenseKey(env.vars.MUIX_LICENSE_KEY);
@@ -88,7 +91,11 @@ const ClientContext: FC<ClientContextProps> = ({
                     adapterLocale={lang}
                     dateAdapter={AdapterDayjs}
                   >
-                    <NextIntlClientProvider locale={lang} messages={messages}>
+                    <NextIntlClientProvider
+                      locale={lang}
+                      messages={messages}
+                      timeZone={timeZone}
+                    >
                       <AppRouterCacheProvider>
                         <ZUISnackbarProvider>
                           <ZUIConfirmDialogProvider>
