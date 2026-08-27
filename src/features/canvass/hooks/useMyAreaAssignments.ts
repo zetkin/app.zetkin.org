@@ -2,6 +2,7 @@ import { useApiClient, useAppSelector } from 'core/hooks';
 import { myAssignmentsLoad, myAssignmentsLoaded } from '../store';
 import useRemoteList from 'core/hooks/useRemoteList';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
 export default function useMyAreaAssignments() {
   const apiClient = useApiClient();
@@ -11,7 +12,9 @@ export default function useMyAreaAssignments() {
     actionOnLoad: () => myAssignmentsLoad(),
     actionOnSuccess: (data) => myAssignmentsLoaded(data),
     loader: () =>
-      apiClient.get<ZetkinAreaAssignment[]>('/api2/users/me/area_assignments'),
+      fetchAllPaginated<ZetkinAreaAssignment>((page) =>
+        apiClient.get(`/api2/users/me/area_assignments?size=100&page=${page}`)
+      ),
   });
 
   const now = new Date();

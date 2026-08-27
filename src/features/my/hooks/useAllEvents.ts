@@ -1,6 +1,10 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
 import useRemoteList from 'core/hooks/useRemoteList';
-import { allEventsLoad, allEventsLoaded } from '../../events/store';
+import {
+  allEventsError,
+  allEventsLoad,
+  allEventsLoaded,
+} from '../../events/store';
 import getAllEvents from '../../events/rpc/getAllEvents';
 import sortEventsByStartTime from '../../events/utils/sortEventsByStartTime';
 import { ZetkinEventWithStatus } from 'features/public/types';
@@ -13,6 +17,7 @@ export default function useAllEvents() {
   const myEvents = useMyEvents();
 
   const events = useRemoteList(allEventsList, {
+    actionOnError: (err) => allEventsError(err),
     actionOnLoad: () => allEventsLoad(),
     actionOnSuccess: (data) => {
       const sorted = data.sort(sortEventsByStartTime);

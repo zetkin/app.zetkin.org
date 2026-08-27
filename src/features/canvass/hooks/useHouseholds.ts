@@ -15,7 +15,7 @@ export default function useHouseholds(
   return useRemoteList(list, {
     actionOnLoad: () => householdsLoad(locationId),
     actionOnSuccess: (data) => householdsLoaded([locationId, data]),
-    loader: async () =>
+    loader: () =>
       fetchAllPaginated<HouseholdWithColor>(
         (page) =>
           apiClient.get(

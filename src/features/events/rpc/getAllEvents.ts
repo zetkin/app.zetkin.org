@@ -107,10 +107,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     if (!followedOrgs.has(event.organization.id)) {
       return false;
     }
+    const publishInstant = parsePublishDate(event.published);
     const isPublished =
-      event.published &&
-      Temporal.Instant.compare(Temporal.Instant.from(event.published), now) <=
-        0;
+      publishInstant && Temporal.Instant.compare(publishInstant, now) <= 0;
     const state = getEventState(event);
     return (
       (state == EventState.OPEN || state == EventState.SCHEDULED) && isPublished
@@ -168,4 +167,20 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   });
 
   return publicEvents;
+}
+
+function parsePublishDate(dateStr: string | null): Temporal.Instant | null {
+  if (!dateStr) {
+    return null;
+  }
+
+  try {
+    return Temporal.Instant.from(dateStr);
+  } catch (err) {
+    try {
+      return Temporal.Instant.from(dateStr + 'Z');
+    } catch (err) {
+      return null;
+    }
+  }
 }
