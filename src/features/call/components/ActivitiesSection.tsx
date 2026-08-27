@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useRef, useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -51,6 +51,7 @@ type Filter = {
   key: string;
   label: string | MUIIcon;
   onClick: () => void;
+  wrapperRef?: React.RefObject<HTMLSpanElement>;
 };
 
 type ActivitiesProps = {
@@ -154,12 +155,18 @@ const Activities: FC<ActivitiesProps> = ({
         {partition([...baseFilters, ...eventFilters], (filter) => filter.active)
           .flat()
           .map((filter) => (
-            <ZUIFilterButton
+            <Box
               key={filter.key}
-              active={filter.active}
-              label={filter.label}
-              onClick={filter.onClick}
-            />
+              ref={filter.wrapperRef}
+              component="span"
+              style={{ display: 'contents' }}
+            >
+              <ZUIFilterButton
+                active={filter.active}
+                label={filter.label}
+                onClick={filter.onClick}
+              />
+            </Box>
           ))}
       </Box>
       {showNoActivities && (
@@ -248,6 +255,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const messages = useMessages(messageIds);
   const intl = useIntl();
   const dispatch = useAppDispatch();
+  const alreadyInRef = useRef<HTMLSpanElement>(null);
   const { events, filteredActivities, filteredEvents, getDateRange, surveys } =
     useFilteredActivities(assignment.organization.id);
   const {
@@ -411,6 +419,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 })
               );
             },
+            wrapperRef: alreadyInRef,
           },
         ]
       : []),
@@ -601,7 +610,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 baseFilters={baseFilters}
                 eventFilters={filterState.events ? eventFilters : []}
                 isFiltered={isFiltered}
-                onClearFilters={() =>
+                onClearFilters={() => {
                   dispatch(
                     filtersUpdated({
                       customDatesToFilterEventsBy: [null, null],
@@ -615,8 +624,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                       orgIdsToFilterEventsBy: [],
                       projectIdsToFilterActivitiesBy: [],
                     })
-                  )
-                }
+                  );
+                  alreadyInRef.current?.querySelector('button')?.focus();
+                }}
                 onSelectSurvey={(surveyId) => {
                   dispatch(surveySelected(surveyId));
                 }}
