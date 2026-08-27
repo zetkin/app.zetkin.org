@@ -6,6 +6,9 @@ import { notFound } from 'next/navigation';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import PublicOrgLayout from 'features/public/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import { getMessages } from 'utils/locale';
+import { getRequestLang } from 'utils/requestLocale';
+import SectionIntlProvider from 'core/env/SectionIntlProvider';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 import { ApiClientError } from 'core/api/errors';
@@ -56,10 +59,20 @@ const OrgLayout: FC<Props> = async ({ children, params }) => {
       `/api/orgs/${params.orgId}`
     );
 
+    const lang = await getRequestLang();
+    const messages = await getMessages(lang, [
+      'feat.events',
+      'feat.organizations',
+      'feat.home',
+      'feat.joinForms',
+    ]);
+
     return (
-      <HomeThemeProvider>
-        <PublicOrgLayout org={org}>{children}</PublicOrgLayout>
-      </HomeThemeProvider>
+      <SectionIntlProvider lang={lang} messages={messages}>
+        <HomeThemeProvider>
+          <PublicOrgLayout org={org}>{children}</PublicOrgLayout>
+        </HomeThemeProvider>
+      </SectionIntlProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {
