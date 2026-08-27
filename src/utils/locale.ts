@@ -93,7 +93,7 @@ export async function getMessages(
   if (scope.length) {
     const scoped: MessageList = {};
     Object.entries(localizedMessages).forEach(([key, val]) => {
-      if (scope.some((s) => key.startsWith(s))) {
+      if (scope.some((s) => key === s || key.startsWith(`${s}.`))) {
         scoped[key] = val;
       }
     });
