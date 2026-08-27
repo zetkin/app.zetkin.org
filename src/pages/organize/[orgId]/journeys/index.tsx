@@ -16,7 +16,7 @@ import ZUISection from 'zui/ZUISection';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.organizeJourneys'],
+  localeScope: ['feat.journeys', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

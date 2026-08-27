@@ -15,7 +15,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.organizeJourney'],
+  localeScope: ['feat.journeys', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

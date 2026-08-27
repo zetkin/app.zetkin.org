@@ -58,6 +58,12 @@ import useSortedMetrics from 'features/canvass/hooks/useSortedMetrics';
 const scaffoldOptions = {
   authLevelRequired: 2,
   featuresRequired: [AREAS],
+  localeScope: [
+    'feat.areaAssignments',
+    'feat.canvass',
+    'feat.campaigns',
+    'feat.breadcrumbs',
+  ],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

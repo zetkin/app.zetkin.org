@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     };
   },
   {
-    localeScope: ['pages.legacy'],
+    localeScope: [],
   }
 );
 
