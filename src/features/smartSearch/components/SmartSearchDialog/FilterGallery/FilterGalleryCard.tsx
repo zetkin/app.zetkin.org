@@ -8,7 +8,10 @@ import { Msg } from 'core/i18n';
 
 interface FilterGalleryCardProps {
   colors: { pale: string; strong: string };
-  filter: Exclude<FILTER_TYPE, 'call_blocked' | 'most_active'>;
+  filter: Exclude<
+    FILTER_TYPE,
+    'call_blocked' | 'caller_participation' | 'most_active'
+  >;
   onAddFilter: () => void;
 }
 

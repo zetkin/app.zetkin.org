@@ -11,9 +11,11 @@ import useSmartSearch from 'features/smartSearch/hooks/useSmartSearch';
 import viewsMessageIds from 'features/views/l10n/messageIds';
 import {
   AnyFilterConfig,
+  CallerFilterConfig,
   FILTER_TYPE,
   OPERATION,
   SelectedSmartSearchFilter,
+  SmartSearchFilterWithId,
   ZetkinQuery,
   ZetkinSmartSearchFilter,
 } from '../types';
@@ -38,6 +40,41 @@ enum STATE {
   START_WITH = 'start_with',
 }
 
+function expandFilterForBackend(
+  filter: ZetkinSmartSearchFilter | SmartSearchFilterWithId
+): ZetkinSmartSearchFilter[] {
+  if (filter.type !== FILTER_TYPE.CALLER) {
+    const { config, op, type } = filter;
+    return [{ config, op, type }];
+  }
+
+  const config = { ...filter.config } as CallerFilterConfig & {
+    assignmentStatus?: string;
+  };
+  const assignmentIds = config.assignmentIds;
+  delete config.assignmentIds;
+  delete config.assignmentStatus;
+
+  if (config.assignment) {
+    return [
+      {
+        config,
+        op: filter.op,
+        type: filter.type,
+      },
+    ];
+  }
+
+  return (assignmentIds || []).map((assignment) => ({
+    config: {
+      ...config,
+      assignment,
+    },
+    op: filter.op,
+    type: filter.type,
+  }));
+}
+
 const SmartSearch = ({
   hasSaveCancelButtons,
   onDialogClose,
@@ -48,7 +85,6 @@ const SmartSearch = ({
 }: SmartSearchDialogProps): JSX.Element => {
   const {
     filtersWithIds: filterArray,
-    filters,
     addFilter,
     editFilter,
     startsWithAll,
@@ -65,12 +101,15 @@ const SmartSearch = ({
 
   const [searchState, setSearchState] = useState(STATE.PREVIEW);
 
+  const filtersForBackend = filterArray.flatMap(expandFilterForBackend);
+
   return (
     <>
       <Typography variant="h5">{smartSearchMessages.smartSearch()}</Typography>
       {searchState === STATE.PREVIEW && (
         <QueryOverview
           filters={filterArray}
+          filtersForStats={filtersForBackend}
           hasSaveCancelButtons={hasSaveCancelButtons}
           onCloseDialog={onDialogClose}
           onDeleteFilter={(filter) => {
@@ -87,7 +126,7 @@ const SmartSearch = ({
           onSaveQuery={() => {
             if (onSave) {
               onSave({
-                filter_spec: filters,
+                filter_spec: filtersForBackend,
               });
             }
           }}
@@ -109,11 +148,23 @@ const SmartSearch = ({
           filter={selectedFilter}
           onCancelSubmitFilter={() => setSearchState(STATE.PREVIEW)}
           onSubmitFilter={(filter) => {
+            const filterSpec =
+              'id' in filter
+                ? filterArray.flatMap((existingFilter) => {
+                    if (existingFilter.id === filter.id) {
+                      return expandFilterForBackend(filter);
+                    }
+                    return expandFilterForBackend(existingFilter);
+                  })
+                : filterArray
+                    .flatMap(expandFilterForBackend)
+                    .concat(expandFilterForBackend(filter));
+
             if (onOutputConfigured) {
               onOutputConfigured([
                 {
                   config: {
-                    filter_spec: [...filters, filter],
+                    filter_spec: filterSpec,
                   },
                   title:
                     viewsMessages.columnDialog.choices.localQuery.columnTitle(),
@@ -122,11 +173,9 @@ const SmartSearch = ({
               ]);
             }
             setSearchState(STATE.PREVIEW);
-            // If editing existing filter
             if ('id' in filter) {
               editFilter(filter.id, filter);
             } else {
-              // If creating a new filter
               addFilter(filter);
             }
           }}
@@ -139,7 +188,7 @@ const SmartSearch = ({
             let filterSpec: ZetkinSmartSearchFilter<AnyFilterConfig>[] = [];
 
             if (startsWithAll && !shouldStartWithAll) {
-              filterSpec = filters.slice(1);
+              filterSpec = filtersForBackend.slice(1);
             } else if (!startsWithAll && shouldStartWithAll) {
               filterSpec = [
                 {
@@ -147,7 +196,7 @@ const SmartSearch = ({
                   op: OPERATION.ADD,
                   type: FILTER_TYPE.ALL,
                 },
-                ...filters,
+                ...filtersForBackend,
               ];
             }
 

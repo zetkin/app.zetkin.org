@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import {
+  CallerFilterConfig,
   FILTER_TYPE,
   OPERATION,
   SmartSearchFilterWithId,
@@ -20,6 +21,89 @@ type UseSmartSearch = {
   update: (filters: SmartSearchFilterWithId[]) => void;
 };
 
+function withoutInvalidCallerConfigFields<
+  FilterType extends SmartSearchFilterWithId | ZetkinSmartSearchFilter,
+>(filter: FilterType): FilterType {
+  if (filter.type !== FILTER_TYPE.CALLER) {
+    return filter;
+  }
+
+  const config = { ...filter.config } as typeof filter.config & {
+    active?: boolean;
+    assignmentStatus?: string;
+  };
+  delete config.active;
+  delete config.assignmentStatus;
+
+  return {
+    ...filter,
+    config,
+  };
+}
+
+function callerFiltersCanCollapse(
+  firstFilter: ZetkinSmartSearchFilter,
+  secondFilter: ZetkinSmartSearchFilter
+): boolean {
+  if (
+    firstFilter.type !== FILTER_TYPE.CALLER ||
+    secondFilter.type !== FILTER_TYPE.CALLER
+  ) {
+    return false;
+  }
+
+  const firstConfig = firstFilter.config as CallerFilterConfig;
+  const secondConfig = secondFilter.config as CallerFilterConfig;
+  const firstAssignmentIds =
+    firstConfig.assignmentIds ||
+    (firstConfig.assignment ? [firstConfig.assignment] : []);
+  const secondAssignmentIds =
+    secondConfig.assignmentIds ||
+    (secondConfig.assignment ? [secondConfig.assignment] : []);
+
+  return (
+    firstFilter.op !== OPERATION.LIMIT &&
+    firstFilter.op === secondFilter.op &&
+    firstConfig.operator === secondConfig.operator &&
+    JSON.stringify(firstConfig.organizations) ===
+      JSON.stringify(secondConfig.organizations) &&
+    firstAssignmentIds.length > 0 &&
+    secondAssignmentIds.length > 0
+  );
+}
+
+function collapseCallerFilters(
+  filters: ZetkinSmartSearchFilter[]
+): ZetkinSmartSearchFilter[] {
+  return filters.reduce<ZetkinSmartSearchFilter[]>(
+    (collapsedFilters, filter) => {
+      const lastFilter = collapsedFilters[collapsedFilters.length - 1];
+
+      if (!lastFilter || !callerFiltersCanCollapse(lastFilter, filter)) {
+        return collapsedFilters.concat(filter);
+      }
+
+      const lastConfig = lastFilter.config as CallerFilterConfig;
+      const config = filter.config as CallerFilterConfig;
+      const lastAssignmentIds =
+        lastConfig.assignmentIds ||
+        (lastConfig.assignment ? [lastConfig.assignment] : []);
+      const assignmentIds =
+        config.assignmentIds || (config.assignment ? [config.assignment] : []);
+
+      return collapsedFilters.slice(0, -1).concat({
+        ...lastFilter,
+        config: {
+          ...lastConfig,
+          assignment: undefined,
+          assignmentIds: lastAssignmentIds.concat(assignmentIds),
+        },
+      });
+    },
+    []
+  );
+}
+
 const useSmartSearch = (
   initialFilters: InitialFilters = []
 ): UseSmartSearch => {
@@ -30,13 +114,18 @@ const useSmartSearch = (
       (!('config' in filter) || !('organizations' in filter.config))
   );
 
-  const normalizedFiltersWithIds = initialFilters
+  const normalizedFilters = initialFilters
     .filter(
       (filter, index) =>
         index > indexOfAllFilter ||
         (index === indexOfAllFilter && filter.op !== OPERATION.SUB)
     )
-    .map((filter, index) => ({ ...filter, id: index }));
+    .map(withoutInvalidCallerConfigFields);
+
+  const normalizedFiltersWithIds = collapseCallerFilters(normalizedFilters).map(
+    (filter, index) =>
+      withoutInvalidCallerConfigFields({ ...filter, id: index })
+  );
 
   const [filtersWithIds, setFiltersWithIds] = useState<
     SmartSearchFilterWithId[]
@@ -47,13 +136,16 @@ const useSmartSearch = (
       ...filter,
       id: filtersWithIds.length,
     };
-    setFiltersWithIds([...filtersWithIds, newFilterWithId]);
+    setFiltersWithIds([
+      ...filtersWithIds,
+      withoutInvalidCallerConfigFields(newFilterWithId),
+    ]);
   };
 
   const editFilter = (id: number, newFilterValue: SmartSearchFilterWithId) => {
     const filtersWithEditedFilter = filtersWithIds.map((filter) => {
       if (id === filter.id) {
-        return newFilterValue;
+        return withoutInvalidCallerConfigFields(newFilterValue);
       } else {
         return filter;
       }
@@ -68,14 +160,16 @@ const useSmartSearch = (
     setFiltersWithIds(filtersWithoutSelected);
   };
 
-  const filters = filtersWithIds.map((filterWithId) => {
-    const { config, op, type } = filterWithId;
-    return {
-      config,
-      op,
-      type,
-    };
-  });
+  const filters = filtersWithIds
+    .map((filterWithId) => {
+      const { config, op, type } = filterWithId;
+      return {
+        config,
+        op,
+        type,
+      };
+    })
+    .map(withoutInvalidCallerConfigFields);
 
   const firstFilter = filtersWithIds[0];
   const firstFilterHasConfig = firstFilter && 'config' in firstFilter;
@@ -113,7 +207,7 @@ const useSmartSearch = (
     setStartsWithAll,
     startsWithAll,
     update: (filters) => {
-      setFiltersWithIds(filters);
+      setFiltersWithIds(filters.map(withoutInvalidCallerConfigFields));
     },
   };
 };

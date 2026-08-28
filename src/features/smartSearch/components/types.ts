@@ -16,6 +16,8 @@ export enum FILTER_TYPE {
   ALL = 'all',
   CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
+  CALLER = 'caller',
+  CALLER_PARTICIPATION = 'caller_participation',
   PROJECT_PARTICIPATION = 'campaign_participation',
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
@@ -154,6 +156,24 @@ export interface CallHistoryFilterConfig {
   after?: string;
   organizations?: FilterConfigOrgOptions;
 }
+
+export interface CallerFilterConfig {
+  assignment?: number;
+  assignmentIds?: number[];
+  operator: 'assigned' | 'notassigned';
+  organizations?: FilterConfigOrgOptions;
+}
+
+export interface CallerParticipationFilterConfig {
+  assignment?: number;
+  assignmentIds?: number[];
+  num_calls: {
+    max?: number;
+    min?: number;
+  };
+  organizations?: FilterConfigOrgOptions;
+}
+
 export interface EmailBlacklistFilterConfig {
   operator: 'blacklisted';
   organizations?: FilterConfigOrgOptions;
@@ -370,6 +390,8 @@ export interface TaskFilterConfig {
 export type AnyFilterConfig =
   | CallBlockedFilterConfig
   | CallHistoryFilterConfig
+  | CallerFilterConfig
+  | CallerParticipationFilterConfig
   | ProjectParticipationConfig
   | EventParticipationConfig
   | DefaultFilterConfig

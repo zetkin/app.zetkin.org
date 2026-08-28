@@ -2,6 +2,7 @@ import AllInSuborg from '../filters/AllInSubOrg';
 import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
+import Caller from '../filters/Caller';
 import ProjectParticipation from '../filters/ProjectParticipation';
 import EmailBlacklist from '../filters/EmailBlacklist';
 import EmailClick from '../filters/EmailClick';
@@ -68,6 +69,20 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.CALL_HISTORY && (
         <CallHistory
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.CALLER && (
+        <Caller
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.CALLER_PARTICIPATION && (
+        <Caller
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

@@ -73,6 +73,10 @@ export default makeMessages('feat.smartSearch', {
         description: m('Find people who were called, reached or tried.'),
         title: m('Call history'),
       },
+      caller: {
+        description: m('Find people who are callers or have logged calls.'),
+        title: m('Callers'),
+      },
       campaign_participation: {
         description: m("Who signed up? Got booked? Who didn't? Find them!"),
         title: m('Participation in events'),
@@ -270,6 +274,36 @@ export default makeMessages('feat.smartSearch', {
         input: ReactElement;
         minTimes: number;
       }>('at least {input} {minTimes, plural, one {time} other {times}}'),
+    },
+    caller: {
+      assignmentSelect: {
+        any: m('any assignment'),
+        assignment: m<{ assignmentTitle: ReactElement | string }>(
+          'assignment "{assignmentTitle}"'
+        ),
+        none: m("This organization doesn't have any call assignments yet"),
+      },
+      callerSelect: {
+        assigned: m('are assigned as callers'),
+        notassigned: m('are not assigned as callers'),
+        participated: m('have logged calls as callers'),
+      },
+      examples: {
+        one: m('Add people who are currently assigned as callers.'),
+        two: m(
+          "Remove people who are assigned as callers in assignment 'Activate old members'."
+        ),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+        callerSelect: ReactElement;
+      }>('{addRemoveSelect} people who {callerSelect} in {assignmentSelect}.'),
+      previewString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+        callerSelect: ReactElement;
+      }>('{addRemoveSelect} people who {callerSelect} in {assignmentSelect}.'),
     },
     emailBlacklist: {
       inputString: m<{
