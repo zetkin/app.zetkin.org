@@ -18,6 +18,7 @@ import zuiTheme from 'zui/theme';
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
 import mockApiClient from './mocks/mockApiClient';
+import { PromiseCacheProvider } from 'core/caching/PromiseCache';
 
 interface ZetkinAppProvidersProps {
   children: React.ReactNode;
@@ -109,7 +110,9 @@ export const makeWrapper = (
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>
-          <UserProvider user={RosaLuxemburgUser}>{children}</UserProvider>
+          <PromiseCacheProvider>
+            <UserProvider user={RosaLuxemburgUser}>{children}</UserProvider>
+          </PromiseCacheProvider>
         </EnvProvider>
       </ReduxProvider>
     );

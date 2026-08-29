@@ -7,6 +7,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import useRemoteList from './useRemoteList';
 import usePromiseCache from './usePromiseCache';
 import { RemoteList, remoteList } from 'utils/storeUtils';
+import {
+  PromiseCache,
+  PromiseCacheContext,
+  PromiseCacheProvider,
+} from 'core/caching/PromiseCache';
 
 type ListObjectForTest = { id: number; name: string };
 type StoreState = {
@@ -91,15 +96,19 @@ describe('useRemoteList()', () => {
       return null;
     };
 
+    const promiseCache: PromiseCache = new Map();
+
     render(
       <ReduxProvider store={store}>
-        <Suspense fallback={<p>loading</p>}>
-          <ListComponent />
-        </Suspense>
+        <PromiseCacheContext.Provider value={promiseCache}>
+          <Suspense fallback={<p>loading</p>}>
+            <ListComponent />
+          </Suspense>
+        </PromiseCacheContext.Provider>
       </ReduxProvider>
     );
 
-    const cachedPromise = usePromiseCache(cacheKey).getExistingPromise();
+    const cachedPromise = promiseCache.get(cacheKey);
     expect(cachedPromise).toBeInstanceOf(Promise);
 
     await act(async () => {
@@ -203,9 +212,11 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
     render: () =>
       render(
         <ReduxProvider store={store}>
-          <Suspense fallback={<p>loading</p>}>
-            <Component />
-          </Suspense>
+          <PromiseCacheProvider>
+            <Suspense fallback={<p>loading</p>}>
+              <Component />
+            </Suspense>
+          </PromiseCacheProvider>
         </ReduxProvider>
       ),
     store,

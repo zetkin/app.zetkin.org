@@ -1,6 +1,6 @@
 import { createContext, FC, PropsWithChildren, useRef } from 'react';
 
-type PromiseCache = Map<string, Promise<unknown>>;
+export type PromiseCache = Map<string, Promise<unknown>>;
 
 export const PromiseCacheContext = createContext<PromiseCache | null>(null);
 
