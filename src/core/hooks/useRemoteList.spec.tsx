@@ -5,7 +5,6 @@ import { Provider as ReduxProvider, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import useRemoteList from './useRemoteList';
-import usePromiseCache from './usePromiseCache';
 import { RemoteList, remoteList } from 'utils/storeUtils';
 import {
   PromiseCache,
