@@ -22,7 +22,7 @@ type ZUIDateFieldProps = Pick<
   /**
    * Pass a ref to the input element.
    */
-  inputRef?: RefObject<HTMLInputElement | null>;
+  inputRef?: RefObject<HTMLInputElement>;
 
   /**
    * The label of the date field.

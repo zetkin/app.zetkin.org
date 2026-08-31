@@ -75,7 +75,9 @@ export const QuestionStatsBarPlot = ({
     <ChartWrapper>
       <BarChartPro
         apiRef={
-          exportApi as unknown as RefObject<ChartPublicAPI<BarChartProPluginSignatures> | undefined | null>
+          exportApi as unknown as RefObject<
+            ChartPublicAPI<BarChartProPluginSignatures> | undefined
+          >
         }
         grid={{
           vertical: true,
