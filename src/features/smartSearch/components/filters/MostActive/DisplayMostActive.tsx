@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { getTimeFrameWithConfig } from '../../utils';
 import {
   MostActiveFilterConfig,
@@ -8,7 +10,6 @@ import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
-import type { JSX } from "react";
 const localMessageIds = messageIds.filters.mostActive;
 
 interface DisplayMostActiveProps {

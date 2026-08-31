@@ -1,6 +1,6 @@
-import { m, makeMessages } from 'core/i18n/messages';
+import type { JSX } from 'react';
 
-import type { JSX } from "react";
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.call', {
   about: {

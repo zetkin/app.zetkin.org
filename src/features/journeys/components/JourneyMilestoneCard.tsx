@@ -1,6 +1,7 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { Box, Checkbox, Container, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
@@ -9,8 +10,6 @@ import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
-
-import type { JSX } from "react";
 
 const JourneyMilestoneCard = ({
   milestone,

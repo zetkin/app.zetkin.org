@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
 import { MESSAGE_KEY_BY_OP } from '.';
@@ -13,8 +15,6 @@ import {
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-
-import type { JSX } from "react";
 
 const localMessageIds = messageIds.filters.emailHistory;
 

@@ -5,10 +5,9 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document';
+import type { JSX } from 'react';
 
 import oldTheme from '../theme';
-
-import type { JSX } from "react";
 
 // boilerplate page taken from https://github.com/mui-org/material-ui/tree/master/examples/nextjs
 

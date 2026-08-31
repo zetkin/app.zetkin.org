@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import {
   DATA_FIELD,
   OPERATION,
@@ -8,7 +10,6 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
-import type { JSX } from "react";
 const localMessageIds = messageIds.filters.personData;
 
 interface DisplayPersonDataProps {

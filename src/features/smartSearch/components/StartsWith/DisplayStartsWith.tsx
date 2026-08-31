@@ -1,6 +1,7 @@
+import type { JSX } from 'react';
+
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import type { JSX } from "react";
 const localMessageIds = messageIds.filters.all;
 
 interface DisplayStartsWithProps {

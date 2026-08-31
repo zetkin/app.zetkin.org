@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { Done, NotInterested } from '@mui/icons-material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -8,8 +9,6 @@ import {
   ZetkinAssignedTask,
 } from 'features/tasks/components/types';
 import messageIds from 'features/tasks/l10n/messageIds';
-
-import type { JSX } from "react";
 
 const TaskStatusSubtitle = ({
   task,

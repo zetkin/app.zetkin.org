@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { UseMessagesMap } from 'core/i18n';
 import {
   PendingZetkinViewColumn,
@@ -5,8 +7,6 @@ import {
   ZetkinViewColumn,
 } from '../../types';
 import messageIds from 'features/views/l10n/messageIds';
-
-import type { JSX } from "react";
 
 export enum CHOICES {
   DELEGATE = 'delegate',

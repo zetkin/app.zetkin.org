@@ -1,12 +1,11 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import ZUILogo from 'zui/ZUILogo';
 import messageIds from 'core/l10n/messageIds';
-
-import type { JSX } from "react";
 
 export default function Custom404(): JSX.Element {
   return (

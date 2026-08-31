@@ -24,6 +24,7 @@ import {
   SpeakerNotesOutlined,
   ViewListOutlined,
 } from '@mui/icons-material';
+import type { JSX } from 'react';
 
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
@@ -79,8 +80,6 @@ import DisplayJoinForm from '../../filters/JoinForm/DisplayJoinForm';
 import DisplayAllInSuborg from '../../filters/AllInSubOrg/DisplayAllInSuborg';
 import DisplayInArea from '../../filters/Area/DisplayInArea';
 import DisplayEventParticipation from '../../filters/EventParticipation/DisplayEventParticipation';
-
-import type { JSX } from "react";
 
 export default function getFilterComponents(
   filter: SmartSearchFilterWithId<AnyFilterConfig>

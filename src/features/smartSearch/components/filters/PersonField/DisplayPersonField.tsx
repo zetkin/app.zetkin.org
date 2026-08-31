@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
 import { Msg } from 'core/i18n';
@@ -12,7 +14,6 @@ import UnderlinedText from '../../UnderlinedText';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
-import type { JSX } from "react";
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {

@@ -1,8 +1,7 @@
 import { TextField, TextFieldProps } from '@mui/material';
+import type { JSX } from 'react';
 
 import oldTheme from 'theme';
-
-import type { JSX } from "react";
 
 const StyledSelect: React.FC<TextFieldProps & { minWidth?: string }> = (
   props

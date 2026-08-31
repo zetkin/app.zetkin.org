@@ -1,8 +1,7 @@
 import { NextPage } from 'next/types';
+import type { JSX } from 'react';
 
 import { ZetkinTokenData } from './sdk';
-
-import type { JSX } from "react";
 
 export type AppSession = {
   memberships?: number[] | null;

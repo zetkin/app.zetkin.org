@@ -1,4 +1,5 @@
 import { Box, Chip, Tooltip } from '@mui/material';
+import type { JSX } from 'react';
 
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
@@ -16,8 +17,6 @@ import {
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-
-import type { JSX } from "react";
 
 const localMessageIds = messageIds.filters.emailClick;
 

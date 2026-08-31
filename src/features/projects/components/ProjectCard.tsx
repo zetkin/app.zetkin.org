@@ -7,14 +7,13 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+import type { JSX } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinProject } from 'utils/types/zetkin';
 import ProjectStatusChip from './ProjectStatusChip';
-
-import type { JSX } from "react";
 
 interface ProjectCardProps {
   project: ZetkinProject;

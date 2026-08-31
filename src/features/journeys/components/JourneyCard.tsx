@@ -1,12 +1,11 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Card, CardActionArea, Link, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import { ZetkinJourney } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
-
-import type { JSX } from "react";
 
 interface JourneyCardProps {
   journey: ZetkinJourney;

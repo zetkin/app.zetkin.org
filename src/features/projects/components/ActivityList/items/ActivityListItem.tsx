@@ -1,12 +1,11 @@
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { Box, SvgIconTypeMap, Tooltip, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import oldTheme from 'theme';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
-
-import type { JSX } from "react";
 
 export enum STATUS_COLORS {
   BLUE = 'blue',

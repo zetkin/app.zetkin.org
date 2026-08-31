@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import {
   OPERATION,
@@ -10,7 +12,6 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
-import type { JSX } from "react";
 const localMessageIds = messageIds.filters.surveyResponse;
 
 interface DisplaySurveyResponseProps {

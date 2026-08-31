@@ -1,4 +1,5 @@
 import { Box, useMediaQuery } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
@@ -13,8 +14,6 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
-
-import type { JSX } from "react";
 
 const localMessageIds = messageIds.filters.personTags;
 

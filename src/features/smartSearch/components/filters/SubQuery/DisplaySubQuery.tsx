@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   OPERATION,
@@ -13,8 +15,6 @@ import useCallAssignments from 'features/callAssignments/hooks/useCallAssignment
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchQueries from 'features/smartSearch/hooks/useSmartSearchQueries';
 import useEmails from 'features/emails/hooks/useEmails';
-
-import type { JSX } from "react";
 
 const localMessageIds = messageIds.filters.subQuery;
 

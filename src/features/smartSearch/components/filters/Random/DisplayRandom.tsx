@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { getQuantityWithConfig } from 'features/smartSearch/components/utils';
 import {
   OPERATION,
@@ -7,7 +9,6 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
-import type { JSX } from "react";
 const localMessageIds = messageIds.filters.random;
 
 interface DisplayRandomProps {

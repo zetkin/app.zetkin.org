@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
 import { Msg } from 'core/i18n';
@@ -12,8 +14,6 @@ import UnderlinedProjectTitle from './UnderlinedProjectTitle';
 import UnderlinedLocationTitle from './UnderlinedLocationTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import { useNumericRouteParams } from 'core/hooks';
-
-import type { JSX } from "react";
 
 const localMessageIds = messageIds.filters.projectParticipation;
 

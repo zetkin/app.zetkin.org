@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { Msg } from 'core/i18n';
 import {
   EmailBlacklistFilterConfig,
@@ -6,8 +8,6 @@ import {
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
-
-import type { JSX } from "react";
 
 const localMessageIds = messageIds.filters.emailBlacklist;
 

@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import AllInSuborg from '../filters/AllInSubOrg';
 import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';
@@ -29,8 +31,6 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import EventParticipation from '../filters/EventParticipation';
-
-import type { JSX } from "react";
 
 interface FilterEditorProps {
   onCancelSubmitFilter: () => void;

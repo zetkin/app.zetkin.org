@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Container, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import { AppSession } from '../utils/types';
 import getUserMemberships from 'utils/getUserMemberships';
@@ -11,8 +12,6 @@ import { Msg } from 'core/i18n';
 import requiredEnvVar from 'utils/requiredEnvVar';
 import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../utils/types/zetkin';
-
-import type { JSX } from "react";
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires

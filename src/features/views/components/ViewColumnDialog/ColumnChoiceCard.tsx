@@ -6,11 +6,10 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import messageIds from 'features/views/l10n/messageIds';
-
-import type { JSX } from "react";
 
 interface ColumnChoiceCardProps {
   addButtonLabel?: 'add';

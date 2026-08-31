@@ -1,9 +1,8 @@
 import SvgIcon from '@mui/material/SvgIcon';
 import { Box, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import oldTheme from 'theme';
-
-import type { JSX } from "react";
 
 interface ZUILogoProps {
   size?: number;

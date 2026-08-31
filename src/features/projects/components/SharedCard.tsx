@@ -8,12 +8,11 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+import type { JSX } from 'react';
 
 import messageIds from 'features/projects/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-
-import type { JSX } from "react";
 
 const SharedCard = (): JSX.Element => {
   const { orgId } = useNumericRouteParams();

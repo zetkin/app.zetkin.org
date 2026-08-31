@@ -1,4 +1,5 @@
 import { useIntl } from 'react-intl';
+import type { JSX } from 'react';
 
 import UnderlinedText from './UnderlinedText';
 import {
@@ -6,8 +7,6 @@ import {
   PlainMessage,
   ValueRecord,
 } from 'core/i18n/messages';
-
-import type { JSX } from "react";
 
 type UnderlinedPlainMsgProps = {
   id: PlainMessage;

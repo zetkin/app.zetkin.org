@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import DisplayCallAssignmentTitle from './DisplayCallAssignmentTitle';
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
@@ -11,8 +13,6 @@ import {
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
-
-import type { JSX } from "react";
 
 const localMessageIds = messageIds.filters.callHistory;
 
