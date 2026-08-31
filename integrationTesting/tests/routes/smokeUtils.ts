@@ -414,6 +414,7 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   moxy.setZetkinApiMock('/orgs/1/people/1/connections', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/people/1/journey_instances', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/people/1/journeys', 'get', [ClarasOnboarding]);
+  moxy.setZetkinApiMock('/orgs/1/people/1/notes', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/people/1/organizations', 'get', [KPD]);
   moxy.setZetkinApiMock('/orgs/1/people/1/tags', 'get', [
     ActivistTag,
