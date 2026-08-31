@@ -69,15 +69,15 @@ export const TextResponseWordCloud = ({
 
   const exportOptions = useMemo(
     () =>
-      (({
+      ({
         chartRootRef: containerRef,
 
         instance: {
           disableAnimation: () => () => {},
         },
 
-        svgRef: svgRef
-      }) as ChartPluginOptions<UseChartProExportSignature>),
+        svgRef: svgRef,
+      }) as ChartPluginOptions<UseChartProExportSignature>,
     []
   );
 

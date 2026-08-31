@@ -84,7 +84,7 @@ const PersonLngLatMap: FC<Props> = ({
         onZoomOut={() => map?.zoomOut()}
       />
       <Map
-        ref={mapRef => {
+        ref={(mapRef) => {
           setMap(mapRef?.getMap() ?? null);
         }}
         initialViewState={{

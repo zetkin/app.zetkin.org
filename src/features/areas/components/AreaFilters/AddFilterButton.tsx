@@ -26,7 +26,7 @@ const AddFilterButton: FC<Props> = ({ items, open, onToggle }) => {
   return (
     <div>
       <Button
-        ref={elem => {
+        ref={(elem) => {
           setAnchorEl(elem);
         }}
         onClick={() => onToggle(!open)}

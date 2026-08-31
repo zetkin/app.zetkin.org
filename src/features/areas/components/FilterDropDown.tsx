@@ -35,7 +35,7 @@ const FilterDropDown: FC<Props> = ({
   return (
     <div style={{ width: '100%' }}>
       <Button
-        ref={elem => {
+        ref={(elem) => {
           setAnchorEl(elem);
         }}
         fullWidth

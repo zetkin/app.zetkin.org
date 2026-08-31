@@ -145,7 +145,7 @@ export const ActivistPortalEventMap: FC<{
         onZoomOut={() => map?.zoomOut()}
       />
       <Map
-        ref={map => {
+        ref={(map) => {
           setMap(map?.getMap() ?? null);
         }}
         initialViewState={{

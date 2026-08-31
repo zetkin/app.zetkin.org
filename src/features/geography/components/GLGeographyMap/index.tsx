@@ -341,7 +341,7 @@ const GLGeographyMapInner: FC<Props> = ({ areas, orgId }) => {
           />
         )}
         <Map
-          ref={map => {
+          ref={(map) => {
             setMap(map?.getMap() ?? null);
           }}
           cursor={drawingPoints ? 'crosshair' : undefined}
