@@ -25,7 +25,7 @@ export interface ZUIFutureProps<DataType> {
   /**
    * What to render if fetching data has failed.
    */
-  errorIndicator?: React.ReactElement<any>;
+  errorIndicator?: React.ReactElement<unknown>;
 
   /**
    * IFuture object representing the aysnchronous operation that rendering is waiting for.

@@ -98,10 +98,11 @@ export default makeMessages('feat.callAssignments', {
     markAsSolved: m('Mark as solved'),
     markAsUnsolved: m('Mark as unsolved'),
     messagePlaceholder: m('Caller did not leave a message'),
-    noteByCaller: m<{ person: ReactElement<any>; time: ReactElement<any> }>(
-      'Note by {person} {time}'
-    ),
-    subtitle: m<{ person: ReactElement<any> }>('Notes on {person}'),
+    noteByCaller: m<{
+      person: ReactElement<unknown>;
+      time: ReactElement<unknown>;
+    }>('Note by {person} {time}'),
+    subtitle: m<{ person: ReactElement<unknown> }>('Notes on {person}'),
     title: m('Organizer Action Needed'),
   },
   ready: {

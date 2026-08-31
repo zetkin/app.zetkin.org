@@ -9,14 +9,14 @@ import messageIds from './l10n/messageIds';
 import oldTheme from 'theme';
 
 interface HeaderProps {
-  actionButtons?: ReactElement<any> | ReactElement<any>[];
+  actionButtons?: ReactElement<unknown> | ReactElement<unknown>[];
   avatar?: string;
   collapsed?: boolean;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   onToggleCollapsed?: (collapsed: boolean) => void;
-  belowActionButtons?: ReactElement<any>;
-  subtitle?: string | ReactElement<any>;
-  title?: string | ReactElement<any>;
+  belowActionButtons?: ReactElement<unknown>;
+  subtitle?: string | ReactElement<unknown>;
+  title?: string | ReactElement<unknown>;
 }
 
 const Header: React.FC<HeaderProps> = ({

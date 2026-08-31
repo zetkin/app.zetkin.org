@@ -4,7 +4,7 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('zui', {
   accessList: {
-    added: m<{ sharer: string; updated: ReactElement<any> }>(
+    added: m<{ sharer: string; updated: ReactElement<unknown> }>(
       'Added by {sharer} {updated}'
     ),
     removeAccess: m('Remove access'),
@@ -101,7 +101,7 @@ export default makeMessages('zui', {
     ascending: m('Ascending'),
     button: m('Sort'),
     descending: m('Descending'),
-    hint: m<{ shiftKeyIcon: ReactElement<any> }>(
+    hint: m<{ shiftKeyIcon: ReactElement<unknown> }>(
       'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     ),
     title: m('Sort'),
@@ -116,17 +116,17 @@ export default makeMessages('zui', {
   },
   dateSpan: {
     multiDay: m<{
-      endDate: ReactElement<any>;
-      startDate: ReactElement<any>;
+      endDate: ReactElement<unknown>;
+      startDate: ReactElement<unknown>;
     }>('{startDate} - {endDate}'),
     multiDayEndsToday: m<{
-      startDate: ReactElement<any>;
+      startDate: ReactElement<unknown>;
     }>('{startDate} - Today'),
     multiDayToday: m<{
-      endDate: ReactElement<any>;
+      endDate: ReactElement<unknown>;
     }>('Today - {endDate}'),
     singleDay: m<{
-      date: ReactElement<any>;
+      date: ReactElement<unknown>;
     }>('{date}'),
     singleDayToday: m('Today'),
   },
@@ -289,30 +289,30 @@ export default makeMessages('zui', {
   },
   timeSpan: {
     multiDay: m<{
-      end: string | ReactElement<any>;
-      endDate: string | ReactElement<any>;
-      start: string | ReactElement<any>;
-      startDate: string | ReactElement<any>;
+      end: string | ReactElement<unknown>;
+      endDate: string | ReactElement<unknown>;
+      start: string | ReactElement<unknown>;
+      startDate: string | ReactElement<unknown>;
     }>('{startDate}, {start} - {endDate}, {end}'),
     multiDayEndsToday: m<{
-      end: string | ReactElement<any>;
-      start: string | ReactElement<any>;
-      startDate: string | ReactElement<any>;
+      end: string | ReactElement<unknown>;
+      start: string | ReactElement<unknown>;
+      startDate: string | ReactElement<unknown>;
     }>('{startDate}, {start} - Today, {end}'),
     multiDayToday: m<{
-      end: string | ReactElement<any>;
-      endDate: string | ReactElement<any>;
-      start: string | ReactElement<any>;
+      end: string | ReactElement<unknown>;
+      endDate: string | ReactElement<unknown>;
+      start: string | ReactElement<unknown>;
     }>('Today, {start} - {endDate}, {end}'),
     singleDay: m<{
-      date: string | ReactElement<any>;
-      end: string | ReactElement<any>;
-      start: string | ReactElement<any>;
+      date: string | ReactElement<unknown>;
+      end: string | ReactElement<unknown>;
+      start: string | ReactElement<unknown>;
     }>('{date}, {start} - {end}'),
     singleDayAllDay: m('All day today'),
     singleDayToday: m<{
-      end: string | ReactElement<any>;
-      start: string | ReactElement<any>;
+      end: string | ReactElement<unknown>;
+      start: string | ReactElement<unknown>;
     }>('Today, {start} - {end}'),
   },
   timeZonePicker: {

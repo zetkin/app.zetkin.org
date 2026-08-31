@@ -13,10 +13,10 @@ interface ZUIFuturesProps<G extends Record<string, unknown>> {
         data,
       }: {
         data: { [I in keyof G]: G[I] };
-      }) => React.ReactElement<any> | null);
-  errorIndicator?: React.ReactElement<any>;
+      }) => React.ReactElement<unknown> | null);
+  errorIndicator?: React.ReactElement<unknown>;
   futures: { [I in keyof G]: IFuture<G[I]> };
-  loadingIndicator?: React.ReactElement<any>;
+  loadingIndicator?: React.ReactElement<unknown>;
 }
 
 export function isEmptyData<T>(future: IFuture<T>): boolean {

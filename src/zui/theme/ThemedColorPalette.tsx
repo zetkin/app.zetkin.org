@@ -5,7 +5,9 @@ import lightPalette, { darkPalette } from 'zui/theme/palette';
 import { useStorybookDarkMode } from 'zui/hooks/useStorybookDarkMode';
 
 export const ThemedColorPalette: FC<{
-  children: ReactElement<any> | ((theme: typeof lightPalette) => ReactElement<any>);
+  children:
+    | ReactElement<unknown>
+    | ((theme: typeof lightPalette) => ReactElement<unknown>);
 }> = ({ children }) => {
   const isDark = useStorybookDarkMode();
 

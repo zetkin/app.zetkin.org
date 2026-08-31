@@ -8,7 +8,7 @@ interface PreviewGridProps {
   isImportID?: boolean;
   columnHeader?: string;
   unmappedRow?: boolean;
-  rowValue: ReactElement<any> | CellData;
+  rowValue: ReactElement<unknown> | CellData;
   emptyLabel?: string;
 }
 

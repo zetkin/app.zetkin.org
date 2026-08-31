@@ -60,7 +60,7 @@ interface UsePersonSelectReturn {
     renderOption: (
       props: HTMLAttributes<HTMLLIElement>,
       person: ZetkinPerson
-    ) => ReactElement<any>;
+    ) => ReactElement<unknown>;
     shiftHeld: boolean;
     value: ZetkinPerson | null;
   };

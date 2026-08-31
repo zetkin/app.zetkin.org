@@ -84,7 +84,7 @@ const ZUIOrganizeMobileHeader = ({
   userMenuItems,
 }: {
   openMobileSidebar: () => void;
-  title?: string | ReactElement<any>;
+  title?: string | ReactElement<unknown>;
   user: ZetkinUser | null;
   userMenuItems: ZUIEllipsisMenuItem[];
 }) => {
@@ -201,7 +201,7 @@ const ZUIOrganizeMobileHeader = ({
 const ZUIOrganizeSidebar = ({
   title,
 }: {
-  title?: string | ReactElement<any>;
+  title?: string | ReactElement<unknown>;
 }): JSX.Element => {
   const messages = useMessages(messageIds);
   const user = useCurrentUser();

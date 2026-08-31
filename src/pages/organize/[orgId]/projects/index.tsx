@@ -120,7 +120,7 @@ function LoadingBoundary<G extends Record<string, unknown>>({
   children,
   futures,
 }: {
-  children: ReactElement<any>;
+  children: ReactElement<unknown>;
   futures: { [I in keyof G]: IFuture<G[I]> };
 }) {
   return (

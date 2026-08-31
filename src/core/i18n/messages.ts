@@ -14,7 +14,7 @@ export type MessageValue =
   | null
   | undefined
   | Date
-  | ReactElement<any>;
+  | ReactElement<unknown>;
 
 export type ValueRecord = Record<string, MessageValue>;
 

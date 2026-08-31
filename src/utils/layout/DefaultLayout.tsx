@@ -8,7 +8,7 @@ import oldTheme from 'theme';
 interface DefaultLayoutProps {
   children: React.ReactNode;
   onScroll?: () => void;
-  title?: string | ReactElement<any>;
+  title?: string | ReactElement<unknown>;
 }
 
 const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({

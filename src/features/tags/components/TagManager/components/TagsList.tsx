@@ -19,7 +19,7 @@ const PersonLink: React.FunctionComponent<{
       </NextLink>
     );
   }
-  return children as React.ReactElement<any>;
+  return children as React.ReactElement<unknown>;
 };
 
 const TagsList: React.FunctionComponent<{

@@ -23,7 +23,7 @@ export interface MenuItem {
   id?: string;
   label: string | React.ReactNode;
   onSelect?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  startIcon?: ReactElement<any>;
+  startIcon?: ReactElement<unknown>;
   subMenuItems?: Omit<MenuItem, 'subMenuItems'>[];
   textColor?: string;
 }
