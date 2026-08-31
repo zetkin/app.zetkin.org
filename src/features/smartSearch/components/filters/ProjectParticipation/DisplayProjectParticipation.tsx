@@ -13,6 +13,8 @@ import UnderlinedLocationTitle from './UnderlinedLocationTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import { useNumericRouteParams } from 'core/hooks';
 
+import type { JSX } from "react";
+
 const localMessageIds = messageIds.filters.projectParticipation;
 
 interface DisplayProjectParticipationProps {

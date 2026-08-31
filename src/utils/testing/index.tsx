@@ -75,7 +75,7 @@ type CustomRenderResult = RenderResult & {
  * specific to our application.
  */
 const customRender = (
-  ui: ReactElement | FC<unknown>,
+  ui: ReactElement<any> | FC<unknown>,
   options?: Omit<RenderOptions, 'wrapper'> & { theme?: 'old' | 'zui' }
 ): CustomRenderResult => {
   const { theme = 'old', ...renderOptions } = options || {};
@@ -83,7 +83,7 @@ const customRender = (
     <ZetkinAppProviders theme={theme}>{children}</ZetkinAppProviders>
   );
 
-  const result = render(ui as ReactElement, {
+  const result = render(ui as ReactElement<any>, {
     wrapper,
     ...renderOptions,
   });
@@ -103,7 +103,7 @@ export const makeWrapper = (
   store: Store,
   apiClient: IApiClient = mockApiClient()
 ) =>
-  function Wrapper({ children }: { children: ReactNode }) {
+  (function Wrapper({ children }: { children: ReactNode }) {
     const env = new Environment(apiClient);
 
     return (
@@ -113,4 +113,4 @@ export const makeWrapper = (
         </EnvProvider>
       </ReduxProvider>
     );
-  };
+  });

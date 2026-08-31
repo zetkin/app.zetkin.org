@@ -4,6 +4,8 @@ import { DEMOGRAPHICS_FIELD } from 'features/tasks/components/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 
+import type { JSX } from "react";
+
 type Props = {
   onChange: (value: DEMOGRAPHICS_FIELD | undefined) => void;
   value?: DEMOGRAPHICS_FIELD;

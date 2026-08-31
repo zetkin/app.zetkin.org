@@ -10,6 +10,7 @@ import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrgIdsFromOrgScope from 'features/smartSearch/hooks/useOrgIdsFromOrgScope';
 import useSubOrgViews from 'features/views/hooks/useSubOrgViews';
+import type { JSX } from "react";
 const localMessageIds = messageIds.filters.personView;
 
 interface DisplayPersonViewProps {

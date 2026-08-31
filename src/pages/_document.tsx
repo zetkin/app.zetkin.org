@@ -8,6 +8,8 @@ import Document, {
 
 import oldTheme from '../theme';
 
+import type { JSX } from "react";
+
 // boilerplate page taken from https://github.com/mui-org/material-ui/tree/master/examples/nextjs
 
 interface ExtendedDocumentProps extends DocumentInitialProps {

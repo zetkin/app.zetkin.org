@@ -17,6 +17,8 @@ import {
   TaskFilterConfig,
 } from 'features/smartSearch/components/types';
 
+import type { JSX } from "react";
+
 interface DisplayTaskProps {
   filter: SmartSearchFilterWithId<TaskFilterConfig>;
 }

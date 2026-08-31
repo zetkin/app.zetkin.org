@@ -6,6 +6,8 @@ import { Msg } from 'core/i18n';
 import { ZetkinJourney } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
 
+import type { JSX } from "react";
+
 interface JourneyCardProps {
   journey: ZetkinJourney;
 }

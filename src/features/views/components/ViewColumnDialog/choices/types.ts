@@ -6,6 +6,8 @@ import {
 } from '../../types';
 import messageIds from 'features/views/l10n/messageIds';
 
+import type { JSX } from "react";
+
 export enum CHOICES {
   DELEGATE = 'delegate',
   FULL_NAME = 'fullName',

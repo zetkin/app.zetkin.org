@@ -15,18 +15,18 @@ export default makeMessages('feat.projects', {
     noActivities: m('There are no activities this week.'),
     noDescription: {
       addOneNow: m('Add one now.'),
-      text: m<{ addOneNow: ReactElement }>(
+      text: m<{ addOneNow: ReactElement<any> }>(
         'No description has been added to this project yet. {addOneNow}'
       ),
     },
     nothingTomorrow: m('Nothing planned for tomorrow'),
     startsTomorrow: m('starts tomorrow'),
     subtitles: {
-      endsLater: m<{ relative: ReactElement }>('Ends {relative}'),
+      endsLater: m<{ relative: ReactElement<any> }>('Ends {relative}'),
       endsToday: m('Ends today'),
-      sentEarlier: m<{ relative: ReactElement }>('Was sent {relative}'),
-      sentLater: m<{ relative: ReactElement }>('To be sent {relative}'),
-      startsLater: m<{ relative: ReactElement }>('Starts {relative}'),
+      sentEarlier: m<{ relative: ReactElement<any> }>('Was sent {relative}'),
+      sentLater: m<{ relative: ReactElement<any> }>('To be sent {relative}'),
+      startsLater: m<{ relative: ReactElement<any> }>('Starts {relative}'),
       startsToday: m('Starts today'),
     },
     thisWeekCard: m('Also this week'),

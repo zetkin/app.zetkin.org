@@ -2,6 +2,8 @@ import { Box, ListItem, Typography } from '@mui/material';
 
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
+import type { JSX } from "react";
+
 interface StatusCardItemProps {
   action?: JSX.Element;
   title: string;

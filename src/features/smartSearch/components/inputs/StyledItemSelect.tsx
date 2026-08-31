@@ -12,6 +12,8 @@ import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import oldTheme from 'theme';
 
+import type { JSX } from "react";
+
 interface StyledItem {
   id: number;
   title: string;

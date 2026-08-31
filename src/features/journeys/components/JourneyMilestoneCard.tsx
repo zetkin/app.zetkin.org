@@ -10,6 +10,8 @@ import ZUIDate from 'zui/ZUIDate';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
 
+import type { JSX } from "react";
+
 const JourneyMilestoneCard = ({
   milestone,
 }: {

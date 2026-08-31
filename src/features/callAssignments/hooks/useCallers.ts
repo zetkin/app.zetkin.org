@@ -47,7 +47,7 @@ export default function useCallers(
   const [searchString, setSearchString] = useState('');
   const [selectedCaller, setSelectedCaller] =
     useState<CallAssignmentCaller | null>(null);
-  const selectInputRef = useRef<HTMLInputElement>();
+  const selectInputRef = useRef<HTMLInputElement>(undefined);
 
   const addCaller = (callerId: number): PromiseFuture<CallAssignmentCaller> => {
     dispatch(callerAdd([assignmentId, callerId]));

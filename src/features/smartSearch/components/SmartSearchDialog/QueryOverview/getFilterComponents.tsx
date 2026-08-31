@@ -80,6 +80,8 @@ import DisplayAllInSuborg from '../../filters/AllInSubOrg/DisplayAllInSuborg';
 import DisplayInArea from '../../filters/Area/DisplayInArea';
 import DisplayEventParticipation from '../../filters/EventParticipation/DisplayEventParticipation';
 
+import type { JSX } from "react";
+
 export default function getFilterComponents(
   filter: SmartSearchFilterWithId<AnyFilterConfig>
 ) {

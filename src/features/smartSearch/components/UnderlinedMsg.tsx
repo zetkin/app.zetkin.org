@@ -7,6 +7,8 @@ import {
   ValueRecord,
 } from 'core/i18n/messages';
 
+import type { JSX } from "react";
+
 type UnderlinedPlainMsgProps = {
   id: PlainMessage;
   values?: void;

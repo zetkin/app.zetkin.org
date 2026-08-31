@@ -53,7 +53,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
   error,
 }) => {
   const msg = useMessages(messageIds);
-  const input = useRef<HTMLInputElement>();
+  const input = useRef<HTMLInputElement>(undefined);
 
   useEffect(() => {
     // Focus when opening the component

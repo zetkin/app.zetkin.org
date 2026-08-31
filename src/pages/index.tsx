@@ -12,6 +12,8 @@ import requiredEnvVar from 'utils/requiredEnvVar';
 import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../utils/types/zetkin';
 
+import type { JSX } from "react";
+
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 

@@ -6,6 +6,8 @@ import { Msg } from 'core/i18n';
 import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
 
+import type { JSX } from "react";
+
 export const getCompletionPercentage = (
   milestones: ZetkinJourneyMilestoneStatus[]
 ): number => {

@@ -3,6 +3,8 @@ import { Dialog, DialogContent } from '@mui/material';
 import SmartSearch from './SmartSearch';
 import { ZetkinQuery } from 'utils/types/zetkin';
 
+import type { JSX } from "react";
+
 export interface SmartSearchDialogProps {
   query?: ZetkinQuery | null;
   onDialogClose: () => void;

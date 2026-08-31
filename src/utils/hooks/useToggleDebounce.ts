@@ -9,9 +9,9 @@ export default function useToggleDebounce(
   delay = 50,
   minHoverDuration = 100
 ) {
-  const targetRef = useRef<HTMLElement | null>();
-  const timeoutId = useRef<number | undefined>();
-  const hoverStartTime = useRef<number | null>();
+  const targetRef = useRef<HTMLElement | null>(undefined);
+  const timeoutId = useRef<number | undefined>(undefined);
+  const hoverStartTime = useRef<number | null>(undefined);
 
   function openDebounced(ev: MouseEvent<HTMLElement>) {
     clearTimeout(timeoutId.current);

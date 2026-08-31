@@ -1,5 +1,7 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
+import type { JSX } from "react";
+
 export default makeMessages('feat.profile', {
   customFields: {
     notEditable: m('This field cannot be edited by your organization'),

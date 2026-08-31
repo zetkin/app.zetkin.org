@@ -14,6 +14,8 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 
+import type { JSX } from "react";
+
 const localMessageIds = messageIds.filters.personTags;
 
 interface DisplayPersonTagProps {

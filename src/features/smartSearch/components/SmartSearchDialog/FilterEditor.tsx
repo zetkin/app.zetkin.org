@@ -30,6 +30,8 @@ import {
 } from 'features/smartSearch/components/types';
 import EventParticipation from '../filters/EventParticipation';
 
+import type { JSX } from "react";
+
 interface FilterEditorProps {
   onCancelSubmitFilter: () => void;
   onSubmitFilter: (

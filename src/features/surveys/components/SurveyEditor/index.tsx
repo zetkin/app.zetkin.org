@@ -28,7 +28,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ orgId, readOnly, surveyId }) => {
     number | undefined
   >();
 
-  const lengthRef = useRef<number>();
+  const lengthRef = useRef<number>(undefined);
   const elementsFuture = useSurveyElements(orgId, surveyId);
   const { updateElementOrder } = useSurveyMutations(orgId, surveyId);
 

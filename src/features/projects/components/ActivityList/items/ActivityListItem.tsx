@@ -6,6 +6,8 @@ import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import oldTheme from 'theme';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 
+import type { JSX } from "react";
+
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',

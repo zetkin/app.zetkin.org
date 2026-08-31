@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const SurveyLayout: FC<Props> = async ({
   children,
   params,
-}): Promise<ReactElement> => {
+}): Promise<ReactElement<any>> => {
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);

@@ -9,6 +9,8 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 import useUser from 'core/hooks/useUser';
 
+import type { JSX } from "react";
+
 export const EventSignupButton = ({
   event,
   fullWidth,

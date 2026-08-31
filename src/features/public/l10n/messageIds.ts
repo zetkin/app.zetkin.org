@@ -51,7 +51,7 @@ export default makeMessages('feat.home', {
     privacyPolicy: m('Privacy policy'),
   },
   ics: {
-    joinEvent: m<{ eventLink: ReactElement }>('Join event here: {eventLink}'),
+    joinEvent: m<{ eventLink: ReactElement<any> }>('Join event here: {eventLink}'),
   },
   newLandingPageAlert: {
     description: m(

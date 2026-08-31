@@ -19,6 +19,7 @@ import UnderlinedText from '../../UnderlinedText';
 import { useNumericRouteParams } from 'core/hooks';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import type { JSX } from "react";
 const localMessageIds = messageIds.filters.surveyOption;
 
 interface DisplaySurveyOptionProps {

@@ -1,5 +1,7 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
+import type { JSX } from "react";
+
 export default makeMessages('feat.call', {
   about: {
     events: m<{ numEvents: number }>('{numEvents} events'),

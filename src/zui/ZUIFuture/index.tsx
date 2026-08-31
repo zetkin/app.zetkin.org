@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 import { Box, Skeleton, Typography } from '@mui/material';
 import { ErrorOutlined } from '@mui/icons-material';
 
@@ -25,7 +25,7 @@ export interface ZUIFutureProps<DataType> {
   /**
    * What to render if fetching data has failed.
    */
-  errorIndicator?: React.ReactElement;
+  errorIndicator?: React.ReactElement<any>;
 
   /**
    * IFuture object representing the aysnchronous operation that rendering is waiting for.

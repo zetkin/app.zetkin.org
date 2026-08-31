@@ -4,6 +4,8 @@ import { Msg } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
 
+import type { JSX } from "react";
+
 const JourneyInstanceOutcome = ({
   journeyInstance,
 }: {

@@ -14,6 +14,8 @@ import messageIds from '../l10n/messageIds';
 import useBreadcrumbElements from '../hooks/useBreadcrumbs';
 import oldTheme from 'theme';
 
+import type { JSX } from "react";
+
 function validMessageId(
   idStr: string
 ): keyof typeof messageIds.elements | null {

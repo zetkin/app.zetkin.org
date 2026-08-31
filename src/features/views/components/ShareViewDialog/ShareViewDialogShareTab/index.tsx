@@ -18,7 +18,7 @@ import messageIds from 'features/views/l10n/messageIds';
 const ShareViewDialogShareTab = () => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
-  const selectInputRef = useRef<HTMLInputElement>();
+  const selectInputRef = useRef<HTMLInputElement>(undefined);
   const { orgId, viewId } = useNumericRouteParams();
   const [showOfficials, setShowOfficials] = useState(true);
   const shareLinkUrl = useAbsoluteUrl(

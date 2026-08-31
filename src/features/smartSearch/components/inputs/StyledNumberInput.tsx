@@ -3,6 +3,8 @@ import { merge } from 'lodash';
 
 import oldTheme from 'theme';
 
+import type { JSX } from "react";
+
 const StyledNumberInput: React.FC<TextFieldProps> = (props): JSX.Element => {
   const slotProps = merge<typeof props.slotProps, typeof props.slotProps>(
     {

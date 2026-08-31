@@ -2,6 +2,8 @@ import { NextPage } from 'next/types';
 
 import { ZetkinTokenData } from './sdk';
 
+import type { JSX } from "react";
+
 export type AppSession = {
   memberships?: number[] | null;
   redirAfterLogin: string | null;

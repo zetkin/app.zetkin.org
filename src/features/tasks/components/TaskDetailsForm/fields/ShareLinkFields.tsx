@@ -3,6 +3,8 @@ import { TextField } from '@mui/material';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 
+import type { JSX } from "react";
+
 type Props = {
   defaultMessage?: string;
   onDefaultMessageChange: (value: string) => void;

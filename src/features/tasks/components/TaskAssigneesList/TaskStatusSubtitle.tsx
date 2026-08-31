@@ -9,6 +9,8 @@ import {
 } from 'features/tasks/components/types';
 import messageIds from 'features/tasks/l10n/messageIds';
 
+import type { JSX } from "react";
+
 const TaskStatusSubtitle = ({
   task,
 }: {

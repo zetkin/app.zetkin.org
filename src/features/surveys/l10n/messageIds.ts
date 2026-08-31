@@ -199,7 +199,7 @@ export default makeMessages('feat.surveys', {
     ),
   },
   organizerActionPane: {
-    subtitle: m<{ person: ReactElement }>('Notes on calls to {person}'),
+    subtitle: m<{ person: ReactElement<any> }>('Notes on calls to {person}'),
     title: m('Organizer Action Needed'),
   },
   overview: {
@@ -224,7 +224,7 @@ export default makeMessages('feat.surveys', {
     anonymous: m('Anonymous'),
     hidden: m('Hidden'),
     linked: m('Linked'),
-    subtitle: m<{ date: ReactElement; person: ReactElement }>(
+    subtitle: m<{ date: ReactElement<any>; person: ReactElement<any> }>(
       '{person} {date}'
     ),
   },

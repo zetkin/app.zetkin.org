@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 
 import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';

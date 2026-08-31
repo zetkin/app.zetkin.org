@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import { Chip } from '@mui/material';
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';

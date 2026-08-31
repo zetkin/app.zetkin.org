@@ -181,7 +181,7 @@ export default makeMessages('feat.canvass', {
       },
       sync: {
         label: {
-          hasLoaded: m<{ timestamp: ReactElement }>('Synced {timestamp}'),
+          hasLoaded: m<{ timestamp: ReactElement<any> }>('Synced {timestamp}'),
           neverLoaded: m('Never loaded'),
         },
         syncButton: {

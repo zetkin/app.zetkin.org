@@ -1,5 +1,7 @@
 import { m, makeMessages } from 'core/i18n';
 
+import type { JSX } from "react";
+
 export default makeMessages('feat.account', {
   lostPassword: {
     actions: {

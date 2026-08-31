@@ -12,6 +12,8 @@ import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import oldTheme from 'theme';
 
+import type { JSX } from "react";
+
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',

@@ -3,6 +3,8 @@ import { Box, Typography } from '@mui/material';
 
 import oldTheme from 'theme';
 
+import type { JSX } from "react";
+
 interface ZUILogoProps {
   size?: number;
   color?: 'inherit' | 'disabled' | 'action' | 'secondary' | 'primary' | 'error';

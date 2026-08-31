@@ -365,7 +365,9 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         </Box>
       </Box>
       <Map
-        ref={(map) => setMap(map?.getMap() ?? null)}
+        ref={map => {
+          setMap(map?.getMap() ?? null);
+        }}
         initialViewState={{
           ...initialBounds,
         }}

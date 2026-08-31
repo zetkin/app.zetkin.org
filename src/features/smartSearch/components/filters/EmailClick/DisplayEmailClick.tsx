@@ -17,6 +17,8 @@ import {
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
 
+import type { JSX } from "react";
+
 const localMessageIds = messageIds.filters.emailClick;
 
 interface DisplayEmailClickProps {
