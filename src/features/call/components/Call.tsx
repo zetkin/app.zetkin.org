@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Box, Slide, Snackbar } from '@mui/material';
+import { InfoOutlined } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import useCurrentCall from '../hooks/useCurrentCall';
@@ -20,7 +21,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
-import ZUIAlert from 'zui/components/ZUIAlert';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   onResetAfterError: (urlToNavigateTo: string) => void;
@@ -85,15 +86,52 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
         })}
       >
         {lane.step === LaneStep.START && (
-          <ZUIAlert
-            button={{
-              href: `${process.env.ZETKIN_GEN2_CALL_URL}/assignments/${assignment.id}/call`,
-              label: messages.newUIAlert.goBackButton(),
+          <Box
+            sx={(theme) => {
+              const backgroundShade = theme.palette.mode === 'dark' ? 900 : 100;
+              const textShade = theme.palette.mode === 'dark' ? 100 : 900;
+              return {
+                alignItems: 'center',
+                backgroundColor: theme.palette.swatches.blue[backgroundShade],
+                color: theme.palette.swatches.blue[textShade],
+                display: 'flex',
+                gap: '1rem',
+                padding: '1rem',
+                textDecorationColor: theme.palette.swatches.blue[textShade],
+              };
             }}
-            description={messages.newUIAlert.subtitle()}
-            severity="info"
-            title={messages.newUIAlert.title()}
-          />
+          >
+            <InfoOutlined
+              sx={(theme) => ({
+                color: theme.palette.info.main,
+                fontSize: '1.25rem',
+              })}
+            />
+            <ZUIText color="inherit" variant="bodyMdSemiBold">
+              <Msg
+                id={messageIds.newUIAlert.title}
+                values={{
+                  description: (
+                    <ZUIText color="inherit" component="span">
+                      <Msg
+                        id={messageIds.newUIAlert.description}
+                        values={{
+                          link: (
+                            <ZUILink
+                              color="inherit"
+                              href={`${process.env.ZETKIN_GEN2_CALL_URL}/assignments/${assignment.id}/call`}
+                              size="medium"
+                              text={messages.newUIAlert.linkText()}
+                            />
+                          ),
+                        }}
+                      />
+                    </ZUIText>
+                  ),
+                }}
+              />
+            </ZUIText>
+          </Box>
         )}
         <CallHeader
           assignment={assignment}

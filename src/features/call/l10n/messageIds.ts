@@ -164,11 +164,13 @@ export default makeMessages('feat.call', {
     title: m('Instructions'),
   },
   newUIAlert: {
-    goBackButton: m('Back to old version'),
-    subtitle: m(
-      'You can start using it right away, or go back to the old version if you prefer.'
+    description: m<{ link: JSX.Element }>(
+      'You can start using it right away or {link}'
     ),
-    title: m('Welcome to the redesigned caller interface!'),
+    linkText: m('go back to the old version.'),
+    title: m<{ description: JSX.Element }>(
+      'Welcome to the redesigned caller interface! {description}'
+    ),
   },
   report: {
     steps: {

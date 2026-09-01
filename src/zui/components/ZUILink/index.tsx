@@ -6,6 +6,11 @@ import { ZUIMedium, ZUISmall } from '../types';
 
 type ZUILinkProps = {
   /**
+   * The color of the link text
+   */
+  color?: 'inherit';
+
+  /**
    * The href to link to.
    */
   href: string;
@@ -31,6 +36,7 @@ type ZUILinkProps = {
 };
 
 const ZUILink: FC<ZUILinkProps> = ({
+  color,
   href,
   text,
   openInNewTab = false,
@@ -48,9 +54,10 @@ const ZUILink: FC<ZUILinkProps> = ({
       rel={openInNewTab ? 'noopener' : ''}
       sx={(theme) => ({
         '&:hover': {
-          textDecorationColor: theme.palette.text.primary,
+          textDecorationColor: color ?? theme.palette.text.primary,
         },
-        textDecorationColor: theme.palette.text.primary,
+        color: color ?? theme.palette.text.primary,
+        textDecorationColor: color ?? theme.palette.text.primary,
       })}
       target={openInNewTab ? '_blank' : ''}
       variant={size ? linkVariants[size] : undefined}
