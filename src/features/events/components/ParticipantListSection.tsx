@@ -140,7 +140,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           </ZUIPersonHoverCard>
         </Link>
       ),
-      resizable: false,
+
       sortable: false,
       width: 20,
     },
@@ -184,7 +184,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
       valueGetter: (value, row) => {
         return `${row.first_name || ''} ${row.last_name || ''}`;
@@ -208,7 +208,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
     },
     {
@@ -229,7 +229,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
     },
     {
@@ -247,7 +247,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
       type: 'date',
       valueGetter: (value, row) => {
@@ -384,7 +384,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
       valueGetter: (value, row) => {
         if (row.attended) {
