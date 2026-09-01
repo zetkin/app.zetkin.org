@@ -27,6 +27,59 @@ type Props = {
   onResetAfterError: (urlToNavigateTo: string) => void;
 };
 
+const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
+  const messages = useMessages(messageIds);
+
+  return (
+    <Box
+      sx={(theme) => {
+        const backgroundShade = theme.palette.mode === 'dark' ? 900 : 100;
+        const textShade = theme.palette.mode === 'dark' ? 100 : 900;
+        return {
+          alignItems: 'center',
+          backgroundColor: theme.palette.swatches.blue[backgroundShade],
+          color: theme.palette.swatches.blue[textShade],
+          display: 'flex',
+          gap: '1rem',
+          padding: '1rem',
+          textDecorationColor: theme.palette.swatches.blue[textShade],
+        };
+      }}
+    >
+      <InfoOutlined
+        sx={(theme) => ({
+          color: theme.palette.info.main,
+          fontSize: '1.25rem',
+        })}
+      />
+      <ZUIText color="inherit" variant="bodyMdSemiBold">
+        <Msg
+          id={messageIds.newUIAlert.title}
+          values={{
+            description: (
+              <ZUIText color="inherit" component="span">
+                <Msg
+                  id={messageIds.newUIAlert.description}
+                  values={{
+                    link: (
+                      <ZUILink
+                        color="inherit"
+                        href={`${process.env.ZETKIN_GEN2_CALL_URL}/assignments/${assignmentId}/call`}
+                        size="medium"
+                        text={messages.newUIAlert.linkText()}
+                      />
+                    ),
+                  }}
+                />
+              </ZUIText>
+            ),
+          }}
+        />
+      </ZUIText>
+    </Box>
+  );
+};
+
 const Call: FC<Props> = ({ onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
@@ -86,52 +139,7 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
         })}
       >
         {lane.step === LaneStep.START && (
-          <Box
-            sx={(theme) => {
-              const backgroundShade = theme.palette.mode === 'dark' ? 900 : 100;
-              const textShade = theme.palette.mode === 'dark' ? 100 : 900;
-              return {
-                alignItems: 'center',
-                backgroundColor: theme.palette.swatches.blue[backgroundShade],
-                color: theme.palette.swatches.blue[textShade],
-                display: 'flex',
-                gap: '1rem',
-                padding: '1rem',
-                textDecorationColor: theme.palette.swatches.blue[textShade],
-              };
-            }}
-          >
-            <InfoOutlined
-              sx={(theme) => ({
-                color: theme.palette.info.main,
-                fontSize: '1.25rem',
-              })}
-            />
-            <ZUIText color="inherit" variant="bodyMdSemiBold">
-              <Msg
-                id={messageIds.newUIAlert.title}
-                values={{
-                  description: (
-                    <ZUIText color="inherit" component="span">
-                      <Msg
-                        id={messageIds.newUIAlert.description}
-                        values={{
-                          link: (
-                            <ZUILink
-                              color="inherit"
-                              href={`${process.env.ZETKIN_GEN2_CALL_URL}/assignments/${assignment.id}/call`}
-                              size="medium"
-                              text={messages.newUIAlert.linkText()}
-                            />
-                          ),
-                        }}
-                      />
-                    </ZUIText>
-                  ),
-                }}
-              />
-            </ZUIText>
-          </Box>
+          <NewUIAlert assignmentId={assignment.id} />
         )}
         <CallHeader
           assignment={assignment}
