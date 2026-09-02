@@ -43,8 +43,8 @@ function setupCsp(path: string) {
       }`;
   const cspHeader = `
   default-src 'self' ${mapTiler};
-  script-src 'self' 'nonce-${nonce}' 'wasm-unsafe-eval' 'strict-dynamic' ${
-    isDev ? "'unsafe-eval'" : ''
+  script-src 'self' 'nonce-${nonce}' 'wasm-unsafe-eval' ${
+    isDev ? "'unsafe-eval'" : "'strict-dynamic'"
   };
   style-src ${styleSrc};
   style-src-attr 'unsafe-inline';
