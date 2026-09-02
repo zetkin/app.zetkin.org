@@ -22,12 +22,16 @@ import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 import ZUILink from 'zui/components/ZUILink';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   onResetAfterError: (urlToNavigateTo: string) => void;
 };
 
-const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
+const NewUIAlert: FC<{ assignmentId: number; isMobile: boolean }> = ({
+  assignmentId,
+  isMobile,
+}) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
 
@@ -37,7 +41,7 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
         const backgroundShade = theme.palette.mode === 'dark' ? 900 : 100;
         const textShade = theme.palette.mode === 'dark' ? 100 : 900;
         return {
-          alignItems: 'center',
+          alignItems: isMobile ? 'flex-start' : 'center',
           backgroundColor: theme.palette.swatches.blue[backgroundShade],
           color: theme.palette.swatches.blue[textShade],
           display: 'flex',
@@ -51,6 +55,7 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
         sx={(theme) => ({
           color: theme.palette.info.main,
           fontSize: '1.25rem',
+          marginTop: isMobile ? '0.15rem' : 0,
         })}
       />
       <ZUIText color="inherit" variant="bodyMdSemiBold">
@@ -85,6 +90,7 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
+  const isMobile = useIsMobile();
   const assignment = useCurrentAssignment();
   const allUserAssignments = useMyAssignments();
 
@@ -145,7 +151,7 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
         })}
       >
         {lane.step === LaneStep.START && (
-          <NewUIAlert assignmentId={assignment.id} />
+          <NewUIAlert assignmentId={assignment.id} isMobile={isMobile} />
         )}
         <CallHeader
           assignment={assignment}
