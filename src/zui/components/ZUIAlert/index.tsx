@@ -60,29 +60,6 @@ type ZUIAlertProps = {
   title: string;
 };
 
-const AlertButton: FC<
-  Pick<ZUIButtonProps, 'label' | 'onClick' | 'endIcon' | 'startIcon' | 'href'>
-> = ({ label, onClick, endIcon: EndIcon, startIcon: StartIcon, href }) => {
-  return (
-    <Button
-      color="inherit"
-      endIcon={EndIcon ? <EndIcon /> : null}
-      href={href}
-      onClick={onClick}
-      startIcon={StartIcon ? <StartIcon /> : null}
-      sx={(theme) => ({
-        boxShadow: 'none',
-        minWidth: 'max-content',
-        padding: '0.33rem 0.625rem',
-        ...theme.typography.labelSmSemiBold,
-      })}
-      variant="outlined"
-    >
-      {label}
-    </Button>
-  );
-};
-
 const ZUIAlert: FC<ZUIAlertProps> = ({
   appear = false,
   button,
@@ -247,13 +224,19 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
               paddingTop: '0.5rem',
             }}
           >
-            <AlertButton
-              endIcon={button.endIcon}
-              href={button.href}
-              label={button.label}
+            <Button
+              color="inherit"
               onClick={button.onClick}
-              startIcon={button.startIcon}
-            />
+              sx={(theme) => ({
+                boxShadow: 'none',
+                minWidth: 'max-content',
+                padding: '0.33rem 0.625rem',
+                ...theme.typography.labelSmSemiBold,
+              })}
+              variant="outlined"
+            >
+              {button.label}
+            </Button>
           </Box>
         )}
       </Box>
