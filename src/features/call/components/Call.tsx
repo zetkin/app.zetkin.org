@@ -96,8 +96,9 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
 
   const call = useCurrentCall();
 
-  const { abandonUnfinishedCall, skipCurrentCall, switchToUnfinishedCall } =
-    useCallMutations(assignment.organization.id);
+  const { skipCurrentCall, switchToUnfinishedCall } = useCallMutations(
+    assignment.organization.id
+  );
   const unfinishedCalls = useUnfinishedCalls();
 
   const lane = useAppSelector(
@@ -160,9 +161,6 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
             assignment={assignment}
             call={call}
             lane={lane}
-            onAbandonUnfinishedCall={(assignmentId, callId) =>
-              abandonUnfinishedCall(assignmentId, callId)
-            }
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
               switchToUnfinishedCall(callId, assignmentId);
