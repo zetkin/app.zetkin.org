@@ -6,10 +6,7 @@ const filterCategoryColors = oldTheme.palette.filterCategoryColors;
 export const GROUPED_FILTERS: {
   [key in FILTER_CATEGORY]: {
     colors: { pale: string; strong: string };
-    filters: Exclude<
-      FILTER_TYPE,
-      'call_blocked' | 'caller_participation' | 'most_active'
-    >[];
+    filters: Exclude<FILTER_TYPE, 'call_blocked' | 'most_active'>[];
   };
 } = {
   [FILTER_CATEGORY.BASIC]: {
@@ -64,7 +61,11 @@ export const GROUPED_FILTERS: {
       pale: filterCategoryColors.orange.pale,
       strong: filterCategoryColors.orange.strong,
     },
-    filters: [FILTER_TYPE.CALL_HISTORY, FILTER_TYPE.CALLER],
+    filters: [
+      FILTER_TYPE.CALL_HISTORY,
+      FILTER_TYPE.CALLER,
+      FILTER_TYPE.CALLER_PARTICIPATION,
+    ],
   },
   [FILTER_CATEGORY.SURVEYS]: {
     colors: {

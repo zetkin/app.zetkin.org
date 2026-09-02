@@ -74,8 +74,12 @@ export default makeMessages('feat.smartSearch', {
         title: m('Call history'),
       },
       caller: {
-        description: m('Find people who are callers or have logged calls.'),
+        description: m('Find people who are assigned as callers.'),
         title: m('Callers'),
+      },
+      caller_participation: {
+        description: m('Find people who have logged calls as callers.'),
+        title: m('Callers who have logged calls'),
       },
       campaign_participation: {
         description: m("Who signed up? Got booked? Who didn't? Find them!"),
@@ -286,7 +290,6 @@ export default makeMessages('feat.smartSearch', {
       callerSelect: {
         assigned: m('are assigned as callers'),
         notassigned: m('are not assigned as callers'),
-        participated: m('have logged calls as callers'),
       },
       examples: {
         one: m('Add people who are currently assigned as callers.'),
@@ -304,6 +307,33 @@ export default makeMessages('feat.smartSearch', {
         assignmentSelect: ReactElement;
         callerSelect: ReactElement;
       }>('{addRemoveSelect} people who {callerSelect} in {assignmentSelect}.'),
+    },
+    callerParticipation: {
+      assignmentSelect: {
+        any: m('any assignment'),
+        assignment: m<{ assignmentTitle: ReactElement | string }>(
+          'assignment "{assignmentTitle}"'
+        ),
+        none: m("This organization doesn't have any call assignments yet"),
+      },
+      examples: {
+        one: m('Add people who have logged calls as callers.'),
+        two: m(
+          "Remove people who have logged calls in assignment 'Activate old members'."
+        ),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have logged calls as callers in {assignmentSelect}.'
+      ),
+      previewString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have logged calls as callers in {assignmentSelect}.'
+      ),
     },
     emailBlacklist: {
       inputString: m<{

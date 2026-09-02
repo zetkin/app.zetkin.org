@@ -28,6 +28,7 @@ import {
 import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
 import DisplayCaller from '../../filters/Caller/DisplayCaller';
+import DisplayCallerParticipation from '../../filters/CallerParticipation/DisplayCallerParticipation';
 import DisplayProjectParticipation from '../../filters/ProjectParticipation/DisplayProjectParticipation';
 import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
 import DisplayEmailClick from '../../filters/EmailClick/DisplayEmailClick';
@@ -120,7 +121,7 @@ export default function getFilterComponents(
     filterTypeIcon = <Call color="secondary" fontSize="small" />;
   } else if (filter.type === FILTER_TYPE.CALLER_PARTICIPATION) {
     displayFilter = (
-      <DisplayCaller
+      <DisplayCallerParticipation
         filter={
           filter as SmartSearchFilterWithId<CallerParticipationFilterConfig>
         }
