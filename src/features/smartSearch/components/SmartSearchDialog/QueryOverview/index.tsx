@@ -15,7 +15,6 @@ import {
   AnyFilterConfig,
   FILTER_TYPE,
   SmartSearchFilterWithId,
-  ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import QueryOverviewChip from './QueryOverviewChip';
@@ -30,7 +29,6 @@ import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 
 interface QueryOverviewProps {
   filters: SmartSearchFilterWithId<AnyFilterConfig>[];
-  filtersForStats: ZetkinSmartSearchFilter<AnyFilterConfig>[];
   onCloseDialog?: () => void;
   onSaveQuery?: () => void;
   onOpenFilterGallery: () => void;
@@ -45,7 +43,6 @@ interface QueryOverviewProps {
 
 const QueryOverview = ({
   filters,
-  filtersForStats,
   hasSaveCancelButtons = true,
   readOnly = false,
   onCloseDialog,
@@ -59,7 +56,7 @@ const QueryOverview = ({
 }: QueryOverviewProps): JSX.Element => {
   const [dragging, setDragging] = useState(false);
   const theme = useTheme();
-  const stats = useSmartSearchStats(filtersForStats);
+  const stats = useSmartSearchStats(filters);
   const resultCount = stats?.length ? stats[stats.length - 1].result : 0;
 
   const reorderableItems = filters
@@ -110,7 +107,6 @@ const QueryOverview = ({
       >
         <SmartSearchSankeyProvider
           filters={filters}
-          filtersForStats={filtersForStats}
           hoverColor={theme.palette.primary.main}
         >
           <List sx={{ overflowY: 'auto', paddingX: 4 }}>
