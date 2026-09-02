@@ -6,7 +6,7 @@ import { FC, useState } from 'react';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { LaneStep } from '../types';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { useAppDispatch, useAppSelector, useEnv } from 'core/hooks';
 import { updateLaneStep } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
@@ -29,6 +29,7 @@ type Props = {
 
 const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
   const messages = useMessages(messageIds);
+  const env = useEnv();
 
   return (
     <Box
@@ -64,7 +65,7 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
                     link: (
                       <ZUILink
                         color="inherit"
-                        href={`${process.env.ZETKIN_GEN2_CALL_URL}/assignments/${assignmentId}/call`}
+                        href={`${env.vars.ZETKIN_GEN2_CALL_URL}/assignments/${assignmentId}/call`}
                         size="medium"
                         text={messages.newUIAlert.linkText()}
                       />
