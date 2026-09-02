@@ -1,10 +1,7 @@
 import DisplayCallAssignmentTitle from '../CallHistory/DisplayCallAssignmentTitle';
 import { Msg } from 'core/i18n';
 import {
-  AnyFilterConfig,
   CallerFilterConfig,
-  CallerParticipationFilterConfig,
-  FILTER_TYPE,
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
@@ -15,22 +12,15 @@ import { useNumericRouteParams } from 'core/hooks';
 const localMessageIds = messageIds.filters.caller;
 
 interface DisplayCallerProps {
-  filter: SmartSearchFilterWithId<
-    CallerFilterConfig | CallerParticipationFilterConfig | AnyFilterConfig
-  >;
+  filter: SmartSearchFilterWithId<CallerFilterConfig>;
 }
 
 const DisplayCaller = ({ filter }: DisplayCallerProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const config = filter.config as
-    | CallerFilterConfig
-    | CallerParticipationFilterConfig;
+  const config = filter.config;
   const assignmentId = config.assignment;
   const op = filter.op || OPERATION.ADD;
-  const callerSelect =
-    filter.type === FILTER_TYPE.CALLER_PARTICIPATION
-      ? localMessageIds.callerSelect.participated
-      : localMessageIds.callerSelect[(config as CallerFilterConfig).operator];
+  const callerSelect = localMessageIds.callerSelect[config.operator];
 
   return (
     <Msg

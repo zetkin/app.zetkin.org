@@ -158,15 +158,13 @@ export interface CallHistoryFilterConfig {
 }
 
 export interface CallerFilterConfig {
-  assignment?: number;
-  assignmentIds?: number[];
+  assignment: number | null;
   operator: 'assigned' | 'notassigned';
   organizations?: FilterConfigOrgOptions;
 }
 
 export interface CallerParticipationFilterConfig {
-  assignment?: number;
-  assignmentIds?: number[];
+  assignment: number | null;
   num_calls: {
     max?: number;
     min?: number;
