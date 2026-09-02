@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import shouldLoad from 'core/caching/shouldLoad';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { useResourceCache } from './ResourceProvider';
@@ -23,6 +25,14 @@ export default function useResource<Context, Data>(
   const dispatch = useAppDispatch();
   const config = definition.createConfig(context);
   const remoteList = useAppSelector(config.selector);
+  const data = useMemo(
+    () =>
+      remoteList?.items
+        .filter((item) => !item.deleted)
+        .map((item) => item.data)
+        .filter((data): data is Data => data != null) ?? [],
+    [remoteList?.items]
+  );
   const existingResource = findResource(
     cache,
     'wrappedResources',
@@ -75,10 +85,5 @@ export default function useResource<Context, Data>(
     throw wrappedResource;
   }
 
-  return (
-    remoteList?.items
-      .filter((item) => !item.deleted)
-      .map((item) => item.data)
-      .filter((data): data is Data => data != null) ?? []
-  );
+  return data;
 }
