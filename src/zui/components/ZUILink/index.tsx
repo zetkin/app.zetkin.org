@@ -6,14 +6,14 @@ import { ZUIMedium, ZUISmall } from '../types';
 
 type ZUILinkProps = {
   /**
-   * The color of the link text
-   */
-  color?: 'inherit';
-
-  /**
    * The href to link to.
    */
   href: string;
+
+  /**
+   * Gets the color for the link text from the font color of the parent
+   */
+  inheritColor?: boolean;
 
   /**
    * If true, the link will open in a new tab.
@@ -36,8 +36,8 @@ type ZUILinkProps = {
 };
 
 const ZUILink: FC<ZUILinkProps> = ({
-  color,
   href,
+  inheritColor = false,
   text,
   openInNewTab = false,
   size,
@@ -54,10 +54,14 @@ const ZUILink: FC<ZUILinkProps> = ({
       rel={openInNewTab ? 'noopener' : ''}
       sx={(theme) => ({
         '&:hover': {
-          textDecorationColor: color ?? theme.palette.text.primary,
+          textDecorationColor: inheritColor
+            ? 'inherit'
+            : theme.palette.text.primary,
         },
-        color: color ?? theme.palette.text.primary,
-        textDecorationColor: color ?? theme.palette.text.primary,
+        color: inheritColor ? 'inherit' : theme.palette.text.primary,
+        textDecorationColor: inheritColor
+          ? 'inherit'
+          : theme.palette.text.primary,
       })}
       target={openInNewTab ? '_blank' : ''}
       variant={size ? linkVariants[size] : undefined}

@@ -64,8 +64,8 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
                   values={{
                     link: (
                       <ZUILink
-                        color="inherit"
                         href={`${env.vars.ZETKIN_GEN2_CALL_URL}/assignments/${assignmentId}/call`}
+                        inheritColor
                         size="medium"
                         text={messages.newUIAlert.linkText()}
                       />
