@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import {
   Event,
@@ -34,14 +34,19 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
     target.id
   );
 
-  const isTargetBooked = target.future_actions.some(
-    (futureEvent) => futureEvent.id == event.id
+  const isTargetBooked = useMemo(
+    () =>
+      target.future_actions.some((futureEvent) => futureEvent.id == event.id),
+    [event.id, target.future_actions]
   );
 
   const idsOfEventsRespondedTo = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
   );
-  const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
+  const isSignedUp = useMemo(
+    () => idsOfEventsRespondedTo.includes(event.id),
+    [idsOfEventsRespondedTo, event.id]
+  );
 
   return (
     <MyActivityListItem

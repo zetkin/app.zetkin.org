@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, Box, Slide, Snackbar } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { LaneStep } from '../types';
@@ -51,12 +51,17 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
 
-  const filteredUnfinishedCalls = unfinishedCalls.filter((unfinishedCall) =>
-    call ? call.id != unfinishedCall.id : true
+  const filteredUnfinishedCalls = useMemo(
+    () =>
+      unfinishedCalls.filter((unfinishedCall) =>
+        call ? call.id != unfinishedCall.id : true
+      ),
+    [unfinishedCalls, call]
   );
 
-  const switchedTo = allUserAssignments.find(
-    (oc) => oc.id == assignmentSwitchedTo
+  const switchedTo = useMemo(
+    () => allUserAssignments.find((oc) => oc.id == assignmentSwitchedTo),
+    [allUserAssignments, assignmentSwitchedTo]
   );
 
   if (onServer) {
