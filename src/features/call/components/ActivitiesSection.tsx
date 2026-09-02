@@ -36,7 +36,11 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
-import { ACTIVITIES } from 'features/projects/types';
+import {
+  ACTIVITIES,
+  EventActivity,
+  SurveyActivity,
+} from 'features/projects/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
@@ -76,49 +80,81 @@ const Activities: FC<ActivitiesProps> = ({
   showNoSignups,
   target,
 }) => {
+  const [userInput, setUserInput] = useState<string>('');
   const [searchString, setSearchString] = useState<string>('');
-  const [debouncedSearchString, setDebouncedSearchString] =
-    useState<string>('');
+
   const fuse = useMemo(() => {
     return new Fuse(activities, {
       keys: [
-        'data.campaign.title',
-        'data.organization.title',
-        'data.location.title',
-        'data.title',
-        'data.activity.title',
+        { name: 'data.campaign.title', weight: 1 },
+        { name: 'data.organization.title', weight: 1 },
+        { name: 'data.location.title', weight: 1 },
+        { name: 'data.title', weight: 3 },
+        { name: 'data.activity.title', weight: 2 },
       ],
-      threshold: 0.4,
+      threshold: 0.3,
     });
   }, [activities]);
 
-  const debouncedSetSearchString = useDebounce(async (value: string) => {
-    setDebouncedSearchString(value);
-  }, 300);
-
-  const handleSearchStringChange = useCallback(
-    (value: string) => {
-      setSearchString(value);
-      debouncedSetSearchString(value);
-    },
-    [debouncedSetSearchString]
-  );
+  const debouncedFinishedTyping = useDebounce(async (value: string) => {
+    setSearchString(value);
+  }, 400);
 
   const clearSearchString = useCallback(() => {
     setSearchString('');
-    setDebouncedSearchString('');
+    setUserInput('');
+  }, []);
+
+  const isEventActivity = (activity: Activity): activity is EventActivity => {
+    return 'start_time' in activity.data;
+  };
+
+  const isSurveyActivity = (activity: Activity): activity is SurveyActivity => {
+    return 'access' in activity.data;
+  };
+
+  const sortActivitiesByDate = useCallback((a: Activity, b: Activity) => {
+    const aVisibleFrom = a.visibleFrom ? new Date(a.visibleFrom) : null;
+    const bVisibleFrom = b.visibleFrom ? new Date(b.visibleFrom) : null;
+    if (isEventActivity(a) && isEventActivity(b)) {
+      const aStart = new Date(a.data.start_time);
+      const bStart = new Date(b.data.start_time);
+
+      return aStart.getTime() - bStart.getTime();
+    } else if (isSurveyActivity(a) && isSurveyActivity(b)) {
+      if (!aVisibleFrom && !bVisibleFrom) {
+        return 0;
+      } else if (!aVisibleFrom) {
+        return -1;
+      } else if (!bVisibleFrom) {
+        return 1;
+      }
+
+      return aVisibleFrom.getTime() - bVisibleFrom.getTime();
+    } else if (isEventActivity(a) && isSurveyActivity(b)) {
+      const aStart = new Date(a.data.start_time);
+
+      return bVisibleFrom ? aStart.getTime() - bVisibleFrom.getTime() : 1;
+    } else if (isSurveyActivity(a) && isEventActivity(b)) {
+      const bStart = new Date();
+
+      return aVisibleFrom ? aVisibleFrom.getTime() - bStart.getTime() : -1;
+    }
+
+    //Should never happen
+    return 0;
   }, []);
 
   const filteredActivities = useMemo(
     () =>
-      debouncedSearchString
+      searchString
         ? fuse
-            .search(debouncedSearchString)
+            .search(searchString)
             .map((fuseResult) => fuseResult.item)
-            .sort((a, b) => a.data.id - b.data.id)
-        : [...activities.sort((a, b) => a.data.id - b.data.id)],
+            .sort(sortActivitiesByDate)
+        : [...activities.sort(sortActivitiesByDate)],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activities, debouncedSearchString]
+    [activities, searchString]
   );
 
   useEffect(() => {
@@ -205,11 +241,12 @@ const Activities: FC<ActivitiesProps> = ({
           endIcon={Close}
           fullWidth
           onChange={(newValue) => {
-            handleSearchStringChange(newValue);
+            setUserInput(newValue);
+            debouncedFinishedTyping(newValue);
           }}
           onEndIconClick={() => clearSearchString()}
           startIcon={Search}
-          value={searchString}
+          value={userInput}
         />
       )}
       {filteredActivities.map((activity) => {
