@@ -2,6 +2,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
+  CircularProgress,
   List,
   ListItem,
   ListItemAvatar,
@@ -288,8 +289,14 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const messages = useMessages(messageIds);
   const intl = useIntl();
   const dispatch = useAppDispatch();
-  const { events, filteredActivities, filteredEvents, getDateRange, surveys } =
-    useFilteredActivities(assignment.organization.id);
+  const {
+    events,
+    filteredActivities,
+    filteredEvents,
+    getDateRange,
+    surveys,
+    surveysLoading,
+  } = useFilteredActivities(assignment.organization.id);
   const {
     respondedEventIds,
     submissionDataBySurveyId,
@@ -660,8 +667,22 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   return (
     <>
       <Box sx={{ height: '100%', width: '100%' }}>
-        {selectedSurvey && <Survey survey={selectedSurvey} />}
-        {!selectedSurvey && (
+        {surveysLoading && (
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              height: '100%',
+              justifyContent: 'center',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        {!surveysLoading && selectedSurvey && (
+          <Survey survey={selectedSurvey} />
+        )}
+        {!surveysLoading && !selectedSurvey && (
           <ZUISection
             borders={false}
             fullHeight
