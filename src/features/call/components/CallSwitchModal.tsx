@@ -47,8 +47,12 @@ const UnfinishedCallsList: FC<{
   const currentCall = useCurrentCall();
   const unfinishedCalls = useUnfinishedCalls();
 
-  const unfinishedExceptCurrentCall = unfinishedCalls.filter((call) =>
-    currentCall ? currentCall.id != call.id : true
+  const unfinishedExceptCurrentCall = useMemo(
+    () =>
+      unfinishedCalls.filter((call) =>
+        currentCall ? currentCall.id != call.id : true
+      ),
+    [currentCall, unfinishedCalls]
   );
 
   const fuse = useMemo(() => {

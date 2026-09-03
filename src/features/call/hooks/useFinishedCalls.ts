@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { FinishedCall } from '../types';
 import { finishedCallsLoad, finishedCallsLoaded } from '../store';
@@ -30,11 +32,17 @@ export default function useFinishedCalls() {
     loadPage(0);
   }
 
+  const filteredFinishedCalls = useMemo(
+    () =>
+      finishedCallsList.items
+        .filter((item) => !item.deleted)
+        .map((item) => item.data)
+        .filter(notEmpty),
+    [finishedCallsList.items]
+  );
+
   return {
-    finishedCalls: finishedCallsList.items
-      .filter((item) => !item.deleted)
-      .map((item) => item.data)
-      .filter(notEmpty),
+    finishedCalls: filteredFinishedCalls,
     isLoading: finishedCallsList.isLoading,
   };
 }
