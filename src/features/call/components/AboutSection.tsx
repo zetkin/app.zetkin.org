@@ -100,14 +100,14 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
         <ZUIResponsiveContainer ssrWidth={300}>
           {(width) => {
             const tags = call.target.tags;
-            const maxTags = Math.floor(width / 90);
+            const maxTags = Math.floor(width / 70);
             const displayedTags = tags.slice(0, maxTags);
             const hiddenTags = tags.slice(maxTags);
 
             const tooltipTitle = hiddenTags.map((tag) => tag.title).join(', ');
 
             return (
-              <Box sx={{ paddingBottom: 0.5 }}>
+              <Box>
                 <Box
                   sx={{
                     alignItems: 'center',
@@ -127,6 +127,7 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
                           : messages.about.previousCalls.tags.show()
                       }
                       onClick={() => setShowAllTags(!showAllTags)}
+                      size="small"
                     />
                   )}
                 </Box>
@@ -159,16 +160,16 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
                             alignItems: 'center',
                             backgroundColor: 'transparent',
                             borderColor: theme.palette.grey[500],
-                            borderRadius: '1em',
+                            borderRadius: '1rem',
                             borderWidth: '1px',
                             color: theme.palette.text.secondary,
                             cursor: 'pointer',
                             display: 'flex',
                             height: '30.4px',
                             lineHeight: 'normal',
-                            marginRight: '0.1em',
+                            marginRight: '0.1rem',
                             overflow: 'hidden',
-                            padding: '0.2em 0.7em',
+                            padding: '0.2rem 0.7rem',
                             textOverflow: 'ellipsis',
                           })}
                         >
@@ -199,7 +200,7 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
           }}
         </ZUIResponsiveContainer>
       )}
-      <Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <ZUIText variant="headingMd">
           <Msg id={messageIds.about.previousActivityHeader} />
         </ZUIText>
