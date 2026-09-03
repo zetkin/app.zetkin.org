@@ -1,7 +1,10 @@
 import { MenuItem, Typography } from '@mui/material';
 import { useState } from 'react';
 
-import { getLoggedCallCountWithConfig } from './utils';
+import {
+  getLoggedCallCountWithConfig,
+  normalizeLoggedCallCountConfig,
+} from './utils';
 import { MATCHING } from 'features/smartSearch/components/types';
 import { Msg } from 'core/i18n';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
@@ -18,22 +21,38 @@ interface LoggedCallCountProps {
 const DEFAULT_MIN = 1;
 const DEFAULT_MAX = 5;
 
+const MIN_CALL_COUNT = 1;
+
 const getLoggedCallCountConfig = (
   option: MATCHING,
   range: { max?: number; min?: number }
 ) => {
   if (option === MATCHING.MAX) {
-    return { max: range.max || DEFAULT_MAX, min: undefined };
+    return {
+      max: Math.max(MIN_CALL_COUNT, range.max ?? DEFAULT_MAX),
+      min: undefined,
+    };
   } else if (option === MATCHING.MIN) {
-    return { max: undefined, min: range.min || DEFAULT_MIN };
+    return {
+      max: undefined,
+      min: Math.max(MIN_CALL_COUNT, range.min ?? DEFAULT_MIN),
+    };
   } else if (option === MATCHING.BETWEEN) {
     return {
-      max: range.max || DEFAULT_MAX,
-      min: range.min || DEFAULT_MIN,
+      max: Math.max(MIN_CALL_COUNT, range.max ?? DEFAULT_MAX),
+      min: Math.max(MIN_CALL_COUNT, range.min ?? DEFAULT_MIN),
     };
   }
 
   return { max: undefined, min: DEFAULT_MIN };
+};
+
+const getCallCountInputValue = (value: string) => {
+  if (!value) {
+    return MIN_CALL_COUNT;
+  }
+
+  return +value;
 };
 
 const LoggedCallCount = ({
@@ -60,6 +79,18 @@ const LoggedCallCount = ({
     onChange(getLoggedCallCountConfig(option, { max: updatedMax, min }));
   };
 
+  const handleBlur = () => {
+    if (option === MATCHING.BETWEEN) {
+      const normalizedConfig = normalizeLoggedCallCountConfig({
+        max: max ?? DEFAULT_MAX,
+        min: min ?? DEFAULT_MIN,
+      });
+      setMax(normalizedConfig.max);
+      setMin(normalizedConfig.min);
+      onChange(normalizedConfig);
+    }
+  };
+
   const callCountSelect = (
     <StyledSelect
       onChange={(event) => handleOptionChange(event.target.value as MATCHING)}
@@ -75,15 +106,23 @@ const LoggedCallCount = ({
 
   const minInput = (
     <StyledNumberInput
-      onChange={(event) => handleMinChange(+event.target.value)}
-      value={min || DEFAULT_MIN}
+      onBlur={handleBlur}
+      onChange={(event) =>
+        handleMinChange(getCallCountInputValue(event.target.value))
+      }
+      slotProps={{ htmlInput: { min: '1' } }}
+      value={min ?? DEFAULT_MIN}
     />
   );
 
   const maxInput = (
     <StyledNumberInput
-      onChange={(event) => handleMaxChange(+event.target.value)}
-      value={max || DEFAULT_MAX}
+      onBlur={handleBlur}
+      onChange={(event) =>
+        handleMaxChange(getCallCountInputValue(event.target.value))
+      }
+      slotProps={{ htmlInput: { min: '1' } }}
+      value={max ?? DEFAULT_MAX}
     />
   );
 
@@ -98,13 +137,13 @@ const LoggedCallCount = ({
       {option === MATCHING.MAX && (
         <Msg
           id={localMessageIds.edit.max}
-          values={{ callCountSelect, max: max || DEFAULT_MAX, maxInput }}
+          values={{ callCountSelect, max: max ?? DEFAULT_MAX, maxInput }}
         />
       )}
       {option === MATCHING.MIN && (
         <Msg
           id={localMessageIds.edit.min}
-          values={{ callCountSelect, min: min || DEFAULT_MIN, minInput }}
+          values={{ callCountSelect, min: min ?? DEFAULT_MIN, minInput }}
         />
       )}
       {option === MATCHING.ONCE && (

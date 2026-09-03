@@ -355,7 +355,7 @@ export default makeMessages('feat.smartSearch', {
           min: m<{ max: number; min: number }>(
             'at least {min} {min, plural, one {call} other {calls}}'
           ),
-          once: m<{ max: number; min: number }>('at least one call'),
+          once: m('at least one call'),
         },
       },
       examples: {
