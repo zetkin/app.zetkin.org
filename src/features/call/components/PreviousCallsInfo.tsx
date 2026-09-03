@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import {
   AccessTime,
   CallMade,
@@ -60,7 +60,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
   const hasPreviousCalls = callLog.length > 0;
 
   return (
-    <>
+    <Box>
       <ZUIText variant="headingMd">
         <Msg id={messageIds.about.previousCalls.title} />
       </ZUIText>
@@ -69,109 +69,112 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
           <Msg id={messageIds.about.previousCalls.hasNoPreviousCalls} />
         </ZUIText>
       )}
-      {hasPreviousCalls &&
-        callLog.map((previousCall, index) => {
-          const fullName = previousCall.caller.name;
-          const [callerFirstName, ...rest] = fullName.split(' ');
-          const callerLastName = rest.join(' ');
+      {hasPreviousCalls && (
+        <Stack gap={1}>
+          {callLog.map((previousCall, index) => {
+            const fullName = previousCall.caller.name;
+            const [callerFirstName, ...rest] = fullName.split(' ');
+            const callerLastName = rest.join(' ');
 
-          return (
-            <Box key={previousCall.id}>
-              <Box mb={1}>
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  justifyContent="space-between"
-                >
+            return (
+              <Box key={previousCall.id}>
+                <Box mb={1}>
                   <Box
                     alignItems="center"
                     display="flex"
-                    gap={1}
-                    sx={(theme) => {
-                      const color = colors[previousCall.state];
-                      if (color == 'warning') {
-                        return { color: theme.palette.warning.dark };
-                      } else {
-                        return { color: theme.palette[color].main };
-                      }
-                    }}
+                    justifyContent="space-between"
                   >
-                    <ZUIIcon
-                      color={colors[previousCall.state]}
-                      icon={icons[previousCall.state]}
-                      size="small"
-                    />
-                    <ZUIText color="inherit">
-                      <Msg
-                        id={
-                          messageIds.about.previousCalls.status[
-                            callStateToString[previousCall.state]
-                          ]
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      gap={1}
+                      sx={(theme) => {
+                        const color = colors[previousCall.state];
+                        if (color == 'warning') {
+                          return { color: theme.palette.warning.dark };
+                        } else {
+                          return { color: theme.palette[color].main };
                         }
+                      }}
+                    >
+                      <ZUIIcon
+                        color={colors[previousCall.state]}
+                        icon={icons[previousCall.state]}
+                        size="small"
                       />
-                    </ZUIText>
-                  </Box>
-                  {isMobile ? (
-                    <ZUIPersonAvatar
-                      firstName={callerFirstName}
-                      id={previousCall.caller.id}
-                      lastName={callerLastName}
-                      size="small"
-                    />
-                  ) : (
-                    <Box alignItems="center" display="flex" gap={1}>
-                      <ZUIText color="secondary">
-                        <ZUIDateTime datetime={previousCall.update_time} />
+                      <ZUIText color="inherit">
+                        <Msg
+                          id={
+                            messageIds.about.previousCalls.status[
+                              callStateToString[previousCall.state]
+                            ]
+                          }
+                        />
                       </ZUIText>
+                    </Box>
+                    {isMobile ? (
                       <ZUIPersonAvatar
                         firstName={callerFirstName}
                         id={previousCall.caller.id}
                         lastName={callerLastName}
                         size="small"
                       />
+                    ) : (
+                      <Box alignItems="center" display="flex" gap={1}>
+                        <ZUIText color="secondary">
+                          <ZUIDateTime datetime={previousCall.update_time} />
+                        </ZUIText>
+                        <ZUIPersonAvatar
+                          firstName={callerFirstName}
+                          id={previousCall.caller.id}
+                          lastName={callerLastName}
+                          size="small"
+                        />
+                      </Box>
+                    )}
+                  </Box>
+                  {isMobile && (
+                    <Box ml="1.75rem">
+                      <ZUIText color="secondary">
+                        <ZUIDateTime datetime={previousCall.update_time} />
+                      </ZUIText>
+                    </Box>
+                  )}
+                  {previousCall.notes && (
+                    <Box display="flex" ml="1.75rem">
+                      <ZUIText>
+                        <Msg
+                          id={messageIds.about.previousCalls.note}
+                          values={{ note: previousCall.notes }}
+                        />
+                      </ZUIText>
+                    </Box>
+                  )}
+                  {previousCall.call_back_after && (
+                    <Box display="flex" ml="1.75rem">
+                      <ZUIText>
+                        <Msg
+                          id={messageIds.about.previousCalls.callBackAfter}
+                          values={{
+                            name: previousCall.target.first_name,
+                            time: (
+                              <ZUIDateTime
+                                datetime={previousCall.call_back_after}
+                              />
+                            ),
+                          }}
+                        />
+                      </ZUIText>
                     </Box>
                   )}
                 </Box>
-                {isMobile && (
-                  <Box ml="1.75rem">
-                    <ZUIText color="secondary">
-                      <ZUIDateTime datetime={previousCall.update_time} />
-                    </ZUIText>
-                  </Box>
-                )}
-                {previousCall.notes && (
-                  <Box display="flex" ml="1.75rem">
-                    <ZUIText>
-                      <Msg
-                        id={messageIds.about.previousCalls.note}
-                        values={{ note: previousCall.notes }}
-                      />
-                    </ZUIText>
-                  </Box>
-                )}
-                {previousCall.call_back_after && (
-                  <Box display="flex" ml="1.75rem">
-                    <ZUIText>
-                      <Msg
-                        id={messageIds.about.previousCalls.callBackAfter}
-                        values={{
-                          name: previousCall.target.first_name,
-                          time: (
-                            <ZUIDateTime
-                              datetime={previousCall.call_back_after}
-                            />
-                          ),
-                        }}
-                      />
-                    </ZUIText>
-                  </Box>
-                )}
+                {index < callLog.length - 1 && <ZUIDivider />}
               </Box>
-              {index < callLog.length - 1 && <ZUIDivider />}
-            </Box>
-          );
-        })}
-    </>
+            );
+          })}
+        </Stack>
+      )}
+    </Box>
   );
 };
 
