@@ -10,6 +10,8 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import { useNumericRouteParams } from 'core/hooks';
 
+const localMessageIds = messageIds.filters.callerParticipation;
+
 interface DisplayCallerParticipationProps {
   filter: SmartSearchFilterWithId<CallerParticipationFilterConfig>;
 }
@@ -25,7 +27,7 @@ const DisplayCallerParticipation = ({
 
   return (
     <Msg
-      id={messageIds.filters.callerParticipation.previewString}
+      id={localMessageIds.previewString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
         assignmentSelect: assignmentId ? (
@@ -34,17 +36,11 @@ const DisplayCallerParticipation = ({
             orgId={orgId}
           />
         ) : (
-          <UnderlinedMsg
-            id={messageIds.filters.callerParticipation.assignmentSelect.any}
-          />
+          <UnderlinedMsg id={localMessageIds.assignmentSelect.any} />
         ),
         callCountSelect: (
           <UnderlinedMsg
-            id={
-              messageIds.filters.callerParticipation.callCount.preview[
-                callCountOption
-              ]
-            }
+            id={localMessageIds.callCount.preview[callCountOption]}
             values={{
               max: callCountConfig?.max ?? 0,
               min: callCountConfig?.min ?? 0,
