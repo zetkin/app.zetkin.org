@@ -46,6 +46,7 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
           color: theme.palette.swatches.blue[textShade],
           display: 'flex',
           gap: '1rem',
+          height: HEIGHT_OF_NEW_UI_ALERT,
           padding: '1rem',
           textDecorationColor: theme.palette.swatches.blue[textShade],
         };
