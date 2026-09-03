@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, Fragment, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import {
   Event,
@@ -61,9 +61,8 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
               </ZUIText>,
             ]
           : [
-              <>
+              <Fragment key={event.id}>
                 <ZUIButton
-                  key={event.id}
                   label={
                     isSignedUp
                       ? messages.activities.events.undoSignUp()
@@ -78,7 +77,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
                 {isSignedUp && (
                   <ZUISignUpChip name={target.first_name} status="signedUp" />
                 )}
-              </>,
+              </Fragment>,
             ]
       }
       iconTitle={Event}
