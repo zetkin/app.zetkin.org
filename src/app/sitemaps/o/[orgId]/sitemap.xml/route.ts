@@ -17,9 +17,10 @@ const getUrlsXml = <T>(ts: T[], urlGen: (t: T) => string) => {
 
 export async function GET(
   _: Request,
-  { params }: { params: { orgId: number } }
+  props: { params: Promise<{ orgId: number }> }
 ) {
-  const headersList = headers();
+  const params = await props.params;
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

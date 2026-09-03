@@ -6,10 +6,10 @@ import { EventSignupModel } from 'features/events/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {
-  params: {
+  params: Promise<{
     eventId: string;
     orgId: string;
-  };
+  }>;
 };
 
 type EventSignupBody = {
@@ -20,7 +20,8 @@ type EventSignupBody = {
   phone?: string;
 };
 
-export async function GET(request: NextRequest, { params }: RouteMeta) {
+export async function GET(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   return asOrgAuthorized(
     {
       orgId: params.orgId,
@@ -40,7 +41,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
   );
 }
 
-export async function POST(request: NextRequest, { params }: RouteMeta) {
+export async function POST(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   await mongoose.connect(process.env.MONGODB_URL || '');
 
   const body: EventSignupBody = await request.json();
@@ -80,7 +82,8 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
   return NextResponse.json({ data: eventSignup }, { status: 201 });
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteMeta) {
+export async function DELETE(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   return asOrgAuthorized(
     {
       orgId: params.orgId,

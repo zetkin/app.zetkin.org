@@ -6,7 +6,7 @@ import { ZetkinOrganization } from 'utils/types/zetkin';
 import organizationsDef from 'features/public/rpc/organizations';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

@@ -11,7 +11,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
@@ -25,9 +25,10 @@ export default async function RootLayout({
   }
 
   const lang =
-    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
+    user?.lang ||
+    getBrowserLanguage((await headers()).get('accept-language') || '');
   const messages = await getMessages(lang);
-  const nonce = headers().get('x-nonce') ?? undefined;
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
 
   return (
     <html lang="en">

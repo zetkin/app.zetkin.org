@@ -8,9 +8,9 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
 type Props = {
-  params: {
+  params: Promise<{
     callAssId: string;
-  };
+  }>;
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -20,9 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   await redirectIfLoginNeeded();
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
