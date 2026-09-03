@@ -1,8 +1,8 @@
 import { CallAssignmentData } from '../apiTypes';
-import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { callAssignmentsLoad, callAssignmentsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { IFuture } from 'core/caching/futures';
 
 export default function useCallAssignments(
   orgId: number
