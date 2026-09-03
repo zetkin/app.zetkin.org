@@ -60,7 +60,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
   const hasPreviousCalls = callLog.length > 0;
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       <ZUIText variant="headingMd">
         <Msg id={messageIds.about.previousCalls.title} />
       </ZUIText>
