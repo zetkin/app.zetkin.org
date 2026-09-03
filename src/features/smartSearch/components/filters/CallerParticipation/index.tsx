@@ -1,6 +1,8 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
 
+import LoggedCallCount from './LoggedCallCount';
+import { normalizeLoggedCallCountConfig } from './utils';
 import FilterForm from '../../FilterForm';
 import { Msg, useMessages } from 'core/i18n';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
@@ -56,7 +58,7 @@ const CallerParticipation = ({
       ...filter,
       config: {
         assignment: filter.config.assignment,
-        num_calls: filter.config.num_calls,
+        num_calls: normalizeLoggedCallCountConfig(filter.config.num_calls),
         organizations: filter.config.organizations,
       },
     });
@@ -68,6 +70,13 @@ const CallerParticipation = ({
     } else {
       setConfig({ ...filter.config, assignment: +assignmentValue });
     }
+  };
+
+  const handleCallCountChange = (callCount: { max?: number; min?: number }) => {
+    setConfig({
+      ...filter.config,
+      num_calls: callCount,
+    });
   };
 
   return (
@@ -117,6 +126,12 @@ const CallerParticipation = ({
                 ]}
                 onChange={(e) => handleAssignmentSelectChange(e.target.value)}
                 value={filter.config.assignment ?? ANY_ASSIGNMENT}
+              />
+            ),
+            callCountSelect: (
+              <LoggedCallCount
+                filterConfig={filter.config.num_calls}
+                onChange={handleCallCountChange}
               />
             ),
           }}
