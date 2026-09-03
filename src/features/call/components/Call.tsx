@@ -23,6 +23,10 @@ import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 import ZUILink from 'zui/components/ZUILink';
 
+const HEIGHT_OF_HEADER = '100px';
+//TODO Delete this when removing new ui alert
+const HEIGHT_OF_NEW_UI_ALERT = '56px';
+
 type Props = {
   onResetAfterError: (urlToNavigateTo: string) => void;
 };
@@ -155,7 +159,11 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
         />
-        <Box height="calc(100dvh - 100px)" position="relative" width="100%">
+        <Box
+          height={`calc(100dvh - ${HEIGHT_OF_HEADER} ${lane.step === LaneStep.START ? `- ${HEIGHT_OF_NEW_UI_ALERT}` : ''})`}
+          position="relative"
+          width="100%"
+        >
           <CallPanels
             assignment={assignment}
             call={call}
