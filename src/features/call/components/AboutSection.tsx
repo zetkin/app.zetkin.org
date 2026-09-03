@@ -28,6 +28,7 @@ type AboutSectionProps = {
 };
 
 export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
+  const messages = useMessages(messageIds);
   const [showAllTags, setShowAllTags] = useState(false);
   const isMobile = useIsMobile();
 
@@ -120,7 +121,11 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
                   {hiddenTags.length > 0 && (
                     <ZUIButton
                       endIcon={showAllTags ? ArrowUpward : ArrowDownward}
-                      label={showAllTags ? 'Collapse ' : 'Show all tags'}
+                      label={
+                        showAllTags
+                          ? messages.about.previousCalls.tags.hide()
+                          : messages.about.previousCalls.tags.show()
+                      }
                       onClick={() => setShowAllTags(!showAllTags)}
                     />
                   )}
