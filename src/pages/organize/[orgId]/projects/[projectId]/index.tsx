@@ -21,7 +21,7 @@ import ProjectDetailsForm from 'features/projects/components/ProjectDetailsForm'
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.organizeProjects'],
+  localeScope: ['feat.campaigns', 'feat.events', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

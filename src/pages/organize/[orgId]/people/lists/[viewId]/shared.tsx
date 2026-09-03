@@ -20,7 +20,7 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 const scaffoldOptions = {
   allowNonOfficials: true,
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people.lists'],
+  localeScope: ['feat.views', 'feat.profile', 'feat.breadcrumbs'],
 };
 
 async function getAccessLevel(

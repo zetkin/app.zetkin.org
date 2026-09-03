@@ -8,6 +8,8 @@ import PublicEventLayout from 'features/public/layouts/PublicEventLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
+import { getRequestLang } from 'utils/requestLocale';
+import SectionIntlProvider from 'core/env/SectionIntlProvider';
 import { getSeoTags } from 'utils/seoTags';
 import { ApiClientError } from 'core/api/errors';
 
@@ -71,12 +73,22 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
       `/api/orgs/${params.orgId}/actions/${params.eventId}`
     );
 
+    const lang = await getRequestLang();
+    const messages = await getMessages(lang, [
+      'feat.events',
+      'feat.home',
+      'feat.organizations',
+      'feat.campaigns',
+    ]);
+
     return (
-      <HomeThemeProvider>
-        <PublicEventLayout eventId={event.id} orgId={event.organization.id}>
-          {children}
-        </PublicEventLayout>
-      </HomeThemeProvider>
+      <SectionIntlProvider lang={lang} messages={messages}>
+        <HomeThemeProvider>
+          <PublicEventLayout eventId={event.id} orgId={event.organization.id}>
+            {children}
+          </PublicEventLayout>
+        </HomeThemeProvider>
+      </SectionIntlProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {

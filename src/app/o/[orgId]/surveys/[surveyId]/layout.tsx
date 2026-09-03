@@ -10,6 +10,9 @@ import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import PublicSurveyLayout from 'features/public/layouts/PublicSurveyLayout';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';
+import { getMessages } from 'utils/locale';
+import { getRequestLang } from 'utils/requestLocale';
+import SectionIntlProvider from 'core/env/SectionIntlProvider';
 import { getSeoTags } from 'utils/seoTags';
 
 type Props = {
@@ -68,10 +71,18 @@ const SurveyLayout: FC<Props> = async ({
     }
   }
 
+  const lang = await getRequestLang();
+  const messages = await getMessages(lang, [
+    'feat.surveys',
+    'feat.organizations',
+  ]);
+
   return (
-    <HomeThemeProvider>
-      <PublicSurveyLayout survey={survey}>{children}</PublicSurveyLayout>
-    </HomeThemeProvider>
+    <SectionIntlProvider lang={lang} messages={messages}>
+      <HomeThemeProvider>
+        <PublicSurveyLayout survey={survey}>{children}</PublicSurveyLayout>
+      </HomeThemeProvider>
+    </SectionIntlProvider>
   );
 };
 

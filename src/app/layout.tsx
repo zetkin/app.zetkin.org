@@ -1,10 +1,9 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { headers } from 'next/headers';
 
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
-import { ZetkinUser } from 'utils/types/zetkin';
-import { getBrowserLanguage, getMessages } from 'utils/locale';
+import { getMessages } from 'utils/locale';
+import { getRequestLang, getRequestUser } from 'utils/requestLocale';
 
 export default async function RootLayout({
   children,
@@ -14,19 +13,11 @@ export default async function RootLayout({
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
-  const apiClient = new BackendApiClient(headersObject);
 
-  let user: ZetkinUser | null;
+  const user = await getRequestUser();
+  const lang = await getRequestLang();
 
-  try {
-    user = await apiClient.get<ZetkinUser>('/api/users/me');
-  } catch (e) {
-    user = null;
-  }
-
-  const lang =
-    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
-  const messages = await getMessages(lang);
+  const sharedBaseMessages = await getMessages(lang, ['core', 'glob', 'zui']);
   const nonce = headers().get('x-nonce') ?? undefined;
 
   return (
@@ -57,7 +48,7 @@ export default async function RootLayout({
             }}
             headers={headersObject}
             lang={lang}
-            messages={messages}
+            messages={sharedBaseMessages}
             nonce={nonce}
             user={user}
           >

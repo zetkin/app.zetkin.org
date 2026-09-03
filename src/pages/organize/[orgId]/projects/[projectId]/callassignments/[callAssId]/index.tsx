@@ -39,10 +39,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: [
-      'layout.organize.callAssignment',
-      'pages.organizeCallAssignment',
-    ],
+    localeScope: ['feat.callAssignments', 'feat.campaigns', 'feat.breadcrumbs'],
   }
 );
 
