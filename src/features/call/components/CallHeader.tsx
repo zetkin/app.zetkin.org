@@ -8,23 +8,16 @@ import ZUIText from 'zui/components/ZUIText';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIButton from 'zui/components/ZUIButton';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
-import {
-  filtersUpdated,
-  surveyDeselected,
-  surveySubmissionDeleted,
-  updateLaneStep,
-} from '../store';
+import { useAppDispatch } from 'core/hooks';
+import { updateLaneStep } from '../store';
 import useAllocateCall from '../hooks/useAllocateCall';
 import useSubmitReport from '../hooks/useSubmitReport';
 import useCallMutations from '../hooks/useCallMutations';
-import { objectToFormData } from './utils/objectToFormData';
-import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import useFilteredActivities from '../hooks/useFilteredActivities';
 import notEmpty from 'utils/notEmpty';
 import ZUILink from 'zui/components/ZUILink';
+import useSetupReportStep from '../hooks/useSetupReportStep';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -45,22 +38,9 @@ const CallHeader: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
-
-  const { surveys } = useFilteredActivities(assignment.organization.id);
-  const { selectedSurveyId } = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex]
-  );
-  const responseBySurveyId = useAppSelector(
-    (state) =>
-      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
-  );
+  const setupReportStep = useSetupReportStep(assignment.organization.id);
 
   const [submittingReport, setSubmittingReport] = useState(false);
-
-  const submissionDataBySurveyId = useAppSelector(
-    (state) =>
-      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
-  );
 
   const { quitCurrentCall } = useCallMutations(assignment.organization.id);
   const {
@@ -205,83 +185,15 @@ const CallHeader: FC<Props> = ({
           onClick={async () => {
             if (lane.step == LaneStep.START) {
               await allocateCall();
-              dispatch(updateLaneStep(LaneStep.CALL));
             } else if (lane.step == LaneStep.CALL) {
-              dispatch(updateLaneStep(LaneStep.REPORT));
-
-              const hasSurveySubmissions =
-                Object.entries(submissionDataBySurveyId).length > 0;
-              const hasEventSignups = lane.respondedEventIds.length > 0;
-
-              if (hasSurveySubmissions || hasEventSignups) {
-                dispatch(
-                  filtersUpdated({
-                    customDatesToFilterEventsBy: [null, null],
-                    eventDateFilterState: null,
-                    filterState: {
-                      alreadyIn: false,
-                      events: false,
-                      surveys: false,
-                      thisCall: true,
-                    },
-                    orgIdsToFilterEventsBy: [],
-                    projectIdsToFilterActivitiesBy: [],
-                  })
-                );
-              }
-
-              const selectedSurvey =
-                surveys.find((survey) => survey.id == selectedSurveyId) || null;
-              if (selectedSurvey) {
-                const response = responseBySurveyId[selectedSurvey.id];
-                const hasMeaningfulContent =
-                  !!response &&
-                  Object.entries(response).some(([, value]) => {
-                    if (typeof value === 'string') {
-                      return value.trim() !== '';
-                    }
-                    return value.length > 0;
-                  });
-
-                if (hasMeaningfulContent) {
-                  dispatch(surveyDeselected());
-                } else {
-                  dispatch(surveySubmissionDeleted(selectedSurvey.id));
-                }
-              }
+              setupReportStep();
             } else if (lane.step == LaneStep.REPORT) {
               if (!report || !call) {
                 return;
               }
               setSubmittingReport(true);
-
-              const submissions = Object.entries(submissionDataBySurveyId)
-                .filter(([, surveySubmissionData]) => {
-                  return Object.entries(surveySubmissionData).some(
-                    ([, value]) => {
-                      if (typeof value == 'string') {
-                        return value.trim() !== '';
-                      }
-                      return true;
-                    }
-                  );
-                })
-                .map(([surveyId, surveySubmissionData]) => {
-                  const surveySubmissionDataAsFormData =
-                    objectToFormData(surveySubmissionData);
-                  return {
-                    submission: prepareSurveyApiSubmission(
-                      surveySubmissionDataAsFormData
-                    ),
-                    surveyId: Number(surveyId),
-                    targetId: call.target.id,
-                  };
-                });
-
-              await submitReport(call.id, report, submissions);
-
+              await submitReport(call.id, report, call.target.id);
               setSubmittingReport(false);
-              dispatch(updateLaneStep(LaneStep.SUMMARY));
             } else {
               //Lane step must be Summary
               await allocateCall();
