@@ -1,7 +1,13 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box } from '@mui/system';
-import { Stack } from '@mui/material';
-import { HomeOutlined, MailOutline, Phone } from '@mui/icons-material';
+import { Collapse, Stack } from '@mui/material';
+import {
+  ArrowDownward,
+  ArrowUpward,
+  HomeOutlined,
+  MailOutline,
+  Phone,
+} from '@mui/icons-material';
 
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
@@ -15,12 +21,14 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 import ZUITooltip from 'zui/components/ZUITooltip';
+import ZUIButton from 'zui/components/ZUIButton';
 
 type AboutSectionProps = {
   call: UnfinishedCall | null;
 };
 
 export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
+  const [showAllTags, setShowAllTags] = useState(false);
   const isMobile = useIsMobile();
 
   return (
@@ -91,7 +99,7 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
         <ZUIResponsiveContainer ssrWidth={300}>
           {(width) => {
             const tags = call.target.tags;
-            const maxTags = Math.floor(width / 100);
+            const maxTags = Math.floor(width / 90);
             const displayedTags = tags.slice(0, maxTags);
             const hiddenTags = tags.slice(maxTags);
 
@@ -99,47 +107,87 @@ export const AboutContent = ({ call }: { call: UnfinishedCall }) => {
 
             return (
               <Box sx={{ paddingBottom: 0.5 }}>
-                <ZUIText variant="headingMd">
-                  <Msg id={messageIds.about.tagsHeader} />
-                </ZUIText>
                 <Box
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.about.tagsHeader} />
+                  </ZUIText>
+                  {hiddenTags.length > 0 && (
+                    <ZUIButton
+                      endIcon={showAllTags ? ArrowUpward : ArrowDownward}
+                      label={showAllTags ? 'Collapse ' : 'Show all tags'}
+                      onClick={() => setShowAllTags(!showAllTags)}
+                    />
+                  )}
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
                     gap: 1,
                     paddingTop: 1,
                   }}
                 >
-                  {displayedTags.map((tag) => (
-                    <ZUITagChip key={tag.id} tag={tag} />
-                  ))}
-                  {hiddenTags.length > 0 && (
-                    <ZUITooltip label={tooltipTitle}>
-                      <Box
-                        border={2}
-                        sx={(theme) => ({
-                          alignItems: 'center',
-                          borderColor: theme.palette.grey[500],
-                          borderRadius: '1em',
-                          borderWidth: '1px',
-                          color: theme.palette.text.secondary,
-                          cursor: 'default',
-                          display: 'flex',
-                          height: '30.4px',
-                          lineHeight: 'normal',
-                          marginRight: '0.1em',
-                          overflow: 'hidden',
-                          padding: '0.2em 0.7em',
-                          textOverflow: 'ellipsis',
-                        })}
-                      >
-                        <ZUIText>
-                          {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
-                        </ZUIText>
-                      </Box>
-                    </ZUITooltip>
-                  )}
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 1,
+                    }}
+                  >
+                    {displayedTags.map((tag) => (
+                      <ZUITagChip key={tag.id} tag={tag} />
+                    ))}
+                    {!showAllTags && hiddenTags.length > 0 && (
+                      <ZUITooltip label={tooltipTitle}>
+                        <Box
+                          border={2}
+                          component="button"
+                          onClick={() => setShowAllTags(true)}
+                          sx={(theme) => ({
+                            alignItems: 'center',
+                            backgroundColor: 'transparent',
+                            borderColor: theme.palette.grey[500],
+                            borderRadius: '1em',
+                            borderWidth: '1px',
+                            color: theme.palette.text.secondary,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            height: '30.4px',
+                            lineHeight: 'normal',
+                            marginRight: '0.1em',
+                            overflow: 'hidden',
+                            padding: '0.2em 0.7em',
+                            textOverflow: 'ellipsis',
+                          })}
+                        >
+                          <ZUIText>
+                            {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
+                          </ZUIText>
+                        </Box>
+                      </ZUITooltip>
+                    )}
+                  </Box>
+                  <Collapse in={showAllTags}>
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 1,
+                      }}
+                    >
+                      {hiddenTags.map((tag) => (
+                        <ZUITagChip key={tag.id} tag={tag} />
+                      ))}
+                    </Box>
+                  </Collapse>
                 </Box>
               </Box>
             );
