@@ -316,23 +316,67 @@ export default makeMessages('feat.smartSearch', {
         ),
         none: m("This organization doesn't have any call assignments yet"),
       },
+      callCount: {
+        edit: {
+          between: m<{
+            callCountSelect: ReactElement;
+            maxInput: ReactElement;
+            minInput: ReactElement;
+          }>('{callCountSelect} {minInput} and {maxInput} calls'),
+          max: m<{
+            callCountSelect: ReactElement;
+            max: number;
+            maxInput: ReactElement;
+          }>(
+            '{callCountSelect} {maxInput} {max, plural, one {call} other {calls}}'
+          ),
+          min: m<{
+            callCountSelect: ReactElement;
+            min: number;
+            minInput: ReactElement;
+          }>(
+            '{callCountSelect} {minInput} {min, plural, one {call} other {calls}}'
+          ),
+          once: m<{ callCountSelect: ReactElement }>('{callCountSelect} call'),
+        },
+        labels: {
+          between: m('between'),
+          max: m('at most'),
+          min: m('at least'),
+          once: m('at least one'),
+        },
+        preview: {
+          between: m<{ max: number; min: number }>(
+            'between {min} and {max} calls'
+          ),
+          max: m<{ max: number; min: number }>(
+            'at most {max} {max, plural, one {call} other {calls}}'
+          ),
+          min: m<{ max: number; min: number }>(
+            'at least {min} {min, plural, one {call} other {calls}}'
+          ),
+          once: m<{ max: number; min: number }>('at least one call'),
+        },
+      },
       examples: {
-        one: m('Add people who have logged calls as callers.'),
+        one: m('Add people who have logged at least 50 calls.'),
         two: m(
-          "Remove people who have logged calls in assignment 'Activate old members'."
+          "Remove people who have logged at most 5 calls in assignment 'Activate old members'."
         ),
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
         assignmentSelect: ReactElement;
+        callCountSelect: ReactElement;
       }>(
-        '{addRemoveSelect} people who have logged calls as callers in {assignmentSelect}.'
+        '{addRemoveSelect} people who have logged {callCountSelect} in {assignmentSelect}.'
       ),
       previewString: m<{
         addRemoveSelect: ReactElement;
         assignmentSelect: ReactElement;
+        callCountSelect: ReactElement;
       }>(
-        '{addRemoveSelect} people who have logged calls as callers in {assignmentSelect}.'
+        '{addRemoveSelect} people who have logged {callCountSelect} in {assignmentSelect}.'
       ),
     },
     emailBlacklist: {

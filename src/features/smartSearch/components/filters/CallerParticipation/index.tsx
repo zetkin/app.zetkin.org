@@ -1,6 +1,7 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
 
+import LoggedCallCount from './LoggedCallCount';
 import FilterForm from '../../FilterForm';
 import { Msg, useMessages } from 'core/i18n';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
@@ -70,6 +71,13 @@ const CallerParticipation = ({
     }
   };
 
+  const handleCallCountChange = (callCount: { max?: number; min?: number }) => {
+    setConfig({
+      ...filter.config,
+      num_calls: callCount,
+    });
+  };
+
   return (
     <FilterForm
       enableOrgSelect
@@ -117,6 +125,12 @@ const CallerParticipation = ({
                 ]}
                 onChange={(e) => handleAssignmentSelectChange(e.target.value)}
                 value={filter.config.assignment ?? ANY_ASSIGNMENT}
+              />
+            ),
+            callCountSelect: (
+              <LoggedCallCount
+                filterConfig={filter.config.num_calls}
+                onChange={handleCallCountChange}
               />
             ),
           }}
