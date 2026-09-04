@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { useMessages } from 'core/i18n';
 import useCallMutations from '../hooks/useCallMutations';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -20,21 +22,25 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
   targetName,
 }) => {
   const messages = useMessages(messageIds);
+  const [isLoading, setIsLoading] = useState(false);
   const { skipCurrentCall } = useCallMutations(assignment.organization.id);
 
   return (
     <ZUIModal
       open={open}
       primaryButton={{
-        label: messages.skipCallDialog.confirmButton({ name: targetName }),
+        label: messages.skipCallDialog.cancelButton(),
         onClick: () => {
-          skipCurrentCall(assignment.id, callId);
           onClose();
         },
       }}
       secondaryButton={{
-        label: messages.skipCallDialog.cancelButton(),
-        onClick: () => {
+        isLoading,
+        label: messages.skipCallDialog.confirmButton({ name: targetName }),
+        onClick: async () => {
+          setIsLoading(true);
+          await skipCurrentCall(assignment.id, callId);
+          setIsLoading(false);
           onClose();
         },
       }}

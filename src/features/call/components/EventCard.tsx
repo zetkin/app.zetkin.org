@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import {
   Event,
@@ -28,6 +28,7 @@ type EventCardProps = {
 const EventCard: FC<EventCardProps> = ({ event, target }) => {
   const messages = useMessages(messageIds);
   const intl = useIntl();
+  const [isLoading, setIsLoading] = useState(false);
   const { signUp, undoSignup } = useEventCallActions(
     event.organization.id,
     event.id,
@@ -64,12 +65,21 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
               <>
                 <ZUIButton
                   key={event.id}
+                  isLoading={isLoading}
                   label={
                     isSignedUp
                       ? messages.activities.events.undoSignUp()
                       : messages.activities.events.signUp()
                   }
-                  onClick={() => (isSignedUp ? undoSignup() : signUp())}
+                  onClick={async () => {
+                    setIsLoading(true);
+                    if (isSignedUp) {
+                      await undoSignup();
+                    } else {
+                      await signUp();
+                    }
+                    setIsLoading(false);
+                  }}
                   variant="primary"
                 />
                 {event.num_participants_available <
