@@ -28,7 +28,7 @@ export default async function RootLayout({
   const messages = await getMessages(lang);
 
   return (
-    <html lang="en">
+    <html lang={lang}>
       <body>
         <AppRouterCacheProvider>
           <ClientContext
