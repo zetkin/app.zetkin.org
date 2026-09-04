@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, type JSX } from 'react';
 
 import ZUIDivider from '../ZUIDivider';
 import { ZUIOrientation } from '../types';

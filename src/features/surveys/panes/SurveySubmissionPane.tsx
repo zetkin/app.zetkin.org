@@ -1,6 +1,6 @@
 import { Box, Link, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, type JSX } from 'react';
 import NextLink from 'next/link';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';

@@ -26,7 +26,7 @@ const OrgScope: FC<Props> = ({ orgId, organizations }) => {
     single: messageIds.orgScope.single,
   });
 
-  let content: ReactElement | string | null = null;
+  let content: ReactElement<unknown> | string | null = null;
 
   if (organizations == 'all') {
     content = <Msg id={messageIds.orgScope.all} />;

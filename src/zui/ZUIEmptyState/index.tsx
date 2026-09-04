@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 import { InfoOutlined } from '@mui/icons-material';
 import NextLink from 'next/link';
 import { Box, Link, SvgIconTypeMap, Typography } from '@mui/material';

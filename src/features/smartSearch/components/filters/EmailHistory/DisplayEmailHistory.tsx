@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';
 import { MESSAGE_KEY_BY_OP } from '.';

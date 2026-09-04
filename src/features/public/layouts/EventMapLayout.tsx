@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Button, NoSsr, SxProps } from '@mui/material';
-import { FC, ReactNode, Suspense, useEffect, useState } from 'react';
+import { FC, ReactNode, Suspense, useEffect, useState, type JSX } from 'react';
 import { useMediaQuery, useTheme } from '@mui/system';
 import 'maplibre-gl/dist/maplibre-gl.css';
 

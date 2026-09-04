@@ -7,6 +7,7 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+import type { JSX } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';

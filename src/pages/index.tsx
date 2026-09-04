@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Container, Typography } from '@mui/material';
+import type { JSX } from 'react';
 
 import { AppSession } from '../utils/types';
 import getUserMemberships from 'utils/getUserMemberships';

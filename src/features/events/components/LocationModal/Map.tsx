@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
-import { FC, useState } from 'react';
+import { FC, useState, type JSX } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useTheme } from '@mui/material';
 import { latLngBounds, Map as MapType } from 'leaflet';

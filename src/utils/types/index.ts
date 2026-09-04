@@ -1,4 +1,5 @@
 import { NextPage } from 'next/types';
+import type { JSX } from 'react';
 
 import { ZetkinTokenData } from './sdk';
 

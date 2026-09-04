@@ -39,7 +39,7 @@ type ItemData = Array<
       group: string;
       key: number;
     }
-  | [React.ReactElement, string, number, string]
+  | [React.ReactElement<unknown>, string, number, string]
 >;
 
 function RowComponent({

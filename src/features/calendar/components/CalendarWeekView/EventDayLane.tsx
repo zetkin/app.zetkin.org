@@ -15,7 +15,7 @@ const EventDayLane: FC<EventDayLaneProps> = ({
   onDragStart,
 }) => {
   const [dragging, setDragging] = useState(false);
-  const laneRef = useRef<HTMLDivElement>();
+  const laneRef = useRef<HTMLDivElement>(undefined);
   const ghostRef = useRef<HTMLDivElement>(null);
   const onCreateRef = useRef(onCreate);
   const onDragStartRef = useRef(onDragStart);

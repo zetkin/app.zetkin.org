@@ -75,7 +75,7 @@ type CustomRenderResult = RenderResult & {
  * specific to our application.
  */
 const customRender = (
-  ui: ReactElement | FC<unknown>,
+  ui: ReactElement<unknown> | FC<unknown>,
   options?: Omit<RenderOptions, 'wrapper'> & { theme?: 'old' | 'zui' }
 ): CustomRenderResult => {
   const { theme = 'old', ...renderOptions } = options || {};
@@ -83,7 +83,7 @@ const customRender = (
     <ZetkinAppProviders theme={theme}>{children}</ZetkinAppProviders>
   );
 
-  const result = render(ui as ReactElement, {
+  const result = render(ui as ReactElement<unknown>, {
     wrapper,
     ...renderOptions,
   });

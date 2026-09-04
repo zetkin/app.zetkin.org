@@ -3,7 +3,7 @@ import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useState, type JSX } from 'react';
 import { Box } from '@mui/system';
 
 import oldTheme from 'theme';
@@ -35,7 +35,9 @@ const FilterDropDown: FC<Props> = ({
   return (
     <div style={{ width: '100%' }}>
       <Button
-        ref={(elem) => setAnchorEl(elem)}
+        ref={(elem) => {
+          setAnchorEl(elem);
+        }}
         fullWidth
         onClick={() => onToggle(!open)}
         variant={variant}

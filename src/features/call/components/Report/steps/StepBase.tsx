@@ -1,6 +1,6 @@
 import { Close, Done, QuestionMark, Undo } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, type JSX } from 'react';
 
 import { useMessages } from 'core/i18n';
 import ZUIButton from 'zui/components/ZUIButton';

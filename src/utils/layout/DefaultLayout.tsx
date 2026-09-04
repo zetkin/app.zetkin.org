@@ -8,7 +8,7 @@ import oldTheme from 'theme';
 interface DefaultLayoutProps {
   children: React.ReactNode;
   onScroll?: () => void;
-  title?: string | ReactElement;
+  title?: string | ReactElement<unknown>;
 }
 
 const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
@@ -30,7 +30,9 @@ const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
     >
       <ZUIOrganizeSidebar title={title} />
       <Box
-        ref={(div: HTMLDivElement) => setContainer(div)}
+        ref={(div: HTMLDivElement) => {
+          setContainer(div);
+        }}
         display="flex"
         flexDirection="column"
         onScroll={onScroll}

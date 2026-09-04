@@ -43,7 +43,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
   orgId,
 }) => {
   const [filterString, setFilterString] = useState<string>('');
-  const listRef = useRef<HTMLDivElement>();
+  const listRef = useRef<HTMLDivElement>(undefined);
   const eventFuture = useEvent(parseInt(orgId), parseInt(eventId));
 
   if (!eventFuture) {

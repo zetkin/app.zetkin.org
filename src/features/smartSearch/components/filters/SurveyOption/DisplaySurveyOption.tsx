@@ -1,5 +1,6 @@
 import { DoneAll } from '@mui/icons-material';
 import { Box, Chip, Tooltip } from '@mui/material';
+import type { JSX } from 'react';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { Msg } from 'core/i18n';

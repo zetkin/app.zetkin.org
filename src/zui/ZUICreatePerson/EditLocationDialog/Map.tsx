@@ -77,7 +77,9 @@ const PersonLocationMap: FC<MapProps> = ({
         onZoomOut={() => map?.zoomOut()}
       />
       <Map
-        ref={(map) => setMap(map?.getMap() ?? null)}
+        ref={(map) => {
+          setMap(map?.getMap() ?? null);
+        }}
         initialViewState={{
           latitude: bounds?.getCenter().lat,
           longitude: bounds?.getCenter().lng,

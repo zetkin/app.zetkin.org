@@ -9,7 +9,7 @@ type ZUITooltipProps = {
    */
   arrow?: boolean;
 
-  children: ReactElement;
+  children: ReactElement<unknown>;
 
   /**
    * The text content of the tooltip.

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 
 import StepBase from './StepBase';
 

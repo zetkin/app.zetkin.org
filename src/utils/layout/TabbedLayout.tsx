@@ -18,17 +18,17 @@ import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 
 interface TabbedLayoutProps {
-  actionButtons?: React.ReactElement | React.ReactElement[];
+  actionButtons?: React.ReactElement<unknown> | React.ReactElement<unknown>[];
   alertBtnMsg?: string;
-  alertMsg?: React.ReactElement;
+  alertMsg?: React.ReactElement<unknown>;
   avatar?: string;
   baseHref: string;
-  belowActionButtons?: ReactElement;
+  belowActionButtons?: ReactElement<unknown>;
   children?: React.ReactNode;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   fixedHeight?: boolean;
-  title?: string | ReactElement;
-  subtitle?: string | ReactElement;
+  title?: string | ReactElement<unknown>;
+  subtitle?: string | ReactElement<unknown>;
   defaultTab: string;
   noPad?: boolean;
   tabs: {

@@ -1,4 +1,5 @@
 import { useIntl } from 'react-intl';
+import type { JSX } from 'react';
 
 import UnderlinedText from './UnderlinedText';
 import {

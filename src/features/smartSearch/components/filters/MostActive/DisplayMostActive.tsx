@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { getTimeFrameWithConfig } from '../../utils';
 import {
   MostActiveFilterConfig,

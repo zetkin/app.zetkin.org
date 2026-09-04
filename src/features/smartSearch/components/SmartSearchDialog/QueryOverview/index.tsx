@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Alert, Divider, Typography, useTheme } from '@mui/material';
 import {
   ArrowForwardOutlined,

@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect, useRef, useState } from 'react';
 
-type ZUIAnimatedNumberRenderFunc = (value: string) => ReactElement;
+type ZUIAnimatedNumberRenderFunc = (value: string) => ReactElement<unknown>;
 
 interface ZUIAnimatedNumberProps {
   children: ZUIAnimatedNumberRenderFunc;

@@ -49,7 +49,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
     blocks: initialContent,
   });
 
-  const blocksRef = useRef<OutputBlockData[]>();
+  const blocksRef = useRef<OutputBlockData[]>(undefined);
 
   const now = new Date();
   const readOnly =

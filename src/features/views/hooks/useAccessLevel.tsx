@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from 'react';
+import { createContext, FC, useContext, type JSX } from 'react';
 
 import { ZetkinObjectAccess } from 'core/api/types';
 

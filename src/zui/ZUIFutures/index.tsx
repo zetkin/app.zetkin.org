@@ -1,5 +1,5 @@
 import { ErrorOutlined } from '@mui/icons-material';
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
 import { IFuture } from 'core/caching/futures';
@@ -13,10 +13,10 @@ interface ZUIFuturesProps<G extends Record<string, unknown>> {
         data,
       }: {
         data: { [I in keyof G]: G[I] };
-      }) => React.ReactElement | null);
-  errorIndicator?: React.ReactElement;
+      }) => React.ReactElement<unknown> | null);
+  errorIndicator?: React.ReactElement<unknown>;
   futures: { [I in keyof G]: IFuture<G[I]> };
-  loadingIndicator?: React.ReactElement;
+  loadingIndicator?: React.ReactElement<unknown>;
 }
 
 export function isEmptyData<T>(future: IFuture<T>): boolean {

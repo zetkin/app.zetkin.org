@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useMemo } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, type JSX } from 'react';
 import { Box, MenuItem, Skeleton, Typography } from '@mui/material';
 
 import FilterForm from '../../FilterForm';

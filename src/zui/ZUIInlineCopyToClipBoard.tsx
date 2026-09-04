@@ -1,6 +1,6 @@
 import copy from 'copy-to-clipboard';
 import { Box, Fade, IconButton } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, type JSX } from 'react';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 import { useMessages } from 'core/i18n';

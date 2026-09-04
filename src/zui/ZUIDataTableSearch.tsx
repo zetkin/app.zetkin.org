@@ -32,7 +32,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
   const isIdSearch =
     searchById && searchString[0] === ID_SEARCH_CHAR && searchString.length > 1;
   const isActive = searchString.length >= minSearchLength || isIdSearch;
-  const textFieldInputRef = useRef<HTMLInputElement>();
+  const textFieldInputRef = useRef<HTMLInputElement>(undefined);
   const [isTyping, setIsTyping] = useState(false);
 
   const debouncedFinishedTyping = useDebounce(async () => {

@@ -12,7 +12,7 @@ export default makeMessages('feat.views', {
     importPeople: m('Import people'),
   },
   browser: {
-    backToFolder: m<{ folder: ReactElement }>('Back to {folder}'),
+    backToFolder: m<{ folder: ReactElement<unknown> }>('Back to {folder}'),
     backToRoot: m('Back to all lists'),
     confirmDelete: {
       folder: {
@@ -35,7 +35,7 @@ export default makeMessages('feat.views', {
       rename: m('Rename'),
       viewCopy: m<{ viewName: string }>('{viewName} - copy'),
     },
-    moveToFolder: m<{ folder: ReactElement }>('Move to {folder}'),
+    moveToFolder: m<{ folder: ReactElement<unknown> }>('Move to {folder}'),
     moveToRoot: m('Move to all lists'),
   },
   browserLayout: {
@@ -339,10 +339,10 @@ export default makeMessages('feat.views', {
     destructiveAlert: m(
       'This is a permanent and destructive action. It cannot be undone. Please read the information below carefully before continuing.'
     ),
-    instruction: m<{ rootOrgSlug: ReactElement }>(
+    instruction: m<{ rootOrgSlug: ReactElement<unknown> }>(
       'To confirm you understand the consequences, type {rootOrgSlug} in the textbox below.'
     ),
-    tagetOrgWarning: m<{ rootOrgTitle: ReactElement }>(
+    tagetOrgWarning: m<{ rootOrgTitle: ReactElement<unknown> }>(
       'This will delete all records of these persons in {rootOrgTitle} and all its child organizations.'
     ),
     title: m<{ numPeople: number }>(
@@ -411,13 +411,13 @@ export default makeMessages('feat.views', {
       warning1: m(
         'Avoid exporting data from Zetkin when you can, to ensure that all data is kept in order.'
       ),
-      warning2: m<{ shareLink: ReactElement }>(
+      warning2: m<{ shareLink: ReactElement<unknown> }>(
         'You can {shareLink} within Zetkin. Exporting makes sense when you want to copy data to another system.'
       ),
     },
     share: {
       addPlaceholder: m('Add collaborator'),
-      collabInstructions: m<{ viewLink: ReactElement }>(
+      collabInstructions: m<{ viewLink: ReactElement<unknown> }>(
         'After adding collaborators, copy and send them the {viewLink}'
       ),
       showOfficials: m('Show officials'),

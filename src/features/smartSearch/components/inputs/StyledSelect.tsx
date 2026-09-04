@@ -1,4 +1,5 @@
 import { TextField, TextFieldProps } from '@mui/material';
+import type { JSX } from 'react';
 
 import oldTheme from 'theme';
 

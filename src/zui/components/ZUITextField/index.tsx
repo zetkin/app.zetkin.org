@@ -59,7 +59,7 @@ type ZUITextFieldProps = {
   initialValue?: string;
 
   /**Pass a ref to the input element */
-  inputRef?: RefObject<HTMLInputElement>;
+  inputRef?: RefObject<HTMLInputElement | null>;
 
   /**
    * The label of the textfield

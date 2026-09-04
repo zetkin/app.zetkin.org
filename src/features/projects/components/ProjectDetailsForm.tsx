@@ -1,5 +1,5 @@
 import { MenuItem, TextField } from '@mui/material';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, type JSX } from 'react';
 
 import ZUISubmitCancelButtons from '../../../zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';

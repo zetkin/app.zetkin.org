@@ -13,7 +13,7 @@ import {
 import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
 import dayjs, { Dayjs } from 'dayjs';
 import { IntlShape, useIntl } from 'react-intl';
-import React, { FC, MouseEvent, useEffect, useState } from 'react';
+import React, { FC, MouseEvent, useEffect, useState, type JSX } from 'react';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';
 import messageIds from 'zui/l10n/messageIds';

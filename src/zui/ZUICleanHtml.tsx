@@ -3,7 +3,7 @@
 
 import DOMPurify from 'dompurify';
 import { Box, BoxProps, Skeleton } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 
 interface ZUICleanHtmlProps {
   dirtyHtml: string;
