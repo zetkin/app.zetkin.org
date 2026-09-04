@@ -28,6 +28,10 @@ export default makeMessages('feat.call', {
         success: m('Successful'),
         wrongNumber: m('Wrong number'),
       },
+      tags: {
+        hide: m('Collapse'),
+        show: m('Show all tags'),
+      },
       title: m('Previous calls'),
     },
     tagsHeader: m('Tags'),
