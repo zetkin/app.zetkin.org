@@ -19,7 +19,7 @@ import notEmpty from 'utils/notEmpty';
 import ZUILink from 'zui/components/ZUILink';
 import useSetupReportStep from '../hooks/useSetupReportStep';
 
-type DesktopHeaderProps = {
+type HeaderProps = {
   allocateCall: () => Promise<void | SerializedError>;
   assignment: ZetkinCallAssignment;
   call: UnfinishedCall | null;
@@ -36,7 +36,199 @@ type DesktopHeaderProps = {
   submittingReport: boolean;
 };
 
-const DesktopHeader: FC<DesktopHeaderProps> = ({
+const MobileHeader: FC<HeaderProps> = ({
+  allocateCall,
+  assignment,
+  call,
+  onSkipCall,
+  onSubmitReport,
+  phoneNumbers,
+  quitCurrentCall,
+  queueError,
+  setupReportStep,
+  report,
+  lane,
+  submittingReport,
+  hasUnfinishedCalls,
+  isAllocatingCall,
+}) => {
+  const dispatch = useAppDispatch();
+  const messages = useMessages(messageIds);
+  return (
+    <>
+      <Box
+        sx={(theme) => ({
+          backgroundColor: theme.palette.common.white,
+          borderBottom: `1px solid ${theme.palette.dividers.main}`,
+          height: lane.step === LaneStep.START ? '100px' : '80px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1100,
+        })}
+      >
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            left: 16,
+            position: 'absolute',
+            top:
+              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+                ? 16
+                : -100,
+            transition: '0.5s',
+          }}
+        >
+          <ZUIOrgLogoAvatar orgId={assignment.organization.id} />
+          <ZUIText>{assignment.organization.title}</ZUIText>
+        </Box>
+        <Box
+          sx={{
+            bottom:
+              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+                ? 16
+                : 100,
+            left: 16,
+            position: 'absolute',
+            transition: '0.5s',
+          }}
+        >
+          <ZUIText
+            variant={
+              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+                ? 'headingLg'
+                : 'bodyMdRegular'
+            }
+          >
+            {assignment.title}
+          </ZUIText>
+        </Box>
+        <Box
+          sx={{
+            alignItems: 'center',
+            bottom: 16,
+            display: 'flex',
+            gap: 1,
+            left:
+              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+                ? '-100%'
+                : 16,
+            position: 'absolute',
+            transition: 'left 0.5s',
+          }}
+        >
+          {call?.target && (
+            <>
+              <ZUIPersonAvatar
+                firstName={call.target.first_name}
+                id={call.target.id}
+                lastName={call.target.last_name}
+              />
+              <Box>
+                <ZUIText variant="bodyMdSemiBold">{call.target.name}</ZUIText>
+                <ZUIText
+                  color="secondary"
+                  sx={{ fontFamily: 'monospace' }}
+                  variant="bodyMdSemiBold"
+                >
+                  {phoneNumbers.flatMap((phone, index) => {
+                    return [
+                      index > 0 ? '/' : null,
+                      <ZUILink
+                        key={phone}
+                        href={`tel:${phone}`}
+                        text={phone}
+                      />,
+                    ];
+                  })}
+                </ZUIText>
+              </Box>
+            </>
+          )}
+        </Box>
+        <Box
+          sx={{
+            bottom: 16,
+            display: 'flex',
+            gap: 1,
+            position: 'absolute',
+            right: 16,
+          }}
+        >
+          {lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY && (
+            <ZUIButton
+              label="Stop"
+              onClick={() => {
+                if (call) {
+                  quitCurrentCall(call.id);
+                }
+              }}
+              variant="tertiary"
+            />
+          )}
+          <ZUIButton
+            endIcon={
+              lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY
+                ? SkipNext
+                : undefined
+            }
+            href={lane.step == LaneStep.START ? '/my/home' : undefined}
+            label={messages.header.secondaryButton[lane.step]()}
+            onClick={() => {
+              if (
+                lane.step != LaneStep.START &&
+                lane.step != LaneStep.SUMMARY
+              ) {
+                onSkipCall();
+              } else if (lane.step == LaneStep.SUMMARY) {
+                dispatch(updateLaneStep(LaneStep.START));
+              }
+            }}
+            variant="secondary"
+          />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          bottom: 16,
+          display: 'flex',
+          position: 'absolute',
+          right: 16,
+          zIndex: 16,
+        }}
+      >
+        <ZUIButton
+          disabled={
+            !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
+          }
+          label={messages.header.primaryButton[lane.step]()}
+          onClick={async () => {
+            if (lane.step == LaneStep.START) {
+              await allocateCall();
+            } else if (lane.step == LaneStep.CALL) {
+              setupReportStep();
+            } else if (lane.step == LaneStep.REPORT) {
+              onSubmitReport();
+            } else {
+              //Lane step must be Summary
+              await allocateCall();
+            }
+          }}
+          variant={
+            isAllocatingCall || submittingReport
+              ? 'loading'
+              : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
+                ? 'secondary'
+                : 'primary'
+          }
+        />
+      </Box>
+    </>
+  );
+};
+
+const DesktopHeader: FC<HeaderProps> = ({
   allocateCall,
   assignment,
   call,
@@ -226,8 +418,6 @@ const CallHeader: FC<Props> = ({
   onSkipCall,
   report,
 }) => {
-  const dispatch = useAppDispatch();
-  const messages = useMessages(messageIds);
   const setupReportStep = useSetupReportStep(assignment.organization.id);
   const [submittingReport, setSubmittingReport] = useState(false);
 
@@ -244,181 +434,29 @@ const CallHeader: FC<Props> = ({
   );
 
   return isMobile ? (
-    <>
-      <Box
-        sx={(theme) => ({
-          backgroundColor: theme.palette.common.white,
-          borderBottom: `1px solid ${theme.palette.dividers.main}`,
-          height: lane.step === LaneStep.START ? '100px' : '80px',
-          position: 'sticky',
-          top: 0,
-          zIndex: 1100,
-        })}
-      >
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            gap: 1,
-            left: 16,
-            position: 'absolute',
-            top:
-              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
-                ? 16
-                : -100,
-            transition: '0.5s',
-          }}
-        >
-          <ZUIOrgLogoAvatar orgId={assignment.organization.id} />
-          <ZUIText>{assignment.organization.title}</ZUIText>
-        </Box>
-        <Box
-          sx={{
-            bottom:
-              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
-                ? 16
-                : 100,
-            left: 16,
-            position: 'absolute',
-            transition: '0.5s',
-          }}
-        >
-          <ZUIText
-            variant={
-              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
-                ? 'headingLg'
-                : 'bodyMdRegular'
-            }
-          >
-            {assignment.title}
-          </ZUIText>
-        </Box>
-        <Box
-          sx={{
-            alignItems: 'center',
-            bottom: 16,
-            display: 'flex',
-            gap: 1,
-            left:
-              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
-                ? '-100%'
-                : 16,
-            position: 'absolute',
-            transition: 'left 0.5s',
-          }}
-        >
-          {call?.target && (
-            <>
-              <ZUIPersonAvatar
-                firstName={call.target.first_name}
-                id={call.target.id}
-                lastName={call.target.last_name}
-              />
-              <Box>
-                <ZUIText variant="bodyMdSemiBold">{call.target.name}</ZUIText>
-                <ZUIText
-                  color="secondary"
-                  sx={{ fontFamily: 'monospace' }}
-                  variant="bodyMdSemiBold"
-                >
-                  {phoneNumbers.flatMap((phone, index) => {
-                    return [
-                      index > 0 ? '/' : null,
-                      <ZUILink
-                        key={phone}
-                        href={`tel:${phone}`}
-                        text={phone}
-                      />,
-                    ];
-                  })}
-                </ZUIText>
-              </Box>
-            </>
-          )}
-        </Box>
-        <Box
-          sx={{
-            bottom: 16,
-            display: 'flex',
-            gap: 1,
-            position: 'absolute',
-            right: 16,
-          }}
-        >
-          {lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY && (
-            <ZUIButton
-              label="Stop"
-              onClick={() => {
-                if (call) {
-                  quitCurrentCall(call.id);
-                }
-              }}
-              variant="tertiary"
-            />
-          )}
-          <ZUIButton
-            endIcon={
-              lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY
-                ? SkipNext
-                : undefined
-            }
-            href={lane.step == LaneStep.START ? '/my/home' : undefined}
-            label={messages.header.secondaryButton[lane.step]()}
-            onClick={() => {
-              if (
-                lane.step != LaneStep.START &&
-                lane.step != LaneStep.SUMMARY
-              ) {
-                onSkipCall();
-              } else if (lane.step == LaneStep.SUMMARY) {
-                dispatch(updateLaneStep(LaneStep.START));
-              }
-            }}
-            variant="secondary"
-          />
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          bottom: 16,
-          display: 'flex',
-          position: 'absolute',
-          right: 16,
-          zIndex: 16,
-        }}
-      >
-        <ZUIButton
-          disabled={
-            !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
-          }
-          label={messages.header.primaryButton[lane.step]()}
-          onClick={async () => {
-            if (lane.step == LaneStep.START) {
-              await allocateCall();
-            } else if (lane.step == LaneStep.CALL) {
-              setupReportStep();
-            } else if (lane.step == LaneStep.REPORT) {
-              if (!report || !call) {
-                return;
-              }
-              setSubmittingReport(true);
-              await submitReport(call.id, report, call.target.id);
-              setSubmittingReport(false);
-            } else {
-              //Lane step must be Summary
-              await allocateCall();
-            }
-          }}
-          variant={
-            isAllocatingCall || submittingReport
-              ? 'loading'
-              : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
-                ? 'secondary'
-                : 'primary'
-          }
-        />
-      </Box>
-    </>
+    <MobileHeader
+      allocateCall={allocateCall}
+      assignment={assignment}
+      call={call}
+      hasUnfinishedCalls={hasUnfinishedCalls}
+      isAllocatingCall={isAllocatingCall}
+      lane={lane}
+      onSkipCall={onSkipCall}
+      onSubmitReport={async () => {
+        if (!report || !call) {
+          return;
+        }
+        setSubmittingReport(true);
+        await submitReport(call.id, report, call.target.id);
+        setSubmittingReport(false);
+      }}
+      phoneNumbers={phoneNumbers}
+      queueError={queueError}
+      quitCurrentCall={quitCurrentCall}
+      report={report}
+      setupReportStep={setupReportStep}
+      submittingReport={submittingReport}
+    />
   ) : (
     <DesktopHeader
       allocateCall={allocateCall}
