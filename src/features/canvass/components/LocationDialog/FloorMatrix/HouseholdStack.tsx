@@ -23,7 +23,7 @@ const HouseholdStack: FC<Props> = ({
   selectedIds,
 }) => {
   return (
-    <Box>
+    <Box sx={{ position: 'relative' }}>
       {householdItems.map((item, index) => {
         const offset = index * GRID_SQUARE_WITH_GAP;
 
