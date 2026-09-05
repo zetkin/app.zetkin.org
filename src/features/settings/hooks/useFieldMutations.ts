@@ -1,3 +1,4 @@
+import { ApiClientError } from 'core/api/errors';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import useApiClient from 'core/hooks/useApiClient';
 import {
@@ -36,6 +37,7 @@ export default function useFieldMutations(orgId: number) {
       const serialized = {
         message: updateError.message,
         name: updateError.name,
+        status: e instanceof ApiClientError ? e.status : null,
       };
       dispatch(fieldUpdateErrorAdded([fieldId, serialized]));
       return updateError;
