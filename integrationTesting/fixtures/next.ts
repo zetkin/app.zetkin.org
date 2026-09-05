@@ -183,7 +183,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
       scope: 'worker',
     },
   ],
-  login: async ({ moxy }, use) => {
+  login: async ({ moxy }, applyFixture) => {
     /**
      * Mocks the responses for getting the current user and the user session.
      *
@@ -207,9 +207,9 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
         factors: ['email_password', 'phone_otp'],
       });
     };
-    await use(login);
+    await applyFixture(login);
   },
-  logout: async ({ moxy }, use) => {
+  logout: async ({ moxy }, applyFixture) => {
     /**
      * Removes mock responses for getting the current user and session. Does not navigate user to log out,
      * this is only used for handling the mocks, which unauthenticates the user.
@@ -219,9 +219,9 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
       moxy.removeMock('/session', 'get');
       moxy.removeMock('/users/me/memberships', 'get');
     };
-    await use(logout);
+    await applyFixture(logout);
   },
-  setBrowserDate: async ({ page }, use) => {
+  setBrowserDate: async ({ page }, applyFixture) => {
     const setBrowserDate = async (date: Date) => {
       // Pick the new/fake "now" for you test pages.
       const fakeNow = new Date(date).valueOf();
@@ -244,7 +244,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
       Date.now = () => __DateNow() + __DateNowOffset;
     }`);
     };
-    await use(setBrowserDate);
+    await applyFixture(setBrowserDate);
   },
 });
 
