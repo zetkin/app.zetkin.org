@@ -1,15 +1,19 @@
-import { KeyboardArrowDown } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { KeyboardArrowDown, QrCode } from '@mui/icons-material';
+import { Box, Button, IconButton } from '@mui/material';
 import { FC, useState } from 'react';
 
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 import { HouseholdItem } from './types';
 import HouseholdStack from './HouseholdStack';
 import { GRID_GAP, GRID_SQUARE, GRID_SQUARE_WITH_GAP } from './constants';
+import QRCodeDialog from './QRCodeDialog';
 
 type Props = {
   floor: number;
   householdItems: HouseholdItem[];
   initialExpanded?: boolean;
+  locationTitle: string;
   onClick: (householdId: number) => void;
   onClickDetails: (householdId: number) => void;
   onClickVisit: (householdId: number) => void;
@@ -22,6 +26,7 @@ const FloorHouseholdGroup: FC<Props> = ({
   floor,
   householdItems,
   initialExpanded = false,
+  locationTitle,
   onClick,
   onClickDetails,
   onClickVisit,
@@ -30,6 +35,8 @@ const FloorHouseholdGroup: FC<Props> = ({
   selectedIds,
 }) => {
   const [expanded, setExpanded] = useState(initialExpanded);
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const messages = useMessages(messageIds);
 
   return (
     <Box
@@ -59,7 +66,7 @@ const FloorHouseholdGroup: FC<Props> = ({
           width: '100%',
         }}
       >
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', height: GRID_SQUARE }}>
           <Box
             sx={{
               alignItems: 'center',
@@ -79,32 +86,55 @@ const FloorHouseholdGroup: FC<Props> = ({
             </IconButton>
           </Box>
           <Box
-            onClick={() => {
-              if (selectedIds) {
-                const selectedIdsOnFloor = householdItems
-                  .map((item) => item.household.id)
-                  .filter((id) => selectedIds.includes(id));
-
-                const allSelected =
-                  selectedIdsOnFloor.length == householdItems.length;
-                const shouldSelectAll = !allSelected;
-                if (shouldSelectAll) {
-                  onSelectIds(householdItems.map((item) => item.household.id));
-                } else {
-                  onDeselectIds(selectedIdsOnFloor);
-                }
-              }
-            }}
             sx={{
               alignItems: 'center',
-              borderRadius: 1,
               display: 'flex',
               height: GRID_SQUARE,
-              justifyContent: 'center',
-              width: GRID_SQUARE,
             }}
           >
-            {floor}
+            <Box
+              onClick={() => {
+                if (selectedIds) {
+                  const selectedIdsOnFloor = householdItems
+                    .map((item) => item.household.id)
+                    .filter((id) => selectedIds.includes(id));
+
+                  const allSelected =
+                    selectedIdsOnFloor.length == householdItems.length;
+                  const shouldSelectAll = !allSelected;
+                  if (shouldSelectAll) {
+                    onSelectIds(
+                      householdItems.map((item) => item.household.id)
+                    );
+                  } else {
+                    onDeselectIds(selectedIdsOnFloor);
+                  }
+                }
+              }}
+              sx={{
+                alignItems: 'center',
+                borderRadius: 1,
+                display: 'flex',
+                height: GRID_SQUARE,
+                justifyContent: 'center',
+                width: GRID_SQUARE,
+              }}
+            >
+              {floor}
+            </Box>
+            {expanded && (
+              <Button
+                aria-label={messages.households.qrCode.buttonLabel()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setQrDialogOpen(true);
+                }}
+                size="small"
+                startIcon={<QrCode />}
+              >
+                {messages.households.qrCode.tooltip()}
+              </Button>
+            )}
           </Box>
         </Box>
         <Box
@@ -136,6 +166,13 @@ const FloorHouseholdGroup: FC<Props> = ({
           />
         </Box>
       </Box>
+      <QRCodeDialog
+        floor={floor}
+        householdItems={householdItems}
+        locationTitle={locationTitle}
+        onClose={() => setQrDialogOpen(false)}
+        open={qrDialogOpen}
+      />
     </Box>
   );
 };

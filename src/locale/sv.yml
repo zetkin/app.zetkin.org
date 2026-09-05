@@ -843,8 +843,14 @@ feat:
       page:
         empty: Denna plats har inga hushåll än
         header: Hushåll
+      qrCode:
+        closeButton: Stäng
+        instruction: Låt din knackare scanna koden
+        tooltip: Dela våningens resultat
       single:
         logVisitButtonLabel: Logga besök
+        recentlyVisited: Nyligen besökt
+        shareInstructions: Markera resultat nedan. Visa för din kapten när du är klar.
         subtitle: Våning {floorNumber}
         wasVisited: Detta hushåll har besökts i det här uppdraget
       stackItem:

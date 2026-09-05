@@ -86,9 +86,20 @@ export default makeMessages('feat.canvass', {
       empty: m('This location does not have any households yet'),
       header: m('Households'),
     },
+    qrCode: {
+      buttonLabel: m('Open QR code dialog'),
+      closeButton: m('Close'),
+      instruction: m('Have your knocker scan the code'),
+      title: m('QR code'),
+      tooltip: m('Share floor results'),
+    },
     single: {
       definesSuccess: m('Defines success'),
       logVisitButtonLabel: m('Log visit'),
+      recentlyVisited: m('Recently visited'),
+      shareInstructions: m(
+        'Mark results below. Show to your captain when done.'
+      ),
       skipped: m('skipped'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       visit: m('Visit'),

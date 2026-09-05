@@ -214,6 +214,7 @@ const FloorMatrix: FC<Props> = ({
                 floor={floor}
                 householdItems={householdItems}
                 initialExpanded={shouldStartExpanded}
+                locationTitle={location.title}
                 onClick={(householdId) => onSelectHousehold(householdId)}
                 onClickDetails={(householdId) => onClickDetails(householdId)}
                 onClickVisit={(householdId) => onClickVisit(householdId)}
