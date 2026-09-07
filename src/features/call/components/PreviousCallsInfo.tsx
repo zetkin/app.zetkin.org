@@ -2,13 +2,14 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 import {
   AccessTime,
-  CallMade,
-  CallMissedOutgoing,
   KeyboardTab,
+  Phone,
+  PhoneMissed,
   RemoveCircleOutline,
-  TurnSlightLeft,
   Voicemail,
+  WarningAmber,
 } from '@mui/icons-material';
+import { FormattedDate, FormattedTime } from 'react-intl';
 
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIText from 'zui/components/ZUIText';
@@ -25,19 +26,20 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { MUIIcon } from 'zui/components/types';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import ZUILabel from 'zui/components/ZUILabel';
 
 type PreviousCallsInfoProps = {
   call: UnfinishedCall;
 };
 
 export const icons: Record<FinishedCall['state'], MUIIcon> = {
-  [CallState.SUCCESSFUL]: CallMade,
-  [CallState.NO_PICKUP]: CallMissedOutgoing,
+  [CallState.SUCCESSFUL]: Phone,
+  [CallState.NO_PICKUP]: PhoneMissed,
   [CallState.LINE_BUSY]: KeyboardTab,
-  [CallState.CALL_BACK]: RemoveCircleOutline,
-  [CallState.NOT_AVAILABLE]: AccessTime,
+  [CallState.CALL_BACK]: AccessTime,
+  [CallState.NOT_AVAILABLE]: RemoveCircleOutline,
   [CallState.LEFT_MESSAGE]: Voicemail,
-  [CallState.WRONG_NUMBER]: TurnSlightLeft,
+  [CallState.WRONG_NUMBER]: WarningAmber,
 };
 
 export const colors: Record<
@@ -101,7 +103,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                       icon={icons[previousCall.state]}
                       size="small"
                     />
-                    <ZUIText color="inherit">
+                    <ZUILabel color="inherit" variant="labelMdMedium">
                       <Msg
                         id={
                           messageIds.about.previousCalls.status[
@@ -109,7 +111,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                           ]
                         }
                       />
-                    </ZUIText>
+                    </ZUILabel>
                   </Box>
                   {isMobile ? (
                     <ZUIPersonAvatar
@@ -120,9 +122,15 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                     />
                   ) : (
                     <Box alignItems="center" display="flex" gap={1}>
-                      <ZUIText color="secondary">
-                        <ZUIDateTime datetime={previousCall.update_time} />
-                      </ZUIText>
+                      <ZUILabel color="secondary" variant="labelMdMedium">
+                        <FormattedDate
+                          day="numeric"
+                          month="numeric"
+                          value={previousCall.update_time}
+                          year="2-digit"
+                        />{' '}
+                        <FormattedTime value={previousCall.update_time} />
+                      </ZUILabel>
                       <ZUIPersonAvatar
                         firstName={callerFirstName}
                         id={previousCall.caller.id}
@@ -141,7 +149,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                 )}
                 {previousCall.notes && (
                   <Box display="flex" ml="1.75rem">
-                    <ZUIText>
+                    <ZUIText variant="bodySmRegular">
                       <Msg
                         id={messageIds.about.previousCalls.note}
                         values={{ note: previousCall.notes }}
@@ -151,7 +159,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                 )}
                 {previousCall.call_back_after && (
                   <Box display="flex" ml="1.75rem">
-                    <ZUIText>
+                    <ZUIText variant="bodySmRegular">
                       <Msg
                         id={messageIds.about.previousCalls.callBackAfter}
                         values={{
