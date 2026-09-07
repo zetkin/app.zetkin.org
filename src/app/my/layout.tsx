@@ -1,12 +1,14 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
 import HomeLayout from 'features/my/layouts/HomeLayout';
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
-import { getBrowserLanguage } from 'utils/locale';
+import { getBrowserLanguage, getMessages } from 'utils/locale';
+import { getRequestLang } from 'utils/requestLocale';
 import getServerMessages from 'core/i18n/server';
 import messageIds from 'features/my/l10n/messageIds';
+import SectionIntlProvider from 'core/env/SectionIntlProvider';
 import { getSeoTags } from '../../utils/seoTags';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -44,14 +46,20 @@ type Props = {
   children: ReactNode;
 };
 
-const MyHomeLayout: FC<Props> = ({ children }) => {
+export default async function MyHomeLayout({ children }: Props) {
   const homeTitle = process.env.HOME_TITLE;
+  const lang = await getRequestLang();
+  const messages = await getMessages(lang, [
+    'feat.events',
+    'feat.home',
+    'feat.organizations',
+  ]);
 
   return (
-    <HomeThemeProvider>
-      <HomeLayout title={homeTitle}>{children}</HomeLayout>
-    </HomeThemeProvider>
+    <SectionIntlProvider lang={lang} messages={messages}>
+      <HomeThemeProvider>
+        <HomeLayout title={homeTitle}>{children}</HomeLayout>
+      </HomeThemeProvider>
+    </SectionIntlProvider>
   );
-};
-
-export default MyHomeLayout;
+}

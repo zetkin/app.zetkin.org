@@ -8,6 +8,9 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ApiClientError } from 'core/api/errors';
 import { ZetkinProject } from 'utils/types/zetkin';
 import PublicProjectLayout from 'features/public/layouts/PublicProjectLayout';
+import { getMessages } from 'utils/locale';
+import { getRequestLang } from 'utils/requestLocale';
+import SectionIntlProvider from 'core/env/SectionIntlProvider';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
 type Props = {
@@ -54,10 +57,22 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
       `/api/orgs/${params.orgId}/campaigns/${params.projId}`
     );
 
+    const lang = await getRequestLang();
+    const messages = await getMessages(lang, [
+      'feat.campaigns',
+      'feat.home',
+      'feat.organizations',
+      'feat.events',
+    ]);
+
     return (
-      <HomeThemeProvider>
-        <PublicProjectLayout project={project}>{children}</PublicProjectLayout>
-      </HomeThemeProvider>
+      <SectionIntlProvider lang={lang} messages={messages}>
+        <HomeThemeProvider>
+          <PublicProjectLayout project={project}>
+            {children}
+          </PublicProjectLayout>
+        </HomeThemeProvider>
+      </SectionIntlProvider>
     );
   } catch (e) {
     if (e instanceof ApiClientError && e.status === 404) {

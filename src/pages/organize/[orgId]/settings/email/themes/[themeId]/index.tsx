@@ -20,6 +20,7 @@ import messageIds from 'features/settings/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  localeScope: ['feat.emails', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async () => {

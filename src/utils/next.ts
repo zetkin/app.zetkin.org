@@ -216,10 +216,10 @@ export const scaffold =
     // Figure out browser's preferred language
     const lang = ctx.user?.lang || getBrowserLanguage(contextFromNext.req);
 
-    // TODO: Respect scope from options again
-    //const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
-    const localeScope: string[] = [];
-    const messages = await getMessages(lang, localeScope);
+    const declaredLocaleScope = options?.localeScope
+      ? [...options.localeScope, 'core', 'glob', 'zui', 'feat.search']
+      : [];
+    const messages = await getMessages(lang, declaredLocaleScope);
 
     if (hasProps(result)) {
       result.props = {

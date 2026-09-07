@@ -16,12 +16,10 @@ import { ZetkinProject } from 'utils/types/zetkin';
 const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: [
-    'layout.organize',
-    'misc.breadcrumbs',
-    'misc.calendar',
-    'misc.formDialog',
-    'misc.tasks',
-    'pages.organizeProjects',
+    'feat.campaigns',
+    'feat.calendar',
+    'feat.events',
+    'feat.breadcrumbs',
   ],
 };
 

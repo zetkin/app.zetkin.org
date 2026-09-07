@@ -30,7 +30,12 @@ import PersonSurveySubmissionsCard from 'features/profile/components/PersonSurve
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people'],
+  localeScope: [
+    'feat.profile',
+    'feat.journeys',
+    'feat.tags',
+    'feat.breadcrumbs',
+  ],
 };
 
 export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (

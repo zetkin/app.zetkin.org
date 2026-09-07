@@ -28,6 +28,12 @@ const OrganizerMap = dynamic(
 const scaffoldOptions = {
   authLevelRequired: 2,
   featuresRequired: [AREAS],
+  localeScope: [
+    'feat.areaAssignments',
+    'feat.areas',
+    'feat.campaigns',
+    'feat.breadcrumbs',
+  ],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

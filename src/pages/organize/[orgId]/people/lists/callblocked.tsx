@@ -22,6 +22,7 @@ import {
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  localeScope: ['feat.views', 'feat.smartSearch', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

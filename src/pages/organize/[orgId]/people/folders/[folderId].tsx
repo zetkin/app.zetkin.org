@@ -12,7 +12,7 @@ import { ZetkinViewFolder } from 'features/views/components/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people'],
+  localeScope: ['feat.views', 'feat.breadcrumbs'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

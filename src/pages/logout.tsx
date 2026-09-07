@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
       },
     };
   },
-  { allowUnverified: true }
+  { allowUnverified: true, localeScope: [] }
 );
 
 export default function NotUsed(): null {

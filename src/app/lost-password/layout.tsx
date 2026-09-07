@@ -1,18 +1,24 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import AccountLayout from 'features/account/layouts/AccountLayout';
+import { getMessages } from 'utils/locale';
+import { getRequestLang } from 'utils/requestLocale';
+import SectionIntlProvider from 'core/env/SectionIntlProvider';
 
 type Props = {
   children: ReactNode;
 };
 
-const LostPasswordLayout: FC<Props> = ({ children }) => {
-  return (
-    <HomeThemeProvider>
-      <AccountLayout>{children}</AccountLayout>
-    </HomeThemeProvider>
-  );
-};
+export default async function LostPasswordLayout({ children }: Props) {
+  const lang = await getRequestLang();
+  const messages = await getMessages(lang, ['feat.account']);
 
-export default LostPasswordLayout;
+  return (
+    <SectionIntlProvider lang={lang} messages={messages}>
+      <HomeThemeProvider>
+        <AccountLayout>{children}</AccountLayout>
+      </HomeThemeProvider>
+    </SectionIntlProvider>
+  );
+}
