@@ -165,9 +165,13 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                         values={{
                           name: previousCall.target.first_name,
                           time: (
-                            <ZUIDateTime
-                              datetime={previousCall.call_back_after}
-                            />
+                            <>
+                              <FormattedTime value={previousCall.update_time} />{' '}
+                              <FormattedDate
+                                dateStyle="full"
+                                value={previousCall.update_time}
+                              />
+                            </>
                           ),
                         }}
                       />
