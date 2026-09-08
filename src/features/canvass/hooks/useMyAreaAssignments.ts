@@ -1,14 +1,20 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
-import { myAssignmentsLoad, myAssignmentsLoaded } from '../store';
+import {
+  myAssignmentsError,
+  myAssignmentsLoad,
+  myAssignmentsLoaded,
+} from '../store';
 import useRemoteList from 'core/hooks/useRemoteList';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import { fetchAllPaginated } from 'utils/fetchAllPaginated';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 export default function useMyAreaAssignments() {
   const apiClient = useApiClient();
   const list = useAppSelector((state) => state.canvass.myAssignmentsList);
 
   const assignments = useRemoteList(list, {
+    actionOnError: (err) => myAssignmentsError(serializeError(err)),
     actionOnLoad: () => myAssignmentsLoad(),
     actionOnSuccess: (data) => myAssignmentsLoaded(data),
     loader: () =>

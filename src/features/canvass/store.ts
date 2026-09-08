@@ -53,6 +53,22 @@ const canvassSlice = createSlice({
       const [locationId, householdId] = action.payload;
       remoteItemDeleted(state.householdsByLocationId[locationId], householdId);
     },
+    householdError: (
+      state,
+      action: PayloadAction<[number, number, string]>
+    ) => {
+      const [locationId, householdId, error] = action.payload;
+
+      state.householdsByLocationId[locationId] ||= remoteList();
+      const item = findOrAddItem(
+        state.householdsByLocationId[locationId],
+        householdId
+      );
+
+      item.error = error;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
     householdLoad: (state, action: PayloadAction<[number, number]>) => {
       const [locationId, householdId] = action.payload;
 
@@ -106,6 +122,21 @@ const canvassSlice = createSlice({
         visit
       );
     },
+    householdVisitsError: (
+      state,
+      action: PayloadAction<[number, number, string]>
+    ) => {
+      const [assignmentId, locationId, error] = action.payload;
+
+      state.visitsByAssignmentAndLocationId[assignmentId] ||= {};
+      const list = (state.visitsByAssignmentAndLocationId[assignmentId][
+        locationId
+      ] ||= remoteListCreated());
+
+      list.error = error;
+      list.isLoading = false;
+      list.loaded = new Date().toISOString();
+    },
     householdVisitsLoad: (state, action: PayloadAction<[number, number]>) => {
       const [assignmentId, locationId] = action.payload;
       state.visitsByAssignmentAndLocationId[assignmentId] ||= {};
@@ -123,6 +154,16 @@ const canvassSlice = createSlice({
       state.visitsByAssignmentAndLocationId[assignmentId][locationId] =
         remoteListLoaded(visits);
     },
+    householdsError: (state, action: PayloadAction<[number, string]>) => {
+      const [locationId, error] = action.payload;
+
+      const list = (state.householdsByLocationId[locationId] ||=
+        remoteListCreated());
+
+      list.error = error;
+      list.isLoading = false;
+      list.loaded = new Date().toISOString();
+    },
     householdsLoad: (state, action: PayloadAction<number>) => {
       const locationId = action.payload;
       state.householdsByLocationId[locationId] ||= remoteList();
@@ -136,6 +177,11 @@ const canvassSlice = createSlice({
       state.householdsByLocationId[locationId] = remoteList(households);
       state.householdsByLocationId[locationId].loaded =
         new Date().toISOString();
+    },
+    myAssignmentsError: (state, action: PayloadAction<string>) => {
+      state.myAssignmentsList.error = action.payload;
+      state.myAssignmentsList.isLoading = false;
+      state.myAssignmentsList.loaded = new Date().toISOString();
     },
     myAssignmentsLoad: (state) => {
       state.myAssignmentsList.isLoading = true;
@@ -177,6 +223,16 @@ const canvassSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    visitsError: (state, action: PayloadAction<[number, string]>) => {
+      const [assignmentId, error] = action.payload;
+
+      const list = (state.visitsByAssignmentId[assignmentId] ||=
+        remoteListCreated());
+
+      list.error = error;
+      list.isLoading = false;
+      list.loaded = new Date().toISOString();
+    },
     visitsInvalidated: (state, action: PayloadAction<number>) => {
       const assignmentId = action.payload;
       state.visitsByAssignmentId[assignmentId].isStale = true;
@@ -201,18 +257,23 @@ export default canvassSlice;
 export const {
   householdCreated,
   householdDeleted,
+  householdError,
   householdLoad,
   householdLoaded,
+  householdsError,
   householdVisitCreated,
+  householdVisitsError,
   householdVisitsLoad,
   householdVisitsLoaded,
   householdUpdated,
   householdsLoad,
   householdsLoaded,
+  myAssignmentsError,
   myAssignmentsLoad,
   myAssignmentsLoaded,
   visitCreated,
   visitUpdated,
+  visitsError,
   visitsInvalidated,
   visitsLoad,
   visitsLoaded,
