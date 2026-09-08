@@ -1,7 +1,22 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
+import {
+  Box,
+  ButtonBase,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
 
+import { ZetkinMetric } from 'features/areaAssignments/types';
+import {
+  METRIC_ICON_BORDER_RADIUS,
+  MetricIcon,
+} from 'features/canvass/components/MetricIcon';
 import {
   FloorShare,
   formatFloorShareHouseholdName,
@@ -60,49 +75,57 @@ const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
   }, [hydrated, highlightedCells]);
 
   return (
-    <div style={{ overflowX: 'auto' }}>
-      <table
-        style={{
-          borderCollapse: 'collapse',
-          minWidth: '100%',
-          tableLayout: 'fixed',
-        }}
-      >
-        <thead>
-          <tr>
-            <th style={numberHeaderCellStyle}>Nr</th>
+    <Box sx={{ overflowX: 'auto' }}>
+      <Table sx={{ minWidth: '100%', tableLayout: 'fixed' }}>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={numberHeaderCellSx}>Nr</TableCell>
             {share.questions.length > 0 &&
               share.questions.map((question, index) => (
-                <th key={index} style={questionHeaderCellStyle}>
+                <TableCell key={index} sx={questionHeaderCellSx}>
                   {question}
-                </th>
+                </TableCell>
               ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {share.households.map((household, householdIndex) => {
             const householdName =
               household.name ||
               formatFloorShareHouseholdName(share.floor, householdIndex + 1);
 
             return (
-              <tr key={householdName}>
-                <td style={bodyCellStyle}>
-                  <div>{householdName}</div>
+              <TableRow key={householdName}>
+                <TableCell sx={bodyCellSx}>
+                  <Box>{householdName}</Box>
                   {share.recentlyVisited[householdIndex] && (
-                    <small style={recentlyVisitedStyle}>
+                    <Typography sx={recentlyVisitedSx} variant="caption">
                       {recentlyVisitedLabel}
-                    </small>
+                    </Typography>
                   )}
-                </td>
+                </TableCell>
                 {share.questions.length > 0 &&
                   household.responses.map((response, questionIndex) => {
                     const cellKey = `${householdIndex}:${questionIndex}`;
                     const highlighted = !!highlightedCells[cellKey];
+                    const success = !!(
+                      share.successMask &
+                      (1 << questionIndex)
+                    );
+
+                    // Minimal stand-in metric; MetricIcon only reads type/defines_success
+                    const metric: ZetkinMetric = {
+                      area_assignment_id: 0,
+                      created: '',
+                      defines_success: success,
+                      id: questionIndex,
+                      question: share.questions[questionIndex],
+                      type: 'bool',
+                    };
 
                     return (
-                      <td key={questionIndex} style={bodyCellStyle}>
-                        <button
+                      <TableCell key={questionIndex} sx={bodyCellSx}>
+                        <ButtonBase
                           aria-label={`${householdName}: ${share.questions[questionIndex]}`}
                           aria-pressed={highlighted}
                           onClick={() =>
@@ -111,117 +134,62 @@ const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
                               [cellKey]: !current[cellKey],
                             }))
                           }
-                          style={buttonStyle}
-                          type="button"
+                          sx={{
+                            borderRadius: `${METRIC_ICON_BORDER_RADIUS}px`,
+                            outline: highlighted
+                              ? '3px solid #ED1C24'
+                              : `3px solid transparent`,
+                            outlineOffset: highlighted ? '2px' : 0,
+                            transition:
+                              'outline-offset 120ms ease-out, outline-color 120ms ease-out',
+                          }}
                         >
-                          {highlighted ? (
-                            <span style={highlightedMarkStyle}>{'\u2713'}</span>
-                          ) : (
-                            <ResponseMark
-                              response={response}
-                              success={
-                                !!(share.successMask & (1 << questionIndex))
-                              }
-                            />
-                          )}
-                        </button>
-                      </td>
+                          <MetricIcon
+                            metric={metric}
+                            response={response}
+                            variant="small"
+                          />
+                        </ButtonBase>
+                      </TableCell>
                     );
                   })}
-              </tr>
+              </TableRow>
             );
           })}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </Box>
   );
 };
 
-type ResponseMarkProps = {
-  response: 'no' | 'yes' | null;
-  success: boolean;
-};
-
-const ResponseMark: FC<ResponseMarkProps> = ({ response, success }) => (
-  <span
-    aria-hidden="true"
-    style={{
-      alignItems: 'center',
-      backgroundColor: success && response === 'yes' ? '#00838f' : '#e0e0e0',
-      borderRadius: 5,
-      color: success && response === 'yes' ? '#fff' : '#757575',
-      display: 'inline-flex',
-      fontSize: 18,
-      fontWeight: 'bold',
-      height: 20,
-      justifyContent: 'center',
-      lineHeight: 1,
-      width: 20,
-    }}
-  >
-    {response === 'yes' ? '\u2713' : response === 'no' ? '\u00d7' : '\u2212'}
-  </span>
-);
-
-const highlightedMarkStyle = {
-  alignItems: 'center',
-  backgroundColor: '#2e7d32',
-  borderRadius: 6,
-  boxShadow: '0 0 0 4px rgba(46, 125, 50, 0.25)',
-  color: '#fff',
-  display: 'inline-flex',
-  fontSize: 24,
-  fontWeight: 'bold',
-  height: 28,
-  justifyContent: 'center',
-  lineHeight: 1,
-  transform: 'scale(1.05)',
-  transition: 'transform 120ms ease-out',
-  width: 28,
-};
-
-const headerCellStyle = {
+const numberHeaderCellSx = {
   borderBottom: '1px solid #ddd',
   padding: '12px 16px',
   textAlign: 'center' as const,
+  width: 56,
 };
 
-const questionHeaderCellStyle = {
-  ...headerCellStyle,
+const questionHeaderCellSx = {
+  borderBottom: '1px solid #ddd',
   fontSize: 12,
   lineHeight: 1.1,
+  padding: '12px 16px',
+  textAlign: 'center' as const,
   whiteSpace: 'normal' as const,
   wordBreak: 'normal' as const,
 };
 
-const numberHeaderCellStyle = {
-  ...headerCellStyle,
-  width: 56,
-};
-
-const bodyCellStyle = {
+const bodyCellSx = {
   borderBottom: '1px solid #eee',
   padding: '8px 16px',
   textAlign: 'center' as const,
 };
 
-const recentlyVisitedStyle = {
+const recentlyVisitedSx = {
   color: '#757575',
   display: 'block',
   fontSize: 10,
   lineHeight: 1.1,
-};
-
-const buttonStyle = {
-  alignItems: 'center',
-  background: 'none',
-  border: 0,
-  cursor: 'pointer',
-  display: 'inline-flex',
-  height: 32,
-  justifyContent: 'center',
-  padding: 0,
-  width: 32,
 };
 
 export default FloorShareTable;
