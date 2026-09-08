@@ -101,7 +101,7 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
     </IconButton>
   ) : null;
 
-  const hasValue = tag.value_type && 'value' in tag;
+  const isValueTag = !!tag.value_type;
 
   const deleteContainerPadding = () => {
     if (deletable) {
@@ -125,7 +125,7 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
         overflow: 'hidden',
       }}
     >
-      {hasValue && (
+      {isValueTag && (
         <>
           <ZUITagTooltip tag={tag}>
             <Box
@@ -162,7 +162,7 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
                 },
               },
             }}
-            title={tag.value || ''}
+            title={'value' in tag ? tag.value : ''}
           >
             <Box
               data-testid="TagChip-value"
@@ -180,13 +180,15 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
                 whiteSpace: 'nowrap',
               })}
             >
-              <Typography variant="labelSmMedium">{tag.value}</Typography>
+              <Typography variant="labelSmMedium">
+                {'value' in tag ? tag.value : ''}
+              </Typography>
               {deleteButton}
             </Box>
           </Tooltip>
         </>
       )}
-      {!tag.value_type && (
+      {!isValueTag && (
         <ZUITagTooltip tag={tag}>
           <Box
             sx={(theme) => ({
