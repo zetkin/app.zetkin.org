@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import {
   FloorShare,
@@ -12,10 +12,52 @@ type Props = {
   share: FloorShare;
 };
 
+// Scoped to the current URL so different shared floors don't collide in storage
+function getHighlightedCellsStorageKey(): string {
+  return `floorShare:highlightedCells:${window.location.pathname}${window.location.search}`;
+}
+
+function readStoredHighlightedCells(): Record<string, boolean> {
+  if (typeof window === 'undefined') {
+    return {};
+  }
+
+  try {
+    const stored = window.sessionStorage.getItem(
+      getHighlightedCellsStorageKey()
+    );
+    return stored ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+}
+
 const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
   const [highlightedCells, setHighlightedCells] = useState<
     Record<string, boolean>
   >({});
+  const [hydrated, setHydrated] = useState(false);
+
+  // Loaded after mount (not during initial render) to avoid a hydration mismatch
+  useEffect(() => {
+    setHighlightedCells(readStoredHighlightedCells());
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) {
+      return;
+    }
+
+    try {
+      window.sessionStorage.setItem(
+        getHighlightedCellsStorageKey(),
+        JSON.stringify(highlightedCells)
+      );
+    } catch {
+      // Ignore storage errors (e.g. quota exceeded or disabled storage)
+    }
+  }, [hydrated, highlightedCells]);
 
   return (
     <div style={{ overflowX: 'auto' }}>
