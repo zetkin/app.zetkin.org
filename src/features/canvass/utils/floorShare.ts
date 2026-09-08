@@ -1,6 +1,7 @@
 export type FloorShareResponse = 'no' | 'yes' | null;
 
 export type FloorShareHousehold = {
+  name: string;
   responses: FloorShareResponse[];
 };
 
@@ -23,86 +24,168 @@ export function formatFloorShareHouseholdName(
 }
 
 export function encodeFloorShare(share: FloorShare): string {
-  if (share.questions.length > 4) {
-    throw new Error('Floor shares support at most four questions');
-  }
-
-  const bytes = share.households.map(({ responses }) =>
-    responses.reduce(
-      (packed, response, index) =>
-        packed | (encodeResponse(response) << (index * 2)),
-      0
-    )
+  const bytes = packHouseholdResponses(
+    share.households,
+    share.questions.length
   );
-
   const encodedQuestions = encodeBase64Url(
-    Array.from(new TextEncoder().encode(share.questions.join('\0')))
+    encodeUtf8(share.questions.join('\0'))
   );
-
+  const encodedHouseholdNames = encodeBase64Url(
+    encodeUtf8(share.households.map(({ name }) => name).join('\0'))
+  );
   const recentBytes = packFlags(share.recentlyVisited);
 
-  // Format: floor, packed responses, UTF-8 questions, success mask, recent flags.
-  return `${share.floor}.${encodeBase64Url(bytes)}.${encodedQuestions}.${share.successMask.toString(36)}.${encodeBase64Url(recentBytes)}`;
+  return `${share.floor.toString(36)}.${encodeBase64Url(bytes)}.${encodedQuestions}.${encodedHouseholdNames}.${share.successMask.toString(36)}.${encodeBase64Url(recentBytes)}`;
 }
 
 export function decodeFloorShare(value: string): FloorShare | null {
   const [
     floorValue,
-    encodedResponses,
-    encodedQuestions,
+    encodedResponses = '',
+    encodedQuestions = '',
+    encodedHouseholdNames = '',
     successMaskValue = '0',
     encodedRecentlyVisited = '',
   ] = value.split('.');
-  const floor = Number(floorValue);
+
+  const floor = Number.parseInt(floorValue, 36);
   const successMask = Number.parseInt(successMaskValue, 36);
 
   if (
     !Number.isInteger(floor) ||
     !encodedResponses ||
-    !encodedQuestions ||
+    !encodedRecentlyVisited ||
     !Number.isInteger(successMask) ||
-    successMask < 0 ||
-    successMask > 15 ||
-    !encodedRecentlyVisited
+    successMask < 0
   ) {
     return null;
   }
 
   const bytes = decodeBase64Url(encodedResponses);
-  if (!bytes) {
-    return null;
-  }
-
-  const recentBytes = decodeBase64Url(encodedRecentlyVisited);
-  if (!recentBytes) {
-    return null;
-  }
-
   const questionBytes = decodeBase64Url(encodedQuestions);
-  if (!questionBytes) {
+  const recentBytes = decodeBase64Url(encodedRecentlyVisited);
+
+  if (!bytes || !questionBytes || !recentBytes) {
     return null;
   }
 
-  const questions = new TextDecoder()
-    .decode(new Uint8Array(questionBytes))
-    .split('\0');
-  if (questions.length > 4) {
+  const questions =
+    questionBytes.length === 0 ? [] : decodeUtf8(questionBytes).split('\0');
+
+  if (questions.length > 0 && questions.some((question) => !question)) {
     return null;
   }
+
+  if (questions.length > 0 && successMask > (1 << questions.length) - 1) {
+    return null;
+  }
+
+  const householdNames = decodeTextList(encodedHouseholdNames);
+  const householdBytesLength = Math.max(
+    1,
+    Math.ceil((questions.length * 2) / 8)
+  );
+  const householdCount = Math.max(
+    householdNames.length || 1,
+    Math.ceil(bytes.length / householdBytesLength)
+  );
+
+  const households = Array.from({ length: householdCount }, (_, index) => {
+    const start = index * householdBytesLength;
+    const slice = bytes.slice(start, start + householdBytesLength);
+    const responses = Array.from(
+      { length: questions.length },
+      (_, questionIndex) => {
+        const offset = questionIndex * 2;
+        const byteIndex = Math.floor(offset / 8);
+        const bitIndex = offset % 8;
+        const byte = slice[byteIndex] ?? 0;
+        return decodeResponse((byte >> bitIndex) & 0b11);
+      }
+    );
+
+    return {
+      name:
+        householdNames[index] ??
+        formatFloorShareHouseholdName(floor, index + 1),
+      responses,
+    };
+  });
+
+  const recentlyVisited = Array.from(
+    { length: householdCount },
+    (_, index) => !!(recentBytes[Math.floor(index / 8)] & (1 << (index % 8)))
+  );
 
   return {
     floor,
-    households: bytes.map((packed) => ({
-      responses: Array.from({ length: questions.length }, (_, index) =>
-        decodeResponse((packed >> (index * 2)) & 0b11)
-      ),
-    })),
+    households,
     questions,
-    recentlyVisited: bytes.map(
-      (_, index) => !!(recentBytes[Math.floor(index / 8)] & (1 << (index % 8)))
-    ),
+    recentlyVisited,
     successMask,
   };
+}
+
+function packHouseholdResponses(
+  households: FloorShareHousehold[],
+  questionCount: number
+): number[] {
+  const householdBytesLength = Math.max(1, Math.ceil((questionCount * 2) / 8));
+  const bytes = new Array(households.length * householdBytesLength).fill(0);
+
+  households.forEach(({ responses }, householdIndex) => {
+    const baseIndex = householdIndex * householdBytesLength;
+
+    responses.forEach((response, questionIndex) => {
+      const encoded = encodeResponse(response);
+      const offset = questionIndex * 2;
+      const byteIndex = baseIndex + Math.floor(offset / 8);
+      const bitIndex = offset % 8;
+      const mask = 0b11 << bitIndex;
+      const current = bytes[byteIndex] ?? 0;
+      bytes[byteIndex] = (current & ~mask) | ((encoded << bitIndex) & mask);
+    });
+  });
+
+  return bytes;
+}
+
+function decodeTextList(value: string): string[] {
+  if (!value) {
+    return [];
+  }
+
+  const bytes = decodeBase64Url(value);
+  if (!bytes) {
+    return [];
+  }
+
+  return decodeUtf8(bytes).split('\0');
+}
+
+function encodeUtf8(value: string): number[] {
+  if (typeof TextEncoder !== 'undefined') {
+    return Array.from(new TextEncoder().encode(value));
+  }
+
+  if (typeof Buffer !== 'undefined') {
+    return Array.from(Buffer.from(value, 'utf8'));
+  }
+
+  throw new Error('TextEncoder is not available in this environment');
+}
+
+function decodeUtf8(value: number[]): string {
+  if (typeof TextDecoder !== 'undefined') {
+    return new TextDecoder().decode(new Uint8Array(value));
+  }
+
+  if (typeof Buffer !== 'undefined') {
+    return Buffer.from(value).toString('utf8');
+  }
+
+  throw new Error('TextDecoder is not available in this environment');
 }
 
 function encodeResponse(response: FloorShareResponse): number {

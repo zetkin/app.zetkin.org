@@ -29,19 +29,19 @@ const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
         <thead>
           <tr>
             <th style={numberHeaderCellStyle}>Nr</th>
-            {share.questions.map((question, index) => (
-              <th key={index} style={questionHeaderCellStyle}>
-                {question}
-              </th>
-            ))}
+            {share.questions.length > 0 &&
+              share.questions.map((question, index) => (
+                <th key={index} style={questionHeaderCellStyle}>
+                  {question}
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody>
           {share.households.map((household, householdIndex) => {
-            const householdName = formatFloorShareHouseholdName(
-              share.floor,
-              householdIndex + 1
-            );
+            const householdName =
+              household.name ||
+              formatFloorShareHouseholdName(share.floor, householdIndex + 1);
 
             return (
               <tr key={householdName}>
@@ -53,38 +53,39 @@ const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
                     </small>
                   )}
                 </td>
-                {household.responses.map((response, questionIndex) => {
-                  const cellKey = `${householdIndex}:${questionIndex}`;
-                  const highlighted = !!highlightedCells[cellKey];
+                {share.questions.length > 0 &&
+                  household.responses.map((response, questionIndex) => {
+                    const cellKey = `${householdIndex}:${questionIndex}`;
+                    const highlighted = !!highlightedCells[cellKey];
 
-                  return (
-                    <td key={questionIndex} style={bodyCellStyle}>
-                      <button
-                        aria-label={`${householdName}: ${share.questions[questionIndex]}`}
-                        aria-pressed={highlighted}
-                        onClick={() =>
-                          setHighlightedCells((current) => ({
-                            ...current,
-                            [cellKey]: !current[cellKey],
-                          }))
-                        }
-                        style={buttonStyle}
-                        type="button"
-                      >
-                        {highlighted ? (
-                          <span style={highlightedMarkStyle}>{'\u2713'}</span>
-                        ) : (
-                          <ResponseMark
-                            response={response}
-                            success={
-                              !!(share.successMask & (1 << questionIndex))
-                            }
-                          />
-                        )}
-                      </button>
-                    </td>
-                  );
-                })}
+                    return (
+                      <td key={questionIndex} style={bodyCellStyle}>
+                        <button
+                          aria-label={`${householdName}: ${share.questions[questionIndex]}`}
+                          aria-pressed={highlighted}
+                          onClick={() =>
+                            setHighlightedCells((current) => ({
+                              ...current,
+                              [cellKey]: !current[cellKey],
+                            }))
+                          }
+                          style={buttonStyle}
+                          type="button"
+                        >
+                          {highlighted ? (
+                            <span style={highlightedMarkStyle}>{'\u2713'}</span>
+                          ) : (
+                            <ResponseMark
+                              response={response}
+                              success={
+                                !!(share.successMask & (1 << questionIndex))
+                              }
+                            />
+                          )}
+                        </button>
+                      </td>
+                    );
+                  })}
               </tr>
             );
           })}

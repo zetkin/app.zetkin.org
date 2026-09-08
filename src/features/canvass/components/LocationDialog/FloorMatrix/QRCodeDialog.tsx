@@ -48,7 +48,8 @@ const QRCodeDialog: FC<Props> = ({
     );
     const share: FloorShare = {
       floor,
-      households: householdItems.map(({ lastVisitMetrics }) => ({
+      households: householdItems.map(({ household, lastVisitMetrics }) => ({
+        name: household.title,
         responses: choiceMetrics.map((metric) => {
           const response = lastVisitMetrics?.find(
             (response) => response.metric_id === metric.id
