@@ -1,6 +1,15 @@
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import sortValuesByFrequency from './sortValuesByFrequency';
-import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
+import {
+  CUSTOM_FIELD_TYPE,
+  ZetkinCustomField,
+  ZetkinPerson,
+} from 'utils/types/zetkin';
+
+const UNMERGEABLE_CUSTOM_FIELD_TYPES = [
+  CUSTOM_FIELD_TYPE.JSON,
+  CUSTOM_FIELD_TYPE.LNGLAT,
+];
 
 export default function getFieldSettings({
   duplicates,
@@ -9,6 +18,10 @@ export default function getFieldSettings({
   customFields: ZetkinCustomField[];
   duplicates: ZetkinPerson[];
 }) {
+  const mergeableCustomFields = customFields.filter(
+    (field) => !UNMERGEABLE_CUSTOM_FIELD_TYPES.includes(field.type)
+  );
+
   const sortedPersonFields: string[] = [
     NATIVE_PERSON_FIELDS.FIRST_NAME,
     NATIVE_PERSON_FIELDS.LAST_NAME,
@@ -22,7 +35,7 @@ export default function getFieldSettings({
     NATIVE_PERSON_FIELDS.CITY,
     NATIVE_PERSON_FIELDS.COUNTRY,
     NATIVE_PERSON_FIELDS.EXT_ID,
-    ...customFields.map((item) => item.slug),
+    ...mergeableCustomFields.map((item) => item.slug),
   ];
 
   const fieldValues: Record<string, string[]> = {};

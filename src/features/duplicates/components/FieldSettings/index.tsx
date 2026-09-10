@@ -19,7 +19,7 @@ import getFieldSettings from 'features/duplicates/utils/getFieldSettings';
 interface FieldSettingsProps {
   customFields: ZetkinCustomField[];
   duplicates: ZetkinPerson[];
-  onChange: (field: NATIVE_PERSON_FIELDS, selectedValue: string) => void;
+  onChange: (field: string, selectedValue: string) => void;
   resetKey: string;
   setOverrides: React.Dispatch<
     React.SetStateAction<Partial<ZetkinPerson> | null>
@@ -96,10 +96,13 @@ const FieldSettings: FC<FieldSettingsProps> = ({
               {field !== NATIVE_PERSON_FIELDS.FIRST_NAME && <Divider />}
               <FieldSettingsRow
                 key={field}
+                customField={customFields.find(
+                  (customField) => customField.slug === field
+                )}
                 duplicates={duplicates}
-                field={field as NATIVE_PERSON_FIELDS}
+                field={field}
                 onChange={(selectedValue: string) =>
-                  onChange(field as NATIVE_PERSON_FIELDS, selectedValue)
+                  onChange(field, selectedValue)
                 }
                 values={values}
               />
