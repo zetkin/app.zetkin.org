@@ -25,20 +25,33 @@ type Props = {
   share: FloorShare;
 };
 
-// Scoped to the current URL so different shared floors don't collide in storage
-function getHighlightedCellsStorageKey(): string {
-  return `floorShare:highlightedCells:${window.location.pathname}${window.location.search}`;
+// A manual override cycled by clicking a cell: 'yes' -> 'no' -> reset (undefined)
+type CellOverride = 'yes' | 'no';
+
+function nextOverride(
+  current: CellOverride | undefined
+): CellOverride | undefined {
+  if (current === undefined) {
+    return 'yes';
+  }
+  if (current === 'yes') {
+    return 'no';
+  }
+  return undefined;
 }
 
-function readStoredHighlightedCells(): Record<string, boolean> {
+// Scoped to the current URL so different shared floors don't collide in storage
+function getCellOverridesStorageKey(): string {
+  return `floorShare:cellOverrides:${window.location.pathname}${window.location.search}`;
+}
+
+function readStoredCellOverrides(): Record<string, CellOverride> {
   if (typeof window === 'undefined') {
     return {};
   }
 
   try {
-    const stored = window.sessionStorage.getItem(
-      getHighlightedCellsStorageKey()
-    );
+    const stored = window.sessionStorage.getItem(getCellOverridesStorageKey());
     return stored ? JSON.parse(stored) : {};
   } catch {
     return {};
@@ -47,14 +60,14 @@ function readStoredHighlightedCells(): Record<string, boolean> {
 
 const FloorShareTable: FC<Props> = ({ share }) => {
   const messages = useMessages(messageIds);
-  const [highlightedCells, setHighlightedCells] = useState<
-    Record<string, boolean>
+  const [cellOverrides, setCellOverrides] = useState<
+    Record<string, CellOverride>
   >({});
   const [hydrated, setHydrated] = useState(false);
 
   // Loaded after mount (not during initial render) to avoid a hydration mismatch
   useEffect(() => {
-    setHighlightedCells(readStoredHighlightedCells());
+    setCellOverrides(readStoredCellOverrides());
     setHydrated(true);
   }, []);
 
@@ -65,13 +78,13 @@ const FloorShareTable: FC<Props> = ({ share }) => {
 
     try {
       window.sessionStorage.setItem(
-        getHighlightedCellsStorageKey(),
-        JSON.stringify(highlightedCells)
+        getCellOverridesStorageKey(),
+        JSON.stringify(cellOverrides)
       );
     } catch {
       // Ignore storage errors (e.g. quota exceeded or disabled storage)
     }
-  }, [hydrated, highlightedCells]);
+  }, [hydrated, cellOverrides]);
 
   return (
     <Box sx={{ overflowX: 'auto' }}>
@@ -118,7 +131,7 @@ const FloorShareTable: FC<Props> = ({ share }) => {
                 {share.questions.length > 0 &&
                   household.responses.map((response, questionIndex) => {
                     const cellKey = `${householdIndex}:${questionIndex}`;
-                    const highlighted = !!highlightedCells[cellKey];
+                    const override = cellOverrides[cellKey];
                     const success = !!(
                       share.successMask &
                       (1 << questionIndex)
@@ -138,26 +151,37 @@ const FloorShareTable: FC<Props> = ({ share }) => {
                       <TableCell key={questionIndex} sx={bodyCellSx}>
                         <ButtonBase
                           aria-label={`${householdName}: ${share.questions[questionIndex]}`}
-                          aria-pressed={highlighted}
+                          aria-pressed={!!override}
                           onClick={() =>
-                            setHighlightedCells((current) => ({
-                              ...current,
-                              [cellKey]: !current[cellKey],
-                            }))
+                            setCellOverrides((current) => {
+                              const updated = { ...current };
+                              const next = nextOverride(current[cellKey]);
+                              if (next) {
+                                updated[cellKey] = next;
+                              } else {
+                                delete updated[cellKey];
+                              }
+                              return updated;
+                            })
                           }
                           sx={{
                             borderRadius: `${METRIC_ICON_BORDER_RADIUS}px`,
-                            outline: highlighted
-                              ? '3px solid #ED1C24'
-                              : `3px solid transparent`,
-                            outlineOffset: highlighted ? '2px' : 0,
-                            transition:
-                              'outline-offset 120ms ease-out, outline-color 120ms ease-out',
+                            outline: override
+                              ? '3px solid #000'
+                              : '3px solid transparent',
+                            transition: 'outline-color 120ms ease-out',
                           }}
                         >
                           <MetricIcon
+                            forceIconColor={
+                              override
+                                ? success
+                                  ? 'white'
+                                  : 'black'
+                                : undefined
+                            }
                             metric={metric}
-                            response={response}
+                            response={override ?? response}
                             variant="small"
                           />
                         </ButtonBase>

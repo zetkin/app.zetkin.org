@@ -90,9 +90,9 @@ export default makeMessages('feat.canvass', {
       altText: m<{ floorNumber: number }>('QR code for floor {floorNumber}'),
       buttonLabel: m('Open QR code dialog'),
       closeButton: m('Close'),
-      instruction: m('Have your knocker scan the code'),
+      instruction: m('Have your canvasser scan the code'),
       title: m('QR code'),
-      tooltip: m('Share floor with knocker'),
+      tooltip: m('Share floor with canvasser'),
     },
     single: {
       daysAgo: m<{ days: number }>(
@@ -109,6 +109,9 @@ export default makeMessages('feat.canvass', {
       ),
       skipped: m('skipped'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
+      toggleInstructions: m(
+        'Tap once for yes, twice for no, three times to reset.'
+      ),
       unknown: m('Unknown'),
       visit: m('Visit'),
       wasNotVisited: m(

@@ -29,6 +29,7 @@ export default async function Page({ searchParams }: Props) {
         {messages.households.single.subtitle({ floorNumber: share.floor })}
       </h1>
       <p>{messages.households.single.shareInstructions()}</p>
+      <p>{messages.households.single.toggleInstructions()}</p>
       <FloorShareTable share={share} />
     </main>
   );

@@ -14,17 +14,27 @@ export const METRIC_ICON_LARGE_SIZE = 30; // px
 export const METRIC_ICON_SMALL_SIZE = 20; // px
 
 type Props = {
+  // Overrides the automatic icon color, e.g. for manually toggled states
+  forceIconColor?: 'black' | 'white';
   metric: ZetkinMetric;
   response: MetricResponse['response'] | null;
   variant: 'small' | 'large';
 };
 
-export const MetricIconIcon: FC<Props> = ({ metric, response, variant }) => {
+export const MetricIconIcon: FC<Props> = ({
+  forceIconColor,
+  metric,
+  response,
+  variant,
+}) => {
   const theme = useTheme();
   const dark = metric.defines_success;
 
-  const color =
-    variant === 'large' || dark
+  const color = forceIconColor
+    ? forceIconColor === 'black'
+      ? theme.palette.common.black
+      : theme.palette.background.default
+    : variant === 'large' || dark
       ? theme.palette.background.default
       : theme.palette.text.disabled;
   const iconSize = variant === 'small' ? 'small' : 'medium';
@@ -60,7 +70,7 @@ export const MetricIcon: FC<
     last?: boolean;
   }
 > = (props) => {
-  const { first, last, variant, metric } = props;
+  const { first, last, forceIconColor, variant, metric } = props;
   const theme = useTheme();
   const dark = metric.defines_success;
 
@@ -70,8 +80,12 @@ export const MetricIcon: FC<
         sx={{
           alignItems: 'center',
           backgroundColor: dark
-            ? theme.palette.secondary.main
-            : theme.palette.grey[400],
+            ? forceIconColor
+              ? theme.palette.common.black
+              : theme.palette.secondary.main
+            : forceIconColor
+              ? theme.palette.background.default
+              : theme.palette.grey[400],
           borderRadius: '15px',
           display: 'flex',
           flexDirection: 'row',
@@ -90,8 +104,12 @@ export const MetricIcon: FC<
       sx={{
         alignItems: 'center',
         backgroundColor: dark
-          ? theme.palette.secondary.main
-          : theme.palette.grey[300],
+          ? forceIconColor
+            ? theme.palette.common.black
+            : theme.palette.secondary.main
+          : forceIconColor
+            ? theme.palette.background.default
+            : theme.palette.grey[300],
         borderBottomLeftRadius: first ? `${METRIC_ICON_BORDER_RADIUS}px` : 0,
         borderBottomRightRadius: last ? `${METRIC_ICON_BORDER_RADIUS}px` : 0,
         borderTopLeftRadius: first ? `${METRIC_ICON_BORDER_RADIUS}px` : 0,
