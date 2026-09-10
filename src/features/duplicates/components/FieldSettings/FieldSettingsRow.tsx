@@ -72,9 +72,10 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
   };
 
   const getAvatars = (value: string) => {
-    const peopleWithMatchingValues = duplicates.filter(
-      (person) => person[field] == value
-    );
+    const peopleWithMatchingValues = duplicates.filter((person) => {
+      const personValue = person[field];
+      return (personValue ? personValue.toString() : '') == value;
+    });
 
     return (
       <Box display="flex" gap="2px">
@@ -124,6 +125,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
         {values.length > 1 && (
           <FormControl fullWidth size="small">
             <Select
+              displayEmpty
               onChange={(event) => {
                 setSelectedValue(event.target.value);
                 onChange(event.target.value);
