@@ -3,6 +3,8 @@ import { Box, Button, IconButton } from '@mui/material';
 import { FC, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
+import { QR_CODES } from 'utils/featureFlags';
+import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { HouseholdItem } from './types';
 import HouseholdStack from './HouseholdStack';
@@ -19,6 +21,7 @@ type Props = {
   onClickVisit: (householdId: number) => void;
   onDeselectIds: (ids: number[]) => void;
   onSelectIds: (ids: number[]) => void;
+  orgId: number;
   selectedIds: null | number[];
 };
 
@@ -27,6 +30,7 @@ const FloorHouseholdGroup: FC<Props> = ({
   householdItems,
   initialExpanded = false,
   locationTitle,
+  orgId,
   onClick,
   onClickDetails,
   onClickVisit,
@@ -37,6 +41,7 @@ const FloorHouseholdGroup: FC<Props> = ({
   const [expanded, setExpanded] = useState(initialExpanded);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const messages = useMessages(messageIds);
+  const hasQrCodesFeature = useFeatureWithOrg(QR_CODES, orgId);
 
   return (
     <Box
@@ -122,7 +127,7 @@ const FloorHouseholdGroup: FC<Props> = ({
             >
               {floor}
             </Box>
-            {expanded && (
+            {expanded && hasQrCodesFeature && (
               <Button
                 aria-label={messages.households.qrCode.buttonLabel()}
                 onClick={(event) => {

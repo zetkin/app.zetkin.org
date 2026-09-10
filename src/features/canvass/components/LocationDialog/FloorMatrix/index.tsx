@@ -227,6 +227,7 @@ const FloorMatrix: FC<Props> = ({
                 onSelectIds={(ids) =>
                   onUpdateSelection([...(selectedHouseholdIds || []), ...ids])
                 }
+                orgId={location.organization_id}
                 selectedIds={selectedHouseholdIds}
               />
             );
