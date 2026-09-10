@@ -13,16 +13,6 @@ export type FloorShare = {
   successMask: number;
 };
 
-export function formatFloorShareHouseholdName(
-  floor: number,
-  householdIndex: number
-): string {
-  return `${String(floor).padStart(2, '0')}${String(householdIndex).padStart(
-    2,
-    '0'
-  )}`;
-}
-
 export function encodeFloorShare(share: FloorShare): string {
   const bytes = packHouseholdResponses(
     share.households,
@@ -106,9 +96,7 @@ export function decodeFloorShare(value: string): FloorShare | null {
     );
 
     return {
-      name:
-        householdNames[index] ??
-        formatFloorShareHouseholdName(floor, index + 1),
+      name: householdNames[index] ?? '',
       responses,
     };
   });

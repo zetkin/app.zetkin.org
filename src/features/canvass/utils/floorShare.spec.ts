@@ -61,4 +61,15 @@ describe('floorShare', () => {
 
     expect(decodeFloorShare(encodeFloorShare(share))).toEqual(share);
   });
+
+  it('leaves missing household names empty', () => {
+    const decoded = decodeFloorShare('7.AA...0.__8');
+
+    expect(decoded?.households).toEqual([
+      {
+        name: '',
+        responses: [],
+      },
+    ]);
+  });
 });

@@ -19,10 +19,7 @@ import {
   MetricIcon,
 } from 'features/canvass/components/MetricIcon';
 import messageIds from 'features/canvass/l10n/messageIds';
-import {
-  FloorShare,
-  formatFloorShareHouseholdName,
-} from 'features/canvass/utils/floorShare';
+import { FloorShare } from 'features/canvass/utils/floorShare';
 
 type Props = {
   share: FloorShare;
@@ -95,8 +92,7 @@ const FloorShareTable: FC<Props> = ({ share }) => {
         <TableBody>
           {share.households.map((household, householdIndex) => {
             const householdName =
-              household.name ||
-              formatFloorShareHouseholdName(share.floor, householdIndex + 1);
+              household.name || messages.households.single.unknown();
             const lastVisitedHoursAgo =
               share.lastVisitedHoursAgo[householdIndex];
 

@@ -109,6 +109,7 @@ export default makeMessages('feat.canvass', {
       ),
       skipped: m('skipped'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
+      unknown: m('Unknown'),
       visit: m('Visit'),
       wasNotVisited: m(
         'This household has not been visited in this assignment'
