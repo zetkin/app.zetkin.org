@@ -87,16 +87,23 @@ export default makeMessages('feat.canvass', {
       header: m('Households'),
     },
     qrCode: {
+      altText: m<{ floorNumber: number }>('QR code for floor {floorNumber}'),
       buttonLabel: m('Open QR code dialog'),
       closeButton: m('Close'),
       instruction: m('Have your knocker scan the code'),
       title: m('QR code'),
-      tooltip: m('Share floor results'),
+      tooltip: m('Share floor with knocker'),
     },
     single: {
+      daysAgo: m<{ days: number }>(
+        '{days, plural, =1 {1 day ago} other {# days ago}}'
+      ),
       definesSuccess: m('Defines success'),
+      hoursAgo: m<{ hours: number }>(
+        '{hours, plural, =1 {1 hour ago} other {# hours ago}}'
+      ),
+      householdColumnHeader: m('Household'),
       logVisitButtonLabel: m('Log visit'),
-      recentlyVisited: m('Recently visited'),
       shareInstructions: m(
         'Mark results below. Show to your captain when done.'
       ),

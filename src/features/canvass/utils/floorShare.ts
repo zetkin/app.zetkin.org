@@ -8,8 +8,8 @@ export type FloorShareHousehold = {
 export type FloorShare = {
   floor: number;
   households: FloorShareHousehold[];
+  lastVisitedHoursAgo: (number | null)[];
   questions: string[];
-  recentlyVisited: boolean[];
   successMask: number;
 };
 
@@ -34,7 +34,7 @@ export function encodeFloorShare(share: FloorShare): string {
   const encodedHouseholdNames = encodeBase64Url(
     encodeUtf8(share.households.map(({ name }) => name).join('\0'))
   );
-  const recentBytes = packFlags(share.recentlyVisited);
+  const recentBytes = packLastVisited(share.lastVisitedHoursAgo);
 
   return `${share.floor.toString(36)}.${encodeBase64Url(bytes)}.${encodedQuestions}.${encodedHouseholdNames}.${share.successMask.toString(36)}.${encodeBase64Url(recentBytes)}`;
 }
@@ -46,7 +46,7 @@ export function decodeFloorShare(value: string): FloorShare | null {
     encodedQuestions = '',
     encodedHouseholdNames = '',
     successMaskValue = '0',
-    encodedRecentlyVisited = '',
+    encodedLastVisited = '',
   ] = value.split('.');
 
   const floor = Number.parseInt(floorValue, 36);
@@ -55,7 +55,7 @@ export function decodeFloorShare(value: string): FloorShare | null {
   if (
     !Number.isInteger(floor) ||
     !encodedResponses ||
-    !encodedRecentlyVisited ||
+    encodedLastVisited === undefined ||
     !Number.isInteger(successMask) ||
     successMask < 0
   ) {
@@ -64,7 +64,7 @@ export function decodeFloorShare(value: string): FloorShare | null {
 
   const bytes = decodeBase64Url(encodedResponses);
   const questionBytes = decodeBase64Url(encodedQuestions);
-  const recentBytes = decodeBase64Url(encodedRecentlyVisited);
+  const recentBytes = decodeBase64Url(encodedLastVisited);
 
   if (!bytes || !questionBytes || !recentBytes) {
     return null;
@@ -113,16 +113,26 @@ export function decodeFloorShare(value: string): FloorShare | null {
     };
   });
 
-  const recentlyVisited = Array.from(
+  const lastVisitedHoursAgo = Array.from(
     { length: householdCount },
-    (_, index) => !!(recentBytes[Math.floor(index / 8)] & (1 << (index % 8)))
+    (_, index) => {
+      const byte0 = recentBytes[index * 2];
+      const byte1 = recentBytes[index * 2 + 1];
+
+      if (byte0 === undefined || byte1 === undefined) {
+        return null;
+      }
+
+      const val = byte0 | (byte1 << 8);
+      return val === 0xffff ? null : val;
+    }
   );
 
   return {
     floor,
     households,
+    lastVisitedHoursAgo,
     questions,
-    recentlyVisited,
     successMask,
   };
 }
@@ -196,12 +206,15 @@ function decodeResponse(value: number): FloorShareResponse {
   return value === 0 ? null : value === 1 ? 'no' : value === 2 ? 'yes' : null;
 }
 
-function packFlags(flags: boolean[]): number[] {
-  const bytes = Array.from({ length: Math.ceil(flags.length / 8) }, () => 0);
+function packLastVisited(lastVisitedHoursAgo: (number | null)[]): number[] {
+  const bytes: number[] = [];
 
-  flags.forEach((flag, index) => {
-    if (flag) {
-      bytes[Math.floor(index / 8)] |= 1 << (index % 8);
+  lastVisitedHoursAgo.forEach((hoursAgo) => {
+    if (hoursAgo === null || hoursAgo < 0 || !Number.isFinite(hoursAgo)) {
+      bytes.push(0xff, 0xff);
+    } else {
+      const hours = Math.min(Math.floor(hoursAgo), 0xfffe);
+      bytes.push(hours & 0xff, (hours >> 8) & 0xff);
     }
   });
 

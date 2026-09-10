@@ -12,18 +12,19 @@ import {
   Typography,
 } from '@mui/material';
 
+import { useMessages } from 'core/i18n';
 import { ZetkinMetric } from 'features/areaAssignments/types';
 import {
   METRIC_ICON_BORDER_RADIUS,
   MetricIcon,
 } from 'features/canvass/components/MetricIcon';
+import messageIds from 'features/canvass/l10n/messageIds';
 import {
   FloorShare,
   formatFloorShareHouseholdName,
 } from 'features/canvass/utils/floorShare';
 
 type Props = {
-  recentlyVisitedLabel: string;
   share: FloorShare;
 };
 
@@ -47,7 +48,8 @@ function readStoredHighlightedCells(): Record<string, boolean> {
   }
 }
 
-const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
+const FloorShareTable: FC<Props> = ({ share }) => {
+  const messages = useMessages(messageIds);
   const [highlightedCells, setHighlightedCells] = useState<
     Record<string, boolean>
   >({});
@@ -76,10 +78,12 @@ const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
 
   return (
     <Box sx={{ overflowX: 'auto' }}>
-      <Table sx={{ minWidth: '100%', tableLayout: 'fixed' }}>
+      <Table sx={{ width: 'auto' }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={numberHeaderCellSx}>Nr</TableCell>
+            <TableCell sx={numberHeaderCellSx}>
+              {messages.households.single.householdColumnHeader()}
+            </TableCell>
             {share.questions.length > 0 &&
               share.questions.map((question, index) => (
                 <TableCell key={index} sx={questionHeaderCellSx}>
@@ -93,16 +97,27 @@ const FloorShareTable: FC<Props> = ({ recentlyVisitedLabel, share }) => {
             const householdName =
               household.name ||
               formatFloorShareHouseholdName(share.floor, householdIndex + 1);
+            const lastVisitedHoursAgo =
+              share.lastVisitedHoursAgo[householdIndex];
 
             return (
               <TableRow key={householdName}>
                 <TableCell sx={bodyCellSx}>
-                  <Box>{householdName}</Box>
-                  {share.recentlyVisited[householdIndex] && (
-                    <Typography sx={recentlyVisitedSx} variant="caption">
-                      {recentlyVisitedLabel}
-                    </Typography>
-                  )}
+                  <Box sx={{ maxWidth: 240, wordBreak: 'break-word' }}>
+                    {householdName}
+                  </Box>
+                  {lastVisitedHoursAgo !== null &&
+                    lastVisitedHoursAgo !== undefined && (
+                      <Typography sx={recentlyVisitedSx} variant="caption">
+                        {lastVisitedHoursAgo < 24
+                          ? messages.households.single.hoursAgo({
+                              hours: lastVisitedHoursAgo,
+                            })
+                          : messages.households.single.daysAgo({
+                              days: Math.floor(lastVisitedHoursAgo / 24),
+                            })}
+                      </Typography>
+                    )}
                 </TableCell>
                 {share.questions.length > 0 &&
                   household.responses.map((response, questionIndex) => {
@@ -166,17 +181,18 @@ const numberHeaderCellSx = {
   borderBottom: '1px solid #ddd',
   padding: '12px 16px',
   textAlign: 'center' as const,
-  width: 56,
+  whiteSpace: 'nowrap' as const,
 };
 
 const questionHeaderCellSx = {
   borderBottom: '1px solid #ddd',
   fontSize: 12,
   lineHeight: 1.1,
+  maxWidth: 200,
   padding: '12px 16px',
   textAlign: 'center' as const,
   whiteSpace: 'normal' as const,
-  wordBreak: 'normal' as const,
+  wordBreak: 'break-word' as const,
 };
 
 const bodyCellSx = {
@@ -190,6 +206,9 @@ const recentlyVisitedSx = {
   display: 'block',
   fontSize: 10,
   lineHeight: 1.1,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap' as const,
 };
 
 export default FloorShareTable;

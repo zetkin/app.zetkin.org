@@ -16,8 +16,8 @@ describe('floorShare', () => {
           responses: [null, 'no', null, 'yes', 'no'],
         },
       ],
+      lastVisitedHoursAgo: [2, null],
       questions: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'],
-      recentlyVisited: [true, false],
       successMask: 0b10101,
     };
 
@@ -27,6 +27,7 @@ describe('floorShare', () => {
     expect(decoded).toEqual(share);
     expect(decoded?.households[0]?.name).toBe('A-101');
     expect(decoded?.households[1]?.name).toBe('A-102');
+    expect(decoded?.lastVisitedHoursAgo).toEqual([2, null]);
   });
 
   it('supports more than four questions without truncation', () => {
@@ -38,8 +39,8 @@ describe('floorShare', () => {
           responses: ['yes', 'no', null, 'yes', 'no', 'yes', null, 'no'],
         },
       ],
+      lastVisitedHoursAgo: [36],
       questions: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8'],
-      recentlyVisited: [true],
       successMask: 0b10101010,
     };
 
@@ -53,8 +54,8 @@ describe('floorShare', () => {
         { name: 'Household A', responses: [] },
         { name: 'Household B', responses: [] },
       ],
+      lastVisitedHoursAgo: [null, 0],
       questions: [],
-      recentlyVisited: [false, true],
       successMask: 0,
     };
 

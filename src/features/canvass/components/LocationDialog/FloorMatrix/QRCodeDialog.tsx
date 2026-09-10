@@ -58,21 +58,27 @@ const QRCodeDialog: FC<Props> = ({
           return response === 'yes' ? 'yes' : response === 'no' ? 'no' : null;
         }),
       })),
-      questions: choiceMetrics.map(({ question }) => question),
-      recentlyVisited: householdItems.map(({ lastVisitTime }) => {
+      lastVisitedHoursAgo: householdItems.map(({ lastVisitTime }) => {
         if (!lastVisitTime) {
-          return false;
+          return null;
         }
 
         const normalizedVisitTime = lastVisitTime.includes('Z')
           ? lastVisitTime
           : lastVisitTime.concat('Z');
         const visitedAt = Date.parse(normalizedVisitTime);
+        if (Number.isNaN(visitedAt)) {
+          return null;
+        }
+
         const age = Date.now() - visitedAt;
-        return (
-          !Number.isNaN(visitedAt) && age >= 0 && age <= 3 * 60 * 60 * 1000
-        );
+        if (age < 0) {
+          return null;
+        }
+
+        return Math.floor(age / (60 * 60 * 1000));
       }),
+      questions: choiceMetrics.map(({ question }) => question),
       successMask: choiceMetrics.reduce(
         (mask, metric, index) =>
           mask | (metric.defines_success ? 1 << index : 0),
@@ -110,7 +116,7 @@ const QRCodeDialog: FC<Props> = ({
         {qrCode && (
           <>
             <Box
-              alt={`QR code for floor ${floor}`}
+              alt={messages.households.qrCode.altText({ floorNumber: floor })}
               component="img"
               src={qrCode}
               sx={{ display: 'block', height: 280, margin: 'auto', width: 280 }}
