@@ -73,6 +73,14 @@ export default makeMessages('feat.smartSearch', {
         description: m('Find people who were called, reached or tried.'),
         title: m('Call history'),
       },
+      caller: {
+        description: m('Find people who are assigned as callers.'),
+        title: m('Callers'),
+      },
+      caller_participation: {
+        description: m('Find people who have logged calls as callers.'),
+        title: m('Callers who have logged calls'),
+      },
       campaign_participation: {
         description: m("Who signed up? Got booked? Who didn't? Find them!"),
         title: m('Participation in events'),
@@ -270,6 +278,106 @@ export default makeMessages('feat.smartSearch', {
         input: ReactElement;
         minTimes: number;
       }>('at least {input} {minTimes, plural, one {time} other {times}}'),
+    },
+    caller: {
+      assignmentSelect: {
+        any: m('any assignment'),
+        assignment: m<{ assignmentTitle: ReactElement | string }>(
+          'assignment "{assignmentTitle}"'
+        ),
+        none: m("This organization doesn't have any call assignments yet"),
+      },
+      callerSelect: {
+        assigned: m('are assigned as callers'),
+        notassigned: m('are not assigned as callers'),
+      },
+      examples: {
+        one: m('Add people who are currently assigned as callers.'),
+        two: m(
+          "Remove people who are assigned as callers in assignment 'Activate old members'."
+        ),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+        callerSelect: ReactElement;
+      }>('{addRemoveSelect} people who {callerSelect} in {assignmentSelect}.'),
+      previewString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+        callerSelect: ReactElement;
+      }>('{addRemoveSelect} people who {callerSelect} in {assignmentSelect}.'),
+    },
+    callerParticipation: {
+      assignmentSelect: {
+        any: m('any assignment'),
+        assignment: m<{ assignmentTitle: ReactElement | string }>(
+          'assignment "{assignmentTitle}"'
+        ),
+        none: m("This organization doesn't have any call assignments yet"),
+      },
+      callCount: {
+        edit: {
+          between: m<{
+            callCountSelect: ReactElement;
+            maxInput: ReactElement;
+            minInput: ReactElement;
+          }>('{callCountSelect} {minInput} and {maxInput} calls'),
+          max: m<{
+            callCountSelect: ReactElement;
+            max: number;
+            maxInput: ReactElement;
+          }>(
+            '{callCountSelect} {maxInput} {max, plural, one {call} other {calls}}'
+          ),
+          min: m<{
+            callCountSelect: ReactElement;
+            min: number;
+            minInput: ReactElement;
+          }>(
+            '{callCountSelect} {minInput} {min, plural, one {call} other {calls}}'
+          ),
+          once: m<{ callCountSelect: ReactElement }>('{callCountSelect} call'),
+        },
+        labels: {
+          between: m('between'),
+          max: m('at most'),
+          min: m('at least'),
+          once: m('at least one'),
+        },
+        preview: {
+          between: m<{ max: number; min: number }>(
+            'between {min} and {max} calls'
+          ),
+          max: m<{ max: number; min: number }>(
+            'at most {max} {max, plural, one {call} other {calls}}'
+          ),
+          min: m<{ max: number; min: number }>(
+            'at least {min} {min, plural, one {call} other {calls}}'
+          ),
+          once: m('at least one call'),
+        },
+      },
+      examples: {
+        one: m('Add people who have logged at least 50 calls.'),
+        two: m(
+          "Remove people who have logged at most 5 calls in assignment 'Activate old members'."
+        ),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+        callCountSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have logged {callCountSelect} in {assignmentSelect}.'
+      ),
+      previewString: m<{
+        addRemoveSelect: ReactElement;
+        assignmentSelect: ReactElement;
+        callCountSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who have logged {callCountSelect} in {assignmentSelect}.'
+      ),
     },
     emailBlacklist: {
       inputString: m<{
