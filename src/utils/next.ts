@@ -230,6 +230,7 @@ export const scaffold =
           FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
           FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
           FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
+          FEAT_QR_CODES: process.env.FEAT_QR_CODES,
           FEAT_TASKS: process.env.FEAT_TASKS,
           FEAT_UNAUTH_EVENT_SIGNUP: process.env.FEAT_UNAUTH_EVENT_SIGNUP,
           INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
