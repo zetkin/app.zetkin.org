@@ -6,8 +6,7 @@ import { FC, useMemo, useState } from 'react';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { LaneStep } from '../types';
-import { useAppDispatch, useAppSelector, useEnv } from 'core/hooks';
-import { updateLaneStep } from '../store';
+import { useAppSelector, useEnv } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import ZUIText from 'zui/components/ZUIText';
@@ -22,6 +21,7 @@ import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
 import ZUILink from 'zui/components/ZUILink';
+import SkipCallDialog from './SkipCallDialog';
 
 const HEIGHT_OF_HEADER = '100px';
 //TODO Delete this when removing new ui alert
@@ -88,7 +88,6 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
 
 const Call: FC<Props> = ({ onResetAfterError }) => {
   const messages = useMessages(messageIds);
-  const dispatch = useAppDispatch();
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
   const allUserAssignments = useMyAssignments();
@@ -101,8 +100,9 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
 
   const call = useCurrentCall();
 
-  const { abandonUnfinishedCall, skipCurrentCall, switchToUnfinishedCall } =
-    useCallMutations(assignment.organization.id);
+  const { switchToUnfinishedCall } = useCallMutations(
+    assignment.organization.id
+  );
   const unfinishedCalls = useUnfinishedCalls();
 
   const lane = useAppSelector(
@@ -169,9 +169,6 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
             assignment={assignment}
             call={call}
             lane={lane}
-            onAbandonUnfinishedCall={(assignmentId, callId) =>
-              abandonUnfinishedCall(assignmentId, callId)
-            }
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
               switchToUnfinishedCall(callId, assignmentId);
@@ -214,31 +211,15 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
         }}
         open={callLogOpen}
       />
-      <ZUIModal
-        open={skipCallModalOpen}
-        primaryButton={{
-          label: messages.skipCallDialog.cancelButton(),
-          onClick: () => {
-            setSkipCallModalOpen(false);
-          },
-        }}
-        secondaryButton={{
-          label: messages.skipCallDialog.confirmButton({
-            name: call?.target.name || '',
-          }),
-          onClick: () => {
-            if (call) {
-              skipCurrentCall(assignment.id, call.id);
-              dispatch(updateLaneStep(LaneStep.CALL));
-              setSkipCallModalOpen(false);
-            }
-          },
-        }}
-        size="small"
-        title={messages.skipCallDialog.title({
-          name: call?.target.name || '',
-        })}
-      />
+      {call && (
+        <SkipCallDialog
+          assignment={assignment}
+          callId={call.id}
+          onClose={() => setSkipCallModalOpen(false)}
+          open={skipCallModalOpen}
+          targetName={call.target.name}
+        />
+      )}
       <Snackbar
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         autoHideDuration={5000}

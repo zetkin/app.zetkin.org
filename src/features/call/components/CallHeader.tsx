@@ -201,6 +201,7 @@ const CallHeader: FC<Props> = ({
           disabled={
             !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
           }
+          isLoading={isAllocatingCall || submittingReport}
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
             if (lane.step == LaneStep.START) {
@@ -288,11 +289,9 @@ const CallHeader: FC<Props> = ({
             }
           }}
           variant={
-            isAllocatingCall || submittingReport
-              ? 'loading'
-              : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
-                ? 'secondary'
-                : 'primary'
+            lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
+              ? 'secondary'
+              : 'primary'
           }
         />
       </Box>

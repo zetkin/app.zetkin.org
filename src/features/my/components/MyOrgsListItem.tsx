@@ -23,26 +23,28 @@ const MyOrgsListItem: FC<Props> = ({ membership }) => {
     actions.push(
       <ZUIButton
         key="unfollow"
+        isLoading={followLoading}
         label={messages.myOrgs.unfollowButton()}
         onClick={async () => {
           setFollowLoading(true);
           await unfollowOrg();
           setFollowLoading(false);
         }}
-        variant={followLoading ? 'loading' : 'secondary'}
+        variant="secondary"
       />
     );
   } else {
     actions.push(
       <ZUIButton
         key="follow"
+        isLoading={followLoading}
         label={messages.myOrgs.followButton()}
         onClick={async () => {
           setFollowLoading(true);
           await followOrg(membership);
           setFollowLoading(false);
         }}
-        variant={followLoading ? 'loading' : 'primary'}
+        variant="primary"
       />
     );
   }

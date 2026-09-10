@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
 import { UnfinishedCall } from '../types';
@@ -8,19 +8,24 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useCallMutations from '../hooks/useCallMutations';
 
 type Props = {
-  onAbandonCall: () => void;
-  onSwitchToCall: () => void;
+  onCall: () => void;
+  orgId: number;
   unfinishedCall: UnfinishedCall;
 };
 
 const UnfinishedCallListItem: FC<Props> = ({
-  onAbandonCall,
-  onSwitchToCall,
+  onCall,
+  orgId,
   unfinishedCall,
 }) => {
   const messages = useMessages(messageIds);
+  const [isLoading, setIsLoading] = useState(false);
+  const { abandonUnfinishedCall, switchToUnfinishedCall } =
+    useCallMutations(orgId);
+
   return (
     <Box
       key={unfinishedCall.id}
@@ -60,14 +65,28 @@ const UnfinishedCallListItem: FC<Props> = ({
         </Box>
         <Box display="flex" gap={1}>
           <ZUIButton
+            isLoading={isLoading}
             label={messages.callLog.unfinishedCall.abandon()}
-            onClick={() => onAbandonCall()}
+            onClick={async () => {
+              setIsLoading(true);
+              await abandonUnfinishedCall(
+                unfinishedCall.assignment_id,
+                unfinishedCall.id
+              );
+              setIsLoading(false);
+            }}
             size="small"
             variant="tertiary"
           />
           <ZUIButton
             label={messages.callLog.unfinishedCall.switch()}
-            onClick={() => onSwitchToCall()}
+            onClick={() => {
+              switchToUnfinishedCall(
+                unfinishedCall.id,
+                unfinishedCall.assignment_id
+              );
+              onCall();
+            }}
             size="small"
             variant="primary"
           />

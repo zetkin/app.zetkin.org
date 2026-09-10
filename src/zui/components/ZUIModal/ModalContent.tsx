@@ -97,15 +97,12 @@ const ModalContent: FC<ModalContentProps> = ({
                 ? primaryButton.href
                 : undefined
             }
+            isLoading={'isLoading' in primaryButton && primaryButton.isLoading}
             label={primaryButton.label}
             onClick={
               'onClick' in primaryButton ? primaryButton.onClick : undefined
             }
-            variant={
-              'isLoading' in primaryButton && primaryButton.isLoading
-                ? 'loading'
-                : 'primary'
-            }
+            variant="primary"
           />
         )}
       </Box>
