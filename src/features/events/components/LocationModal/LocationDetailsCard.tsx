@@ -71,7 +71,9 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        width: '100%',
+        maxWidth: '40vw',
+        pointerEvents: 'auto',
+        width: '300px',
       }}
     >
       <ClickAwayListener
