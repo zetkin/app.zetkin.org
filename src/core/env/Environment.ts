@@ -24,6 +24,7 @@ export type EnvVars = {
   FEAT_BULK_DELETE?: string;
   FEAT_EMAIL_SETTINGS?: string;
   FEAT_OFFICIALS?: string;
+  FEAT_QR_CODES?: string;
   FEAT_TASKS?: string;
   FEAT_UNAUTH_EVENT_SIGNUP?: string;
   INSTANCE_OWNER_HREF?: string;
