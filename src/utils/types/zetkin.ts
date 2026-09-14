@@ -216,6 +216,18 @@ export interface ZetkinCustomField {
   org_write: 'sameorg' | 'suborgs';
 }
 
+export interface ZetkinTimelineAction {
+  event: 'action';
+  // Not returned by the API, derived in usePersonTimeline so entries can be stored in a RemoteList
+  id: string;
+  timestamp: string; // time of event. should this be time of the action???;
+  data: {
+    action: ZetkinEvent; // Can this be a different type? How do types link to names of these properties
+  };
+}
+
+export type ZetkinTimeline = Omit<ZetkinTimelineAction, 'id'>[];
+
 export interface ZetkinSession {
   created: string;
   level: number;

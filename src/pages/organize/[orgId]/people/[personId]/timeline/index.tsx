@@ -5,6 +5,8 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import usePerson from 'features/profile/hooks/usePerson';
+import usePersonTimeline from 'features/profile/hooks/usePersonTimeline';
+import ZUIFuture from 'zui/ZUIFuture';
 import { getPersonScaffoldProps, scaffoldOptions } from '../index';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -22,6 +24,7 @@ const PersonTimelinePage: PageWithLayout<PersonTimelinePageProps> = ({
   personId,
 }) => {
   const { data: person } = usePerson(orgId, personId);
+  const timelineFuture = usePersonTimeline(orgId, personId);
 
   if (!person) {
     return null;
@@ -34,7 +37,18 @@ const PersonTimelinePage: PageWithLayout<PersonTimelinePageProps> = ({
           {person?.first_name} {person?.last_name}
         </title>
       </Head>
-      <p>Timeline</p>
+      <ZUIFuture future={timelineFuture}>
+        {(timeline) => (
+          <ul>
+            {timeline.map((entry) => (
+              <li key={entry.id}>
+                {entry.timestamp}:{' '}
+                {entry.data.action.title || entry.data.action.activity?.title}
+              </li>
+            ))}
+          </ul>
+        )}
+      </ZUIFuture>
     </>
   );
 };
