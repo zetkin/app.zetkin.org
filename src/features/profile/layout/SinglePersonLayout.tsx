@@ -46,7 +46,6 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
         {
           href: `/timeline`,
           label: messages.tabs.timeline(),
-          tabProps: { disabled: true },
         },
         {
           href: `/manage`,
