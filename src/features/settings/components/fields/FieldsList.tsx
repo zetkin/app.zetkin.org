@@ -25,6 +25,7 @@ import messageIds from '../../l10n/messageIds';
 import createSlug from '../../utils/createSlug';
 import { AccessType } from '../../types';
 import { getAccessType, getOrgReadWrite } from '../../utils/orgReadWrite';
+import getFieldErrorMessageId from '../../utils/getFieldErrorMessageId';
 import { parseEnumChoices } from './NewFieldForm';
 
 type EditFieldFormProps = {
@@ -216,7 +217,12 @@ const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
                 }}
                 severity="error"
               >
-                <Msg id={messageIds.fields.edit.errorMessage} />
+                <Msg
+                  id={
+                    getFieldErrorMessageId(fieldUpdateError.status) ??
+                    messageIds.fields.edit.errorMessage
+                  }
+                />
               </Alert>
             )}
           </Box>
