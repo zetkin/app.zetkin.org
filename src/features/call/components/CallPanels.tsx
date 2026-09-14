@@ -343,12 +343,13 @@ const CallPanels: FC<Props> = ({
                   onClick={() =>
                     onSwitchToUnfinishedCall(c.id, c.assignment_id)
                   }
-                  sx={{
+                  sx={(theme) => ({
+                    border: `4px solid ${theme.palette.background.default}`,
                     borderRadius: '2rem',
                     cursor: 'pointer',
                     display: 'flex',
                     padding: 0,
-                  }}
+                  })}
                 >
                   <ZUIPersonAvatar
                     firstName={c.target.first_name}
