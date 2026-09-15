@@ -55,12 +55,12 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
   disabled,
   href,
   icon: Icon,
+  isLoading,
   onClick,
   onKeyDown,
   size = 'medium',
   variant,
 }) => {
-  const isLoading = variant == 'loading';
   return (
     <Button
       color={variant ? getColor(variant) : undefined}
@@ -120,13 +120,13 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
       type={actionType}
       variant={variant ? getVariant(variant) : undefined}
     >
-      {variant == 'loading' && (
+      {isLoading && (
         <CircularProgress
           size={size == 'small' ? '0.875rem' : '1rem'}
           sx={{ margin: size == 'small' ? '0.188rem' : '0.25rem' }}
         />
       )}
-      {variant != 'loading' && (
+      {!isLoading && (
         <Icon
           sx={(theme) => {
             let color: string | undefined = '';
