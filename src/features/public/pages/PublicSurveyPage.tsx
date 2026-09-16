@@ -266,9 +266,10 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({
               <ZUIButton
                 actionType="submit"
                 dataTestId="Survey-submit"
+                isLoading={isLoading}
                 label={messages.surveyForm.submit()}
                 size="large"
-                variant={isLoading ? 'loading' : 'primary'}
+                variant="primary"
               />
             </Box>
           </form>

@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { allocateCallError, allocateNewCall, newCallAllocated } from '../store';
 import { UnfinishedCall } from '../types';
@@ -24,25 +26,26 @@ export default function useAllocateCall(
     (state) => state.call.lanes[state.call.activeLaneIndex].callIsBeingAllocated
   );
 
-  const allocateCall = async (): Promise<void | SerializedError> => {
-    dispatch(allocateNewCall());
-    try {
-      const call = await apiClient.post<UnfinishedCall>(
-        `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
-        {}
-      );
-      dispatch(newCallAllocated(call));
-    } catch (e) {
-      const queueError =
-        e instanceof Error ? e : new Error('Empty queue error');
-      const serialized = {
-        message: queueError.message,
-        name: queueError.name,
-      };
-      dispatch(allocateCallError(serialized));
-      return queueError;
-    }
-  };
+  const allocateCall =
+    useCallback(async (): Promise<void | SerializedError> => {
+      dispatch(allocateNewCall());
+      try {
+        const call = await apiClient.post<UnfinishedCall>(
+          `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
+          {}
+        );
+        dispatch(newCallAllocated(call));
+      } catch (e) {
+        const queueError =
+          e instanceof Error ? e : new Error('Empty queue error');
+        const serialized = {
+          message: queueError.message,
+          name: queueError.name,
+        };
+        dispatch(allocateCallError(serialized));
+        return queueError;
+      }
+    }, [apiClient, assignmentId, dispatch, orgId]);
 
   return {
     allocateCall,

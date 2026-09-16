@@ -129,7 +129,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
           {params.row.first_name} {params.row.last_name}
         </Typography>
       ),
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
       valueGetter: (value, row) =>
         `${row.first_name || ''} ${row.last_name || ''}`,
@@ -143,7 +143,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
         params.row.phone ? (
           <Link href={`tel:${params.row.phone}`}>{params.row.phone}</Link>
         ) : null,
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
     },
     {
@@ -155,7 +155,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
         params.row.email ? (
           <Link href={`mailto:${params.row.email}`}>{params.row.email}</Link>
         ) : null,
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
     },
     {
@@ -170,7 +170,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
         ) : (
           <Typography>—</Typography>
         ),
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
       valueGetter: (value, row) => (row.created ? new Date(row.created) : null),
     },
@@ -196,7 +196,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
           </Box>
         );
       },
-      resizable: false,
+
       sortable: false,
     },
   ];

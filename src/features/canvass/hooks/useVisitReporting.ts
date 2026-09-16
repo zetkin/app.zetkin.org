@@ -22,13 +22,12 @@ import submitHouseholdVisits from '../rpc/submitHouseholdVisits';
 import useLocationHouseholdVisits from './useLocationHouseholdVisits';
 import useIndexedDB from './useIndexedDB';
 
-type VisitByHouseholdIdMap = Record<
-  number,
-  {
-    created: string;
-    metrics: MetricResponse[];
-  }
->;
+export type HouseholdVisit = {
+  created: string;
+  metrics: MetricResponse[];
+};
+
+type VisitByHouseholdIdMap = Record<number, HouseholdVisit>;
 
 export type UseVisitReportingReturn = {
   currentLocationVisit: ZetkinLocationVisit | null;

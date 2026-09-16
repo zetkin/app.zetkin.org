@@ -10,6 +10,7 @@ import useLocationHouseholdVisits from './useLocationHouseholdVisits';
 import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { UserProvider } from 'core/env/UserContext';
+import { PromiseCacheProvider } from 'core/caching/PromiseCache';
 
 describe('useLocationHouseholdVisits', () => {
   it('returns aggregated household visits from RPC', async () => {
@@ -63,11 +64,13 @@ describe('useLocationHouseholdVisits', () => {
     const { queryByText } = render(
       <ReduxProvider store={store}>
         <EnvProvider env={env}>
-          <UserProvider user={null}>
-            <Suspense fallback={<p>loading</p>}>
-              <TestComponent />
-            </Suspense>
-          </UserProvider>
+          <PromiseCacheProvider>
+            <UserProvider user={null}>
+              <Suspense fallback={<p>loading</p>}>
+                <TestComponent />
+              </Suspense>
+            </UserProvider>
+          </PromiseCacheProvider>
         </EnvProvider>
       </ReduxProvider>
     );

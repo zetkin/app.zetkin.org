@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from 'react';
+import { FC, Fragment, useMemo, useState } from 'react';
 import { Assignment, GroupWorkOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
@@ -28,14 +28,17 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
 
   const response = responseBySurveyId[survey.id];
 
-  const hasMeaningfulContent =
-    !!response &&
-    Object.entries(response).some(([, value]) => {
-      if (typeof value === 'string') {
-        return value.trim() !== '';
-      }
-      return true;
-    });
+  const hasMeaningfulContent = useMemo(
+    () =>
+      !!response &&
+      Object.entries(response).some(([, value]) => {
+        if (typeof value === 'string') {
+          return value.trim() !== '';
+        }
+        return true;
+      }),
+    [response]
+  );
 
   return (
     <>
