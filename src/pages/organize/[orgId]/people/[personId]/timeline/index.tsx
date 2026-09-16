@@ -1,5 +1,8 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { Box } from '@mui/system';
+import Link from 'next/link';
+import { Card, Divider, List, Typography } from '@mui/material';
 
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -38,16 +41,45 @@ const PersonTimelinePage: PageWithLayout<PersonTimelinePageProps> = ({
         </title>
       </Head>
       <ZUIFuture future={timelineFuture}>
-        {(timeline) => (
-          <ul>
-            {timeline.map((entry) => (
-              <li key={entry.id}>
-                {entry.timestamp}:{' '}
-                {entry.data.action.title || entry.data.action.activity?.title}
-              </li>
-            ))}
-          </ul>
-        )}
+        {(timeline) => {
+          return (
+            <Card>
+              <List>
+                {timeline.map((event, index) => {
+                  if (event.event === 'action') {
+                    return (
+                      <>
+                        {index > 0 && <Divider variant="fullWidth" />}
+                        <Link
+                          href={'/'}
+                          passHref
+                          style={{ textDecoration: 'none' }}
+                        >
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              padding: '1.0em',
+                            }}
+                          >
+                            <Typography>{event.data.action.title}</Typography>
+                            {event.data.action.info_text && (
+                              <Box>
+                                <Typography variant="body2">
+                                  {event.data.action.info_text}
+                                </Typography>
+                              </Box>
+                            )}
+                          </Box>
+                        </Link>
+                      </>
+                    );
+                  }
+                })}
+              </List>
+            </Card>
+          );
+        }}
       </ZUIFuture>
     </>
   );
