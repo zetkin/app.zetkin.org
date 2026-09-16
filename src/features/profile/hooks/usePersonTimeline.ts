@@ -21,9 +21,6 @@ export default function usePersonTimeline(
       const timeline = await apiClient.get<ZetkinTimeline>(
         `/api/orgs/${orgId}/people/${personId}/timeline`
       );
-
-      // Timeline entries have no id of their own, so derive one from the
-      // event type and the id of the entity it refers to
       return timeline.map((entry) => ({
         ...entry,
         id: `${entry.event}-${entry.data.action.id}`,
