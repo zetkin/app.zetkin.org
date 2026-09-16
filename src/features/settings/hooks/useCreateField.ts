@@ -1,3 +1,4 @@
+import { ApiClientError } from 'core/api/errors';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import useApiClient from 'core/hooks/useApiClient';
 import {
@@ -31,6 +32,7 @@ export default function useCreateField(orgId: number) {
       const serialized = {
         message: createError.message,
         name: createError.name,
+        status: err instanceof ApiClientError ? err.status : null,
       };
       dispatch(fieldCreateErrorAdded(serialized));
       return createError;

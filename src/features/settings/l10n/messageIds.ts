@@ -126,6 +126,14 @@ export default makeMessages('feat.settings', {
       titleInput: m('Title'),
       typeInput: m('Type'),
     },
+    errors: {
+      invalidData: m(
+        'The server rejected this data. Check the slug and the options, then try again.'
+      ),
+      slugInUse: m(
+        'A field with this slug already exists. Please choose a different slug.'
+      ),
+    },
     list: {
       editButton: m('Edit'),
       headers: {

@@ -9,6 +9,7 @@ import { Msg, useMessages } from 'core/i18n';
 import createSlug from '../../utils/createSlug';
 import { AccessType } from '../../types';
 import { getOrgReadWrite } from '../../utils/orgReadWrite';
+import getFieldErrorMessageId from '../../utils/getFieldErrorMessageId';
 
 export const parseEnumChoices = (input: string) => {
   return input
@@ -168,7 +169,12 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
             }}
             severity="error"
           >
-            <Msg id={messageIds.fields.create.errorMessage} />
+            <Msg
+              id={
+                getFieldErrorMessageId(fieldCreateError.status) ??
+                messageIds.fields.create.errorMessage
+              }
+            />
           </Alert>
         </Box>
       )}
