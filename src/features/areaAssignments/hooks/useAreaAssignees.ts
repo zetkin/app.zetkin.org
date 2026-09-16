@@ -16,12 +16,10 @@ export default function useAreaAssignees(orgId: number, areaAssId: number) {
     actionOnLoad: () => assigneesLoad(areaAssId),
     actionOnSuccess: (data) => assigneesLoaded([areaAssId, data]),
     loader: () =>
-      fetchAllPaginated(
-        (page) =>
-          apiClient.get<ZetkinAreaAssignee[]>(
-            `/api2/orgs/${orgId}/area_assignments/${areaAssId}/assignees?size=100&page=${page}`
-          ),
-        100
+      fetchAllPaginated((page, size) =>
+        apiClient.get<ZetkinAreaAssignee[]>(
+          `/api2/orgs/${orgId}/area_assignments/${areaAssId}/assignees?size=${size}&page=${page}`
+        )
       ),
   });
 }
