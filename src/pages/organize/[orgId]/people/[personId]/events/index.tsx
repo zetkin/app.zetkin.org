@@ -89,7 +89,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
         future={timelineFuture}
         skeleton={
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
-            <Skeleton variant="rounded" width={210} />
+            <Skeleton variant="rounded" width={190} />
             <Skeleton height={100} variant="rounded" />
             <Skeleton variant="rounded" width={210} />
             <Skeleton height={200} variant="rounded" />
