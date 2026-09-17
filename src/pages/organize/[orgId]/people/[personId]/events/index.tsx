@@ -15,13 +15,14 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { useMessages } from 'core/i18n';
-import messageIds from 'features/events/l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
+import eventMessageIds from 'features/events/l10n/messageIds';
+import profileMessageIds from 'features/profile/l10n/messageIds';
 import getEventUrl from 'features/events/utils/getEventUrl';
 import { getPersonScaffoldProps, scaffoldOptions } from '../index';
 
 const EventListItem = ({ event }: { event: ZetkinEvent }) => {
-  const messages = useMessages(messageIds);
+  const eventMessages = useMessages(eventMessageIds);
   return (
     <Link href={getEventUrl(event)} passHref style={{ textDecoration: 'none' }}>
       <Box
@@ -32,7 +33,9 @@ const EventListItem = ({ event }: { event: ZetkinEvent }) => {
         }}
       >
         <Typography>
-          {event.title || event.activity?.title || messages.common.noTitle()}
+          {event.title ||
+            event.activity?.title ||
+            eventMessages.common.noTitle()}
         </Typography>
         <ZUIIconLabelRow
           color="secondary"
@@ -101,7 +104,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                   })}
                   variant="h5"
                 >
-                  Upcoming Events
+                  <Msg id={profileMessageIds.events.upcoming} />
                 </Typography>
                 <Typography
                   sx={(theme) => ({
@@ -127,7 +130,9 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                   </List>
                 </Card>
               ) : (
-                <Typography>No upcoming events</Typography>
+                <Typography>
+                  <Msg id={profileMessageIds.events.noUpcoming} />
+                </Typography>
               )}
               <Box sx={{ display: 'flex', marginBottom: 1, marginTop: 2 }}>
                 <Typography
@@ -137,7 +142,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                   })}
                   variant="h5"
                 >
-                  Past Events
+                  <Msg id={profileMessageIds.events.past} />
                 </Typography>
                 <Typography
                   sx={(theme) => ({
@@ -163,7 +168,9 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                   </List>
                 </Card>
               ) : (
-                <Typography>No past events</Typography>
+                <Typography>
+                  <Msg id={profileMessageIds.events.noPast} />
+                </Typography>
               )}
             </>
           );
