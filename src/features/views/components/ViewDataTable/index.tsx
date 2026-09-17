@@ -727,6 +727,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         checkboxSelection={!!selectionModel?.mode}
         columns={gridColumns}
         disableRowSelectionOnClick={true}
+        filterDebounceMs={400}
         getRowClassName={getRowClassName}
         hideFooter={
           disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC
