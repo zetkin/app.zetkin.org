@@ -17,12 +17,13 @@ import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/events/l10n/messageIds';
+import getEventUrl from 'features/events/utils/getEventUrl';
 import { getPersonScaffoldProps, scaffoldOptions } from '../index';
 
 const EventListItem = ({ event }: { event: ZetkinEvent }) => {
   const messages = useMessages(messageIds);
   return (
-    <Link href={'/'} passHref style={{ textDecoration: 'none' }}>
+    <Link href={getEventUrl(event)} passHref style={{ textDecoration: 'none' }}>
       <Box
         sx={{
           display: 'flex',
