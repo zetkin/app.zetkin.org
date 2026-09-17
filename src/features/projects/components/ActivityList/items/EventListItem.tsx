@@ -95,5 +95,3 @@ const EventListItem: FC<EventListeItemProps> = ({ cluster }) => {
 };
 
 export default EventListItem;
-
-// THIS IS THE COMPONENT
