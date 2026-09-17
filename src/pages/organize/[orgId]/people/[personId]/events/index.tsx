@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Box } from '@mui/system';
 import { ScheduleOutlined } from '@mui/icons-material';
 import Link from 'next/link';
-import { Card, Divider, List, Typography } from '@mui/material';
+import { Card, Divider, List, Skeleton, Typography } from '@mui/material';
 
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -85,7 +85,17 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
           {person?.first_name} {person?.last_name}
         </title>
       </Head>
-      <ZUIFuture future={timelineFuture}>
+      <ZUIFuture
+        future={timelineFuture}
+        skeleton={
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
+            <Skeleton variant="rounded" width={210} />
+            <Skeleton height={100} variant="rounded" />
+            <Skeleton variant="rounded" width={210} />
+            <Skeleton height={200} variant="rounded" />
+          </Box>
+        }
+      >
         {(timeline) => {
           // Split in to "upcoming" and "past"
           const upcomingEvents = timeline.filter(
