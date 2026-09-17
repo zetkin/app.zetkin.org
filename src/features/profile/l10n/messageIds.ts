@@ -65,9 +65,9 @@ export default makeMessages('feat.profile', {
     title: m('Survey Submissions'),
   },
   tabs: {
+    events: m('Events'),
     manage: m('Manage'),
     profile: m('Profile'),
-    timeline: m('Timeline'),
   },
   tags: {
     createAndApplyLabel: m('Create and apply'),

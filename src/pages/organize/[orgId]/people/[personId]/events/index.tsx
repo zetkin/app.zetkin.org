@@ -58,12 +58,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   scaffoldOptions
 );
 
-interface PersonTimelinePageProps {
+interface PersonEventsPageProps {
   orgId: number;
   personId: number;
 }
 
-const PersonTimelinePage: PageWithLayout<PersonTimelinePageProps> = ({
+const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
   orgId,
   personId,
 }) => {
@@ -172,8 +172,8 @@ const PersonTimelinePage: PageWithLayout<PersonTimelinePageProps> = ({
   );
 };
 
-PersonTimelinePage.getLayout = function getLayout(page) {
+PersonEventsPage.getLayout = function getLayout(page) {
   return <SinglePersonLayout>{page}</SinglePersonLayout>;
 };
 
-export default PersonTimelinePage;
+export default PersonEventsPage;
