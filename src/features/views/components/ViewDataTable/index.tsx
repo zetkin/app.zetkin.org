@@ -600,7 +600,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const localeText = useMemo(
     () => ({
       ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
-      filterValueAny: messages.filterOptions.all(),
+      filterValueAny: messages.filterOptions.any(),
       filterValueFalse: messages.filterOptions.no(),
       filterValueTrue: messages.filterOptions.yes(),
       noRowsLabel: messages.empty.notice[contentSource](),

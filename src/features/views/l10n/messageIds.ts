@@ -373,7 +373,7 @@ export default makeMessages('feat.views', {
     },
   },
   filterOptions: {
-    all: m('All'),
+    any: m('Any'),
     no: m('No'),
     yes: m('Yes'),
   },
