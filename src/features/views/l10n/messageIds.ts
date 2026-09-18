@@ -372,6 +372,11 @@ export default makeMessages('feat.views', {
       headline: m('Add people manually'),
     },
   },
+  filterOptions: {
+    all: m('All'),
+    no: m('No'),
+    yes: m('Yes'),
+  },
   folder: {
     summary: {
       empty: m('Empty'),
