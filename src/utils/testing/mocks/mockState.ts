@@ -141,6 +141,7 @@ export default function mockState(overrides?: RootState) {
       orgsByPersonId: {},
       personById: {},
       surveySubmissionsByPersonId: {},
+      timelineByPersonId: {},
     },
     projects: {
       filters: {
