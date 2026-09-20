@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 
 import range from 'utils/range';
-import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
@@ -10,15 +9,15 @@ import {
 } from 'features/projects/types';
 
 export function isAllDay(start: string, end: string): boolean {
-  const startDate = new Date(removeOffset(start));
-  const endDate = new Date(removeOffset(end));
+  const startDate = Temporal.PlainDateTime.from(start);
+  const endDate = Temporal.PlainDateTime.from(end);
 
   // Check if the start and end dates are not on the same day
-  if (startDate.toDateString() !== endDate.toDateString()) {
-    // If start time and end time are 00:00:00 return true
+  if (!startDate.toPlainDate().equals(endDate.toPlainDate())) {
+    const midnight = Temporal.PlainTime.from('00:00:00');
     if (
-      startDate.toString().split(' ')[4] == '00:00:00' &&
-      endDate.toString().split(' ')[4] == '00:00:00'
+      startDate.toPlainTime().equals(midnight) &&
+      endDate.toPlainTime().equals(midnight)
     ) {
       return true;
     }
