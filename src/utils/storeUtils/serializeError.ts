@@ -1,5 +1,9 @@
 export const serializeError = (err: unknown) => {
   if (err instanceof Error) {
+    if (err.message === '') {
+      return 'unknown error';
+    }
+
     return err.message;
   }
 
