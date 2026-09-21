@@ -12,11 +12,11 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { Msg } from 'core/i18n';
 import profileMessageIds from 'features/profile/l10n/messageIds';
 import PersonEventListItem from 'features/profile/components/PersonEventListItem';
-import { getPersonScaffoldProps, scaffoldOptions } from '../index';
+import { getPersonScaffoldProps } from '../index';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   getPersonScaffoldProps,
-  scaffoldOptions
+  { authLevelRequired: 2 }
 );
 
 interface PersonEventsPageProps {
