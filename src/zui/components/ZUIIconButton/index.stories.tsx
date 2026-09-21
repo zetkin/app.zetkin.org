@@ -49,6 +49,6 @@ export const Destructive: Story = {
 export const Loading: Story = {
   args: {
     icon: Close,
-    variant: 'loading',
+    isLoading: true,
   },
 };

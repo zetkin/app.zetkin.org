@@ -1,8 +1,9 @@
 import useRemoteList from 'core/hooks/useRemoteList';
 import { HouseholdWithColor } from '../types';
 import { useApiClient, useAppSelector } from 'core/hooks';
-import { householdsLoad, householdsLoaded } from '../store';
+import { householdsError, householdsLoad, householdsLoaded } from '../store';
 import { fetchAllPaginated } from 'utils/fetchAllPaginated';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 export default function useHouseholds(
   orgId: number,
@@ -13,9 +14,10 @@ export default function useHouseholds(
     (state) => state.canvass.householdsByLocationId[locationId]
   );
   return useRemoteList(list, {
+    actionOnError: (err) => householdsError([locationId, serializeError(err)]),
     actionOnLoad: () => householdsLoad(locationId),
     actionOnSuccess: (data) => householdsLoaded([locationId, data]),
-    loader: async () =>
+    loader: () =>
       fetchAllPaginated<HouseholdWithColor>(
         (page) =>
           apiClient.get(

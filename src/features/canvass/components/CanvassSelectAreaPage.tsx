@@ -6,6 +6,7 @@ import { ArrowForwardIos } from '@mui/icons-material';
 import {
   Avatar,
   Box,
+  Chip,
   CircularProgress,
   Divider,
   List,
@@ -19,22 +20,44 @@ import { notFound, useRouter } from 'next/navigation';
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
 import useOrganization from 'features/organizations/hooks/useOrganization';
-import ZUIFutures from 'zui/ZUIFutures';
 import oldTheme from 'theme';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
-}> = ({ assignment }) => {
+  currentUserId: number;
+}> = ({ assignment, currentUserId }) => {
   const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
+  const assigneesFuture = useAreaAssignees(
+    assignment.organization_id,
+    assignment.id
+  );
+  const messages = useMessages(messageIds);
   const [loadingAreaId, setLoadingAreaId] = useState<number | null>(null);
+
+  let hasMixedUsers = false;
+  if (
+    !assigneesFuture.isLoading &&
+    assigneesFuture.data &&
+    assigneesFuture.data.length != 1
+  ) {
+    hasMixedUsers = assigneesFuture.data
+      ?.slice(1)
+      .some((a) => a.user_id != assigneesFuture.data?.[0].user_id);
+  }
+
+  const errorLoadingAssignees = !!assigneesFuture.error;
+  const assignees = errorLoadingAssignees ? [] : assigneesFuture.data || [];
+
   return (
-    <ZUIFutures futures={{ org: orgFuture }}>
-      {({ data: { org } }) => (
+    <ZUIFuture future={orgFuture}>
+      {(org) => (
         <Box
           sx={{
             display: 'flex',
@@ -76,49 +99,74 @@ const Page: FC<{
           <Box>
             {areas.length > 0 ? (
               <List disablePadding>
-                {areas.map((area) => (
-                  <React.Fragment key={area.id}>
-                    <ListItem key={area.id} disablePadding>
-                      <ListItemButton
-                        href={`/canvass/${assignment.id}/areas/${area.id}`}
-                        onClick={() => {
-                          setLoadingAreaId(area.id);
-                        }}
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                          height: 64,
-                          justifyContent: 'space-between',
-                          px: 2,
-                        }}
-                      >
-                        <Box
+                {areas.map((area) => {
+                  const currentUserIsAssignedToThisArea = assignees.find(
+                    (a) => a.area_id == area.id && a.user_id == currentUserId
+                  );
+                  const showAssignedToMeChip =
+                    hasMixedUsers && currentUserIsAssignedToThisArea;
+
+                  return (
+                    <React.Fragment key={area.id}>
+                      <ListItem key={area.id} disablePadding>
+                        <ListItemButton
+                          href={`/canvass/${assignment.id}/areas/${area.id}`}
+                          onClick={() => {
+                            setLoadingAreaId(area.id);
+                          }}
                           sx={{
+                            alignItems: 'center',
                             display: 'flex',
-                            flexDirection: 'column',
-                            height: '100%',
-                            justifyContent: area.description
-                              ? 'flex-start'
-                              : 'center',
+                            height: 64,
+                            justifyContent: 'space-between',
+                            px: 2,
                           }}
                         >
-                          <Typography variant="body1">{area.title}</Typography>
-                          {area.description && (
-                            <Typography color="text.secondary" variant="body2">
-                              {area.description}
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              height: '100%',
+                              justifyContent: area.description
+                                ? 'flex-start'
+                                : 'center',
+                            }}
+                          >
+                            <Typography variant="body1">
+                              {area.title}
                             </Typography>
+                            {area.description && (
+                              <Typography
+                                color="text.secondary"
+                                variant="body2"
+                              >
+                                {area.description}
+                              </Typography>
+                            )}
+                          </Box>
+                          {loadingAreaId === area.id ? (
+                            <CircularProgress size={20} />
+                          ) : (
+                            <Box alignItems="center" display={'flex'}>
+                              {showAssignedToMeChip && (
+                                <Chip
+                                  label={messages.selectArea.assignedToMe()}
+                                  sx={(theme) => ({
+                                    backgroundColor: theme.palette.info.light,
+                                    color: theme.palette.common.white,
+                                    marginRight: 2,
+                                  })}
+                                />
+                              )}
+                              <ArrowForwardIos fontSize="small" />
+                            </Box>
                           )}
-                        </Box>
-                        {loadingAreaId === area.id ? (
-                          <CircularProgress size={20} />
-                        ) : (
-                          <ArrowForwardIos fontSize="small" />
-                        )}
-                      </ListItemButton>
-                    </ListItem>
-                    <Divider />
-                  </React.Fragment>
-                ))}
+                        </ListItemButton>
+                      </ListItem>
+                      <Divider />
+                    </React.Fragment>
+                  );
+                })}
               </List>
             ) : (
               <Typography>
@@ -128,16 +176,18 @@ const Page: FC<{
           </Box>
         </Box>
       )}
-    </ZUIFutures>
+    </ZUIFuture>
   );
 };
 
 type CanvassSelectAreaPageProps = {
   areaAssId: number;
+  myUserId: number;
 };
 
 const CanvassSelectAreaPage: FC<CanvassSelectAreaPageProps> = ({
   areaAssId,
+  myUserId,
 }) => {
   const myAssignments = useMyCanvassAssignments() || [];
   const assignment = myAssignments.find(
@@ -148,7 +198,7 @@ const CanvassSelectAreaPage: FC<CanvassSelectAreaPageProps> = ({
     notFound();
   }
 
-  return <Page assignment={assignment} />;
+  return <Page assignment={assignment} currentUserId={myUserId} />;
 };
 
 export default CanvassSelectAreaPage;

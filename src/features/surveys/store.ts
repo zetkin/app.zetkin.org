@@ -20,6 +20,7 @@ import {
 } from 'utils/storeUtils';
 import { SurveyResponseStats } from 'features/surveys/types';
 import { AutoLinkableSubmissions } from 'features/surveys/rpc/getAutoLinkableSubmissions';
+import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export interface SurveysStoreSlice {
   autoLinkableSubmissionsBySurveyId: Record<
@@ -239,6 +240,13 @@ const surveysSlice = createSlice({
             newOrder.default.indexOf(el1.data?.id ?? 0)
         );
     },
+    extendedSurveyError: (state, action: PayloadAction<[number, string]>) => {
+      const [surveyId, err] = action.payload;
+      if (!state.extendedSurveyBySurveyId[surveyId]) {
+        state.extendedSurveyBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.extendedSurveyBySurveyId[surveyId].error = err;
+    },
     extendedSurveyLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
       if (!state.extendedSurveyBySurveyId[surveyId]) {
@@ -311,6 +319,11 @@ const surveysSlice = createSlice({
       state.statsBySurveyId[surveyId].isLoading = false;
       state.statsBySurveyId[surveyId].loaded = new Date().toISOString();
       state.statsBySurveyId[surveyId].isStale = false;
+    },
+    submissionError: (state, action: PayloadAction<[number, string]>) => {
+      const [submissionId, err] = action.payload;
+      const submission = findOrAddItem(state.submissionList, submissionId);
+      submission.error = err;
     },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -549,11 +562,13 @@ export const {
   elementsLoad,
   elementsLoaded,
   elementsReordered,
+  extendedSurveyError,
   extendedSurveyLoad,
   extendedSurveyLoaded,
   responseStatsError,
   responseStatsLoad,
   responseStatsLoaded,
+  submissionError,
   submissionLoad,
   submissionLoaded,
   statsLoad,

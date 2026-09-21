@@ -8,11 +8,7 @@ import {
 
 import { MUIIcon, ZUISize, ZUIVariant } from '../types';
 
-export type ZUIButtonVariant =
-  | ZUIVariant
-  | 'destructive'
-  | 'warning'
-  | 'loading';
+export type ZUIButtonVariant = ZUIVariant | 'destructive' | 'warning';
 
 export interface ZUIButtonProps {
   /**
@@ -52,6 +48,11 @@ export interface ZUIButtonProps {
    * If you want the button to lead to a url.
    */
   href?: string;
+
+  /**
+   * If the button is loading.
+   */
+  isLoading?: boolean;
 
   /**
    * The text on the button.
@@ -157,6 +158,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   endIcon: EndIcon,
   fullWidth,
   href,
+  isLoading,
   label,
   noWrap,
   onClick,
@@ -165,7 +167,6 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   startIcon: StartIcon,
   variant,
 }) => {
-  const isLoading = variant === 'loading';
   return (
     <Button
       color={variant ? getColor(variant) : undefined}

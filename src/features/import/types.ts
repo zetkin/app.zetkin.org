@@ -123,6 +123,7 @@ export type IDFieldColumn = BaseColumn & {
 export type TagColumn = BaseColumn & {
   kind: ColumnKind.TAG;
   mapping: {
+    score?: number;
     tags: { id: number }[];
     value: CellData;
   }[];
@@ -132,6 +133,7 @@ export type OrgColumn = BaseColumn & {
   kind: ColumnKind.ORGANIZATION;
   mapping: {
     orgId: number | null;
+    score?: number;
     value: CellData;
   }[];
 };

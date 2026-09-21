@@ -30,7 +30,7 @@ import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import sortMetrics from 'features/canvass/utils/sortMetrics';
+import useSortedMetrics from 'features/canvass/hooks/useSortedMetrics';
 import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
 import BulkEditHouseholdsPage from './pages/BulkEditHouseholdsPage';
 import useEditHouseholds from 'features/canvass/hooks/useEditHouseholds';
@@ -68,7 +68,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
   );
   const { deleteHousehold, updateHousehold, updateLocation } =
     useLocationMutations(orgId, location.id);
-  const metrics = sortMetrics(metricsList);
+  const metrics = useSortedMetrics(metricsList);
 
   const {
     lastVisitByHouseholdId,
@@ -190,7 +190,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
           {selectedHouseholdId && (
             <HouseholdPage
               householdId={selectedHouseholdId}
+              lastVisit={lastVisitByHouseholdId[selectedHouseholdId] || null}
               location={location}
+              metrics={metrics}
               onBack={() => back()}
               onClose={onClose}
               onDelete={() => {
@@ -209,9 +211,6 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onHouseholdVisitStart={() => {
                 goto('householdVisit');
               }}
-              visitedInThisAssignment={
-                !!lastVisitByHouseholdId[selectedHouseholdId]
-              }
             />
           )}
         </Box>

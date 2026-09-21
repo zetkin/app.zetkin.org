@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Fragment, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import {
   Event,
@@ -28,20 +28,26 @@ type EventCardProps = {
 const EventCard: FC<EventCardProps> = ({ event, target }) => {
   const messages = useMessages(messageIds);
   const intl = useIntl();
+  const [isLoading, setIsLoading] = useState(false);
   const { signUp, undoSignup } = useEventCallActions(
     event.organization.id,
     event.id,
     target.id
   );
 
-  const isTargetBooked = target.future_actions.some(
-    (futureEvent) => futureEvent.id == event.id
+  const isTargetBooked = useMemo(
+    () =>
+      target.future_actions.some((futureEvent) => futureEvent.id == event.id),
+    [event.id, target.future_actions]
   );
 
   const idsOfEventsRespondedTo = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
   );
-  const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
+  const isSignedUp = useMemo(
+    () => idsOfEventsRespondedTo.includes(event.id),
+    [idsOfEventsRespondedTo, event.id]
+  );
 
   return (
     <MyActivityListItem
@@ -56,15 +62,23 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
               </ZUIText>,
             ]
           : [
-              <>
+              <Fragment key={event.id}>
                 <ZUIButton
-                  key={event.id}
+                  isLoading={isLoading}
                   label={
                     isSignedUp
                       ? messages.activities.events.undoSignUp()
                       : messages.activities.events.signUp()
                   }
-                  onClick={() => (isSignedUp ? undoSignup() : signUp())}
+                  onClick={async () => {
+                    setIsLoading(true);
+                    if (isSignedUp) {
+                      await undoSignup();
+                    } else {
+                      await signUp();
+                    }
+                    setIsLoading(false);
+                  }}
                   variant="primary"
                 />
                 {event.num_participants_available <
@@ -73,7 +87,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
                 {isSignedUp && (
                   <ZUISignUpChip name={target.first_name} status="signedUp" />
                 )}
-              </>,
+              </Fragment>,
             ]
       }
       iconTitle={Event}

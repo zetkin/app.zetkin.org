@@ -20,6 +20,7 @@ export default function useTagConfig(
 
       if (!map) {
         const newMap = {
+          score: undefined,
           tags: [{ id: tag.id }],
           value: value,
         };
@@ -37,7 +38,7 @@ export default function useTagConfig(
         const updatedTags = map.tags.concat({
           id: tag.id,
         });
-        const updatedMap = { ...map, tags: updatedTags };
+        const updatedMap = { ...map, score: undefined, tags: updatedTags };
 
         dispatch(
           columnUpdate([
@@ -64,6 +65,14 @@ export default function useTagConfig(
         ])
       );
     }
+  };
+
+  const getScore = (value: CellData): number | null => {
+    if (column.kind == ColumnKind.TAG) {
+      const map = column.mapping.find((m) => m.value === value);
+      return map?.score || null;
+    }
+    return null;
   };
 
   const getAssignedTags = (value: CellData): ZetkinAppliedTag[] => {
@@ -112,5 +121,5 @@ export default function useTagConfig(
     }
   };
 
-  return { assignTag, assignTags, getAssignedTags, unAssignTag };
+  return { assignTag, assignTags, getAssignedTags, getScore, unAssignTag };
 }
