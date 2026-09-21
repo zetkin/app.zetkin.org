@@ -19,7 +19,7 @@ const PersonEventListItem = ({ event }: { event: ZetkinEvent }) => {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            padding: '1.0em',
+            padding: 2,
           }}
         >
           <Typography>
