@@ -10,6 +10,8 @@ import SharedViewLayout from 'features/views/layout/SharedViewLayout';
 import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
+import ViewDataTableSkeleton from 'features/views/components/ViewDataTable/ViewDataTableSkeleton';
+import ViewLoadError from 'features/views/components/ViewLoadError';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
@@ -120,12 +122,16 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
 
   return (
     <ZUIFutures
+      errorIndicator={
+        <ViewLoadError orgId={parsedOrgId} viewId={parsedViewId} />
+      }
       futures={{
         cols: columnsFuture,
         customFields: customFieldsFuture,
         rows: rowsFuture,
         view: viewFuture,
       }}
+      loadingIndicator={<ViewDataTableSkeleton />}
     >
       {({ data: { cols, customFields, rows, view } }) => (
         <>
