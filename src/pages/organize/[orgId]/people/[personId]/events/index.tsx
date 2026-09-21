@@ -84,7 +84,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                   {upcomingEvents.length}
                 </Typography>
               </Box>
-              {upcomingEvents.length > 0 ? (
+              {upcomingEvents.length > 0 && (
                 <Card>
                   <List>
                     {upcomingEvents.map((event, index) => {
@@ -97,7 +97,8 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                     })}
                   </List>
                 </Card>
-              ) : (
+              )}
+              {upcomingEvents.length === 0 && (
                 <Typography>
                   <Msg id={profileMessageIds.events.noUpcoming} />
                 </Typography>
@@ -122,7 +123,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                   {pastEvents.length}
                 </Typography>
               </Box>
-              {pastEvents.length > 0 ? (
+              {pastEvents.length > 0 && (
                 <Card>
                   <List>
                     {pastEvents.map((event, index) => {
@@ -135,7 +136,8 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
                     })}
                   </List>
                 </Card>
-              ) : (
+              )}{' '}
+              {pastEvents.length === 0 && (
                 <Typography>
                   <Msg id={profileMessageIds.events.noPast} />
                 </Typography>
