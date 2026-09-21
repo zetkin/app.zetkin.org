@@ -39,7 +39,8 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
     <>
       <Head>
         <title>
-          {person?.first_name} {person?.last_name}
+          {person?.first_name} {person?.last_name} -{' '}
+          <Msg id={profileMessageIds.tabs.events} />
         </title>
       </Head>
       <ZUIFuture
