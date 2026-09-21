@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import { ScheduleOutlined } from '@mui/icons-material';
-import Link from 'next/link';
+import NextLink from 'next/link';
 
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
@@ -13,36 +13,38 @@ import getEventUrl from 'features/events/utils/getEventUrl';
 const PersonEventListItem = ({ event }: { event: ZetkinEvent }) => {
   const eventMessages = useMessages(eventMessageIds);
   return (
-    <Link href={getEventUrl(event)} passHref style={{ textDecoration: 'none' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '1.0em',
-        }}
-      >
-        <Typography>
-          {event.title ||
-            event.activity?.title ||
-            eventMessages.common.noTitle()}
-        </Typography>
-        <ZUIIconLabelRow
-          color="secondary"
-          iconLabels={[
-            {
-              icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
-              label: (
-                <ZUITimeSpan
-                  end={new Date(removeOffset(event.start_time))}
-                  start={new Date(removeOffset(event.end_time))}
-                />
-              ),
-            },
-          ]}
-          size="sm"
-        />
-      </Box>
-    </Link>
+    <NextLink href={getEventUrl(event)} legacyBehavior passHref>
+      <Link color="inherit" underline="none">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '1.0em',
+          }}
+        >
+          <Typography>
+            {event.title ||
+              event.activity?.title ||
+              eventMessages.common.noTitle()}
+          </Typography>
+          <ZUIIconLabelRow
+            color="secondary"
+            iconLabels={[
+              {
+                icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
+                label: (
+                  <ZUITimeSpan
+                    end={new Date(removeOffset(event.start_time))}
+                    start={new Date(removeOffset(event.end_time))}
+                  />
+                ),
+              },
+            ]}
+            size="sm"
+          />
+        </Box>
+      </Link>
+    </NextLink>
   );
 };
 
