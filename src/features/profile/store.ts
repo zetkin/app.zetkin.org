@@ -40,7 +40,7 @@ export interface ProfilesStoreSlice {
   fieldsList: RemoteList<ZetkinCustomField>;
   orgsByPersonId: Record<number, RemoteItem<PersonOrgData>>;
   notesByPersonId: Record<number, RemoteList<ZetkinPersonNote>>;
-  timelineByPersonId: Record<number, RemoteList<ZetkinTimelineAction>>;
+  eventsByPersonId: Record<number, RemoteList<ZetkinTimelineAction>>;
   personById: Record<number, RemoteItem<ZetkinPerson>>;
   surveySubmissionsByPersonId: Record<
     number,
@@ -49,6 +49,7 @@ export interface ProfilesStoreSlice {
 }
 
 const initialState: ProfilesStoreSlice = {
+  eventsByPersonId: {},
   fieldCreateError: null,
   fieldUpdateError: null,
   fieldsList: remoteList(),
@@ -56,7 +57,6 @@ const initialState: ProfilesStoreSlice = {
   orgsByPersonId: {},
   personById: {},
   surveySubmissionsByPersonId: {},
-  timelineByPersonId: {},
 };
 
 const profilesSlice = createSlice({
@@ -134,6 +134,19 @@ const profilesSlice = createSlice({
     fieldsLoaded: (state, action: PayloadAction<ZetkinCustomField[]>) => {
       state.fieldsList = remoteList(action.payload);
       state.fieldsList.loaded = new Date().toISOString();
+    },
+    personEventsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.eventsByPersonId[id] = remoteListLoad(
+        state.eventsByPersonId[id] ?? null
+      );
+    },
+    personEventsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinTimelineAction[]]>
+    ) => {
+      const [id, events] = action.payload;
+      state.eventsByPersonId[id] = remoteListLoaded(events);
     },
     personLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -237,19 +250,6 @@ const profilesSlice = createSlice({
       const [id, submissions] = action.payload;
       state.surveySubmissionsByPersonId[id] = remoteListLoaded(submissions);
     },
-    personTimelineLoad: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
-      state.timelineByPersonId[id] = remoteListLoad(
-        state.timelineByPersonId[id] ?? null
-      );
-    },
-    personTimelineLoaded: (
-      state,
-      action: PayloadAction<[number, ZetkinTimelineAction[]]>
-    ) => {
-      const [id, timeline] = action.payload;
-      state.timelineByPersonId[id] = remoteListLoaded(timeline);
-    },
     personUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [personId, attributes] = action.payload;
       const item = state.personById[personId];
@@ -328,6 +328,6 @@ export const {
   personsMerged,
   personSurveySubmissionsLoad,
   personSurveySubmissionsLoaded,
-  personTimelineLoad,
-  personTimelineLoaded,
+  personEventsLoad,
+  personEventsLoaded,
 } = profilesSlice.actions;

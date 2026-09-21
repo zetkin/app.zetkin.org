@@ -9,7 +9,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import usePerson from 'features/profile/hooks/usePerson';
-import usePersonTimeline from 'features/profile/hooks/usePersonTimeline';
+import usePersonEvents from 'features/profile/hooks/usePersonEvents';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
@@ -72,7 +72,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
   personId,
 }) => {
   const { data: person } = usePerson(orgId, personId);
-  const timelineFuture = usePersonTimeline(orgId, personId);
+  const personEventsFuture = usePersonEvents(orgId, personId);
 
   if (!person) {
     return null;
@@ -86,7 +86,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
         </title>
       </Head>
       <ZUIFuture
-        future={timelineFuture}
+        future={personEventsFuture}
         skeleton={
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
             <Skeleton variant="rounded" width={190} />
@@ -96,12 +96,12 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
           </Box>
         }
       >
-        {(timeline) => {
+        {(eventsTimeline) => {
           // Split in to "upcoming" and "past"
-          const upcomingEvents = timeline.filter(
+          const upcomingEvents = eventsTimeline.filter(
             (event) => new Date(event.data.action.start_time) > new Date()
           );
-          const pastEvents = timeline.filter(
+          const pastEvents = eventsTimeline.filter(
             (event) => new Date(event.data.action.end_time) < new Date()
           );
           return (

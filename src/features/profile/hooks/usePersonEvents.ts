@@ -1,27 +1,27 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinTimeline, ZetkinTimelineAction } from 'utils/types/zetkin';
-import { personTimelineLoad, personTimelineLoaded } from '../store';
+import { personEventsLoad, personEventsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
-export default function usePersonTimeline(
+export default function usePersonEvents(
   orgId: number,
   personId: number
 ): IFuture<ZetkinTimelineAction[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const timelineList = useAppSelector(
-    (state) => state.profiles.timelineByPersonId[personId]
+  const eventsList = useAppSelector(
+    (state) => state.profiles.eventsByPersonId[personId]
   );
 
-  return loadListIfNecessary(timelineList, dispatch, {
-    actionOnLoad: () => personTimelineLoad(personId),
-    actionOnSuccess: (data) => personTimelineLoaded([personId, data]),
+  return loadListIfNecessary(eventsList, dispatch, {
+    actionOnLoad: () => personEventsLoad(personId),
+    actionOnSuccess: (data) => personEventsLoaded([personId, data]),
     loader: async () => {
-      const timeline = await apiClient.get<ZetkinTimeline>(
+      const events = await apiClient.get<ZetkinTimeline>(
         `/api/orgs/${orgId}/people/${personId}/timeline`
       );
-      return timeline.map((entry) => ({
+      return events.map((entry) => ({
         ...entry,
         id: `${entry.event}-${entry.data.action.id}`,
       }));
