@@ -63,11 +63,11 @@ const VerifyPage: FC = () => {
               {!verificationSent && (
                 <ZUIButton
                   actionType="submit"
-                  disabled={loading}
                   fullWidth
+                  isLoading={loading}
                   label={messages.verify.sendVerification()}
                   size="large"
-                  variant={loading ? 'loading' : 'primary'}
+                  variant="primary"
                 />
               )}
               {verificationSent && (

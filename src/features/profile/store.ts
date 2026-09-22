@@ -16,6 +16,7 @@ import {
   ZetkinCustomField,
   ZetkinPerson,
   ZetkinSurveySubmission,
+  ZetkinTimelineAction,
 } from 'utils/types/zetkin';
 import { ZetkinPersonNote } from './types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
@@ -39,6 +40,7 @@ export interface ProfilesStoreSlice {
   fieldsList: RemoteList<ZetkinCustomField>;
   orgsByPersonId: Record<number, RemoteItem<PersonOrgData>>;
   notesByPersonId: Record<number, RemoteList<ZetkinPersonNote>>;
+  eventsByPersonId: Record<number, RemoteList<ZetkinTimelineAction>>;
   personById: Record<number, RemoteItem<ZetkinPerson>>;
   surveySubmissionsByPersonId: Record<
     number,
@@ -47,6 +49,7 @@ export interface ProfilesStoreSlice {
 }
 
 const initialState: ProfilesStoreSlice = {
+  eventsByPersonId: {},
   fieldCreateError: null,
   fieldUpdateError: null,
   fieldsList: remoteList(),
@@ -131,6 +134,19 @@ const profilesSlice = createSlice({
     fieldsLoaded: (state, action: PayloadAction<ZetkinCustomField[]>) => {
       state.fieldsList = remoteList(action.payload);
       state.fieldsList.loaded = new Date().toISOString();
+    },
+    personEventsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      state.eventsByPersonId[id] = remoteListLoad(
+        state.eventsByPersonId[id] ?? null
+      );
+    },
+    personEventsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinTimelineAction[]]>
+    ) => {
+      const [id, events] = action.payload;
+      state.eventsByPersonId[id] = remoteListLoaded(events);
     },
     personLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -312,4 +328,6 @@ export const {
   personsMerged,
   personSurveySubmissionsLoad,
   personSurveySubmissionsLoaded,
+  personEventsLoad,
+  personEventsLoaded,
 } = profilesSlice.actions;

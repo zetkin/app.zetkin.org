@@ -44,9 +44,8 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
       tabs={[
         { href: `/`, label: messages.tabs.profile() },
         {
-          href: `/timeline`,
-          label: messages.tabs.timeline(),
-          tabProps: { disabled: true },
+          href: `/events`,
+          label: messages.tabs.events(),
         },
         {
           href: `/manage`,

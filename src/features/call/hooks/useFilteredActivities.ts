@@ -241,5 +241,6 @@ export default function useFilteredActivities(orgId: number) {
     filteredSurveys,
     getDateRange,
     surveys: activeSurveys,
+    surveysLoading: surveysFuture.isLoading,
   };
 }

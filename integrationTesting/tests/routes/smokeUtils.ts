@@ -420,6 +420,13 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     ActivistTag,
     OrganizerTag,
   ]);
+  moxy.setZetkinApiMock('/orgs/1/people/1/timeline', 'get', [
+    {
+      data: { action: SmokeEvent },
+      event: 'action',
+      timestamp: SmokeEvent.start_time,
+    },
+  ]);
   moxy.setZetkinApiMock('/orgs/1/people/duplicates', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
   moxy.setZetkinApiMock('/orgs/1/people/queries', 'get', []);

@@ -3,6 +3,14 @@
   "version": "41.0.0",
   "private": true,
   "license": "UNLICENSED",
+  "packageManager": "npm@12.0.2",
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "12.0.2",
+      "onFail": "warn"
+    }
+  },
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build",

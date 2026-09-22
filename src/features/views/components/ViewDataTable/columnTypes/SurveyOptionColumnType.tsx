@@ -1,4 +1,4 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import { getGridBooleanOperators, GridColDef } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 import { Check, History } from '@mui/icons-material';
@@ -32,7 +32,29 @@ export default class SurveyOptionColumnType implements IColumnType<
   }
 
   getColDef(): Omit<GridColDef<SurveyOptionViewColumn>, 'field'> {
+    const booleanFilterOperator = getGridBooleanOperators()[0];
+
     return {
+      filterOperators: [
+        {
+          ...booleanFilterOperator,
+          getApplyFilterFn: (filterItem) => {
+            if (filterItem.value === undefined) {
+              return null;
+            }
+
+            const expectedValue = String(filterItem.value) === 'true';
+            return (cell: SurveyOptionViewCell) => {
+              const sorted = cell?.concat().sort((sub0, sub1) => {
+                const d0 = new Date(sub0.submitted);
+                const d1 = new Date(sub1.submitted);
+                return d1.getTime() - d0.getTime();
+              });
+              return !!sorted?.[0]?.selected === expectedValue;
+            };
+          },
+        },
+      ],
       headerAlign: 'center',
       renderCell: (params) => {
         return <Cell cell={params.value} />;
