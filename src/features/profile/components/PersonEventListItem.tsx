@@ -1,5 +1,9 @@
 import { Box, Link, Typography } from '@mui/material';
-import { ScheduleOutlined } from '@mui/icons-material';
+import {
+  CategoryOutlined,
+  GroupWorkOutlined,
+  ScheduleOutlined,
+} from '@mui/icons-material';
 import NextLink from 'next/link';
 
 import ZUITimeSpan from 'zui/ZUITimeSpan';
@@ -39,6 +43,33 @@ const PersonEventListItem = ({ event }: { event: ZetkinEvent }) => {
                   />
                 ),
               },
+              ...(event.campaign
+                ? [
+                    {
+                      icon: (
+                        <GroupWorkOutlined
+                          color="secondary"
+                          fontSize="inherit"
+                        />
+                      ),
+                      label: event.campaign.title,
+                    },
+                  ]
+                : []),
+              // Without a title, the activity is already shown as the title
+              ...(event.activity && event.title
+                ? [
+                    {
+                      icon: (
+                        <CategoryOutlined
+                          color="secondary"
+                          fontSize="inherit"
+                        />
+                      ),
+                      label: event.activity.title,
+                    },
+                  ]
+                : []),
             ]}
             size="sm"
           />
