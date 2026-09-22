@@ -9,7 +9,7 @@ import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import usePerson from 'features/profile/hooks/usePerson';
 import usePersonEvents from 'features/profile/hooks/usePersonEvents';
 import ZUIFuture from 'zui/ZUIFuture';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import profileMessageIds from 'features/profile/l10n/messageIds';
 import PersonEventListItem from 'features/profile/components/PersonEventListItem';
 import { getPersonScaffoldProps } from '../index';
@@ -30,6 +30,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
 }) => {
   const { data: person } = usePerson(orgId, personId);
   const personEventsFuture = usePersonEvents(orgId, personId);
+  const profileMessages = useMessages(profileMessageIds);
 
   if (!person) {
     return null;
@@ -40,7 +41,7 @@ const PersonEventsPage: PageWithLayout<PersonEventsPageProps> = ({
       <Head>
         <title>
           {person?.first_name} {person?.last_name} -{' '}
-          <Msg id={profileMessageIds.tabs.events} />
+          {profileMessages.tabs.events()}
         </title>
       </Head>
       <ZUIFuture
