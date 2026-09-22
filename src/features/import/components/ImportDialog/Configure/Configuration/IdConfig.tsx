@@ -35,6 +35,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
     if (skipUnknown) {
       updateSheetSettings({ skipUnknown: false });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importID]);
 
   const idField = uiDataColumn.originalColumn.idField;

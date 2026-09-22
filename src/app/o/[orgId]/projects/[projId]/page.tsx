@@ -12,7 +12,7 @@ type Props = {
 };
 
 const Page: FC<Props> = ({ params }) => {
-  return <PublicProjPage campId={params.projId} orgId={params.orgId} />;
+  return <PublicProjPage orgId={params.orgId} projectId={params.projId} />;
 };
 
 export default Page;

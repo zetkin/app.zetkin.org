@@ -9,7 +9,7 @@ import {
 } from 'features/canvass/types';
 
 const paramsSchema = z.object({
-  color: z.optional(z.nullable(z.string())),
+  color: z.optional(z.string()),
   householdIds: z.array(z.number()),
   level: z.optional(z.number()),
   locationId: z.number(),
@@ -39,7 +39,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       HouseholdWithColor,
       HouseholdPatchBody
     >(`/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`, {
-      color: (color ?? 'clear') as HouseholdColor,
+      color: color != undefined ? (color as HouseholdColor) : undefined,
       level,
     });
 

@@ -1,6 +1,9 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.profile', {
+  customFields: {
+    notEditable: m('This field cannot be edited by your organization'),
+  },
   delete: {
     button: m('Delete person'),
     confirm: m<{ name: string; org: string }>(
@@ -18,6 +21,12 @@ export default makeMessages('feat.profile', {
   editPersonHeader: m<{ person: string }>('Edit {person}'),
   ellipsisMenu: {
     merge: m('Merge with...'),
+  },
+  events: {
+    noPast: m('No past events'),
+    noUpcoming: m('No upcoming events'),
+    past: m('Past events'),
+    upcoming: m('Upcoming events'),
   },
   genders: {
     f: m('Female'),
@@ -57,10 +66,14 @@ export default makeMessages('feat.profile', {
     noRole: m('No role'),
   },
   saveButton: m('Save'),
+  surveySubmissions: {
+    showMore: m<{ numExtra: number }>('+ {numExtra} more'),
+    title: m('Survey Submissions'),
+  },
   tabs: {
+    events: m('Events'),
     manage: m('Manage'),
     profile: m('Profile'),
-    timeline: m('Timeline'),
   },
   tags: {
     createAndApplyLabel: m('Create and apply'),

@@ -4,11 +4,11 @@ import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
-import { truncateOnMiddle } from 'utils/stringUtils';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmailLinks from 'features/emails/hooks/useLinks';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
@@ -53,20 +53,17 @@ const EmailClick = ({
 }: EmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const emailsSorted = emails.sort((e1, e2) => {
-    return e1.title!.localeCompare(e2.title!);
-  });
-  const projects = useCampaigns(orgId).data || [];
-  const projectsSorted = projects.sort((pf1, pf2) => {
-    return pf1.title.localeCompare(pf2.title);
-  });
+  const projects = useProjects(orgId).data || [];
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
       operator: 'clicked',
     });
   const linkList = useEmailLinks(orgId, filter.config?.email).data || [];
-  const linkListSorted = linkList.sort((l1, l2) => {
+  const linkListFilteredByUniqueTag = linkList.filter(
+    (link, index, self) => self.findIndex((l) => l.tag === link.tag) === index
+  );
+  const linkListSorted = linkListFilteredByUniqueTag.sort((l1, l2) => {
     return l1.url.localeCompare(l2.url);
   });
 
@@ -74,10 +71,10 @@ const EmailClick = ({
     filter.config.campaign
       ? LINK_SELECT_SCOPE.LINK_IN_PROJECT
       : filter.config.email && !filter.config.links
-      ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
-      : filter.config.email && filter.config.links
-      ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
-      : LINK_SELECT_SCOPE.ANY_LINK
+        ? LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL
+        : filter.config.email && filter.config.links
+          ? LINK_SELECT_SCOPE.FOLLOWING_LINKS
+          : LINK_SELECT_SCOPE.ANY_LINK
   );
 
   const handleTimeFrameChange = (range: {
@@ -152,31 +149,14 @@ const EmailClick = ({
             emailSelect:
               linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL ||
               linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS ? (
-                <StyledSelect
-                  minWidth="10rem"
-                  onChange={(e) =>
-                    setValueToKey('email', parseInt(e.target.value))
-                  }
-                  value={filter.config.email || ''}
-                >
-                  {emailsSorted.map((email) => (
-                    <MenuItem key={email.id} value={email.id}>
-                      <Tooltip
-                        placement="right-start"
-                        title={
-                          !email.title || email.title.length < 40
-                            ? ''
-                            : email.title
-                        }
-                      >
-                        <Box>{`"${truncateOnMiddle(
-                          email.title ?? '',
-                          40
-                        )}"`}</Box>
-                      </Tooltip>
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
+                <StyledAutocomplete
+                  items={emails.map((email) => ({
+                    id: email.id,
+                    label: email.title ?? '',
+                  }))}
+                  onChange={(e) => setValueToKey('email', +e.target.value)}
+                  value={filter.config.email}
+                />
               ) : null,
             linkScopeSelect: (
               <StyledSelect
@@ -209,14 +189,17 @@ const EmailClick = ({
                         <Tooltip key={`link-${link.id}`} title={link.url}>
                           <Chip
                             label={link.url.split('://')[1]}
-                            onDelete={() =>
+                            onDelete={() => {
+                              const idsToRemove = linkList
+                                .filter((l) => l.tag === link.tag)
+                                .map((l) => l.id);
                               setValueToKey(
                                 'links',
                                 filter.config.links!.filter(
-                                  (linkId) => linkId !== link.id
+                                  (linkId) => !idsToRemove.includes(linkId)
                                 )
-                              )
-                            }
+                              );
+                            }}
                             sx={{
                               margin: '3px',
                               maxWidth: '200px',
@@ -242,17 +225,25 @@ const EmailClick = ({
                         <Msg id={messageIds.misc.noOptionsInvalidEmail} />
                       )
                     }
-                    onChange={(_, value) =>
-                      setValueToKey(
-                        'links',
-                        value.map((link) => link.id)
-                      )
-                    }
-                    options={linkList.map((link) => ({
+                    onChange={(_, value) => {
+                      const selectedTags = new Set(
+                        value.map(
+                          (selected) =>
+                            linkListFilteredByUniqueTag.find(
+                              (l) => l.id === selected.id
+                            )?.tag
+                        )
+                      );
+                      const allIds = linkList
+                        .filter((link) => selectedTags.has(link.tag))
+                        .map((link) => link.id);
+                      setValueToKey('links', allIds);
+                    }}
+                    options={linkListFilteredByUniqueTag.map((link) => ({
                       id: link.id,
                       title: link.url.split('://')[1],
                     }))}
-                    value={linkList
+                    value={linkListFilteredByUniqueTag
                       .filter(
                         (link) =>
                           filter.config.links?.includes(link.id) || false
@@ -278,19 +269,14 @@ const EmailClick = ({
             ),
             projectSelect:
               linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT ? (
-                <StyledSelect
-                  minWidth="10rem"
-                  onChange={(e) =>
-                    setValueToKey('campaign', parseInt(e.target.value))
-                  }
-                  value={filter.config.campaign || ''}
-                >
-                  {projectsSorted.map((project) => (
-                    <MenuItem key={`project-${project.id}`} value={project.id}>
-                      {`"${project.title}"`}
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
+                <StyledAutocomplete
+                  items={projects.map((project) => ({
+                    id: project.id,
+                    label: project.title,
+                  }))}
+                  onChange={(e) => setValueToKey('campaign', +e.target.value)}
+                  value={filter.config.campaign}
+                />
               ) : null,
             timeFrame: (
               <TimeFrame

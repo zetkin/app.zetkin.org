@@ -29,6 +29,7 @@ const PreviewTab: FC = () => {
     if (user && destinationEmailAddress == '') {
       setDestinationEmailAddress(user.email);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.email]);
 
   if (!user) {

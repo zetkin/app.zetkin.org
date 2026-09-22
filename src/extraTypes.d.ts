@@ -1,3 +1,5 @@
+declare module '*.css';
+
 interface CSSStyleSheet {
   addRule(selector?: string, style?: string, index?: number): number;
   deleteRule(index: number): void;

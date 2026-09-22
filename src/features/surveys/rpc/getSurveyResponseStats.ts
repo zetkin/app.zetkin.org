@@ -6,12 +6,18 @@ import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
   ZetkinSurveyExtended,
-  ZetkinSurveyOption,
-  ZetkinSurveyOptionsQuestionElement,
-  ZetkinSurveyQuestionResponse,
   ZetkinSurveySubmission,
-  ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
+import {
+  isOptionsResponse,
+  isTextResponse,
+  OptionsQuestionStats,
+  QuestionStats,
+  ResponseStatsCounter,
+  SubmissionStats,
+  SurveyResponseStats,
+  TextQuestionStats,
+} from 'features/surveys/types';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -20,75 +26,10 @@ const paramsSchema = z.object({
 
 type Params = z.input<typeof paramsSchema>;
 
-export type OptionsQuestionStats = {
-  answerCount: number;
-  multipleSelectedOptionsCount: number;
-  options: {
-    count: number;
-    option: ZetkinSurveyOption;
-  }[];
-  question: ZetkinSurveyOptionsQuestionElement;
-  totalSelectedOptionsCount: number;
-};
-
-export type TextQuestionStats = {
-  answerCount: number;
-  question: ZetkinSurveyTextQuestionElement;
-  topWordFrequencies: Record<string, number>;
-  totalUniqueWordCount: number;
-  totalWordCount: number;
-};
-
-export type QuestionStats = OptionsQuestionStats | TextQuestionStats;
-
-export type SubmissionStats = {
-  answeredTextQuestions: number[];
-  submissionId: number;
-};
-
-export type SurveyResponseStats = {
-  id: number;
-  questions: QuestionStats[];
-  submissionStats: SubmissionStats[];
-};
-
 export const getSurveyResponseStatsDef = {
   handler: handle,
   name: 'getSurveyResponseStats',
   schema: paramsSchema,
-};
-
-type ResponseStatsCounter = {
-  answerCounter: number;
-  multipleSelectedOptionsCount: number;
-  selectedOptions: Record<
-    number,
-    {
-      count: 0;
-      option: ZetkinSurveyOption;
-    }
-  >;
-  topWordFrequencies: Record<string, number>;
-  totalSelectedOptionsCounts: number;
-  totalUniqueWordCount: number;
-  totalWordCounts: number;
-  wordFrequencies: Record<string, number>;
-};
-
-export const isTextResponse = (response: ZetkinSurveyQuestionResponse) => {
-  return 'response' in response;
-};
-
-export const isOptionsResponse = (response: ZetkinSurveyQuestionResponse) => {
-  return 'options' in response;
-};
-
-export const isTextStats = (questionStats: QuestionStats) => {
-  return 'topWordFrequencies' in questionStats;
-};
-
-export const isOptionsStats = (questionStats: QuestionStats) => {
-  return 'options' in questionStats;
 };
 
 const initializeStatsCounters = (survey: ZetkinSurveyExtended) => {
@@ -252,7 +193,7 @@ async function handle(
 
   const [survey, submissions]: [
     ZetkinSurveyExtended,
-    ZetkinSurveySubmission[]
+    ZetkinSurveySubmission[],
   ] = await Promise.all([
     apiClient.get<ZetkinSurveyExtended>(
       `/api/orgs/${orgId}/surveys/${surveyId}`

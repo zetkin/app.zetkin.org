@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { isInteger, stringToBool, truncateOnMiddle } from './stringUtils';
 
 describe('stringToBool()', () => {

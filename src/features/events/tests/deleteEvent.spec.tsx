@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { renderHook } from '@testing-library/react';
 
 import createStore from 'core/store';
@@ -7,7 +8,7 @@ import mockEvent from 'utils/testing/mocks/mockEvent';
 import mockState from 'utils/testing/mocks/mockState';
 import { remoteItem } from 'utils/storeUtils';
 import { remoteListWithEventItems } from '../utils/testUtils';
-import useCampaignEvents from 'features/campaigns/hooks/useCampaignEvents';
+import useProjectEvents from 'features/projects/hooks/useProjectEvents';
 import useEvent from '../hooks/useEvent';
 import useEventsFromDateRange from '../hooks/useEventsFromDateRange';
 
@@ -34,11 +35,11 @@ describe('Deleting an event', () => {
       events: {
         ...emptyState.events,
         eventList: remoteListWithEventItem,
-        eventsByCampaignId: {
-          1: remoteListWithEventItem,
-        },
         eventsByDate: {
           [event.start_time.slice(0, 10)]: remoteListWithEventItem,
+        },
+        eventsByProjectId: {
+          1: remoteListWithEventItem,
         },
       },
     });
@@ -53,7 +54,7 @@ describe('Deleting an event', () => {
     expect(result.current).toBe(null);
   });
 
-  it('does not return deleted events when getting events by campaign date', () => {
+  it('does not return deleted events when getting events by project date', () => {
     const endTime = new Date();
     endTime.setDate(endTime.getDate() + 1);
     const firstEvent = mockEvent();
@@ -79,11 +80,11 @@ describe('Deleting an event', () => {
       events: {
         ...emptyState.events,
         eventList: eventItemsList,
-        eventsByCampaignId: {
-          1: eventItemsList,
-        },
         eventsByDate: {
           [firstEvent.start_time.slice(0, 10)]: eventItemsList,
+        },
+        eventsByProjectId: {
+          1: eventItemsList,
         },
       },
     });
@@ -92,7 +93,7 @@ describe('Deleting an event', () => {
     store.dispatch(eventDeleted(firstEvent.id));
 
     const { result } = renderHook(
-      () => useCampaignEvents(firstEvent.organization.id, 1),
+      () => useProjectEvents(firstEvent.organization.id, 1),
       { wrapper: makeWrapper(store) }
     );
 
@@ -138,13 +139,13 @@ describe('Deleting an event', () => {
       events: {
         ...emptyState.events,
         eventList: eventItemsList,
-        eventsByCampaignId: {
-          1: eventItemsList,
-        },
         eventsByDate: {
           [yesterday.toISOString().slice(0, 10)]: eventItemsList,
           [today.toISOString().slice(0, 10)]: eventItemsList,
           [tomorrow.toISOString().slice(0, 10)]: eventItemsList,
+        },
+        eventsByProjectId: {
+          1: eventItemsList,
         },
       },
     });
@@ -159,8 +160,8 @@ describe('Deleting an event', () => {
       }
     );
 
-    expect(result.current).toHaveLength(2);
-    expect(result.current[0].data.id).toBe(2);
-    expect(result.current[1].data.id).toBe(2);
+    expect(result.current.data).toHaveLength(2);
+    expect(result.current.data?.[0].data.id).toBe(2);
+    expect(result.current.data?.[1].data.id).toBe(2);
   });
 });

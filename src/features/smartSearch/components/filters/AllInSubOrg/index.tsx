@@ -9,6 +9,7 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from '../../types';
+import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
@@ -107,29 +108,20 @@ const AllInSuborg: FC<Props> = ({
   );
 
   const singleSuborgSelect = (
-    <StyledSelect
-      defaultValue={selectedSuborgs[0]?.id}
-      onChange={(ev) => {
-        const selectedSuborgId = parseInt(ev.target.value);
+    <StyledAutocomplete
+      items={activeSuborgs.map((suborg) => ({
+        id: suborg.id,
+        label: suborg.title,
+      }))}
+      onChange={(e) => {
+        const orgId = +e.target.value;
         setConfig({
           ...filter.config,
-          organizations: [selectedSuborgId],
+          organizations: [orgId],
         });
       }}
-    >
-      {activeSuborgs.map((suborg) => (
-        <MenuItem
-          key={suborg.id}
-          disabled={
-            organizationsConfigIsArray &&
-            organizationsConfig.includes(suborg.id)
-          }
-          value={suborg.id}
-        >
-          {suborg.title}
-        </MenuItem>
-      ))}
-    </StyledSelect>
+      value={selectedSuborgs[0]?.id}
+    />
   );
 
   const multipleSuborgsSelect = (

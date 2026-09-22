@@ -38,6 +38,7 @@ const Matching = ({
     } else if (option == MATCHING.ONCE) {
       onChange({ max: undefined, min: undefined });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [min, max, option]);
 
   const matchingSelect = (

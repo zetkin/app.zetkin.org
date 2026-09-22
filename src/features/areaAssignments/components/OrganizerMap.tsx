@@ -30,7 +30,6 @@ import {
   ZetkinLocation,
 } from '../types';
 import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
-import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import OrganizerMapFilters from './OrganizerMapFilters';
 import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
 import AreaSelect from './AreaSelect';
@@ -54,9 +53,8 @@ type OrganizerMapProps = {
 };
 
 export type MapStyle = {
-  area: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
-  location: 'dot' | 'households' | 'progress' | 'hide';
-  overlay: 'assignees' | 'households' | 'progress' | 'hide';
+  area: 'assignees' | 'outlined';
+  overlay: 'assignees';
 };
 
 type SettingName = 'layers' | 'filters' | 'select';
@@ -75,7 +73,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     `mapStyle-${areaAssId}`,
     {
       area: 'assignees',
-      location: 'dot',
       overlay: 'assignees',
     }
   );
@@ -84,7 +81,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | number[]>(null);
   const [selectedId, setSelectedId] = useState(0);
   const [filterText, setFilterText] = useState('');
-  const { onAssigneesFilterChange } = useContext(assigneesFilterContext);
   const { setActiveGroupIds, setActiveTagIdsByGroup } =
     useContext(areaFilterContext);
   const router = useRouter();
@@ -134,8 +130,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     startTransition(() => {
       setSettingsOpen(null);
       setSelectedId(0);
-      onAssigneesFilterChange(null);
-      setFilteredAreaIds(null);
       setActiveGroupIds([]);
       setActiveTagIdsByGroup({});
       setFilterText('');
@@ -377,7 +371,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             areaStats={areaStats}
             areaStyle={mapStyle.area}
             locations={locations}
-            locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {
               startTransition(() => {
                 setSelectedId(newId);

@@ -26,7 +26,9 @@ import ClusterImageRenderer from './ClusterImageRenderer';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useIsMobile from 'utils/hooks/useIsMobile';
+
 const BOUNDS_PADDING = 20;
+const ICON_OFFSET = 15;
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -105,6 +107,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         bounds: boundsForSelectedArea,
         fitBoundsOptions: { padding: BOUNDS_PADDING },
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [boundsForSelectedArea]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
@@ -168,6 +171,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         }) ?? [],
       type: 'FeatureCollection',
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations.data]);
 
   const selectedLocation = useMemo(() => {
@@ -176,6 +180,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
 
     return locations.data?.find((loc) => loc.id == selectedLocationId) || null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations]);
 
   const locationTitles = useMemo(() => {
@@ -256,7 +261,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             location.latitude,
           ]);
           const dx = screenPos.x - markerPos.markerX;
-          const dy = screenPos.y - markerPos.markerY;
+          const dy = screenPos.y - ICON_OFFSET - markerPos.markerY;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < nearestDistance) {
@@ -276,12 +281,14 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     } catch {
       // Do nothing for now
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, selectedLocationId, locations]);
 
   useEffect(() => {
     if (created) {
       updateSelection();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [created, locations]);
 
   if (!locations.data) {

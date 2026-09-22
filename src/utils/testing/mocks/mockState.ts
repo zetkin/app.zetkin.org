@@ -16,6 +16,7 @@ export default function mockState(overrides?: RootState) {
     },
     areas: {
       areaList: remoteList(),
+      assignmentStatsByAreaId: {},
       tagsByAreaId: {},
     },
     breadcrumbs: {
@@ -23,31 +24,21 @@ export default function mockState(overrides?: RootState) {
     },
     call: {
       activeLaneIndex: 0,
+      finishedCalls: remoteList(),
       lanes: [],
       myAssignmentsList: remoteList(),
-      outgoingCalls: remoteList(),
-      queueHasError: null,
+      queueError: null,
+      unfinishedCalls: remoteList(),
       upcomingEventsList: remoteList(),
     },
     callAssignments: {
       assignmentList: remoteList(),
-      callAssignmentIdsByCampaignId: {},
+      callAssignmentIdsByProjectId: {},
       callList: remoteList(),
       callersById: {},
       simpleStatsById: {},
       statsById: {},
       userAssignmentList: remoteList(),
-    },
-    campaigns: {
-      campaignList: remoteList(),
-      campaignsByOrgId: {},
-      filters: {
-        customDatesToFilterBy: [null, null],
-        dateFilterState: null,
-        eventTypesToFilterBy: [],
-        geojsonToFilterBy: [],
-      },
-      recentlyCreatedCampaign: null,
     },
     canvass: {
       householdsByLocationId: {},
@@ -65,13 +56,24 @@ export default function mockState(overrides?: RootState) {
       insightsByEmailId: {},
       linksByEmailId: {},
       statsById: {},
+      themeEditorValue: {
+        block_attributes: '',
+        css: '',
+        frame_mjml: '',
+      },
+      themeJsonError: {
+        block_attributes: false,
+        css: false,
+        frame_mjml: false,
+      },
       themeList: remoteList(),
+      themeUpdateError: null,
     },
     events: {
       allEventsList: remoteList(),
       eventList: remoteList(),
-      eventsByCampaignId: {},
       eventsByDate: {},
+      eventsByProjectId: {},
       filters: {
         selectedActions: [],
         selectedStates: [],
@@ -124,6 +126,7 @@ export default function mockState(overrides?: RootState) {
         orgIdsToFilterBy: [],
       },
       orgList: remoteList(),
+      rootOrgByOrgId: {},
       statsBySuborgId: {},
       subOrgsByOrgId: {},
       suborgsWithStats: remoteList(),
@@ -131,10 +134,25 @@ export default function mockState(overrides?: RootState) {
       userMembershipList: remoteList(),
     },
     profiles: {
+      eventsByPersonId: {},
+      fieldCreateError: null,
+      fieldUpdateError: null,
       fieldsList: remoteList(),
       notesByPersonId: {},
       orgsByPersonId: {},
       personById: {},
+      surveySubmissionsByPersonId: {},
+    },
+    projects: {
+      filters: {
+        customDatesToFilterBy: [null, null],
+        dateFilterState: null,
+        eventTypesToFilterBy: [],
+        geojsonToFilterBy: [],
+      },
+      projectList: remoteList(),
+      projectsByOrgId: {},
+      recentlyCreatedProject: null,
     },
     search: {
       matchesByQuery: {},
@@ -143,17 +161,20 @@ export default function mockState(overrides?: RootState) {
       officialMembershipsList: remoteList(),
     },
     smartSearch: {
+      eventsByOrgId: {},
       queryList: remoteList(),
+      recursiveEventsByOrgId: {},
       statsByFilterSpec: {},
     },
     surveys: {
+      autoLinkableSubmissionsBySurveyId: {},
       elementsBySurveyId: {},
       extendedSurveyBySurveyId: {},
       responseStatsBySurveyId: {},
       statsBySurveyId: {},
       submissionList: remoteList(),
       submissionsBySurveyId: {},
-      surveyIdsByCampaignId: {},
+      surveyIdsByProjectId: {},
       surveyList: remoteList(),
       surveysWithElementsList: remoteList(),
     },
@@ -165,7 +186,7 @@ export default function mockState(overrides?: RootState) {
     tasks: {
       assignedTasksByTaskId: {},
       statsById: {},
-      taskIdsByCampaignId: {},
+      taskIdsByProjectId: {},
       tasksList: remoteList(),
     },
     user: {
@@ -179,7 +200,7 @@ export default function mockState(overrides?: RootState) {
       officialList: remoteList(),
       recentlyCreatedFolder: null,
       rowsByViewId: {},
-      viewList: remoteList(),
+      viewsByOrgId: {},
     },
   };
 

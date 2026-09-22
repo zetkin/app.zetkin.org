@@ -3,8 +3,13 @@ import dayjs from 'dayjs';
 import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
+import {
+  ZetkinEvent,
+  ZetkinOrganization,
+  ZetkinUser,
+} from 'utils/types/zetkin';
 import icsFromEvents from 'features/public/utils/icsFromEvents';
+import { getBrowserLanguage } from 'utils/locale';
 
 export async function GET(
   _req: Request,
@@ -34,7 +39,20 @@ export async function GET(
 
   const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
 
-  return new Response(icsFromEvents(org.title, events, org), {
+  let user: ZetkinUser | null;
+
+  try {
+    user = await apiClient.get<ZetkinUser>('/api/users/me');
+  } catch (e) {
+    user = null;
+  }
+
+  const lang =
+    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
+
+  const ics = await icsFromEvents(org.title, events, org, lang);
+
+  return new Response(ics, {
     headers: { 'Content-Type': 'text/calendar' },
   });
 }

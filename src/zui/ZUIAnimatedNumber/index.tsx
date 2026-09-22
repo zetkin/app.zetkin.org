@@ -60,6 +60,7 @@ const ZUIAnimatedNumber: FC<ZUIAnimatedNumberProps> = ({
     // Restart animation
     animRef.current.startTime = null;
     animRef.current.requestId = requestAnimationFrame(animate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return children(animatedValue.toFixed(decimals));

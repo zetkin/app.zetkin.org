@@ -66,6 +66,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
     return keys.map((key) => ({ ...choices[key], key }));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchResults = useMemo(() => search(), [searchString]);
 
   const choiceContainerRef = useRef<HTMLDivElement>();

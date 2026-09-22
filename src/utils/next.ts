@@ -226,6 +226,8 @@ export const scaffold =
         ...result.props,
         envVars: omitUndefined({
           FEAT_AREAS: process.env.FEAT_AREAS,
+          FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
+          FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
           FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
           FEAT_PERSON_NOTES: process.env.FEAT_PERSON_NOTES,
           FEAT_TASKS: process.env.FEAT_TASKS,
@@ -237,6 +239,7 @@ export const scaffold =
           TILESERVER:
             process.env.TILESERVER || 'https://tile.openstreetmap.org',
           ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+          ZETKIN_GEN2_CALL_URL: process.env.ZETKIN_GEN2_CALL_URL,
           ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
           ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
         }),

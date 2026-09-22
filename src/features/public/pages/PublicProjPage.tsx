@@ -21,28 +21,28 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
+import useFilteredProjectEvents from 'features/projects/hooks/useFilteredProjectEvents';
 import NoEventsBlurb from 'features/public/components/NoEventsBlurb';
-import { filtersUpdated } from 'features/campaigns/store';
-import messageIds from 'features/campaigns/l10n/messageIds';
-import useCampaign from 'features/campaigns/hooks/useCampaign';
+import { filtersUpdated } from 'features/projects/store';
+import messageIds from 'features/projects/l10n/messageIds';
+import useProject from 'features/projects/hooks/useProject';
 import SignupChoiceModal from 'features/organizations/components/SignupChoiceModal';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
 
 type Props = {
-  campId: number;
   orgId: number;
+  projectId: number;
 };
 
-const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
+const PublicProjectPage: FC<Props> = ({ projectId, orgId }) => {
   const intl = useIntl();
   const router = useRouter();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
   const user = useUser();
   const dispatch = useAppDispatch();
-  const campaign = useCampaign(orgId, campId).campaignFuture.data;
+  const project = useProject(orgId, projectId).projectFuture.data;
   const hasUnauthSignup = useFeatureWithOrg(UNAUTH_EVENT_SIGNUP, orgId);
 
   const {
@@ -51,9 +51,9 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
     filteredEvents,
     getDateRange,
     locationEvents,
-  } = useFilteredCampaignEvents(orgId, campId);
+  } = useFilteredProjectEvents(orgId, projectId);
   const { customDatesToFilterBy, dateFilterState, geojsonToFilterBy } =
-    useAppSelector((state) => state.campaigns.filters);
+    useAppSelector((state) => state.projects.filters);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [drawerContent, setDrawerContent] = useState<
@@ -92,56 +92,67 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
 
   const filters = [
     {
-      active: dateFilterState == 'today',
+      active: dateFilterState === 'today',
       key: 'today',
       label: messages.publicProjectPage.eventList.filterButtonLabels.today(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'today',
+            dateFilterState: dateFilterState === 'today' ? null : 'today',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'tomorrow',
+      active: dateFilterState === 'tomorrow',
       key: 'tomorrow',
       label: messages.publicProjectPage.eventList.filterButtonLabels.tomorrow(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'tomorrow',
+            dateFilterState: dateFilterState === 'tomorrow' ? null : 'tomorrow',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'thisWeek',
+      active: dateFilterState === 'thisWeek',
       key: 'thisWeek',
       label: messages.publicProjectPage.eventList.filterButtonLabels.thisWeek(),
       onClick: () => {
         dispatch(
           filtersUpdated({
             customDatesToFilterBy: [null, null],
-            dateFilterState: 'thisWeek',
+            dateFilterState: dateFilterState === 'thisWeek' ? null : 'thisWeek',
           })
         );
       },
     },
     {
-      active: dateFilterState == 'custom',
+      active: dateFilterState === 'custom',
+      ariaLabel:
+        messages.publicProjectPage.eventList.filterButtonLabels.selectDate(),
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0]
+        dateFilterState === 'custom' && customDatesToFilterBy[0]
           ? getDatesFilteredBy(
               customDatesToFilterBy[1],
               customDatesToFilterBy[0]
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerContent('calendar');
+        if (dateFilterState === 'custom') {
+          dispatch(
+            filtersUpdated({
+              customDatesToFilterBy: [null, null],
+              dateFilterState: null,
+            })
+          );
+        } else {
+          setDrawerContent('calendar');
+        }
       },
     },
     ...(eventTypeFilter.shouldShowFilter
@@ -150,7 +161,17 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: eventTypeFilter.filterButtonLabel,
-            onClick: () => setDrawerContent('eventTypes'),
+            onClick: () => {
+              if (eventTypeFilter.isFiltered) {
+                dispatch(
+                  filtersUpdated({
+                    eventTypesToFilterBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('eventTypes');
+              }
+            },
           },
         ]
       : []),
@@ -221,9 +242,9 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         <Box key="empty">
           <NoEventsBlurb
             description={
-              campaign
+              project
                 ? messages.publicProjectPage.eventList.noEventsBlurb.description(
-                    { project: campaign.title }
+                    { project: project.title }
                   )
                 : undefined
             }
@@ -261,13 +282,14 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             <ZUIFilterButton
               key={filter.key}
               active={filter.active}
+              ariaLabel={filter.ariaLabel}
               label={filter.label}
               onClick={filter.onClick}
             />
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {filteredEvents.length === 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -336,7 +358,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       ))}
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'calendar'}
+        open={drawerContent === 'calendar'}
       >
         <Box
           alignItems="center"
@@ -400,7 +422,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'eventTypes'}
+        open={drawerContent === 'eventTypes'}
       >
         <List>
           {eventTypeFilter.eventTypeLabels.map((eventType) => (

@@ -6,7 +6,7 @@ export default function mockAreaAssignment(
   const now = new Date();
 
   const nextMonth = new Date(now);
-  nextMonth.setDate(now.getMonth() + 1);
+  nextMonth.setMonth(now.getMonth() + 1);
 
   const defaultValues: ZetkinAreaAssignment = {
     end_date: nextMonth.toISOString(),

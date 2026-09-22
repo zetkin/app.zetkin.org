@@ -1,6 +1,8 @@
+import { useCallback } from 'react';
+
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { allocateCallError, allocateNewCall, newCallAllocated } from '../store';
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 
 export type SerializedError = {
   message: string;
@@ -9,8 +11,8 @@ export type SerializedError = {
 
 type UseAllocateCallReturn = {
   allocateCall: () => Promise<void | SerializedError>;
-  error: SerializedError | null;
   isLoading: boolean;
+  queueError: SerializedError | null;
 };
 
 export default function useAllocateCall(
@@ -19,33 +21,35 @@ export default function useAllocateCall(
 ): UseAllocateCallReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const error = useAppSelector((state) => state.call.queueHasError);
+  const queueError = useAppSelector((state) => state.call.queueError);
   const callIsBeingAllocated = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].callIsBeingAllocated
   );
 
-  const allocateCall = async (): Promise<void | SerializedError> => {
-    dispatch(allocateNewCall());
-    try {
-      const call = await apiClient.post<ZetkinCall>(
-        `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
-        {}
-      );
-      dispatch(newCallAllocated(call));
-    } catch (e) {
-      const error = e instanceof Error ? e : new Error('Empty queue error');
-      const serialized = {
-        message: error.message,
-        name: error.name,
-      };
-      dispatch(allocateCallError(serialized));
-      return error;
-    }
-  };
+  const allocateCall =
+    useCallback(async (): Promise<void | SerializedError> => {
+      dispatch(allocateNewCall());
+      try {
+        const call = await apiClient.post<UnfinishedCall>(
+          `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
+          {}
+        );
+        dispatch(newCallAllocated(call));
+      } catch (e) {
+        const queueError =
+          e instanceof Error ? e : new Error('Empty queue error');
+        const serialized = {
+          message: queueError.message,
+          name: queueError.name,
+        };
+        dispatch(allocateCallError(serialized));
+        return queueError;
+      }
+    }, [apiClient, assignmentId, dispatch, orgId]);
 
   return {
     allocateCall,
-    error,
     isLoading: callIsBeingAllocated,
+    queueError,
   };
 }

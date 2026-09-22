@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { renderHook } from '@testing-library/react';
 
 import createStore from 'core/store';
@@ -52,6 +53,6 @@ describe('When creating an event', () => {
       }
     );
 
-    expect(result.current[0].data.id).toEqual(1);
+    expect(result.current.data?.[0].data.id).toEqual(1);
   });
 });

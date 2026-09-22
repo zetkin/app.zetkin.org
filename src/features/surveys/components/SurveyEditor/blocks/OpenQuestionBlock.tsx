@@ -1,6 +1,6 @@
 import AbcIcon from '@mui/icons-material/Abc';
 import SortIcon from '@mui/icons-material/Sort';
-import { BaseSyntheticEvent, FC, useState } from 'react';
+import { BaseSyntheticEvent, FC, useEffect, useRef, useState } from 'react';
 import {
   Box,
   ClickAwayListener,
@@ -17,6 +17,7 @@ import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
+import RequiredCheckbox from '../elements/RequiredCheckbox';
 
 interface OpenQuestionBlockProps {
   editable: boolean;
@@ -52,29 +53,57 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
       : FIELDTYPE.SINGLELINE
   );
 
+  // Store draft in local component state to survive server refetches when shouldLoad.ts DEFAULT_TTL expires
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
   const [multiline, setMultiline] = useState(
     elemQuestion.response_config.multiline
   );
 
+  const isEditingRef = useRef(false);
+
+  // restore data if the user is not editing
+  useEffect(() => {
+    if (!isEditingRef.current) {
+      setTitle(elemQuestion.question);
+      setDescription(elemQuestion.description);
+      setMultiline(elemQuestion.response_config.multiline);
+      setFieldType(
+        elemQuestion.response_config.multiline === true
+          ? FIELDTYPE.MULTILINE
+          : FIELDTYPE.SINGLELINE
+      );
+    }
+  }, [
+    elemQuestion.question,
+    elemQuestion.description,
+    elemQuestion.response_config.multiline,
+  ]);
+
   const handleSelect = (event: BaseSyntheticEvent) => {
     setFieldType(event.target.value);
+    setMultiline(event.target.value === FIELDTYPE.MULTILINE);
   };
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
       editable,
-      onEditModeEnter,
-      onEditModeExit,
+      onEditModeEnter: () => {
+        isEditingRef.current = true;
+        onEditModeEnter();
+      },
+      onEditModeExit: () => {
+        isEditingRef.current = false;
+        onEditModeExit();
+      },
       readOnly,
       save: () => {
         updateElement(element.id, {
           question: {
-            description: description,
+            description,
             question: title,
             response_config: {
-              multiline: multiline,
+              multiline,
             },
           },
         });
@@ -94,6 +123,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           label={messages.blocks.open.label()}
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.open.empty()}
+          required={element.question.required}
           value={title}
           variant="header"
         />
@@ -105,6 +135,13 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           value={description}
           variant="content"
         />
+        {editable && (
+          <RequiredCheckbox
+            orgId={orgId}
+            surveyId={surveyId}
+            surveyQuestionElement={element}
+          />
+        )}
         <ZUIPreviewableInput
           {...previewableProps}
           renderInput={() => (
@@ -119,9 +156,6 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               margin="normal"
               onChange={(event) => {
                 handleSelect(event);
-                setMultiline(
-                  event.target.value === FIELDTYPE.MULTILINE ? true : false
-                );
               }}
               select
               SelectProps={{

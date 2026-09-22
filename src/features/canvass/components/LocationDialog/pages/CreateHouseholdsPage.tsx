@@ -55,6 +55,7 @@ const CreateHouseholdsPage: FC<Props> = ({
         setScale(newScale);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setNumFloors, setNumAptsPerFloor, container]
   );
 

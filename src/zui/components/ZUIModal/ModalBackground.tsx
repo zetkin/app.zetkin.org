@@ -2,11 +2,20 @@ import { Box } from '@mui/material';
 import { range } from 'lodash';
 import { FC, useEffect, useState } from 'react';
 
+import { makeDeterministicRNG } from 'utils/randomUtils';
+
 type Props = {
   /**
    * The height of the background
    */
   height: number | string;
+
+  /**
+   * The seed to be used when generating random numbers for the background
+   * This is to enable generating the same image between rerenders.
+   * The default value is 1, which means it will always have the same animation
+   */
+  seed: number;
 
   /**
    * The width of the background
@@ -63,19 +72,21 @@ type LayerData = {
   imageWidth: number;
 };
 
-const ModalBackground: FC<Props> = ({ height, width }) => {
+const ModalBackground: FC<Props> = ({ height, seed = 1, width }) => {
   const [layers, setLayers] = useState<LayerData[]>([]);
 
   useEffect(() => {
+    const random = makeDeterministicRNG(seed);
     const newLayers = range(0, 4).map(() => {
-      const patternIndex = Math.floor(Math.random() * PATTERNS.length);
+      const patternIndex = Math.floor(random() * PATTERNS.length);
       const pattern = PATTERNS[patternIndex];
       const imageHeight = pattern.length;
       const imageWidth = pattern[0].length;
-      const randomColors = COLORS.concat().sort(() => Math.random() - 0.5);
+      const randomColors = COLORS.concat().sort(() => random() - 0.5);
 
-      const duration = 23 + Math.random() * 19;
-      const delay = Math.random() * 7;
+      // animation should be between 23 and 42 seconds long.
+      const duration = 23 + random() * 19;
+      const delay = (new Date().getTime() / 1000) % duration;
 
       const imageData = new ImageData(imageWidth, imageHeight);
 
@@ -99,8 +110,9 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
     });
 
     setLayers(newLayers);
-  }, []);
+  }, [seed]);
 
+  const random = makeDeterministicRNG(seed);
   return (
     <Box
       sx={{
@@ -146,7 +158,7 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
           <Box
             key={index}
             sx={{
-              animationDelay: delay + 's',
+              animationDelay: -delay + 's',
               animationDirection: 'alternate',
               animationDuration: duration + 's',
               animationFillMode: 'both',
@@ -156,12 +168,12 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
               left: 0,
               position: 'absolute',
               right: 0,
-              rotate: Math.random() < 0.5 ? '0deg' : '180deg',
+              rotate: random() < 0.5 ? '0deg' : '180deg',
               top: 0,
               [`@keyframes ${animName}`]: {
                 '000%': {
                   filter: 'blur(20px) hue-rotate(0)',
-                  opacity: 0,
+                  opacity: 0.0,
                 },
                 '033%': {
                   filter: 'blur(30px) hue-rotate(30deg)',
@@ -169,7 +181,7 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
                 },
                 '066%': {
                   filter: 'blur(30px) hue-rotate(120deg)',
-                  opacity: 0.0,
+                  opacity: 0,
                 },
                 '100%': {
                   filter: 'blur(10px) hue-rotate(180deg)',
@@ -179,11 +191,12 @@ const ModalBackground: FC<Props> = ({ height, width }) => {
             }}
           >
             <canvas
-              ref={async (canvas) => {
+              ref={(canvas) => {
                 const ctx = canvas?.getContext('2d');
                 if (ctx) {
-                  const bitmap = await createImageBitmap(imageData);
-                  ctx.drawImage(bitmap, 0, 0);
+                  createImageBitmap(imageData).then((bitmap) => {
+                    ctx.drawImage(bitmap, 0, 0);
+                  });
                 }
               }}
               height={imageHeight}

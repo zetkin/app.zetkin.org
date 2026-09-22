@@ -1,7 +1,5 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
-  preset: 'ts-jest',
-  setupFiles: ['<rootDir>/src/utils/testing/setup.ts'],
+  setupFiles: ['<rootDir>/src/utils/testing/setup.ts', 'fake-indexeddb/auto'],
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: [
     '<rootDir>/integrationTesting/',
@@ -11,4 +9,7 @@ module.exports = {
     '^.+\\.tsx?$': ['babel-jest', { configFile: './.babelrc.jest.json' }],
   },
   moduleDirectories: ['node_modules', 'src'],
+  moduleNameMapper: {
+    '\\.(css|scss|less)$': '<rootDir>/src/utils/testing/jest/mocks/css.ts',
+  },
 };

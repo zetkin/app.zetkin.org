@@ -7,6 +7,7 @@ import PersonFieldInput from 'zui/ZUICreatePerson/PersonFieldInput';
 interface EditPersonFieldProps {
   disabled?: boolean;
   error?: boolean;
+  helperText?: string;
   field: string;
   hasChanges: boolean;
   isURLField?: boolean;
@@ -20,6 +21,7 @@ const EditPersonField: FC<EditPersonFieldProps> = ({
   disabled = false,
   error,
   field,
+  helperText,
   hasChanges,
   isURLField,
   label,
@@ -34,6 +36,7 @@ const EditPersonField: FC<EditPersonFieldProps> = ({
         disabled={disabled}
         error={error}
         field={field}
+        helperText={helperText}
         isURLField={isURLField}
         label={label}
         onChange={(field, newValue) => onChange(field, newValue)}

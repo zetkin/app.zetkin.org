@@ -140,7 +140,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           </ZUIPersonHoverCard>
         </Link>
       ),
-      resizable: false,
+
       sortable: false,
       width: 20,
     },
@@ -184,10 +184,10 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
-        return `${params.row.first_name || ''} ${params.row.last_name || ''}`;
+      valueGetter: (value, row) => {
+        return `${row.first_name || ''} ${row.last_name || ''}`;
       },
     },
     {
@@ -208,7 +208,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
     },
     {
@@ -229,7 +229,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
     },
     {
@@ -247,14 +247,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
       type: 'date',
-      valueGetter: (params) => {
-        if (params.row.person) {
-          return new Date(params.row.response_date);
+      valueGetter: (value, row) => {
+        if (row.person) {
+          return new Date(row.response_date);
         } else {
-          return new Date(params.row.reminder_sent);
+          return new Date(row.reminder_sent);
         }
       },
     },
@@ -290,8 +290,14 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
               ]}
             />
           );
-        } else if (type == 'booked') {
-          if (event && new Date(removeOffset(event.start_time)) < new Date()) {
+        } else if (event && type == 'booked') {
+          const eventStart = new Date(removeOffset(event.start_time));
+          const anHourFromNow = new Date(
+            new Date().setHours(new Date().getHours() + 1)
+          );
+          const canTakeAttendance = eventStart < anHourFromNow;
+
+          if (canTakeAttendance) {
             const options: ButtonOption[] = [
               {
                 callback: () => {
@@ -378,12 +384,12 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           );
         }
       },
-      resizable: false,
+
       sortingOrder: ['asc', 'desc', null],
-      valueGetter: (params) => {
-        if (params.row.attended) {
+      valueGetter: (value, row) => {
+        if (row.attended) {
           return 1;
-        } else if (params.row.noshow) {
+        } else if (row.noshow) {
           return 2;
         } else {
           return 0;
@@ -420,7 +426,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         rows={
           filterString
             ? filterSignupOrParticipantRows(rows, filterString)
-            : rows ?? []
+            : (rows ?? [])
         }
         sx={{
           '& .MuiDataGrid-row:hover': {

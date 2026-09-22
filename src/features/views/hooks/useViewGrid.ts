@@ -95,7 +95,9 @@ export default function useViewGrid(
   ) => {
     dispatch(cellUpdate());
     apiClient
-      .put<{ value: DataType }>(
+      .put<{
+        value: DataType;
+      }>(
         `/api/orgs/${orgId}/people/views/${viewId}/rows/${rowId}/cells/${colId}`,
         { value }
       )

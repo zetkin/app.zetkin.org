@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 import FieldSettingsRow from './FieldSettingsRow';
 import messageIds from 'features/duplicates/l10n/messageIds';
@@ -19,7 +19,8 @@ import getFieldSettings from 'features/duplicates/utils/getFieldSettings';
 interface FieldSettingsProps {
   customFields: ZetkinCustomField[];
   duplicates: ZetkinPerson[];
-  onChange: (field: NATIVE_PERSON_FIELDS, selectedValue: string) => void;
+  onChange: (field: string, selectedValue: string) => void;
+  resetKey: string;
   setOverrides: React.Dispatch<
     React.SetStateAction<Partial<ZetkinPerson> | null>
   >;
@@ -29,24 +30,28 @@ const FieldSettings: FC<FieldSettingsProps> = ({
   customFields,
   duplicates,
   onChange,
+  resetKey,
   setOverrides,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const lastResetKeyRef = useRef<string | null>(null);
   const { hasConflictingValues, fieldValues, initialOverrides } = useMemo(
     () => getFieldSettings({ customFields, duplicates }),
     [customFields, duplicates]
   );
 
   useEffect(() => {
-    setOverrides((prev) => {
-      if (prev) {
-        return prev;
-      }
+    const resetKeyChanged = lastResetKeyRef.current !== resetKey;
 
-      return initialOverrides;
-    });
-  }, [initialOverrides]);
+    if (resetKeyChanged) {
+      lastResetKeyRef.current = resetKey;
+      setOverrides(initialOverrides);
+      return;
+    }
+
+    setOverrides((prev) => (prev ? prev : initialOverrides));
+  }, [initialOverrides, resetKey, setOverrides]);
 
   return (
     <Box>
@@ -91,10 +96,13 @@ const FieldSettings: FC<FieldSettingsProps> = ({
               {field !== NATIVE_PERSON_FIELDS.FIRST_NAME && <Divider />}
               <FieldSettingsRow
                 key={field}
+                customField={customFields.find(
+                  (customField) => customField.slug === field
+                )}
                 duplicates={duplicates}
-                field={field as NATIVE_PERSON_FIELDS}
+                field={field}
                 onChange={(selectedValue: string) =>
-                  onChange(field as NATIVE_PERSON_FIELDS, selectedValue)
+                  onChange(field, selectedValue)
                 }
                 values={values}
               />

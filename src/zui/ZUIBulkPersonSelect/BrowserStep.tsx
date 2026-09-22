@@ -29,7 +29,6 @@ const BrowserStep: FC<Props> = ({
       }}
     >
       <ViewBrowser
-        autoHeight={false}
         basePath=""
         enableDragAndDrop={false}
         enableEllipsisMenu={false}

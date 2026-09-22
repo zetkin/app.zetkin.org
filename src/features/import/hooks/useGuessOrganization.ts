@@ -3,9 +3,7 @@ import Fuse from 'fuse.js';
 import { UIDataColumn } from './useUIDataColumn';
 import useOrgMapping from './useOrgMapping';
 import { ZetkinSubOrganization } from 'utils/types/zetkin';
-import { CellData, OrgColumn } from '../types';
-
-type OrgMap = { orgId: number; value: CellData };
+import { OrgColumn } from '../types';
 
 const useGuessOrganization = (
   orgs: ZetkinSubOrganization[],
@@ -23,7 +21,7 @@ const useGuessOrganization = (
   const guessOrgs = () => {
     // Loop through each possible cell value
     const matchedRows = uiDataColumn.uniqueValues.reduce(
-      (acc: OrgMap[], orgTitle: string | number) => {
+      (acc: OrgColumn['mapping'], orgTitle: string | number) => {
         if (typeof orgTitle === 'string') {
           // Find orgs with most similar name
           const results = fuse.search(orgTitle);
@@ -33,10 +31,14 @@ const useGuessOrganization = (
           );
           // If there is a match, guess it
           if (goodResults.length > 0) {
+            const bestOrg = goodResults.sort(
+              (a, b) => (a.score ?? 1) - (b.score ?? 1)
+            )[0];
             return [
               ...acc,
               {
-                orgId: goodResults[0].item.id,
+                orgId: bestOrg.item.id,
+                score: bestOrg.score,
                 value: orgTitle,
               },
             ];

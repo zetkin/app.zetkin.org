@@ -1,7 +1,5 @@
-import { Box } from '@mui/system';
-import dayjs from 'dayjs';
-import { FormattedTime } from 'react-intl';
-import isoWeek from 'dayjs/plugin/isoWeek';
+import { Box, lighten } from '@mui/system';
+import { useIntl } from 'react-intl';
 import { Event, SplitscreenOutlined } from '@mui/icons-material';
 import {
   ListItemIcon,
@@ -9,7 +7,6 @@ import {
   Menu,
   MenuItem,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -19,7 +16,10 @@ import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
 import EventShiftModal from '../EventShiftModal';
 import HeaderWeekNumber from './HeaderWeekNumber';
-import { isSameDate } from 'utils/dateUtils';
+import {
+  legacyDateFromPlainDate,
+  legacyDateFromPlainDateTime,
+} from 'utils/dateUtils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
@@ -29,45 +29,105 @@ import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import { useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 
-dayjs.extend(isoWeek);
-
 const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '60px';
 
+const CurrentTimeCircleMarker = ({
+  currentTime,
+}: {
+  currentTime: Temporal.PlainTime;
+}) => {
+  const topOffset =
+    currentTime.since({ hour: 0, minute: 0, second: 0 }).total('hours') *
+    HOUR_HEIGHT;
+  return (
+    <Box
+      sx={(theme) => ({
+        backgroundColor: theme.palette.primary.main,
+        border: '2px solid white',
+        borderRadius: '100%',
+        height: '14px',
+        position: 'absolute',
+        top: `${topOffset}px`,
+        translate: '-30% -50%',
+        width: '14px',
+        zIndex: 1000,
+      })}
+    />
+  );
+};
+
+const CurrentTimeLineMarker = ({
+  currentTime,
+}: {
+  currentTime: Temporal.PlainTime;
+}) => {
+  const topOffset =
+    currentTime.since({ hour: 0, minute: 0, second: 0 }).total('hours') *
+    HOUR_HEIGHT;
+  return (
+    <Box
+      sx={(theme) => ({
+        backgroundColor: lighten(theme.palette.primary.main, 0.4),
+        height: '2px',
+        mixBlendMode: 'multiply',
+        opacity: 0.5,
+        position: 'absolute',
+        top: `${topOffset}px`,
+        translate: '0 -50%',
+        width: 'calc((100% + 7px) * 7 - 1px)',
+        zIndex: 1000,
+      })}
+    />
+  );
+};
+
 export interface CalendarWeekViewProps {
-  focusDate: Date;
+  focusDate: Temporal.PlainDate;
   onClickDay: (date: Date) => void;
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
-  const theme = useTheme();
+  const intl = useIntl();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
-  const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
+  const [pendingEvent, setPendingEvent] = useState<
+    [Temporal.PlainDateTime, Temporal.PlainDateTime] | null
+  >(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
     null
   );
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
-  const focusWeekStartDay =
-    dayjs(focusDate).isoWeekday() == 7
-      ? dayjs(focusDate).add(-1, 'day')
-      : dayjs(focusDate);
+  const focusWeekStartDay = focusDate.subtract({
+    days: focusDate.dayOfWeek - 1,
+  });
 
   const dayDates = range(7).map((weekday) => {
-    return focusWeekStartDay.day(weekday + 1).toDate();
+    return focusWeekStartDay.add({ days: weekday });
   });
 
   const dstChange = useMemo(
-    () =>
-      dayDates.map((d) => dayjs(d)).find((date) => getDstChangeAtDate(date)),
+    () => dayDates.find(getDstChangeAtDate),
     [dayDates]
   );
 
   const eventsByDate = useWeekCalendarEvents({
-    campaignId: campId,
-    dates: dayDates,
+    dates: dayDates.map(legacyDateFromPlainDate),
     orgId,
+    projectId,
   });
+
+  const [currentTime, setCurrentTime] = useState<Temporal.PlainDateTime>(
+    Temporal.Now.plainDateTimeISO()
+  );
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(Temporal.Now.plainDateTimeISO());
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   let laneHeight = 0;
   const weekGridRef = useRef<HTMLDivElement>();
@@ -78,6 +138,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
       laneHeight,
       eventsByDate.map((a) => a.lanes)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusDate]);
 
   return (
@@ -93,16 +154,14 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         position="relative"
       >
         {/* Empty */}
-        <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
-        {dayDates.map((weekdayDate: Date, weekday: number) => {
+        <HeaderWeekNumber weekNr={dayDates[0].weekOfYear!} />
+        {dayDates.map((weekdayDate: Temporal.PlainDate, weekday: number) => {
           return (
             <Box key={`weekday-${weekday}`} position="relative">
               <DayHeader
                 date={weekdayDate}
-                focused={
-                  new Date().toDateString() == weekdayDate.toDateString()
-                }
-                onClick={() => onClickDay(weekdayDate)}
+                focused={Temporal.Now.plainDateISO().equals(weekdayDate)}
+                onClick={() => onClickDay(legacyDateFromPlainDate(weekdayDate))}
               />
               <Box
                 sx={{
@@ -141,7 +200,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         {/* Hours column */}
         <Box>
           {range(24).map((hour: number) => {
-            const time = dayjs().set('hour', hour).set('minute', 0).toString();
+            const time = Temporal.PlainTime.from({ hour });
             return (
               <Box
                 key={`hour-${hour}`}
@@ -149,24 +208,23 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                 height={`${HOUR_HEIGHT}px`}
                 justifyContent="flex-end"
               >
-                <Typography color={theme.palette.grey[500]} variant="caption">
-                  <FormattedTime hour="numeric" minute="numeric" value={time} />
+                <Typography color="textDisabled" variant="caption">
+                  {time.toLocaleString(intl.locale, {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  })}
                 </Typography>
               </Box>
             );
           })}
         </Box>
         {/* Day columns */}
-        {dayDates.map((date: Date, index: number) => {
+        {dayDates.map((date: Temporal.PlainDate, index: number) => {
           const pendingTop = pendingEvent
-            ? (pendingEvent[0].getUTCHours() * 60 +
-                pendingEvent[0].getMinutes()) /
-              (24 * 60)
+            ? (pendingEvent[0].hour * 60 + pendingEvent[0].minute) / (24 * 60)
             : 0;
           const pendingHeight = pendingEvent
-            ? (pendingEvent[1].getUTCHours() * 60 +
-                pendingEvent[1].getMinutes()) /
-                (24 * 60) -
+            ? (pendingEvent[1].hour * 60 + pendingEvent[1].minute) / (24 * 60) -
               pendingTop
             : 0;
 
@@ -174,164 +232,181 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
 
           return (
             <Box
-              key={date.toISOString()}
-              ref={(elm: HTMLDivElement) =>
-                (laneHeight = elm?.clientHeight ?? 0)
-              }
+              key={date.toString()}
+              ref={(elm: HTMLDivElement | null) => {
+                laneHeight = elm?.clientHeight ?? 0;
+              }}
               flexGrow={1}
               height={`${HOUR_HEIGHT * 24}px`}
               sx={{
-                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}px)`,
                 marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
-                overflow: 'hidden', // Will prevent the ghostElement to expand the size of the calender, showing vertical scrollbar and whitespace underneath calender #issue-#1614
+                position: 'relative',
               }}
             >
-              <EventDayLane
-                onCreate={(startTime, endTime) => {
-                  const startDate = new Date(
-                    Date.UTC(
-                      date.getFullYear(),
-                      date.getMonth(),
-                      date.getDate(),
-                      startTime[0],
-                      startTime[1]
-                    )
-                  );
-
-                  const endDate = new Date(
-                    Date.UTC(
-                      date.getFullYear(),
-                      date.getMonth(),
-                      date.getDate(),
-                      endTime[0] >= 24 ? 23 : endTime[0],
-                      endTime[0] >= 24 ? 59 : endTime[1]
-                    )
-                  );
-
-                  setPendingEvent([startDate, endDate]);
+              {index === 0 && (
+                <CurrentTimeLineMarker
+                  currentTime={currentTime.toPlainTime()}
+                />
+              )}
+              {currentTime.toPlainDate().equals(date) && (
+                <CurrentTimeCircleMarker
+                  currentTime={currentTime.toPlainTime()}
+                />
+              )}
+              <Box
+                ref={(elm: HTMLDivElement) => {
+                  laneHeight = elm?.clientHeight ?? 0;
                 }}
-                onDragStart={() => setPendingEvent(null)}
-              >
-                {lanes.flatMap((lane, laneIdx) => {
-                  return lane.map((cluster) => {
-                    const startTime = new Date(cluster.events[0].start_time);
-                    const endTime = new Date(
-                      cluster.events[cluster.events.length - 1].end_time
-                    );
-                    const startOffs =
-                      (startTime.getUTCHours() +
-                        startTime.getUTCMinutes() / 60) /
-                      24;
-                    const endOffs =
-                      (endTime.getUTCHours() + endTime.getUTCMinutes() / 60) /
-                      24;
-
-                    const height = Math.max(endOffs - startOffs, 1 / 3 / 24);
-
-                    const laneOffset = 0.15 * laneIdx;
-                    const width =
-                      1 - laneOffset - (lanes.length - laneIdx) * 0.05;
-
-                    const pixelHeight = height * HOUR_HEIGHT * 24;
-
-                    return (
-                      <Box
-                        key={`lane-${cluster.events[0].id}`}
-                        sx={{
-                          '&:hover': {
-                            zIndex: 100,
-                          },
-                          left: `${laneOffset * 100}%`,
-                          overflow: 'hidden',
-                          // Padding (and offset `top`) make room for the TopBadge
-                          // if there is one, without it overflowing (and clipping)
-                          paddingTop: '20px',
-                          position: 'absolute',
-                          top: `calc(${startOffs * 100}% - 20px)`,
-                          width: `${width * 100}%`,
-                        }}
-                      >
-                        <EventCluster cluster={cluster} height={pixelHeight} />
-                      </Box>
-                    );
-                  });
+                flexGrow={1}
+                height={`${HOUR_HEIGHT * 24}px`}
+                sx={(theme) => ({
+                  backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}px)`,
+                  overflow: 'hidden', // Will prevent the ghostElement to expand the size of the calender, showing vertical scrollbar and whitespace underneath calender #issue-#1614
                 })}
-                {pendingEvent && isSameDate(date, pendingEvent[0]) && (
-                  <>
-                    <EventGhost
-                      ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
-                      height={pendingHeight * 100 + '%'}
-                      y={pendingTop * 100 + '%'}
-                    />
-                    {ghostAnchorEl && !creating && (
-                      <Menu
-                        anchorEl={ghostAnchorEl}
-                        anchorOrigin={{
-                          horizontal: index > 3 ? 'left' : 'right',
-                          vertical: 'bottom',
-                        }}
-                        onClose={() => {
-                          setPendingEvent(null);
-                          setGhostAnchorEl(null);
-                        }}
-                        open={true}
-                        transformOrigin={{
-                          horizontal: index > 3 ? 'right' : 'left',
-                          vertical: 'top',
-                        }}
-                      >
-                        <MenuItem
-                          onClick={async () => {
-                            setCreating(true);
-                            setGhostAnchorEl(null);
-                            await createEvent({
-                              activity_id: null,
-                              campaign_id: campId,
-                              end_time: pendingEvent[1].toISOString(),
-                              location_id: null,
-                              start_time: pendingEvent[0].toISOString(),
-                              title: null,
-                            });
+              >
+                <EventDayLane
+                  onCreate={(startTime, endTime) => {
+                    const startDate = date.toPlainDateTime({
+                      hour: startTime[0],
+                      minute: startTime[1],
+                    });
+                    const endDate = date.toPlainDateTime({
+                      hour: endTime[0] >= 24 ? 23 : endTime[0],
+                      minute: endTime[0] >= 24 ? 59 : endTime[1],
+                    });
+
+                    setPendingEvent([startDate, endDate]);
+                  }}
+                  onDragStart={() => setPendingEvent(null)}
+                >
+                  {lanes.flatMap((lane, laneIdx) => {
+                    return lane.map((cluster) => {
+                      const startTime = new Date(cluster.events[0].start_time);
+                      const endTime = new Date(
+                        cluster.events[cluster.events.length - 1].end_time
+                      );
+                      const startOffs =
+                        (startTime.getUTCHours() +
+                          startTime.getUTCMinutes() / 60) /
+                        24;
+                      const endOffs =
+                        (endTime.getUTCHours() + endTime.getUTCMinutes() / 60) /
+                        24;
+
+                      const height = Math.max(endOffs - startOffs, 1 / 3 / 24);
+
+                      const laneOffset = 0.15 * laneIdx;
+                      const width =
+                        1 - laneOffset - (lanes.length - laneIdx) * 0.05;
+
+                      const pixelHeight = height * HOUR_HEIGHT * 24;
+
+                      return (
+                        <Box
+                          key={`lane-${cluster.events[0].id}`}
+                          sx={{
+                            '&:hover': {
+                              zIndex: 100,
+                            },
+                            left: `${laneOffset * 100}%`,
+                            overflow: 'hidden',
+                            // Padding (and offset `top`) make room for the TopBadge
+                            // if there is one, without it overflowing (and clipping)
+                            paddingTop: '20px',
+                            position: 'absolute',
+                            top: `calc(${startOffs * 100}% - 20px)`,
+                            width: `${width * 100}%`,
+                          }}
+                        >
+                          <EventCluster
+                            cluster={cluster}
+                            height={pixelHeight}
+                          />
+                        </Box>
+                      );
+                    });
+                  })}
+                  {pendingEvent &&
+                    date.equals(pendingEvent[0].toPlainDate()) && (
+                      <>
+                        <EventGhost
+                          ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
+                          height={pendingHeight * 100 + '%'}
+                          y={pendingTop * 100 + '%'}
+                        />
+                        {ghostAnchorEl && !creating && (
+                          <Menu
+                            anchorEl={ghostAnchorEl}
+                            anchorOrigin={{
+                              horizontal: index > 3 ? 'left' : 'right',
+                              vertical: 'bottom',
+                            }}
+                            onClose={() => {
+                              setPendingEvent(null);
+                              setGhostAnchorEl(null);
+                            }}
+                            open={true}
+                            transformOrigin={{
+                              horizontal: index > 3 ? 'right' : 'left',
+                              vertical: 'top',
+                            }}
+                          >
+                            <MenuItem
+                              onClick={async () => {
+                                setCreating(true);
+                                setGhostAnchorEl(null);
+                                await createEvent({
+                                  activity_id: null,
+                                  campaign_id: projectId,
+                                  end_time: pendingEvent[1].toString(),
+                                  location_id: null,
+                                  start_time: pendingEvent[0].toString(),
+                                  title: null,
+                                });
+                                setPendingEvent(null);
+                                setCreating(false);
+                              }}
+                            >
+                              <ListItemIcon>
+                                <Event />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Msg id={messageIds.createMenu.singleEvent} />
+                              </ListItemText>
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                setCreating(true);
+                                setGhostAnchorEl(null);
+                                setShiftModalOpen(true);
+                              }}
+                            >
+                              <ListItemIcon>
+                                <SplitscreenOutlined />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Msg id={messageIds.createMenu.shiftEvent} />
+                              </ListItemText>
+                            </MenuItem>
+                          </Menu>
+                        )}
+                        <EventShiftModal
+                          close={() => {
+                            setShiftModalOpen(false);
                             setPendingEvent(null);
                             setCreating(false);
                           }}
-                        >
-                          <ListItemIcon>
-                            <Event />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <Msg id={messageIds.createMenu.singleEvent} />
-                          </ListItemText>
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            setCreating(true);
-                            setGhostAnchorEl(null);
-                            setShiftModalOpen(true);
-                          }}
-                        >
-                          <ListItemIcon>
-                            <SplitscreenOutlined />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <Msg id={messageIds.createMenu.shiftEvent} />
-                          </ListItemText>
-                        </MenuItem>
-                      </Menu>
+                          dates={[
+                            legacyDateFromPlainDateTime(pendingEvent[0]),
+                            legacyDateFromPlainDateTime(pendingEvent[1]),
+                          ]}
+                          open={shiftModalOpen}
+                        />
+                      </>
                     )}
-                    <EventShiftModal
-                      close={() => {
-                        setShiftModalOpen(false);
-                        setPendingEvent(null);
-                        setCreating(false);
-                      }}
-                      dates={pendingEvent}
-                      open={shiftModalOpen}
-                    />
-                  </>
-                )}
-                {/* TODO: Put events here */}
-              </EventDayLane>
+                  {/* TODO: Put events here */}
+                </EventDayLane>
+              </Box>
             </Box>
           );
         })}

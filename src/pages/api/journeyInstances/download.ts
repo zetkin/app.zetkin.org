@@ -145,7 +145,7 @@ export default async function handler(
       const allLengths = [
         col.length,
         ...dataRows.map((row) =>
-          row[idx] instanceof Date ? 16 : row[idx]?.toString().length ?? 0
+          row[idx] instanceof Date ? 16 : (row[idx]?.toString().length ?? 0)
         ),
       ];
 

@@ -174,6 +174,7 @@ const DateTextField: FC<DateTextFieldProps> = ({ label, onChange, value }) => {
 
   useEffect(() => {
     resetValue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (

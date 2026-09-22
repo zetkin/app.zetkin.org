@@ -77,7 +77,7 @@ const journeysSlice = createSlice({
         remoteItem(journeyInstance.id, { data: journeyInstance })
       );
 
-      state.journeyInstancesByJourneyId[journeyInstance.journey.id].items.push(
+      state.journeyInstancesByJourneyId[journeyInstance.journey.id]?.items.push(
         remoteItem(journeyInstance.id, { data: journeyInstance })
       );
     },

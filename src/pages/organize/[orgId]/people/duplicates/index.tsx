@@ -37,6 +37,7 @@ const DuplicatesPage: PageWithLayout = () => {
       router.asPath.split('?')[0]
     }?page=${page}`;
     window.history.replaceState({}, '', url);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   if (onServer) {

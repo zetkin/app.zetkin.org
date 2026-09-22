@@ -45,6 +45,7 @@ export default function useMapBounds({ areas, map }: Props): Return {
     if (bounds && shouldPan) {
       map.fitBounds(bounds, { animate: true, duration: 800 });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bounds]);
 
   useEffect(() => {

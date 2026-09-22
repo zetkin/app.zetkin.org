@@ -29,7 +29,7 @@ const PreviousDayPrompt = ({
         <Typography color={oldTheme.palette.secondary.main}>
           <Msg
             id={messageIds.lastDayWithEvents}
-            values={{ numEvents: daySummary.events.length }}
+            values={{ numEvents: daySummary.length }}
           />
         </Typography>
         <Button

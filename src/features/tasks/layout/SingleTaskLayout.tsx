@@ -19,7 +19,7 @@ const SingleTaskLayout: FunctionComponent<SingleTaskLayoutProps> = ({
   children,
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId, taskId, campId } = useNumericRouteParams();
+  const { orgId, taskId, projectId } = useNumericRouteParams();
   const task = useTask(orgId, taskId);
   if (!task) {
     return null;
@@ -28,7 +28,7 @@ const SingleTaskLayout: FunctionComponent<SingleTaskLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={<TaskActionButtons task={task} />}
-      baseHref={`/organize/${orgId}/projects/${campId}/tasks/${taskId}`}
+      baseHref={`/organize/${orgId}/projects/${projectId}/tasks/${taskId}`}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">

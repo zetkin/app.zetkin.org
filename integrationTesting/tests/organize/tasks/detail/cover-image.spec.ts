@@ -3,8 +3,8 @@ import fs from 'fs/promises';
 
 import test from '../../../../fixtures/next';
 import KPD from '../../../../mockData/orgs/KPD';
-import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import SpeakToFriend from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import ReferendumSignatureCollection from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures';
+import SpeakToFriend from '../../../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 import { ZetkinFile, ZetkinTask } from '../../../../../src/utils/types/zetkin';
 
 test.describe('Task detail page', () => {
@@ -73,13 +73,7 @@ test.describe('Task detail page', () => {
 
     moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', taskWithFile);
 
-    await Promise.all([
-      page.waitForRequest((req) => req.method() === 'PATCH'),
-      page.waitForResponse((res) =>
-        res.request().url().includes('clara_and_rosa.jpg')
-      ),
-      page.locator('data-testid=FileLibraryDialog-useButton').click(),
-    ]);
+    await page.locator('data-testid=FileLibraryDialog-useButton').click();
 
     await page.locator('data-testid=TaskPreviewSection-section').waitFor();
 
@@ -122,10 +116,9 @@ test.describe('Task detail page', () => {
     await page.goto(appUri + '/organize/1/projects/1/tasks/1');
     await image.waitFor({ state: 'visible' });
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PATCH'),
-      page.locator('data-testid=ZetkinEditableImage-resetButton').click(),
-    ]);
+    await page.locator('data-testid=ZetkinEditableImage-resetButton').click();
+
+    await expect.poll(() => patchLog().length).toBe(1);
 
     expect(patchLog()[0].data).toEqual({
       cover_file_id: null,

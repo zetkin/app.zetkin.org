@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 export default function useResizeObserver<
-  ElemType extends HTMLElement = HTMLElement
+  ElemType extends HTMLElement = HTMLElement,
 >(onResize: (elem: ElemType) => void) {
   const elemRef = useRef<ElemType>(null);
 
@@ -18,6 +18,7 @@ export default function useResizeObserver<
     }
 
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elemRef.current, onResize]);
 
   return elemRef;

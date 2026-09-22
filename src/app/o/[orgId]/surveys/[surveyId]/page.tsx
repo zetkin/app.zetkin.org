@@ -16,7 +16,6 @@ type Props = {
   };
 };
 
-// @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
 const Page: FC<Props> = async ({ params }) => {
   const headersList = headers();
   const headersEntries = headersList.entries();
@@ -24,6 +23,9 @@ const Page: FC<Props> = async ({ params }) => {
   const apiClient = new BackendApiClient(headersObject);
 
   const { orgId, surveyId } = params;
+
+  const privacyUrl =
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
 
   let survey: ZetkinSurveyExtended;
   try {
@@ -45,7 +47,9 @@ const Page: FC<Props> = async ({ params }) => {
     user = null;
   }
 
-  return <PublicSurveyPage survey={survey} user={user} />;
+  return (
+    <PublicSurveyPage privacyUrl={privacyUrl} survey={survey} user={user} />
+  );
 };
 
 export default Page;

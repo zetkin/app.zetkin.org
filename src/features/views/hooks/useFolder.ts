@@ -75,7 +75,7 @@ export default function useFolder(
 
   const deleteFolder = async (folderId: number): Promise<void> => {
     const report = await apiClient.rpc(deleteViewFolder, { folderId, orgId });
-    dispatch(folderDeleted(report));
+    dispatch(folderDeleted([orgId, report]));
   };
 
   const updateFolder = (

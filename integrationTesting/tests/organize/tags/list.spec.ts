@@ -39,16 +39,10 @@ test.describe('Tag manager', () => {
       PlaysGuitarTag,
     ]);
 
-    await Promise.all([
-      page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
-      page.waitForResponse(`**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`),
-      page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
-      page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`),
-    ]);
+    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
-    expect(
-      await page.locator(`text="${ActivistTag.title}"`).isVisible()
-    ).toBeTruthy();
+    await expect(page.locator(`text="${ActivistTag.title}"`)).toBeVisible();
+
     expect(
       await page.locator(`text="${OrganizerTag.title}"`).isVisible()
     ).toBeTruthy();

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIText from './index';
 

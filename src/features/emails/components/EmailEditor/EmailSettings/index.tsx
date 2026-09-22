@@ -8,6 +8,7 @@ import BlockListItem from './BlockListItem';
 import messageIds from 'features/emails/l10n/messageIds';
 import PreviewTab from './PreviewTab';
 import { useMessages } from 'core/i18n';
+import ThemeTab from 'features/emails/components/EmailEditor/EmailSettings/ThemeTab';
 
 interface EmailSettingsProps {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -24,7 +25,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<
-    'content' | 'preview' | 'settings'
+    'content' | 'preview' | 'settings' | 'theme'
   >('content');
   const boxRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,6 +50,10 @@ const EmailSettings: FC<EmailSettingsProps> = ({
             label={messages.editor.settings.tabs.content()}
             sx={{ marginLeft: 2 }}
             value="content"
+          />
+          <Tab
+            label={messages.editor.settings.tabs.theme.title()}
+            value="theme"
           />
           <Tab
             label={messages.editor.settings.tabs.preview.title()}
@@ -78,6 +83,9 @@ const EmailSettings: FC<EmailSettingsProps> = ({
               />
             ))}
           </Stack>
+        </TabPanel>
+        <TabPanel sx={{ padding: 0 }} value="theme">
+          <ThemeTab />
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="preview">
           <PreviewTab />

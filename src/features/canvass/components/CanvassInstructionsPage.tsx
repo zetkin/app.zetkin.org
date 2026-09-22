@@ -3,6 +3,7 @@
 import { FC } from 'react';
 import { HomeWork } from '@mui/icons-material';
 import { Avatar, Box, Button, Card, Divider, Typography } from '@mui/material';
+import { notFound } from 'next/navigation';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
@@ -145,7 +146,7 @@ const CanvassInstructionsPage: FC<CanvassInstructionsPageProps> = ({
   );
 
   if (!assignment) {
-    return null;
+    notFound();
   }
 
   return <Page assignment={assignment} />;

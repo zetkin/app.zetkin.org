@@ -46,8 +46,8 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
         gap={1}
         justifyItems="flex-start"
       >
-        {dayInfo.events
-          .sort(
+        {dayInfo
+          .toSorted(
             (a, b) =>
               new Date(a.data.start_time).getTime() -
               new Date(b.data.start_time).getTime()

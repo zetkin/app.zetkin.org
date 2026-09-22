@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 import test from '../../../../fixtures/next';
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import KPD from '../../../../mockData/orgs/KPD';
@@ -24,13 +22,8 @@ test.describe('Views list page', () => {
 
     await page.goto(appUri + '/organize/1/people');
 
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click(`text=${AllMembers.title}`),
-    ]);
+    await page.click(`text=${AllMembers.title}`);
 
-    await expect(page.url()).toEqual(
-      appUri + `/organize/1/people/lists/${AllMembers.id}`
-    );
+    await page.waitForURL(appUri + `/organize/1/people/lists/${AllMembers.id}`);
   });
 });

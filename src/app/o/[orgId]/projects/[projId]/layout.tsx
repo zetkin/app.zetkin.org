@@ -5,7 +5,8 @@ import { notFound } from 'next/navigation';
 
 import HomeThemeProvider from 'features/my/components/HomeThemeProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinCampaign } from 'utils/types/zetkin';
+import { ApiClientError } from 'core/api/errors';
+import { ZetkinProject } from 'utils/types/zetkin';
 import PublicProjectLayout from 'features/public/layouts/PublicProjectLayout';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
@@ -23,26 +24,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const campaign = await apiClient.get<ZetkinCampaign>(
+  const project = await apiClient.get<ZetkinProject>(
     `/api/orgs/${params.orgId}/campaigns/${params.projId}`
   );
 
   const baseTags = getSeoTags(
-    `${campaign.title} | ${campaign.organization.title}`,
-    campaign.info_text,
-    `/o/${campaign.organization.id}/projects/${campaign.id}`
+    `${project.title} | ${project.organization.title}`,
+    project.info_text,
+    `/o/${project.organization.id}/projects/${project.id}`
   );
   return {
     ...baseTags,
     openGraph: {
       ...baseTags.openGraph,
-      ...getOrganizationOpenGraphTags(campaign.organization),
+      ...getOrganizationOpenGraphTags(project.organization),
     },
-    robots: { follow: true, index: campaign.published },
+    robots: { follow: true, index: project.published },
   };
 }
 
-// @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
 const MyHomeLayout: FC<Props> = async ({ children, params }) => {
   const headersList = headers();
   const headersEntries = headersList.entries();
@@ -50,19 +50,20 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
   const apiClient = new BackendApiClient(headersObject);
 
   try {
-    const campaign = await apiClient.get<ZetkinCampaign>(
+    const project = await apiClient.get<ZetkinProject>(
       `/api/orgs/${params.orgId}/campaigns/${params.projId}`
     );
 
     return (
       <HomeThemeProvider>
-        <PublicProjectLayout campaign={campaign}>
-          {children}
-        </PublicProjectLayout>
+        <PublicProjectLayout project={project}>{children}</PublicProjectLayout>
       </HomeThemeProvider>
     );
-  } catch (err) {
-    return notFound();
+  } catch (e) {
+    if (e instanceof ApiClientError && e.status === 404) {
+      notFound();
+    }
+    throw e;
   }
 };
 

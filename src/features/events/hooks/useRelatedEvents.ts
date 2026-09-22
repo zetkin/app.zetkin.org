@@ -1,7 +1,7 @@
 import useEventsFromDateRange from './useEventsFromDateRange';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { IFuture, ResolvedFuture } from 'core/caching/futures';
+import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 
 export default function useRelatedEvents(
   currentEvent: ZetkinEvent,
@@ -10,15 +10,14 @@ export default function useRelatedEvents(
   const relatedEvents: ZetkinEvent[] = [];
   const start = new Date(currentEvent.start_time);
   const end = new Date(currentEvent.end_time);
-  const { campId } = useNumericRouteParams();
-  const allEventsInActivities = useEventsFromDateRange(
-    start,
-    end,
-    orgId,
-    campId
-  );
+  const { projectId } = useNumericRouteParams();
+  const allEventsFuture = useEventsFromDateRange(start, end, orgId, projectId);
 
-  const allEvents = allEventsInActivities
+  if (allEventsFuture.isLoading) {
+    return new LoadingFuture();
+  }
+
+  const allEvents = (allEventsFuture.data || [])
     .map((event) => event.data)
     .filter((event) => orgId == event.organization.id);
 

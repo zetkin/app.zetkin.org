@@ -13,12 +13,15 @@ import {
 } from '../store';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type Props = {
   survey: ZetkinSurvey;
 };
 
 const Survey: FC<Props> = ({ survey }) => {
+  const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const responseBySurveyId = useAppSelector(
     (state) =>
@@ -28,7 +31,6 @@ const Survey: FC<Props> = ({ survey }) => {
 
   return (
     <Box
-      id="surrrvey"
       sx={{
         height: '100%',
         position: 'relative',
@@ -37,7 +39,7 @@ const Survey: FC<Props> = ({ survey }) => {
     >
       <Box sx={{ left: 20, position: 'absolute', top: 16 }}>
         <ZUIButton
-          label="Back to activities"
+          label={messages.activities.survey.backButton()}
           onClick={() => {
             const response = responseBySurveyId[survey.id];
 

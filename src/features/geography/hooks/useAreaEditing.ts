@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MapLayerMouseEvent, MapMouseEvent, Map as MapType } from 'maplibre-gl';
-import distance from '@turf/distance';
+import { distance } from '@turf/turf';
 
 import { Zetkin2Area, Zetkin2AreaLine } from 'features/areas/types';
 import lngLat from '../utils/lngLat';

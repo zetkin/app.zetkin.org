@@ -9,11 +9,24 @@ import {
   useNumericRouteParams,
 } from 'core/hooks';
 
+function filterSpecForStats(
+  filters: ZetkinSmartSearchFilter[]
+): ZetkinSmartSearchFilter[] {
+  return filters.map((filter) => {
+    const spec = { ...filter } as ZetkinSmartSearchFilter & { id?: number };
+    delete spec.id;
+
+    return spec;
+  });
+}
+
 export default function useSmartSearchStats(
   filters: ZetkinSmartSearchFilter[]
 ): ZetkinSmartSearchFilterStats[] | null {
   const { orgId } = useNumericRouteParams();
-  const key = JSON.stringify(filters);
+  const specForStats = filterSpecForStats(filters);
+  const key = JSON.stringify(specForStats);
+
   const apiClient = useApiClient();
   const statsItem = useAppSelector(
     (state) => state.smartSearch.statsByFilterSpec[key]
@@ -27,7 +40,7 @@ export default function useSmartSearchStats(
         ZetkinSmartSearchFilterStats[],
         { filter_spec: ZetkinSmartSearchFilter[] }
       >(`/api/orgs/${orgId}/people/queries/ephemeral/stats`, {
-        filter_spec: filters,
+        filter_spec: specForStats,
       })
       .then((stats) => {
         dispatch(statsLoaded([key, stats]));

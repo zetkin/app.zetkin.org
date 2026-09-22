@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { Box, Paper, Typography } from '@mui/material';
 
 import ZUIDataChip from './index';

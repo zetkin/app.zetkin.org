@@ -129,10 +129,10 @@ export default function useSurveyMutations(
 
   async function addElement(data: ZetkinSurveyElementPostBody) {
     apiClient
-      .post<ZetkinSurveyElement, ZetkinSurveyElementPostBody>(
-        `/api/orgs/${orgId}/surveys/${surveyId}/elements`,
-        data
-      )
+      .post<
+        ZetkinSurveyElement,
+        ZetkinSurveyElementPostBody
+      >(`/api/orgs/${orgId}/surveys/${surveyId}/elements`, data)
       .then((newElement) => {
         dispatch(elementAdded([surveyId, newElement]));
         return newElement;

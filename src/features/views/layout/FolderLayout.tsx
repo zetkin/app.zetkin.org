@@ -1,5 +1,7 @@
+import { PropsWithChildren } from 'react';
+
 import PeopleActionButton from '../components/PeopleActionButton';
-import SimpleLayout from 'utils/layout/SimpleLayout';
+import { SimpleLayoutHeader } from 'utils/layout/SimpleLayout';
 import useFolder from '../hooks/useFolder';
 import useItemSummary from '../hooks/useItemSummary';
 import { useNumericRouteParams } from 'core/hooks';
@@ -7,13 +9,14 @@ import useViewBrowserMutations from '../hooks/useViewBrowserMutations';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
+import DefaultLayout from 'utils/layout/DefaultLayout';
 
 interface FolderLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   folderId: number;
 }
 
-const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
+export const FolderHeader: React.FunctionComponent<FolderLayoutProps> = ({
   children,
   folderId,
 }) => {
@@ -24,24 +27,22 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   const { renameItem } = useViewBrowserMutations(orgId);
 
   return (
-    <ZUIFuture future={folderFuture}>
-      {(data) => (
-        <SimpleLayout
-          actionButtons={
-            <PeopleActionButton folderId={folderId} orgId={orgId} />
-          }
-          noPad
-          subtitle={
-            <ZUIFuture future={itemSummaryFuture}>
-              {(data) => (
-                <ViewFolderSubtitle
-                  numFolders={data.folders}
-                  numViews={data.views}
-                />
-              )}
-            </ZUIFuture>
-          }
-          title={
+    <SimpleLayoutHeader
+      actionButtons={<PeopleActionButton folderId={folderId} orgId={orgId} />}
+      noPad
+      subtitle={
+        <ZUIFuture future={itemSummaryFuture}>
+          {(data) => (
+            <ViewFolderSubtitle
+              numFolders={data.folders}
+              numViews={data.views}
+            />
+          )}
+        </ZUIFuture>
+      }
+      title={
+        <ZUIFuture future={folderFuture}>
+          {(data) => (
             <ZUIEditTextinPlace
               key={data.id}
               onChange={(newTitle) => {
@@ -49,13 +50,19 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
               }}
               value={data.title}
             />
-          }
-        >
-          {children}
-        </SimpleLayout>
-      )}
-    </ZUIFuture>
+          )}
+        </ZUIFuture>
+      }
+    >
+      {children}
+    </SimpleLayoutHeader>
   );
+};
+
+const FolderLayout: React.FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
+  return <DefaultLayout>{children}</DefaultLayout>;
 };
 
 export default FolderLayout;

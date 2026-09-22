@@ -85,7 +85,7 @@ export default makeMessages('feat.import', {
         ),
         field: {
           email: m('Email'),
-          ['ext_id']: m('External ID'),
+          ext_id: m('External ID'),
           id: m('Zetkin ID'),
         },
         importCheckboxDescription: m(
@@ -110,9 +110,10 @@ export default makeMessages('feat.import', {
         ),
       },
       orgs: {
-        guess: m('Guess organisations'),
+        guess: m('Guess organizations'),
         header: m('Map values to organizations'),
         organizations: m('Organization'),
+        scoreImperfect: m('This is not a perfect match'),
         showOrganizationSelectButton: m('Map to...'),
         status: m('Status'),
       },
@@ -123,6 +124,7 @@ export default makeMessages('feat.import', {
         numberOfRows: m<{ numRows: number }>(
           '{numRows, plural, =1 {1 row} other {# rows}}'
         ),
+        scoreImperfect: m('This is not a perfect match'),
         tagsHeader: m('Tags'),
       },
     },

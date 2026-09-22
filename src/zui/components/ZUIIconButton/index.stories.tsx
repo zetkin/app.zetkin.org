@@ -1,5 +1,5 @@
 import { Close } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIIconButton from './index';
 
@@ -49,6 +49,6 @@ export const Destructive: Story = {
 export const Loading: Story = {
   args: {
     icon: Close,
-    variant: 'loading',
+    isLoading: true,
   },
 };

@@ -9,14 +9,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-// TODO: Remove comment once we upgrade to React 19
-// Type definitions for useFormState don't exist in React 18
-// because it's an experimental feature. That's why we silence
-// the Typescript warning.
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { useFormState } from 'react-dom';
+import { FC, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Msg, useMessages } from 'core/i18n';
 import SurveyForm from 'features/surveys/components/SurveyForm';
@@ -35,22 +28,64 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
 import { submit } from 'features/surveys/actions/submit';
 import messageIds from 'features/surveys/l10n/messageIds';
+import {
+  SurveySubmissionData,
+  useSurveyFormState,
+} from 'features/public/hooks/useSurveyFormState';
 
 type PublicSurveyPageProps = {
+  privacyUrl: string;
   survey: ZetkinSurveyExtended;
   user: ZetkinUser | null;
 };
 
-const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
+const PublicSurveyPage: FC<PublicSurveyPageProps> = ({
+  privacyUrl,
+  survey,
+  user,
+}) => {
   const messages = useMessages(messageIds);
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState(false);
   const [signatureType, setSignatureType] = useState<
     ZetkinSurveySignatureType | undefined
   >(undefined);
-  const [status, action] = useFormState<ZetkinSurveyFormStatus>(
-    submit,
-    'editing'
+
+  const [initialSurveyState, setSurveyState] = useSurveyFormState(survey.id);
+  const surveyStateRef = useRef<SurveySubmissionData>(initialSurveyState);
+
+  const onChangeSurveyState = useCallback(
+    (name: string, newValue: string | string[]) => {
+      const updatedSurveyState = {
+        ...surveyStateRef.current,
+        ...{ [name]: newValue },
+      };
+      surveyStateRef.current = updatedSurveyState;
+      setSurveyState(updatedSurveyState);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [initialSurveyState, setSurveyState]
+  );
+
+  const [status, setStatus] = useState<ZetkinSurveyFormStatus>('editing');
+
+  const trySubmitSurvey = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+        const formData = new FormData(e.currentTarget);
+        const newState = await submit(status, formData);
+        if (newState === 'submitted') {
+          setSurveyState(null, true);
+        }
+        setStatus(newState);
+      } catch (e) {
+        setStatus('error');
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setSurveyState, setStatus]
   );
 
   const handleRadioChange = useCallback(
@@ -66,6 +101,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     if (errorMessageRef.current) {
       errorMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMessageRef.current]);
 
   useEffect(() => {
@@ -77,9 +113,6 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   const showForm = status == 'editing' || status == 'error';
   const showSuccess = status == 'submitted';
   const showErrorAlert = status == 'error';
-
-  const privacyUrl =
-    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -95,9 +128,9 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
         )}
         {showForm && (
           <form
-            action={action as unknown as string}
-            onSubmit={() => {
+            onSubmit={(e) => {
               setIsLoading(true);
+              trySubmitSurvey(e);
             }}
           >
             <input name="orgId" type="hidden" value={survey.organization.id} />
@@ -110,7 +143,11 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                 padding: '1rem',
               }}
             >
-              <SurveyForm survey={survey} />
+              <SurveyForm
+                initialValues={initialSurveyState}
+                onChange={onChangeSurveyState}
+                survey={survey}
+              />
               <FormControl fullWidth>
                 <RadioGroup
                   aria-labelledby="survey-signature"
@@ -229,9 +266,10 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
               <ZUIButton
                 actionType="submit"
                 dataTestId="Survey-submit"
+                isLoading={isLoading}
                 label={messages.surveyForm.submit()}
                 size="large"
-                variant={isLoading ? 'loading' : 'primary'}
+                variant="primary"
               />
             </Box>
           </form>

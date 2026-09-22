@@ -24,6 +24,7 @@ export const CreateLocationCard: FC<CreateLocationCardProps> = ({
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState<string>('');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const titles = suggestions ?? [];
 
   const { tokenOriginalByLower, tokenCounts, bigramCounts } = useMemo(() => {

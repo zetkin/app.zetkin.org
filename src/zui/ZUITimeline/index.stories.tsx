@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import dayjs from 'dayjs';
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 const chance = Chance();
 

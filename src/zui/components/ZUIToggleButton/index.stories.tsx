@@ -4,7 +4,7 @@ import {
   CalendarViewMonth,
   CalendarViewWeek,
 } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIToggleButton from './index';
 

@@ -24,7 +24,9 @@ export default function useViewBrowserMutations(
       const item = views.folderList.items.find((item) => item.id == id);
       return item?.mutating.includes('title') ?? false;
     } else if (type == 'view') {
-      const item = views.viewList.items.find((item) => item.id == id);
+      const item = views.viewsByOrgId[orgId].items.find(
+        (item) => item.id == id
+      );
       return item?.mutating.includes('title') ?? false;
     } else {
       return false;

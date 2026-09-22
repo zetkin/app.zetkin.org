@@ -1,6 +1,8 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { act, renderHook } from '@testing-library/react';
 
 import useVisitReporting from './useVisitReporting';
+import IApiClient from 'core/api/client/IApiClient';
 import { makeWrapper } from 'utils/testing';
 import mockState from 'utils/testing/mocks/mockState';
 import createStore, { RootState } from 'core/store';
@@ -105,8 +107,8 @@ describe('useVisitReporting()', () => {
       const store = createStore(initialState);
       const newVisit = mockHouseholdVisit();
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue({}),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue({}),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -175,8 +177,8 @@ describe('useVisitReporting()', () => {
       const store = createStore(initialState);
       const newVisit = mockHouseholdVisit();
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue(mockLocation),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue(mockLocation),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -297,8 +299,8 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue({}),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue({}),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -372,8 +374,8 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue(mockLocation),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue(mockLocation),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -417,8 +419,8 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue({}),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue({}),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -524,8 +526,8 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue({}),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue({}),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -590,11 +592,14 @@ describe('useVisitReporting()', () => {
       const store = createStore(initialState);
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue({}),
-        patch: jest.fn().mockImplementation((url, data) => ({
-          ...correctCurrentVisit,
-          ...data,
-        })),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue({}),
+        patch: jest
+          .fn<IApiClient['patch']>()
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .mockImplementation((url: string, data: any) => ({
+            ...correctCurrentVisit,
+            ...data,
+          })),
       });
 
       const { result } = renderHook(
@@ -692,8 +697,8 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue(mockLocation),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue(mockLocation),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -776,8 +781,10 @@ describe('useVisitReporting()', () => {
         num_households_visited: 3,
       };
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue({ id: LOCATION_ID, title: 'Loc' }),
-        patch: jest.fn().mockResolvedValue(updatedVisit),
+        get: jest
+          .fn<IApiClient['get']>()
+          .mockResolvedValue({ id: LOCATION_ID, title: 'Loc' }),
+        patch: jest.fn<IApiClient['patch']>().mockResolvedValue(updatedVisit),
       });
 
       const { result } = renderHook(
@@ -832,8 +839,10 @@ describe('useVisitReporting()', () => {
       };
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue({ id: LOCATION_ID, title: 'Loc' }),
-        post: jest.fn().mockResolvedValue(newVisit),
+        get: jest
+          .fn<IApiClient['get']>()
+          .mockResolvedValue({ id: LOCATION_ID, title: 'Loc' }),
+        post: jest.fn<IApiClient['post']>().mockResolvedValue(newVisit),
       });
 
       const { result } = renderHook(
@@ -918,8 +927,8 @@ describe('useVisitReporting()', () => {
       };
 
       const apiClient = mockApiClient({
-        get: jest.fn().mockResolvedValue(mockLocation),
-        rpc: jest.fn().mockResolvedValue(mockRpcResult),
+        get: jest.fn<IApiClient['get']>().mockResolvedValue(mockLocation),
+        rpc: jest.fn<IApiClient['rpc']>().mockResolvedValue(mockRpcResult),
       });
 
       const { result } = renderHook(

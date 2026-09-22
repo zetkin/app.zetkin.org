@@ -11,6 +11,11 @@ import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { EmotionCache } from '@emotion/utils';
+import 'dayjs/locale/de';
+import 'dayjs/locale/da';
+import 'dayjs/locale/nn';
+import 'dayjs/locale/sv';
+import 'dayjs/locale/nl';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment, { EnvVars } from 'core/env/Environment';
@@ -23,6 +28,8 @@ import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
+import { NonceContext } from 'core/hooks/useNonce';
+import { PromiseCacheProvider } from 'core/caching/PromiseCache';
 
 type ClientContextProps = {
   children: ReactNode;
@@ -30,6 +37,7 @@ type ClientContextProps = {
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;
+  nonce?: string;
   user: ZetkinUser | null;
 };
 
@@ -39,6 +47,7 @@ const ClientContext: FC<ClientContextProps> = ({
   headers,
   lang,
   messages,
+  nonce,
   user,
 }) => {
   const onServer = typeof window == 'undefined';
@@ -57,7 +66,11 @@ const ClientContext: FC<ClientContextProps> = ({
   const cache = useRef<EmotionCache | null>(null);
 
   if (!cache.current) {
-    cache.current = createCache({ key: 'css', prepend: true });
+    cache.current = createCache({
+      key: 'css',
+      nonce: nonce,
+      prepend: true,
+    });
   }
 
   // MUI-X license
@@ -67,38 +80,45 @@ const ClientContext: FC<ClientContextProps> = ({
 
   return (
     <ReduxProvider store={storeRef.current}>
-      <StyledEngineProvider injectFirst>
-        <CacheProvider value={cache.current}>
-          <ThemeProvider theme={oldThemeWithLocale(lang)}>
-            <EnvProvider env={env}>
-              <UserProvider user={user}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <IntlProvider
-                    defaultLocale="en"
-                    locale={lang}
-                    messages={messages}
-                  >
-                    <AppRouterCacheProvider>
-                      <ZUISnackbarProvider>
-                        <IntlProvider
-                          defaultLocale="en"
-                          locale={lang}
-                          messages={messages}
-                        >
-                          <ZUIConfirmDialogProvider>
-                            <CssBaseline />
-                            <Suspense>{children}</Suspense>
-                          </ZUIConfirmDialogProvider>
-                        </IntlProvider>
-                      </ZUISnackbarProvider>
-                    </AppRouterCacheProvider>
-                  </IntlProvider>
-                </LocalizationProvider>
-              </UserProvider>
-            </EnvProvider>
-          </ThemeProvider>
-        </CacheProvider>
-      </StyledEngineProvider>
+      <PromiseCacheProvider>
+        <StyledEngineProvider injectFirst>
+          <CacheProvider value={cache.current}>
+            <NonceContext.Provider value={nonce}>
+              <ThemeProvider theme={oldThemeWithLocale(lang)}>
+                <EnvProvider env={env}>
+                  <UserProvider user={user}>
+                    <LocalizationProvider
+                      adapterLocale={lang}
+                      dateAdapter={AdapterDayjs}
+                    >
+                      <IntlProvider
+                        defaultLocale="en"
+                        locale={lang}
+                        messages={messages}
+                      >
+                        <AppRouterCacheProvider>
+                          <ZUISnackbarProvider>
+                            <IntlProvider
+                              defaultLocale="en"
+                              locale={lang}
+                              messages={messages}
+                            >
+                              <ZUIConfirmDialogProvider>
+                                <CssBaseline />
+                                <Suspense>{children}</Suspense>
+                              </ZUIConfirmDialogProvider>
+                            </IntlProvider>
+                          </ZUISnackbarProvider>
+                        </AppRouterCacheProvider>
+                      </IntlProvider>
+                    </LocalizationProvider>
+                  </UserProvider>
+                </EnvProvider>
+              </ThemeProvider>
+            </NonceContext.Provider>
+          </CacheProvider>
+        </StyledEngineProvider>
+      </PromiseCacheProvider>
     </ReduxProvider>
   );
 };

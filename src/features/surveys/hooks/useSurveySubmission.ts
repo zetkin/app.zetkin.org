@@ -1,6 +1,9 @@
+import { useCallback } from 'react';
+
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { futureToObject, IFuture } from 'core/caching/futures';
 import {
+  submissionError,
   submissionLoad,
   submissionLoaded,
   surveySubmissionUpdate,
@@ -11,6 +14,7 @@ import {
   ZetkinSurveySubmission,
   ZetkinSurveySubmissionPatchBody,
 } from 'utils/types/zetkin';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 type UseSurveySubmissionResponderReturn = {
   setRespondentId: (id: number | null) => void;
@@ -32,6 +36,8 @@ export default function useSurveySubmission(
   );
 
   const future = loadItemIfNecessary(submissionItem, dispatch, {
+    actionOnError: (err) =>
+      submissionError([submissionId, serializeError(err)]),
     actionOnLoad: () => submissionLoad(submissionId),
     actionOnSuccess: (data) => submissionLoaded(data),
     loader: () =>
@@ -66,4 +72,37 @@ export function useSurveySubmissionResponder(
         });
     },
   };
+}
+
+export function useSurveySubmissionBulkSetResponder(
+  orgId: number
+): (
+  patches: { respondentId: number; submissionId: number }[]
+) => Promise<void> {
+  const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    async (patches) => {
+      patches.forEach(({ submissionId }) =>
+        dispatch(surveySubmissionUpdate([submissionId, ['respondent_id']]))
+      );
+
+      const submissions = await Promise.all(
+        patches.map(async ({ respondentId, submissionId }) => {
+          return await apiClient.patch<
+            ZetkinSurveySubmission,
+            ZetkinSurveySubmissionPatchBody
+          >(`/api/orgs/${orgId}/survey_submissions/${submissionId}`, {
+            respondent_id: respondentId,
+          });
+        })
+      );
+
+      submissions.forEach((submission) =>
+        dispatch(surveySubmissionUpdated(submission))
+      );
+    },
+    [orgId, apiClient, dispatch]
+  );
 }

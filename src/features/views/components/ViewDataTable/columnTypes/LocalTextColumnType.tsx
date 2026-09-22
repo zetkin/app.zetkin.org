@@ -100,6 +100,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
       el.setSelectionRange(el.value.length, el.value.length);
       el.scrollTop = el.scrollHeight;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRef = useCallback((el: HTMLElement | null) => {
@@ -118,6 +119,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
         event
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiRef, field, id]
   );
 
@@ -128,6 +130,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
         event.stopPropagation();
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiRef, id, field]
   );
 

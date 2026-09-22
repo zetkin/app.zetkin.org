@@ -71,18 +71,21 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
 }) => {
   const theme = useTheme();
 
+  const backgroundShade = theme.palette.mode === 'dark' ? 900 : 100;
+  const textShade = theme.palette.mode === 'dark' ? 100 : 900;
+
   const backgroundColors = {
-    error: theme.palette.swatches.red[100],
-    info: theme.palette.swatches.blue[100],
-    success: theme.palette.swatches.green[100],
-    warning: theme.palette.swatches.yellow[100],
+    error: theme.palette.swatches.red[backgroundShade],
+    info: theme.palette.swatches.blue[backgroundShade],
+    success: theme.palette.swatches.green[backgroundShade],
+    warning: theme.palette.swatches.yellow[backgroundShade],
   } as const;
 
   const colors = {
-    error: theme.palette.swatches.red[900],
-    info: theme.palette.swatches.blue[900],
-    success: theme.palette.swatches.green[900],
-    warning: theme.palette.swatches.yellow[900],
+    error: theme.palette.swatches.red[textShade],
+    info: theme.palette.swatches.blue[textShade],
+    success: theme.palette.swatches.green[textShade],
+    warning: theme.palette.swatches.yellow[textShade],
   } as const;
 
   const Icon = () => {

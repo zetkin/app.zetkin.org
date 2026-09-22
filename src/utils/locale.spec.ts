@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { NextApiRequest } from 'next';
 
 import { getBrowserLanguage } from './locale';

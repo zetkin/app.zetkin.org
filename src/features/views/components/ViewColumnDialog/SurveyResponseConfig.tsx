@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ChangeEventHandler, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import {
@@ -21,6 +21,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import StyledAutocomplete from 'features/smartSearch/components/inputs/StyledAutocomplete';
 
 interface SurveyResponseConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -35,10 +36,10 @@ const SurveyResponseConfig = ({
   onOutputConfigured,
 }: SurveyResponseConfigProps) => {
   const { orgId } = useNumericRouteParams();
-  const surveys = useSurveys(orgId);
+  const surveysFuture = useSurveys(orgId);
   const messages = useMessages(messageIds);
 
-  const [surveyId, setSurveyId] = useState<number | null>();
+  const [surveyId, setSurveyId] = useState<number | undefined>();
   const selectedSurvey = useSurveyElements(orgId, surveyId ?? null);
   const [selectedQuestion, setSelectedQuestion] =
     useState<ZetkinSurveyQuestionElement | null>(null);
@@ -46,8 +47,10 @@ const SurveyResponseConfig = ({
     SURVEY_QUESTION_OPTIONS.ALL_OPTIONS
   );
 
-  const onSurveyChange: ChangeEventHandler<{ value: unknown }> = (ev) => {
-    setSurveyId(ev.target.value as number);
+  const onSurveyChange = (
+    ev: SyntheticEvent & { target: { value: string } }
+  ) => {
+    setSurveyId(+ev.target.value);
     setSelectedQuestion(null);
     onOutputConfigured([]);
   };
@@ -65,25 +68,34 @@ const SurveyResponseConfig = ({
   };
 
   return (
-    <ZUIFuture future={surveys}>
-      {(data) => {
+    <ZUIFuture future={surveysFuture}>
+      {(surveys) => {
         return (
           <FormControl sx={{ width: 300 }}>
-            <TextField
-              fullWidth
+            <StyledAutocomplete
+              clearable={true}
+              items={surveys.map((survey) => ({
+                group: survey.campaign?.title,
+                id: survey.id,
+                label: survey.title,
+              }))}
               label={messages.columnDialog.choices.surveyResponse.surveyField()}
-              margin="normal"
               onChange={onSurveyChange}
-              select
-              value={surveyId || ''}
-              variant="standard"
-            >
-              {data.map((survey) => (
-                <MenuItem key={survey.id} value={survey.id}>
-                  {survey.title}
-                </MenuItem>
-              ))}
-            </TextField>
+              sx={{
+                '& .MuiInputBase-input': {
+                  textOverflow: 'ellipsis',
+                },
+                '& .MuiInputBase-root .MuiInputBase-input': {
+                  fontSize: 'inherit',
+                },
+                '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot':
+                  {
+                    paddingRight: '24px',
+                  },
+                width: '100%',
+              }}
+              value={surveyId}
+            />
             {!!surveyId && (
               <ZUIFuture future={selectedSurvey}>
                 {(data) => {

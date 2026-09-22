@@ -13,6 +13,7 @@ export default makeMessages('feat.organizations', {
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
       ),
+      selectDate: m('Select a date'),
       thisWeek: m('This week'),
       today: m('Today'),
       tomorrow: m('Tomorrow'),
@@ -67,13 +68,12 @@ export default makeMessages('feat.organizations', {
     },
     map: {
       viewInList: m('View in list'),
-      viewInMap: m('View in map'),
+      viewOnMap: m('View on map'),
     },
     menu: {
-      allEvents: m('All events'),
       logout: m('Logout'),
-      myActivities: m('My activities'),
       myZetkin: m('My Zetkin'),
+      organize: m('Organize'),
       settings: m('Settings'),
     },
     tabs: {

@@ -5,6 +5,7 @@ import { ZUIModalProps } from '.';
 import ModalContent from './ModalContent';
 
 const MobileModal: FC<ZUIModalProps> = ({
+  allowPropagation = false,
   children,
   onClose,
   open,
@@ -13,7 +14,7 @@ const MobileModal: FC<ZUIModalProps> = ({
   title,
 }) => {
   return (
-    <Drawer onClose={onClose} open={open}>
+    <Drawer allowPropagation={allowPropagation} onClose={onClose} open={open}>
       <ModalContent
         isMobile={true}
         onClose={onClose}

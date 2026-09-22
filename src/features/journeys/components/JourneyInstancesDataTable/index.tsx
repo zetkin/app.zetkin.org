@@ -74,8 +74,8 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
       slotProps={{
         toolbar: {
           gridColumns: columnsWithHeaderTitles,
-          onQuickSearchChange: setQuickSearch,
           onSortModelChange: modelGridProps.onSortModelChange,
+          setQuickSearch,
           sortModel: modelGridProps.sortModel,
         },
       }}

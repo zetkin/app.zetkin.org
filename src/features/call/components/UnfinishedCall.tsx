@@ -1,26 +1,31 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
-import { ZetkinCall } from '../types';
+import { UnfinishedCall } from '../types';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useCallMutations from '../hooks/useCallMutations';
 
 type Props = {
-  onAbandonCall: () => void;
-  onSwitchToCall: () => void;
-  unfinishedCall: ZetkinCall;
+  onCall: () => void;
+  orgId: number;
+  unfinishedCall: UnfinishedCall;
 };
 
-const UnfinishedCall: FC<Props> = ({
-  onAbandonCall,
-  onSwitchToCall,
+const UnfinishedCallListItem: FC<Props> = ({
+  onCall,
+  orgId,
   unfinishedCall,
 }) => {
   const messages = useMessages(messageIds);
+  const [isLoading, setIsLoading] = useState(false);
+  const { abandonUnfinishedCall, switchToUnfinishedCall } =
+    useCallMutations(orgId);
+
   return (
     <Box
       key={unfinishedCall.id}
@@ -60,14 +65,28 @@ const UnfinishedCall: FC<Props> = ({
         </Box>
         <Box display="flex" gap={1}>
           <ZUIButton
+            isLoading={isLoading}
             label={messages.callLog.unfinishedCall.abandon()}
-            onClick={() => onAbandonCall()}
+            onClick={async () => {
+              setIsLoading(true);
+              await abandonUnfinishedCall(
+                unfinishedCall.assignment_id,
+                unfinishedCall.id
+              );
+              setIsLoading(false);
+            }}
             size="small"
             variant="tertiary"
           />
           <ZUIButton
             label={messages.callLog.unfinishedCall.switch()}
-            onClick={() => onSwitchToCall()}
+            onClick={() => {
+              switchToUnfinishedCall(
+                unfinishedCall.id,
+                unfinishedCall.assignment_id
+              );
+              onCall();
+            }}
             size="small"
             variant="primary"
           />
@@ -84,11 +103,11 @@ const UnfinishedCall: FC<Props> = ({
       >
         <ZUIText variant="bodyMdRegular">{unfinishedCall.target.phone}</ZUIText>
         <ZUIText color="secondary" noWrap>
-          <ZUIRelativeTime datetime={unfinishedCall.update_time} />
+          <ZUIRelativeTime datetime={unfinishedCall.update_time} forcePast />
         </ZUIText>
       </Box>
     </Box>
   );
 };
 
-export default UnfinishedCall;
+export default UnfinishedCallListItem;

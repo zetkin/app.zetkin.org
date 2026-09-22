@@ -1,6 +1,6 @@
-import { useState } from '@storybook/preview-api';
+import { useState } from 'storybook/preview-api';
 import { Box, Button } from '@mui/material';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/nextjs';
 
 import ZUIStackedStatusBar from '.';
 

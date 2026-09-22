@@ -21,10 +21,10 @@ const DateLabel = ({ date }: { date: Date }) => {
             ? // White colour if today
               'white'
             : isThePast
-            ? // Grey if it's the past
-              oldTheme.palette.secondary.main
-            : // Default colour if it's the future
-              'inherit',
+              ? // Grey if it's the past
+                oldTheme.palette.secondary.main
+              : // Default colour if it's the future
+                'inherit',
           minHeight: '40px',
           minWidth: '40px',
           padding: '8px',

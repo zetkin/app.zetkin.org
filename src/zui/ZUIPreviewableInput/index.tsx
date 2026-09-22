@@ -17,7 +17,7 @@ type ZUIPreviewableInputProps<ValueType, InputType> = {
 
 function ZUIPreviewableInput<
   ValueType extends string | number,
-  InputType extends HTMLInputElement
+  InputType extends HTMLInputElement,
 >({
   focusInitially = false,
   mode,

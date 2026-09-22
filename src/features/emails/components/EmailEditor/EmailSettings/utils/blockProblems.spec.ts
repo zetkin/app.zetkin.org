@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { OutputBlockData } from '@editorjs/editorjs';
 
 import blockProblems from './blockProblems';

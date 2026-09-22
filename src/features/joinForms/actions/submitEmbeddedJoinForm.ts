@@ -9,7 +9,7 @@ import { EmbeddedJoinFormData, EmbeddedJoinFormStatus } from '../types';
 export default async function submitJoinForm(
   prevState: EmbeddedJoinFormStatus,
   inputFormData: FormData
-) {
+): Promise<EmbeddedJoinFormStatus> {
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);

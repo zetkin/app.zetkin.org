@@ -42,7 +42,6 @@ feat:
       calendar: Kalender
       callassignments: Ringeopgaver
       callers: Ringere
-      campaigns: Projekter
       closed: Lukket
       conversation: Samtale
       events: Begivenheder
@@ -221,7 +220,7 @@ feat:
       editButton: Rediger målgruppen
       subtitle: Brug smart søgning for at definere målgruppen til denne opgave
       title: Målpersoner
-  campaigns:
+  projects:
     activitiesOverview:
       button: Søg i alle begivenheder
       empty: Intet denne dag
@@ -273,15 +272,15 @@ feat:
     form:
       createCallAssignment:
         newCallAssignment: Mine ringeopgaver
-      createCampaign:
+      createProject:
         create: Opret projekt
         error: Der er opstået en fejl under oprettelsen af projektet
-        newCampaign: Mit projekt
+        newProject: Mit projekt
       createSurvey:
         newSurvey: Mit spørgeskema
       createTask:
         title: Opret opgave
-      deleteCampaign:
+      deleteProject:
         cancel: Afbryd
         error: Der er opstået en fejl under sletningen af projektet
         submitButton: Bekræft sletning
@@ -290,7 +289,7 @@ feat:
           permanent.
       description: Beskrivelse
       edit: Rediger projekt
-      editCampaignTitle:
+      editProjectTitle:
         error: Fejl under opdateringen af projektetnavn
         success: Projektnavn opdateret
       manager:
@@ -309,7 +308,7 @@ feat:
     indefinite: Ubestemt tidslinje
     layout:
       activities: Aktiviteter
-      allCampaigns: Alle projekter & aktiviteter
+      allProjects: Alle projekter & aktiviteter
       archive: Arkiv
       calendar: Kalender
       insights: Indsigter
@@ -592,16 +591,16 @@ feat:
           two: Fjern personer, der er blevet ringet op mindst 1 gang i opgaven 'Aktiver
             gamle medlemmer' i løbet af de sidste 30 dage.
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {gange}}'
-      campaignParticipation:
+      projectParticipation:
         activitySelect:
           activity: type "{activity}"
           any: enhver type
         bookedSelect:
           booked: blevet booket
           signed_up: tilmeldt
-        campaignSelect:
+        projectSelect:
           any: hvilket som helst projekt
-          campaign: projekt "{campaign}"
+          project: projekt "{project}"
         examples:
           one: Tilføj personer, der har tilmeldt sig begivenheder på lokationen
             'Dorfplatz' uanset type, projekt eller tidspunkt
@@ -612,7 +611,7 @@ feat:
           in: har
           notin: har ikke
         inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} til
-          begivenheden i {campaignSelect} af {activitySelect} på
+          begivenheden i {projectSelect} af {activitySelect} på
           {locationSelect} {timeFrame}'
         locationSelect:
           any: enhver lokation
@@ -779,9 +778,9 @@ feat:
           none: Denne organisation har ingen spørgeskemaer endnu
           survey: spørgeskema "{surveyTitle}"
       task:
-        campaignSelect:
+        projectSelect:
           any: et hvilket som helst projekt
-          campaign: projekt "{campaign}"
+          project: projekt "{project}"
           in: i
         examples:
           one: Tilføj personer, der har fuldført opgaven "Fortæl dine venner" mindst én
@@ -789,7 +788,7 @@ feat:
           two: Tilføj personer, der har ignoreret en opgave i et projekt mellem 2 og 5
             gange før dags dato
         inputString: '{addRemoveSelect} personer som har {taskStatusSelect}
-          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
+          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: enhver opgave
           task: opgave "{task}"
@@ -1125,7 +1124,7 @@ feat:
       title: Rediger opgave
     form:
       fields:
-        campaign: Kampagne
+        project: Kampagne
         deadline: Afslutningsfrist
         expires: Udløbsdato
         instructions: Instruktioner

@@ -17,5 +17,6 @@ export const useAutoResizeMap = (mapRef: MapType | null) => {
     const resizeObserver = new ResizeObserver(() => mapRef?.invalidateSize());
     resizeObserver.observe(containerElement);
     return () => resizeObserver.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerElement]);
 };

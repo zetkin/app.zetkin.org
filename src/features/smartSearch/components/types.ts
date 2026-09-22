@@ -16,10 +16,13 @@ export enum FILTER_TYPE {
   ALL = 'all',
   CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
-  CAMPAIGN_PARTICIPATION = 'campaign_participation',
+  CALLER = 'caller',
+  CALLER_PARTICIPATION = 'caller_participation',
+  PROJECT_PARTICIPATION = 'campaign_participation',
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
+  EVENT_PARTICIPATION = 'action_participation',
   JOINFORM = 'joinform',
   JOURNEY = 'journey_subjects',
   MOST_ACTIVE = 'most_active',
@@ -96,6 +99,7 @@ export enum TIME_FRAME {
   EVER = 'ever',
   FUTURE = 'future',
   BEFORE_TODAY = 'beforeToday',
+  ON_DATE = 'onDate',
   BEFORE_DATE = 'beforeDate',
   AFTER_DATE = 'afterDate',
   BETWEEN = 'between',
@@ -152,6 +156,22 @@ export interface CallHistoryFilterConfig {
   after?: string;
   organizations?: FilterConfigOrgOptions;
 }
+
+export interface CallerFilterConfig {
+  assignment: number | null;
+  operator: 'assigned' | 'notassigned';
+  organizations?: FilterConfigOrgOptions;
+}
+
+export interface CallerParticipationFilterConfig {
+  assignment: number | null;
+  num_calls: {
+    max?: number;
+    min?: number;
+  };
+  organizations?: FilterConfigOrgOptions;
+}
+
 export interface EmailBlacklistFilterConfig {
   operator: 'blacklisted';
   organizations?: FilterConfigOrgOptions;
@@ -287,7 +307,7 @@ export type AreaFilterConfig = {
   operator: AREA_OPERATOR;
 };
 
-export interface CampaignParticipationConfig {
+export interface ProjectParticipationConfig {
   state: 'booked' | 'signed_up';
   status?: 'attended' | 'cancelled' | 'noshow';
   operator: 'in' | 'notin';
@@ -297,6 +317,13 @@ export interface CampaignParticipationConfig {
   location?: number;
   after?: string;
   before?: string;
+}
+
+export interface EventParticipationConfig {
+  action: number;
+  state: 'booked' | 'signed_up';
+  status?: 'attended' | 'cancelled' | 'noshow';
+  organizations?: FilterConfigOrgOptions;
 }
 
 export interface SubQueryFilterConfig {
@@ -361,7 +388,10 @@ export interface TaskFilterConfig {
 export type AnyFilterConfig =
   | CallBlockedFilterConfig
   | CallHistoryFilterConfig
-  | CampaignParticipationConfig
+  | CallerFilterConfig
+  | CallerParticipationFilterConfig
+  | ProjectParticipationConfig
+  | EventParticipationConfig
   | DefaultFilterConfig
   | EmailBlacklistFilterConfig
   | JoinFormFilterConfig
@@ -387,8 +417,9 @@ export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
   type: FILTER_TYPE;
 }
 
-export interface SmartSearchFilterWithId<C = AnyFilterConfig>
-  extends ZetkinSmartSearchFilter<C> {
+export interface SmartSearchFilterWithId<
+  C = AnyFilterConfig,
+> extends ZetkinSmartSearchFilter<C> {
   id: number;
 }
 

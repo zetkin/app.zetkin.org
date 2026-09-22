@@ -25,15 +25,18 @@ const FrontendResponsiveContainer: FC<
     if (onWidthChange && widthRef.current) {
       onWidthChange(width, widthRef.current);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width]);
 
   useEffect(() => {
     if (widthRef.current) {
       observerRef.current.observe(widthRef.current);
       return () => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         observerRef.current.disconnect();
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [widthRef.current]);
 
   return (

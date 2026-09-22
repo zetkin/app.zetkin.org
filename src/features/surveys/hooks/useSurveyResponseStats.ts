@@ -1,9 +1,8 @@
 import { IFuture } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import getSurveyResponseStats, {
-  SurveyResponseStats,
-} from 'features/surveys/rpc/getSurveyResponseStats';
+import getSurveyResponseStats from 'features/surveys/rpc/getSurveyResponseStats';
+import { SurveyResponseStats } from 'features/surveys/types';
 import {
   responseStatsError,
   responseStatsLoad,

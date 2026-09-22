@@ -13,9 +13,9 @@ import clusterEventsForWeekCalender, {
 } from '../utils/clusterEventsForWeekCalender';
 
 type UseWeekCalendarEventsParams = {
-  campaignId: number;
   dates: Date[];
   orgId: number;
+  projectId: number;
 };
 
 type UseWeekCalendarEventsReturn = {
@@ -25,16 +25,13 @@ type UseWeekCalendarEventsReturn = {
 }[];
 
 export default function useWeekCalendarEvents({
-  campaignId,
+  projectId,
   dates,
   orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
-  const eventActivities = useEventsFromDateRange(
-    dates[0],
-    dates[dates.length - 1],
-    orgId,
-    campaignId
-  );
+  const eventActivities =
+    useEventsFromDateRange(dates[0], dates[dates.length - 1], orgId, projectId)
+      .data || [];
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
   return dates.map((date) => {
@@ -45,7 +42,7 @@ export default function useWeekCalendarEvents({
         return (
           isSameDate(start, date) ||
           isSameDate(end, date) ||
-          (dateIsAfter(start, date) && dateIsBefore(end, date))
+          (dateIsBefore(start, date) && dateIsAfter(end, date))
         );
       })
       .map((activity) => ({

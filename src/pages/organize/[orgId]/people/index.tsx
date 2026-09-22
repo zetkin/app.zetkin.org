@@ -4,7 +4,7 @@ import Head from 'next/head';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/views/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
-import PeopleLayout from 'features/views/layout/PeopleLayout';
+import PeopleLayout, { PeopleHeader } from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
@@ -50,13 +50,16 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
       <Head>
         <title>{messages.browserLayout.title()}</title>
       </Head>
-      <ViewBrowser basePath={`/organize/${orgId}/people`} />
+      <ViewBrowser
+        basePath={`/organize/${orgId}/people`}
+        header={<PeopleHeader />}
+      />
     </>
   );
 };
 
 PeopleViewsPage.getLayout = function getLayout(page) {
-  return <PeopleLayout>{page}</PeopleLayout>;
+  return <PeopleLayout hideHeader={true}>{page}</PeopleLayout>;
 };
 
 export default PeopleViewsPage;

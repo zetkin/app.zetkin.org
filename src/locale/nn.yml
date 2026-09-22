@@ -40,6 +40,69 @@ core:
       vil bruke, du blir videresendt til den gamle versjonen av Zetkin som
       støtter denne funksjonen.
 feat:
+  account:
+    lostPassword:
+      actions:
+        sendEmail: Send e-post
+        sendLink: Send lenke på nytt
+        signIn: Logg inn
+      checkEmail: Sjekk e-posten din
+      description: Har du glemt passordet? Skriv inn e-postadressen din, så sender vi
+        en lenke så du kan velge nytt passord.
+      descriptionCheck: Hvis det finnes en konto med denne e-postadressen får du
+        veiledning for å tilbakestille på {email}
+      emailFieldLabel: E-post
+      errors:
+        alreadyLoggedIn:
+          description: Du kan ikke tilbakestille passordet, siden du alt er logga inn.
+          title: Du er alt logga inn
+        invalidEmail: Vennligst legg inn en gyldig e-postadresse.
+        unknownError: Noe gikk galt, du kan forsøke igjen senere.
+        unknownErrorTitle: Uventet feil
+      footer:
+        readPolicy: Les vår personvernerklæring
+      title: Gjenopprett Zetkinkontoen din
+    register:
+      actions:
+        createAccount: Opprett konto
+      description: Begynn å organisere med Zetkin
+      error:
+        conflictError: Det finnes en konto med denne e-posten eller telefonnummeret fra før.
+        invalidParameter: Vennligst legg inn gyldig e-post og/eller telefonnummer.
+        phoneError: Legg inn et gyldig telefonnummer
+        unknownError: Registreringen mislyktes. Du kan forsøke igjen senere.
+      instructions: En melding med instruksjoner har blitt sendt til
+      labels:
+        checkBox: Jeg godkjenner at personopplysningene mine brukes til å opprettholde
+          brukerkontoen i Zetkin
+        email: E-postadresse
+        firstName: Fornavn
+        lastName: Etternavn
+        mobile: Mobilnummer
+        password: Passord
+      title: Opprett ny konto
+      welcome: Velkommen, {userName}
+    resetPassword:
+      actions:
+        labelPassword: Passord
+        save: Lagre passord
+      description: Sett et nytt passord. Det må være minst 6 tegn langt.
+      descriptionUpdated: Passordet ditt ble oppdatert, du kan logge på med det nye passordet.
+      error:
+        errorMessage: Noe gikk galt, vennligst prøv igjen
+        title: Feil
+      title: Tilbakestill passord
+      unexpectedError: Det oppstod en uventet feil ved tilbakestilling av passord, du
+        kan forsøke igjen.
+      validation: Passordet må være minst 6 tegn langt.
+    verify:
+      description: Vær vennlig å bekrefte e-postadressen din for å fortsette å bruke
+        Zetkin. Vi har sendt en bekreftelseslenke til innboksen din. Sjekk
+        søppelposten dersom du ikke finner den, eller klikk på knappen nedenfor
+        for å sende på nytt.
+      sendVerification: Send ny bekreftelseslenke
+      success: Vi har sendt en ny bekreftelseslenke
+      title: Bekreft e-postadressen din
   areaAssignments:
     assignees:
       columns:
@@ -217,7 +280,6 @@ feat:
       calendar: Kalender
       callassignments: Ringeoppdrag
       callers: Ringere
-      campaigns: Prosjekter
       closed: Stengt
       compose: Utforming
       conversation: Samtale
@@ -243,6 +305,7 @@ feat:
       settings: Innstillinger
       shared: Delt med oss
       submissions: Svar
+      suborgOverview: Oversikt over underorganisasjoner
       surveys: Spørreundersøkelser
       tags: Etiketter
       tasks: App-innhold
@@ -320,6 +383,8 @@ feat:
         duplicate: Samme tid og dato (dupliser)
         nextDay: Neste dag {dates}
         nextWeek: Neste uke {dates}
+        reschedule: Endre dato/tid
+        rescheduleMenuHeader: Endre dato/tid for {numberOfEvents} arrangementer til
     shortWeek: uke {weekNumber}
     showMore: Vis
     today: I dag
@@ -346,6 +411,8 @@ feat:
         organizations:
           noSelected: Organisasjoner
           selected: '{numOrgs} organisasjoner'
+        projects: '{numProjects, plural, =0{Context} =1{ett prosjekt} other{#
+          prosjekter}}'
       projects:
         wihoutProjectLabel: Inget prosjekt
       title: Aktiviteter
@@ -386,9 +453,9 @@ feat:
       title: En uventet feil oppsto.
     header:
       primaryButton:
-        undefined: Ring
+        start: Ring
       secondaryButton:
-        undefined: Avslutt
+        start: Avslutt
     instructions:
       noInstructions: Dette ringeoppdraget har ingen veiledning
       title: Veiledning
@@ -542,9 +609,9 @@ feat:
       subtitle: Folk som ikke er klare til å ringes
       title: Blokkert
       viewSheetButton: Vis alle
-    callAssignmentChangeCampaignDialog:
+    callAssignmentChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte oppdraget til det valgte prosjektet'
-      success: Oppdraget "{assignmentTitle}" ble flyttet til "{campaignTitle}"
+      success: Oppdraget "{assignmentTitle}" ble flyttet til "{projectTitle}"
       title: Flytt oppdrag
     callers:
       actions:
@@ -626,7 +693,9 @@ feat:
       editButton: Rediger målgruppe
       subtitle: Bruk smartsøk til å definere målgruppa for dette oppdraget
       title: Folk i målgruppa
-  campaigns:
+  projects:
+    activeProjects:
+      header: Aktivt
     activitiesOverview:
       button: Se alle aktiviteter
       empty: Ingen ting på denne dagen
@@ -658,6 +727,8 @@ feat:
           fått varsel'
         signups: Uregistrerte påmeldinger finnes
     all:
+      projectFilterPlaceholder: Skriv for å filtrere prosjekter
+      cardAriaLabel: Åpne prosjektet {title}
       cardCTA: Gå til prosjekt
       create: Nytt prosjekt
       filter:
@@ -667,6 +738,7 @@ feat:
         filter: Filtrer resultater
         standalones: Frittstående arrangementer
         surveys: Spørreundersøkelser
+      header: Prosjekter
       indefinite: Uten sluttdato
       unsorted: Usorterte prosjekter
       upcoming: '{numEvents, number} kommende arrangementer.'
@@ -674,9 +746,14 @@ feat:
       noActivities: Hvis organisasjonen din har aktiviteter som ikke tilhører et
         prosjekt vises de her.
       viewArchive: Vis arkiv
+    archivedProjects:
+      header: Arkiverte
+      hideShowButton:
+        hide: Skjul arkiverte prosjekter
+        show: Vis arkiverte prosjekter
     assigneeActions: Klikk i appen
     calendarView: Se alle i kalender
-    changeCampaignDialog:
+    changeProjectDialog:
       moveButtonLabel: Flytt
     createButton:
       createActivity: Opprett
@@ -692,21 +769,24 @@ feat:
       create: Ny spørreundersøkelse
       heading: Tilbakemeldinger og spørreundersøkelser (ingen satt opp)
     form:
+      archiveProject:
+        archive: Arkiver prosjekt
+        unarchive: Hent tilbake fra arkivet
       createAreaAssignment:
         defaultQuestion: Fullførte du oppgaven?
       createCallAssignment:
         newCallAssignment: Mitt ringeoppdrag
-      createCampaign:
+      createProject:
         create: Nytt prosjekt
         error: Kunne ikke opprette prosjektet
-        newCampaign: Mitt prosjekt
+        newProject: Mitt prosjekt
       createEmail:
         newEmail: E-post uten tittel
       createSurvey:
         newSurvey: Min spørreundersøkelse
       createTask:
         title: Ny oppgave
-      deleteCampaign:
+      deleteProject:
         cancel: Avbryt
         error: Kunne ikke slette prosjektet
         submitButton: Bekreft sletting
@@ -714,7 +794,7 @@ feat:
         warning: Er du sikker på at du vil slette dette prosjektet? Kan ikke angres.
       description: Beskrivelse
       edit: Rediger prosjekt
-      editCampaignTitle:
+      editProjectTitle:
         error: Kunne ikke oppdatere prosjektnavnet
         success: Prosjektnavn oppdatert
       manager:
@@ -733,7 +813,7 @@ feat:
     indefinite: Uten sluttdato
     layout:
       activities: Aktiviteter
-      allCampaigns: Alle prosjekter
+      allProjects: Alle prosjekter
       archive: Arkiv
       calendar: Kalender
       insights: Analyse
@@ -773,6 +853,7 @@ feat:
         viewInListButton: Vis i liste
         viewInMapButton: Vis i kart
     shared:
+      cta: Gå til prosjekt
       noActivities: Alle pågående aktiviteter som er delt med organisasjonen din vil
         vises her.
       noArchives: Alle tidligere aktiviteter som har blitt delt med organisasjonen din
@@ -792,6 +873,11 @@ feat:
       noActivities: Det er ingen aktiviteter i dette prosjektet ennå.
       noSearchResults: Filtreringen gav ingen resultater.
       showPublicPage: Vis påmeldingssiden
+      status:
+        archived: Arkivert
+        draft: Utkast
+        private: Privat
+        public: Offentlig
       viewArchive: Vis arkiv
     taskLayout:
       tabs:
@@ -915,6 +1001,8 @@ feat:
         cancel: Avbryt
         create: Opprett adresse
         inputPlaceholder: Gi adressen et navn
+      initializationError: Det skjedde en feil ved lasting av kartet. Kontroller at
+        nettleseren din støtter WebGL og at det er på.
     selectArea:
       noAreas: Ingen områder er tilgjengelig
     sidebar:
@@ -929,6 +1017,7 @@ feat:
         header:
           households: Dører
           householdsSuccessful: Vellykkede besøk
+          householdsVisited: Besøkte husstander
           locations: Adresser
           successfulVisits: Vellykkede besøk
           title: Framgang
@@ -1092,9 +1181,9 @@ feat:
       timeZone: Tidssone
       warning: Er du sikker på at du vil slette e-posten? Handlingen er permanent og
         kan ikke angres.
-    emailChangeCampaignDialog:
+    emailChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte e-posten til valgt prosjekt'
-      success: E-posten "{emailTitle}" ble flyttet til "{campaignTitle}"
+      success: E-posten "{emailTitle}" ble flyttet til "{projectTitle}"
       title: Flytt e-post
     emailFeatureIsBlocked:
       errorMessage: Organisasjonen din har ikke tilgang til å sende e-post.
@@ -1213,9 +1302,9 @@ feat:
       warning: '"{eventTitle}" vil bli slettet.'
       warningCancel: '"{eventTitle}" vil bli avlyst.'
       warningRestore: '"{eventTitle}" vil bli gjenopprettet.'
-    eventChangeCampaignDialog:
+    eventChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte arrangementet til det valgte prosjektet'
-      success: Arrangementet ble flyttet til "{campaignTitle}"
+      success: Arrangementet ble flyttet til "{projectTitle}"
       title: Flytt arrangement
     eventContactCard:
       header: Kontakt
@@ -1256,6 +1345,7 @@ feat:
       buttonDelete: Slett
       buttonNoshow: Ikke møtt
       cancelledParticipants: Avmeldte deltakere
+      columnAction: Handling
       columnEmail: E-post
       columnName: Navn
       columnNotified: Varslet
@@ -1286,6 +1376,9 @@ feat:
         arrangementet avlyses.
       confirmCancel: Er du sikker på at du vil avlyse dette arrangementet?
       confirmDelete: Er du sikker på at du vil slette dette arrangementet?
+      confirmRemindersMessage: Bekreft at du vil sende påminnelse til {numReminders,
+        plural, =1 {en deltaker} other {# deltakere}}
+      confirmRemindersTitle: Bekreft utsending av påminnelser
       contactPerson: Kontaktperson
       dateAndTime: Dato og tid
       delete: Slett
@@ -1571,7 +1664,7 @@ feat:
             Zetkin, for eksempel medlemsregisteret.
           field:
             email: E-post
-            undefined: Medlemsnummer
+            ext_id: Medlemsnummer
           importCheckboxDescription: Dette feltet blir brukt til å finne folk som finnes i
             Zetkin fra før, verdiene burde være unike.
           importCheckboxLabel: Bruk {importID} som import ID
@@ -1667,7 +1760,7 @@ feat:
           unknown: Ukjent
         ids:
           email: E-post
-          undefined: Medlemsnummer
+          ext_id: Medlemsnummer
         next: Neste
         noOrg: Ingen organisasjon
         noTags: Ingen etiketter
@@ -2010,6 +2103,10 @@ feat:
       noLocation: Ingen fysisk plassering
     footer:
       privacyPolicy: Personvernerklæring
+    myOrgs:
+      followButton: Følg
+      organizeButton: Organiser
+      unfollowButton: Slutt å følge
     newLandingPageAlert:
       description: Hvis du ser etter administrasjonssidene kan du finne dem ved å
         klikke på knappen under
@@ -2034,6 +2131,7 @@ feat:
     tabs:
       feed: Alle arrangementer
       home: Mine aktiviteter
+      orgs: Mine organisasjoner
       settings: Innstillinger
     title: Min Zetkin
   organizations:
@@ -2284,7 +2382,7 @@ feat:
         call_history:
           description: Finn folk som har blitt ringt, nådd, eller forsøkt ringt.
           title: Ringehistorikk
-        campaign_participation:
+        project_participation:
           description: Hvem meldte seg på? Ble registrert? Hvem meldte seg ikke på? Finn
             dem!
           title: Deltakelse på arrangementer
@@ -2303,6 +2401,10 @@ feat:
         journey_subjects:
           description: Finn folk som har en pågående plan eller har fullført en
           title: Folk som deltar i en plan
+        official:
+          description: Finn folk som har roller som koordinator eller administrator i en
+            organisasjon.
+          title: Basert på tilgangsnivå.
         person_data:
           description: Navn, adresse, e-post og mer!
           title: Personopplysninger
@@ -2391,16 +2493,16 @@ feat:
           {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {ganger}}'
         minTimesInput: minst {input} {minTimes, plural, one {gang} other {ganger}}
-      campaignParticipation:
+      projectParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
           any: en aktivitet
         bookedSelect:
           booked: blitt registrert på
           signed_up: meldt seg på
-        campaignSelect:
+        projectSelect:
           any: et prosjekt
-          campaign: Prosjektet "{campaign}"
+          project: Prosjektet "{project}"
         examples:
           one: Legg til folk som har meldt seg på arrangementer i et prosjekt med en
             aktivitet på plassen 'Torget' når som helst.
@@ -2410,7 +2512,7 @@ feat:
           in: har
           notin: ikke har
         inputString: '{addRemoveSelect} folk som {haveSelect} {bookedSelect}
-          {statusSelect} på arrangementer {campaignSelect} av typen
+          {statusSelect} på arrangementer {projectSelect} av typen
           {activitySelect} på stedet {locationSelect} {timeFrame}'
         locationSelect:
           any: et sted
@@ -2482,6 +2584,15 @@ feat:
         inputString: '{addRemoveSelect} de {numPeopleSelect} mest aktive {numPeople,
           plural, one {person} other {folka}} i organisasjonen {timeFrame}.'
         numPeople: '{numPeople, plural, one {person} other {folk}}'
+      official:
+        examples:
+          one: Legg til alle som har tilgang som koordinator eller administrator.
+          two: Fjern alle folk som har tilgang som administrator.
+        inputString: '{addRemoveSelect} folk som har tilgang som {roleSelect}.'
+        roleSelect:
+          admin: administratorer
+          any: enten koordinator eller administrator
+          organizer: koordinatorer
       personData:
         ellipsis: ...
         examples:
@@ -2523,6 +2634,7 @@ feat:
           text: '{fieldName} {searchTerm}'
           url: '{fieldName} {searchTerm}'
       personTags:
+        addAllFromGroupButton: Legg til alle
         condition:
           conditionSelect:
             all: alle
@@ -2639,9 +2751,9 @@ feat:
           none: Denne organisasjonen har ikke noen spørreundersøkelsen ennå
           survey: '"{surveyTitle}"'
       task:
-        campaignSelect:
+        projectSelect:
           any: et prosjekt
-          campaign: prosjektet "{campaign}"
+          project: prosjektet "{project}"
           in: i
         examples:
           one: Legg til folk som har trykket fullført på innholdet 'Verv en venn' minst en
@@ -2649,7 +2761,7 @@ feat:
           two: Legg til folk som har trykket ignorer på innhold i et prosjekt mellom 2 og
             5 ganger før i dag
         inputString: '{addRemoveSelect} folk som har {taskStatusSelect} {taskSelect}
-          {campaignSelect} {matchingSelect} {timeFrame}'
+          {projectSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: innhold
           task: innholdet "{task}"
@@ -2835,6 +2947,7 @@ feat:
           nå kan det bli problemer med informasjonen i svarene. Utvis
           forsiktighet.
     insights:
+      error: En ukjent feil oppsto under lasting.
       export:
         errorUnknown: En ukjent feil oppsto nå Zetkin eksporterte.
         toPdf: Eksporter som PDF
@@ -2913,19 +3026,15 @@ feat:
       personRecordColumn: Innsender
       suggestedPeople: Foreslåtte folk
       unlink: Fjern kobling
-    surveyChangeCampaignDialog:
+    surveyChangeProjectDialog:
       error: 'Feil: Kunne ikke flytte undersøkelsen til valgt prosjekt'
-      success: Undersøkelsen "{surveyTitle}" ble flyttet til "{campaignTitle}"
+      success: Undersøkelsen "{surveyTitle}" ble flyttet til "{projectTitle}"
       title: Flytt spørreundersøkelse
     surveyDialog:
       add: Legg til
       cancel: Ikke legg til
-      description: Personen du skal koble til har ikke e-postadresse, men de har
-        oppgitt en i undersøkelsen, vil du legge adressen til personen i Zetkin?
       title: Legg til e-postadresse
     surveyDialogDifferentEmail:
-      description: Personen du skal koble har en annen e-post i systemet enn den som
-        er oppgitt i svaret. Vil erstatte den med adressen fra skjemaet?
       keep: Nei, behold gammel e-post
       title: Oppdater e-postadresse
       update: Ja, oppdater e-post
@@ -3087,7 +3196,7 @@ feat:
       title: Rediger innhold
     form:
       fields:
-        campaign: Prosjekt
+        project: Prosjekt
         deadline: Frist
         expires: Utløpsdato
         instructions: Instruks
@@ -3141,9 +3250,9 @@ feat:
       draft: Utkast
       expired: Utløpt
       scheduled: Planlagt
-    taskChangeCampaignDialog:
+    taskChangeProjectDialog:
       error: 'Feil: Kunnne ikke flytte oppgaven til valgt prosjekt'
-      success: Oppgaven "{taskTitle}" ble flyttet til "{campaignTitle}"
+      success: Oppgaven "{taskTitle}" ble flyttet til "{projectTitle}"
       title: Flytt oppgave
     taskDetails:
       deadlineTime: Frist
@@ -3491,7 +3600,6 @@ feat:
       bulk:
         createList: Lag liste av valgte
         delete: Slett valgte folk fra organisasjonen
-        handleSelection: Behandle utvalg
         removeFromList: Fjern valgte folk fra lista
       createColumn: Ny kolonne
     viewLayout:

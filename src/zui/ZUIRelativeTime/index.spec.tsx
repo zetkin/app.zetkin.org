@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { render } from 'utils/testing';
 import ZUIRelativeTime from '.';
 

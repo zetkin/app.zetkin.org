@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import mockEvent from 'utils/testing/mocks/mockEvent';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { getFirstAndLastEvent, removeOffset } from './dateUtils';
@@ -20,28 +22,25 @@ describe('getFirstAndLastEvent()', () => {
 
   it('Returns array of undefined if passed an empty array ', () => {
     const emptyArray: ZetkinEvent[] = [];
-    expect(getFirstAndLastEvent(emptyArray)).toMatchObject([
-      undefined,
-      undefined,
-    ]);
+    expect(getFirstAndLastEvent(emptyArray)).toEqual([undefined, undefined]);
   });
   it('Returns array with two of the same event if passed an array of one event', () => {
     const singleEventArray = [firstEvent];
-    expect(getFirstAndLastEvent(singleEventArray)).toMatchObject([
+    expect(getFirstAndLastEvent(singleEventArray)).toEqual([
       firstEvent,
       firstEvent,
     ]);
   });
   it('Returns first and last event when passed an array of multiple events', () => {
     const multiEventArray = [firstEvent, secondEvent, thirdEvent];
-    expect(getFirstAndLastEvent(multiEventArray)).toMatchObject([
+    expect(getFirstAndLastEvent(multiEventArray)).toEqual([
       firstEvent,
       thirdEvent,
     ]);
   });
   it('Returns first and last event when passed an array of multiple events out of order', () => {
     const multiEventArray = [firstEvent, thirdEvent, secondEvent];
-    expect(getFirstAndLastEvent(multiEventArray)).toMatchObject([
+    expect(getFirstAndLastEvent(multiEventArray)).toEqual([
       firstEvent,
       thirdEvent,
     ]);

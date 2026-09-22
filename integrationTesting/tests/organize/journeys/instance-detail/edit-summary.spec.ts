@@ -46,10 +46,9 @@ test.describe('Journey instance detail page', () => {
       newSummaryText
     );
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'PATCH'),
-      page.click('data-testid=SubmitCancelButtons-submitButton'),
-    ]);
+    await page.click('data-testid=SubmitCancelButtons-submitButton');
+
+    await expect.poll(() => patchJourneyReqLog().length).toBe(1);
 
     // Makes request with correct data
     expect(

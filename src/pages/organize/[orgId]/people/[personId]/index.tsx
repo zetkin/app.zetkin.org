@@ -21,11 +21,12 @@ import useTagging from 'features/tags/hooks/useTagging';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { CUSTOM_FIELD_TYPE, ZetkinPerson } from 'utils/types/zetkin';
 import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
 import PersonNotes from 'features/profile/components/PersonNotes';
 import { PERSON_NOTES } from 'utils/featureFlags';
 import useFeature from 'utils/featureFlags/useFeature';
+import PersonSurveySubmissionsCard from 'features/profile/components/PersonSurveySubmissionsCard';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -86,13 +87,27 @@ const PersonProfilePage: PageWithLayout = () => {
       <Grid container direction="row" spacing={6}>
         <Grid size={12}>
           <ZUIFuture future={fieldsFuture}>
-            {(fields) => (
-              <PersonLngLatMap
-                customFields={fields}
-                height="30vh"
-                person={person}
-              />
-            )}
+            {(fields) => {
+              const lngLatFields = fields.filter(
+                (field) => field.type == CUSTOM_FIELD_TYPE.LNGLAT
+              );
+
+              const lngLatFieldsWithValues = lngLatFields.filter(
+                (field) => !!person[field.slug]
+              );
+
+              if (lngLatFieldsWithValues.length == 0) {
+                return null;
+              }
+
+              return (
+                <PersonLngLatMap
+                  height="30vh"
+                  lngLatFields={lngLatFieldsWithValues}
+                  person={person}
+                />
+              );
+            }}
           </ZUIFuture>
         </Grid>
         <Grid size={{ lg: 4, xs: 12 }}>
@@ -133,6 +148,9 @@ const PersonProfilePage: PageWithLayout = () => {
         )}
         <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
+        </Grid>
+        <Grid size={{ lg: 4, xs: 12 }}>
+          <PersonSurveySubmissionsCard orgId={orgId} person={person} />
         </Grid>
         {hasPersonNotesFeature && (
           <Grid size={{ lg: 4, xs: 12 }}>

@@ -27,14 +27,14 @@ const EmailLayout: FC<EmailLayoutProps> = ({
   children,
   fixedHeight = false,
 }) => {
-  const { orgId, campId, emailId } = useNumericRouteParams();
+  const { orgId, projectId, emailId } = useNumericRouteParams();
   const router = useRouter();
   const messages = useMessages(messageIds);
   const { data: email, updateEmail } = useEmail(orgId, emailId);
   const emailStatsFuture = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   const organization = useOrganization(orgId).data;
-  const themes = useEmailThemes(orgId).data || [];
+  const themes = useEmailThemes(orgId);
 
   if (!email || !organization) {
     return null;
@@ -64,7 +64,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
         actionButtons={
           <EmailActionButtons email={email} orgId={orgId} state={emailState} />
         }
-        baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
+        baseHref={`/organize/${orgId}/projects/${projectId}/emails/${emailId}`}
         belowActionButtons={
           emailState !== EmailState.SENT ? (
             <DeliveryStatusMessage email={email} />
@@ -121,7 +121,13 @@ const EmailLayout: FC<EmailLayoutProps> = ({
       >
         {children}
       </TabbedLayout>
-      <Dialog open={themes.length == 0}>
+      <Dialog
+        open={
+          !themes.isLoading &&
+          !themes.error &&
+          (!themes.data || themes.data.length === 0)
+        }
+      >
         <Box
           alignItems="center"
           display="flex"

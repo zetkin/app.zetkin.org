@@ -13,6 +13,7 @@ export interface ZUIConfirmDialogProps {
   title?: string;
   warningText?: string;
   submitDisabled?: boolean;
+  submitText?: string;
 }
 
 const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
@@ -23,6 +24,7 @@ const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
   title,
   warningText,
   submitDisabled,
+  submitText,
 }) => {
   const messages = useMessages(messageIds);
   return (
@@ -44,7 +46,7 @@ const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
         <ZUISubmitCancelButtons
           onCancel={() => onCancel()}
           submitDisabled={submitDisabled}
-          submitText={messages.confirmDialog.button()}
+          submitText={submitText || messages.confirmDialog.button()}
         />
       </form>
     </ZUIDialog>

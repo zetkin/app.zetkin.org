@@ -1,3 +1,4 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import { act, render } from '@testing-library/react';
 import { FC, Suspense } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -6,10 +7,10 @@ import createStore from 'core/store';
 import mockApiClient from 'utils/testing/mocks/mockApiClient';
 import IApiClient from 'core/api/client/IApiClient';
 import useLocationHouseholdVisits from './useLocationHouseholdVisits';
-import loadLocationHouseholdVisits from '../rpc/loadLocationHouseholdVisits';
 import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { UserProvider } from 'core/env/UserContext';
+import { PromiseCacheProvider } from 'core/caching/PromiseCache';
 
 describe('useLocationHouseholdVisits', () => {
   it('returns aggregated household visits from RPC', async () => {
@@ -36,15 +37,9 @@ describe('useLocationHouseholdVisits', () => {
       },
     ];
 
-    const rpcMock = jest.fn().mockImplementation(async (def, params) => {
-      if ((def as { name: string }).name === loadLocationHouseholdVisits.name) {
-        expect(params).toEqual({ assignmentId, locationId, orgId });
-        return { visits };
-      }
-      throw new Error('Unexpected RPC');
-    }) as unknown as jest.MockedFunction<IApiClient['rpc']>;
-
-    const apiClient = mockApiClient({ rpc: rpcMock });
+    const apiClient = mockApiClient({
+      rpc: jest.fn<IApiClient['rpc']>().mockResolvedValue({ visits }),
+    });
     const store = createStore();
     const env = new Environment(apiClient);
 
@@ -69,11 +64,13 @@ describe('useLocationHouseholdVisits', () => {
     const { queryByText } = render(
       <ReduxProvider store={store}>
         <EnvProvider env={env}>
-          <UserProvider user={null}>
-            <Suspense fallback={<p>loading</p>}>
-              <TestComponent />
-            </Suspense>
-          </UserProvider>
+          <PromiseCacheProvider>
+            <UserProvider user={null}>
+              <Suspense fallback={<p>loading</p>}>
+                <TestComponent />
+              </Suspense>
+            </UserProvider>
+          </PromiseCacheProvider>
         </EnvProvider>
       </ReduxProvider>
     );
@@ -87,6 +84,11 @@ describe('useLocationHouseholdVisits', () => {
     });
 
     // After load, shows the loaded content
+    expect(apiClient.rpc.mock.calls.at(-1)?.[1]).toEqual({
+      assignmentId,
+      locationId,
+      orgId,
+    });
     expect(queryByText('loading')).toBeNull();
     expect(queryByText('loaded')).not.toBeNull();
     expect(queryByText('10')).not.toBeNull();

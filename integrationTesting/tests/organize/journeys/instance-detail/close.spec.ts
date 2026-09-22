@@ -81,18 +81,10 @@ test.describe('Journey instance detail page', () => {
       'data-testid=JourneyInstanceCloseButton-outcomeDialog >> data-testid=SubmitCancelButtons-submitButton'
     );
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() === 'POST'),
-      (async () => {
-        await submitButton.click({ force: true }); // To close the tag select popover
-        await submitButton.click();
-      })(),
-    ]);
+    await submitButton.click({ force: true }); // To close the tag select popover
+    await submitButton.click();
 
-    // Check requests to tags made
-    expect(tagPutMock.log().length).toEqual(1);
-
-    // Check patch request has correct data
-    expect(instanceCloseMock.log().length).toEqual(1);
+    await expect.poll(() => tagPutMock.log().length).toBe(1);
+    await expect.poll(() => instanceCloseMock.log().length).toBe(1);
   });
 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, Fragment, Suspense, useMemo, useState } from 'react';
+import { FC, Fragment, Suspense, useContext, useMemo, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   CalendarMonth,
@@ -42,13 +42,15 @@ import useUser from 'core/hooks/useUser';
 import { PublicEventSignup } from 'features/organizations/components/PublicEventSignup';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 import { UNAUTH_EVENT_SIGNUP } from 'utils/featureFlags';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 type Props = {
   eventId: number;
   orgId: number;
+  privacyUrl: string;
 };
 
-export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
+export const PublicEventPage: FC<Props> = ({ eventId, orgId, privacyUrl }) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const myEvents = useMyEvents();
@@ -245,13 +247,14 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 padding={2}
                 width={isFullScreen && showDescriptionSection ? '40%' : '100%'}
               >
-                <SignUpSection event={event} />
+                <SignUpSection event={event} privacyUrl={privacyUrl} />
                 <DateAndLocation event={event} />
                 {isLoggedInAsContactPerson && (
                   <ParticipatingInfo
                     participatingCount={event.num_participants_available}
                   />
                 )}
+                <ICSLink event={event} orgId={orgId} />
               </Box>
             </Box>
             <ZUIPublicFooter />
@@ -329,7 +332,8 @@ const ContactPersonSection: FC<{
 
 const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
-}> = ({ event }) => {
+  privacyUrl: string;
+}> = ({ event, privacyUrl }) => {
   const messages = useMessages(messageIds);
   const user = useUser();
   const pathname = usePathname();
@@ -372,6 +376,7 @@ const SignUpSection: FC<{
               <PublicEventSignup
                 event={event}
                 onSignupSuccess={() => setSignupSuccessful(true)}
+                privacyUrl={privacyUrl}
               />
             </Box>
             {!signupSuccessful && (
@@ -491,6 +496,38 @@ const ParticipatingInfo: FC<{
             }}
           />
         </ZUIText>
+      </Box>
+    </Box>
+  );
+};
+
+const ICSLink: FC<{
+  event: ZetkinEventWithStatus;
+  orgId: number;
+}> = ({ event, orgId }) => {
+  const isMobile = useIsMobile();
+  const messages = useMessages(messageIds);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+
+  function copyUrlToClipboard() {
+    const url = `${location.protocol}//${location.host}/o/${orgId}/events/${event.id}/cal.ics`;
+    navigator.clipboard.writeText(url);
+    showSnackbar(
+      'success',
+      <Msg id={messageIds.home.header.calendarLinkCopied} />
+    );
+  }
+
+  return (
+    <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
+      <Box alignItems="center" display="flex" gap={1}>
+        <ZUIButton
+          fullWidth
+          label={messages.home.header.copyIcsUrl()}
+          onClick={() => copyUrlToClipboard()}
+          size="large"
+          variant="secondary"
+        />
       </Box>
     </Box>
   );

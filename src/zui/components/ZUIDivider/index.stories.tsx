@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import { Paper } from '@mui/material';
 import { CatchingPokemon, Surfing } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIDivider from '.';
 import ZUIText from 'zui/components/ZUIText';

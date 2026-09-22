@@ -1,5 +1,5 @@
 import { ExpandMore, Mail } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 
 import ZUIButton from './index';
 
@@ -48,8 +48,8 @@ export const Destructive: Story = {
 
 export const Loading: Story = {
   args: {
+    isLoading: true,
     label: 'Loading',
-    variant: 'loading',
   },
 };
 

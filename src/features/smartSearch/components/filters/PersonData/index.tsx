@@ -73,6 +73,7 @@ const PersonData = ({
       ...filter.config,
       fields,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [criteria]);
 
   const addCriteria = (field: string) => {

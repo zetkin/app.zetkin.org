@@ -79,12 +79,9 @@ test.describe('Journey instance notes', () => {
     await page.click('[data-slate-editor=true]');
     await page.type('[data-slate-editor=true]', newNote.text);
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes`
-      ),
-      page.click('[data-testid=TimelineAddNote-submitButton]'),
-    ]);
+    await page.click('[data-testid=TimelineAddNote-submitButton]');
+
+    await expect.poll(() => notePostMock.log().length).toBe(1);
 
     expect(notePostMock.log()[0].data).toEqual({
       file_ids: [],
@@ -123,14 +120,11 @@ test.describe('Journey instance notes', () => {
       newNote.text
     );
 
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes/${NoteUpdate.details.note.id}`
-      ),
-      page.click(
-        `[data-testid=TimelineNoteAdded-submitButton-note-${NoteUpdate.details.note.id}]`
-      ),
-    ]);
+    await page.click(
+      `[data-testid=TimelineNoteAdded-submitButton-note-${NoteUpdate.details.note.id}]`
+    );
+
+    await expect.poll(() => notePatchMock.log().length).toBe(1);
 
     expect(notePatchMock.log()[0].data).toEqual({
       text: `${newNote.text}\n`,

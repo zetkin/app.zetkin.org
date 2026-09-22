@@ -5,7 +5,7 @@ import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
-import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useProjects from 'features/projects/hooks/useProjects';
 import useEmails from 'features/emails/hooks/useEmails';
 import { useNumericRouteParams } from 'core/hooks';
 import {
@@ -25,7 +25,7 @@ const DisplayEmailHistory = ({
 }: DisplayEmailHistoryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const projects = useCampaigns(orgId).data || [];
+  const projects = useProjects(orgId).data || [];
 
   const { config } = filter;
   const { operator, campaign: projectId, email: emailId } = config;
@@ -50,8 +50,8 @@ const DisplayEmailHistory = ({
               filter.config.campaign
                 ? localMessageIds.emailScopeSelect.project
                 : filter.config.email
-                ? localMessageIds.emailScopeSelect.email
-                : localMessageIds.emailScopeSelect.any
+                  ? localMessageIds.emailScopeSelect.email
+                  : localMessageIds.emailScopeSelect.any
             }
           />
         ),

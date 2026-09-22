@@ -25,6 +25,15 @@ export default makeMessages('feat.tags', {
     },
     updateTagButton: m('Update'),
   },
+  groupDialog: {
+    deleteTitle: m<{ groupName: string }>('Delete "{groupName}"'),
+    deleteWarning: m(
+      'Are you sure you want to delete this group? Deleting a group cannot be undone. Tags in this group will not be deleted but remain unassigned.'
+    ),
+    editButton: m('Edit'),
+    editTitle: m('Edit group'),
+    titleLabel: m('Group name'),
+  },
   manager: {
     addTag: m('Add tag'),
     addValue: m<{ tag: string }>('Add value for "{tag}"'),

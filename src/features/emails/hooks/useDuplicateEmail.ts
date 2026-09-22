@@ -14,7 +14,7 @@ export default function useDuplicateEmail(
   const dispatch = useAppDispatch();
 
   const duplicateEmail = async () => {
-    dispatch(emailCreate);
+    dispatch(emailCreate());
     const duplicatedEmail = await apiClient.rpc(copyEmail, {
       emailId: emailId,
       orgId: orgId,
