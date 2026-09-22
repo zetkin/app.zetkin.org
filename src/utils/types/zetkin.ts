@@ -216,6 +216,17 @@ export interface ZetkinCustomField {
   org_write: 'sameorg' | 'suborgs';
 }
 
+export type ZetkinTimelineAction = {
+  data: {
+    action: ZetkinEvent;
+  };
+  event: 'action';
+  id: string;
+  timestamp: string;
+};
+
+export type ZetkinTimeline = Omit<ZetkinTimelineAction, 'id'>[];
+
 export interface ZetkinSession {
   created: string;
   level: number;
