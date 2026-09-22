@@ -1,28 +1,41 @@
-import { Box, Typography } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { useMemo } from 'react';
+import { useIntl } from 'react-intl';
 
 import messageIds from '../../l10n/messageIds';
 import oldTheme from 'theme';
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import EventCluster from '../EventCluster';
 import { getDstChangeAtDate } from '../utils';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 
 type DayProps = {
   clusters: AnyClusteredEvent[];
   date: Temporal.PlainDate;
+  disabled: boolean;
   isInFocusMonth: boolean;
   itemHeight: number;
+  menuId?: string;
   onClick: (date: Temporal.PlainDate) => void;
+  onCreate: (anchorEl: HTMLButtonElement) => void;
 };
 
 const Day = ({
   clusters,
   date,
+  disabled,
   isInFocusMonth,
   itemHeight,
+  menuId,
   onClick,
+  onCreate,
 }: DayProps) => {
+  const intl = useIntl();
+  const messages = useMessages(messageIds);
+  const createLabel = messages.createOnDate({
+    date: date.toLocaleString(intl.locale, { dateStyle: 'long' }),
+  });
   const isToday = date.equals(Temporal.Now.plainDateISO());
   const dstChange = useMemo(() => getDstChangeAtDate(date), [date]);
 
@@ -43,11 +56,14 @@ const Day = ({
       flexDirection="column"
       height="100%"
       sx={{
+        '&:hover .create-event, &:focus-within .create-event': {
+          opacity: 1,
+        },
         overflowY: 'hidden',
       }}
       width="100%"
     >
-      <Box marginLeft="5px">
+      <Box alignItems="center" display="flex" marginLeft="5px">
         <Typography
           color={textColor}
           onClick={() => onClick(date)}
@@ -58,6 +74,28 @@ const Day = ({
         >
           {date.day}
         </Typography>
+        <Tooltip title={createLabel}>
+          <IconButton
+            aria-controls={menuId}
+            aria-expanded={!!menuId}
+            aria-haspopup="menu"
+            aria-label={createLabel}
+            className="create-event"
+            disabled={disabled}
+            onClick={(ev) => onCreate(ev.currentTarget)}
+            size="small"
+            sx={{
+              '@media (hover: none)': { opacity: 1 },
+              height: 20,
+              marginLeft: 0.5,
+              opacity: menuId ? 1 : 0,
+              padding: 0,
+              width: 20,
+            }}
+          >
+            <Add sx={{ fontSize: 18 }} />
+          </IconButton>
+        </Tooltip>
       </Box>
       {dstChange !== undefined && (
         <Box paddingLeft="4px">
