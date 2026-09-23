@@ -15,6 +15,34 @@ export default makeMessages('feat.search', {
     view: m('List'),
   },
   scope: {
-    label: m<{ title: string }>('Searching in: {title}'),
+    // "Project: My project"
+    label: m<{ title: string; type: string }>('{type}: {title}'),
+    // Keys match SCOPE_TYPE
+    types: {
+      callassignment: m('Call assignment'),
+      event: m('Event'),
+      folder: m('Folder'),
+      journey: m('Journey'),
+      journeyinstance: m('Journey'),
+      list: m('List'),
+      person: m('Person'),
+      project: m('Project'),
+      survey: m('Survey'),
+      task: m('Task'),
+    },
+    undo: m('Put back the scope'),
+  },
+  // Keys match SEARCH_DATA_TYPE, where a project is still called a campaign
+  types: {
+    callassignment: m('Call assignments'),
+    campaign: m('Projects'),
+    // Not a SEARCH_DATA_TYPE: the API cannot search events yet
+    event: m('Events'),
+    eventsUnavailable: m('Events cannot be searched yet'),
+    journeyinstance: m('Journeys'),
+    person: m('People'),
+    survey: m('Surveys'),
+    task: m('Tasks'),
+    view: m('Lists'),
   },
 });

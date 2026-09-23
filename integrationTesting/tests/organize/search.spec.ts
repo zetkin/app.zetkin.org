@@ -131,8 +131,10 @@ test.describe('Search', async () => {
       await page.locator('data-testid=SearchDialog-resultsListItem').count()
     ).toEqual(2);
 
-    // Turning the scope off shows everything that matched
-    await page.click('data-testid=SearchDialog-scopeChip');
+    // Removing the scope shows everything that matched
+    await page.click(
+      '[data-testid=SearchDialog-scopeChip-project] .MuiChip-deleteIcon'
+    );
 
     expect(
       await page.locator('data-testid=SearchDialog-resultsListItem').count()
