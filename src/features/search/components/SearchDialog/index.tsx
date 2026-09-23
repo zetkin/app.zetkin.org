@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { Box, Chip, Dialog, Tooltip } from '@mui/material';
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
 
 import isUserTyping from 'features/search/utils/isUserTyping';
 import matchResult from 'features/search/scopes/matchResult';
@@ -33,14 +33,12 @@ const SearchDialog: React.FunctionComponent<{
   const [open, setOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [removedScopes, setRemovedScopes] = useState<string[]>([]);
-  const [armedScope, setArmedScope] = useState<string | null>(null);
   const [selectedTypes, setSelectedTypes] = useState<SEARCH_DATA_TYPE[]>([]);
 
   const router = useRouter();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const scopes = useSearchScopes();
-  const inputRef = useRef<HTMLInputElement>();
 
   const { error, results, isLoading, setQuery, queryString } = useSearch(orgId);
 
@@ -52,7 +50,6 @@ const SearchDialog: React.FunctionComponent<{
   // Every scope is back, and no type is singled out, each time search is opened
   const openDialog = () => {
     setRemovedScopes([]);
-    setArmedScope(null);
     setSelectedTypes([]);
     setOpen(true);
   };
@@ -64,40 +61,18 @@ const SearchDialog: React.FunctionComponent<{
         : [...current, type]
     );
 
-  const removeScope = (key: string) => {
+  const removeScope = (key: string) =>
     setRemovedScopes((current) => [...current, key]);
-    setArmedScope(null);
-  };
 
-  /**
-   * Backspace in an empty field works like it does on an email recipient:
-   * the first press arms the last pill, the second removes it.
-   */
+  // Backspace in an empty field removes the last pill
   const handleFieldKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
-    if (ev.key != 'Backspace') {
-      setArmedScope(null);
+    if (ev.key != 'Backspace' || queryString.length > 0) {
       return;
     }
 
-    if (queryString.length > 0 || activeScopes.length == 0) {
-      return;
-    }
-
-    ev.preventDefault();
-
-    if (armedScope) {
-      removeScope(armedScope);
-      return;
-    }
-
-    const last = activeScopes[activeScopes.length - 1];
-    setArmedScope(scopeKey(last));
-
-    // Put the caret where the next press will take effect
-    const input = inputRef.current;
-    if (input) {
-      const end = input.value.length;
-      input.setSelectionRange(end, end);
+    if (activeScopes.length > 0) {
+      ev.preventDefault();
+      removeScope(scopeKey(activeScopes[activeScopes.length - 1]));
     }
   };
 
@@ -153,7 +128,6 @@ const SearchDialog: React.FunctionComponent<{
 
   const scopePills = activeScopes.map((scope) => {
     const key = scopeKey(scope);
-    const armed = armedScope == key;
 
     return (
       <Chip
@@ -166,10 +140,6 @@ const SearchDialog: React.FunctionComponent<{
         })}
         onDelete={() => removeScope(key)}
         size="small"
-        // Armed by backspace: show what the next press will remove
-        sx={(theme) => ({
-          boxShadow: armed ? `0 0 0 2px ${theme.palette.primary.dark}` : 'none',
-        })}
       />
     );
   });
@@ -196,7 +166,6 @@ const SearchDialog: React.FunctionComponent<{
         <Box p={1}>
           <SearchField
             error={!!error}
-            inputRef={inputRef}
             loading={isLoading}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(ev) => {
