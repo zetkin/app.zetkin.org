@@ -464,6 +464,8 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
     CallBlockedColumns
   );
   moxy.setZetkinApiMock('/orgs/1/people/views/2/rows', 'get', AllMembersRows);
+  moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', AllMembersRows);
+  moxy.setZetkinApi2Mock('/orgs/1/lists/2/rows', 'get', AllMembersRows);
   moxy.setZetkinApiMock('/orgs/1/officials', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/search/callassignment', 'post', []);
   moxy.setZetkinApiMock('/orgs/1/search/campaign', 'post', []);

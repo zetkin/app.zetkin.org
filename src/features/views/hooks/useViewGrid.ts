@@ -70,10 +70,12 @@ export default function useViewGrid(
     actionOnLoad: () => rowsLoad(viewId),
     actionOnSuccess: (rows) => rowsLoaded([viewId, rows]),
     loader: () =>
-      fetchAllPaginated<ZetkinViewRow>((page) =>
-        apiClient.get<ZetkinViewRow[]>(
-          `/api2/orgs/${orgId}/lists/${viewId}/rows?size=10000&page=${page}`
-        )
+      fetchAllPaginated<ZetkinViewRow>(
+        (page) =>
+          apiClient.get<ZetkinViewRow[]>(
+            `/api2/orgs/${orgId}/lists/${viewId}/rows?size=10000&page=${page}`
+          ),
+        10000
       ),
   });
 
