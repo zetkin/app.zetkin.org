@@ -53,8 +53,8 @@ export default async function handler(
 
   const dataRows: string[][] = rows.map((row) =>
     [row.id.toString()].concat(
-      row.content.map((cell, index) => {
-        const col = columns[index];
+      columns.map((col) => {
+        const cell = row.cells[String(col.id)];
         return columnTypes[col.type].cellToString(cell, col);
       })
     )
