@@ -8,9 +8,13 @@ import messageIds from 'features/search/l10n/messageIds';
 import ResultsList from 'features/search/components/SearchDialog/ResultsList';
 import { scopeKey } from 'features/search/scopes/types';
 import SearchField from './SearchField';
-import { SEARCH_DATA_TYPE } from 'features/search/components/types';
+import {
+  SEARCH_DATA_TYPE,
+  SearchResult,
+} from 'features/search/components/types';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
+import useScopeContents from 'features/search/hooks/useScopeContents';
 import useScopeMemberIds from 'features/search/hooks/useScopeMemberIds';
 import useSearch from 'features/search/hooks/useSearch';
 import useSearchScopes from 'features/search/hooks/useSearchScopes';
@@ -26,6 +30,15 @@ const TYPE_ORDER = [
   SEARCH_DATA_TYPE.CALL_ASSIGNMENT,
   SEARCH_DATA_TYPE.JOURNEY_INSTANCE,
 ] as const;
+
+function matchesQuery(result: SearchResult, query: string): boolean {
+  const title =
+    result.type === SEARCH_DATA_TYPE.PERSON
+      ? `${result.match.first_name} ${result.match.last_name}`
+      : result.match.title || '';
+
+  return title.toLowerCase().includes(query);
+}
 
 const SearchDialog: React.FunctionComponent<{
   activator: (openDialog: () => void) => JSX.Element;
@@ -46,6 +59,7 @@ const SearchDialog: React.FunctionComponent<{
     (scope) => !removedScopes.includes(scopeKey(scope))
   );
   const members = useScopeMemberIds(activeScopes, open);
+  const scopeContents = useScopeContents(activeScopes, open);
 
   // Every scope is back, and no type is singled out, each time search is opened
   const openDialog = () => {
@@ -76,11 +90,26 @@ const SearchDialog: React.FunctionComponent<{
     }
   };
 
-  // A result is shown when no active scope rules it out and at least one
-  // vouches for it. Scopes that have nothing to say about a result type stay
-  // silent instead of hiding it.
+  // The search API caps its answer, so a scope's own contents are matched
+  // here as well and merged in. Without this, a survey sitting in the project
+  // you are standing in can be missing when its name is shared by many others.
+  const query = queryString.toLowerCase();
+  const fromScopes = scopeContents.filter((result) =>
+    matchesQuery(result, query)
+  );
+  const seen = new Set<string>();
+
   const visibleResults = (results || [])
     .map((item) => item.result)
+    .concat(fromScopes)
+    .filter((result) => {
+      const key = `${result.type}-${result.match.id}`;
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    })
     // No type selected means every type, so the chips start out of the way
     .filter(
       (result) =>
