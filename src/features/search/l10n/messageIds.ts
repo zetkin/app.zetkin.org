@@ -14,4 +14,7 @@ export default makeMessages('feat.search', {
     task: m('Task'),
     view: m('List'),
   },
+  scope: {
+    label: m<{ title: string }>('Searching in: {title}'),
+  },
 });

@@ -125,7 +125,15 @@ test.describe('Search', async () => {
     expect(taskSearchReq.log()[0].mocked).toEqual(true);
     expect(journeyInstanceSearchReq.log()[0].mocked).toEqual(true);
 
-    // Check that results list contains all results
+    // On a project page the scope is on by default, so only the results
+    // belonging to that project are shown
+    expect(
+      await page.locator('data-testid=SearchDialog-resultsListItem').count()
+    ).toEqual(2);
+
+    // Turning the scope off shows everything that matched
+    await page.click('data-testid=SearchDialog-scopeChip');
+
     expect(
       await page.locator('data-testid=SearchDialog-resultsListItem').count()
     ).toEqual(4);
