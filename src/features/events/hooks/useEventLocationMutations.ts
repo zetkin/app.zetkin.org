@@ -5,7 +5,9 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 type useEventLocationMutationsReturn = {
-  addLocation: (newLocation: Partial<ZetkinLocation>) => void;
+  addLocation: (
+    newLocation: Partial<ZetkinLocation>
+  ) => Promise<ZetkinLocation>;
   setLocationDescription: (locationId: number, description: string) => void;
   setLocationLatLng: (locationId: number, lat: number, lng: number) => void;
   setLocationTitle: (locationId: number, title: string) => void;
@@ -28,6 +30,7 @@ export default function useEventLocationMutations(
       }
     );
     dispatch(locationAdded(location));
+    return location;
   };
 
   const setLocationDescription = (locationId: number, description: string) => {
