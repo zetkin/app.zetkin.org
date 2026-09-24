@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent } from 'react';
 import {
   List,
   ListItem,
@@ -22,12 +22,9 @@ import {
 import messages from '../../../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
-// How many results each group shows before it is expanded, and by how much
-const INITIAL_PER_GROUP = 3;
-const STEP = 5;
+const PREVIEW_PER_GROUP = 3;
 
-// Groups appear in this order, whichever of them have results
-const GROUP_ORDER = [
+export const GROUP_ORDER = [
   SEARCH_DATA_TYPE.PERSON,
   SEARCH_DATA_TYPE.VIEW,
   SEARCH_DATA_TYPE.PROJECT,
@@ -38,62 +35,63 @@ const GROUP_ORDER = [
 ];
 
 interface ResultsListProps {
-  /** What was searched for, so that a new search collapses the groups again */
-  query: string;
+  onSelectType: (type: SEARCH_DATA_TYPE) => void;
   results: SearchResult[];
+  selectedType: SEARCH_DATA_TYPE | null;
 }
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({
-  query,
+  onSelectType,
   results,
+  selectedType,
 }): JSX.Element => {
   const msg = useMessages(messages);
-  const [shownPerGroup, setShownPerGroup] = useState<
-    Partial<Record<SEARCH_DATA_TYPE, number>>
-  >({});
-
-  // A new search starts every group collapsed again
-  useEffect(() => {
-    setShownPerGroup({});
-  }, [query]);
 
   const groups = GROUP_ORDER.map((type) => ({
     items: results.filter((result) => result.type === type),
     type,
   })).filter((group) => group.items.length > 0);
 
-  const showMore = (type: SEARCH_DATA_TYPE) =>
-    setShownPerGroup((current) => ({
-      ...current,
-      [type]: (current[type] ?? INITIAL_PER_GROUP) + STEP,
-    }));
-
-  return (
-    <List sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
-      {groups.length === 0 && (
+  if (groups.length === 0) {
+    return (
+      <List>
         <ListItem>
           <ListItemText>
             <Msg id={messages.noResults} />
           </ListItemText>
         </ListItem>
-      )}
+      </List>
+    );
+  }
+
+  return (
+    <List sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
       {groups.map(({ items, type }) => {
-        const shown = shownPerGroup[type] ?? INITIAL_PER_GROUP;
+        const expanded = selectedType === type;
+        const shown = expanded ? items : items.slice(0, PREVIEW_PER_GROUP);
 
         return [
-          <ListSubheader key={`header-${type}`} disableSticky>
-            {msg.groups[type]()}
-          </ListSubheader>,
-          ...items.slice(0, shown).map(renderResult),
-          items.length > shown ? (
+          expanded ? null : (
+            <ListSubheader key={`header-${type}`} disableSticky>
+              {msg.groups[type]()}
+            </ListSubheader>
+          ),
+          ...shown.map(renderResult),
+          items.length > shown.length ? (
             <ListItem key={`more-${type}`} disablePadding>
               <ListItemButton
                 data-testid={`SearchDialog-showMore-${type}`}
-                onClick={() => showMore(type)}
+                onClick={() => onSelectType(type)}
               >
-                <Typography color="primary" variant="body2">
-                  <Msg id={messages.showMore} />
-                </Typography>
+                <ListItemText
+                  disableTypography
+                  primary={
+                    <Typography color="primary" variant="body2">
+                      <Msg id={messages.showMore} />
+                    </Typography>
+                  }
+                  sx={{ paddingLeft: 9 }}
+                />
               </ListItemButton>
             </ListItem>
           ) : null,

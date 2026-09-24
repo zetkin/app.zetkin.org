@@ -45,8 +45,9 @@ describe('ResultsList', () => {
   it('groups results by data type', () => {
     const { getByMessageId } = render(
       <ResultsList
-        query="rosa"
+        onSelectType={jest.fn()}
         results={[...makePeople(2), ...makeProjects(2)]}
+        selectedType={null}
       />
     );
 
@@ -54,48 +55,52 @@ describe('ResultsList', () => {
     expect(getByMessageId(messageIds.groups.campaign)).not.toBeNull();
   });
 
-  it('shows three per group before it is expanded', () => {
+  it('previews three per group', () => {
     const { getAllByTestId, getByTestId } = render(
-      <ResultsList query="rosa" results={makePeople(9)} />
+      <ResultsList
+        onSelectType={jest.fn()}
+        results={makePeople(9)}
+        selectedType={null}
+      />
     );
 
     expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(3);
     expect(getByTestId('SearchDialog-showMore-person')).not.toBeNull();
   });
 
-  it('expands only the group whose button was clicked', async () => {
+  it('selects the type when show more is clicked', async () => {
     const user = userEvent.setup();
-    const { getAllByTestId, getByTestId } = render(
+    const onSelectType = jest.fn();
+    const { getByTestId } = render(
       <ResultsList
-        query="rosa"
-        results={[...makePeople(9), ...makeProjects(9)]}
+        onSelectType={onSelectType}
+        results={makePeople(9)}
+        selectedType={null}
       />
     );
 
-    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(6);
-
     await user.click(getByTestId('SearchDialog-showMore-person'));
 
-    // Eight people and three projects, the project group untouched
-    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(11);
-    expect(getByTestId('SearchDialog-showMore-campaign')).not.toBeNull();
+    expect(onSelectType).toHaveBeenCalledWith(SEARCH_DATA_TYPE.PERSON);
   });
 
-  it('drops the button when a group is fully shown', async () => {
-    const user = userEvent.setup();
-    const { getAllByTestId, getByTestId, queryByTestId } = render(
-      <ResultsList query="rosa" results={makePeople(5)} />
+  it('shows every result of the selected type, without its heading', () => {
+    const { getAllByTestId, queryByText, queryByTestId } = render(
+      <ResultsList
+        onSelectType={jest.fn()}
+        results={makePeople(9)}
+        selectedType={SEARCH_DATA_TYPE.PERSON}
+      />
     );
 
-    await user.click(getByTestId('SearchDialog-showMore-person'));
-
-    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(5);
+    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(9);
     expect(queryByTestId('SearchDialog-showMore-person')).toBeNull();
+    expect(queryByText(messageIds.groups.person._id)).toBeNull();
   });
 
   it('says so when there is nothing to show', () => {
     const { getByMessageId } = render(
-      <ResultsList query="rosa" results={[]} />
+      <ResultsList onSelectType={jest.fn()} results={[]} selectedType={null} />
     );
 
     expect(getByMessageId(messageIds.noResults)).not.toBeNull();
