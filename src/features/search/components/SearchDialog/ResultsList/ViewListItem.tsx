@@ -10,21 +10,14 @@ import {
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinView } from 'utils/types/zetkin';
-import messageIds from '../../../l10n/messageIds';
-import { useMessages } from 'core/i18n';
 
 const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
   view,
 }) => {
-  const messages = useMessages(messageIds);
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
-  const elements = [messages.results.people()];
-  if (view.folder) {
-    elements.push(view.folder.title);
-  }
-  elements.push(messages.results.view());
+  // The group header says these are lists, so only the folder is context
 
   return (
     <Link href={`/organize/${orgId}/people/lists/${view.id}`}>
@@ -37,7 +30,7 @@ const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
           </ListItemAvatar>
           <ResultsListItemText
             primary={view.title}
-            secondary={elements.join(' / ')}
+            secondary={view.folder?.title}
           />
         </ListItemButton>
       </ListItem>

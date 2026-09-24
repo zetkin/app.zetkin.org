@@ -23,58 +23,81 @@ beforeEach(() => {
 function makeProjects(count: number): SearchResult[] {
   return Array.from({ length: count }, (ignored, index) => ({
     match: {
-      color: '#000000',
       id: index + 1,
-      info_text: '',
-      manager: null,
-      published: null,
       title: `Project ${index + 1}`,
-      visibility: 'hidden',
     },
     type: SEARCH_DATA_TYPE.PROJECT,
-  })) as SearchResult[];
+  })) as unknown as SearchResult[];
+}
+
+function makePeople(count: number): SearchResult[] {
+  return Array.from({ length: count }, (ignored, index) => ({
+    match: {
+      first_name: 'Rosa',
+      id: 100 + index,
+      last_name: `Luxemburg ${index + 1}`,
+    },
+    type: SEARCH_DATA_TYPE.PERSON,
+  })) as unknown as SearchResult[];
 }
 
 describe('ResultsList', () => {
-  it('lists six results and offers the rest', () => {
-    const { getAllByTestId, getByMessageId, getByTestId } = render(
-      <ResultsList query="project" results={makeProjects(10)} />
+  it('groups results by data type', () => {
+    const { getByMessageId } = render(
+      <ResultsList
+        query="rosa"
+        results={[...makePeople(2), ...makeProjects(2)]}
+      />
+    );
+
+    expect(getByMessageId(messageIds.groups.person)).not.toBeNull();
+    expect(getByMessageId(messageIds.groups.campaign)).not.toBeNull();
+  });
+
+  it('shows three per group before it is expanded', () => {
+    const { getAllByTestId, getByTestId } = render(
+      <ResultsList query="rosa" results={makePeople(9)} />
+    );
+
+    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(3);
+    expect(getByTestId('SearchDialog-showMore-person')).not.toBeNull();
+  });
+
+  it('expands only the group whose button was clicked', async () => {
+    const user = userEvent.setup();
+    const { getAllByTestId, getByTestId } = render(
+      <ResultsList
+        query="rosa"
+        results={[...makePeople(9), ...makeProjects(9)]}
+      />
     );
 
     expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(6);
-    expect(getByTestId('SearchDialog-showMore')).not.toBeNull();
-    expect(getByMessageId(messageIds.resultCount.exact)).not.toBeNull();
+
+    await user.click(getByTestId('SearchDialog-showMore-person'));
+
+    // Eight people and three projects, the project group untouched
+    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(11);
+    expect(getByTestId('SearchDialog-showMore-campaign')).not.toBeNull();
   });
 
-  it('reveals six more each time the row is clicked', async () => {
+  it('drops the button when a group is fully shown', async () => {
     const user = userEvent.setup();
     const { getAllByTestId, getByTestId, queryByTestId } = render(
-      <ResultsList query="project" results={makeProjects(14)} />
+      <ResultsList query="rosa" results={makePeople(5)} />
     );
 
-    await user.click(getByTestId('SearchDialog-showMore'));
-    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(12);
+    await user.click(getByTestId('SearchDialog-showMore-person'));
 
-    await user.click(getByTestId('SearchDialog-showMore'));
-    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(14);
-
-    // Nothing left to reveal, so the row is only a count
-    expect(queryByTestId('SearchDialog-showMore')).toBeNull();
+    expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(5);
+    expect(queryByTestId('SearchDialog-showMore-person')).toBeNull();
   });
 
-  it('shows the count as a floor when the API capped a data type', () => {
+  it('says so when there is nothing to show', () => {
     const { getByMessageId } = render(
-      <ResultsList query="project" results={makeProjects(20)} />
+      <ResultsList query="rosa" results={[]} />
     );
 
-    expect(getByMessageId(messageIds.resultCount.capped)).not.toBeNull();
-  });
-
-  it('counts exactly when no data type is capped', () => {
-    const { getByMessageId } = render(
-      <ResultsList query="project" results={makeProjects(19)} />
-    );
-
-    expect(getByMessageId(messageIds.resultCount.exact)).not.toBeNull();
+    expect(getByMessageId(messageIds.noResults)).not.toBeNull();
   });
 });

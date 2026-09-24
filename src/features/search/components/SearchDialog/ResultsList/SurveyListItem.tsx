@@ -11,8 +11,6 @@ import {
 import getSurveyUrl from 'features/surveys/utils/getSurveyUrl';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinSurvey } from 'utils/types/zetkin';
-import messageIds from '../../../l10n/messageIds';
-import { Msg } from 'core/i18n';
 
 const SurveyListItem: React.FunctionComponent<{
   survey: ZetkinSurvey;
@@ -28,10 +26,7 @@ const SurveyListItem: React.FunctionComponent<{
               <AssignmentOutlined />
             </Avatar>
           </ListItemAvatar>
-          <ResultsListItemText
-            primary={survey.title}
-            secondary={<Msg id={messageIds.results.survey} />}
-          />
+          <ResultsListItemText primary={survey.title} />
         </ListItemButton>
       </ListItem>
     </Link>
