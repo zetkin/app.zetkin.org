@@ -553,13 +553,6 @@ feat:
     label: Søg
     noResults: Ingen resultater
     placeholder: Skriv for at søge
-    results:
-      callassignment: Ringeopgave
-      people: Personer
-      person: Person
-      survey: Spørgeskema
-      task: Opgave
-      view: Lister
   smartSearch:
     buttonLabels:
       add: Gem valgte

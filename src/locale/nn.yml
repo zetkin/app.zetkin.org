@@ -2292,13 +2292,7 @@ feat:
     noResults: Ingen resultater
     placeholder: Skriv for å søke
     results:
-      callassignment: Ringeoppdrag
-      people: Folk
-      person: Person
       project: Prosjekt
-      survey: Spørreundersøkelse
-      task: Innhold
-      view: Liste
   settings:
     officials:
       addPerson:

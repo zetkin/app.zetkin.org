@@ -1374,17 +1374,20 @@ feat:
       noAccount: Not connected to a Zetkin account
   search:
     error: There was an error
+    groups:
+      callassignment: Call assignments
+      campaign: Projects
+      journeyinstance: Journeys
+      person: People
+      survey: Surveys
+      task: Tasks
+      view: Lists
     label: Search
     noResults: No results
     placeholder: Type to search
     results:
-      callassignment: Call assignment
-      people: People
-      person: Person
       project: Project
-      survey: Survey
-      task: Task
-      view: List
+    showMore: Show more
   settings:
     officials:
       addPerson:
