@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { Fragment, FunctionComponent } from 'react';
 import {
   List,
   ListItem,
@@ -70,32 +70,32 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
         const expanded = selectedType === type;
         const shown = expanded ? items : items.slice(0, PREVIEW_PER_GROUP);
 
-        return [
-          expanded ? null : (
-            <ListSubheader key={`header-${type}`} disableSticky>
-              {msg.groups[type]()}
-            </ListSubheader>
-          ),
-          ...shown.map(renderResult),
-          items.length > shown.length ? (
-            <ListItem key={`more-${type}`} disablePadding>
-              <ListItemButton
-                data-testid={`SearchDialog-showMore-${type}`}
-                onClick={() => onSelectType(type)}
-              >
-                <ListItemText
-                  disableTypography
-                  primary={
-                    <Typography color="primary" variant="body2">
-                      <Msg id={messages.showMore} />
-                    </Typography>
-                  }
-                  sx={{ paddingLeft: 9 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ) : null,
-        ];
+        return (
+          <Fragment key={type}>
+            {!expanded && (
+              <ListSubheader disableSticky>{msg.groups[type]()}</ListSubheader>
+            )}
+            {shown.map(renderResult)}
+            {items.length > shown.length && (
+              <ListItem>
+                <ListItemButton
+                  data-testid={`SearchDialog-showMore-${type}`}
+                  onClick={() => onSelectType(type)}
+                >
+                  <ListItemText
+                    disableTypography
+                    inset
+                    primary={
+                      <Typography color="primary" variant="body2">
+                        <Msg id={messages.showMore} />
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            )}
+          </Fragment>
+        );
       })}
     </List>
   );

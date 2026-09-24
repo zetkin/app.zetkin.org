@@ -1371,13 +1371,7 @@ feat:
     noResults: Geen resultaten
     placeholder: Type iets om te zoeken
     results:
-      callassignment: Bel-opdracht
-      people: Personen
-      person: Persoon
       project: Project
-      survey: Vragenlijst
-      task: Taak
-      view: Lijst
   settings:
     officials:
       addPerson:

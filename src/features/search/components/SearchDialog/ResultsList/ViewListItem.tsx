@@ -17,8 +17,6 @@ const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
-  // The group header says these are lists, so only the folder is context
-
   return (
     <Link href={`/organize/${orgId}/people/lists/${view.id}`}>
       <ListItem data-testid="SearchDialog-resultsListItem">

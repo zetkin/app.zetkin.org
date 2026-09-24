@@ -67,13 +67,10 @@ const SearchDialog: React.FunctionComponent<{
 
   const countByType = allResults.reduce<
     Partial<Record<SEARCH_DATA_TYPE, number>>
-  >(
-    (counts, result) => ({
-      ...counts,
-      [result.type]: (counts[result.type] ?? 0) + 1,
-    }),
-    {}
-  );
+  >((counts, result) => {
+    counts[result.type] = (counts[result.type] ?? 0) + 1;
+    return counts;
+  }, {});
 
   const chipTypes = hasSearched
     ? [...GROUP_ORDER].sort(

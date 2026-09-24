@@ -3,6 +3,8 @@ import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 
 import messageIds from 'features/search/l10n/messageIds';
+import mockPerson from 'utils/testing/mocks/mockPerson';
+import mockView from 'utils/testing/mocks/mockView';
 import { render } from 'utils/testing';
 import ResultsList from '.';
 import {
@@ -20,25 +22,18 @@ beforeEach(() => {
   };
 });
 
-function makeProjects(count: number): SearchResult[] {
+function people(count: number): SearchResult[] {
   return Array.from({ length: count }, (ignored, index) => ({
-    match: {
-      id: index + 1,
-      title: `Project ${index + 1}`,
-    },
-    type: SEARCH_DATA_TYPE.PROJECT,
-  })) as unknown as SearchResult[];
+    match: mockPerson({ id: index + 1, last_name: `Luxemburg ${index + 1}` }),
+    type: SEARCH_DATA_TYPE.PERSON,
+  }));
 }
 
-function makePeople(count: number): SearchResult[] {
+function lists(count: number): SearchResult[] {
   return Array.from({ length: count }, (ignored, index) => ({
-    match: {
-      first_name: 'Rosa',
-      id: 100 + index,
-      last_name: `Luxemburg ${index + 1}`,
-    },
-    type: SEARCH_DATA_TYPE.PERSON,
-  })) as unknown as SearchResult[];
+    match: mockView({ id: index + 1, title: `List ${index + 1}` }),
+    type: SEARCH_DATA_TYPE.VIEW,
+  }));
 }
 
 describe('ResultsList', () => {
@@ -46,20 +41,20 @@ describe('ResultsList', () => {
     const { getByMessageId } = render(
       <ResultsList
         onSelectType={jest.fn()}
-        results={[...makePeople(2), ...makeProjects(2)]}
+        results={[...people(2), ...lists(2)]}
         selectedType={null}
       />
     );
 
     expect(getByMessageId(messageIds.groups.person)).not.toBeNull();
-    expect(getByMessageId(messageIds.groups.campaign)).not.toBeNull();
+    expect(getByMessageId(messageIds.groups.view)).not.toBeNull();
   });
 
-  it('previews three per group', () => {
+  it('previews three results per group', () => {
     const { getAllByTestId, getByTestId } = render(
       <ResultsList
         onSelectType={jest.fn()}
-        results={makePeople(9)}
+        results={people(9)}
         selectedType={null}
       />
     );
@@ -68,13 +63,13 @@ describe('ResultsList', () => {
     expect(getByTestId('SearchDialog-showMore-person')).not.toBeNull();
   });
 
-  it('selects the type when show more is clicked', async () => {
+  it('selects the data type when show more is clicked', async () => {
     const user = userEvent.setup();
     const onSelectType = jest.fn();
     const { getByTestId } = render(
       <ResultsList
         onSelectType={onSelectType}
-        results={makePeople(9)}
+        results={people(9)}
         selectedType={null}
       />
     );
@@ -84,18 +79,18 @@ describe('ResultsList', () => {
     expect(onSelectType).toHaveBeenCalledWith(SEARCH_DATA_TYPE.PERSON);
   });
 
-  it('shows every result of the selected type, without its heading', () => {
-    const { getAllByTestId, queryByText, queryByTestId } = render(
+  it('shows every result of the selected data type, without its heading', () => {
+    const { getAllByTestId, queryByMessageId, queryByTestId } = render(
       <ResultsList
         onSelectType={jest.fn()}
-        results={makePeople(9)}
+        results={people(9)}
         selectedType={SEARCH_DATA_TYPE.PERSON}
       />
     );
 
     expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(9);
     expect(queryByTestId('SearchDialog-showMore-person')).toBeNull();
-    expect(queryByText(messageIds.groups.person._id)).toBeNull();
+    expect(queryByMessageId(messageIds.groups.person)).toBeNull();
   });
 
   it('says so when there is nothing to show', () => {

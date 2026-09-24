@@ -2171,13 +2171,7 @@ feat:
     noResults: Keine Treffer
     placeholder: Tippe, um zu suchen
     results:
-      callassignment: Telefonaktion
-      people: Personen
-      person: Person
       project: Projekt
-      survey: Umfrage
-      task: Aufgabe
-      view: Ansicht
   settings:
     officials:
       addPerson:

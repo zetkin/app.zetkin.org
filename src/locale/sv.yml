@@ -2113,13 +2113,7 @@ feat:
     noResults: Inget resultat
     placeholder: Skriv för att söka
     results:
-      callassignment: Ringuppdrag
-      people: Människor
-      person: Person
       project: Projekt
-      survey: Enkät
-      task: Uppgifter
-      view: Lista
   settings:
     officials:
       addPerson:
