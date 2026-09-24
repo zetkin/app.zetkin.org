@@ -78,7 +78,10 @@ const SearchDialog: React.FunctionComponent<{
             }}
           />
           {Array.isArray(results) && queryString.length > 2 && !isLoading && (
-            <ResultsList results={results.map((item) => item.result)} />
+            <ResultsList
+              query={queryString}
+              results={results.map((item) => item.result)}
+            />
           )}
         </Box>
       </Dialog>

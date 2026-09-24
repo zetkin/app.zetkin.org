@@ -5,6 +5,13 @@ export default makeMessages('feat.search', {
   label: m('Search'),
   noResults: m('No results'),
   placeholder: m('Type to search'),
+  resultCount: {
+    capped: m<{ count: number }>('{count}+ results'),
+    exact: m<{ count: number }>(
+      '{count, plural, one {# result} other {# results}}'
+    ),
+    showMore: m<{ count: number }>('Show {count, plural, other {# more}}'),
+  },
   results: {
     callassignment: m('Call assignment'),
     people: m('People'),
