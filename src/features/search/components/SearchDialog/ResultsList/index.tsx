@@ -54,7 +54,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
 
   if (groups.length === 0) {
     return (
-      <List>
+      <List disablePadding sx={{ marginTop: 1 }}>
         <ListItem>
           <ListItemText>
             <Msg id={messages.noResults} />
@@ -65,7 +65,10 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
   }
 
   return (
-    <List sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
+    <List
+      disablePadding
+      sx={{ marginTop: 1, maxHeight: '60vh', overflowY: 'auto' }}
+    >
       {groups.map(({ items, type }) => {
         const expanded = selectedType === type;
         const shown = expanded ? items : items.slice(0, PREVIEW_PER_GROUP);

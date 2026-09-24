@@ -112,14 +112,7 @@ const SearchDialog: React.FunctionComponent<{
               }
             }}
           />
-          <Box
-            display="flex"
-            flexWrap="wrap"
-            gap={0.5}
-            paddingBottom={1.5}
-            paddingTop={1}
-            paddingX={1}
-          >
+          <Box display="flex" flexWrap="wrap" gap={0.5} paddingTop={1}>
             {chipTypes.map((type) => {
               const selected = selectedType === type;
 
