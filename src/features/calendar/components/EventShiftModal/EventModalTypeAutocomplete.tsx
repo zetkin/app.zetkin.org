@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 import { Add, Clear } from '@mui/icons-material';
 import { Autocomplete, Box, TextField } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
@@ -46,13 +46,18 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [types.length]);
 
-  const allTypes: EventTypeOption[] = [
-    ...types,
-    {
+  // The same object must be used on every render, or the Autocomplete
+  // treats it as a new value and resets any text that the user has typed
+  const uncategorizedTitle = messages.type.uncategorized();
+  const uncategorizedOption: EventTypeOption = useMemo(
+    () => ({
       id: 'UNCATEGORIZED',
-      title: messages.type.uncategorized(),
-    },
-  ];
+      title: uncategorizedTitle,
+    }),
+    [uncategorizedTitle]
+  );
+
+  const allTypes: EventTypeOption[] = [...types, uncategorizedOption];
 
   const fuse = new Fuse(types, {
     keys: ['title'],
@@ -75,10 +80,7 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
           ...searchedResults.map((result) => {
             return { id: result.item.id, title: result.item.title };
           }),
-          {
-            id: 'UNCATEGORIZED',
-            title: messages.type.uncategorized(),
-          },
+          uncategorizedOption,
         ];
         if (
           filteredResult.find(
@@ -154,14 +156,7 @@ const EventModalTypeAutocomplete: FC<EventModalTypeAutocompleteProps> = ({
           </Box>
         );
       }}
-      value={
-        value
-          ? value
-          : {
-              id: 'UNCATEGORIZED',
-              title: messages.type.uncategorized(),
-            }
-      }
+      value={value ? value : uncategorizedOption}
     />
   );
 };
