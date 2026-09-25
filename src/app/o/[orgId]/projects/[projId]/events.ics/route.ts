@@ -52,7 +52,8 @@ export async function GET(
   }
 
   const lang =
-    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
+    user?.lang ||
+    getBrowserLanguage((await headers()).get('accept-language') || '');
 
   const ics = await icsFromEvents(project.title, events, org, lang);
 

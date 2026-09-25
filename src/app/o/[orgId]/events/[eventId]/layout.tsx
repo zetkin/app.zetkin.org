@@ -18,8 +18,9 @@ type Props = PropsWithChildren<{
   };
 }>;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const headersList = headers();
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
@@ -29,7 +30,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `/api/orgs/${params.orgId}/actions/${params.eventId}`
     );
 
-    const lang = getBrowserLanguage(headers().get('accept-language') || '');
+    const lang = getBrowserLanguage(
+      (await headers()).get('accept-language') || ''
+    );
     const messages = await getMessages(lang);
 
     const baseTitle =
@@ -60,8 +63,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const EventLayout: FC<Props> = async ({ children, params }) => {
-  const headersList = headers();
+const EventLayout: FC<Props> = async (props) => {
+  const params = await props.params;
+
+  const { children } = props;
+
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
