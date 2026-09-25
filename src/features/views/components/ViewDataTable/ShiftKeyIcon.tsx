@@ -1,4 +1,5 @@
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import type { JSX } from 'react';
 
 interface ShiftKeyIconProps {
   size?: number;

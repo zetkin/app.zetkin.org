@@ -1,4 +1,5 @@
 import { Box, Chip, Tooltip } from '@mui/material';
+import type { JSX } from 'react';
 
 import DisplayTimeFrame from '../DisplayTimeFrame';
 import { getTimeFrameWithConfig } from '../../utils';

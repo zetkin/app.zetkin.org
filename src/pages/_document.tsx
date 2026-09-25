@@ -5,6 +5,7 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document';
+import type { JSX } from 'react';
 
 import oldTheme from '../theme';
 

@@ -1,5 +1,5 @@
 import { Box, Card, CardProps, Typography } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, type JSX } from 'react';
 
 type ZUICardProps = {
   children?: ReactNode;

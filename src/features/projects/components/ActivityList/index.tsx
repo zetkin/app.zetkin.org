@@ -35,7 +35,7 @@ const LazyActivitiesBox = ({
   ...props
 }: LazyActivitiesBoxProps) => {
   const [inView, setInView] = useState(false);
-  const boxRef = useRef<HTMLElement>();
+  const boxRef = useRef<HTMLElement>(undefined);
 
   useEffect(() => {
     if (!boxRef.current) {

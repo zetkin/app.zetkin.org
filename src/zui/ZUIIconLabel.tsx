@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 import { Box, Typography } from '@mui/material';
 
 export interface ZUIIconLabelProps {

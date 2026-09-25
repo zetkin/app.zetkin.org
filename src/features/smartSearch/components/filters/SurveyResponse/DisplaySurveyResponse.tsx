@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import {
   OPERATION,

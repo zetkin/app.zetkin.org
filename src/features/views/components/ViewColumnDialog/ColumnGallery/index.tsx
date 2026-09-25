@@ -69,7 +69,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchResults = useMemo(() => search(), [searchString]);
 
-  const choiceContainerRef = useRef<HTMLDivElement>();
+  const choiceContainerRef = useRef<HTMLDivElement>(undefined);
   const filteredCategories = categories.filter(
     (category) =>
       !!filterChoicesByMode(isRestrictedMode, category.choices).length

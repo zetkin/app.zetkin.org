@@ -53,8 +53,8 @@ export const TextResponseWordCloud = ({
     [questionStats.topWordFrequencies]
   );
 
-  const containerRef = useRef<HTMLDivElement>();
-  const svgRef = useRef<SVGSVGElement>();
+  const containerRef = useRef<HTMLDivElement>(undefined);
+  const svgRef = useRef<SVGSVGElement>(undefined);
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -71,9 +71,11 @@ export const TextResponseWordCloud = ({
     () =>
       ({
         chartRootRef: containerRef,
+
         instance: {
           disableAnimation: () => () => {},
         },
+
         svgRef: svgRef,
       }) as ChartPluginOptions<UseChartProExportSignature>,
     []

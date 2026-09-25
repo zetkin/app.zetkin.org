@@ -1,4 +1,4 @@
-import { cloneElement, forwardRef } from 'react';
+import { cloneElement, forwardRef, type JSX } from 'react';
 import {
   IconProps,
   ListItemButton,

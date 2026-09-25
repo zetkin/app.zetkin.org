@@ -1,6 +1,6 @@
 import { DoneAll } from '@mui/icons-material';
 import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
-import { FormEvent, useEffect } from 'react';
+import { FormEvent, useEffect, type JSX } from 'react';
 
 import FilterForm from '../../FilterForm';
 import { Msg } from 'core/i18n';

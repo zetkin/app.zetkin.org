@@ -24,8 +24,8 @@ export default makeMessages('feat.journeys', {
     },
     collapseButton: m('Collapse'),
     createAndApplyTagButton: m('Create and apply'),
-    created: m<{ relative: ReactElement }>('Created {relative}'),
-    deadlineLabel: m<{ date: ReactElement }>('(Was due {date})'),
+    created: m<{ relative: ReactElement<unknown> }>('Created {relative}'),
+    deadlineLabel: m<{ date: ReactElement<unknown> }>('(Was due {date})'),
     dueDateInputClear: m('Clear'),
     dueDateInputLabel: m('Due date'),
     editButton: m('Edit'),
@@ -39,7 +39,7 @@ export default makeMessages('feat.journeys', {
       },
     },
     expandButton: m('Expand'),
-    markedCompleteLabel: m<{ relativeTime: ReactElement }>(
+    markedCompleteLabel: m<{ relativeTime: ReactElement<unknown> }>(
       'Marked complete {relativeTime}'
     ),
     newInstance: {
@@ -70,7 +70,7 @@ export default makeMessages('feat.journeys', {
     summaryPlaceholder: m<{ journeyTitle: string }>(
       'Enter a brief description of the status of this {journeyTitle}.'
     ),
-    updated: m<{ relative: ReactElement }>('last activity {relative}'),
+    updated: m<{ relative: ReactElement<unknown> }>('last activity {relative}'),
   },
   instances: {
     columns: {

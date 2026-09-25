@@ -34,7 +34,7 @@ export const TextStatsCard = ({
     [questionStats, messages.insights.textFields.subheader]
   );
 
-  const exportApi = useRef<UseChartProExportPublicApi>();
+  const exportApi = useRef<UseChartProExportPublicApi>(undefined);
 
   return (
     <InsightsCard

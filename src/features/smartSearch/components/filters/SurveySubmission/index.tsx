@@ -1,5 +1,5 @@
 import { MenuItem } from '@mui/material';
-import { FormEvent } from 'react';
+import { FormEvent, type JSX } from 'react';
 
 import FilterForm from '../../FilterForm';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';

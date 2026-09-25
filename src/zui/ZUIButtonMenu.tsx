@@ -3,7 +3,7 @@ import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
-import { FC, MouseEvent, ReactNode, useState } from 'react';
+import { FC, MouseEvent, ReactNode, useState, type JSX } from 'react';
 
 import oldTheme from 'theme';
 

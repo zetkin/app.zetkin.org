@@ -36,7 +36,7 @@ const PersonLink: React.FunctionComponent<{
       </NextLink>
     );
   }
-  return children as React.ReactElement;
+  return children as React.ReactElement<unknown>;
 };
 
 const ZUIPerson: React.FunctionComponent<{

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, type JSX } from 'react';
 import { Box, CircularProgress, Tooltip } from '@mui/material';
 import {
   EmojiPeople,

@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { FormEvent, type JSX } from 'react';
 import { Box, MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';

@@ -1,4 +1,4 @@
-import { KeyboardEvent } from 'react';
+import { KeyboardEvent, type JSX } from 'react';
 import { GridColDef, MuiEvent } from '@mui/x-data-grid-pro';
 
 import IApiClient from 'core/api/client/IApiClient';

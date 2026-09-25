@@ -1,4 +1,4 @@
-import { FC, Fragment, PropsWithChildren } from 'react';
+import { FC, Fragment, PropsWithChildren, type JSX } from 'react';
 import { Avatar, Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';

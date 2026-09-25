@@ -130,7 +130,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   }, []);
 
   let laneHeight = 0;
-  const weekGridRef = useRef<HTMLDivElement>();
+  const weekGridRef = useRef<HTMLDivElement>(undefined);
   // This should only run when focusDate changes
   useEffect(() => {
     scrollToEarliestEvent(
@@ -330,7 +330,9 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                     date.equals(pendingEvent[0].toPlainDate()) && (
                       <>
                         <EventGhost
-                          ref={(div: HTMLDivElement) => setGhostAnchorEl(div)}
+                          ref={(div: HTMLDivElement) => {
+                            setGhostAnchorEl(div);
+                          }}
                           height={pendingHeight * 100 + '%'}
                           y={pendingTop * 100 + '%'}
                         />

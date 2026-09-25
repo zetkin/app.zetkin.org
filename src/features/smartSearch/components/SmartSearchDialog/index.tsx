@@ -1,4 +1,5 @@
 import { Dialog, DialogContent } from '@mui/material';
+import type { JSX } from 'react';
 
 import SmartSearch from './SmartSearch';
 import { ZetkinQuery } from 'utils/types/zetkin';

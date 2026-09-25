@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { ReactElement, useRef, useState } from 'react';
+import { ReactElement, useRef, useState, type JSX } from 'react';
 import {
   Architecture,
   Close,
@@ -84,7 +84,7 @@ const ZUIOrganizeMobileHeader = ({
   userMenuItems,
 }: {
   openMobileSidebar: () => void;
-  title?: string | ReactElement;
+  title?: string | ReactElement<unknown>;
   user: ZetkinUser | null;
   userMenuItems: ZUIEllipsisMenuItem[];
 }) => {
@@ -201,7 +201,7 @@ const ZUIOrganizeMobileHeader = ({
 const ZUIOrganizeSidebar = ({
   title,
 }: {
-  title?: string | ReactElement;
+  title?: string | ReactElement<unknown>;
 }): JSX.Element => {
   const messages = useMessages(messageIds);
   const user = useCurrentUser();

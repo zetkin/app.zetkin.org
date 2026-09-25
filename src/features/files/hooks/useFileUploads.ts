@@ -51,7 +51,7 @@ export default function useFileUploads(
 
   const fileKeyRef = useRef<number>(1);
   const filesRef = useRef(fileUploads);
-  const fileInput = useRef<HTMLInputElement>();
+  const fileInput = useRef<HTMLInputElement>(undefined);
 
   const addFiles = (files: File[]) => {
     setFileUploads([

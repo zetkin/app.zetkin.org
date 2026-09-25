@@ -30,7 +30,7 @@ export const OptionsStatsCard = ({
     [questionStats, messages.insights.optionsFields.subheader]
   );
 
-  const exportApi = useRef<UseChartProExportPublicApi>();
+  const exportApi = useRef<UseChartProExportPublicApi>(undefined);
   const displayToggle = (
     <ToggleButtonGroup
       exclusive

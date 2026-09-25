@@ -103,8 +103,8 @@ export default makeMessages('feat.calendar', {
       ),
       createShift: m('After each event (create shift)'),
       duplicate: m('Same time and date (duplicate)'),
-      nextDay: m<{ dates: ReactElement }>('Next day {dates}'),
-      nextWeek: m<{ dates: ReactElement }>('Next week {dates}'),
+      nextDay: m<{ dates: ReactElement<unknown> }>('Next day {dates}'),
+      nextWeek: m<{ dates: ReactElement<unknown> }>('Next week {dates}'),
       reschedule: m('Reschedule'),
       rescheduleMenuHeader: m<{ numberOfEvents: number }>(
         'Reschedule {numberOfEvents} events to'

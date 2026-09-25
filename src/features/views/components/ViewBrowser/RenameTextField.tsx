@@ -22,7 +22,7 @@ const RenameTextField: FC<{
     canceled?: boolean
   ) => void;
 }> = ({ item, onRenamed }) => {
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(undefined);
   const [value, setValue] = useState(item.title);
 
   useLayoutEffect(() => {

@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { Done, NotInterested } from '@mui/icons-material';
+import type { JSX } from 'react';
 
 import { Msg } from 'core/i18n';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';

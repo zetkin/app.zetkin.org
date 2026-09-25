@@ -243,7 +243,7 @@ function BrowserList({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [hasEvaluatedHeightOnce, setHasEvaluatedHeightOnce] = useState(false);
 
-  const resizeObserverRef = useRef<ResizeObserver>();
+  const resizeObserverRef = useRef<ResizeObserver>(undefined);
 
   const headerRef: Ref<HTMLDivElement | null> = useCallback(
     (el: HTMLDivElement | null) => {

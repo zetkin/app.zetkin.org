@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { Box, Dialog } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 
 import isUserTyping from 'features/search/utils/isUserTyping';
 import ResultsList from 'features/search/components/SearchDialog/ResultsList';

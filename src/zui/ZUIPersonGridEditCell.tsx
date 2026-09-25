@@ -118,7 +118,11 @@ const ZUIPersonGridEditCell: FC<{
         setAnchorEl(null);
       }}
     >
-      <Box ref={(div: HTMLDivElement) => setAnchorEl(div)}>
+      <Box
+        ref={(div: HTMLDivElement) => {
+          setAnchorEl(div);
+        }}
+      >
         <InputBase
           /* eslint-disable-next-line jsx-a11y/no-autofocus */
           autoFocus

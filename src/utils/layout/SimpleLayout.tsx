@@ -7,14 +7,14 @@ import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 
 interface SimpleLayoutProps {
-  actionButtons?: React.ReactElement | React.ReactElement[];
+  actionButtons?: React.ReactElement<unknown> | React.ReactElement<unknown>[];
   avatar?: string;
-  belowActionButtons?: ReactElement;
+  belowActionButtons?: ReactElement<unknown>;
   children?: React.ReactNode;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   fixedHeight?: boolean;
-  title?: string | ReactElement;
-  subtitle?: string | ReactElement;
+  title?: string | ReactElement<unknown>;
+  subtitle?: string | ReactElement<unknown>;
   noPad?: boolean;
 }
 
