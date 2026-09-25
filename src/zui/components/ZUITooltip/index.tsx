@@ -1,4 +1,4 @@
-import { Tooltip } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
 import { FC, ReactElement } from 'react';
 
 import { ZUIPlacement } from '../types';
@@ -68,7 +68,7 @@ const ZUITooltip: FC<ZUITooltipProps> = ({
       }}
       title={label}
     >
-      {children}
+      <Box display="flex">{children}</Box>
     </Tooltip>
   );
 };
