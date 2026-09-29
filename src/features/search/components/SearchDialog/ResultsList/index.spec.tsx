@@ -60,10 +60,10 @@ describe('ResultsList', () => {
     );
 
     expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(3);
-    expect(getByTestId('SearchDialog-showMore-person')).not.toBeNull();
+    expect(getByTestId('SearchDialog-showOnly-person')).not.toBeNull();
   });
 
-  it('selects the data type when show more is clicked', async () => {
+  it('selects the data type when "only show" is clicked', async () => {
     const user = userEvent.setup();
     const onSelectType = jest.fn();
     const { getByTestId } = render(
@@ -74,7 +74,7 @@ describe('ResultsList', () => {
       />
     );
 
-    await user.click(getByTestId('SearchDialog-showMore-person'));
+    await user.click(getByTestId('SearchDialog-showOnly-person'));
 
     expect(onSelectType).toHaveBeenCalledWith(SEARCH_DATA_TYPE.PERSON);
   });
@@ -89,7 +89,7 @@ describe('ResultsList', () => {
     );
 
     expect(getAllByTestId('SearchDialog-resultsListItem').length).toBe(9);
-    expect(queryByTestId('SearchDialog-showMore-person')).toBeNull();
+    expect(queryByTestId('SearchDialog-showOnly-person')).toBeNull();
     expect(queryByMessageId(messageIds.groups.person)).toBeNull();
   });
 

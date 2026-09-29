@@ -1387,7 +1387,14 @@ feat:
     placeholder: Type to search
     results:
       project: Project
-    showMore: Show more
+    showOnly:
+      callassignment: Only show call assignments
+      campaign: Only show projects
+      journeyinstance: Only show journeys
+      person: Only show people
+      survey: Only show surveys
+      task: Only show tasks
+      view: Only show lists
   settings:
     officials:
       addPerson:

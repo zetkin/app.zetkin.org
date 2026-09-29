@@ -18,5 +18,13 @@ export default makeMessages('feat.search', {
   results: {
     project: m('Project'),
   },
-  showMore: m('Show more'),
+  showOnly: {
+    callassignment: m('Only show call assignments'),
+    campaign: m('Only show projects'),
+    journeyinstance: m('Only show journeys'),
+    person: m('Only show people'),
+    survey: m('Only show surveys'),
+    task: m('Only show tasks'),
+    view: m('Only show lists'),
+  },
 });

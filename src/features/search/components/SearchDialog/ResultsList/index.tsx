@@ -82,7 +82,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
             {items.length > shown.length && (
               <ListItem>
                 <ListItemButton
-                  data-testid={`SearchDialog-showMore-${type}`}
+                  data-testid={`SearchDialog-showOnly-${type}`}
                   onClick={() => onSelectType(type)}
                 >
                   <ListItemText
@@ -90,7 +90,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
                     inset
                     primary={
                       <Typography color="primary" variant="body2">
-                        <Msg id={messages.showMore} />
+                        {msg.showOnly[type]()}
                       </Typography>
                     }
                   />
