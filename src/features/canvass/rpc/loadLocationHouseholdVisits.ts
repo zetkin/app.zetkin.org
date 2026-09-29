@@ -30,7 +30,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const visits = await fetchAllPaginated(
     (page, size) =>
       apiClient.get<ZetkinHouseholdVisit[]>(
-        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/household_visits?page=${page}&size={size}`
+        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/household_visits?page=${page}&size={${size}}`
       ),
     100
   );
