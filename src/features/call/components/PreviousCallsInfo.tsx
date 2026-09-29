@@ -209,7 +209,7 @@ const PreviousCall: FC<{
           size="small"
         />
       </Box>
-      <Collapse in={showMore}>
+      <Collapse in={showMore} timeout={200}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           <Box
             alignItems="center"
