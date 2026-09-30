@@ -86,11 +86,33 @@ export default makeMessages('feat.canvass', {
       empty: m('This location does not have any households yet'),
       header: m('Households'),
     },
+    qrCode: {
+      altText: m<{ floorNumber: number }>('QR code for floor {floorNumber}'),
+      buttonLabel: m('Open QR code dialog'),
+      closeButton: m('Close'),
+      instruction: m('Have your canvasser scan the code'),
+      title: m('QR code'),
+      tooltip: m('Share floor with canvasser'),
+    },
     single: {
+      daysAgo: m<{ days: number }>(
+        '{days, plural, =1 {1 day ago} other {# days ago}}'
+      ),
       definesSuccess: m('Defines success'),
+      hoursAgo: m<{ hours: number }>(
+        '{hours, plural, =1 {1 hour ago} other {# hours ago}}'
+      ),
+      householdColumnHeader: m('Household'),
       logVisitButtonLabel: m('Log visit'),
+      shareInstructions: m(
+        'Mark results below. Show to your captain when done.'
+      ),
       skipped: m('skipped'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
+      toggleInstructions: m(
+        'Tap once for yes, twice for no, three times to reset.'
+      ),
+      unknown: m('Unknown'),
       visit: m('Visit'),
       wasNotVisited: m(
         'This household has not been visited in this assignment'
