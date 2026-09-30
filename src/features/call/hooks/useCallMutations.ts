@@ -24,6 +24,23 @@ export default function useCallMutations(orgId: number) {
         (assignment) => assignment.id == assignmentId
       );
 
+      if (!assignment) {
+        //If you are no longer a caller in that assignment,
+        //we try with the org id of the assignments you are assigned,
+        //since it is likely that at least one is from the same org
+        for (const assignment of assignments) {
+          try {
+            await apiClient.delete(
+              `/api/orgs/${assignment.organization.id}/calls/${callId}`
+            );
+            dispatch(unfinishedCallAbandoned(callId));
+            break;
+          } catch {
+            //Do nothing
+          }
+        }
+      }
+
       if (assignment) {
         await apiClient.delete(
           `/api/orgs/${assignment.organization.id}/calls/${callId}`
