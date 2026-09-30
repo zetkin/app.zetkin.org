@@ -86,6 +86,8 @@ jobs:
           context: .
           file: ./env/frontend/Dockerfile
           push: true
+          build-args: |
+            ZETKIN_APP_VERSION=${{ steps.release-version.outputs.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
