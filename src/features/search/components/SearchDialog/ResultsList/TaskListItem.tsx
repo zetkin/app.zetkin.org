@@ -20,11 +20,7 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
-  const elements = [
-    messages.results.project(),
-    task.campaign.title,
-    messages.results.task(),
-  ];
+  const elements = [messages.results.project(), task.campaign.title];
 
   return (
     <Link
