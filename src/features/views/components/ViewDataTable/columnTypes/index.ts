@@ -14,7 +14,7 @@ import SurveyOptionsColumnType from './SurveyOptionsColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
-import { ZetkinObjectAccess } from 'core/api/types';
+import { ListAccessLevel } from 'core/api/types';
 import { AppDispatch } from 'core/store';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 import { RemoteList } from 'utils/storeUtils';
@@ -27,7 +27,7 @@ export interface IColumnType<
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(
     column: ColumnType,
-    accessLevel: ZetkinObjectAccess['level'] | null,
+    accessLevel: ListAccessLevel | null,
     optionalParams: {
       apiClient?: IApiClient;
       customFieldsInfo?: ZetkinCustomField[];
@@ -43,7 +43,7 @@ export interface IColumnType<
     personId: number,
     data: CellType,
     ev: MuiEvent<KeyboardEvent<HTMLElement>>,
-    accessLevel: ZetkinObjectAccess['level'] | null
+    accessLevel: ListAccessLevel | null
   ): void;
   processRowUpdate?(
     useViewGrid: UseViewGridReturn,

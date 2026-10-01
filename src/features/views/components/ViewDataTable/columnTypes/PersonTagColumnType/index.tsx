@@ -19,7 +19,7 @@ import useTag from 'features/tags/hooks/useTag';
 import useTagging from 'features/tags/hooks/useTagging';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import ValueTagCell from './ValueTagCell';
-import { ZetkinObjectAccess } from 'core/api/types';
+import { ListAccessLevel } from 'core/api/types';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { AppDispatch } from 'core/store';
@@ -39,7 +39,7 @@ export default class PersonTagColumnType implements IColumnType {
 
   getColDef(
     column: PersonTagViewColumn,
-    accessLevel: ZetkinObjectAccess['level'],
+    accessLevel: ListAccessLevel,
     optionalParams: {
       apiClient: IApiClient;
       dispatch: AppDispatch;
@@ -98,7 +98,7 @@ export default class PersonTagColumnType implements IColumnType {
     personId: number,
     data: PersonTagViewCell,
     ev: MuiEvent<KeyboardEvent<HTMLElement>>,
-    accessLevel: ZetkinObjectAccess['level']
+    accessLevel: ListAccessLevel
   ): void {
     if (accessLevel) {
       // Any non-null value means we're in restricted mode

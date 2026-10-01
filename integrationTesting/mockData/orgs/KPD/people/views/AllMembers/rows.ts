@@ -2,11 +2,15 @@ import { ZetkinViewRow } from 'utils/types/zetkin';
 
 const AllMembersRows: ZetkinViewRow[] = [
   {
-    content: ['Clara', 'Zetkin', true],
+    added: null,
+    added_by_user_id: null,
+    cells: { '1': 'Clara', '2': 'Zetkin', '3': true },
     id: 1,
   },
   {
-    content: ['Rosa', 'Luxemburg', false],
+    added: null,
+    added_by_user_id: null,
+    cells: { '1': 'Rosa', '2': 'Luxemburg', '3': false },
     id: 2,
   },
 ];

@@ -15,6 +15,7 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
 import { Msg } from 'core/i18n';
+import { colIdFromFieldName } from '../utils';
 import { OrganizerActionPane } from 'features/callAssignments/panes/OrganizerActionPane';
 import oldTheme from 'theme';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
@@ -57,12 +58,11 @@ export default class OrganizerActionColumnType implements IColumnType {
       renderCell: (
         params: GridRenderCellParams<ZetkinViewRow, OrganizerActionViewCell>
       ) => {
-        // Get the index of the column
-        const columnIdx = Object.keys(params.row).indexOf(params.field) - 1;
+        const columnId = colIdFromFieldName(params.field);
         return (
           <Cell
             cell={params.value}
-            columnIdx={columnIdx}
+            columnId={columnId}
             personId={params.row.id}
           />
         );
@@ -78,9 +78,9 @@ export default class OrganizerActionColumnType implements IColumnType {
 
 const Cell: FC<{
   cell?: OrganizerActionViewCell;
-  columnIdx: number;
+  columnId: number;
   personId: number;
-}> = ({ cell, columnIdx, personId }) => {
+}> = ({ cell, columnId, personId }) => {
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
   const viewId = parseInt(query.viewId as string);
@@ -134,7 +134,7 @@ const Cell: FC<{
               render() {
                 return (
                   <OrganizerActionPane
-                    columnIdx={columnIdx}
+                    columnId={columnId}
                     orgId={orgId}
                     personId={personId}
                     viewId={viewId}
