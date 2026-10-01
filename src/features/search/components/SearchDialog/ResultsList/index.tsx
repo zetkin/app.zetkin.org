@@ -47,10 +47,13 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
 }): JSX.Element => {
   const msg = useMessages(messages);
 
-  const groups = GROUP_ORDER.map((type) => ({
-    items: results.filter((result) => result.type === type),
-    type,
-  })).filter((group) => group.items.length > 0);
+  const groups = GROUP_ORDER.map((type) => {
+    const searchResults = results.filter((result) => result.type === type);
+    return {
+      searchResults,
+      type,
+    };
+  }).filter((group) => group.searchResults.length > 0);
 
   if (groups.length === 0) {
     return (
@@ -69,17 +72,63 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
       disablePadding
       sx={{ marginTop: 1, maxHeight: '60vh', overflowY: 'auto' }}
     >
-      {groups.map(({ items, type }) => {
+      {groups.map(({ searchResults, type }) => {
         const expanded = selectedType === type;
-        const shown = expanded ? items : items.slice(0, PREVIEW_PER_GROUP);
+        const shownResults = expanded
+          ? searchResults
+          : searchResults.slice(0, PREVIEW_PER_GROUP);
 
         return (
           <Fragment key={type}>
             {!expanded && (
               <ListSubheader disableSticky>{msg.groups[type]()}</ListSubheader>
             )}
-            {shown.map(renderResult)}
-            {items.length > shown.length && (
+            {shownResults.map((result) => {
+              if (result.type === SEARCH_DATA_TYPE.PERSON) {
+                return (
+                  <PersonListItem key={result.match.id} person={result.match} />
+                );
+              }
+              if (result.type === SEARCH_DATA_TYPE.PROJECT) {
+                return (
+                  <ProjectListItem
+                    key={result.match.id}
+                    project={result.match}
+                  />
+                );
+              }
+              if (result.type === SEARCH_DATA_TYPE.TASK) {
+                return (
+                  <TaskListItem key={result.match.id} task={result.match} />
+                );
+              }
+              if (result.type === SEARCH_DATA_TYPE.CALL_ASSIGNMENT) {
+                return (
+                  <CallAssignmentListItem
+                    key={result.match.id}
+                    callAssignment={result.match}
+                  />
+                );
+              }
+              if (result.type === SEARCH_DATA_TYPE.SURVEY) {
+                return (
+                  <SurveyListItem key={result.match.id} survey={result.match} />
+                );
+              }
+              if (result.type === SEARCH_DATA_TYPE.VIEW) {
+                return (
+                  <ViewListItem key={result.match.id} view={result.match} />
+                );
+              }
+
+              return (
+                <JourneyInstanceListItem
+                  key={result.match.id}
+                  journeyInstance={result.match}
+                />
+              );
+            })}
+            {searchResults.length > shownResults.length && (
               <ListItem>
                 <ListItemButton
                   data-testid={`SearchDialog-showOnly-${type}`}
@@ -103,38 +152,5 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
     </List>
   );
 };
-
-function renderResult(result: SearchResult) {
-  if (result.type === SEARCH_DATA_TYPE.PERSON) {
-    return <PersonListItem key={result.match.id} person={result.match} />;
-  }
-  if (result.type === SEARCH_DATA_TYPE.PROJECT) {
-    return <ProjectListItem key={result.match.id} project={result.match} />;
-  }
-  if (result.type === SEARCH_DATA_TYPE.TASK) {
-    return <TaskListItem key={result.match.id} task={result.match} />;
-  }
-  if (result.type === SEARCH_DATA_TYPE.CALL_ASSIGNMENT) {
-    return (
-      <CallAssignmentListItem
-        key={result.match.id}
-        callAssignment={result.match}
-      />
-    );
-  }
-  if (result.type === SEARCH_DATA_TYPE.SURVEY) {
-    return <SurveyListItem key={result.match.id} survey={result.match} />;
-  }
-  if (result.type === SEARCH_DATA_TYPE.VIEW) {
-    return <ViewListItem key={result.match.id} view={result.match} />;
-  }
-
-  return (
-    <JourneyInstanceListItem
-      key={result.match.id}
-      journeyInstance={result.match}
-    />
-  );
-}
 
 export default ResultsList;
