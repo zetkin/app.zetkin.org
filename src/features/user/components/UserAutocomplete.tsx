@@ -14,11 +14,18 @@ import useOrgUsers from '../hooks/useOrgUsers';
 import { ZetkinOrgUser } from '../types';
 
 type Props = {
+  getOptionDisabled?: (user: ZetkinOrgUser) => boolean;
   onSelect: (user: ZetkinOrgUser | null) => void;
   orgId: number;
+  placeholder?: string;
 };
 
-const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
+const UserAutocomplete: FC<Props> = ({
+  getOptionDisabled,
+  onSelect,
+  orgId,
+  placeholder,
+}) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const users = useOrgUsers(orgId);
 
@@ -43,6 +50,7 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
   return (
     <Autocomplete
       filterOptions={filterOptions}
+      getOptionDisabled={getOptionDisabled}
       getOptionKey={(user) => user.id}
       getOptionLabel={(user) => `${user.first_name} ${user.last_name}`}
       inputValue={searchValue}
@@ -58,6 +66,7 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
       renderInput={(params) => (
         <TextField
           {...params}
+          placeholder={placeholder}
           slotProps={{
             htmlInput: {
               ...params.inputProps,
