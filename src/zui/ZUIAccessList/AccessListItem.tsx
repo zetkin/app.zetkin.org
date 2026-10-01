@@ -22,9 +22,7 @@ interface AccessListItemUserProps extends AccessListItemBaseProps {
   userId: number;
 }
 
-type AccessListItemProps =
-  | AccessListItemPersonProps
-  | AccessListItemUserProps;
+type AccessListItemProps = AccessListItemPersonProps | AccessListItemUserProps;
 
 const AccessListItem: FC<AccessListItemProps> = ({
   action,

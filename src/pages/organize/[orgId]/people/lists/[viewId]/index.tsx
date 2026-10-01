@@ -29,7 +29,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   // Verify that the user may read the view. Officials are allowed by role,
   // while non-officials are only allowed if the view has been shared with them.
   try {
-    await apiClient.get<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`);
+    await apiClient.get<ZetkinView>(
+      `/api/orgs/${orgId}/people/views/${viewId}`
+    );
   } catch {
     return {
       notFound: true,

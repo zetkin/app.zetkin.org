@@ -74,10 +74,7 @@ const viewsSlice = createSlice({
   initialState,
   name: 'views',
   reducers: {
-    accessAdded: (
-      state,
-      action: PayloadAction<[number, ZetkinListAccess]>
-    ) => {
+    accessAdded: (state, action: PayloadAction<[number, ZetkinListAccess]>) => {
       const [viewId, accessObj] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
@@ -100,8 +97,7 @@ const viewsSlice = createSlice({
     },
     accessLoad: (state, action: PayloadAction<number>) => {
       if (!state.accessByViewId[action.payload]) {
-        state.accessByViewId[action.payload] =
-          remoteList<ZetkinListAccess>();
+        state.accessByViewId[action.payload] = remoteList<ZetkinListAccess>();
       }
       state.accessByViewId[action.payload].isLoading = true;
     },
@@ -118,9 +114,7 @@ const viewsSlice = createSlice({
       const [viewId, userId] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
-        list.items = list.items.filter(
-          (item) => item.data?.user_id != userId
-        );
+        list.items = list.items.filter((item) => item.data?.user_id != userId);
       }
     },
     allItemsLoad: (state, action: PayloadAction<number>) => {
