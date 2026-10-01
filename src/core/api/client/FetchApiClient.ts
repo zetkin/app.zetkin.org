@@ -3,8 +3,18 @@ import IApiClient from './IApiClient';
 import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
 import { ApiClientError } from '../errors';
 
+let reloadingToLogin = false;
+
 async function assertOk(res: Response) {
   if (!res.ok) {
+    if (res.status == 401 && typeof window !== 'undefined') {
+      if (!reloadingToLogin) {
+        reloadingToLogin = true;
+        window.location.reload();
+        return;
+      }
+    }
+
     throw await ApiClientError.fromResponse(res);
   }
 }
