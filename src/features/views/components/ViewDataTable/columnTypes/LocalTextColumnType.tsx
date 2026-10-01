@@ -8,7 +8,7 @@ import {
 
 import { IColumnType } from '.';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
-import { ZetkinObjectAccess } from 'core/api/types';
+import { ListAccessLevel } from 'core/api/types';
 import { LocalTextViewColumn, ZetkinViewRow } from '../../types';
 
 type LocalTextViewCell = string | null;
@@ -19,7 +19,7 @@ export default class LocalTextColumnType implements IColumnType {
   }
   getColDef(
     column: LocalTextViewColumn,
-    accessLevel: ZetkinObjectAccess['level'] | null
+    accessLevel: ListAccessLevel | null
   ): Omit<GridColDef, 'field'> {
     return {
       /* 

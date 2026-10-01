@@ -6,7 +6,7 @@ import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
 import { PersonViewFilterConfig } from 'features/smartSearch/components/types';
 import { ViewTreeData } from 'pages/api/views/tree';
-import { ZetkinObjectAccess } from 'core/api/types';
+import { ZetkinListAccess } from 'core/api/types';
 import {
   COLUMN_TYPE,
   ZetkinView,
@@ -24,14 +24,10 @@ import {
 } from 'utils/types/zetkin';
 import { personsDeleted } from 'features/profile/store';
 
-type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
-  id: number;
-};
-
 const SUPPORTED_COLUMN_TYPES = new Set<string>(Object.values(COLUMN_TYPE));
 
 export interface ViewsStoreSlice {
-  accessByViewId: Record<number | string, RemoteList<ZetkinObjectAccessWithId>>;
+  accessByViewId: Record<number | string, RemoteList<ZetkinListAccess>>;
   columnsByViewId: Record<number | string, RemoteList<ZetkinViewColumn>>;
   folderList: RemoteList<ZetkinViewFolder>;
   officialList: RemoteList<ZetkinOfficial>;
@@ -80,21 +76,16 @@ const viewsSlice = createSlice({
   reducers: {
     accessAdded: (
       state,
-      action: PayloadAction<[number, ZetkinObjectAccess]>
+      action: PayloadAction<[number, ZetkinListAccess]>
     ) => {
       const [viewId, accessObj] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
         let updated = false;
-        const newItem = remoteItem(accessObj.person.id, {
-          data: {
-            id: accessObj.person.id,
-            ...accessObj,
-          },
-        });
+        const newItem = remoteItem(accessObj.id, { data: accessObj });
 
         list.items = list.items.map((item) => {
-          if (item.id == accessObj.person.id) {
+          if (item.data?.user_id == accessObj.user_id) {
             updated = true;
             return newItem;
           } else {
@@ -110,30 +101,26 @@ const viewsSlice = createSlice({
     accessLoad: (state, action: PayloadAction<number>) => {
       if (!state.accessByViewId[action.payload]) {
         state.accessByViewId[action.payload] =
-          remoteList<ZetkinObjectAccessWithId>();
+          remoteList<ZetkinListAccess>();
       }
       state.accessByViewId[action.payload].isLoading = true;
     },
     accessLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinObjectAccess[]]>
+      action: PayloadAction<[number, ZetkinListAccess[]]>
     ) => {
       const [viewId, accessList] = action.payload;
 
-      // Add ID which is required by RemoteList
-      state.accessByViewId[viewId] = remoteList(
-        accessList.map((accessObj) => ({
-          ...accessObj,
-          id: accessObj.person.id,
-        }))
-      );
+      state.accessByViewId[viewId] = remoteList(accessList);
       state.accessByViewId[viewId].loaded = new Date().toISOString();
     },
     accessRevoked: (state, action: PayloadAction<[number, number]>) => {
-      const [viewId, personId] = action.payload;
+      const [viewId, userId] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
-        list.items = list.items.filter((item) => item.id != personId);
+        list.items = list.items.filter(
+          (item) => item.data?.user_id != userId
+        );
       }
     },
     allItemsLoad: (state, action: PayloadAction<number>) => {
