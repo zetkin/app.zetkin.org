@@ -47,6 +47,7 @@ function setupCsp(path: string) {
   const cspHeader = `
   default-src 'self' ${mapTiler};
   script-src ${scriptSrc};
+  worker-src 'self' blob:;
   style-src ${styleSrc};
   style-src-attr 'unsafe-inline';
   img-src 'self' blob: data: ${tileServer} ${
