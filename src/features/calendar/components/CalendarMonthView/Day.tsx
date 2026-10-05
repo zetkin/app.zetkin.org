@@ -75,26 +75,27 @@ const Day = ({
           {date.day}
         </Typography>
         <Tooltip title={createLabel}>
-          <IconButton
-            aria-controls={menuId}
-            aria-expanded={!!menuId}
-            aria-haspopup="menu"
-            aria-label={createLabel}
-            className="create-event"
-            disabled={disabled}
-            onClick={(ev) => onCreate(ev.currentTarget)}
-            size="small"
-            sx={{
-              '@media (hover: none)': { opacity: 1 },
-              height: 20,
-              marginLeft: 0.5,
-              opacity: menuId ? 1 : 0,
-              padding: 0,
-              width: 20,
-            }}
-          >
-            <Add sx={{ fontSize: 18 }} />
-          </IconButton>
+          <Box component="span" display="flex" marginLeft={0.5}>
+            <IconButton
+              aria-controls={menuId}
+              aria-expanded={!!menuId}
+              aria-haspopup="menu"
+              aria-label={createLabel}
+              className="create-event"
+              disabled={disabled}
+              onClick={(ev) => onCreate(ev.currentTarget)}
+              size="small"
+              sx={{
+                '@media (hover: none)': { opacity: 1 },
+                height: 20,
+                opacity: menuId ? 1 : 0.4,
+                padding: 0,
+                width: 20,
+              }}
+            >
+              <Add sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Box>
         </Tooltip>
       </Box>
       {dstChange !== undefined && (
