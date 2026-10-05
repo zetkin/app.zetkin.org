@@ -182,7 +182,7 @@ describe('Month calendar creation', () => {
     );
     render(monthView());
     const button = createButton('2026-09-16');
-    const header = button.parentElement!;
+    const header = button.parentElement!.parentElement!;
     await user.click(header.parentElement!);
     expect(screen.queryByRole('menu')).toBeNull();
     await user.click(within(header).getByText('16'));
