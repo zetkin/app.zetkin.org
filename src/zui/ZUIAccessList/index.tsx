@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Divider, FormControl, List, MenuItem, Select } from '@mui/material';
 
 import AccessListItem from './AccessListItem';
-import { ListAccessLevel, ZetkinListAccess } from 'core/api/types';
+import { ListAccessLevel, Zetkin2ListAccess } from 'features/views/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
 import useOrgUsers from 'features/user/hooks/useOrgUsers';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -11,7 +11,7 @@ import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIAccessListProps {
-  accessList: ZetkinListAccess[];
+  accessList: Zetkin2ListAccess[];
   officials: ZetkinOfficial[];
   onChangeLevel?: (userId: number, level: ListAccessLevel) => void;
   onRevoke?: (userId: number) => void;

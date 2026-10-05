@@ -14,7 +14,7 @@ import SurveyOptionsColumnType from './SurveyOptionsColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
-import { ListAccessLevel } from 'core/api/types';
+import { ListAccessLevel } from 'features/views/types';
 import { AppDispatch } from 'core/store';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 import { RemoteList } from 'utils/storeUtils';

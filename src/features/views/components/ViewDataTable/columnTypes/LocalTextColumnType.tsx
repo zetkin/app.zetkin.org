@@ -8,7 +8,7 @@ import {
 
 import { IColumnType } from '.';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
-import { ListAccessLevel } from 'core/api/types';
+import { ListAccessLevel } from 'features/views/types';
 import { LocalTextViewColumn, ZetkinViewRow } from '../../types';
 
 type LocalTextViewCell = string | null;

@@ -1,6 +1,6 @@
 import { createContext, FC, useContext } from 'react';
 
-import { ListAccessLevel } from 'core/api/types';
+import { ListAccessLevel } from '../types';
 
 type UseAccessLevelReturn = [boolean, ListAccessLevel | null];
 

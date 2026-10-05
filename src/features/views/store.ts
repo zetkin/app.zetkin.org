@@ -6,7 +6,7 @@ import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
 import { PersonViewFilterConfig } from 'features/smartSearch/components/types';
 import { ViewTreeData } from 'pages/api/views/tree';
-import { ZetkinListAccess } from 'core/api/types';
+import { Zetkin2ListAccess } from './types';
 import {
   COLUMN_TYPE,
   ZetkinView,
@@ -27,7 +27,7 @@ import { personsDeleted } from 'features/profile/store';
 const SUPPORTED_COLUMN_TYPES = new Set<string>(Object.values(COLUMN_TYPE));
 
 export interface ViewsStoreSlice {
-  accessByViewId: Record<number | string, RemoteList<ZetkinListAccess>>;
+  accessByViewId: Record<number | string, RemoteList<Zetkin2ListAccess>>;
   columnsByViewId: Record<number | string, RemoteList<ZetkinViewColumn>>;
   folderList: RemoteList<ZetkinViewFolder>;
   officialList: RemoteList<ZetkinOfficial>;
@@ -74,7 +74,10 @@ const viewsSlice = createSlice({
   initialState,
   name: 'views',
   reducers: {
-    accessAdded: (state, action: PayloadAction<[number, ZetkinListAccess]>) => {
+    accessAdded: (
+      state,
+      action: PayloadAction<[number, Zetkin2ListAccess]>
+    ) => {
       const [viewId, accessObj] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
@@ -97,13 +100,13 @@ const viewsSlice = createSlice({
     },
     accessLoad: (state, action: PayloadAction<number>) => {
       if (!state.accessByViewId[action.payload]) {
-        state.accessByViewId[action.payload] = remoteList<ZetkinListAccess>();
+        state.accessByViewId[action.payload] = remoteList<Zetkin2ListAccess>();
       }
       state.accessByViewId[action.payload].isLoading = true;
     },
     accessLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinListAccess[]]>
+      action: PayloadAction<[number, Zetkin2ListAccess[]]>
     ) => {
       const [viewId, accessList] = action.payload;
 

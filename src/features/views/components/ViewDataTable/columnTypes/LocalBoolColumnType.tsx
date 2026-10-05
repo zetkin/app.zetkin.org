@@ -8,7 +8,7 @@ import {
 
 import { IColumnType } from '.';
 import { useNumericRouteParams } from 'core/hooks';
-import { ListAccessLevel } from 'core/api/types';
+import { ListAccessLevel } from 'features/views/types';
 import {
   LocalBoolViewColumn,
   ZetkinViewColumn,

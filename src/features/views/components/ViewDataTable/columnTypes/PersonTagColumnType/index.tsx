@@ -19,7 +19,7 @@ import useTag from 'features/tags/hooks/useTag';
 import useTagging from 'features/tags/hooks/useTagging';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import ValueTagCell from './ValueTagCell';
-import { ListAccessLevel } from 'core/api/types';
+import { ListAccessLevel } from 'features/views/types';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { AppDispatch } from 'core/store';

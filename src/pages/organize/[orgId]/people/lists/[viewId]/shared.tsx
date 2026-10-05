@@ -11,7 +11,7 @@ import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
-import { ListAccessLevel, ZetkinListAccess } from 'core/api/types';
+import { ListAccessLevel, Zetkin2ListAccess } from 'features/views/types';
 import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinView } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
@@ -28,7 +28,7 @@ async function getAccessLevel(
   viewId: number
 ): Promise<ListAccessLevel | null> {
   try {
-    const access = await apiClient.get<ZetkinListAccess>(
+    const access = await apiClient.get<Zetkin2ListAccess>(
       `/api2/orgs/${orgId}/lists/${viewId}/access/me`
     );
 
