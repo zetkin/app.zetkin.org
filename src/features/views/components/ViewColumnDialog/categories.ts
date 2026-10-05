@@ -20,7 +20,12 @@ const categories = [
     key: CATEGORIES.BASIC,
   },
   {
-    choices: [CHOICES.TAG, CHOICES.TOGGLE, CHOICES.CUSTOM_QUERY],
+    choices: [
+      CHOICES.TAG,
+      CHOICES.TAG_GROUP,
+      CHOICES.TOGGLE,
+      CHOICES.CUSTOM_QUERY,
+    ],
     key: CATEGORIES.CATEGORIZING,
   },
   {

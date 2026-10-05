@@ -223,6 +223,11 @@ export default makeMessages('feat.views', {
         keywords: m(''),
         title: m('Tag'),
       },
+      tagGroup: {
+        description: m('See the tags a person has from a specific group.'),
+        keywords: m(''),
+        title: m('Tag group'),
+      },
       toggle: {
         columnTitle: m('Toggle'),
         description: m('Checkbox column'),
@@ -451,6 +456,9 @@ export default makeMessages('feat.views', {
       header: m('Older submissions'),
       openButton: m('Show'),
     },
+  },
+  tagGroup: {
+    tagListHeader: m<{ groupTitle: string }>('Tags from {groupTitle}'),
   },
   toolbar: {
     bulk: {

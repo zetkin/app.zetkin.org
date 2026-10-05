@@ -293,7 +293,16 @@ const viewsSlice = createSlice({
         return copy;
       });
 
-      state.columnsByViewId[viewId] = remoteList(supportedColumns);
+      state.columnsByViewId[viewId] = remoteList(
+        supportedColumns.concat([
+          {
+            config: { tag_group_id: 342 },
+            id: 23984723,
+            title: 'Cohorts',
+            type: COLUMN_TYPE.TAG_GROUP,
+          },
+        ])
+      );
       state.columnsByViewId[viewId].loaded = new Date().toISOString();
     },
     folderCreate: (state) => {

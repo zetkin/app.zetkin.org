@@ -1,4 +1,5 @@
 import {
+  AutoAwesomeMotion,
   CheckBox,
   Description,
   EventNote,
@@ -15,6 +16,7 @@ import PersonTagConfig from '../PersonTagConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
 import oldTheme from 'theme';
 import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
+import TagGroupConfig from '../TagGroupConfig';
 
 const { blue, purple, red } = oldTheme.palette.viewColumnGallery;
 
@@ -27,6 +29,16 @@ export const personTag: ColumnChoice = {
     existingColumns: ZetkinViewColumn[];
     onOutputConfigured: (columns: SelectedViewColumn[]) => void;
   }) => <PersonTagConfig onOutputConfigured={props.onOutputConfigured} />,
+};
+
+export const tagGroup: ColumnChoice = {
+  color: blue,
+  renderCardVisual: (color: string) => (
+    <SingleIconCardVisual color={color} icon={AutoAwesomeMotion} />
+  ),
+  renderConfigForm: (props: {
+    onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+  }) => <TagGroupConfig onOutputConfigured={props.onOutputConfigured} />,
 };
 
 export const toggle: ColumnChoice = {

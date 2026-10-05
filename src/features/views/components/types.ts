@@ -58,6 +58,7 @@ export enum COLUMN_TYPE {
   SURVEY_RESPONSE = 'survey_response',
   SURVEY_SUBMITTED = 'survey_submitted',
   UNSUPPORTED = 'unsupported',
+  TAG_GROUP = 'person_tag_group',
 }
 
 export interface LocalBoolViewColumn extends ZetkinViewColumnBase {
@@ -112,6 +113,13 @@ export interface PersonTagViewColumn extends ZetkinViewColumnBase {
   };
 }
 
+export interface TagGroupViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.TAG_GROUP;
+  config: {
+    tag_group_id: number;
+  };
+}
+
 export interface SurveyOptionViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.SURVEY_OPTION;
   config: {
@@ -159,7 +167,8 @@ export type ZetkinViewColumn =
   | SurveyOptionsViewColumn
   | SurveyResponseViewColumn
   | SurveySubmittedViewColumn
-  | UnsupportedViewColumn;
+  | UnsupportedViewColumn
+  | TagGroupViewColumn;
 
 export type NewZetkinViewColumn = Record<string, never>;
 

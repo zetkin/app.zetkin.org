@@ -22,6 +22,7 @@ const choices: Record<CHOICES, ColumnChoice> = {
   [CHOICES.TOGGLE]: misc.toggle,
   [CHOICES.ASSIGNEE]: misc.localPerson,
   [CHOICES.NOTES]: misc.localText,
+  [CHOICES.TAG_GROUP]: misc.tagGroup,
 };
 
 export default choices;

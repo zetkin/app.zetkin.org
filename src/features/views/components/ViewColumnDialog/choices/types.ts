@@ -15,6 +15,7 @@ export enum CHOICES {
   PERSON_FIELDS = 'personFields',
   SURVEY_SUBMIT_DATE = 'surveySubmitDate',
   TAG = 'tag',
+  TAG_GROUP = 'tagGroup',
   TOGGLE = 'toggle',
   ASSIGNEE = 'localPerson',
   NOTES = 'localText',

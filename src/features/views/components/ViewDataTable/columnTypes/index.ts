@@ -19,6 +19,7 @@ import { AppDispatch } from 'core/store';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 import { RemoteList } from 'utils/storeUtils';
 import { ZetkinCustomField, ZetkinTag } from 'utils/types/zetkin';
+import TagGroupColumnType from './TagGroupColumnType';
 
 export interface IColumnType<
   ColumnType = ZetkinViewColumn,
@@ -109,6 +110,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.SURVEY_SUBMITTED]: new SurveySubmittedColumnType(),
   [COLUMN_TYPE.LOCAL_TEXT]: new LocalTextColumnType(),
   [COLUMN_TYPE.UNSUPPORTED]: new UnsupportedColumnType(),
+  [COLUMN_TYPE.TAG_GROUP]: new TagGroupColumnType(),
 };
 
 export default columnTypes;
