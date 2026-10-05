@@ -56,9 +56,6 @@ const Day = ({
       flexDirection="column"
       height="100%"
       sx={{
-        '&:hover .create-event, &:focus-within .create-event': {
-          opacity: 1,
-        },
         overflowY: 'hidden',
       }}
       width="100%"
@@ -81,12 +78,15 @@ const Day = ({
               aria-expanded={!!menuId}
               aria-haspopup="menu"
               aria-label={createLabel}
-              className="create-event"
               disabled={disabled}
               onClick={(ev) => onCreate(ev.currentTarget)}
               size="small"
               sx={{
-                '@media (hover: none)': { opacity: 1 },
+                '&:hover, &:focus-visible': {
+                  color: oldTheme.palette.primary.main,
+                  opacity: 1,
+                },
+                color: menuId ? oldTheme.palette.primary.main : undefined,
                 height: 20,
                 opacity: menuId ? 1 : 0.4,
                 padding: 0,
