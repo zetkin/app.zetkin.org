@@ -6,7 +6,6 @@ import { EventState } from 'features/events/hooks/useEventState';
 import getEventState from 'features/events/utils/getEventState';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import messageIds from 'features/events/l10n/messageIds';
-import { removeOffset } from 'utils/dateUtils';
 import { STATUS_COLORS } from 'features/projects/components/ActivityList/items/ActivityListItem';
 import useEvent from 'features/events/hooks/useEvent';
 import useEventParticipantsWithChanges from 'features/events/hooks/useEventParticipantsWithChanges';
@@ -99,8 +98,8 @@ const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
                     ),
                     label: (
                       <ZUITimeSpan
-                        end={new Date(removeOffset(event.end_time))}
-                        start={new Date(removeOffset(event.start_time))}
+                        end={Temporal.PlainDateTime.from(event.end_time)}
+                        start={Temporal.PlainDateTime.from(event.start_time)}
                       />
                     ),
                   },

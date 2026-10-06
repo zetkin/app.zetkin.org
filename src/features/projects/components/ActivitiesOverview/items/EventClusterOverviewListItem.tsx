@@ -13,7 +13,6 @@ import messageIds from 'features/projects/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import OverviewListItem from './OverviewListItem';
-import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
 import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
@@ -88,8 +87,8 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
               icon: <ScheduleOutlined fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
-                  end={new Date(removeOffset(endTime))}
-                  start={new Date(removeOffset(startTime))}
+                  end={Temporal.PlainDateTime.from(endTime)}
+                  start={Temporal.PlainDateTime.from(startTime)}
                 />
               ),
             },
