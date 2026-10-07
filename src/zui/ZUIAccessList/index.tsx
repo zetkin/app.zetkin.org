@@ -2,21 +2,19 @@ import { FC } from 'react';
 import { Divider, FormControl, List, MenuItem, Select } from '@mui/material';
 
 import AccessListItem from './AccessListItem';
-import { ZetkinObjectAccess } from 'core/api/types';
+import { ListAccessLevel, Zetkin2ListAccess } from 'features/views/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
+import useOrgUsers from 'features/user/hooks/useOrgUsers';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
 import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIAccessListProps {
-  accessList: ZetkinObjectAccess[];
+  accessList: Zetkin2ListAccess[];
   officials: ZetkinOfficial[];
-  onChangeLevel?: (
-    personId: number,
-    level: ZetkinObjectAccess['level']
-  ) => void;
-  onRevoke?: (personId: number) => void;
+  onChangeLevel?: (userId: number, level: ListAccessLevel) => void;
+  onRevoke?: (userId: number) => void;
   orgId: number;
 }
 
@@ -28,6 +26,10 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
+  const orgUsers = useOrgUsers(orgId);
+
+  const usersById = new Map(orgUsers.map((user) => [user.id, user]));
+
   let first = true;
   return (
     <List>
@@ -48,7 +50,11 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
         );
       })}
       {accessList.map((item) => {
-        const { person, level, updated, updated_by: sharer } = item;
+        const { level, granted, granted_by_user_id: grantedByUserId } = item;
+        const user = usersById.get(item.user_id);
+        const sharer = grantedByUserId
+          ? usersById.get(grantedByUserId)
+          : undefined;
         const showDivider = !first;
         first = false;
         return (
@@ -66,10 +72,10 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
                         level == 'readonly'
                       ) {
                         if (onChangeLevel) {
-                          onChangeLevel(person.id, level);
+                          onChangeLevel(item.user_id, level);
                         }
                       } else if (level == 'delete' && onRevoke) {
-                        onRevoke(person.id);
+                        onRevoke(item.user_id);
                       }
                     }}
                     value={level}
@@ -90,19 +96,28 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
                   </Select>
                 </FormControl>
               }
-              orgId={orgId}
-              personId={person.id}
-              subtitle={messages.accessList.added({
-                sharer: `${sharer.first_name} ${sharer.last_name}`,
-                updated: (
-                  <ZUIRelativeTime
-                    convertToLocal
-                    datetime={updated}
-                    forcePast
-                  />
-                ),
-              })}
-              title={`${person.first_name} ${person.last_name}`}
+              subtitle={
+                user
+                  ? messages.accessList.added({
+                      sharer: sharer
+                        ? `${sharer.first_name} ${sharer.last_name}`
+                        : '-',
+                      updated: (
+                        <ZUIRelativeTime
+                          convertToLocal
+                          datetime={granted}
+                          forcePast
+                        />
+                      ),
+                    })
+                  : messages.accessList.notAMember()
+              }
+              title={
+                user
+                  ? `${user.first_name} ${user.last_name}`
+                  : `#${item.user_id}`
+              }
+              userId={item.user_id}
             />
           </>
         );
