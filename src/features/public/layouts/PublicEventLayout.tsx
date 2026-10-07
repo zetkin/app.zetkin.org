@@ -12,7 +12,6 @@ import messageIds from 'features/organizations/l10n/messageIds';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useEvent from 'features/events/hooks/useEvent';
-import { removeOffset } from 'utils/dateUtils';
 
 type Props = PropsWithChildren<{
   eventId: number;
@@ -52,8 +51,8 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                 >
                   <ZUIText>
                     <ZUITimeSpan
-                      end={new Date(removeOffset(event.end_time))}
-                      start={new Date(removeOffset(event.start_time))}
+                      end={Temporal.PlainDateTime.from(event.end_time)}
+                      start={Temporal.PlainDateTime.from(event.start_time)}
                     />
                   </ZUIText>
                   <ZUIText component="span">·</ZUIText>

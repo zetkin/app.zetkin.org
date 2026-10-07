@@ -7,7 +7,6 @@ import {
 import NextLink from 'next/link';
 
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import { removeOffset } from 'utils/dateUtils';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { useMessages } from 'core/i18n';
@@ -38,8 +37,8 @@ const PersonEventListItem = ({ event }: { event: ZetkinEvent }) => {
                 icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
                 label: (
                   <ZUITimeSpan
-                    end={new Date(removeOffset(event.start_time))}
-                    start={new Date(removeOffset(event.end_time))}
+                    end={Temporal.PlainDateTime.from(event.start_time)}
+                    start={Temporal.PlainDateTime.from(event.end_time)}
                   />
                 ),
               },
