@@ -150,6 +150,7 @@ const EmailClick = ({
               linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL ||
               linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS ? (
                 <StyledAutocomplete
+                  clearable={true}
                   items={emails.map((email) => ({
                     id: email.id,
                     label: email.title ?? '',
@@ -270,6 +271,7 @@ const EmailClick = ({
             projectSelect:
               linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT ? (
                 <StyledAutocomplete
+                  clearable={true}
                   items={projects.map((project) => ({
                     id: project.id,
                     label: project.title,

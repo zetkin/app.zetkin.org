@@ -150,6 +150,7 @@ const EmailHistory = ({
             emailSelect:
               emailSelectScope === 'email' ? (
                 <StyledAutocomplete
+                  clearable={true}
                   items={emails.map((email) => ({
                     id: email.id,
                     label: email.title ?? '',
@@ -178,6 +179,7 @@ const EmailHistory = ({
             projectSelect:
               emailSelectScope === 'project' ? (
                 <StyledAutocomplete
+                  clearable={true}
                   items={projectsSorted.map((project) => ({
                     id: project.id,
                     label: project.title,
