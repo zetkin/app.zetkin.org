@@ -150,6 +150,8 @@ const EmailHistory = ({
             emailSelect:
               emailSelectScope === 'email' ? (
                 <StyledAutocomplete
+                  key="email"
+                  autoOpen={!filter.config.email}
                   clearable={true}
                   items={emails.map((email) => ({
                     id: email.id,
@@ -179,6 +181,8 @@ const EmailHistory = ({
             projectSelect:
               emailSelectScope === 'project' ? (
                 <StyledAutocomplete
+                  key="project"
+                  autoOpen={!filter.config.campaign}
                   clearable={true}
                   items={projectsSorted.map((project) => ({
                     id: project.id,
