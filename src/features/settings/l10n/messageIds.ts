@@ -128,10 +128,10 @@ export default makeMessages('feat.settings', {
     },
     errors: {
       invalidData: m(
-        'The server rejected this data. Check the slug and the options, then try again.'
+        'This field could not be saved. Please check the slug and options.'
       ),
       slugInUse: m(
-        'A field with this slug already exists. Please choose a different slug.'
+        'This slug is already in use. Please choose a different one.'
       ),
     },
     list: {
