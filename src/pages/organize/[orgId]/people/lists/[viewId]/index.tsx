@@ -32,41 +32,41 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     await apiClient.get<ZetkinView>(
       `/api/orgs/${orgId}/people/views/${viewId}`
     );
-  } catch {
-    return {
-      notFound: true,
-    };
-  }
 
-  // Check if user is an official
-  const officialMemberships = await getUserMemberships(ctx, false);
-  const isOfficialMember = officialMemberships.includes(
-    parseInt(orgId as string)
-  );
+    // Check if user is an official
+    const officialMemberships = await getUserMemberships(ctx, false);
+    const isOfficialMember = officialMemberships.includes(
+      parseInt(orgId as string)
+    );
 
-  const isSuperUser = !!ctx.user?.is_superuser;
+    const isSuperUser = !!ctx.user?.is_superuser;
 
-  if (isOfficialMember || isSuperUser) {
+    if (isOfficialMember || isSuperUser) {
+      return {
+        props: {
+          orgId,
+          viewId,
+        },
+      };
+    }
+
+    // The user is not an official, so the list must have been explicitly shared
+    // with them for them to have access. Send them to the read-only view.
     return {
       props: {
         orgId,
         viewId,
       },
+      redirect: {
+        destination: `/organize/${orgId}/people/lists/${viewId}/shared`,
+        permanent: false,
+      },
+    };
+  } catch {
+    return {
+      notFound: true,
     };
   }
-
-  // The user is not an official, so the list must have been explicitly shared
-  // with them for them to have access. Send them to the read-only view.
-  return {
-    props: {
-      orgId,
-      viewId,
-    },
-    redirect: {
-      destination: `/organize/${orgId}/people/lists/${viewId}/shared`,
-      permanent: false,
-    },
-  };
 }, scaffoldOptions);
 
 type SingleViewPageProps = {
