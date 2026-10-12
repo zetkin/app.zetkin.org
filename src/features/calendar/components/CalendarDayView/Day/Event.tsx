@@ -60,7 +60,10 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             >
               <Box alignItems="center" display="flex" gap={0.5}>
                 <Schedule />
-                {isAllDay(event.start_time, event.end_time) ? (
+                {isAllDay(
+                  Temporal.PlainDateTime.from(event.start_time),
+                  Temporal.PlainDateTime.from(event.end_time)
+                ) ? (
                   <Typography key={event.id}>
                     {messages.common.allDay()}
                   </Typography>

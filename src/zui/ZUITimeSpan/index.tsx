@@ -4,6 +4,7 @@ import { FormattedDate, FormattedTime } from 'react-intl';
 import { isAllDay } from 'features/calendar/components/utils';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import { plainDateTimeFromLegacyDate } from 'utils/dateUtils';
 
 type ZUITimeSpanProps = {
   end: Date;
@@ -11,9 +12,12 @@ type ZUITimeSpanProps = {
 };
 
 const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
-  const isToday = start.toDateString() === new Date().toDateString();
-  const endsOnSameDay = start.toDateString() === end.toDateString();
-  const endsOnToday = end.toDateString() === new Date().toDateString();
+  const today = Temporal.Now.plainDateISO();
+  const startsAt = plainDateTimeFromLegacyDate(start);
+  const endsAt = plainDateTimeFromLegacyDate(end);
+  const isToday = startsAt.toPlainDate().equals(today);
+  const endsOnSameDay = startsAt.toPlainDate().equals(endsAt.toPlainDate());
+  const endsOnToday = endsAt.toPlainDate().equals(today);
 
   const startTime = <FormattedTime value={start} />;
   const endTime = <FormattedTime value={end} />;
@@ -21,7 +25,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
   const startDate = <FormattedDate dateStyle="medium" value={start} />;
   const endDate = <FormattedDate dateStyle="medium" value={end} />;
 
-  if (isToday && isAllDay(start.toISOString(), end.toDateString())) {
+  if (isToday && isAllDay(startsAt, endsAt)) {
     return <Msg id={messageIds.timeSpan.singleDayAllDay} />;
   }
 
