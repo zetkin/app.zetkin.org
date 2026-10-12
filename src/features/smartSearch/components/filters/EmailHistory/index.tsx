@@ -3,7 +3,7 @@ import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
@@ -48,6 +48,7 @@ const EmailHistory = ({
   onSubmit,
 }: EmailHistoryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
+  const messages = useMessages(localMessageIds);
   const emails = useEmails(orgId).data || [];
   const projects = useProjects(orgId).data || [];
   const projectsSorted = projects.sort((p1, p2) => {
@@ -151,6 +152,7 @@ const EmailHistory = ({
               emailSelectScope === 'email' ? (
                 <StyledAutocomplete
                   key="email"
+                  ariaLabel={messages.emailSelectLabel()}
                   autoOpen={!filter.config.email}
                   clearable={true}
                   items={emails.map((email) => ({
@@ -182,6 +184,7 @@ const EmailHistory = ({
               emailSelectScope === 'project' ? (
                 <StyledAutocomplete
                   key="project"
+                  ariaLabel={messages.projectSelectLabel()}
                   autoOpen={!filter.config.campaign}
                   clearable={true}
                   items={projectsSorted.map((project) => ({

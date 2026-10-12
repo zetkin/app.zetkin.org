@@ -3,7 +3,7 @@ import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import StyledAutocomplete from '../../inputs/StyledAutocomplete';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -52,6 +52,7 @@ const EmailClick = ({
   onSubmit,
 }: EmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
+  const messages = useMessages(localMessageIds);
   const emails = useEmails(orgId).data || [];
   const projects = useProjects(orgId).data || [];
 
@@ -151,6 +152,7 @@ const EmailClick = ({
               linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS ? (
                 <StyledAutocomplete
                   key="email"
+                  ariaLabel={messages.emailSelectLabel()}
                   autoOpen={!filter.config.email}
                   clearable={true}
                   items={emails.map((email) => ({
@@ -274,6 +276,7 @@ const EmailClick = ({
               linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT ? (
                 <StyledAutocomplete
                   key="project"
+                  ariaLabel={messages.projectSelectLabel()}
                   autoOpen={!filter.config.campaign}
                   clearable={true}
                   items={projects.map((project) => ({
