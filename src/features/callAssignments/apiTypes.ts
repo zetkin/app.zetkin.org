@@ -54,7 +54,7 @@ export interface Call {
   allocation_time: string;
   update_time: string;
   state: number;
-  notes?: string;
+  notes?: string | null;
   call_back_after?: string;
   organizer_action_needed: boolean;
   organizer_action_taken: boolean;
