@@ -5,6 +5,8 @@ import {
   RemoteItem,
   remoteList,
   RemoteList,
+  remoteListLoad,
+  remoteListLoaded,
 } from 'utils/storeUtils';
 import {
   Call,
@@ -26,6 +28,7 @@ export interface CallAssignmentSlice {
     number,
     RemoteItem<ZetkinCallAssignmentStats & { id: number }>
   >;
+  callsByAssignmentId: Record<number, RemoteList<Call>>;
   statsById: Record<number, RemoteItem<CallAssignmentStats>>;
   userAssignmentList: RemoteList<CallAssignmentData>;
 }
@@ -35,6 +38,7 @@ const initialState: CallAssignmentSlice = {
   callAssignmentIdsByProjectId: {},
   callList: remoteList(),
   callersById: {},
+  callsByAssignmentId: {},
   simpleStatsById: {},
   statsById: {},
   userAssignmentList: remoteList(),
@@ -178,6 +182,8 @@ const callAssignmentsSlice = createSlice({
       state.callList.items = state.callList.items
         .filter((c) => c.id != call?.id)
         .concat([remoteItem(call.id, { data: call })]);
+
+      state.callsByAssignmentId[call.assignment_id].isStale = true;
     },
     callerAdd: (state, action: PayloadAction<[number, number]>) => {
       const [assignmentId, callerId] = action.payload;
@@ -244,6 +250,16 @@ const callAssignmentsSlice = createSlice({
 
       state.callersById[assignmentId] = remoteList(callers);
       state.callersById[assignmentId].loaded = timestamp;
+    },
+    callsLoad: (state, action: PayloadAction<number>) => {
+      const callAssId = action.payload;
+      state.callsByAssignmentId[callAssId] = remoteListLoad(
+        state.callsByAssignmentId[callAssId] ?? null
+      );
+    },
+    callsLoaded: (state, action: PayloadAction<[number, Call[]]>) => {
+      const [callAssId, calls] = action.payload;
+      state.callsByAssignmentId[callAssId] = remoteListLoaded(calls);
     },
     projectCallAssignmentsLoad: (state, action: PayloadAction<number>) => {
       const projectId = action.payload;
@@ -347,6 +363,8 @@ export const {
   callerRemoved,
   callersLoad,
   callersLoaded,
+  callsLoad,
+  callsLoaded,
   projectCallAssignmentsLoad,
   projectCallAssignmentsLoaded,
   simpleStatsLoad,
