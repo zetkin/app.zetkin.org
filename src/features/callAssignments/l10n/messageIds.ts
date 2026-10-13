@@ -85,6 +85,7 @@ export default makeMessages('feat.callAssignments', {
         none: m('No action needed'),
         title: m('Flagged'),
       },
+      is: m('Is'),
       status: m('Call status'),
     },
     organizerActionNeeded: {

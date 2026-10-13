@@ -81,7 +81,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
               return value === +filterItem.value;
             };
           },
-          label: 'Is',
+          label: messages.calls.filters.is(),
           value: 'is',
         },
       ],
@@ -153,7 +153,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
               }
             };
           },
-          label: 'Is',
+          label: messages.calls.filters.is(),
           value: 'is',
         },
       ],
@@ -230,6 +230,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
       width: 250,
     },
   ];
+
   return (
     <DataGridPro
       columns={columns}
