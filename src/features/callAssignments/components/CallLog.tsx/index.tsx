@@ -4,7 +4,6 @@ import { Avatar, Box, Tooltip, Typography } from '@mui/material';
 
 import { useMessages } from 'core/i18n';
 import useCalls from 'features/callAssignments/hooks/useCalls';
-import { Call } from 'features/callAssignments/apiTypes';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import messageIds from 'features/callAssignments/l10n/messageIds';
@@ -13,7 +12,7 @@ import { CallState, callStateToString, ZetkinCall } from 'features/call/types';
 import OrganizerActionCell from './OrganizerActionCell';
 import CallerNoteCell from './CallerNoteCell';
 import CallStatusFilterInput from './CallStatusFilterInput';
-import { colors, icons } from './utils';
+import { colors, icons, states } from './utils';
 import OrganizerActionFilterInput from './OrganizerActionFilterInput';
 
 type Props = {
@@ -26,7 +25,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
   const callMessages = useMessages(callMessageIds);
   const { data: calls, isLoading } = useCalls(orgId, callAssId);
 
-  const columns: GridColDef<Call>[] = [
+  const columns: GridColDef<ZetkinCall>[] = [
     {
       disableColumnMenu: true,
       field: 'id',
@@ -67,7 +66,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
       filterOperators: [
         {
           InputComponent: CallStatusFilterInput,
-          InputComponentProps: { options: Object.keys(icons) },
+          InputComponentProps: { callStates: Object.keys(states) },
           getApplyFilterFn: (filterItem) => {
             if (
               !filterItem.field ||

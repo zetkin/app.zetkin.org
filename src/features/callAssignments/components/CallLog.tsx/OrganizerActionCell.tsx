@@ -8,10 +8,10 @@ import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import messageIds from 'features/callAssignments/l10n/messageIds';
-import { Call } from 'features/callAssignments/apiTypes';
+import { ZetkinCall } from 'features/call/types';
 
 type Props = {
-  call: Call;
+  call: ZetkinCall;
   orgId: number;
 };
 

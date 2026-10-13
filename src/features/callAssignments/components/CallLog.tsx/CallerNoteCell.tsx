@@ -6,10 +6,10 @@ import useCall from 'features/callAssignments/hooks/useCall';
 import messageIds from 'features/callAssignments/l10n/messageIds';
 import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { Call } from 'features/callAssignments/apiTypes';
+import { ZetkinCall } from 'features/call/types';
 
 type Props = {
-  call: Call;
+  call: ZetkinCall;
   orgId: number;
 };
 

@@ -13,23 +13,14 @@ import { Msg } from 'core/i18n';
 import messageIds from 'features/callAssignments/l10n/messageIds';
 import callMessageIds from 'features/call/l10n/messageIds';
 import { CallState } from 'features/call/types';
-import { colors, icons, states, StateString } from './utils';
+import { colors, icons, states } from './utils';
 
 const CallStatusFilterInput: FC<
   GridFilterInputValueProps & {
-    options: CallState[];
+    callStates: CallState[];
   }
-> = ({ applyValue, item, options }) => {
+> = ({ applyValue, item, callStates }) => {
   const [value, setValue] = useState('');
-
-  const callStates: { name: StateString; value: CallState }[] = options.map(
-    (option) => {
-      return {
-        name: states[+option as CallState],
-        value: option,
-      };
-    }
-  );
 
   return (
     <FormControl>
@@ -45,17 +36,18 @@ const CallStatusFilterInput: FC<
         variant="standard"
       >
         {callStates.map((state) => {
-          const Icon = icons[state.value];
+          const Icon = icons[state];
+          const stateString = states[state];
 
           return (
             <MenuItem
-              key={state.name}
-              value={state.value === 0 ? '0' : state.value}
+              key={stateString}
+              value={state === 0 ? '0' : state.toString()}
             >
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
                 <Box
                   sx={(theme) => {
-                    const color = colors[state.value];
+                    const color = colors[state];
 
                     return {
                       alignItems: 'center',
@@ -72,12 +64,14 @@ const CallStatusFilterInput: FC<
                   <Icon />
                 </Box>
                 <Typography>
-                  {state.name === 'unfinished' && (
+                  {stateString === 'unfinished' && (
                     <Msg id={messageIds.calls.callState.unfinished} />
                   )}
-                  {state.name !== 'unfinished' && (
+                  {stateString !== 'unfinished' && (
                     <Msg
-                      id={callMessageIds.about.previousCalls.status[state.name]}
+                      id={
+                        callMessageIds.about.previousCalls.status[stateString]
+                      }
                     />
                   )}
                 </Typography>

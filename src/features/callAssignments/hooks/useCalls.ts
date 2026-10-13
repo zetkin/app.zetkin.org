@@ -1,7 +1,7 @@
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { callsLoad, callsLoaded } from '../store';
-import { Call } from '../apiTypes';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
+import { ZetkinCall } from 'features/call/types';
 
 export default function useCalls(orgId: number, callAssId: number) {
   const dispatch = useAppDispatch();
@@ -14,7 +14,7 @@ export default function useCalls(orgId: number, callAssId: number) {
     actionOnLoad: () => callsLoad(callAssId),
     actionOnSuccess: (data) => callsLoaded([callAssId, data]),
     loader: () =>
-      apiClient.get<Call[]>(
+      apiClient.get<ZetkinCall[]>(
         `/api/orgs/${orgId}/call_assignments/${callAssId}/calls`
       ),
   });

@@ -9,12 +9,12 @@ import {
   remoteListLoaded,
 } from 'utils/storeUtils';
 import {
-  Call,
   CallAssignmentCaller,
   CallAssignmentData,
   CallAssignmentStats,
   ZetkinCallAssignmentStats,
 } from './apiTypes';
+import { ZetkinCall } from 'features/call/types';
 
 export interface CallAssignmentSlice {
   assignmentList: RemoteList<CallAssignmentData>;
@@ -23,12 +23,12 @@ export interface CallAssignmentSlice {
     RemoteList<{ id: string | number }>
   >;
   callersById: Record<number, RemoteList<CallAssignmentCaller>>;
-  callList: RemoteList<Call>;
+  callList: RemoteList<ZetkinCall>;
   simpleStatsById: Record<
     number,
     RemoteItem<ZetkinCallAssignmentStats & { id: number }>
   >;
-  callsByAssignmentId: Record<number, RemoteList<Call>>;
+  callsByAssignmentId: Record<number, RemoteList<ZetkinCall>>;
   statsById: Record<number, RemoteItem<CallAssignmentStats>>;
   userAssignmentList: RemoteList<CallAssignmentData>;
 }
@@ -169,7 +169,7 @@ const callAssignmentsSlice = createSlice({
           .concat(attributes);
       }
     },
-    callUpdated: (state, action: PayloadAction<[Call, string[]]>) => {
+    callUpdated: (state, action: PayloadAction<[ZetkinCall, string[]]>) => {
       const [call, mutating] = action.payload;
       const callItem = state.callList.items.find((item) => item.id == call.id);
 
@@ -257,7 +257,7 @@ const callAssignmentsSlice = createSlice({
         state.callsByAssignmentId[callAssId] ?? null
       );
     },
-    callsLoaded: (state, action: PayloadAction<[number, Call[]]>) => {
+    callsLoaded: (state, action: PayloadAction<[number, ZetkinCall[]]>) => {
       const [callAssId, calls] = action.payload;
       state.callsByAssignmentId[callAssId] = remoteListLoaded(calls);
     },
