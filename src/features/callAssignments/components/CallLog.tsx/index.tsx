@@ -23,7 +23,8 @@ type Props = {
 const CallLog: FC<Props> = ({ callAssId, orgId }) => {
   const messages = useMessages(messageIds);
   const callMessages = useMessages(callMessageIds);
-  const { data: calls, isLoading } = useCalls(orgId, callAssId);
+  const { data, isLoading } = useCalls(orgId, callAssId);
+  const calls = data || [];
 
   const columns: GridColDef<ZetkinCall>[] = [
     {
@@ -96,10 +97,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
 
               return {
                 alignItems: 'center',
-                color:
-                  color === 'warning'
-                    ? theme.palette.warning.dark
-                    : theme.palette[color].main,
+                color: theme.palette[color].main,
                 display: 'flex',
                 gap: 1,
                 justifyContent: 'center',
@@ -202,6 +200,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
 
         return <CallerNoteCell call={params.row} orgId={orgId} />;
       },
+      valueGetter: (value, cell) => cell.notes,
       width: 250,
     },
     {

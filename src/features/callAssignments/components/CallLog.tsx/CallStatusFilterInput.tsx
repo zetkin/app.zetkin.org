@@ -40,10 +40,7 @@ const CallStatusFilterInput: FC<
           const stateString = states[state];
 
           return (
-            <MenuItem
-              key={stateString}
-              value={state === 0 ? '0' : state.toString()}
-            >
+            <MenuItem key={stateString} value={state.toString()}>
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
                 <Box
                   sx={(theme) => {
@@ -51,10 +48,7 @@ const CallStatusFilterInput: FC<
 
                     return {
                       alignItems: 'center',
-                      color:
-                        color === 'warning'
-                          ? theme.palette.warning.dark
-                          : theme.palette[color].main,
+                      color: theme.palette[color].main,
                       display: 'flex',
                       gap: 1,
                       justifyContent: 'center',

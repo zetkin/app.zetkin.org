@@ -47,11 +47,11 @@ export const iconByCallState: Record<FinishedCall['state'], MUIIcon> = {
 
 export const colorByCallState: Record<
   FinishedCall['state'],
-  'success' | 'warning' | 'error'
+  'success' | 'warning' | 'error' | 'secondary'
 > = {
   [CallState.SUCCESSFUL]: 'success',
-  [CallState.NO_PICKUP]: 'error',
-  [CallState.LINE_BUSY]: 'error',
+  [CallState.NO_PICKUP]: 'secondary',
+  [CallState.LINE_BUSY]: 'secondary',
   [CallState.CALL_BACK]: 'warning',
   [CallState.NOT_AVAILABLE]: 'warning',
   [CallState.LEFT_MESSAGE]: 'warning',

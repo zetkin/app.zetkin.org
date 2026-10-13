@@ -19,7 +19,7 @@ export const states: Record<ZetkinCall['state'], StateString> = {
 };
 export const colors: Record<
   ZetkinCall['state'],
-  'success' | 'warning' | 'error' | 'info'
+  'success' | 'warning' | 'error' | 'info' | 'secondary'
 > = { ...colorByCallState, [CallState.UNFINISHED]: 'info' };
 
 export const icons: Record<ZetkinCall['state'], MUIIcon> = {
