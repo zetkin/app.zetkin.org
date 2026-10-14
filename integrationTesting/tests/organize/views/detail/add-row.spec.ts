@@ -27,19 +27,21 @@ test.describe('View detail page', () => {
     );
     moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
     moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [NewPerson]);
-    moxy.setZetkinApiMock(
-      '/orgs/1/people/views/1/rows/1',
-      'put',
+    moxy.setZetkinApi2Mock(
+      '/orgs/1/lists/1/rows',
+      'post',
       {
-        content: [NewPerson.first_name, NewPerson.last_name, false],
+        added: null,
+        added_by_user_id: null,
+        cells: {
+          '1': NewPerson.first_name,
+          '2': NewPerson.last_name,
+          '3': false,
+        },
         id: NewPerson.id,
       },
       201
     );
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows/1337', 'get', {
-      content: [NewPerson.first_name, NewPerson.last_name, false],
-      id: NewPerson.id,
-    });
   });
 
   test.afterEach(({ moxy }) => {
@@ -76,8 +78,7 @@ test.describe('View detail page', () => {
         .log()
         .find(
           (req) =>
-            req.method === 'PUT' &&
-            req.path === `/v1/orgs/1/people/views/1/rows/${NewPerson.id}`
+            req.method === 'POST' && req.path === '/v2/orgs/1/lists/1/rows'
         )
     ).toBeTruthy();
 
@@ -92,7 +93,7 @@ test.describe('View detail page', () => {
         )
     ).toBeTruthy();
 
-    // Make sure rows are fetched anew
+    // Make sure rows are reloaded after the content query was removed
     expect(
       moxy
         .log()
@@ -129,8 +130,7 @@ test.describe('View detail page', () => {
           .log()
           .find(
             (req) =>
-              req.method === 'PUT' &&
-              req.path === `/v1/orgs/1/people/views/1/rows/${NewPerson.id}`
+              req.method === 'POST' && req.path === '/v2/orgs/1/lists/1/rows'
           )
       )
       .toBeTruthy();
