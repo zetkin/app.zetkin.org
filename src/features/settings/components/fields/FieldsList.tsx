@@ -25,8 +25,7 @@ import messageIds from '../../l10n/messageIds';
 import createSlug from '../../utils/createSlug';
 import { AccessType } from '../../types';
 import { getAccessType, getOrgReadWrite } from '../../utils/orgReadWrite';
-import getFieldErrorMessageId from '../../utils/getFieldErrorMessageId';
-import { parseEnumChoices } from './NewFieldForm';
+import { fieldErrorMessages, parseEnumChoices } from './NewFieldForm';
 
 type EditFieldFormProps = {
   fieldId: number;
@@ -219,7 +218,8 @@ const EditFieldForm: FC<EditFieldFormProps> = ({ onClose, orgId, fieldId }) => {
               >
                 <Msg
                   id={
-                    getFieldErrorMessageId(fieldUpdateError.status) ??
+                    (fieldUpdateError.status &&
+                      fieldErrorMessages[fieldUpdateError.status]) ||
                     messageIds.fields.edit.errorMessage
                   }
                 />
