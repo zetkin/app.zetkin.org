@@ -1,4 +1,5 @@
 import { ListAccessLevel, Zetkin2ListAccess } from '../types';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinOfficial } from 'utils/types/zetkin';
@@ -31,8 +32,10 @@ export default function useViewSharing(
     actionOnLoad: () => accessLoad(viewId),
     actionOnSuccess: (data) => accessLoaded([viewId, data]),
     loader: () =>
-      apiClient.get<Zetkin2ListAccess[]>(
-        `/api2/orgs/${orgId}/lists/${viewId}/access`
+      fetchAllPaginated<Zetkin2ListAccess>((page, size) =>
+        apiClient.get<Zetkin2ListAccess[]>(
+          `/api2/orgs/${orgId}/lists/${viewId}/access?size=${size}&page=${page}`
+        )
       ),
   });
 
