@@ -20,9 +20,10 @@ import useMyAssignments from '../hooks/useMyAssignments';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
-import CallPanels from './CallPanels';
+import DesktopCallPanels from './CallPanels';
 import ZUILink from 'zui/components/ZUILink';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import CallPanels from './CallPanels';
 
 const HEIGHT_OF_HEADER = '100px';
 //TODO Delete this when removing new ui alert
@@ -173,7 +174,7 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
             position="relative"
             width="100%"
           >
-            <CallPanels
+            <DesktopCallPanels
               assignment={assignment}
               call={call}
               lane={lane}
@@ -198,7 +199,21 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
             position="relative"
             width="100%"
           >
-            panels
+            <CallPanels
+              assignment={assignment}
+              call={call}
+              lane={lane}
+              onAbandonUnfinishedCall={() => null}
+              onOpenCallLog={() => setCallLogOpen(true)}
+              onSwitchToUnfinishedCall={(callId, assignmentId) => {
+                switchToUnfinishedCall(callId, assignmentId);
+                if (assignmentId != assignment.id) {
+                  setAssignmentSwitchedTo(assignmentId);
+                }
+              }}
+              report={report}
+              unfinishedCalls={filteredUnfinishedCalls}
+            />
           </Box>
         )}
       </Box>

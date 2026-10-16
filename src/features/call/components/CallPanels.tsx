@@ -20,6 +20,7 @@ import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import CallSummary from './CallSummary';
 import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -33,6 +34,137 @@ type Props = {
 };
 
 const CallPanels: FC<Props> = ({
+  assignment,
+  call,
+  lane,
+  onAbandonUnfinishedCall,
+  onOpenCallLog,
+  onSwitchToUnfinishedCall,
+  report,
+  unfinishedCalls,
+}) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <MobileCallPanels
+        assignment={assignment}
+        call={call}
+        lane={lane}
+        onAbandonUnfinishedCall={onAbandonUnfinishedCall}
+        onOpenCallLog={onOpenCallLog}
+        onSwitchToUnfinishedCall={onSwitchToUnfinishedCall}
+        report={report}
+        unfinishedCalls={unfinishedCalls}
+      />
+    );
+  } else {
+    return (
+      <DesktopCallPanels
+        assignment={assignment}
+        call={call}
+        lane={lane}
+        onAbandonUnfinishedCall={onAbandonUnfinishedCall}
+        onOpenCallLog={onOpenCallLog}
+        onSwitchToUnfinishedCall={onSwitchToUnfinishedCall}
+        report={report}
+        unfinishedCalls={unfinishedCalls}
+      />
+    );
+  }
+};
+
+const MobileCallPanels: FC<Props> = ({ assignment, call, lane }) => {
+  const messages = useMessages(messageIds);
+
+  const queueError = useAppSelector((state) => state.call.queueError);
+  return (
+    <>
+      {queueError && (
+        <ZUIAlert
+          appear
+          description={messages.callAlert.description()}
+          severity="warning"
+          title={messages.callAlert.title()}
+        />
+      )}
+      <Box
+        sx={(theme) => ({
+          borderRight: `1px solid ${theme.palette.dividers.main}`,
+          height: '100%',
+          left: lane.step == LaneStep.START ? 0 : 'calc(-100%)',
+          maxHeight: '100%',
+          overflowY: 'auto',
+          position: 'absolute',
+          transition: 'left 0.5s',
+          width: '100%',
+        })}
+      >
+        <ZUISection
+          renderContent={() => (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                paddingBottom: 2,
+              }}
+            >
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.start.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg id={messageIds.callingInfo.tutorial.start.description} />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.personInfo.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg
+                  id={messageIds.callingInfo.tutorial.personInfo.description}
+                />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.call.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg id={messageIds.callingInfo.tutorial.call.description} />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.report.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg id={messageIds.callingInfo.tutorial.report.description} />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.oldCalls.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg
+                  id={messageIds.callingInfo.tutorial.oldCalls.description}
+                />
+              </ZUIText>
+            </Box>
+          )}
+          title={messages.callingInfo.title()}
+        />
+        <SuspenseWithCircularLoader>
+          <AssignmentStats
+            assignmentId={assignment.id}
+            orgId={assignment.organization.id}
+          />
+        </SuspenseWithCircularLoader>
+        <InstructionsSection
+          call={call}
+          instructions={assignment.instructions}
+          step={lane.step}
+        />
+      </Box>
+    </>
+  );
+};
+
+const DesktopCallPanels: FC<Props> = ({
   assignment,
   call,
   lane,
@@ -57,7 +189,6 @@ const CallPanels: FC<Props> = ({
           title={messages.callAlert.title()}
         />
       )}
-
       <Box
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,

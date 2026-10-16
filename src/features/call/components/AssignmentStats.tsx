@@ -61,8 +61,8 @@ const AssignmentStats: FC<Props> = ({ orgId, assignmentId }) => {
   const stats = useSimpleCallAssignmentStats(orgId, assignmentId);
   return (
     <ZUISection
-      borders={false}
-      fullHeight
+      borders={isMobile}
+      fullHeight={!isMobile}
       renderContent={() => (
         <>
           {isMobile && (
