@@ -36,7 +36,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   const messages = useMessages(messageIds);
   const { data: recipient } = usePerson(orgId, personId);
 
-  const { setOrganizerActionNeeded, setOrganizerActionTaken } = useCall();
+  const updateCall = useCall();
 
   const sorted: ZetkinOrganizerAction[] = useMemo(
     () =>
@@ -101,10 +101,9 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               {!call.organizer_action_taken ? (
                 <Button
                   onClick={() =>
-                    setOrganizerActionTaken(
-                      call.assignment.organization_id,
-                      call.id
-                    )
+                    updateCall(call.assignment.organization_id, call.id, {
+                      organizer_action_taken: true,
+                    })
                   }
                   startIcon={<Check />}
                   variant="contained"
@@ -114,10 +113,9 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               ) : (
                 <Button
                   onClick={() =>
-                    setOrganizerActionNeeded(
-                      call.assignment.organization_id,
-                      call.id
-                    )
+                    updateCall(call.assignment.organization_id, call.id, {
+                      organizer_action_taken: false,
+                    })
                   }
                   startIcon={<PriorityHigh />}
                   variant="text"
