@@ -123,6 +123,11 @@ Zetkins Playwright tests isolate the Next.js app from the back end very thorough
 
 Moxy intercepts HTTP requests to the Zetkin API and returns mock responses.
 
+Unmocked requests return HTTP 404 locally. Never forward them to a real API:
+hanging background requests can exhaust the browser's connections, blocking
+mutations and navigation and preventing fixture teardown. Mock any data needed
+by the behavior under test explicitly.
+
 #### Basic Usage
 
 ```typescript
