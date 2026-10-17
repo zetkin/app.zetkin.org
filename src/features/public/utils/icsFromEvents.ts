@@ -29,7 +29,7 @@ export default async function icsFromEvents(
   events: ZetkinEvent[],
   org: ZetkinOrganization,
   lang: string,
-  timeZone: string = 'UTC'
+  timeZone?: string
 ): Promise<string> {
   const vLines: string[] = ['NAME:' + name, 'X-WR-CALNAME:' + name];
 
@@ -63,10 +63,10 @@ export default async function icsFromEvents(
           org.email ?? 'noreply@zetkin.org'
         }`
       );
-      const tz = timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-      vLines.push(`DTSTAMP;TZID=${tz}:${timeStamp(dayjs(event.published))}`);
-      vLines.push(`DTSTART;TZID=${tz}:${timeStamp(dayjs(event.start_time))}`);
-      vLines.push(`DTEND;TZID=${tz}:${timeStamp(dayjs(event.end_time))}`);
+      const tz = timeZone !== undefined ? `;TZID=${timeZone}` : '';
+      vLines.push(`DTSTAMP${tz}:${timeStamp(dayjs(event.published))}`);
+      vLines.push(`DTSTART${tz}:${timeStamp(dayjs(event.start_time))}`);
+      vLines.push(`DTEND${tz}:${timeStamp(dayjs(event.end_time))}`);
       if (event.title || event.activity?.title) {
         vLines.push(`SUMMARY:${event.title || event.activity?.title || ''}`);
       }
