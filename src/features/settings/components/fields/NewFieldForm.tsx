@@ -8,6 +8,7 @@ import messageIds from '../../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import { PlainMessage } from 'core/i18n/messages';
 import createSlug from '../../utils/createSlug';
+import createEnumChoiceKeys from '../../utils/createEnumChoiceKeys';
 import { AccessType } from '../../types';
 import { getOrgReadWrite } from '../../utils/orgReadWrite';
 
@@ -16,14 +17,17 @@ export const fieldErrorMessages: Partial<Record<number, PlainMessage>> =
   messageIds.fields.errors;
 
 export const parseEnumChoices = (input: string) => {
-  return input
+  const labels = input
     .split(',')
     .map((item) => item.trim())
-    .filter(Boolean)
-    .map((label) => ({
-      key: createSlug(label),
-      label,
-    }));
+    .filter(Boolean);
+
+  const keys = createEnumChoiceKeys(labels);
+
+  return labels.map((label, index) => ({
+    key: keys[index],
+    label,
+  }));
 };
 
 type Props = {
