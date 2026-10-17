@@ -13,7 +13,7 @@ glob:
     city: Plaats
     co_address: Per adres
     country: Land
-    email: Email
+    email: E-mail
     ext_id: Externe ID
     first_name: Voornaam
     gender: Gender
@@ -46,10 +46,10 @@ feat:
       archive: Archief
       assignees: Verantwoordelijke personen
       calendar: Kalender
-      callassignments: Bel opdrachten
+      callassignments: Belopdrachten
       callers: Bellers
       closed: Gesloten
-      compose: Samenstellen
+      compose: Opstellen
       conversation: Gesprek
       duplicates: Kopieën
       emails: E-mails
@@ -58,8 +58,8 @@ feat:
       incoming: Inkomend
       insights: Inzichten
       instances: Voorvallen
-      joinforms: Neem deel aan formulieren
-      journeys: Reizen
+      joinforms: Aanmeldformulieren
+      journeys: Trajecten
       manage: Beheer
       milestones: Mijlpalen
       new: Nieuw
@@ -71,7 +71,7 @@ feat:
       questions: Vragen
       settings: Instellingen
       shared: Gedeeld met ons
-      submissions: Aanmeldingen
+      submissions: Inzendingen
       surveys: Vragenlijsten
       tags: Tags
       tasks: Taken
@@ -79,7 +79,7 @@ feat:
       views: Lijsten
   calendar:
     createMenu:
-      shiftEvent: Maak meerdere gebeurtenissen aan die opgedeeld worden
+      shiftEvent: Maak meerdere gebeurtenissen aan die samen shifts vormen
       singleEvent: Maak één gebeurtenis aan
     dstEnds: Wintertijd
     dstStarts: Zomertijd
@@ -94,17 +94,16 @@ feat:
       withoutContact: '{numWithoutContact} Zonder contactpersoon'
     eventFilter:
       collapse: Inklappen
-      expand: '{numOfOptions, plural, one {+ 1 more event type} other {+ # more event
-        types}}'
+      expand: '{numOfOptions, plural, one {+ nog 1 type gebeurtenis} other {+ nog # typen gebeurtenissen}}'
       filter: Filter
       filterOptions:
         actionFilters:
-          missing: Contact persoon niet gevonden
+          missing: Contactpersoon ontbreekt
           overbooked: Overgereserveerd
           pending: Inschrijvingen in behandeling
           title: Filter op nodige actie
           underbooked: Ondergereserveerd
-          unsent: Maak verzenden notificaties ongedaan
+          unsent: Niet-verstuurde notificaties
         eventTypes:
           title: Filter op type gebeurtenis
         stateFilters:
