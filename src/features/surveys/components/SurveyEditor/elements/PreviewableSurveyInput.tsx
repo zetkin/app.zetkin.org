@@ -12,6 +12,7 @@ type HeadlinePreviewableInputProps = {
   onChange: (value: string) => void;
   onSwitchMode: (newMode: ZUIPreviewableMode) => void;
   placeholder: string;
+  required?: boolean;
   value: string | undefined | null;
   variant: keyof typeof VARIANTS;
 };
@@ -27,6 +28,7 @@ const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
   mode,
   onChange,
   onSwitchMode,
+  required,
   placeholder,
   value,
   variant,
@@ -62,6 +64,7 @@ const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
           sx={{ ...VARIANTS[variant], wordBreak: 'break-word' }}
         >
           {value || placeholder}
+          {required && '*'}
         </Typography>
       )}
       value={value || placeholder}

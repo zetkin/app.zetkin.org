@@ -240,6 +240,7 @@ const MobileHeader: FC<HeaderProps> = ({
           disabled={
             !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
           }
+          isLoading={isAllocatingCall || submittingReport}
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
             if (lane.step == LaneStep.START) {
@@ -254,12 +255,10 @@ const MobileHeader: FC<HeaderProps> = ({
             }
           }}
           variant={
-            isAllocatingCall || submittingReport
-              ? 'loading'
-              : (lane.step == LaneStep.SUMMARY && hasUnfinishedCalls) ||
-                  lane.step == LaneStep.CALL
-                ? 'secondary'
-                : 'primary'
+            (lane.step == LaneStep.SUMMARY && hasUnfinishedCalls) ||
+            lane.step == LaneStep.CALL
+              ? 'secondary'
+              : 'primary'
           }
         />
       </Box>
@@ -412,6 +411,7 @@ const DesktopHeader: FC<Omit<HeaderProps, 'onOpenCallLog'>> = ({
           disabled={
             !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
           }
+          isLoading={isAllocatingCall || submittingReport}
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
             if (lane.step == LaneStep.START) {
@@ -426,11 +426,9 @@ const DesktopHeader: FC<Omit<HeaderProps, 'onOpenCallLog'>> = ({
             }
           }}
           variant={
-            isAllocatingCall || submittingReport
-              ? 'loading'
-              : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
-                ? 'secondary'
-                : 'primary'
+            lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
+              ? 'secondary'
+              : 'primary'
           }
         />
       </Box>

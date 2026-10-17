@@ -26,7 +26,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { colors } from './PreviousCallsInfo';
 import useFinishedCalls from '../hooks/useFinishedCalls';
-import { callStateToString } from '../types';
+import { callStateToString, FinishedCall as FinishedCallType } from '../types';
 import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
 
 type CallSwitchModalProps = {
@@ -41,9 +41,6 @@ const UnfinishedCallsList: FC<{
   orgId: number;
   searchString: string;
 }> = ({ onCall, orgId, searchString }) => {
-  const { abandonUnfinishedCall, switchToUnfinishedCall } =
-    useCallMutations(orgId);
-
   const currentCall = useCurrentCall();
   const unfinishedCalls = useUnfinishedCalls();
 
@@ -82,19 +79,8 @@ const UnfinishedCallsList: FC<{
       {filteredUnfinishedCalls.map((unfinishedCall) => (
         <Fragment key={unfinishedCall.id}>
           <UnfinishedCallListItem
-            onAbandonCall={() =>
-              abandonUnfinishedCall(
-                unfinishedCall.assignment_id,
-                unfinishedCall.id
-              )
-            }
-            onSwitchToCall={() => {
-              switchToUnfinishedCall(
-                unfinishedCall.id,
-                unfinishedCall.assignment_id
-              );
-              onCall(unfinishedCall.assignment_id);
-            }}
+            onCall={() => onCall(unfinishedCall.assignment_id)}
+            orgId={orgId}
             unfinishedCall={unfinishedCall}
           />
           <ZUIDivider />
@@ -104,13 +90,116 @@ const UnfinishedCallsList: FC<{
   );
 };
 
+const FinishedCall: FC<{
+  finishedCall: FinishedCallType;
+  onCall: () => void;
+  orgId: number;
+}> = ({ finishedCall, onCall, orgId }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const messages = useMessages(messageIds);
+  const { switchToPreviousCall } = useCallMutations(orgId);
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 0.5,
+          paddingY: 1,
+        }}
+      >
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              flex: 1,
+              gap: 1,
+              minWidth: 0,
+            }}
+          >
+            <ZUIPersonAvatar
+              firstName={finishedCall.target.first_name}
+              id={finishedCall.target.id}
+              lastName={finishedCall.target.last_name}
+              size="medium"
+            />
+            <ZUIText noWrap variant="bodyMdSemiBold">
+              {finishedCall.target.name}
+            </ZUIText>
+          </Box>
+          <ZUIButton
+            isLoading={isLoading}
+            label={messages.callLog.previousCall.logNew()}
+            onClick={async () => {
+              setIsLoading(true);
+              await switchToPreviousCall(
+                finishedCall.assignment_id,
+                finishedCall.target.id
+              );
+              onCall();
+              setIsLoading(false);
+            }}
+            size="small"
+            variant="secondary"
+          />
+        </Box>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingLeft: 5,
+          }}
+        >
+          <ZUIText variant="bodyMdRegular">{finishedCall.target.phone}</ZUIText>
+          <Box
+            alignItems="center"
+            display="flex"
+            gap={1}
+            sx={(theme) => {
+              const color = colors[finishedCall.state];
+              return {
+                color:
+                  color === 'warning'
+                    ? theme.palette.warning.dark
+                    : theme.palette[color].main,
+                minWidth: 0,
+              };
+            }}
+          >
+            <ZUIText color="inherit" noWrap>
+              <Msg
+                id={
+                  messageIds.about.previousCalls.status[
+                    callStateToString[finishedCall.state]
+                  ]
+                }
+              />
+            </ZUIText>
+            <ZUIText color="secondary" noWrap>
+              <ZUIRelativeTime datetime={finishedCall.update_time} />
+            </ZUIText>
+          </Box>
+        </Box>
+      </Box>
+      <ZUIDivider />
+    </>
+  );
+};
+
 const FinishedCallsList: FC<{
   onCall: (assignmentId: number) => void;
   orgId: number;
   searchString: string;
 }> = ({ onCall, orgId, searchString }) => {
-  const messages = useMessages(messageIds);
-  const { switchToPreviousCall } = useCallMutations(orgId);
   const { isLoading, finishedCalls } = useFinishedCalls();
 
   const fuse = useMemo(() => {
@@ -135,97 +224,12 @@ const FinishedCallsList: FC<{
   return (
     <>
       {filteredFinishedCalls.map((finishedCall) => (
-        <Fragment key={finishedCall.id}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 0.5,
-              paddingY: 1,
-            }}
-          >
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flex: 1,
-                  gap: 1,
-                  minWidth: 0,
-                }}
-              >
-                <ZUIPersonAvatar
-                  firstName={finishedCall.target.first_name}
-                  id={finishedCall.target.id}
-                  lastName={finishedCall.target.last_name}
-                  size="medium"
-                />
-                <ZUIText noWrap variant="bodyMdSemiBold">
-                  {finishedCall.target.name}
-                </ZUIText>
-              </Box>
-              <ZUIButton
-                label={messages.callLog.previousCall.logNew()}
-                onClick={() => {
-                  switchToPreviousCall(
-                    finishedCall.assignment_id,
-                    finishedCall.target.id
-                  );
-                  onCall(finishedCall.assignment_id);
-                }}
-                size="small"
-                variant="secondary"
-              />
-            </Box>
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'space-between',
-                paddingLeft: 5,
-              }}
-            >
-              <ZUIText variant="bodyMdRegular">
-                {finishedCall.target.phone}
-              </ZUIText>
-              <Box
-                alignItems="center"
-                display="flex"
-                gap={1}
-                sx={(theme) => {
-                  const color = colors[finishedCall.state];
-                  return {
-                    color:
-                      color === 'warning'
-                        ? theme.palette.warning.dark
-                        : theme.palette[color].main,
-                    minWidth: 0,
-                  };
-                }}
-              >
-                <ZUIText color="inherit" noWrap>
-                  <Msg
-                    id={
-                      messageIds.about.previousCalls.status[
-                        callStateToString[finishedCall.state]
-                      ]
-                    }
-                  />
-                </ZUIText>
-                <ZUIText color="secondary" noWrap>
-                  <ZUIRelativeTime datetime={finishedCall.update_time} />
-                </ZUIText>
-              </Box>
-            </Box>
-          </Box>
-          <ZUIDivider />
-        </Fragment>
+        <FinishedCall
+          key={finishedCall.id}
+          finishedCall={finishedCall}
+          onCall={() => onCall(finishedCall.assignment_id)}
+          orgId={orgId}
+        />
       ))}
       {isLoading && (
         <Box

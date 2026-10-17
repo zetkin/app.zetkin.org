@@ -600,10 +600,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const localeText = useMemo(
     () => ({
       ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
+      filterValueAny: messages.filterOptions.any(),
+      filterValueFalse: messages.filterOptions.no(),
+      filterValueTrue: messages.filterOptions.yes(),
       noRowsLabel: messages.empty.notice[contentSource](),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [theme.components, messages.empty.notice]
+    [theme.components, messages.empty.notice, messages.filterOptions]
   );
 
   const onCellEditStart = useCallback(
@@ -727,6 +730,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         checkboxSelection={!!selectionModel?.mode}
         columns={gridColumns}
         disableRowSelectionOnClick={true}
+        filterDebounceMs={400}
         getRowClassName={getRowClassName}
         hideFooter={
           disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC

@@ -1,7 +1,12 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
 import useRemoteList from 'core/hooks/useRemoteList';
-import { householdVisitsLoad, householdVisitsLoaded } from '../store';
+import {
+  householdVisitsError,
+  householdVisitsLoad,
+  householdVisitsLoaded,
+} from '../store';
 import loadLocationHouseholdVisits from '../rpc/loadLocationHouseholdVisits';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 export default function useLocationHouseholdVisits(
   orgId: number,
@@ -15,6 +20,8 @@ export default function useLocationHouseholdVisits(
   );
 
   return useRemoteList(list, {
+    actionOnError: (err) =>
+      householdVisitsError([assignmentId, locationId, serializeError(err)]),
     actionOnLoad: () => householdVisitsLoad([assignmentId, locationId]),
     actionOnSuccess: (data) =>
       householdVisitsLoaded([assignmentId, locationId, data]),
