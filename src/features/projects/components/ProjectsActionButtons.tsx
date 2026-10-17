@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { CircularProgress } from '@mui/material';
 
@@ -14,7 +13,6 @@ const ProjectActionButtons: React.FunctionComponent = () => {
   const { orgId } = useNumericRouteParams();
   const createProject = useCreateProject(orgId);
 
-  const router = useRouter();
   const [isBusy, setIsBusy] = useState(false);
 
   return (
@@ -29,10 +27,9 @@ const ProjectActionButtons: React.FunctionComponent = () => {
           onClick={async () => {
             setIsBusy(true);
             try {
-              const project = await createProject({
+              await createProject({
                 title: messages.form.createProject.newProject(),
               });
-              router.push(`/organize/${orgId}/projects/${project.id}`);
             } catch (error) {
               setIsBusy(false);
               throw error;
