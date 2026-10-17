@@ -1,6 +1,7 @@
+import { ListAccessLevel, Zetkin2ListAccess } from '../types';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
 import {
   accessAdded,
@@ -13,10 +14,10 @@ import {
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 interface UseViewSharingReturn {
-  accessListFuture: IFuture<ZetkinObjectAccess[]>;
-  grantAccess: (personId: number, level: ZetkinObjectAccess['level']) => void;
+  accessListFuture: IFuture<Zetkin2ListAccess[]>;
+  grantAccess: (userId: number, level: ListAccessLevel) => void;
   officialsFuture: IFuture<ZetkinOfficial[]>;
-  revokeAccess: (personId: number) => void;
+  revokeAccess: (userId: number) => void;
 }
 export default function useViewSharing(
   orgId: number,
@@ -31,8 +32,10 @@ export default function useViewSharing(
     actionOnLoad: () => accessLoad(viewId),
     actionOnSuccess: (data) => accessLoaded([viewId, data]),
     loader: () =>
-      apiClient.get<ZetkinObjectAccess[]>(
-        `/api/orgs/${orgId}/people/views/${viewId}/access`
+      fetchAllPaginated<Zetkin2ListAccess>((page, size) =>
+        apiClient.get<Zetkin2ListAccess[]>(
+          `/api2/orgs/${orgId}/lists/${viewId}/access?size=${size}&page=${page}`
+        )
       ),
   });
 
@@ -43,13 +46,10 @@ export default function useViewSharing(
       apiClient.get<ZetkinOfficial[]>(`/api/orgs/${orgId}/officials`),
   });
 
-  const grantAccess = (
-    personId: number,
-    level: ZetkinObjectAccess['level']
-  ) => {
+  const grantAccess = (userId: number, level: ListAccessLevel) => {
     apiClient
-      .put<ZetkinObjectAccess>(
-        `/api/orgs/${orgId}/people/views/${viewId}/access/${personId}`,
+      .put<Zetkin2ListAccess>(
+        `/api2/orgs/${orgId}/lists/${viewId}/access/${userId}`,
         {
           level,
         }
@@ -59,11 +59,11 @@ export default function useViewSharing(
       });
   };
 
-  const revokeAccess = (personId: number) => {
+  const revokeAccess = (userId: number) => {
     apiClient
-      .delete(`/api/orgs/${orgId}/people/views/${viewId}/access/${personId}`)
+      .delete(`/api2/orgs/${orgId}/lists/${viewId}/access/${userId}`)
       .then(() => {
-        dispatch(accessRevoked([viewId, personId]));
+        dispatch(accessRevoked([viewId, userId]));
       });
   };
 

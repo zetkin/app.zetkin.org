@@ -45,7 +45,7 @@ test.describe('View detail page', () => {
     );
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/columns',
       'get',
@@ -68,7 +68,7 @@ test.describe('View detail page', () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', AllMembersRows);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/columns',
       'get',
