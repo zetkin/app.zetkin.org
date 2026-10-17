@@ -76,7 +76,15 @@ const CallPanels: FC<Props> = ({
   }
 };
 
-const MobileCallPanels: FC<Props> = ({ assignment, call, lane, report }) => {
+const MobileCallPanels: FC<Props> = ({
+  assignment,
+  call,
+  lane,
+  report,
+  onAbandonUnfinishedCall,
+  onSwitchToUnfinishedCall,
+  unfinishedCalls,
+}) => {
   const messages = useMessages(messageIds);
   const [callTab, setCallTab] = useState<1 | 2 | 3>(2);
   const dispatch = useAppDispatch();
@@ -247,6 +255,51 @@ const MobileCallPanels: FC<Props> = ({ assignment, call, lane, report }) => {
             );
           }}
           title={messages.report.title()}
+        />
+      </Box>
+      <Box
+        sx={{
+          '@keyframes summaryOut': {
+            '0%': { left: '100%' },
+            '100%': { left: '100%' },
+          },
+          alignItems: 'center',
+          animationDuration: '0.5s',
+          animationFillMode: 'backwards',
+          animationName: lane.step == LaneStep.CALL ? 'summaryOut' : '',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          justifyContent: 'space-evenly',
+          left: lane.step == LaneStep.SUMMARY ? '0%' : '120%',
+          padding: 2,
+          position: 'relative',
+          transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
+          visibility: () => {
+            const noCurrentCall = !call;
+            const inCallOrReport =
+              lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT;
+            const hideSummary = noCurrentCall && inCallOrReport;
+
+            return hideSummary ? 'hidden' : undefined;
+          },
+          width: '100%',
+        }}
+      >
+        <CallSummary
+          assignmentId={assignment.id}
+          onAbandonUnfinishedCall={(
+            unfinshedCallAssignmentId,
+            unfinishedCallId
+          ) =>
+            onAbandonUnfinishedCall(unfinshedCallAssignmentId, unfinishedCallId)
+          }
+          onSwitchToUnfinishedCall={(unfinishedCallId, assignmentId) =>
+            onSwitchToUnfinishedCall(unfinishedCallId, assignmentId)
+          }
+          orgId={assignment.organization.id}
+          report={report}
+          unfinishedCalls={unfinishedCalls}
         />
       </Box>
     </>
