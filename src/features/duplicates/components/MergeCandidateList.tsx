@@ -12,10 +12,12 @@ import {
 } from '@mui/material';
 import { VerticalAlignCenter, EmojiEvents } from '@mui/icons-material';
 
+import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import { useMessages } from 'core/i18n';
 
 interface MergeCandidateListProps {
   buttonLabel: string;
@@ -32,6 +34,7 @@ const MergeCandidateList: FC<MergeCandidateListProps> = ({
   rows,
   showActionButton = true,
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
 
   return (
@@ -71,10 +74,18 @@ const MergeCandidateList: FC<MergeCandidateListProps> = ({
                         sx={{
                           display: 'inline-block',
                           textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
                         }}
                         variant="labelSmMedium"
                       >
-                        {person.is_user && 'Zetkin user'}
+                        <Typography component="span">
+                          {person.is_user && messages.modal.userLabel()}
+                        </Typography>
+                        <Typography color="warning" component="span">
+                          {person.is_user &&
+                            index !== 0 &&
+                            messages.modal.userWarning()}
+                        </Typography>
                       </Typography>
                     </Box>
                   }
