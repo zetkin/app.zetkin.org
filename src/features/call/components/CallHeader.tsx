@@ -24,10 +24,10 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useFilteredActivities from '../hooks/useFilteredActivities';
 import notEmpty from 'utils/notEmpty';
-import ZUILink from 'zui/components/ZUILink';
 import QRCodeImage from './QRCodeImage';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 import ZUIModal from 'zui/components/ZUIModal';
+import { CallHeaderNumber } from 'features/call/components/CallHeaderNumber';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -153,18 +153,27 @@ const CallHeader: FC<Props> = ({
               lastName={call.target.last_name}
             />
             <ZUIText variant="headingLg">{call.target.name}</ZUIText>
-            <ZUIText
-              color="secondary"
-              sx={{ fontFamily: 'monospace' }}
-              variant="headingLg"
-            >
+            <Box alignItems="center" display="flex" flexDirection="row">
               {phoneNumbers.flatMap((phone, index) => {
                 return [
-                  index > 0 ? '/' : null,
-                  <ZUILink key={phone} href={`tel:${phone}`} text={phone} />,
+                  index > 0 ? (
+                    <ZUIText
+                      color="secondary"
+                      sx={{ fontFamily: 'monospace' }}
+                      variant="headingLg"
+                    >
+                      {'/'}
+                    </ZUIText>
+                  ) : null,
+                  <CallHeaderNumber
+                    key={phone}
+                    assignment={assignment}
+                    call={call}
+                    phone={phone}
+                  />,
                 ];
               })}
-            </ZUIText>
+            </Box>
             <ZUIIconButton
               icon={QrCode}
               onClick={() => {

@@ -1,6 +1,6 @@
 import { Link } from '@mui/material';
 import NextLink from 'next/link';
-import { FC } from 'react';
+import { FC, MouseEvent as ReactMouseEvent } from 'react';
 
 import { ZUIMedium, ZUISmall } from '../types';
 
@@ -14,6 +14,11 @@ type ZUILinkProps = {
    * Gets the color for the link text from the font color of the parent
    */
   inheritColor?: boolean;
+
+  /**
+   * What happens when we click the link?
+   */
+  onClick?: (event: ReactMouseEvent<HTMLAnchorElement>) => void;
 
   /**
    * If true, the link will open in a new tab.
@@ -41,6 +46,7 @@ const ZUILink: FC<ZUILinkProps> = ({
   text,
   openInNewTab = false,
   size,
+  onClick,
 }) => {
   const linkVariants = {
     medium: 'linkMd',
@@ -51,6 +57,7 @@ const ZUILink: FC<ZUILinkProps> = ({
     <Link
       component={NextLink}
       href={href}
+      onClick={onClick}
       rel={openInNewTab ? 'noopener' : ''}
       sx={(theme) => ({
         '&:hover': {

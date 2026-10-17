@@ -31,6 +31,7 @@ export type EnvVars = {
   MAPLIBRE_STYLE?: string;
   MUIX_LICENSE_KEY?: string;
   TILESERVER?: string;
+  VOIP_EMBED_URL?: string;
   ZETKIN_APP_DOMAIN?: string;
   ZETKIN_GEN2_CALL_URL?: string;
   ZETKIN_GEN2_ORGANIZE_URL?: string;
