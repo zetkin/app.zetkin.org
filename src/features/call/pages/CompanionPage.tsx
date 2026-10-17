@@ -25,21 +25,19 @@ const CompanionPage: FC<Props> = ({ name, numbers }) => {
         }}
       >
         <ZUIText variant="headingLg">{name}</ZUIText>
-        <Box>
-          {numbers.map((number) => {
-            const href = `tel:${number}`;
-            return (
-              <Box key={number}>
-                <ZUIButton
-                  href={href}
-                  label={number}
-                  size="large"
-                  variant="primary"
-                />
-              </Box>
-            );
-          })}
-        </Box>
+        {numbers.map((number) => {
+          const href = `tel:${number}`;
+          return (
+            <Box key={number}>
+              <ZUIButton
+                href={href}
+                label={number}
+                size="large"
+                variant="primary"
+              />
+            </Box>
+          );
+        })}
       </Box>
     </NoSsr>
   );
