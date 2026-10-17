@@ -29,20 +29,20 @@ export default class SurveyResponseColumnType implements IColumnType<
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
       filterable: true,
-      getSortComparator: (sortDirection) => (v1: string, v2: string) => {
-        if (!v1 && !v2) {
-          return 0;
-        }
-        if (!v1) {
-          return 1;
-        }
-        if (!v2) {
-          return -1;
-        }
-        if (sortDirection === 'desc') {
-          return v2.localeCompare(v1);
-        }
-        return v1.localeCompare(v2);
+      getSortComparator: (sortDirection) => {
+        const modifier = sortDirection === 'desc' ? -1 : 1;
+        return (v1: string, v2: string) => {
+          if (!v1 && !v2) {
+            return 0;
+          }
+          if (!v1) {
+            return 1;
+          }
+          if (!v2) {
+            return -1;
+          }
+          return modifier * v1.localeCompare(v2);
+        };
       },
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
