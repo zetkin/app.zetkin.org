@@ -89,6 +89,7 @@ const ProjectActionButtons: React.FunctionComponent<
   };
 
   const handleCreateEvent = () => {
+    setIsBusy(true);
     const [defaultStart, defaultEnd] = getDefaultEventDates();
     createEvent({
       activity_id: null,
@@ -120,19 +121,23 @@ const ProjectActionButtons: React.FunctionComponent<
     {
       icon: <HeadsetMic />,
       label: projectMessages.createButton.createCallAssignment(),
-      onClick: () =>
+      onClick: () => {
+        setIsBusy(true);
         createCallAssignment({
           title: projectMessages.form.createCallAssignment.newCallAssignment(),
-        }),
+        });
+      },
     },
     {
       icon: <AssignmentOutlined />,
       label: projectMessages.createButton.createSurvey(),
-      onClick: () =>
+      onClick: () => {
+        setIsBusy(true);
         createSurvey({
           signature: 'require_signature',
           title: projectMessages.form.createSurvey.newSurvey(),
-        }),
+        });
+      },
     },
   ];
 
@@ -148,7 +153,8 @@ const ProjectActionButtons: React.FunctionComponent<
     menuItems.push({
       icon: <Map />,
       label: projectMessages.createButton.createAreaAssignment(),
-      onClick: () =>
+      onClick: () => {
+        setIsBusy(true);
         createAreaAssignment({
           instructions: '',
           /*
@@ -164,7 +170,8 @@ const ProjectActionButtons: React.FunctionComponent<
           */
           reporting_level: 'location',
           title: areaAssignmentMessages.default.title(),
-        }),
+        });
+      },
     });
   }
 
@@ -192,12 +199,20 @@ const ProjectActionButtons: React.FunctionComponent<
       .join('-');
   }
 
+  const [isBusy, setIsBusy] = useState(false);
+
   return (
     <Box display="flex" gap={1}>
       <Box>
         <ZUIButtonMenu
           items={menuItems}
-          label={projectMessages.createButton.createActivity()}
+          label={
+            isBusy
+              ? projectMessages.createButton.creatingActivity()
+              : projectMessages.createButton.createActivity()
+          }
+          loading={isBusy}
+          loadingVariant="persistent"
         />
       </Box>
       <Box>
