@@ -20,7 +20,6 @@ import useMyAssignments from '../hooks/useMyAssignments';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
-import DesktopCallPanels from './CallPanels';
 import ZUILink from 'zui/components/ZUILink';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import CallPanels from './CallPanels';
@@ -108,8 +107,9 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
 
   const call = useCurrentCall();
 
-  const { abandonUnfinishedCall, skipCurrentCall, switchToUnfinishedCall } =
-    useCallMutations(assignment.organization.id);
+  const { skipCurrentCall, switchToUnfinishedCall } = useCallMutations(
+    assignment.organization.id
+  );
   const unfinishedCalls = useUnfinishedCalls();
 
   const lane = useAppSelector(
@@ -169,54 +169,27 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
         />
-        {!isMobile && (
-          <Box
-            height={`calc(100dvh - ${HEIGHT_OF_HEADER} ${lane.step === LaneStep.START ? `- ${isMobile ? '100px' : HEIGHT_OF_NEW_UI_ALERT}` : ''})`}
-            position="relative"
-            width="100%"
-          >
-            <DesktopCallPanels
-              assignment={assignment}
-              call={call}
-              lane={lane}
-              onAbandonUnfinishedCall={(assignmentId, callId) =>
-                abandonUnfinishedCall(assignmentId, callId)
+        <Box
+          height={`calc(100dvh - ${isMobile && lane.step !== LaneStep.START ? `${HEIGHT_OF_HEADER} +  20px` : HEIGHT_OF_HEADER} ${lane.step === LaneStep.START ? `- ${isMobile ? '100px' : HEIGHT_OF_NEW_UI_ALERT}` : ''})`}
+          position="relative"
+          width="100%"
+        >
+          <CallPanels
+            assignment={assignment}
+            call={call}
+            lane={lane}
+            onAbandonUnfinishedCall={() => null}
+            onOpenCallLog={() => setCallLogOpen(true)}
+            onSwitchToUnfinishedCall={(callId, assignmentId) => {
+              switchToUnfinishedCall(callId, assignmentId);
+              if (assignmentId != assignment.id) {
+                setAssignmentSwitchedTo(assignmentId);
               }
-              onOpenCallLog={() => setCallLogOpen(true)}
-              onSwitchToUnfinishedCall={(callId, assignmentId) => {
-                switchToUnfinishedCall(callId, assignmentId);
-                if (assignmentId != assignment.id) {
-                  setAssignmentSwitchedTo(assignmentId);
-                }
-              }}
-              report={report}
-              unfinishedCalls={filteredUnfinishedCalls}
-            />
-          </Box>
-        )}
-        {isMobile && (
-          <Box
-            height={`calc(100dvh - 100px ${lane.step === LaneStep.START ? '- 100px' : ''})`}
-            position="relative"
-            width="100%"
-          >
-            <CallPanels
-              assignment={assignment}
-              call={call}
-              lane={lane}
-              onAbandonUnfinishedCall={() => null}
-              onOpenCallLog={() => setCallLogOpen(true)}
-              onSwitchToUnfinishedCall={(callId, assignmentId) => {
-                switchToUnfinishedCall(callId, assignmentId);
-                if (assignmentId != assignment.id) {
-                  setAssignmentSwitchedTo(assignmentId);
-                }
-              }}
-              report={report}
-              unfinishedCalls={filteredUnfinishedCalls}
-            />
-          </Box>
-        )}
+            }}
+            report={report}
+            unfinishedCalls={filteredUnfinishedCalls}
+          />
+        </Box>
       </Box>
       <ZUIModal
         open={

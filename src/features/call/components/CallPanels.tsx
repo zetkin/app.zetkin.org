@@ -1,5 +1,7 @@
-import { FC } from 'react';
-import { Box, List, ListItem } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+import { Box, List, ListItem, Tab } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Info, Person, List as ListIcon } from '@mui/icons-material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
@@ -76,6 +78,11 @@ const CallPanels: FC<Props> = ({
 
 const MobileCallPanels: FC<Props> = ({ assignment, call, lane }) => {
   const messages = useMessages(messageIds);
+  const [callTab, setCallTab] = useState<1 | 2 | 3>(2);
+
+  useEffect(() => {
+    setCallTab(2);
+  }, [call?.id]);
 
   const queueError = useAppSelector((state) => state.call.queueError);
   return (
@@ -89,8 +96,7 @@ const MobileCallPanels: FC<Props> = ({ assignment, call, lane }) => {
         />
       )}
       <Box
-        sx={(theme) => ({
-          borderRight: `1px solid ${theme.palette.dividers.main}`,
+        sx={{
           height: '100%',
           left: lane.step == LaneStep.START ? 0 : 'calc(-100%)',
           maxHeight: '100%',
@@ -98,7 +104,7 @@ const MobileCallPanels: FC<Props> = ({ assignment, call, lane }) => {
           position: 'absolute',
           transition: 'left 0.5s',
           width: '100%',
-        })}
+        }}
       >
         <ZUISection
           renderContent={() => (
@@ -159,6 +165,50 @@ const MobileCallPanels: FC<Props> = ({ assignment, call, lane }) => {
           instructions={assignment.instructions}
           step={lane.step}
         />
+      </Box>
+      <Box
+        sx={{
+          height: '100%',
+          left: lane.step == LaneStep.CALL ? 0 : 'calc(-100%)',
+          maxHeight: '100%',
+          overflowY: 'auto',
+          position: 'absolute',
+          transition: 'left 0.5s',
+          width: '100%',
+        }}
+      >
+        <TabContext value={callTab}>
+          <Box sx={{ height: 'calc(100% - 120px)', overflowY: 'auto' }}>
+            <TabPanel sx={{ padding: 0 }} value={1}>
+              <InstructionsSection
+                call={call}
+                instructions={assignment.instructions}
+                step={lane.step}
+              />
+            </TabPanel>
+            <TabPanel sx={{ padding: 0 }} value={2}>
+              <AboutSection call={call} />
+            </TabPanel>
+            <TabPanel sx={{ padding: 0 }} value={3}>
+              <SuspenseWithCircularLoader>
+                <ActivitiesSection
+                  assignment={assignment}
+                  step={lane.step}
+                  target={call?.target ?? null}
+                />
+              </SuspenseWithCircularLoader>
+            </TabPanel>
+          </Box>
+          <TabList
+            onChange={(ev, value) => setCallTab(value)}
+            sx={{ backgroundColor: 'white', position: 'relative' }}
+            variant="fullWidth"
+          >
+            <Tab icon={<Info />} value={1} />
+            <Tab icon={<Person />} value={2} />
+            <Tab icon={<ListIcon />} value={3} />
+          </TabList>
+        </TabContext>
       </Box>
     </>
   );
