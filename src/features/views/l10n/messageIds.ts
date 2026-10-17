@@ -9,6 +9,7 @@ export default makeMessages('feat.views', {
     createJoinForm: m('Create join form'),
     createPerson: m('Create person'),
     createView: m('Create list'),
+    creating: m('Creating'),
     importPeople: m('Import people'),
   },
   browser: {

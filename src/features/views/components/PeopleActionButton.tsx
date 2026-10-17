@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   FolderOutlined,
   FormatListBulleted,
@@ -36,6 +36,35 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   const zuiMessages = useMessages(zuiMessageIds);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (pendingRoute && pendingRoute === pathname) {
+      setIsBusy(false);
+      setPendingRoute(null);
+    }
+  }, [pathname, pendingRoute]);
+
+  const createAndNavigate = async (
+    create: () => Promise<unknown>,
+    route?: string
+  ) => {
+    setIsBusy(true);
+    try {
+      await create();
+      if (route) {
+        setPendingRoute(route);
+        router.push(route);
+      } else {
+        setIsBusy(false);
+      }
+    } catch (error) {
+      setPendingRoute(null);
+      setIsBusy(false);
+      throw error;
+    }
+  };
 
   const { createView } = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
@@ -48,18 +77,30 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
           {
             icon: <InsertDriveFileOutlined />,
             label: messages.actions.createView(),
-            onClick: () => {
-              createView(folderId || undefined);
+            onClick: async () => {
+              setIsBusy(true);
+              try {
+                await createView(folderId || undefined);
+              } catch (error) {
+                setIsBusy(false);
+                throw error;
+              }
             },
           },
           {
             icon: <FolderOutlined />,
             label: messages.actions.createFolder(),
-            onClick: () => {
-              createFolder(messages.newFolderTitle(), folderId || undefined);
-              if (!pathname?.includes('folders')) {
-                router.push(`/organize/${orgId}/people`);
-              }
+            onClick: async () => {
+              createAndNavigate(
+                () =>
+                  createFolder(
+                    messages.newFolderTitle(),
+                    folderId || undefined
+                  ),
+                !pathname?.includes('folders')
+                  ? `/organize/${orgId}/people`
+                  : undefined
+              );
             },
           },
           {
@@ -79,17 +120,21 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
           {
             icon: <FormatListBulleted />,
             label: messages.actions.createJoinForm(),
-            onClick: async () => {
-              router.push(`/organize/${orgId}/people/joinforms`);
-              await createForm({
-                fields: ['first_name', 'last_name', 'email'],
-                requires_email_verification: true,
-                title: joinFormMessages.defaultTitle(),
-              });
-            },
+            onClick: () =>
+              createAndNavigate(
+                () =>
+                  createForm({
+                    fields: ['first_name', 'last_name', 'email'],
+                    requires_email_verification: true,
+                    title: joinFormMessages.defaultTitle(),
+                  }),
+                `/organize/${orgId}/people/joinforms`
+              ),
           },
         ]}
-        label={messages.actions.create()}
+        label={isBusy ? messages.actions.creating() : messages.actions.create()}
+        loading={isBusy}
+        loadingVariant="persistent"
       />
       <ImportDialog
         onClose={() => setImportDialogOpen(false)}

@@ -48,6 +48,7 @@ export default makeMessages('feat.projects', {
     cardAriaLabel: m<{ title: string }>('Open {title} project'),
     cardCTA: m('Go to project'),
     create: m('Create new project'),
+    creating: m('Creating new project'),
     filter: {
       areaAssignments: m('Area assignments'),
       calls: m('Call assignments'),
@@ -89,6 +90,7 @@ export default makeMessages('feat.projects', {
     createMultiShiftEvent: m('Multi-shift event'),
     createSurvey: m('Survey'),
     createTask: m('Task'),
+    creatingActivity: m('Creating'),
   },
   events: m('Events'),
   feedback: {

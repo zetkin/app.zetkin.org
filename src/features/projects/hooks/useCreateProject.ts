@@ -1,15 +1,14 @@
 import { projectCreate, projectCreated } from '../store';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinProject, ZetkinProjectPostBody } from 'utils/types/zetkin';
 
 export default function useCreateProject(
   orgId: number
-): (projectBody: ZetkinProjectPostBody) => IFuture<ZetkinProject> {
+): (projectBody: ZetkinProjectPostBody) => Promise<ZetkinProject> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  return (projectBody: ZetkinProjectPostBody): IFuture<ZetkinProject> => {
+  return (projectBody: ZetkinProjectPostBody): Promise<ZetkinProject> => {
     dispatch(projectCreate());
 
     const promise = apiClient
@@ -22,6 +21,6 @@ export default function useCreateProject(
         return project;
       });
 
-    return new PromiseFuture(promise);
+    return promise;
   };
 }
