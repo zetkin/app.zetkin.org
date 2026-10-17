@@ -63,7 +63,10 @@ const MobileHeader: FC<HeaderProps> = ({
         sx={(theme) => ({
           backgroundColor: theme.palette.common.white,
           borderBottom: `1px solid ${theme.palette.dividers.main}`,
-          height: lane.step === LaneStep.START ? '100px' : '80px',
+          height:
+            lane.step === LaneStep.START || lane.step === LaneStep.SUMMARY
+              ? '100px'
+              : '80px',
           position: 'sticky',
           top: 0,
           zIndex: 1100,
@@ -177,7 +180,11 @@ const MobileHeader: FC<HeaderProps> = ({
           )}
           <ZUIIconButton
             href={lane.step == LaneStep.START ? '/my/home' : undefined}
-            icon={lane.step == LaneStep.START ? Stop : SkipNext}
+            icon={
+              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
+                ? Stop
+                : SkipNext
+            }
             onClick={() => {
               if (
                 lane.step != LaneStep.START &&
