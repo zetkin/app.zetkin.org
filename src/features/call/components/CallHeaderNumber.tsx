@@ -38,7 +38,7 @@ export const CallHeaderNumber = ({
         tel: phone,
       }).toString()
     );
-  }, [assignment, call, env.vars]);
+  }, [assignment, call, env.vars, phone]);
 
   const onClick = useCallback(
     (ev: ReactMouseEvent<HTMLAnchorElement>) => {
