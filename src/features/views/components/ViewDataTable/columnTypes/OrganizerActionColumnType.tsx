@@ -204,6 +204,7 @@ const PreviewPopper: FC<PreviewPopperProps> = ({
           </Typography>
           {sortedUnsolved?.map((call) => (
             <Box key={call.id}>
+              <Typography>{call.assignment.title}</Typography>
               <Typography
                 sx={{
                   color: 'grey',
