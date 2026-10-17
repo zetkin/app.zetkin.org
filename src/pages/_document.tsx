@@ -6,11 +6,15 @@ import Document, {
   NextScript,
 } from 'next/document';
 
+import { getBrowserLanguage } from 'utils/locale';
+import { ZetkinUser } from 'utils/types/zetkin';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import oldTheme from '../theme';
 
 // boilerplate page taken from https://github.com/mui-org/material-ui/tree/master/examples/nextjs
 
 interface ExtendedDocumentProps extends DocumentInitialProps {
+  lang: string;
   nonce?: string;
 }
 
@@ -22,7 +26,7 @@ export default class MyDocument extends Document<ExtendedDocumentProps> {
     }
 
     return (
-      <Html lang="en" style={{ overscrollBehaviorX: 'none' }}>
+      <Html lang={this.props.lang} style={{ overscrollBehaviorX: 'none' }}>
         <Head nonce={nonce}>
           {/* PWA primary color */}
           <meta content={oldTheme.palette.primary.main} name="theme-color" />
@@ -45,10 +49,26 @@ MyDocument.getInitialProps = async (ctx) => {
     throw new Error('nonce undefined in document initial props generation');
   }
 
+  const headersObject = {
+    'accept-language': ctx.req?.headers['accept-language'] || '',
+    cookie: ctx.req?.headers.cookie || '',
+  };
+  const apiClient = new BackendApiClient(headersObject);
+  let user: ZetkinUser | null = null;
+  try {
+    user = await apiClient.get<ZetkinUser>('/api/users/me');
+  } catch (e) {
+    user = null;
+  }
+
+  const lang =
+    user?.lang || getBrowserLanguage(ctx.req?.headers['accept-language'] || '');
+
   const initialProps = await Document.getInitialProps(ctx);
 
   return {
     ...initialProps,
+    lang,
     nonce,
   };
 };
