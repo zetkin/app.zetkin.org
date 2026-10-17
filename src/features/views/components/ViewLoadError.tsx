@@ -25,7 +25,7 @@ const ViewLoadError = ({
         </Button>
       }
       severity="error"
-      sx={{ m: 2 }}
+      sx={{ m: 2, maxWidth: 600 }}
     >
       <Msg id={messageIds.loadError.message} />
     </Alert>
