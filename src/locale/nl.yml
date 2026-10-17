@@ -117,8 +117,7 @@ feat:
         all: Alles
         none: Geen
       type: Typ om inhoud te filteren
-    lastDayWithEvents: Er {numEvents, plural, one {was one event} other {were
-      {numEvents} events}} op de laatst actieve dag
+    lastDayWithEvents: Er {numEvents, plural, one {was één gebeurtenis} other {waren {numEvents} gebeurtenissen}} op de laatst actieve dag
     loadMore: Meer laden
     moreEvents: '{numEvents, plural, one {# more event} other {# more events}}'
     next: VOLGENDE
@@ -136,8 +135,8 @@ feat:
         cancel: Annuleren
         cancelWarning: Als je dit doet, vergeet dan niet om alle deelnemers en
           inschrijvers te informeren dat de gebeurtenissen zijn geannuleerd!
-        confirmCancel: Weet je zeker dat je de geselecteerde gebeurtenis wilt annuleren?
-        confirmDelete: Weet je zeker dat je de geselecteerde gebeurtenis wilt verwijderen?
+        confirmCancel: Weet je zeker dat je de geselecteerde gebeurtenissen wilt annuleren?
+        confirmDelete: Weet je zeker dat je de geselecteerde gebeurtenissen wilt verwijderen?
         delete: Verwijderen
         deleteWarning: Gebeurtenissen zijn niet meer beschikbaar nadat je ze verwijdert.
         print: Planning uitprinten
@@ -156,24 +155,24 @@ feat:
   callAssignments:
     actions:
       delete: Verwijder
-      end: Taak eindigen
-      start: Taak starten
+      end: Opdracht beëindigen
+      start: Opdracht starten
       warning: '"{title}" wordt verwijderd.'
     blocked:
       callBackLater: Heeft ons gevraagd later terug te bellen
       calledTooRecently: Te kort geleden gebeld
       cooldownHelperText: Stel de minimale tijd in tussen pogingen om iemand te bereiken
-      cooldownLabel: Tijd afkoelen in uren
-      hours: '{cooldown, plural, =0 {None} =1 {# hour} other {# hours}}'
+      cooldownLabel: Wachttijd in uren
+      hours: '{cooldown, plural, =0 {Geen} =1 {# uur} other {# uur}}'
       missingPhoneNumber: Telefoonnummer niet gevonden
-      organizerActionNeeded: Nodige actie van organizer
+      organizerActionNeeded: Actie van organisator nodig
       subtitle: Targets die we nog niet kunnen bellen
       title: Geblokkeerd
       viewSheetButton: Bekijk lijst
     callers:
       actions:
         customize: Wachtrij aanpassen
-        remove: Uit taak verwijderen
+        remove: Uit opdracht verwijderen
       add:
         alreadyAdded: Al toegevoegd
         placeholder: Begin met typen om nieuwe beller te zoeken of toe te voegen
@@ -200,8 +199,8 @@ feat:
         saveButton: Opslaan
         savedMessage: Alles is up-to-date!
         savingButton: Opslaan...
-        title: Bel instructies
-        unsavedMessage: Je hebt nog niet-opgeslagen aanpassingen
+        title: Instructies voor bellers
+        unsavedMessage: Je hebt nog niet-opgeslagen aanpassingen.
       settings:
         notes:
           message: Het uitschakelen van bel-notities kan het aantal oproepen verhogen,
@@ -211,11 +210,11 @@ feat:
           message: Target-naam en telefoonnummer zijn altijd zichtbaar voor bellers. Door
             extra target-gegevens in te schakelen worden alle
             persoonsgegevens-velden gedeeld met bellers.
-          title: Toon aanvullende target gegevens
+          title: Toon aanvullende target-gegevens
         title: Gespreksinstellingen
     done:
-      defineButton: Bewerk afgemaakte criteria
-      subtitle: Targets die voldoen aan afgemaakte criteria
+      defineButton: Bewerk criteria voor afronding
+      subtitle: Targets die voldoen aan de criteria voor afronding
       title: Afgerond
     organizerActionPane:
       markAsSolved: Als opgelost markeren
@@ -223,7 +222,7 @@ feat:
       messagePlaceholder: Beller heeft geen bericht achtergelaten
       noteByCaller: Notitie door {person} {time}
       subtitle: Notities over {person}
-      title: Actie van organizer nodig
+      title: Actie van organisator nodig
     ready:
       allocated: Targets toegewezen aan beller
       queue: Targets in wachtrij
@@ -236,17 +235,17 @@ feat:
       open: Open
       scheduled: Ingepland
     stats:
-      callers: '{numCallers, plural, =0 {No callers} one {1 caller} other {# callers}}'
-      targets: '{numTargets, plural, =0 {No targets} one {1 targets} other {# targets}}'
+      callers: '{numCallers, plural, =0 {Geen bellers} one {1 beller} other {# bellers}}'
+      targets: '{numTargets, plural, =0 {Geen targets} one {1 target} other {# targets}}'
     statusSectionTitle: Status
     tabs:
       callers: Bellers
       conversation: Gesprek
       overview: Overzicht
     targets:
-      defineButton: Definieer target-groep
-      editButton: Pas target-groep aan
-      subtitle: Gebruik slim-zoeken om de targets voor deze opdracht te definiëren.
+      defineButton: Bepaal doelgroep
+      editButton: Bewerk doelgroep
+      subtitle: Gebruik Slim Zoeken om de doelgroep voor deze opdracht te bepalen.
       title: Targets
   projects:
     activitiesOverview:
@@ -261,8 +260,8 @@ feat:
       subtitles:
         endsLater: Eindigt {relative}
         endsToday: Eindigt vandaag
-        sentEarlier: Verzonden naar {relative}
-        sentLater: Moet verzonden worden naar {relative}
+        sentEarlier: Verzonden {relative}
+        sentLater: Wordt {relative} verzonden
         startsLater: Begint {relative}
         startsToday: Begint vandaag
       thisWeekCard: Ook deze week
@@ -273,14 +272,13 @@ feat:
       eventItem:
         contact: Geen contactpersoon toegewezen
         locations: '{count} locaties'
-        reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
-          hebben nog geen herinnering ontvangen'
+        reminders: '{numMissing, plural, =1 {Eén deelnemer heeft} other {# deelnemers hebben}} nog geen herinnering ontvangen'
         signups: Er zijn nog inschrijvingen in behandeling
     all:
       cardCTA: Ga naar project
       create: Maak nieuw project
       filter:
-        calls: Bel opdrachten
+        calls: Belopdrachten
         emails: E-mails
         filter: Filter resultaten
         standalones: Op zichzelf staande gebeurtenissen
@@ -296,7 +294,7 @@ feat:
     calendarView: Bekijk alles in kalender
     createButton:
       createActivity: Maken
-      createCallAssignment: Bel opdracht
+      createCallAssignment: Belopdracht
       createEmail: E-mail
       createEvent: Gebeurtenis
       createSurvey: Vragenlijst
@@ -309,7 +307,7 @@ feat:
       heading: Feedback en vragenlijsten (niet geconfigureerd)
     form:
       createCallAssignment:
-        newCallAssignment: Mijn bel-opdracht
+        newCallAssignment: Mijn belopdracht
       createProject:
         create: Project maken
         error: Er is een fout opgetreden bij het aanmaken van het project
@@ -349,7 +347,7 @@ feat:
     layout:
       activities: Activiteiten
       allProjects: Alle Projecten & Activiteiten
-      archive: Archiveren
+      archive: Archief
       calendar: Kalender
       insights: Inzichten
       overview: Overzicht
@@ -369,7 +367,7 @@ feat:
       heading: Mobilisering en outreach (niet geconfigureerd)
     noManager: Geen project manager
     shared:
-      cta: Ga naar project
+      cta: Bekijk gedeelde activiteiten
       noActivities: Alle lopende activiteiten die met je organisatie worden gedeeld,
         worden hier weergegeven.
       noArchives: Alle verlopen activiteiten die met je organisatie worden gedeeld,
@@ -378,7 +376,7 @@ feat:
     sharedLayout:
       alertMsg: Dit project bevat alleen activiteiten die door andere organisaties
         worden gedeeld. Je kunt deze bekijken, maar niet wijzigen.
-      subtitle: '{numOfActivities, plural, =1 {1 activity} other {# activities}}'
+      subtitle: '{numOfActivities, plural, =1 {1 activiteit} other {# activiteiten}}'
       tabs:
         activities: Activiteiten
         archive: Archief
@@ -388,7 +386,7 @@ feat:
       filterActivities: Typ om te filteren
       noActivities: Er staan nog geen activiteiten in dit project.
       noSearchResults: Je filters hebben geen resultaten opgeleverd.
-      showPublicPage: Toon openbare aanmeld-pagina.
+      showPublicPage: Toon openbare aanmeldpagina
       viewArchive: Bekijk archief
     taskLayout:
       tabs:
@@ -409,12 +407,12 @@ feat:
         noValue: Geen gegevens
         title: Samen te voegen data
       findCandidateManually: Typ om een potentiële kopie te vinden
-      isDuplicateButton: Met
+      isDuplicateButton: Toevoegen
       lists:
         hideManual: Verberg handmatig zoeken
         showManual: Toon handmatig zoeken
       mergeButton: Samenvoegen
-      notDuplicateButton: Zonder
+      notDuplicateButton: Uitsluiten
       peopleNotBeingMerged: Personen die niet worden samengevoegd
       peopleToMerge: Personen om samen te voegen
       possibleDuplicatesColumns:
@@ -422,22 +420,19 @@ feat:
         name: Naam
         phone: Telefoonnummer
       title: Voeg kopieën samen
-      warningMessage: Alle gegevens met betrekking tot één van de persoonsrecords
-        worden overgedragen naar de samengevoegde persoon. Dit omvat deelname
-        aan gebeurtenissen, vragenlijst-inzendingen, tags, etc. Maar wat je in
-        de velden hierboven weglaat, gaat verloren.
+      warningMessage: Alle gegevens met betrekking tot één van de persoonsrecords worden overgedragen naar de samengevoegde persoon. Dit omvat deelname aan gebeurtenissen, vragenlijst-inzendingen, tags, etc. Maar wat je in de velden hieronder weglaat, gaat verloren.
       warningTitle: Mogelijk risico data te verliezen
     page:
       dismiss: Negeer
       noDuplicates: Geen kopieën
-      noDuplicatesDescription: Joepie! Al je leden lijken unieke individuen te zijn.
+      noDuplicatesDescription: Zetkin heeft geen waarschijnlijke kopieën gevonden in je personendatabase. De database wordt dagelijks gescand en mogelijke kopieën worden hier getoond.
       possibleDuplicates: Mogelijke kopieën
       possibleDuplicatesDescription: Deze {numPeople} personen lijken erg op elkaar
       resolve: Los op
   emails:
     blocked:
-      blacklisted: Geblokkeerd
-      missingEmail: E-mail adres mist
+      blacklisted: Op zwarte lijst
+      missingEmail: E-mailadres ontbreekt
       subtitle: Niet beschikbare targets.
       title: Geblokkeerd
       unsubscribed: Uitgeschreven
@@ -445,13 +440,9 @@ feat:
       contentError: Er zijn problemen met de inhoud van je e-mail. Ga naar de bewerker
         in het tabblad Opstellen en corrigeer ze.
       empty: Je e-mail is leeg. Ga naar het tabblad Opstellen en voeg een inhoud toe.
-      noSubject: Je e-mail heeft geen onderwerp. Ga naar Instellingen in het tabblad
-        Opstellen en voeg er een toe.
-      notTargeted: Je e-mail heeft geen targets. Ga naar de Targets sectie in het
-        Overzicht tabblad om een Slimme Zoekopdracht aan te maken en je targets
-        te kiezen.
-      targetsNotLocked: Je targets zijn niet vastgezet. Ga naar de Targets sectie in
-        het Overzicht tabblad om dit te doen.
+      noSubject: Je e-mail heeft geen onderwerp. Ga naar het tabblad Opstellen en voeg er een toe.
+      notTargeted: Je e-mail heeft geen targets. Ga naar de sectie Doelen in het tabblad Overzicht om met Slim Zoeken je targets te bepalen.
+      targetsNotLocked: Je targets zijn niet vastgezet. Ga naar de sectie Doelen in het tabblad Overzicht om dit te doen.
     deliveryStatus:
       notLocked: Niet vastgezet, niet ingepland
       notProcessed: Staat ingepland om zo snel mogelijk bezorgd te worden
@@ -488,7 +479,7 @@ feat:
             urlLabel: Link URL
           title: Knop
         header:
-          title: Header
+          title: Koptekst
         libraryImage:
           changeImage: Pas afbeelding aan
           title: Afbeelding
@@ -506,10 +497,10 @@ feat:
       cancel: Annuleren
       delete: Verwijderen
       delivery: Bezorging
-      deliveryDate: Bezorg datum
-      deliveryTime: Bezorg tijd
-      duplicate: Kopie
-      schedule: Planning
+      deliveryDate: Bezorgdatum
+      deliveryTime: Bezorgtijd
+      duplicate: Kopiëren
+      schedule: Inplannen
       sendAnyway: Toch versturen
       sendLater: Later versturen
       sendNow:
@@ -524,14 +515,12 @@ feat:
       warning: Weet je zeker dat je deze e-mail wil verwijderen? Deze actie is
         permanent en kan niet teruggedraaid worden.
     emailFeatureIsBlocked:
-      errorMessage: Je organisatie heeft op het moment geen toegang tot de e-mail optie.
-      goBackButton: Terug gaan
+      errorMessage: Je organisatie heeft op het moment geen toegang tot de e-mailfunctie.
+      goBackButton: Ga terug
     insights:
       clicked:
         descriptions:
-          ctor: Click-to-open rate (CTOR) is het aantal ontvangers die de e-mail hebben
-            geopend en ook op een van de links hebben geklikt. Een hoge rate is
-            een indicator van een goed gerichte e-mail met overtuigende tekst.
+          ctor: Click-to-open rate (CTOR) is het percentage ontvangers dat op een van de links heeft geklikt, van alle ontvangers die de e-mail hebben geopend. Een hoge CTOR is een indicator van een goed gerichte e-mail met overtuigende tekst.
           ctr: Clickthrough rate (CTR) is het percentage ontvangers dat niet alleen de
             e-mail heeft geopend, maar ook op een van de links heeft geklikt.
             Een hoge rate is een indicator van een goed gerichte e-mail met
@@ -563,9 +552,7 @@ feat:
           header: Open rate
         header: Geopend
     ready:
-      missingEmailsDescription: Er {numPeople, plural, one {is een persoon} other
-        {zijn mensen}} met een ontbrekend e-mailadres in de doelgroep. Los het
-        op door deze toe te voegen aan de doelgroep.
+      missingEmailsDescription: Er {numPeople, plural, one {is een persoon} other {zijn mensen}} met een ontbrekend e-mailadres in de doelgroep. Als je dit oplost, worden ze opgenomen in de doelgroep.
       sentSubtitle: Targets die beschikbaar waren voor verzending
       subtitle: Targets die beschikbaar zijn voor verzending
       title: Klaar
@@ -574,9 +561,8 @@ feat:
       scheduled: Ingepland
       sent: Verzonden
     stats:
-      lockedTargets: '{numLocked, plural, =0 {No locked targets} one {1 locked target}
-        other {# locked targets}}'
-      targets: '{numTargets, plural, =0 {No targets} one {1 target} other {# targets}}'
+      lockedTargets: '{numLocked, plural, =0 {Geen vastgezette targets} one {1 vastgezette target} other {# vastgezette targets}}'
+      targets: '{numTargets, plural, =0 {Geen targets} one {1 target} other {# targets}}'
     tabs:
       compose: Opstellen
       insights: Inzichten
