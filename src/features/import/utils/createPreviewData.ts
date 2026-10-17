@@ -91,6 +91,15 @@ export default function createPreviewData(
         }
       }
 
+      if (column.kind === ColumnKind.LNGLAT) {
+        if (row[colIdx]) {
+          personPreviewOp.data = {
+            ...personPreviewOp.data,
+            [`${column.field}.${column.type}`]: row[colIdx],
+          };
+        }
+      }
+
       if (column.kind === ColumnKind.GENDER) {
         column.mapping.forEach((mappedColumn) => {
           if (
