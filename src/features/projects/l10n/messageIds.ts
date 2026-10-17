@@ -59,6 +59,7 @@ export default makeMessages('feat.projects', {
     header: m('Projects'),
     indefinite: m('Indefinite'),
     projectFilterPlaceholder: m('Type to filter projects'),
+    title: m('Title'),
     unsorted: m('Unsorted projects'),
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
   },
@@ -81,7 +82,7 @@ export default makeMessages('feat.projects', {
     moveButtonLabel: m('Move'),
   },
   createButton: {
-    createActivity: m('Create'),
+    create: m('Create'),
     createAreaAssignment: m('Area assignment'),
     createCallAssignment: m('Call assignment'),
     createEmail: m('Email'),

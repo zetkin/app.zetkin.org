@@ -197,7 +197,7 @@ const ProjectActionButtons: React.FunctionComponent<
       <Box>
         <ZUIButtonMenu
           items={menuItems}
-          label={projectMessages.createButton.createActivity()}
+          label={projectMessages.createButton.create()}
         />
       </Box>
       <Box>
