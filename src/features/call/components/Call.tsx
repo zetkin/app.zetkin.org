@@ -165,6 +165,7 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
           hasUnfinishedCalls={filteredUnfinishedCalls.length > 0}
           isMobile={isMobile}
           lane={lane}
+          onOpenCallLog={() => setCallLogOpen(true)}
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
         />

@@ -1,4 +1,4 @@
-import { SkipNext } from '@mui/icons-material';
+import { AccessTimeFilled, SkipNext, Stop } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
@@ -18,6 +18,7 @@ import messageIds from '../l10n/messageIds';
 import notEmpty from 'utils/notEmpty';
 import ZUILink from 'zui/components/ZUILink';
 import useSetupReportStep from '../hooks/useSetupReportStep';
+import ZUIIconButton from 'zui/components/ZUIIconButton';
 
 type HeaderProps = {
   allocateCall: () => Promise<void | SerializedError>;
@@ -26,6 +27,7 @@ type HeaderProps = {
   hasUnfinishedCalls: boolean;
   isAllocatingCall: boolean;
   lane: LaneState;
+  onOpenCallLog: () => void;
   onSkipCall: () => void;
   onSubmitReport: () => Promise<void>;
   phoneNumbers: string[];
@@ -40,6 +42,7 @@ const MobileHeader: FC<HeaderProps> = ({
   allocateCall,
   assignment,
   call,
+  onOpenCallLog,
   onSkipCall,
   onSubmitReport,
   phoneNumbers,
@@ -156,25 +159,25 @@ const MobileHeader: FC<HeaderProps> = ({
             right: 16,
           }}
         >
+          <ZUIIconButton
+            icon={AccessTimeFilled}
+            onClick={onOpenCallLog}
+            variant="secondary"
+          />
           {lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY && (
-            <ZUIButton
-              label="Stop"
+            <ZUIIconButton
+              icon={Stop}
               onClick={() => {
                 if (call) {
                   quitCurrentCall(call.id);
                 }
               }}
-              variant="tertiary"
+              variant="secondary"
             />
           )}
-          <ZUIButton
-            endIcon={
-              lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY
-                ? SkipNext
-                : undefined
-            }
+          <ZUIIconButton
             href={lane.step == LaneStep.START ? '/my/home' : undefined}
-            label={messages.header.secondaryButton[lane.step]()}
+            icon={SkipNext}
             onClick={() => {
               if (
                 lane.step != LaneStep.START &&
@@ -228,7 +231,7 @@ const MobileHeader: FC<HeaderProps> = ({
   );
 };
 
-const DesktopHeader: FC<HeaderProps> = ({
+const DesktopHeader: FC<Omit<HeaderProps, 'onOpenCallLog'>> = ({
   allocateCall,
   assignment,
   call,
@@ -405,6 +408,7 @@ type Props = {
   hasUnfinishedCalls: boolean;
   isMobile: boolean;
   lane: LaneState;
+  onOpenCallLog: () => void;
   onSkipCall: () => void;
   report: Report;
 };
@@ -415,6 +419,7 @@ const CallHeader: FC<Props> = ({
   hasUnfinishedCalls,
   isMobile,
   lane,
+  onOpenCallLog,
   onSkipCall,
   report,
 }) => {
@@ -441,6 +446,7 @@ const CallHeader: FC<Props> = ({
       hasUnfinishedCalls={hasUnfinishedCalls}
       isAllocatingCall={isAllocatingCall}
       lane={lane}
+      onOpenCallLog={onOpenCallLog}
       onSkipCall={onSkipCall}
       onSubmitReport={async () => {
         if (!report || !call) {
