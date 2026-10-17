@@ -203,11 +203,39 @@ const MobileHeader: FC<HeaderProps> = ({
         sx={{
           bottom: 16,
           display: 'flex',
+          gap: 1,
+          justifyContent:
+            lane.step === LaneStep.CALL ? 'space-between' : 'flex-end',
           position: 'absolute',
           right: 16,
+          width: 'calc(100% - 32px)',
           zIndex: 16,
         }}
       >
+        {lane.step === LaneStep.CALL && call && !call.target.alt_phone && (
+          <ZUIButton
+            fullWidth
+            href={`tel:${call?.target.phone}`}
+            label={`Call ${call?.target.first_name}`}
+            variant="primary"
+          />
+        )}
+        {lane.step === LaneStep.CALL && call && call.target.alt_phone && (
+          <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
+            <ZUIButton
+              fullWidth
+              href={`tel:${call.target.alt_phone}`}
+              label={`Call ${call.target.first_name} alternative`}
+              variant="primary"
+            />
+            <ZUIButton
+              fullWidth
+              href={`tel:${call.target.phone}`}
+              label={`Call ${call.target.first_name} main`}
+              variant="primary"
+            />
+          </Box>
+        )}
         <ZUIButton
           disabled={
             !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
@@ -228,7 +256,8 @@ const MobileHeader: FC<HeaderProps> = ({
           variant={
             isAllocatingCall || submittingReport
               ? 'loading'
-              : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
+              : (lane.step == LaneStep.SUMMARY && hasUnfinishedCalls) ||
+                  lane.step == LaneStep.CALL
                 ? 'secondary'
                 : 'primary'
           }

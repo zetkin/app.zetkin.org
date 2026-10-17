@@ -187,7 +187,7 @@ const MobileCallPanels: FC<Props> = ({
         }}
       >
         <TabContext value={callTab}>
-          <Box sx={{ height: 'calc(100% - 120px)', overflowY: 'auto' }}>
+          <Box sx={{ height: 'calc(100% - 140px)', overflowY: 'auto' }}>
             <TabPanel sx={{ padding: 0 }} value={1}>
               <InstructionsSection
                 call={call}
