@@ -1,5 +1,8 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { CircularProgress } from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -11,19 +14,43 @@ const ProjectActionButtons: React.FunctionComponent = () => {
   const { orgId } = useNumericRouteParams();
   const createProject = useCreateProject(orgId);
 
+  const router = useRouter();
+  const [isBusy, setIsBusy] = useState(false);
+
   return (
     <Box display="flex">
       <Box mr={1}>
         <Button
           color="primary"
-          onClick={() =>
-            createProject({
-              title: messages.form.createProject.newProject(),
-            })
+          disabled={isBusy}
+          endIcon={
+            isBusy ? <CircularProgress color="inherit" size={16} /> : null
+          }
+          onClick={async () => {
+            setIsBusy(true);
+            try {
+              const project = await createProject({
+                title: messages.form.createProject.newProject(),
+              });
+              router.push(`/organize/${orgId}/projects/${project.id}`);
+            } catch (error) {
+              setIsBusy(false);
+              throw error;
+            }
+          }}
+          sx={
+            isBusy
+              ? (theme) => ({
+                  '&.Mui-disabled': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                  },
+                })
+              : undefined
           }
           variant="contained"
         >
-          <Msg id={messageIds.all.create} />
+          <Msg id={isBusy ? messageIds.all.creating : messageIds.all.create} />
         </Button>
       </Box>
     </Box>
