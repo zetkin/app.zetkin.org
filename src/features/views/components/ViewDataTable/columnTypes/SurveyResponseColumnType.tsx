@@ -32,7 +32,7 @@ export default class SurveyResponseColumnType implements IColumnType<
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
+      sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
       valueGetter: (value: SurveyResponseViewCell) => {
         if (!value?.length) {
           return '';
