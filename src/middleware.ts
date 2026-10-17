@@ -47,6 +47,7 @@ function setupCsp(path: string) {
   const cspHeader = `
   default-src 'self' ${mapTiler};
   script-src ${scriptSrc};
+  frame-src 'self'${process.env.VOIP_EMBED_URL ? ` ${process.env.VOIP_EMBED_URL}` : ''};
   worker-src 'self' blob:;
   style-src ${styleSrc};
   style-src-attr 'unsafe-inline';

@@ -238,6 +238,7 @@ export const scaffold =
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
           TILESERVER:
             process.env.TILESERVER || 'https://tile.openstreetmap.org',
+          VOIP_EMBED_URL: process.env.VOIP_EMBED_URL,
           ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
           ZETKIN_GEN2_CALL_URL: process.env.ZETKIN_GEN2_CALL_URL,
           ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
