@@ -24,7 +24,6 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useFilteredActivities from '../hooks/useFilteredActivities';
 import notEmpty from 'utils/notEmpty';
-import ZUILink from 'zui/components/ZUILink';
 import QRCodeImage from './QRCodeImage';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 import ZUIModal from 'zui/components/ZUIModal';
