@@ -19,8 +19,9 @@ import useMyAssignments from '../hooks/useMyAssignments';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
-import CallPanels from './CallPanels';
 import ZUILink from 'zui/components/ZUILink';
+import useIsMobile from 'utils/hooks/useIsMobile';
+import CallPanels from './CallPanels';
 import SkipCallDialog from './SkipCallDialog';
 
 const HEIGHT_OF_HEADER = '100px';
@@ -31,7 +32,10 @@ type Props = {
   onResetAfterError: (urlToNavigateTo: string) => void;
 };
 
-const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
+const NewUIAlert: FC<{ assignmentId: number; isMobile: boolean }> = ({
+  assignmentId,
+  isMobile,
+}) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
 
@@ -41,12 +45,12 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
         const backgroundShade = theme.palette.mode === 'dark' ? 900 : 100;
         const textShade = theme.palette.mode === 'dark' ? 100 : 900;
         return {
-          alignItems: 'center',
+          alignItems: isMobile ? 'flex-start' : 'center',
           backgroundColor: theme.palette.swatches.blue[backgroundShade],
           color: theme.palette.swatches.blue[textShade],
           display: 'flex',
           gap: '1rem',
-          height: HEIGHT_OF_NEW_UI_ALERT,
+          height: isMobile ? '100px' : HEIGHT_OF_NEW_UI_ALERT,
           padding: '1rem',
           textDecorationColor: theme.palette.swatches.blue[textShade],
         };
@@ -56,6 +60,7 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
         sx={(theme) => ({
           color: theme.palette.info.main,
           fontSize: '1.25rem',
+          marginTop: isMobile ? '0.15rem' : 0,
         })}
       />
       <ZUIText color="inherit" variant="bodyMdSemiBold">
@@ -89,6 +94,7 @@ const NewUIAlert: FC<{ assignmentId: number }> = ({ assignmentId }) => {
 const Call: FC<Props> = ({ onResetAfterError }) => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
+  const isMobile = useIsMobile();
   const assignment = useCurrentAssignment();
   const allUserAssignments = useMyAssignments();
 
@@ -150,18 +156,20 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
         })}
       >
         {lane.step === LaneStep.START && (
-          <NewUIAlert assignmentId={assignment.id} />
+          <NewUIAlert assignmentId={assignment.id} isMobile={isMobile} />
         )}
         <CallHeader
           assignment={assignment}
           call={call}
           hasUnfinishedCalls={filteredUnfinishedCalls.length > 0}
+          isMobile={isMobile}
           lane={lane}
+          onOpenCallLog={() => setCallLogOpen(true)}
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
         />
         <Box
-          height={`calc(100dvh - ${HEIGHT_OF_HEADER} ${lane.step === LaneStep.START ? `- ${HEIGHT_OF_NEW_UI_ALERT}` : ''})`}
+          height={`calc(100dvh - ${isMobile && lane.step !== LaneStep.START ? `${HEIGHT_OF_HEADER} +  20px` : HEIGHT_OF_HEADER} ${lane.step === LaneStep.START ? `- ${isMobile ? '100px' : HEIGHT_OF_NEW_UI_ALERT}` : ''})`}
           position="relative"
           width="100%"
         >
