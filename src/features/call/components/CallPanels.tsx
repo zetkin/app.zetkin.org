@@ -76,9 +76,10 @@ const CallPanels: FC<Props> = ({
   }
 };
 
-const MobileCallPanels: FC<Props> = ({ assignment, call, lane }) => {
+const MobileCallPanels: FC<Props> = ({ assignment, call, lane, report }) => {
   const messages = useMessages(messageIds);
   const [callTab, setCallTab] = useState<1 | 2 | 3>(2);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setCallTab(2);
@@ -209,6 +210,44 @@ const MobileCallPanels: FC<Props> = ({ assignment, call, lane }) => {
             <Tab icon={<ListIcon />} value={3} />
           </TabList>
         </TabContext>
+      </Box>
+      <Box
+        sx={{
+          '@keyframes reportOut': {
+            '0%': { left: 'calc((100%) * 2)' },
+            '100%': { left: '-100%' },
+          },
+          animationDuration: '0.5s',
+          animationFillMode: 'backwards',
+          animationName: lane.step == LaneStep.SUMMARY ? 'reportOut' : '',
+          height: '100%',
+          left: lane.step == LaneStep.REPORT ? 0 : '100%',
+          overflowY: 'auto',
+          position: 'absolute',
+          transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
+          width: '100%',
+        }}
+      >
+        <ZUISection
+          borders={false}
+          fullHeight
+          renderContent={() => {
+            if (!call) {
+              return <Box sx={{ height: '200px' }} />;
+            }
+            return (
+              <ReportForm
+                disableCallerNotes={assignment.disable_caller_notes}
+                onReportChange={(updatedReport) => {
+                  dispatch(reportUpdated(updatedReport));
+                }}
+                report={report}
+                target={call.target}
+              />
+            );
+          }}
+          title={messages.report.title()}
+        />
       </Box>
     </>
   );

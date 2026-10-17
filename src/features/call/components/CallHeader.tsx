@@ -177,7 +177,7 @@ const MobileHeader: FC<HeaderProps> = ({
           )}
           <ZUIIconButton
             href={lane.step == LaneStep.START ? '/my/home' : undefined}
-            icon={SkipNext}
+            icon={lane.step == LaneStep.START ? Stop : SkipNext}
             onClick={() => {
               if (
                 lane.step != LaneStep.START &&
