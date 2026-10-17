@@ -4,7 +4,7 @@ import {
   SvgIconTypeMap,
   TextField,
 } from '@mui/material';
-import { FC, HTMLInputTypeAttribute, RefObject } from 'react';
+import { FC, HTMLInputTypeAttribute } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 import { ZUILarge, ZUIMedium } from '../types';
@@ -59,7 +59,7 @@ type ZUITextFieldProps = {
   initialValue?: string;
 
   /**Pass a ref to the input element */
-  inputRef?: RefObject<HTMLInputElement>;
+  inputRef?: React.Ref<HTMLInputElement>;
 
   /**
    * The label of the textfield
