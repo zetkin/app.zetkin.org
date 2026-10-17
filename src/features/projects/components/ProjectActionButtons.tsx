@@ -88,17 +88,22 @@ const ProjectActionButtons: React.FunctionComponent<
     return [defaultStart, defaultEnd];
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEvent = async () => {
     setIsBusy(true);
     const [defaultStart, defaultEnd] = getDefaultEventDates();
-    createEvent({
-      activity_id: null,
-      campaign_id: project.id,
-      end_time: defaultEnd.toISOString(),
-      location_id: null,
-      start_time: defaultStart.toISOString(),
-      title: null,
-    });
+    try {
+      await createEvent({
+        activity_id: null,
+        campaign_id: project.id,
+        end_time: defaultEnd.toISOString(),
+        location_id: null,
+        start_time: defaultStart.toISOString(),
+        title: null,
+      });
+    } catch (error) {
+      setIsBusy(false);
+      throw error;
+    }
   };
 
   const handleArchiveProject = () => {
@@ -121,22 +126,34 @@ const ProjectActionButtons: React.FunctionComponent<
     {
       icon: <HeadsetMic />,
       label: projectMessages.createButton.createCallAssignment(),
-      onClick: () => {
+      onClick: async () => {
         setIsBusy(true);
-        createCallAssignment({
-          title: projectMessages.form.createCallAssignment.newCallAssignment(),
-        });
+        try {
+          await createCallAssignment({
+            title:
+              projectMessages.form.createCallAssignment.newCallAssignment(),
+          });
+        } catch (error) {
+          setIsBusy(false);
+          throw error;
+        }
       },
     },
     {
       icon: <AssignmentOutlined />,
       label: projectMessages.createButton.createSurvey(),
-      onClick: () => {
+      onClick: async () => {
         setIsBusy(true);
-        createSurvey({
-          signature: 'require_signature',
-          title: projectMessages.form.createSurvey.newSurvey(),
-        });
+
+        try {
+          await createSurvey({
+            signature: 'require_signature',
+            title: projectMessages.form.createSurvey.newSurvey(),
+          });
+        } catch (error) {
+          setIsBusy(false);
+          throw error;
+        }
       },
     },
   ];
@@ -153,11 +170,12 @@ const ProjectActionButtons: React.FunctionComponent<
     menuItems.push({
       icon: <Map />,
       label: projectMessages.createButton.createAreaAssignment(),
-      onClick: () => {
+      onClick: async () => {
         setIsBusy(true);
-        createAreaAssignment({
-          instructions: '',
-          /*
+        try {
+          await createAreaAssignment({
+            instructions: '',
+            /*
           metrics: [
             {
               definesDone: true,
@@ -168,9 +186,13 @@ const ProjectActionButtons: React.FunctionComponent<
             },
           ],
           */
-          reporting_level: 'location',
-          title: areaAssignmentMessages.default.title(),
-        });
+            reporting_level: 'location',
+            title: areaAssignmentMessages.default.title(),
+          });
+        } catch (error) {
+          setIsBusy(false);
+          throw error;
+        }
       },
     });
   }

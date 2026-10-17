@@ -3,7 +3,6 @@ import {
   callAssignmentCreate,
   callAssignmentCreated,
 } from 'features/callAssignments/store';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { surveyCreate, surveyCreated } from 'features/surveys/store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
@@ -17,8 +16,8 @@ import {
 interface UseCreateProjectActivityReturn {
   createCallAssignment: (
     callAssignmentBody: ZetkinCallAssignmentPartial
-  ) => IFuture<ZetkinCallAssignment>;
-  createSurvey: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
+  ) => Promise<ZetkinCallAssignment>;
+  createSurvey: (surveyBody: ZetkinSurveyPostBody) => Promise<ZetkinSurvey>;
 }
 
 export default function useCreateProjectActivity(
@@ -30,7 +29,7 @@ export default function useCreateProjectActivity(
 
   const createCallAssignment = (
     callAssignmentBody: ZetkinCallAssignmentPartial
-  ): IFuture<ZetkinCallAssignment> => {
+  ): Promise<ZetkinCallAssignment> => {
     dispatch(callAssignmentCreate());
 
     const promise = apiClient
@@ -44,12 +43,12 @@ export default function useCreateProjectActivity(
         return callAssignment;
       });
 
-    return new PromiseFuture(promise);
+    return promise;
   };
 
   const createSurvey = (
     surveyBody: ZetkinSurveyPostBody
-  ): IFuture<ZetkinSurvey> => {
+  ): Promise<ZetkinSurvey> => {
     dispatch(surveyCreate());
 
     const promise = apiClient
@@ -62,7 +61,7 @@ export default function useCreateProjectActivity(
         return survey;
       });
 
-    return new PromiseFuture(promise);
+    return promise;
   };
 
   return { createCallAssignment, createSurvey };
