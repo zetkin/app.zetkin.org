@@ -154,7 +154,10 @@ export type ConfigurableColumn =
   | EnumColumn;
 
 export type Column =
-  UnknownColumn | FieldColumn | ConfigurableColumn | LnglatColumn;
+  | UnknownColumn
+  | FieldColumn
+  | ConfigurableColumn
+  | LnglatColumn;
 
 export interface ZetkinPersonImportPostBody {
   ops: BulkOp[];
@@ -214,7 +217,10 @@ type PendingBulkLogItem = {
 };
 
 export type PersonImport =
-  CompletedLogItem | ErrorBulkLogItem | InProgressLogItem | PendingBulkLogItem;
+  | CompletedLogItem
+  | ErrorBulkLogItem
+  | InProgressLogItem
+  | PendingBulkLogItem;
 
 export enum ImportPreviewProblemCode {
   INVALID_FORMAT = 'INVALID_FORMAT',
