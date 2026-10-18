@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import {
   FolderOutlined,
   FormatListBulleted,
@@ -19,6 +19,7 @@ import { useMessages } from 'core/i18n';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import ZUICreatePerson from 'zui/ZUICreatePerson';
 import zuiMessageIds from 'zui/l10n/messageIds';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 interface PeopleActionButtonProps {
   folderId: number | null;
@@ -38,6 +39,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
   const [isBusy, setIsBusy] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   useEffect(() => {
     if (pendingRoute && pendingRoute === pathname) {
@@ -62,7 +64,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
     } catch (error) {
       setPendingRoute(null);
       setIsBusy(false);
-      throw error;
+      showSnackbar('error', messages.actions.createError());
     }
   };
 
@@ -81,9 +83,10 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
               setIsBusy(true);
               try {
                 await createView(folderId || undefined);
+                throw new Error('TEST ERROR MESSAGE');
               } catch (error) {
                 setIsBusy(false);
-                throw error;
+                showSnackbar('error', messages.actions.createError());
               }
             },
           },

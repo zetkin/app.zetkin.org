@@ -105,6 +105,9 @@ export default makeMessages('feat.projects', {
       archive: m('Archive project'),
       unarchive: m('Bring back from archive'),
     },
+    createActivity: {
+      error: m('There was an error creating the activity'),
+    },
     createAreaAssignment: {
       defaultQuestion: m('Did you complete the task?'),
     },

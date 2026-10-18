@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import { CircularProgress } from '@mui/material';
@@ -7,6 +7,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useCreateProject from '../hooks/useCreateProject';
 import { useNumericRouteParams } from 'core/hooks';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 const ProjectActionButtons: React.FunctionComponent = () => {
   const messages = useMessages(messageIds);
@@ -14,6 +15,7 @@ const ProjectActionButtons: React.FunctionComponent = () => {
   const createProject = useCreateProject(orgId);
 
   const [isBusy, setIsBusy] = useState(false);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   return (
     <Box display="flex">
@@ -32,7 +34,7 @@ const ProjectActionButtons: React.FunctionComponent = () => {
               });
             } catch (error) {
               setIsBusy(false);
-              throw error;
+              showSnackbar('error', messages.form.createProject.error());
             }
           }}
           sx={

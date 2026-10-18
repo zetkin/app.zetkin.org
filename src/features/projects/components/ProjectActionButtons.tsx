@@ -37,6 +37,7 @@ import { AREAS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 import EventShiftModal from 'features/calendar/components/EventShiftModal';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 enum PROJECT_MENU_ITEMS {
   ARCHIVE_PROJECT = 'archiveProject',
@@ -102,7 +103,7 @@ const ProjectActionButtons: React.FunctionComponent<
       });
     } catch (error) {
       setIsBusy(false);
-      throw error;
+      showSnackbar('error', projectMessages.form.createActivity.error());
     }
   };
 
@@ -135,7 +136,7 @@ const ProjectActionButtons: React.FunctionComponent<
           });
         } catch (error) {
           setIsBusy(false);
-          throw error;
+          showSnackbar('error', projectMessages.form.createActivity.error());
         }
       },
     },
@@ -152,7 +153,7 @@ const ProjectActionButtons: React.FunctionComponent<
           });
         } catch (error) {
           setIsBusy(false);
-          throw error;
+          showSnackbar('error', projectMessages.form.createActivity.error());
         }
       },
     },
@@ -191,7 +192,7 @@ const ProjectActionButtons: React.FunctionComponent<
           });
         } catch (error) {
           setIsBusy(false);
-          throw error;
+          showSnackbar('error', projectMessages.form.createActivity.error());
         }
       },
     });
@@ -222,6 +223,7 @@ const ProjectActionButtons: React.FunctionComponent<
   }
 
   const [isBusy, setIsBusy] = useState(false);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   return (
     <Box display="flex" gap={1}>
