@@ -4,6 +4,7 @@ import {
   PowerSettingsNew,
   SkipNext,
   Stop,
+  QrCode,
 } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
@@ -25,6 +26,8 @@ import notEmpty from 'utils/notEmpty';
 import ZUILink from 'zui/components/ZUILink';
 import useSetupReportStep from '../hooks/useSetupReportStep';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
+import QRCodeImage from './QRCodeImage';
+import ZUIModal from 'zui/components/ZUIModal';
 
 type HeaderProps = {
   allocateCall: () => Promise<void | SerializedError>;
@@ -297,6 +300,12 @@ const DesktopHeader: FC<Omit<HeaderProps, 'onOpenCallLog'>> = ({
 }) => {
   const dispatch = useAppDispatch();
   const messages = useMessages(messageIds);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+
+  const encodedName = encodeURIComponent(
+    `${call?.target.first_name} ${call?.target.last_name}`
+  );
+
   return (
     <Box
       sx={(theme) => ({
@@ -380,6 +389,22 @@ const DesktopHeader: FC<Omit<HeaderProps, 'onOpenCallLog'>> = ({
                 ];
               })}
             </ZUIText>
+            <ZUIIconButton
+              icon={QrCode}
+              onClick={() => {
+                setQrModalOpen(true);
+              }}
+            />
+            <ZUIModal
+              onClose={() => setQrModalOpen(false)}
+              open={qrModalOpen}
+              title={messages.header.qrModal.title()}
+            >
+              <QRCodeImage
+                clickable
+                url={`${location.origin}/call/companion?name=${encodedName}&numbers=${phoneNumbers.join(',')}`}
+              />
+            </ZUIModal>
           </>
         )}
       </Box>
