@@ -16,6 +16,7 @@ export default makeMessages('feat.tags', {
     groupCreatePrompt: m<{ groupName: string }>('Add "{groupName}"'),
     groupLabel: m('Group'),
     groupSelectPlaceholder: m('Type to search or create a group'),
+    hideForCallersLabel: m('Hide tag for callers'),
     titleErrorText: m('Tag name is required'),
     titleLabel: m('Tag name'),
     typeLabel: m('Tag type'),
