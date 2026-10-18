@@ -903,38 +903,26 @@ feat:
       mapping:
         configButton: Configureer
         defaultColumnHeader: Kolom {columnIndex}
-        emptyStateMessage: Start met toewijzen van bestands kolommen
+        emptyStateMessage: Begin met het toewijzen van de bestandskolommen.
         externalID: Externe ID
         fileHeader: bestand
-        finishedMappingDates: Mapping {numValues, plural, =1 {1 value} other {# values}}
-          from {dateFormat, select, se {Swedish personnummer} no {Norwegian
-          fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates
-        finishedMappingOrganizations: '{numPeople, plural, =1 {1 person} other {#
-          people}} mapped to {numMappedTo, plural, =1 {1 organization} other {#
-          organizations}}'
-        finishedMappingTags: Mapping {numRows, plural, =1 {1 row} other {# rows}} to
-          {numMappedTo, plural, =1 {1 tag} other {# tags}}
-        header: In kaart brengen
+        finishedMappingDates: '{numValues, plural, =1 {1 waarde} other {# waarden}} omgezet van {dateFormat, select, se {Zweeds personnummer} no {Noors fødselsnummer} dk {Deens CPR-nummer} other {{dateFormat}}} naar datums'
+        finishedMappingOrganizations: '{numPeople, plural, =1 {1 persoon} other {# personen}} toegewezen aan {numMappedTo, plural, =1 {1 organisatie} other {# organisaties}}'
+        finishedMappingTags: '{numRows, plural, =1 {1 rij} other {# rijen}} toegewezen aan {numMappedTo, plural, =1 {1 tag} other {# tags}}'
+        header: Toewijzing
         infoButton: Info
         mapValuesButton: Wijs waarden toe
         messages:
-          manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
-            plural, =1 {one other value} other {# other values}} and {numEmpty,
-            plural, =1 {one empty row} other {# empty rows}}.'
-          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} and
-            {numMoreValues, plural, =1 {one other value} other {# other
-            values}}.'
-          oneValueAndEmpty: '{firstValue} and {numEmpty, plural, =1 {one empty row} other
-            {# empty rows}}.'
+          manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues, plural, =1 {één andere waarde} other {# andere waarden}} en {numEmpty, plural, =1 {één lege rij} other {# lege rijen}}.'
+          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} en {numMoreValues, plural, =1 {één andere waarde} other {# andere waarden}}.'
+          oneValueAndEmpty: '{firstValue} en {numEmpty, plural, =1 {één lege rij} other {# lege rijen}}.'
           oneValueNoEmpty: '{firstValue}.'
-          onlyEmpty: '{numEmpty, plural, =1 {one empty row} other {# empty rows}}.'
+          onlyEmpty: '{numEmpty, plural, =1 {één lege rij} other {# lege rijen}}.'
           readOnlyField: '{title} (alleen lezen)'
-          threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} and {numEmpty,
-            plural, =1 {one empty row} other {# empty rows}}.'
-          threeValuesNoEmpty: '{firstValue}, {secondValue} and {thirdValue}.'
-          twoValuesAndEmpty: '{firstValue}, {secondValue} and {numEmpty, plural, =1 {one
-            empty row} other {# empty rows}}.'
-          twoValuesNoEmpty: '{firstValue} and {secondValue}.'
+          threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} en {numEmpty, plural, =1 {één lege rij} other {# lege rijen}}.'
+          threeValuesNoEmpty: '{firstValue}, {secondValue} en {thirdValue}.'
+          twoValuesAndEmpty: '{firstValue}, {secondValue} en {numEmpty, plural, =1 {één lege rij} other {# lege rijen}}.'
+          twoValuesNoEmpty: '{firstValue} en {secondValue}.'
         organization: Organisatie
         selectZetkinField: Importeren als...
         tags: Tags
@@ -960,40 +948,35 @@ feat:
         noTags: Geen tags
         noValue: Geen waarde
         previous: Vorige
-        title: Toewijzingen preview
+        title: Voorbeeld van toewijzingen
       settings:
         firstRowIsHeaders: De eerste rij zijn headers
-        header: Settings
+        header: Instellingen
         sheetSelectHelpText: Dit bestand heeft meerdere bladen. Kies er een.
         sheetSelectLabel: Blad
       show: Toon
       statusMessage:
-        done: Configureert import van {numConfiguredPeople, plural, =1 {1 person} other
-          {# people}}
+        done: Configureert import van {numConfiguredPeople, plural, =1 {1 persoon} other {# personen}}
         notDone: Je configuratie is incompleet
       title: Importeer personen
     impactSummary:
       future:
-        created: '{number} new {numPeople, plural, =1 {person} other {people}} worden
-          aangemaakt'
+        created: '{number} nieuwe {numPeople, plural, =1 {persoon wordt} other {personen worden}} aangemaakt'
         defaultDesc: '{numPeople} ontvangen wijzigingen in {field}'
         organization: Organisatie
         orgs: '{numPeople} zullen worden toegevoegd aan {org}'
         tags: Tags
         tagsDesc: '{numPeople} krijgen {tags}'
-        updated: '{number} {numPeople, plural, =1 {person} other {people}} worden
-          geüpdatet'
+        updated: '{number} {numPeople, plural, =1 {persoon wordt} other {personen worden}} geüpdatet'
       past:
-        created: '{number} new {numPeople, plural, =1 {person} other {people}} zijn
-          aangemaakt'
-        defaultDesc: Voor {numPeople} zijn veranderingen gemaakt aan {field}
+        created: '{number} nieuwe {numPeople, plural, =1 {persoon is} other {personen zijn}} aangemaakt'
+        defaultDesc: '{numPeople} hebben wijzigingen ontvangen in {field}'
         organization: Organisatie
         orgs: '{numPeople} zijn toegevoegd aan {org}'
         tags: Tags
         tagsDesc: '{numPeople} hebben {tags} gekregen'
-        updated: '{number} {numPeople, plural, =1 {person} other {people}} zijn
-          geüpdatet'
-      people: '{number} {numPeople, plural, =1 {person} other {people}}'
+        updated: '{number} {numPeople, plural, =1 {persoon is} other {personen zijn}} geüpdatet'
+      people: '{number} {numPeople, plural, =1 {persoon} other {personen}}'
     importStatus:
       completed:
         desc: Je data is geïmporteerd naar Zetkin
@@ -1014,12 +997,11 @@ feat:
         common:
           back: Ga terug
           checkbox: Ik snap het en wil toch doorgaan
-          fewRows: Dit probleem komt voor bij {commaRows} en {lastRow}.
-          manyRows: Dit probleem komt voor bij rijen {commaRows} en {additionalRows,
-            plural, =1 {1 additional row} other {# additional rows}}.
+          fewRows: Dit probleem komt voor bij rijen {commaRows} en {lastRow}.
+          manyRows: 'Dit probleem komt voor bij rijen {commaRows} en {additionalRows, plural, =1 {nog 1 rij} other {nog # rijen}}.'
           singleRow: Dit probleem komt voor bij rij {row}
         invalidFormat:
-          title: 'Verkeerd formaat of veld:  {field}'
+          title: 'Verkeerd formaat voor veld: {field}'
         majorChange:
           description: Let op! Minimaal 30% worden aangepast. Check of de kolommen juist
             zijn geconfigureerd.
@@ -1027,35 +1009,33 @@ feat:
         missingIdAndName:
           description: Elke rij moet minimaal een volledige naam hebben of een ID van een
             persoon in Zetkin.
-          title: Niet alle rijen hebben identifiers
+          title: Niet alle rijen hebben identificatiegegevens
         noImpact:
           description: Dit kan gebeuren omdat er geen nieuwe data in het bestand zit, of
             wegens een onbekende fout.
           title: Deze import heeft geen effect
         ok:
-          description: Zorg dat de samenvatting er goed uit ziet en klik dan op 'import'.
+          description: Zorg dat de samenvatting er goed uitziet en klik op "Importeer" om de import uit te voeren.
           title: Geen problemen gevonden!
         unconfiguredId:
           description: Dit zorgt voor dubbelingen in de database. Als dit je eerste import
             is, ga dan terug en kies een externe ID om te gebruiken.
-          title: Je hebt geen ID kolom gekozen
+          title: Je hebt geen ID-kolom gekozen
         unconfiguredIdAndName:
           description: Bij elke import moeten minimaal de volledige namen of de ID's
             worden vermeld van personen die al in Zetkin voorkomen.
-          title: Je hebt kolommen niet geconfigureerd
+          title: Je hebt geen identificerende kolommen geconfigureerd
         unexpectedError:
-          description: Er zijn geen personen geïmporteerd. Check settings of selecteer
-            nieuw bestand. Er waren fouten in het formulier. Mail
-            info@zetkin.org als het probleem zich blijft voordoen.
+          description: Er zijn geen personen geïmporteerd. Je kunt teruggaan en de importinstellingen controleren of een nieuw bestand selecteren om te importeren. Er zaten fouten in het formulier dat je hebt verstuurd. Probeer het opnieuw en zorg dat je alle benodigde informatie invult. Als de fout zich blijft voordoen, kun je contact opnemen met support via info@zetkin.org
           title: Er is iets fout gegaan. Import afgebroken.
         unknownError:
-          description: Contact support als je vragen hebt
+          description: Neem contact op met support als je hulp nodig hebt om het probleem te begrijpen.
           title: Onbekende fout opgetreden
         unknownPerson:
           description: Je hebt een kolom geconfigureerd als Zetkin ID's, maar de kolom
             bevat ID's die niet bestaan. Bedoelde je een externe ID, of zijn er
             mogelijk personen verwijderd sinds het bestand is aangemaakt?
-          title: Je probeert niet-bestaande bestanden te updaten.
+          title: Je probeert records te updaten die niet bestaan
         validating: Valideren
     steps:
       configure: Configureer
@@ -1066,32 +1046,28 @@ feat:
       dialogButtons:
         configure: Configureer
         restart: Herstart
-      instructions: '{link} voor drag and drop'
+      instructions: '{link} of sleep een bestand hierheen'
       loading: Bestand wordt geladen...
       release: Plaats bestand hier
       selectClick: Klik om te uploaden
-      types: CSV, XLS or XLSX
-      unsupportedFile: Bestandsformaat onbekend
+      types: CSV, XLS of XLSX
+      unsupportedFile: Bestandsformaat wordt niet ondersteund.
     validation:
       messages: Berichten
       people: '{numPeople, plural, =1 {person} other {people}}'
       statusMessages:
-        create: Deze import zorgt voor {numCreated, plural, =1 {1 person} other {#
-          people}}.
-        createAndUpdate: Deze import creëert {numCreated, plural, =1 {1 person} other {#
-          people}} en updatet {numUpdated, plural, =1 {1 person} other {#
-          people}}.
+        create: Deze import maakt {numCreated, plural, =1 {1 persoon} other {# personen}} aan.
+        createAndUpdate: Deze import maakt {numCreated, plural, =1 {1 persoon} other {# personen}} aan en updatet {numUpdated, plural, =1 {1 persoon} other {# personen}}.
         error: Je moet de fouten herstellen voordat je kunt importeren
-        update: This import updatet {numUpdated, plural, =1 {1 person} other {#
-          people}}.
+        update: Deze import updatet {numUpdated, plural, =1 {1 persoon} other {# personen}}.
   joinForms:
     defaultTitle: Naamloos formulier
     embedding:
-      copyLink: Copy embed URL
+      copyLink: URL voor insluiten kopiëren
       formSubmitted: Formulier ingediend
-      linkCopied: Embed URL gekopieerd
+      linkCopied: URL voor insluiten gekopieerd.
       openLink: Bezoek nu
-      submitButton: Submit
+      submitButton: Indienen
     formPane:
       labels:
         addField: Veld toevoegen
@@ -1102,10 +1078,10 @@ feat:
     forms: Formulieren
     states:
       accepted: Goedgekeurd
-      pending: Pending
+      pending: In behandeling
     status: Status
     submissionList:
-      approveButton: Toegestaan
+      approveButton: Goedkeuren
       firstName: Voornaam
       form: Formulier
       lastName: Achternaam
@@ -1120,26 +1096,25 @@ feat:
       rejectButton: Afwijzen
     submissionVerifiedPage:
       h: Dankjewel!
-      info: Je toevoeging is bevestigd en organisers in {org} beoordelen het
-        binnenkort.
+      info: Je aanmelding is bevestigd en organizers van {org} zullen deze binnenkort beoordelen.
   journeys:
     instance:
       addAssigneeButton: Wijs toe
-      addSubjectButton: Toevoegen persoon
-      addSubjectLabel: Toevoegen persoon
-      assignPersonLabel: Toewijzen persoon
+      addSubjectButton: Persoon toevoegen
+      addSubjectLabel: Persoon toevoegen
+      assignPersonLabel: Persoon toewijzen
       closeButton:
         dialog:
           outcomeFieldPlaceholder: Beschrijf de uitkomst van de {singularLabel}
           outcomeLabel: Uitkomst
           outcomeTagsDescription: Voeg tags toe die de uitkomst beschrijven.
-          outcomeTagsLabel: Uitkomst tags
+          outcomeTagsLabel: Tags voor de uitkomst
         error: Fout tijdens sluiten van {singularLabel}
         label: Sluit {singularLabel}
       collapseButton: Minimaliseer
       createAndApplyTagButton: Maken en toepassen
-      created: Created {relative}
-      deadlineLabel: (Was due {date})
+      created: Gemaakt {relative}
+      deadlineLabel: (Deadline was {date})
       dueDateInputClear: Leegmaken
       dueDateInputLabel: Verloopdatum
       editButton: Wijzig
