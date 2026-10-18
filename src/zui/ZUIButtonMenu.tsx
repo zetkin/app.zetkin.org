@@ -36,6 +36,9 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (loading) {
+      return;
+    }
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -45,7 +48,7 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   return (
     <div>
       <Button
-        disabled={loading}
+        aria-disabled={loading}
         endIcon={
           loadingVariant === 'persistent' && loading ? (
             <CircularProgress color="inherit" size={16} />
