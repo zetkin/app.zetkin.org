@@ -543,6 +543,9 @@ describe('prepareImportOperations()', () => {
         {
           data: ['125', 'not a number', '18.07'],
         },
+        {
+          data: ['127', '59.33', '   '],
+        },
       ],
       title: 'My sheet',
     };
@@ -562,6 +565,58 @@ describe('prepareImportOperations()', () => {
         },
         op: 'person.get',
         ops: [],
+      },
+      {
+        key: {
+          id: 127,
+        },
+        op: 'person.get',
+        ops: [],
+      },
+    ]);
+  });
+
+  it('keeps zero coordinates', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lat',
+        },
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lng',
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 0, ' 0 '],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              location: { lat: 0, lng: 0 },
+            },
+            op: 'person.setfields',
+          },
+        ],
       },
     ]);
   });

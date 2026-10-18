@@ -70,8 +70,12 @@ export default function prepareImportOperations(
             }
           }
         } else if (col.kind == ColumnKind.LNGLAT) {
-          if (value) {
-            const coordinate = Number(value.toString().replace(',', '.'));
+          const rawCoordinate =
+            typeof value == 'number' || typeof value == 'string'
+              ? value.toString().trim()
+              : '';
+          if (rawCoordinate) {
+            const coordinate = Number(rawCoordinate.replace(',', '.'));
             if (!isNaN(coordinate)) {
               lnglatValues[col.field] = {
                 ...lnglatValues[col.field],
