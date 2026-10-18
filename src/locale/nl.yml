@@ -165,7 +165,7 @@ feat:
       cooldownLabel: Wachttijd in uren
       hours: '{cooldown, plural, =0 {Geen} =1 {# uur} other {# uur}}'
       missingPhoneNumber: Telefoonnummer niet gevonden
-      organizerActionNeeded: Actie van organisator nodig
+      organizerActionNeeded: Nodige actie van organizer
       subtitle: Targets die we nog niet kunnen bellen
       title: Geblokkeerd
       viewSheetButton: Bekijk lijst
@@ -222,7 +222,7 @@ feat:
       messagePlaceholder: Beller heeft geen bericht achtergelaten
       noteByCaller: Notitie door {person} {time}
       subtitle: Notities over {person}
-      title: Actie van organisator nodig
+      title: Actie van organizer nodig
     ready:
       allocated: Targets toegewezen aan beller
       queue: Targets in wachtrij
@@ -243,9 +243,9 @@ feat:
       conversation: Gesprek
       overview: Overzicht
     targets:
-      defineButton: Bepaal doelgroep
-      editButton: Bewerk doelgroep
-      subtitle: Gebruik Slim Zoeken om de doelgroep voor deze opdracht te bepalen.
+      defineButton: Definieer target-groep
+      editButton: Pas target-groep aan
+      subtitle: Gebruik Slim Zoeken om de target-groep voor deze opdracht te definiëren.
       title: Targets
   projects:
     activitiesOverview:
@@ -552,7 +552,7 @@ feat:
           header: Open rate
         header: Geopend
     ready:
-      missingEmailsDescription: Er {numPeople, plural, one {is een persoon} other {zijn mensen}} met een ontbrekend e-mailadres in de doelgroep. Als je dit oplost, worden ze opgenomen in de doelgroep.
+      missingEmailsDescription: Er {numPeople, plural, one {is een persoon} other {zijn mensen}} met een ontbrekend e-mailadres in de target-groep. Als je dit oplost, worden ze opgenomen in de target-groep.
       sentSubtitle: Targets die beschikbaar waren voor verzending
       subtitle: Targets die beschikbaar zijn voor verzending
       title: Klaar
