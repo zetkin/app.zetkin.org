@@ -18,12 +18,27 @@ export type SurveyResponseViewCell = {
   text: string | null;
 }[];
 
+const getCellValueString = (value: SurveyResponseViewCell): string => {
+  if (!value?.length) {
+    return '';
+  }
+
+  const sortedSubmissions = value.concat().sort((sub0, sub1) => {
+    const d0 = new Date(sub0.submitted);
+    const d1 = new Date(sub1.submitted);
+    return d1.getTime() - d0.getTime();
+  });
+  const mostRecentSubmission = sortedSubmissions[0];
+
+  return mostRecentSubmission.text || '';
+};
+
 export default class SurveyResponseColumnType implements IColumnType<
   SurveyResponseViewColumn,
   SurveyResponseViewCell
 > {
   cellToString(cell: SurveyResponseViewCell): string {
-    return cell?.length && cell[0].text ? cell[0].text : '';
+    return getCellValueString(cell);
   }
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
@@ -48,18 +63,7 @@ export default class SurveyResponseColumnType implements IColumnType<
         return <Cell cell={params.row[params.field]} />;
       },
       valueGetter: (value: SurveyResponseViewCell) => {
-        if (!value?.length) {
-          return '';
-        }
-
-        const sortedSubmissions = value.concat().sort((sub0, sub1) => {
-          const d0 = new Date(sub0.submitted);
-          const d1 = new Date(sub1.submitted);
-          return d1.getTime() - d0.getTime();
-        });
-        const mostRecentSubmission = sortedSubmissions[0];
-
-        return mostRecentSubmission.text || '';
+        return getCellValueString(value);
       },
       width: 250,
     };
