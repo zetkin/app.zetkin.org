@@ -39,6 +39,7 @@ export default async function RootLayout({
           <ClientContext
             envVars={{
               FEAT_AREAS: process.env.FEAT_AREAS,
+              FEAT_AREA_ASSIGNMENTS: process.env.FEAT_AREA_ASSIGNMENTS,
               FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
               FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
               FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,

@@ -306,6 +306,7 @@ export async function addSessionCookie(
 
 export function setupFeatureFlags() {
   process.env.FEAT_AREAS = '*';
+  process.env.FEAT_AREA_ASSIGNMENTS = '*';
   process.env.FEAT_CALL = '*';
   process.env.FEAT_OFFICIALS = '*';
   process.env.FEAT_TASKS = '*';
