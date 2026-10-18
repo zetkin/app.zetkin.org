@@ -575,7 +575,7 @@ feat:
       locked: Doelen zijn vastgezet voor verzending
       lockedChip: Vastgezet
       title: Doelen
-      unlockAlert: Ontgrendelen kan mensen toevoegen aan of verwijderen uit de target-groep, afhankelijk van de resultaten die Slim Zoeken oplevert.
+      unlockAlert: Ontgrendelen kan mensen toevoegen aan of verwijderen uit de target-groep, afhankelijk van de resultaten die de Smart Search oplevert.
       unlockButton: Ontgrendelen
       viewButton: Bekijk doelgroep
     unsubscribePage:
