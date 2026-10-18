@@ -245,7 +245,7 @@ feat:
     targets:
       defineButton: Definieer target-groep
       editButton: Pas target-groep aan
-      subtitle: Gebruik Slim Zoeken om de target-groep voor deze opdracht te definiëren.
+      subtitle: Gebruik Smart Search om de target-groep voor deze opdracht te definiëren.
       title: Targets
   projects:
     activitiesOverview:
@@ -441,7 +441,7 @@ feat:
         in het tabblad Opstellen en corrigeer ze.
       empty: Je e-mail is leeg. Ga naar het tabblad Opstellen en voeg een inhoud toe.
       noSubject: Je e-mail heeft geen onderwerp. Ga naar het tabblad Opstellen en voeg er een toe.
-      notTargeted: Je e-mail heeft geen targets. Ga naar de sectie Doelen in het tabblad Overzicht om met Slim Zoeken je targets te bepalen.
+      notTargeted: Je e-mail heeft geen targets. Ga naar de sectie Doelen in het tabblad Overzicht om een Smart Search aan te maken die je targets bepaalt.
       targetsNotLocked: Je targets zijn niet vastgezet. Ga naar de sectie Doelen in het tabblad Overzicht om dit te doen.
     deliveryStatus:
       notLocked: Niet vastgezet, niet ingepland
