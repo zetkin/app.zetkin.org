@@ -20,7 +20,7 @@ function makeFlatOrgData(orgData: TreeItemData[]): TreeItemData[] {
   );
 }
 
-function useOrgSwitcher(orgId: number, searchString: string) {
+function useOrgSwitcher(orgId: number | undefined, searchString: string) {
   const treeDataList = useAppSelector(
     (state) => state.organizations.treeDataList
   );
@@ -35,10 +35,10 @@ function useOrgSwitcher(orgId: number, searchString: string) {
     [] as number[]
   );
 
-  function onSwitchOrg() {
+  function onSwitchOrg(targetOrgId: number) {
     setRecentOrganizationIds([
-      orgId,
-      ...recentOrganizationIds.filter((id) => id != orgId),
+      targetOrgId,
+      ...recentOrganizationIds.filter((id) => id != targetOrgId),
     ]);
   }
 

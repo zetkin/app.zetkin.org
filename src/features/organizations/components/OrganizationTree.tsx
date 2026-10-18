@@ -8,8 +8,8 @@ import { TreeItemData } from '../types';
 
 interface OrganizationTreeProps {
   treeItemData: TreeItemData[];
-  onSwitchOrg: () => void;
-  orgId: number;
+  onSwitchOrg: (orgId: number) => void;
+  orgId?: number;
 }
 
 function renderTree(props: OrganizationTreeProps): React.ReactNode {
@@ -41,7 +41,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
           </Box>
         </Link>
       }
-      onClick={onSwitchOrg}
+      onClick={() => onSwitchOrg(item.id)}
     >
       {item.children
         ? renderTree({ onSwitchOrg, orgId, treeItemData: item.children })
