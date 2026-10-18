@@ -228,58 +228,60 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
           targetName={call.target.name}
         />
       )}
-      <Snackbar
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        autoHideDuration={5000}
-        onClose={(ev, reason) => {
-          if (reason == 'clickaway') {
-            return;
-          } else {
-            setAssignmentSwitchedTo(null);
-          }
-        }}
-        open={!!assignmentSwitchedTo}
-        slots={{
-          transition: (props) => {
-            return (
-              <Slide
-                {...props}
-                direction="right"
-                timeout={{
-                  enter: 500,
-                  exit: 300,
-                }}
-              />
-            );
-          },
-        }}
-        sx={{
-          '@media (min-width: 600px)': {
-            bottom: 68,
-            left: 16,
-          },
-        }}
-      >
-        <Alert
-          icon={false}
-          onClose={() => setAssignmentSwitchedTo(null)}
-          severity="success"
-          sx={(theme) => ({
-            backgroundColor: theme.palette.common.white,
-            borderLeft: `4px solid ${theme.palette.success.main}`,
-            boxShadow: theme.elevation.bottom.big.medium,
-          })}
+      {assignmentSwitchedTo && (
+        <Snackbar
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          autoHideDuration={5000}
+          onClose={(ev, reason) => {
+            if (reason == 'clickaway') {
+              return;
+            } else {
+              setAssignmentSwitchedTo(null);
+            }
+          }}
+          open={!!assignmentSwitchedTo}
+          slots={{
+            transition: (props) => {
+              return (
+                <Slide
+                  {...props}
+                  direction="right"
+                  timeout={{
+                    enter: 500,
+                    exit: 300,
+                  }}
+                />
+              );
+            },
+          }}
+          sx={{
+            '@media (min-width: 600px)': {
+              bottom: 68,
+              left: 16,
+            },
+          }}
         >
-          {switchedTo && (
-            <ZUIText>
-              <Msg
-                id={messageIds.switchedAssignmentsAlert.message}
-                values={{ assignmentTitle: switchedTo.title }}
-              />
-            </ZUIText>
-          )}
-        </Alert>
-      </Snackbar>
+          <Alert
+            icon={false}
+            onClose={() => setAssignmentSwitchedTo(null)}
+            severity="success"
+            sx={(theme) => ({
+              backgroundColor: theme.palette.common.white,
+              borderLeft: `4px solid ${theme.palette.success.main}`,
+              boxShadow: theme.elevation.bottom.big.medium,
+            })}
+          >
+            {switchedTo && (
+              <ZUIText>
+                <Msg
+                  id={messageIds.switchedAssignmentsAlert.message}
+                  values={{ assignmentTitle: switchedTo.title }}
+                />
+              </ZUIText>
+            )}
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };
