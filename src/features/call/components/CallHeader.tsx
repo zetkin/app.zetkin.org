@@ -1,5 +1,6 @@
 import {
   AccessTimeFilled,
+  ArrowBack,
   PowerSettingsNew,
   SkipNext,
   Stop,
@@ -214,6 +215,16 @@ const MobileHeader: FC<HeaderProps> = ({
           zIndex: 16,
         }}
       >
+        {lane.step === LaneStep.REPORT && (
+          <ZUIButton
+            label="Back to call"
+            onClick={() => {
+              dispatch(updateLaneStep(LaneStep.CALL));
+            }}
+            startIcon={ArrowBack}
+            variant="secondary"
+          />
+        )}
         {lane.step === LaneStep.CALL && call && !call.target.alt_phone && (
           <ZUIButton
             fullWidth
