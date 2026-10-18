@@ -575,20 +575,17 @@ feat:
       locked: Doelen zijn vastgezet voor verzending
       lockedChip: Vastgezet
       title: Doelen
-      unlockAlert: Aan de hand van de Smart Search zul je mensen toevoegen of
-        verwijderen van de target groep door te ontgrendelen.
+      unlockAlert: Ontgrendelen kan mensen toevoegen aan of verwijderen uit de target-groep, afhankelijk van de resultaten die de Smart Search oplevert.
       unlockButton: Ontgrendelen
       viewButton: Bekijk doelgroep
     unsubscribePage:
       consent: Ik begrijp het
       h: Uitschrijven van {org}
-      info: Na uitschrijving zal je geen massa e-mails meer ontvangen van deze
-        organisatie. Mogelijk ontvang je nog steeds herinneringen en andere
-        e-mails die specifiek voor jou bedoeld zijn.
+      info: Na uitschrijving zal je geen massa-e-mails meer ontvangen van deze organisatie. Mogelijk ontvang je nog steeds herinneringen en andere e-mails die specifiek naar jou worden gestuurd als onderdeel van werk dat je binnen de organisatie doet.
       unsubButton: Schrijf me uit
     unsubscribedPage:
       h: Uitgeschreven!
-      info: Je bent uitgeschreven van de massa e-mail van {org}.
+      info: Je bent uitgeschreven voor massa-e-mails van {org}.
     varDefaults:
       target: Lezer
   events:
@@ -617,25 +614,24 @@ feat:
     eventChangeProjectDialog:
       error: 'Foutsituatie: Kan gebeurtenis niet verplaatsen naar het geselecteerde
         project'
-      success: Gebeurtenis verplaatst naar "{projectTitle}"
+      success: Gebeurtenis "{eventTitle}" verplaatst naar "{projectTitle}"
     eventContactCard:
-      header: Contacteer
+      header: Contactpersoon
       noContact: Geen contactpersoon toegewezen!
       removeButton: Verwijder
-      selectPlaceholder: Selecteer contact persoon
-      warningText: '{name} zal niet langer de contactpersoon zijn, maar blijft wel als
-        deelnemer aan evenement geboekt'
+      selectPlaceholder: Selecteer een contactpersoon
+      warningText: '{name} zal niet langer de contactpersoon zijn, maar blijft wel als deelnemer in het evenement geboekt'
     eventOverviewCard:
-      buttonEndDate: + Eind datum
+      buttonEndDate: + Einddatum
       createLocation: Creëer een nieuwe locatie
       description: Beschrijving
       editButton: Wijzig informatie gebeurtenis
       endDate: Eind
-      endTime: Eind tijd
+      endTime: Eindtijd
       location: Locatie
       noLocation: Geen fysieke locatie
       startDate: Begin
-      startTime: Begin tijd
+      startTime: Begintijd
       url: Link
     eventParticipantsCard:
       confirmed: Aanwezigheid bevestigd
@@ -645,7 +641,7 @@ feat:
       notifications: Meldingen
       participantList: Bekijk deelnemers
       pending: Inschrijvingen in behandeling
-      reqParticipantsHelperText: Het minimum aantal benodigde deelnemers
+      reqParticipantsHelperText: Het minimumaantal benodigde deelnemers
       reqParticipantsLabel: Benodigde deelnemers
     eventParticipantsList:
       attendance: Aanwezigheid
@@ -665,9 +661,7 @@ feat:
       descriptionBooked: Dit zijn de mensen die je hebt geboekt en op wie je rekent
         voor het evenement. Om hun deelname te annuleren, moeten ze contact met
         jou opnemen en je kunt ze handmatig annuleren.
-      descriptionCancelled: Deze mensen hebben hun deelname om een ​​of andere reden
-        geannuleerd. We houden ze hier zodat je ze niet opnieuw probeert te
-        boeken.
+      descriptionCancelled: Deze mensen hebben hun deelname om een of andere reden geannuleerd. We houden ze hier zodat je ze niet opnieuw probeert te boeken.
       descriptionSignups: Deze mensen hebben zich aangemeld in het activistenportaal.
         Ze kunnen hun aanmelding op elk moment annuleren.
       dropDownAttended: Bevestigde aanwezigheid
@@ -675,34 +669,34 @@ feat:
       participantTooltip: Maak contactpersoon
       signUps: Aanmeldingen
     eventPopper:
-      backToEvents: Terug naar de evenement-lijst
+      backToEvents: Terug naar de evenementenlijst
       backToLocations: Terug naar locaties
-      backToShifts: Terug naar shift lijst
+      backToShifts: Terug naar de shiftlijst
       booked: Geboekt
       cancel: Annuleren
       cancelWarning: Als je dit doet, vergeet dan niet om alle deelnemers en
         inschrijvers te informeren dat het evenement is geannuleerd!
-      confirmCancel: Weet je zeker dat dit evenement wil annuleren?
-      confirmDelete: Weet je zeker dat dit evenement wil verwijderen?
+      confirmCancel: Weet je zeker dat je dit evenement wilt annuleren?
+      confirmDelete: Weet je zeker dat je dit evenement wilt verwijderen?
       contactPerson: Contactpersoon
       dateAndTime: Datum & Tijd
       delete: Verwijderen
       deleteWarning: Eenmaal verwijderde events zijn niet meer toegankelijk.
       description: Beschrijving
       duplicate: Kopieer
-      eventPageLink: Ga naar de evenement-pagina
+      eventPageLink: Ga naar de evenementpagina
       events: Evenementen
       location: Locatie
       locations: Locaties
       multiEvent: Meerdere evenementen
       multiLocation: Evenement met meerdere locaties
-      multiShift: Evenementen met meerdere shifts
+      multiShift: Evenement met meerdere shifts
       noContact: Geen contactpersoon toegewezen
       notified: Op de hoogte gesteld
       pendingSignups: Er zijn geen aanmeldingen in behandeling
       publish: Publiceren
       reminded: Herinnerd
-      shifts: Shift
+      shifts: Shifts
       signups: Aanmeldingen
       unsentReminders: '{numMissing, plural, =1 {One participant} other {#
         participants}} hebben nog geen herinnering ontvangen'
@@ -710,7 +704,7 @@ feat:
       header: Gerelateerde events
     eventShiftModal:
       addShift: Shift toevoegen
-      customTitle: Custom title
+      customTitle: Aangepaste titel
       date: Datum
       description: Beschrijving
       draft: Voorlopige versie
@@ -718,13 +712,13 @@ feat:
       event: Gebeurtenis
       eventDuration: Duur gebeurtenis
       header: Creëer een event met meerdere shifts
-      hours: '{no, plural, one {1 hour} other {# hours}}'
+      hours: '{no, plural, one {1 uur} other {# uren}}'
       hoursShort: h
       invalidDate: Ongeldige datum
       invalidTime: Ongeldige tijd
       link: Link
       location: Locatie
-      minutes: '{no, plural, one {1 minute} other {# minutes}}'
+      minutes: '{no, plural, one {1 minuut} other {# minuten}}'
       minutesShort: min
       noEvents: Dit zal {no} gebeurtenissen aanmaken
       noTitle: Gebeurtenis met meerdere shifts zonder titel
@@ -732,17 +726,17 @@ feat:
       participationDescription: Gewenst aantal deelnemers per shift
       publish: Publiceer
       reset: Reset
-      shiftDuration: Shift duur
+      shiftDuration: Shiftduur
       shiftStart: Start shift {no}
       shifts: '{no, plural, one {1 shift} other {# shifts}}'
       shiftsHeader: Shifts
-      showMoreSettingsButton: Meer settings
+      showMoreSettingsButton: Meer instellingen
       start: Start
       type: Type
     eventStatus:
       cancelled: Geannuleerd
       draft: Voorlopig
-      ended: Geeindigd
+      ended: Geëindigd
       open: Open
       scheduled: Ingepland
       unknown: Onbekend
@@ -753,10 +747,8 @@ feat:
       cancel: Annuleer
       createLocation: Maak nieuwe locatie
       description: Omschrijving
-      infoText: Je kunt klikken en slepen om de kaart te verschuiven en scrollen of je
-        vingers naar elkaar toe bewegen om te vergroten. Om een ​​nieuwe locatie
-        aan te maken, kun je op een lege plek op de kaart klikken.
-      move: Veplaats
+      infoText: Je kunt klikken en slepen om de kaart te verschuiven en scrollen of je vingers naar elkaar toe bewegen om te zoomen. Om een nieuwe locatie aan te maken, kun je op een lege plek op de kaart klikken.
+      move: Verplaats
       moveInstructions: Versleep de speld om een locatie te selecteren.
       noDescription: Geen omschrijving
       noRelatedEvents: Er zijn geen andere gebeurtenissen rond dit tijdstip.
@@ -773,8 +765,8 @@ feat:
       confirmed: Bevestigde deelname
       header: Deelnemers
       noshow: ({noshows, plural, =1 {1 no-show} other {# no-shows}})
-      pending: Pending sign-ups
-      recordButton: Record attendance
+      pending: Inschrijvingen in behandeling
+      recordButton: Aanwezigheid registreren
       remindButton: Herinner iedereen
       remindButtondisabledTooltip: Je moet een contactpersoon kiezen voordat je herinneringen kunt uitsturen
       reqParticipantsHelperText: Minimaal aantal deelnemers
@@ -783,7 +775,7 @@ feat:
       affected:
         empty: Je hebt nog geen wijzigingen doorgevoerd. Kies een gebeurtenis om
           deelnemers te verplaatsen.
-        header: Personen geraakt
+        header: Betrokken personen
       discardButton: Wijzigingen verwijderen
       emptyStates:
         booked: Niemand is geboekt voor dit event. Je kunt deelnemers toevoegen vanuit
@@ -798,13 +790,12 @@ feat:
           undo: Maak ongedaan
         headers:
           booked: Deze gebeurtenis
-          pending: Aantal personen dat je kan toevoegen
+          pending: Personen die je kunt toevoegen
         states:
           added: Wordt toegevoegd aan deze gebeurtenis
           pending: In de pool
           removed: Wordt verwijderd van deze gebeurtenis
-      statusText: '{personCount, plural, =1 {One person} other {# people}} zullen
-        worden verplaatst'
+      statusText: '{personCount, plural, =1 {Eén persoon wordt} other {# personen worden}} verplaatst'
       submitButton: Uitvoeren
       title: Deelnemers bewerken
     search: Zoeken
@@ -815,11 +806,11 @@ feat:
       open: Open
       scheduled: Ingepland
     stats:
-      participants: '{participants, plural, one {1 participant} other {# participants}}'
+      participants: '{participants, plural, one {1 deelnemer} other {# deelnemers}}'
     tabs:
       overview: Overzicht
       participants: Deelnemers
-    tooltipContent: Gebeurtenissen zonder titel krijgen een standaard naam
+    tooltipContent: Bij gebeurtenissen zonder titel wordt het type als titel getoond
     type:
       createType: Maak "{type}"
       deleteMessage: Weet je zeker dat je het type gebeurtenis "{eventType}" wilt
@@ -830,9 +821,9 @@ feat:
       uncategorized: Ongecategoriseerd
   files:
     fileUpload:
-      dropToUpload: Verplaats bestand hierheen om up te loaden
-      instructions: of drag and drop
-      selectClick: Klik om up te loaden
+      dropToUpload: Plaats het bestand hier om het te uploaden
+      instructions: ' of sleep een bestand hierheen'
+      selectClick: Klik om te uploaden
     image:
       dimensions: '{width} × {height} pixels'
     libraryDialog:
@@ -864,8 +855,8 @@ feat:
     configuration:
       configure:
         dates:
-          customFormatDescription: Gebruik DD/MM/YYYY
-          customFormatLabel: Aangepast datum formaat
+          customFormatDescription: Beschrijf de notatie van de waarden in deze kolom met de letters Y, M en D en de tekens die je gebruikt om ze te scheiden. Staan je datums bijvoorbeeld als 1998.03.23 in het bestand, dan beschrijf je dat als YYYY.MM.DD.
+          customFormatLabel: Aangepaste datumnotatie
           dateConfigDescription: Selecteer de juiste datumnotatie.
           dateInputLabel: Datumnotatie
           dropDownLabel: Selecteer notatie
@@ -875,32 +866,27 @@ feat:
           listSubHeaders:
             custom: Aangepast
             dates: Datumnotaties
-            personNumbers: Telefoonnummers
+            personNumbers: Persoonsnummers
           noCustomFormatWarning: Je hebt geen aangepaste datumnotatie aangeleverd
           personNumberFormat:
             dk:
-              description: The values in this column will be parsed from 10 digit Danish
-                CPR-numbers (DDMMYY-XXXX or DDMMYYXXXX) into dates
-              label: Danish CPR-number
+              description: De waarden in deze kolom worden omgezet van 10-cijferige Deense CPR-nummers (DDMMYY-XXXX of DDMMYYXXXX) naar datums.
+              label: Deens CPR-nummer
             no:
-              description: The values in this column will be parsed from 11 digit Norwegian
-                fødselsnummer (DDMMYYXXXXX or DDMMYY-XXXXX) into dates.
-              label: Norwegian fødselsnummer
+              description: De waarden in deze kolom worden omgezet van 11-cijferige Noorse fødselsnummers (DDMMYYXXXXX of DDMMYY-XXXXX) naar datums.
+              label: Noors fødselsnummer
             se:
-              description: The values in this column will be parsed from 10 or 12 digit
-                Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.
-              label: Swedish Personnummer
+              description: De waarden in deze kolom worden omgezet van 10- of 12-cijferige Zweedse personnummers (YYMMDD-XXXX of YYYYMMDD-XXXX) naar datums.
+              label: Zweeds personnummer
         enum:
           header: Wijs waarden toe aan opties
-          numberOfRows: '{numRows, plural, =1 {1 row} other {# rows}}'
+          numberOfRows: '{numRows, plural, =1 {1 rij} other {# rijen}}'
           value: Waarde
         ids:
           externalIDInfo: Een extern ID is een ID van een ander systeem. Je kunt het
             gebruiken om personen te vinden in Zetkin.
-          wrongIDFormatWarning: De waarde in deze kolom zijn geen of voldoen niet aan de
-            standaard voor Zetkin ID's (cijfers).
-          zetkinIDInfo: Zetkin ID is de ID van een persoon in Zetkin. Zit in het bestand
-            als je een export hebt gemaakt.
+          wrongIDFormatWarning: De waarden in deze kolom zien er niet uit als Zetkin ID's. Een Zetkin ID bevat alleen cijfers. Als sommige cellen bijvoorbeeld letters bevatten, kunnen ze niet als Zetkin ID's worden gebruikt.
+          zetkinIDInfo: Een Zetkin ID is de ID van een persoon die al in Zetkin staat. Je vindt deze in een bestand als je gegevens uit Zetkin hebt geëxporteerd.
         orgs:
           guess: Gok de organisaties
           header: Wijs waarden toe aan organisaties
@@ -911,7 +897,7 @@ feat:
           empty: Leeg
           guess: Raad tags
           header: Wijs waarden toe aan tags
-          numberOfRows: '{numRows, plural, =1 {1 row} other {# rows}}'
+          numberOfRows: '{numRows, plural, =1 {1 rij} other {# rijen}}'
           tagsHeader: Tags
       hide: Verberg
       mapping:
