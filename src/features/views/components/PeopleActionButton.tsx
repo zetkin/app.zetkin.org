@@ -83,7 +83,6 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
               setIsBusy(true);
               try {
                 await createView(folderId || undefined);
-                throw new Error('TEST ERROR MESSAGE');
               } catch (error) {
                 setIsBusy(false);
                 showSnackbar('error', messages.actions.createError());
