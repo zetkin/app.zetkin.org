@@ -1,4 +1,9 @@
-import { AccessTimeFilled, SkipNext, Stop } from '@mui/icons-material';
+import {
+  AccessTimeFilled,
+  PowerSettingsNew,
+  SkipNext,
+  Stop,
+} from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
@@ -167,36 +172,33 @@ const MobileHeader: FC<HeaderProps> = ({
             onClick={onOpenCallLog}
             variant="secondary"
           />
-          {lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY && (
+          {lane.step === LaneStep.START && (
+            <ZUIIconButton
+              href="/my/home"
+              icon={PowerSettingsNew}
+              variant="secondary"
+            />
+          )}
+          {lane.step !== LaneStep.START && (
             <ZUIIconButton
               icon={Stop}
               onClick={() => {
                 if (call) {
                   quitCurrentCall(call.id);
+                } else {
+                  dispatch(updateLaneStep(LaneStep.START));
                 }
               }}
               variant="secondary"
             />
           )}
-          <ZUIIconButton
-            href={lane.step == LaneStep.START ? '/my/home' : undefined}
-            icon={
-              lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
-                ? Stop
-                : SkipNext
-            }
-            onClick={() => {
-              if (
-                lane.step != LaneStep.START &&
-                lane.step != LaneStep.SUMMARY
-              ) {
-                onSkipCall();
-              } else if (lane.step == LaneStep.SUMMARY) {
-                dispatch(updateLaneStep(LaneStep.START));
-              }
-            }}
-            variant="secondary"
-          />
+          {(lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT) && (
+            <ZUIIconButton
+              icon={SkipNext}
+              onClick={() => onSkipCall()}
+              variant="secondary"
+            />
+          )}
         </Box>
       </Box>
       <Box
