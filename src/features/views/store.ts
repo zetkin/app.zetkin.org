@@ -272,6 +272,12 @@ const viewsSlice = createSlice({
         }
       }
     },
+    columnsError: (state, action: PayloadAction<[number, string]>) => {
+      const [viewId, error] = action.payload;
+      const list = state.columnsByViewId[viewId];
+      list.error = error;
+      list.isLoading = false;
+    },
     columnsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.columnsByViewId[viewId]) {
@@ -380,6 +386,12 @@ const viewsSlice = createSlice({
         list.items = list.items.filter((item) => item.id != rowId);
       }
     },
+    rowsError: (state, action: PayloadAction<[number, string]>) => {
+      const [viewId, error] = action.payload;
+      const list = state.rowsByViewId[viewId];
+      list.error = error;
+      list.isLoading = false;
+    },
     rowsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.rowsByViewId[viewId]) {
@@ -432,6 +444,16 @@ const viewsSlice = createSlice({
         remoteItem(view.id, { data: view, loaded: new Date().toISOString() })
       );
     },
+    viewError: (state, action: PayloadAction<[number, number, string]>) => {
+      const [orgId, viewId, error] = action.payload;
+      const item = state.viewsByOrgId[orgId]?.items.find(
+        (item) => item.id === viewId
+      );
+      if (item) {
+        item.error = error;
+        item.isLoading = false;
+      }
+    },
     viewLoad: (state, action: PayloadAction<[number, number]>) => {
       const [orgId, viewId] = action.payload;
       if (!state.viewsByOrgId[orgId]) {
@@ -447,6 +469,23 @@ const viewsSlice = createSlice({
           orgId
         ].items.concat([remoteItem(viewId, { isLoading: true })]);
       }
+    },
+    viewLoadRetry: (state, action: PayloadAction<[number, number]>) => {
+      const [orgId, viewId] = action.payload;
+      const item = state.viewsByOrgId[orgId]?.items.find(
+        (item) => item.id === viewId
+      );
+      const resources = [
+        item,
+        state.columnsByViewId[viewId],
+        state.rowsByViewId[viewId],
+      ];
+      resources.forEach((resource) => {
+        if (resource?.error) {
+          resource.error = null;
+          resource.isStale = true;
+        }
+      });
     },
     viewLoaded: (state, action: PayloadAction<[number, ZetkinView]>) => {
       const [orgId, view] = action.payload;
@@ -699,6 +738,7 @@ export const {
   columnDeleted,
   columnOrderUpdated,
   columnUpdated,
+  columnsError,
   columnsLoad,
   columnsLoaded,
   folderCreate,
@@ -710,11 +750,14 @@ export const {
   officialsLoaded,
   rowAdded,
   rowRemoved,
+  rowsError,
   rowsLoad,
   rowsLoaded,
   viewCreate,
   viewCreated,
   viewDeleted,
+  viewError,
+  viewLoadRetry,
   viewLoad,
   viewLoaded,
   viewQueryUpdated,
