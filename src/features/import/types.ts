@@ -67,6 +67,7 @@ export enum ColumnKind {
   GENDER = 'gender',
   DATE = 'date',
   ID_FIELD = 'id',
+  LNGLAT = 'lnglat',
   TAG = 'tag',
   ORGANIZATION = 'org',
   ENUM = 'enum',
@@ -120,6 +121,12 @@ export type IDFieldColumn = BaseColumn & {
   kind: ColumnKind.ID_FIELD;
 };
 
+export type LnglatColumn = BaseColumn & {
+  field: string;
+  kind: ColumnKind.LNGLAT;
+  type: 'lng' | 'lat';
+};
+
 export type TagColumn = BaseColumn & {
   kind: ColumnKind.TAG;
   mapping: {
@@ -146,7 +153,11 @@ export type ConfigurableColumn =
   | GenderColumn
   | EnumColumn;
 
-export type Column = UnknownColumn | FieldColumn | ConfigurableColumn;
+export type Column =
+  | UnknownColumn
+  | FieldColumn
+  | ConfigurableColumn
+  | LnglatColumn;
 
 export interface ZetkinPersonImportPostBody {
   ops: BulkOp[];
