@@ -57,6 +57,7 @@ test.describe('Tag manager', () => {
 
     expect(editTagRequest.log()[0].data).toEqual({
       group_id: ActivistTag.group?.id,
+      hidden: false,
       title: 'New tag title',
     });
   });
