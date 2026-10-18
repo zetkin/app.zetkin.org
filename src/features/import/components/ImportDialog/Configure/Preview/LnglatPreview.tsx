@@ -40,7 +40,11 @@ const LnglatPreview: FC<LnglatPreviewProps> = ({ fieldKey, fields, orgId }) => {
   return (
     <PreviewGrid
       columnHeader={columnHeader}
-      emptyLabel={!lat && !lng ? messages.configuration.preview.noValue() : ''}
+      emptyLabel={
+        lat === undefined && lng === undefined
+          ? messages.configuration.preview.noValue()
+          : ''
+      }
       rowValue={`${formatCoordinate(lat)}, ${formatCoordinate(lng)}`}
     />
   );
