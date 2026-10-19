@@ -16,8 +16,9 @@ type Props = {
   };
 };
 
-const Page: FC<Props> = async ({ params }) => {
-  const headersList = headers();
+const Page: FC<Props> = async (props) => {
+  const params = await props.params;
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

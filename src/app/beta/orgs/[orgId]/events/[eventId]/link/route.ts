@@ -7,10 +7,10 @@ import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinEventParticipant } from 'utils/types/zetkin';
 
 type RouteMeta = {
-  params: {
+  params: Promise<{
     eventId: string;
     orgId: string;
-  };
+  }>;
 };
 
 type LinkRequestBody = {
@@ -18,7 +18,8 @@ type LinkRequestBody = {
   signupId: string;
 };
 
-export async function POST(request: NextRequest, { params }: RouteMeta) {
+export async function POST(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   return asOrgAuthorized(
     {
       orgId: params.orgId,
