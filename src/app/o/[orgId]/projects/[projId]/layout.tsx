@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ...baseTags,
     openGraph: {
       ...baseTags.openGraph,
-      ...getOrganizationOpenGraphTags(project.organization),
+      ...(await getOrganizationOpenGraphTags(project.organization)),
     },
     robots: { follow: true, index: project.published },
   };
