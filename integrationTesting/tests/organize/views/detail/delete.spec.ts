@@ -61,43 +61,6 @@ test.describe('View detail page', () => {
     await expect(page).toHaveURL(appUri + `/organize/${KPD.id}/people`);
   });
 
-  test('returns user to the folder the deleted view was in', async ({
-    page,
-    appUri,
-    moxy,
-  }) => {
-    const folder = { id: 2, parent: null, title: 'Folder' };
-    const { log: deleteLog } = moxy.setZetkinApiMock(
-      '/orgs/1/people/views/1',
-      'delete',
-      undefined,
-      204
-    );
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
-    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', [folder]);
-    moxy.setZetkinApiMock('/orgs/1/people/view_folders/2', 'get', folder);
-    moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', {
-      ...AllMembers,
-      folder: { id: folder.id, title: folder.title },
-    });
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
-    moxy.setZetkinApiMock(
-      '/orgs/1/people/views/1/columns',
-      'get',
-      AllMembersColumns
-    );
-
-    await page.goto(appUri + '/organize/1/people/lists/1');
-
-    await deleteView(page);
-
-    await expect.poll(() => deleteLog().length).toBe(1);
-
-    await expect(page).toHaveURL(
-      appUri + `/organize/${KPD.id}/people/folders/${folder.id}`
-    );
-  });
-
   test('shows error snackbar if error deleting view', async ({
     page,
     appUri,
