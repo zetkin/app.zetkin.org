@@ -49,7 +49,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   }, [pathname, pendingRoute]);
 
   const createAndNavigate = async (
-    create: () => Promise<unknown>,
+    create: () => Promise<void>,
     route?: string
   ) => {
     setIsLoading(true);
@@ -70,7 +70,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
 
   const { createView } = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
-  const { createForm } = useCreateJoinForm(orgId);
+  const createForm = useCreateJoinForm(orgId);
 
   return (
     <Box>
