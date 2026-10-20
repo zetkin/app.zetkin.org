@@ -26,6 +26,16 @@ test.describe('View detail page', () => {
       AllMembersColumns
     );
     moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
+    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/officials', 'get', []);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/access', 'get', []);
+    moxy.setMock('/v1/orgs/1/avatar', 'get', { status: 404 });
+    moxy.setMock('/v1/users/1/avatar', 'get', { status: 404 });
+    moxy.setMock('/v1/orgs/1/people/1/avatar', 'get', { status: 404 });
+    moxy.setMock('/v1/orgs/1/people/2/avatar', 'get', { status: 404 });
+    moxy.setMock(`/v1/orgs/1/people/${NewPerson.id}/avatar`, 'get', {
+      status: 404,
+    });
     moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [NewPerson]);
     moxy.setZetkinApi2Mock(
       '/orgs/1/lists/1/rows',
@@ -44,7 +54,8 @@ test.describe('View detail page', () => {
     );
   });
 
-  test.afterEach(({ moxy }) => {
+  test.afterEach(async ({ moxy, page }) => {
+    await page.close();
     moxy.teardown();
   });
 
