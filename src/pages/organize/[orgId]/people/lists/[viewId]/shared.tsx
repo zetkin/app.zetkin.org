@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import getUserMemberships from 'utils/getUserMemberships';
 import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -49,6 +50,33 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
 
   if (accessLevel == null) {
+    if (ctx.user?.is_superuser) {
+      return {
+        redirect: {
+          destination: `/organize/${orgId}/people/lists/${viewId}`,
+          permanent: false,
+        },
+      };
+    }
+
+    try {
+      const officialMemberships = await getUserMemberships(ctx, false);
+      const isOfficialMember = officialMemberships.includes(
+        parseInt(orgId as string)
+      );
+
+      if (isOfficialMember) {
+        return {
+          redirect: {
+            destination: `/organize/${orgId}/people/lists/${viewId}`,
+            permanent: false,
+          },
+        };
+      }
+    } catch {
+      // If memberships cannot be fetched, fall through to notFound.
+    }
+
     return {
       notFound: true,
     };
