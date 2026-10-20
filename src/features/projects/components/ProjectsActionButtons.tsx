@@ -14,7 +14,7 @@ const ProjectActionButtons: React.FunctionComponent = () => {
   const { orgId } = useNumericRouteParams();
   const createProject = useCreateProject(orgId);
 
-  const [isBusy, setIsBusy] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   return (
@@ -22,23 +22,23 @@ const ProjectActionButtons: React.FunctionComponent = () => {
       <Box mr={1}>
         <Button
           color="primary"
-          disabled={isBusy}
+          disabled={isLoading}
           endIcon={
-            isBusy ? <CircularProgress color="inherit" size={16} /> : null
+            isLoading ? <CircularProgress color="inherit" size={16} /> : null
           }
           onClick={async () => {
-            setIsBusy(true);
+            setIsLoading(true);
             try {
               await createProject({
                 title: messages.form.createProject.newProject(),
               });
             } catch (error) {
-              setIsBusy(false);
+              setIsLoading(false);
               showSnackbar('error', messages.form.createProject.error());
             }
           }}
           sx={
-            isBusy
+            isLoading
               ? (theme) => ({
                   '&.Mui-disabled': {
                     backgroundColor: theme.palette.primary.main,
@@ -49,7 +49,9 @@ const ProjectActionButtons: React.FunctionComponent = () => {
           }
           variant="contained"
         >
-          <Msg id={isBusy ? messageIds.all.creating : messageIds.all.create} />
+          <Msg
+            id={isLoading ? messageIds.all.creating : messageIds.all.create}
+          />
         </Button>
       </Box>
     </Box>

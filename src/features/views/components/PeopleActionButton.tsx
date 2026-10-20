@@ -37,13 +37,13 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   const zuiMessages = useMessages(zuiMessageIds);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
-  const [isBusy, setIsBusy] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   useEffect(() => {
     if (pendingRoute && pendingRoute === pathname) {
-      setIsBusy(false);
+      setIsLoading(false);
       setPendingRoute(null);
     }
   }, [pathname, pendingRoute]);
@@ -52,18 +52,18 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
     create: () => Promise<unknown>,
     route?: string
   ) => {
-    setIsBusy(true);
+    setIsLoading(true);
     try {
       await create();
       if (route) {
         setPendingRoute(route);
         router.push(route);
       } else {
-        setIsBusy(false);
+        setIsLoading(false);
       }
     } catch (error) {
       setPendingRoute(null);
-      setIsBusy(false);
+      setIsLoading(false);
       showSnackbar('error', messages.actions.createError());
     }
   };
@@ -80,11 +80,11 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             icon: <InsertDriveFileOutlined />,
             label: messages.actions.createView(),
             onClick: async () => {
-              setIsBusy(true);
+              setIsLoading(true);
               try {
                 await createView(folderId || undefined);
               } catch (error) {
-                setIsBusy(false);
+                setIsLoading(false);
                 showSnackbar('error', messages.actions.createError());
               }
             },
@@ -134,8 +134,10 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
               ),
           },
         ]}
-        label={isBusy ? messages.actions.creating() : messages.actions.create()}
-        loading={isBusy}
+        label={
+          isLoading ? messages.actions.creating() : messages.actions.create()
+        }
+        loading={isLoading}
         loadingVariant="persistent"
       />
       <ImportDialog

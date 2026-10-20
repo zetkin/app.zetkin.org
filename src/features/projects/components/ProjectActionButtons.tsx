@@ -67,6 +67,8 @@ const ProjectActionButtons: React.FunctionComponent<
     null
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const createAreaAssignment = useCreateAreaAssignment(orgId, projectId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateProjectActivity(
@@ -90,7 +92,7 @@ const ProjectActionButtons: React.FunctionComponent<
   };
 
   const handleCreateEvent = async () => {
-    setIsBusy(true);
+    setIsLoading(true);
     const [defaultStart, defaultEnd] = getDefaultEventDates();
     try {
       await createEvent({
@@ -102,7 +104,7 @@ const ProjectActionButtons: React.FunctionComponent<
         title: null,
       });
     } catch (error) {
-      setIsBusy(false);
+      setIsLoading(false);
       showSnackbar('error', projectMessages.form.createActivity.error());
     }
   };
@@ -128,14 +130,14 @@ const ProjectActionButtons: React.FunctionComponent<
       icon: <HeadsetMic />,
       label: projectMessages.createButton.createCallAssignment(),
       onClick: async () => {
-        setIsBusy(true);
+        setIsLoading(true);
         try {
           await createCallAssignment({
             title:
               projectMessages.form.createCallAssignment.newCallAssignment(),
           });
         } catch (error) {
-          setIsBusy(false);
+          setIsLoading(false);
           showSnackbar('error', projectMessages.form.createActivity.error());
         }
       },
@@ -144,7 +146,7 @@ const ProjectActionButtons: React.FunctionComponent<
       icon: <AssignmentOutlined />,
       label: projectMessages.createButton.createSurvey(),
       onClick: async () => {
-        setIsBusy(true);
+        setIsLoading(true);
 
         try {
           await createSurvey({
@@ -152,7 +154,7 @@ const ProjectActionButtons: React.FunctionComponent<
             title: projectMessages.form.createSurvey.newSurvey(),
           });
         } catch (error) {
-          setIsBusy(false);
+          setIsLoading(false);
           showSnackbar('error', projectMessages.form.createActivity.error());
         }
       },
@@ -172,7 +174,7 @@ const ProjectActionButtons: React.FunctionComponent<
       icon: <Map />,
       label: projectMessages.createButton.createAreaAssignment(),
       onClick: async () => {
-        setIsBusy(true);
+        setIsLoading(true);
         try {
           await createAreaAssignment({
             instructions: '',
@@ -191,7 +193,7 @@ const ProjectActionButtons: React.FunctionComponent<
             title: areaAssignmentMessages.default.title(),
           });
         } catch (error) {
-          setIsBusy(false);
+          setIsLoading(false);
           showSnackbar('error', projectMessages.form.createActivity.error());
         }
       },
@@ -222,20 +224,17 @@ const ProjectActionButtons: React.FunctionComponent<
       .join('-');
   }
 
-  const [isBusy, setIsBusy] = useState(false);
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-
   return (
     <Box display="flex" gap={1}>
       <Box>
         <ZUIButtonMenu
           items={menuItems}
           label={
-            isBusy
+            isLoading
               ? projectMessages.createButton.creatingActivity()
               : projectMessages.createButton.createActivity()
           }
-          loading={isBusy}
+          loading={isLoading}
           loadingVariant="persistent"
         />
       </Box>

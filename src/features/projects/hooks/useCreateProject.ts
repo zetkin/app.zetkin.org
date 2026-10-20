@@ -4,23 +4,18 @@ import { ZetkinProject, ZetkinProjectPostBody } from 'utils/types/zetkin';
 
 export default function useCreateProject(
   orgId: number
-): (projectBody: ZetkinProjectPostBody) => Promise<ZetkinProject> {
+): (projectBody: ZetkinProjectPostBody) => Promise<void> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  return (projectBody: ZetkinProjectPostBody): Promise<ZetkinProject> => {
+  return async (projectBody: ZetkinProjectPostBody): Promise<void> => {
     dispatch(projectCreate());
 
-    const promise = apiClient
-      .post<
-        ZetkinProject,
-        ZetkinProjectPostBody
-      >(`/api/orgs/${orgId}/campaigns`, projectBody)
-      .then((project: ZetkinProject) => {
-        dispatch(projectCreated(project));
-        return project;
-      });
+    const project = await apiClient.post<ZetkinProject, ZetkinProjectPostBody>(
+      `/api/orgs/${orgId}/campaigns`,
+      projectBody
+    );
 
-    return promise;
+    dispatch(projectCreated(project));
   };
 }
