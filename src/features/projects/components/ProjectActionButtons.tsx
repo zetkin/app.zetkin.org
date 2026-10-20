@@ -204,13 +204,20 @@ const ProjectActionButtons: React.FunctionComponent<
     menuItems.push({
       icon: <EmailOutlined />,
       label: projectMessages.createButton.createEmail(),
-      onClick: () =>
-        createEmail({
-          campaign_id: projectId,
-          config_id: configs[0].id,
-          theme_id: themes[0].id,
-          title: projectMessages.form.createEmail.newEmail(),
-        }),
+      onClick: async () => {
+        setIsLoading(true);
+        try {
+          await createEmail({
+            campaign_id: projectId,
+            config_id: configs[0].id,
+            theme_id: themes[0].id,
+            title: projectMessages.form.createEmail.newEmail(),
+          });
+        } catch (error) {
+          setIsLoading(false);
+          showSnackbar('error', projectMessages.form.createActivity.error());
+        }
+      },
     });
   }
 
