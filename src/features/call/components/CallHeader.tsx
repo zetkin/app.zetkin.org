@@ -1,4 +1,4 @@
-import { SkipNext } from '@mui/icons-material';
+import { QrCode, SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
@@ -25,6 +25,9 @@ import messageIds from '../l10n/messageIds';
 import useFilteredActivities from '../hooks/useFilteredActivities';
 import notEmpty from 'utils/notEmpty';
 import ZUILink from 'zui/components/ZUILink';
+import QRCodeImage from './QRCodeImage';
+import ZUIIconButton from 'zui/components/ZUIIconButton';
+import ZUIModal from 'zui/components/ZUIModal';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -45,6 +48,7 @@ const CallHeader: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
+  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   const { surveys } = useFilteredActivities(assignment.organization.id);
   const { selectedSurveyId } = useAppSelector(
@@ -72,6 +76,10 @@ const CallHeader: FC<Props> = ({
 
   const phoneNumbers = [call?.target.phone, call?.target.alt_phone].filter(
     notEmpty
+  );
+
+  const encodedName = encodeURIComponent(
+    `${call?.target.first_name} ${call?.target.last_name}`
   );
 
   return (
@@ -157,6 +165,22 @@ const CallHeader: FC<Props> = ({
                 ];
               })}
             </ZUIText>
+            <ZUIIconButton
+              icon={QrCode}
+              onClick={() => {
+                setQrModalOpen(true);
+              }}
+            />
+            <ZUIModal
+              onClose={() => setQrModalOpen(false)}
+              open={qrModalOpen}
+              title={messages.header.qrModal.title()}
+            >
+              <QRCodeImage
+                clickable
+                url={`${location.origin}/call/companion?name=${encodedName}&numbers=${phoneNumbers.join(',')}`}
+              />
+            </ZUIModal>
           </>
         )}
       </Box>

@@ -8,7 +8,16 @@ import { getMessages } from 'utils/locale';
 import messageIds from 'features/public/l10n/messageIds';
 import { stringToBool } from 'utils/stringUtils';
 
-const timeStamp = (t: Dayjs): string => t.format('YYYYMMDDTHHmmss');
+// toISOString is used instead of format since we want the time without timezone
+// Otherwise the timezone would be applied twice in the ICS file
+const timeStamp = (t: Dayjs): string => {
+  let str = t.toISOString();
+  str = str.substring(0, str.lastIndexOf('.'));
+  str = str.replaceAll(':', '');
+  str = str.replaceAll('-', '');
+  return str;
+};
+
 const formatString = (str: string): string =>
   str
     .replaceAll('\n', '\\n')
@@ -19,7 +28,8 @@ export default async function icsFromEvents(
   name: string,
   events: ZetkinEvent[],
   org: ZetkinOrganization,
-  lang: string
+  lang: string,
+  timeZone?: string
 ): Promise<string> {
   const vLines: string[] = ['NAME:' + name, 'X-WR-CALNAME:' + name];
 
@@ -53,9 +63,10 @@ export default async function icsFromEvents(
           org.email ?? 'noreply@zetkin.org'
         }`
       );
-      vLines.push(`DTSTAMP:${timeStamp(dayjs(event.published))}`);
-      vLines.push(`DTSTART:${timeStamp(dayjs(event.start_time))}`);
-      vLines.push(`DTEND:${timeStamp(dayjs(event.end_time))}`);
+      const tz = timeZone !== undefined ? `;TZID=${timeZone}` : '';
+      vLines.push(`DTSTAMP${tz}:${timeStamp(dayjs(event.published))}`);
+      vLines.push(`DTSTART${tz}:${timeStamp(dayjs(event.start_time))}`);
+      vLines.push(`DTEND${tz}:${timeStamp(dayjs(event.end_time))}`);
       if (event.title || event.activity?.title) {
         vLines.push(`SUMMARY:${event.title || event.activity?.title || ''}`);
       }
