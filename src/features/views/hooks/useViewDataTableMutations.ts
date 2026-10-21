@@ -35,8 +35,9 @@ export default function useViewDataTableMutations(
   };
 
   const addPerson = async (personId: number): Promise<void> => {
-    const row = await apiClient.put<ZetkinViewRow>(
-      `/api/orgs/${orgId}/people/views/${viewId}/rows/${personId}`
+    const row = await apiClient.post<ZetkinViewRow, { id: number }>(
+      `/api2/orgs/${orgId}/lists/${viewId}/rows`,
+      { id: personId }
     );
     dispatch(rowAdded([viewId, row]));
   };

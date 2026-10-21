@@ -15,7 +15,8 @@ test.describe('View detail page', () => {
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
   });
 
-  test.afterEach(({ moxy }) => {
+  test.afterEach(async ({ moxy, page }) => {
+    await page.close();
     moxy.teardown();
   });
 
@@ -26,13 +27,28 @@ test.describe('View detail page', () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers, NewView]);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
-    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+    moxy.setZetkinApiMock(`/orgs/1/people/views/${NewView.id}`, 'get', NewView);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/columns',
       'get',
       AllMembersColumns
     );
+    moxy.setZetkinApiMock(
+      `/orgs/1/people/views/${NewView.id}/columns`,
+      'get',
+      NewViewColumns
+    );
     moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
+    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/officials', 'get', []);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/access', 'get', []);
+    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', AllMembersRows);
+    moxy.setZetkinApi2Mock(`/orgs/1/lists/${NewView.id}/access`, 'get', []);
+    moxy.setZetkinApi2Mock(`/orgs/1/lists/${NewView.id}/rows`, 'get', []);
+    moxy.setMock('/v1/orgs/1/avatar', 'get', { status: 404 });
+    moxy.setMock('/v1/users/1/avatar', 'get', { status: 404 });
+    moxy.setMock('/v1/orgs/1/people/1/avatar', 'get', { status: 404 });
+    moxy.setMock('/v1/orgs/1/people/2/avatar', 'get', { status: 404 });
 
     moxy.setZetkinApiMock('/orgs/1/people/views', 'post', NewView, 201);
     moxy.setZetkinApiMock(
@@ -45,8 +61,8 @@ test.describe('View detail page', () => {
       id: 1,
     });
     moxy.setZetkinApiMock(`/orgs/1/people/views/${NewView.id}/rows/2`, 'put', {
-      content: ['Clara', 'Zetkin'],
-      id: 1,
+      content: ['Rosa', 'Luxemburg'],
+      id: 2,
     });
 
     await page.goto(appUri + '/organize/1/people/lists/1');
@@ -65,7 +81,21 @@ test.describe('View detail page', () => {
       .locator('[role="menuitem"]:has-text("create list from selection")')
       .click();
 
-    await page.waitForURL(appUri + `/organize/1/people/lists/${NewView.id}`);
+    await expect
+      .poll(
+        () =>
+          moxy
+            .log()
+            .filter(
+              (req) =>
+                req.method === 'PUT' &&
+                req.path.startsWith(
+                  `/v1/orgs/1/people/views/${NewView.id}/rows/`
+                )
+            ).length,
+        { timeout: 15000 }
+      )
+      .toBe(2);
 
     // Get POST requests for creating new view and columns
     const moxyLog = moxy.log<{ title: string }>();
@@ -95,5 +125,7 @@ test.describe('View detail page', () => {
     // Expect that the correct rows were added
     expect(rowPutLogs[0].path).toMatch(/1$/);
     expect(rowPutLogs[1].path).toMatch(/2$/);
+
+    await page.waitForURL(appUri + `/organize/1/people/lists/${NewView.id}`);
   });
 });

@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import getUserMemberships from 'utils/getUserMemberships';
 import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -11,8 +12,7 @@ import useServerSide from 'core/useServerSide';
 import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
-import { ZetkinMembership } from 'utils/types/zetkin';
-import { ZetkinObjectAccess } from 'core/api/types';
+import { ListAccessLevel, Zetkin2ListAccess } from 'features/views/types';
 import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinView } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
@@ -27,41 +27,21 @@ async function getAccessLevel(
   apiClient: IApiClient,
   orgId: number,
   viewId: number
-): Promise<ZetkinObjectAccess['level'] | null> {
-  const memberships = await apiClient.get<ZetkinMembership[]>(
-    `/api/users/me/memberships`
-  );
-  const myMembership = memberships.find((mem) => mem.organization.id == orgId);
-
-  if (!myMembership) {
-    // NOTE: Might be superuser
-    return null;
-  }
-
-  const isOfficial = Boolean(myMembership.role);
-  if (isOfficial) {
-    return 'configure';
-  }
-
-  let accessList: ZetkinObjectAccess[] = [];
+): Promise<ListAccessLevel | null> {
   try {
-    accessList = await apiClient.get<ZetkinObjectAccess[]>(
-      `/api/orgs/${orgId}/people/views/${viewId}/access`
+    const access = await apiClient.get<Zetkin2ListAccess>(
+      `/api2/orgs/${orgId}/lists/${viewId}/access/me`
     );
+
+    return access.level;
   } catch (e) {
     return null;
   }
-  const accessObject = accessList.find(
-    (obj) => obj.person.id == myMembership.profile.id
-  );
-
-  return accessObject?.level ?? null;
 }
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, viewId } = ctx.params!;
 
-  // TODO: Handle this some other way with server-side models?
   const apiClient = new BackendApiClient(ctx.req.headers);
   const accessLevel = await getAccessLevel(
     apiClient,
@@ -70,6 +50,33 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
 
   if (accessLevel == null) {
+    if (ctx.user?.is_superuser) {
+      return {
+        redirect: {
+          destination: `/organize/${orgId}/people/lists/${viewId}`,
+          permanent: false,
+        },
+      };
+    }
+
+    try {
+      const officialMemberships = await getUserMemberships(ctx, false);
+      const isOfficialMember = officialMemberships.includes(
+        parseInt(orgId as string)
+      );
+
+      if (isOfficialMember) {
+        return {
+          redirect: {
+            destination: `/organize/${orgId}/people/lists/${viewId}`,
+            permanent: false,
+          },
+        };
+      }
+    } catch {
+      // If memberships cannot be fetched, fall through to notFound.
+    }
+
     return {
       notFound: true,
     };
@@ -95,7 +102,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 type SharedViewPageProps = {
-  accessLevel: ZetkinObjectAccess['level'];
+  accessLevel: ListAccessLevel;
   orgId: string;
   viewId: string;
 };

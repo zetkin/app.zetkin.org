@@ -6,7 +6,7 @@ import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
 import { PersonViewFilterConfig } from 'features/smartSearch/components/types';
 import { ViewTreeData } from 'pages/api/views/tree';
-import { ZetkinObjectAccess } from 'core/api/types';
+import { Zetkin2ListAccess } from './types';
 import {
   COLUMN_TYPE,
   ZetkinView,
@@ -24,14 +24,10 @@ import {
 } from 'utils/types/zetkin';
 import { personsDeleted } from 'features/profile/store';
 
-type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
-  id: number;
-};
-
 const SUPPORTED_COLUMN_TYPES = new Set<string>(Object.values(COLUMN_TYPE));
 
 export interface ViewsStoreSlice {
-  accessByViewId: Record<number | string, RemoteList<ZetkinObjectAccessWithId>>;
+  accessByViewId: Record<number | string, RemoteList<Zetkin2ListAccess>>;
   columnsByViewId: Record<number | string, RemoteList<ZetkinViewColumn>>;
   folderList: RemoteList<ZetkinViewFolder>;
   officialList: RemoteList<ZetkinOfficial>;
@@ -80,21 +76,16 @@ const viewsSlice = createSlice({
   reducers: {
     accessAdded: (
       state,
-      action: PayloadAction<[number, ZetkinObjectAccess]>
+      action: PayloadAction<[number, Zetkin2ListAccess]>
     ) => {
       const [viewId, accessObj] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
         let updated = false;
-        const newItem = remoteItem(accessObj.person.id, {
-          data: {
-            id: accessObj.person.id,
-            ...accessObj,
-          },
-        });
+        const newItem = remoteItem(accessObj.id, { data: accessObj });
 
         list.items = list.items.map((item) => {
-          if (item.id == accessObj.person.id) {
+          if (item.data?.user_id == accessObj.user_id) {
             updated = true;
             return newItem;
           } else {
@@ -109,31 +100,24 @@ const viewsSlice = createSlice({
     },
     accessLoad: (state, action: PayloadAction<number>) => {
       if (!state.accessByViewId[action.payload]) {
-        state.accessByViewId[action.payload] =
-          remoteList<ZetkinObjectAccessWithId>();
+        state.accessByViewId[action.payload] = remoteList<Zetkin2ListAccess>();
       }
       state.accessByViewId[action.payload].isLoading = true;
     },
     accessLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinObjectAccess[]]>
+      action: PayloadAction<[number, Zetkin2ListAccess[]]>
     ) => {
       const [viewId, accessList] = action.payload;
 
-      // Add ID which is required by RemoteList
-      state.accessByViewId[viewId] = remoteList(
-        accessList.map((accessObj) => ({
-          ...accessObj,
-          id: accessObj.person.id,
-        }))
-      );
+      state.accessByViewId[viewId] = remoteList(accessList);
       state.accessByViewId[viewId].loaded = new Date().toISOString();
     },
     accessRevoked: (state, action: PayloadAction<[number, number]>) => {
-      const [viewId, personId] = action.payload;
+      const [viewId, userId] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
-        list.items = list.items.filter((item) => item.id != personId);
+        list.items = list.items.filter((item) => item.data?.user_id != userId);
       }
     },
     allItemsLoad: (state, action: PayloadAction<number>) => {
@@ -162,12 +146,11 @@ const viewsSlice = createSlice({
       const [viewId, rowId, colId, newValue] = action.payload;
       const rowList = state.rowsByViewId[viewId];
       const rowItem = rowList.items.find((item) => item.id == rowId);
-      const columnList = state.columnsByViewId[viewId];
-      const colIndex = columnList.items.findIndex((item) => item.id == colId);
-      if (rowItem?.data?.content) {
-        rowItem.data.content = rowItem.data.content.map((oldValue, idx) =>
-          idx == colIndex ? newValue : oldValue
-        );
+      if (rowItem?.data?.cells) {
+        rowItem.data.cells = {
+          ...rowItem.data.cells,
+          [String(colId)]: newValue,
+        };
       }
     },
     columnAdded: (state, action: PayloadAction<[number, ZetkinViewColumn]>) => {
@@ -217,30 +200,7 @@ const viewsSlice = createSlice({
           })
           .filter(notEmpty);
 
-        // Re-arrange columns of data-rows
-        const rowList = state.rowsByViewId[viewId];
-        if (rowList) {
-          const newRowListItems = rowList.items.map((row) => {
-            if (row.data) {
-              return {
-                ...row,
-                data: {
-                  content: columnOrder.map((colId) => {
-                    const idx = colList.items.findIndex(
-                      (col) => col.id == colId
-                    )!;
-                    return row.data?.content[idx];
-                  }),
-                  id: row.data.id,
-                },
-              };
-            } else {
-              return row;
-            }
-          });
-          state.columnsByViewId[viewId].items = newColListItems;
-          state.rowsByViewId[viewId].items = newRowListItems;
-        }
+        state.columnsByViewId[viewId].items = newColListItems;
       }
     },
     columnUpdated: (
@@ -545,25 +505,23 @@ function setTagOnRelevantRows(
   tag: ZetkinTag | null
 ) {
   Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {
-    // Find indices of relevant columns
-    const relevantColumnIndices: number[] = [];
-    columnList.items.forEach((colItem, index) => {
+    const relevantColumnIds: (string | number)[] = [];
+    columnList.items.forEach((colItem) => {
       if (
         colItem.data?.type == COLUMN_TYPE.PERSON_TAG &&
         colItem.data.config.tag_id == tagId
       ) {
-        relevantColumnIndices.push(index);
+        relevantColumnIds.push(colItem.id);
       }
     });
 
-    // If there are relevant columns in this view
-    if (relevantColumnIndices.length) {
+    if (relevantColumnIds.length) {
       const rowItems = state.rowsByViewId[viewId]?.items;
       if (rowItems) {
         rowItems.forEach((item) => {
-          if (item.data?.id == personId) {
-            for (const colIndex of relevantColumnIndices) {
-              item.data.content[colIndex] = tag;
+          if (item.data?.id == personId && item.data.cells) {
+            for (const colId of relevantColumnIds) {
+              item.data.cells[String(colId)] = tag;
             }
           }
         });
@@ -580,28 +538,28 @@ function updateCallOnRelevantRows(
   Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {
     const personId = call.target.id;
 
-    // Find indices of relevant columns
-    const relevantColumnIndices: number[] = [];
-    columnList.items.forEach((colItem, index) => {
+    const relevantColumnIds: (string | number)[] = [];
+    columnList.items.forEach((colItem) => {
       if (colItem.data?.type == COLUMN_TYPE.ORGANIZER_ACTION) {
-        relevantColumnIndices.push(index);
+        relevantColumnIds.push(colItem.id);
       }
     });
 
-    // If there are relevant columns in this view
-    if (relevantColumnIndices.length) {
+    if (relevantColumnIds.length) {
       const rowItems = state.rowsByViewId[viewId]?.items;
       if (rowItems) {
         rowItems.forEach((item) => {
-          if (item.data?.id == personId) {
-            for (const colIndex of relevantColumnIndices) {
-              const calls = item.data.content[
-                colIndex
-              ] as ZetkinOrganizerAction[];
-              for (const c of calls) {
-                if (call.id == c.id) {
-                  if (mutations.includes('organizer_action_taken')) {
-                    c.organizer_action_taken = call.organizer_action_taken;
+          if (item.data?.id == personId && item.data.cells) {
+            for (const colId of relevantColumnIds) {
+              const calls = item.data.cells[String(colId)] as
+                | ZetkinOrganizerAction[]
+                | undefined;
+              if (calls) {
+                for (const c of calls) {
+                  if (call.id == c.id) {
+                    if (mutations.includes('organizer_action_taken')) {
+                      c.organizer_action_taken = call.organizer_action_taken;
+                    }
                   }
                 }
               }

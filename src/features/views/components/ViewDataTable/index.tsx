@@ -420,8 +420,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const moveColumn = useCallback(
     (field: string, targetIndex: number) => {
-      // The column index is offset by 2 compared to the API (avatar and checkbox)
-      targetIndex -= 2;
+      // The grid has leading non-data columns that are not part of the API's
+      // column order: the avatar column, plus the checkbox column when row
+      // selection is enabled.
+      const leadingColumns = selectionModel?.mode ? 2 : 1;
+      targetIndex -= leadingColumns;
       const columnId = colIdFromFieldName(field);
       const origIndex = columns.findIndex((col) => col.id == columnId);
       const columnOrder = columns.map((col) => col.id);
@@ -436,7 +439,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       debouncedUpdateColumnOrder(newColumnOrder);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [colIdFromFieldName, columns, debouncedUpdateColumnOrder]
+    [colIdFromFieldName, columns, debouncedUpdateColumnOrder, selectionModel]
   );
 
   const unConfiguredGridColumns = useMemo(
@@ -484,12 +487,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const output: Row = {
         id: input.id,
       };
-      input.content.forEach((cellValue, colIndex) => {
-        const col = columns[colIndex];
-        if (col) {
-          const fieldName = `col_${col.id}`;
-          output[fieldName] = cellValue;
-        }
+      columns.forEach((col) => {
+        const fieldName = `col_${col.id}`;
+        output[fieldName] = input.cells[String(col.id)] ?? null;
       });
 
       return output;
@@ -729,6 +729,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         autoHeight={empty}
         checkboxSelection={!!selectionModel?.mode}
         columns={gridColumns}
+        disableColumnReorder={disableConfigure}
         disableRowSelectionOnClick={true}
         filterDebounceMs={400}
         getRowClassName={getRowClassName}
