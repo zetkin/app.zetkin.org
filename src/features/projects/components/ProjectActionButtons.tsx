@@ -37,6 +37,7 @@ import { AREAS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 import EventShiftModal from 'features/calendar/components/EventShiftModal';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 enum PROJECT_MENU_ITEMS {
   ARCHIVE_PROJECT = 'archiveProject',
@@ -66,6 +67,8 @@ const ProjectActionButtons: React.FunctionComponent<
     null
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const createAreaAssignment = useCreateAreaAssignment(orgId, projectId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateProjectActivity(
@@ -88,16 +91,22 @@ const ProjectActionButtons: React.FunctionComponent<
     return [defaultStart, defaultEnd];
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEvent = async () => {
+    setIsLoading(true);
     const [defaultStart, defaultEnd] = getDefaultEventDates();
-    createEvent({
-      activity_id: null,
-      campaign_id: project.id,
-      end_time: defaultEnd.toISOString(),
-      location_id: null,
-      start_time: defaultStart.toISOString(),
-      title: null,
-    });
+    try {
+      await createEvent({
+        activity_id: null,
+        campaign_id: project.id,
+        end_time: defaultEnd.toISOString(),
+        location_id: null,
+        start_time: defaultStart.toISOString(),
+        title: null,
+      });
+    } catch (error) {
+      setIsLoading(false);
+      showSnackbar('error', projectMessages.form.createActivity.error());
+    }
   };
 
   const handleArchiveProject = () => {
@@ -120,19 +129,35 @@ const ProjectActionButtons: React.FunctionComponent<
     {
       icon: <HeadsetMic />,
       label: projectMessages.createButton.createCallAssignment(),
-      onClick: () =>
-        createCallAssignment({
-          title: projectMessages.form.createCallAssignment.newCallAssignment(),
-        }),
+      onClick: async () => {
+        setIsLoading(true);
+        try {
+          await createCallAssignment({
+            title:
+              projectMessages.form.createCallAssignment.newCallAssignment(),
+          });
+        } catch (error) {
+          setIsLoading(false);
+          showSnackbar('error', projectMessages.form.createActivity.error());
+        }
+      },
     },
     {
       icon: <AssignmentOutlined />,
       label: projectMessages.createButton.createSurvey(),
-      onClick: () =>
-        createSurvey({
-          signature: 'require_signature',
-          title: projectMessages.form.createSurvey.newSurvey(),
-        }),
+      onClick: async () => {
+        setIsLoading(true);
+
+        try {
+          await createSurvey({
+            signature: 'require_signature',
+            title: projectMessages.form.createSurvey.newSurvey(),
+          });
+        } catch (error) {
+          setIsLoading(false);
+          showSnackbar('error', projectMessages.form.createActivity.error());
+        }
+      },
     },
   ];
 
@@ -148,10 +173,12 @@ const ProjectActionButtons: React.FunctionComponent<
     menuItems.push({
       icon: <Map />,
       label: projectMessages.createButton.createAreaAssignment(),
-      onClick: () =>
-        createAreaAssignment({
-          instructions: '',
-          /*
+      onClick: async () => {
+        setIsLoading(true);
+        try {
+          await createAreaAssignment({
+            instructions: '',
+            /*
           metrics: [
             {
               definesDone: true,
@@ -162,9 +189,14 @@ const ProjectActionButtons: React.FunctionComponent<
             },
           ],
           */
-          reporting_level: 'location',
-          title: areaAssignmentMessages.default.title(),
-        }),
+            reporting_level: 'location',
+            title: areaAssignmentMessages.default.title(),
+          });
+        } catch (error) {
+          setIsLoading(false);
+          showSnackbar('error', projectMessages.form.createActivity.error());
+        }
+      },
     });
   }
 
@@ -172,13 +204,20 @@ const ProjectActionButtons: React.FunctionComponent<
     menuItems.push({
       icon: <EmailOutlined />,
       label: projectMessages.createButton.createEmail(),
-      onClick: () =>
-        createEmail({
-          campaign_id: projectId,
-          config_id: configs[0].id,
-          theme_id: themes[0].id,
-          title: projectMessages.form.createEmail.newEmail(),
-        }),
+      onClick: async () => {
+        setIsLoading(true);
+        try {
+          await createEmail({
+            campaign_id: projectId,
+            config_id: configs[0].id,
+            theme_id: themes[0].id,
+            title: projectMessages.form.createEmail.newEmail(),
+          });
+        } catch (error) {
+          setIsLoading(false);
+          showSnackbar('error', projectMessages.form.createActivity.error());
+        }
+      },
     });
   }
 
@@ -197,7 +236,13 @@ const ProjectActionButtons: React.FunctionComponent<
       <Box>
         <ZUIButtonMenu
           items={menuItems}
-          label={projectMessages.createButton.createActivity()}
+          label={
+            isLoading
+              ? projectMessages.createButton.creatingActivity()
+              : projectMessages.createButton.createActivity()
+          }
+          loading={isLoading}
+          loadingVariant="persistent"
         />
       </Box>
       <Box>
