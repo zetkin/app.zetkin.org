@@ -46,9 +46,14 @@ const MergeModal: FC<Props> = ({
   const { orgId } = useNumericRouteParams();
   const customFields = useCustomFields(orgId);
 
+  const [mergeTarget, setMergeTarget] = useState(persons[0]);
+
   const peopleToMerge = [
-    ...persons.filter((person) => selectedIds.includes(person.id)),
-    ...additionalPeople,
+    mergeTarget,
+    ...[
+      ...persons.filter((person) => selectedIds.includes(person.id)),
+      ...additionalPeople,
+    ].filter((person) => person.id !== mergeTarget.id),
   ];
 
   const detailedPersons = useDetailedPersons(
@@ -84,6 +89,7 @@ const MergeModal: FC<Props> = ({
         <Box paddingX={2} sx={{ overflowY: 'auto' }} width="50%">
           <PotentialDuplicatesLists
             initiallyShowManualSearch={initiallyShowManualSearch}
+            mergeTarget={mergeTarget}
             onDeselect={(person: ZetkinPerson) => {
               const isPredefined = persons.some(
                 (predefinedPerson) => predefinedPerson.id == person.id
@@ -111,6 +117,9 @@ const MergeModal: FC<Props> = ({
               } else {
                 setAdditionalPeople([...additionalPeople, person]);
               }
+            }}
+            onTarget={(person: ZetkinPerson) => {
+              setMergeTarget(person);
             }}
             peopleNotToMerge={peopleNotToMerge}
             peopleToMerge={peopleToMerge}
@@ -161,11 +170,10 @@ const MergeModal: FC<Props> = ({
                 'Operation not allowed. Merge data not available'
               );
             }
-            const idSet = new Set([
-              ...selectedIds,
-              ...additionalPeople.map((person) => person.id),
-            ]);
-            onMerge(Array.from(idSet), overrides);
+            onMerge(
+              Array.from(new Set(peopleToMerge.map((person) => person.id))),
+              overrides
+            );
             setAdditionalPeople([]);
           }}
           variant="contained"
