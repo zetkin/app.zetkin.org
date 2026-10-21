@@ -153,6 +153,9 @@ export default makeMessages('feat.call', {
       start: m('Call'),
       summary: m('Next call'),
     },
+    qrModal: {
+      title: m('Scan to call with smartphone'),
+    },
     secondaryButton: {
       call: m('Skip'),
       report: m('Skip'),

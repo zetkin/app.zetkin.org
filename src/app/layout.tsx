@@ -30,7 +30,7 @@ export default async function RootLayout({
   const nonce = headers().get('x-nonce') ?? undefined;
 
   return (
-    <html lang="en">
+    <html lang={lang}>
       <head>
         <meta content={nonce} property={'csp-nonce'} />
       </head>

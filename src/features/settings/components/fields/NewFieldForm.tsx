@@ -6,9 +6,14 @@ import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import useCreateField from '../../hooks/useCreateField';
 import messageIds from '../../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import { PlainMessage } from 'core/i18n/messages';
 import createSlug from '../../utils/createSlug';
 import { AccessType } from '../../types';
 import { getOrgReadWrite } from '../../utils/orgReadWrite';
+
+// Typed so that looking up a status without a specific message gives undefined
+export const fieldErrorMessages: Partial<Record<number, PlainMessage>> =
+  messageIds.fields.errors;
 
 export const parseEnumChoices = (input: string) => {
   return input
@@ -168,7 +173,13 @@ const NewFieldForm: FC<Props> = ({ orgId }) => {
             }}
             severity="error"
           >
-            <Msg id={messageIds.fields.create.errorMessage} />
+            <Msg
+              id={
+                (fieldCreateError.status &&
+                  fieldErrorMessages[fieldCreateError.status]) ||
+                messageIds.fields.create.errorMessage
+              }
+            />
           </Alert>
         </Box>
       )}

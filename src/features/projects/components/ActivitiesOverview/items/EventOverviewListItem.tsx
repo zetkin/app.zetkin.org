@@ -12,7 +12,6 @@ import getEventUrl from 'features/events/utils/getEventUrl';
 import getStatusColor from 'features/projects/utils/getStatusColor';
 import messageIds from 'features/events/l10n/messageIds';
 import OverviewListItem from './OverviewListItem';
-import { removeOffset } from 'utils/dateUtils';
 import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -70,8 +69,8 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
               icon: <ScheduleOutlined fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
-                  end={new Date(removeOffset(event.end_time))}
-                  start={new Date(removeOffset(event.start_time))}
+                  end={Temporal.PlainDateTime.from(event.end_time)}
+                  start={Temporal.PlainDateTime.from(event.start_time)}
                 />
               ),
             },
