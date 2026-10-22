@@ -224,162 +224,12 @@ feat:
       editButton: Edit target group
       subtitle: Use smart search to define target group for this assignment.
       title: Targets
-  projects:
-    activitiesOverview:
-      button: Browse all activities
-      empty: Nothing on this day
-      endsTomorrow: ends tomorrow
-      extraActivities: + {numExtra} more
-      goToActivities: See all upcoming activities.
-      noActivities: There are no activities this week.
-      nothingTomorrow: Nothing planned for tomorrow
-      startsTomorrow: starts tomorrow
-      subtitles:
-        endsLater: Ends {relative}
-        endsToday: Ends today
-        sentEarlier: Was sent {relative}
-        sentLater: To be sent {relative}
-        startsLater: Starts {relative}
-        startsToday: Starts today
-      thisWeekCard: Also this week
-      title: Upcoming activities
-      todayCard: Today
-      tomorrowCard: Tomorrow
-    activityList:
-      eventItem:
-        contact: No contact person has been assigned
-        locations: '{count} locations'
-        reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
-          have not yet received reminders'
-        signups: There are pending signups
-    all:
-      cardCTA: Go to project
-      create: Create new project
-      filter:
-        calls: Call assignments
-        emails: Emails
-        filter: Filter results
-        standalones: Standalone events
-        surveys: Surveys
-      indefinite: Indefinite
-      unsorted: Unsorted projects
-      upcoming: '{numEvents, number} upcoming events.'
-    allProjects:
-      noActivities: If your organization has activities that do not belong to a
-        project they will show up here.
-      viewArchive: View archive
-    assigneeActions: Assignee actions
-    calendarView: See all in calendar
-    createButton:
-      createActivity: Create
-      createCallAssignment: Call assignment
-      createEmail: Email
-      createEvent: Event
-      createSurvey: Survey
-      createTask: Task
-    events: Events
-    feedback:
-      copy: Collecting feedback (during phonebanks or standalone) can help you work
-        more efficiently
-      create: Create survey
-      heading: Feedback and Surveys (none configured)
-    form:
-      createCallAssignment:
-        newCallAssignment: My call assignment
-      createProject:
-        create: Create project
-        error: There was an error creating the project
-        newProject: My project
-      createEmail:
-        newEmail: Untitled email
-      createSurvey:
-        newSurvey: My survey
-      createTask:
-        title: Create task
-      deleteProject:
-        cancel: Cancel
-        error: There was an error deleting the project
-        submitButton: Confirm deletion
-        title: Delete project
-        warning: Are you sure you want to delete this project? This action is permanent.
-      description: Description
-      edit: Edit project
-      editProjectTitle:
-        error: Error updating project title
-        success: Project title updated
-      manager:
-        label: Project manager
-      name: Name
-      requestError: There was an error. Please try again.
-      required: Required
-      status:
-        draft: Draft
-        heading: Status
-        published: Published
-      visibility:
-        heading: Visibility
-        private: Private
-        public: Public
-    indefinite: Indefinite timeline
-    layout:
-      activities: Activities
-      allProjects: All Projects & Activities
-      archive: Archive
-      calendar: Calendar
-      insights: Insights
-      overview: Overview
-    linkGroup:
-      createActivity: Create
-      createCallAssignment: Call assignment
-      createEmail: Email
-      createEvent: Event
-      createSurvey: Survey
-      createTask: Task
-      public: Public Page
-      settings: Edit Settings
-    mobilization:
-      copy: Organizing a phone bank to mobilize your organization will increase
-        participation manifold
-      create: Create call assignment
-      heading: Mobilization and outreach (none configured)
-    noManager: No Project Manager
-    shared:
-      cta: Go to project
-      noActivities: All ongoing activities shared with your organization will appear here.
-      noArchives: All expired activities that have been shared with your organization
-        will appear here.
-      title: Shared with us
-    sharedLayout:
-      alertMsg: This project contains only activities shared from other organizations
-        and you can view it but not change it.
-      subtitle: '{numOfActivities, plural, =1 {1 activity} other {# activities}}'
-      tabs:
-        activities: Activities
-        archive: Archive
-        overview: Overview
-      title: Shared with us
-    singleProject:
-      filterActivities: Type to filter
-      noActivities: There are no activities in this project yet.
-      noSearchResults: Your filtering yielded no results.
-      showPublicPage: Show public sign-up page
-      viewArchive: View archive
-    taskLayout:
-      tabs:
-        assignees: Assignees
-        insights: Insights
-        summary: Summary
-    tasks: Tasks
   duplicates:
     modal:
       cancelButton: Cancel
       fieldSettings:
         data: Data
         field: Field
-        gender:
-          f: Female
-          m: Male
-          o: Other
         noValue: No value
         title: Data to merge
       findCandidateManually: Type to find a potential duplicate
@@ -909,7 +759,7 @@ feat:
           zetkinIDInfo: A Zetkin ID is the ID of a person already in Zetkin. You would
             have it in a file if you exported data from Zetkin.
         orgs:
-          guess: Guess organizations
+          guess: Guess organisations
           header: Map values to organizations
           organizations: Organization
           showOrganizationSelectButton: Map to...
@@ -1366,25 +1216,164 @@ feat:
     tabs:
       manage: Manage
       profile: Profile
-      timeline: Timeline
     tags:
       createAndApplyLabel: Create and apply
     user:
       hasAccount: Connected to a Zetkin account
       noAccount: Not connected to a Zetkin account
+  projects:
+    activitiesOverview:
+      button: Browse all activities
+      empty: Nothing on this day
+      endsTomorrow: ends tomorrow
+      extraActivities: + {numExtra} more
+      goToActivities: See all upcoming activities.
+      noActivities: There are no activities this week.
+      nothingTomorrow: Nothing planned for tomorrow
+      startsTomorrow: starts tomorrow
+      subtitles:
+        endsLater: Ends {relative}
+        endsToday: Ends today
+        sentEarlier: Was sent {relative}
+        sentLater: To be sent {relative}
+        startsLater: Starts {relative}
+        startsToday: Starts today
+      thisWeekCard: Also this week
+      title: Upcoming activities
+      todayCard: Today
+      tomorrowCard: Tomorrow
+    activityList:
+      eventItem:
+        contact: No contact person has been assigned
+        locations: '{count} locations'
+        reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
+          have not yet received reminders'
+        signups: There are pending signups
+    all:
+      cardCTA: Go to project
+      create: Create new project
+      filter:
+        calls: Call assignments
+        emails: Emails
+        filter: Filter results
+        standalones: Standalone events
+        surveys: Surveys
+      indefinite: Indefinite
+      unsorted: Unsorted projects
+      upcoming: '{numEvents, number} upcoming events.'
+    allProjects:
+      noActivities: If your organization has activities that do not belong to a
+        project they will show up here.
+      viewArchive: View archive
+    assigneeActions: Assignee actions
+    calendarView: See all in calendar
+    createButton:
+      createActivity: Create
+      createCallAssignment: Call assignment
+      createEmail: Email
+      createEvent: Event
+      createSurvey: Survey
+      createTask: Task
+    events: Events
+    feedback:
+      copy: Collecting feedback (during phonebanks or standalone) can help you work
+        more efficiently
+      create: Create survey
+      heading: Feedback and Surveys (none configured)
+    form:
+      createCallAssignment:
+        newCallAssignment: My call assignment
+      createEmail:
+        newEmail: Untitled email
+      createProject:
+        create: Create project
+        error: There was an error creating the project
+        newProject: My project
+      createSurvey:
+        newSurvey: My survey
+      createTask:
+        title: Create task
+      deleteProject:
+        cancel: Cancel
+        error: There was an error deleting the project
+        submitButton: Confirm deletion
+        title: Delete project
+        warning: Are you sure you want to delete this project? This action is permanent.
+      description: Description
+      edit: Edit project
+      editProjectTitle:
+        error: Error updating project title
+        success: Project title updated
+      manager:
+        label: Project manager
+      name: Name
+      requestError: There was an error. Please try again.
+      required: Required
+      status:
+        draft: Draft
+        heading: Status
+        published: Published
+      visibility:
+        heading: Visibility
+        private: Private
+        public: Public
+    indefinite: Indefinite timeline
+    layout:
+      activities: Activities
+      allProjects: All Projects & Activities
+      archive: Archive
+      calendar: Calendar
+      insights: Insights
+      overview: Overview
+    linkGroup:
+      createActivity: Create
+      createCallAssignment: Call assignment
+      createEmail: Email
+      createEvent: Event
+      createSurvey: Survey
+      createTask: Task
+      public: Public Page
+      settings: Edit Settings
+    mobilization:
+      copy: Organizing a phone bank to mobilize your organization will increase
+        participation manifold
+      create: Create call assignment
+      heading: Mobilization and outreach (none configured)
+    noManager: No Project Manager
+    shared:
+      cta: Go to project
+      noActivities: All ongoing activities shared with your organization will appear here.
+      noArchives: All expired activities that have been shared with your organization
+        will appear here.
+      title: Shared with us
+    sharedLayout:
+      alertMsg: This project contains only activities shared from other organizations
+        and you can view it but not change it.
+      subtitle: '{numOfActivities, plural, =1 {1 activity} other {# activities}}'
+      tabs:
+        activities: Activities
+        archive: Archive
+        overview: Overview
+      title: Shared with us
+    singleProject:
+      filterActivities: Type to filter
+      noActivities: There are no activities in this project yet.
+      noSearchResults: Your filtering yielded no results.
+      showPublicPage: Show public sign-up page
+      viewArchive: View archive
+    taskLayout:
+      tabs:
+        assignees: Assignees
+        insights: Insights
+        summary: Summary
+    tasks: Tasks
   search:
     error: There was an error
     label: Search
     noResults: No results
     placeholder: Type to search
     results:
-      callassignment: Call assignment
-      people: People
-      person: Person
       project: Project
-      survey: Survey
-      task: Task
-      view: List
   settings:
     officials:
       addPerson:
@@ -1406,12 +1395,9 @@ feat:
           inheritance: Role inheritance
           name: Name
         description: Organizers have enough privileges to do things like organizing
-          projects and managing existing call assignments.
+          campaigns and managing existing call assignments.
         roleInheritance: Organizer in
         title: Organizers
-      settingsLayout:
-        access: Access
-        title: Settings
       tableButtons:
         demote: Demote
         promote: Promote
@@ -1462,7 +1448,7 @@ feat:
         call_history:
           description: Find people who were called, reached or tried.
           title: Call history
-        project_participation:
+        campaign_participation:
           description: Who signed up? Got booked? Who didn't? Find them!
           title: Participation in events
         email_blacklist:
@@ -1542,28 +1528,6 @@ feat:
           {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes, plural, one {once} other {# times}}'
         minTimesInput: at least {input} {minTimes, plural, one {time} other {times}}
-      projectParticipation:
-        activitySelect:
-          activity: type "{activity}"
-          any: any type
-        bookedSelect:
-          booked: been booked
-          signed_up: signed up
-        projectSelect:
-          any: any project
-          project: project "{project}"
-        examples:
-          one: Add people who have signed up for events in any project of any type at
-            location 'Dorfplatz' at any point in time
-          two: Remove people who have not been booked for events in any project of type
-            'Put up posters' at any location before today.
-        haveSelect:
-          in: have
-          notin: have not
-        inputString: ''
-        locationSelect:
-          any: any location
-          location: location "{location}"
       emailBlacklist:
         inputString: '{addRemoveSelect} people who will not receive email because
           {reasonSelect}'
@@ -1699,6 +1663,28 @@ feat:
         inputString: '{addRemoveSelect} people who are {inSelect} the list {viewSelect}.'
         viewSelect:
           none: This organization doesn't have any lists yet
+      projectParticipation:
+        activitySelect:
+          activity: type "{activity}"
+          any: any type
+        bookedSelect:
+          booked: been booked
+          signed_up: signed up
+        examples:
+          one: Add people who have signed up for events in any project of any type at
+            location 'Dorfplatz' at any point in time
+          two: Remove people who have not been booked for events in any project of type
+            'Put up posters' at any location before today.
+        haveSelect:
+          in: have
+          notin: have not
+        inputString: ''
+        locationSelect:
+          any: any location
+          location: location "{location}"
+        projectSelect:
+          any: any project
+          project: project "{project}"
       random:
         addLimitRemoveSelect:
           add: add
@@ -1792,17 +1778,17 @@ feat:
           none: This organization has no surveys yet
           survey: survey "{surveyTitle}"
       task:
-        projectSelect:
-          any: any project
-          project: project "{project}"
-          in: ' in '
         examples:
           one: Add people who have completed task "Tell your friends" at least once at any
             point in time
           two: Add people who have ignored any task in any project between 2 and 5 times
             before today
         inputString: '{addRemoveSelect} people who have {taskStatusSelect}
-          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
+          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
+        projectSelect:
+          any: any project
+          in: ' in '
+          project: project "{project}"
         taskSelect:
           any: any task
           task: task "{task}"
@@ -2044,6 +2030,8 @@ feat:
     surveyDialog:
       add: Add
       cancel: Don't add
+      description: The person you are about to link does not have an email address
+        while the survey response does. Would you like to add it the person?
       title: Add email address
     surveyForm:
       accept: I accept the terms stated below
@@ -2193,10 +2181,10 @@ feat:
       title: Edit task
     form:
       fields:
-        project: Project
         deadline: Completion Deadline
         expires: Expiration Date
         instructions: Instructions
+        project: Project
         published: Publish Time
         reassignInterval: Reassign after completion
         reassignIntervalOptions:
