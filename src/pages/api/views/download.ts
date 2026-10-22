@@ -4,7 +4,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import columnTypes from 'features/views/components/ViewDataTable/columnTypes';
-import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 import {
   ZetkinView,
   ZetkinViewColumn,
@@ -46,20 +45,16 @@ export default async function handler(
   const columns = await apiClient.get<ZetkinViewColumn[]>(
     `/api/orgs/${orgId}/people/views/${viewId}/columns`
   );
-  const rows = await fetchAllPaginated<ZetkinViewRow>(
-    (page, size) =>
-      apiClient.get<ZetkinViewRow[]>(
-        `/api2/orgs/${orgId}/lists/${viewId}/rows?size=${size}&page=${page}`
-      ),
-    10000
+  const rows = await apiClient.get<ZetkinViewRow[]>(
+    `/api/orgs/${orgId}/people/views/${viewId}/rows`
   );
 
   const headerRow: string[] = ['ID'].concat(columns.map((col) => col.title));
 
   const dataRows: string[][] = rows.map((row) =>
     [row.id.toString()].concat(
-      columns.map((col) => {
-        const cell = row.cells[String(col.id)];
+      row.content.map((cell, index) => {
+        const col = columns[index];
         return columnTypes[col.type].cellToString(cell, col);
       })
     )

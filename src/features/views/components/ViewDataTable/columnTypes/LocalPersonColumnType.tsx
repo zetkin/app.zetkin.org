@@ -150,21 +150,27 @@ function getPeopleInView(
     return [];
   }
 
-  const personColumnIds = cols
+  const personColumnIndices = cols
     .filter((col) => col.type == COLUMN_TYPE.LOCAL_PERSON)
-    .map((col) => col.id);
+    .map((col) => cols.indexOf(col));
 
   const peopleInView: ZetkinPerson[] = [];
 
   rows.forEach((row) => {
-    personColumnIds.forEach((colId) => {
-      const cell = row.cells[String(colId)];
+    row.content.forEach((cell, index) => {
       if (!cell) {
+        // Skip empty cells
+        return;
+      }
+
+      if (!personColumnIndices.includes(index)) {
+        // Skip non-person cells
         return;
       }
 
       const person = cell as ZetkinPerson;
       if (peopleInView.some((existing) => existing.id == person.id)) {
+        // Skip people that are already in the list
         return;
       }
 

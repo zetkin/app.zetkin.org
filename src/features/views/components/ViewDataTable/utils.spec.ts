@@ -21,37 +21,28 @@ function mockSurveyResponseCell(text: string): SurveyResponseViewCell {
 describe('viewQuickSearch', () => {
   const columns = [
     mockViewCol({
-      config: { field: 'first_name' },
-      id: 1,
+      config: {
+        field: 'first_name',
+      },
       type: COLUMN_TYPE.PERSON_FIELD,
     }),
     mockViewCol({
-      config: { field: 'last_name' },
-      id: 2,
+      config: {
+        field: 'last_name',
+      },
       type: COLUMN_TYPE.PERSON_FIELD,
     }),
     mockViewCol({
-      id: 3,
       type: COLUMN_TYPE.SURVEY_RESPONSE,
     }),
   ];
 
   const rows = [
     mockViewRow({
-      cells: {
-        '1': 'Angela',
-        '2': 'Davis',
-        '3': mockSurveyResponseCell('Response text AA'),
-      },
-      id: 1,
+      content: ['Angela', 'Davis', mockSurveyResponseCell('Response text AA')],
     }),
     mockViewRow({
-      cells: {
-        '1': 'Clara',
-        '2': 'Zetkin',
-        '3': mockSurveyResponseCell('Response text B'),
-      },
-      id: 2,
+      content: ['Clara', 'Zetkin', mockSurveyResponseCell('Response text B')],
     }),
   ];
 
@@ -59,7 +50,7 @@ describe('viewQuickSearch', () => {
     const matchedRows = viewQuickSearch(rows, columns, 'Zetki');
 
     expect(matchedRows.length).toEqual(1);
-    expect(matchedRows[0].cells['1']).toEqual('Clara');
+    expect(matchedRows[0].content[0]).toEqual('Clara');
   });
   it('Searches case-insensitively', () => {
     const matchedRows = viewQuickSearch(rows, columns, 'zetkin');
@@ -68,7 +59,7 @@ describe('viewQuickSearch', () => {
   });
   it('Correctly returns rows when searching for an object field', () => {
     const matchedRows = viewQuickSearch(rows, columns, 'text aa');
-    const matchedNotes = matchedRows[0].cells['3'] as SurveyResponseViewCell;
+    const matchedNotes = matchedRows[0].content[2] as SurveyResponseViewCell;
 
     expect(matchedRows.length).toEqual(1);
     expect(matchedNotes).toHaveLength(1);
