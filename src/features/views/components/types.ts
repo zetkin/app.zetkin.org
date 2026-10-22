@@ -33,9 +33,7 @@ export interface ZetkinView {
 
 export interface ZetkinViewRow {
   id: number;
-  cells: Record<string, unknown>;
-  added_by_user_id: number | null;
-  added: string | null;
+  content: unknown[];
 }
 
 export interface ZetkinViewColumnBase {

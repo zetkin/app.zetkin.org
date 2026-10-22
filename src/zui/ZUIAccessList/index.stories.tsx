@@ -23,25 +23,102 @@ export const basic = Template.bind({});
 basic.args = {
   accessList: [
     {
-      granted: '1857-07-05T13:37:00.000Z',
-      granted_by_user_id: 2,
-      id: 1,
       level: 'configure',
-      user_id: 1,
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
     },
     {
-      granted: '1857-07-05T13:37:00.000Z',
-      granted_by_user_id: 2,
-      id: 2,
       level: 'edit',
-      user_id: 1,
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
     },
     {
-      granted: '1857-07-05T13:37:00.000Z',
-      granted_by_user_id: null,
-      id: 3,
       level: 'readonly',
-      user_id: 1,
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
+    },
+    {
+      level: 'readonly',
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
+    },
+    {
+      level: 'readonly',
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
+    },
+    {
+      level: 'readonly',
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
+    },
+    {
+      level: 'readonly',
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
     },
   ],
   officials: [

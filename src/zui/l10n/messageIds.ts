@@ -7,7 +7,6 @@ export default makeMessages('zui', {
     added: m<{ sharer: string; updated: ReactElement }>(
       'Added by {sharer} {updated}'
     ),
-    notAMember: m('No longer a member of this organization'),
     removeAccess: m('Remove access'),
   },
   autocomplete: {

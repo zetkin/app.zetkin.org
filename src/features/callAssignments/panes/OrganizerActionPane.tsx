@@ -13,7 +13,7 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
 
 interface OrganizerActionPaneProps {
-  columnId: number;
+  columnIdx: number;
   orgId: number;
   personId: number;
   viewId: number;
@@ -22,15 +22,13 @@ interface OrganizerActionPaneProps {
 export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   orgId,
   personId,
-  columnId,
+  columnIdx,
   viewId,
 }) => {
   const { rowsFuture } = useViewGrid(orgId, viewId);
   const rows = rowsFuture.data;
   const row = rows?.find((r) => r.id == personId);
-  let calls = row?.cells[String(columnId)] as
-    | ZetkinOrganizerAction[]
-    | undefined;
+  let calls = row?.content[columnIdx] as ZetkinOrganizerAction[];
   if (!calls) {
     calls = [];
   }

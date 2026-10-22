@@ -1,20 +1,24 @@
 import NextLink from 'next/link';
 import { Box, FormControlLabel, Link, Switch } from '@mui/material';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
-import UserAutocomplete from 'features/user/components/UserAutocomplete';
+import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import useAbsoluteUrl from 'utils/hooks/useAbsoluteUrl';
 import { useNumericRouteParams } from 'core/hooks';
 import useViewSharing from 'features/views/hooks/useViewSharing';
+import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAccessList from 'zui/ZUIAccessList';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIInlineCopyToClipboard from 'zui/ZUIInlineCopyToClipBoard';
 import ZUIScrollingContainer from 'zui/ZUIScrollingContainer';
 import { Msg, useMessages } from 'core/i18n';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'features/views/l10n/messageIds';
 
 const ShareViewDialogShareTab = () => {
   const messages = useMessages(messageIds);
+  const globalMessages = useMessages(globalMessageIds);
+  const selectInputRef = useRef<HTMLInputElement>();
   const { orgId, viewId } = useNumericRouteParams();
   const [showOfficials, setShowOfficials] = useState(true);
   const shareLinkUrl = useAbsoluteUrl(
@@ -59,23 +63,48 @@ const ShareViewDialogShareTab = () => {
               <ZUIAccessList
                 accessList={accessList}
                 officials={showOfficials ? officials : []}
-                onChangeLevel={(userId, level) => grantAccess(userId, level)}
-                onRevoke={(userId) => revokeAccess(userId)}
+                onChangeLevel={(personId, level) =>
+                  grantAccess(personId, level)
+                }
+                onRevoke={(personId) => revokeAccess(personId)}
                 orgId={orgId}
               />
             </ZUIScrollingContainer>
             <Box marginTop={1}>
-              <UserAutocomplete
-                getOptionDisabled={(user) =>
-                  accessList.some((item) => item.user_id == user.id)
+              <MUIOnlyPersonSelect
+                disabled
+                getOptionDisabled={(person) =>
+                  accessList.some((item) => item.person.id == person.id) ||
+                  officials.some((item) => item.id == person.id)
                 }
-                onSelect={(user) => {
-                  if (user) {
-                    grantAccess(user.id, 'readonly');
+                getOptionExtraLabel={(person) => {
+                  const accessItem = accessList.find(
+                    (item) => item.person.id == person.id
+                  );
+                  if (accessItem) {
+                    return globalMessages.accessLevels[accessItem.level]();
                   }
+
+                  const official = officials.find(
+                    (item) => item.id == person.id
+                  );
+                  if (official) {
+                    return globalMessages.roles[official.role]();
+                  }
+
+                  return '';
                 }}
-                orgId={orgId}
+                inputRef={selectInputRef}
+                onChange={function (person: ZetkinPerson): void {
+                  grantAccess(person.id, 'readonly');
+
+                  // Blur and re-focus input to reset, so that user can type again to
+                  // add another person, without taking their hands off the keyboard.
+                  selectInputRef?.current?.blur();
+                  selectInputRef?.current?.focus();
+                }}
                 placeholder={messages.shareDialog.share.addPlaceholder()}
+                selectedPerson={null}
               />
             </Box>
             <Box textAlign="right">

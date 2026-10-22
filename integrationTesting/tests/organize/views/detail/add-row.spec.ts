@@ -26,36 +26,23 @@ test.describe('View detail page', () => {
       AllMembersColumns
     );
     moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);
-    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
-    moxy.setZetkinApiMock('/orgs/1/officials', 'get', []);
-    moxy.setZetkinApi2Mock('/orgs/1/lists/1/access', 'get', []);
-    moxy.setMock('/v1/orgs/1/avatar', 'get', { status: 404 });
-    moxy.setMock('/v1/users/1/avatar', 'get', { status: 404 });
-    moxy.setMock('/v1/orgs/1/people/1/avatar', 'get', { status: 404 });
-    moxy.setMock('/v1/orgs/1/people/2/avatar', 'get', { status: 404 });
-    moxy.setMock(`/v1/orgs/1/people/${NewPerson.id}/avatar`, 'get', {
-      status: 404,
-    });
     moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [NewPerson]);
-    moxy.setZetkinApi2Mock(
-      '/orgs/1/lists/1/rows',
-      'post',
+    moxy.setZetkinApiMock(
+      '/orgs/1/people/views/1/rows/1',
+      'put',
       {
-        added: null,
-        added_by_user_id: null,
-        cells: {
-          '1': NewPerson.first_name,
-          '2': NewPerson.last_name,
-          '3': false,
-        },
+        content: [NewPerson.first_name, NewPerson.last_name, false],
         id: NewPerson.id,
       },
       201
     );
+    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows/1337', 'get', {
+      content: [NewPerson.first_name, NewPerson.last_name, false],
+      id: NewPerson.id,
+    });
   });
 
-  test.afterEach(async ({ moxy, page }) => {
-    await page.close();
+  test.afterEach(({ moxy }) => {
     moxy.teardown();
   });
 
@@ -64,7 +51,7 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApi2Mock('/orgs/1/lists/1/rows', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', []);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/content_query',
       'delete',
@@ -78,10 +65,7 @@ test.describe('View detail page', () => {
     await page.click('[name=person]');
     await page.fill('[name=person]', `${NewPerson.last_name}`);
 
-    await Promise.all([
-      page.waitForResponse('**/orgs/1/lists/1/rows**'),
-      page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`),
-    ]);
+    await page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`);
 
     // Make sure the row was added
     expect(
@@ -89,7 +73,8 @@ test.describe('View detail page', () => {
         .log()
         .find(
           (req) =>
-            req.method === 'POST' && req.path === '/v2/orgs/1/lists/1/rows'
+            req.method === 'PUT' &&
+            req.path === `/v1/orgs/1/people/views/1/rows/${NewPerson.id}`
         )
     ).toBeTruthy();
 
@@ -104,13 +89,14 @@ test.describe('View detail page', () => {
         )
     ).toBeTruthy();
 
-    // Make sure rows are reloaded after the content query was removed
+    // Make sure rows are fetched anew
     expect(
       moxy
         .log()
         .filter(
           (req) =>
-            req.method === 'GET' && req.path === '/v2/orgs/1/lists/1/rows'
+            req.method === 'GET' &&
+            req.path === '/v1/orgs/1/people/views/1/rows'
         ).length
     ).toBeGreaterThan(1);
   });
@@ -120,8 +106,8 @@ test.describe('View detail page', () => {
     appUri,
     moxy,
   }) => {
-    moxy.setZetkinApi2Mock(
-      '/orgs/1/lists/1/rows',
+    moxy.setZetkinApiMock(
+      '/orgs/1/people/views/1/rows',
       'get',
       AllMembersRows.slice(0, 1)
     );
@@ -141,7 +127,8 @@ test.describe('View detail page', () => {
           .log()
           .find(
             (req) =>
-              req.method === 'POST' && req.path === '/v2/orgs/1/lists/1/rows'
+              req.method === 'PUT' &&
+              req.path === `/v1/orgs/1/people/views/1/rows/${NewPerson.id}`
           )
       )
       .toBeTruthy();

@@ -82,9 +82,9 @@ async function proxy(
       if (session.tokenData?.refresh_token) {
         const refreshData = new URLSearchParams({
           grant_type: 'refresh_token',
-          refresh_token: session.tokenData.refresh_token,
+          refresh_token: session.tokenData?.refresh_token,
         });
-        const tokenUrl = `${protocol}://${hostAndPort}/v1/oauth/token`;
+        const tokenUrl = apiBase + 'oauth/token';
 
         const refreshResponse = await fetch(tokenUrl, {
           body: refreshData,
@@ -96,16 +96,11 @@ async function proxy(
           method: 'POST',
         });
 
-        if (refreshResponse.ok) {
-          const refreshPayload = await refreshResponse.json();
-          if (refreshPayload.access_token) {
-            session.tokenData = refreshPayload;
-            await session.save();
+        session.tokenData = await refreshResponse.json();
+        await session.save();
 
-            zetkinResponse = await makeZetkinApiRequest();
-            payload = await zetkinResponse.json();
-          }
-        }
+        zetkinResponse = await makeZetkinApiRequest();
+        payload = zetkinResponse.json();
       }
     }
   }

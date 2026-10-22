@@ -1,13 +1,13 @@
 import { createContext, FC, useContext } from 'react';
 
-import { ListAccessLevel } from '../types';
+import { ZetkinObjectAccess } from 'core/api/types';
 
-type UseAccessLevelReturn = [boolean, ListAccessLevel | null];
+type UseAccessLevelReturn = [boolean, ZetkinObjectAccess['level'] | null];
 
 const AccessLevelContext = createContext<UseAccessLevelReturn>([false, null]);
 
 type AccessLevelProviderProps = {
-  accessLevel?: ListAccessLevel | null;
+  accessLevel?: ZetkinObjectAccess['level'] | null;
   children: JSX.Element | null;
   isRestricted?: boolean;
 };

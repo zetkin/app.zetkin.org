@@ -8,7 +8,7 @@ import {
 
 import { IColumnType } from '.';
 import { useNumericRouteParams } from 'core/hooks';
-import { ListAccessLevel } from 'features/views/types';
+import { ZetkinObjectAccess } from 'core/api/types';
 import {
   LocalBoolViewColumn,
   ZetkinViewColumn,
@@ -25,7 +25,7 @@ export default class LocalBoolColumnType implements IColumnType {
 
   getColDef(
     column: LocalBoolViewColumn,
-    accessLevel: ListAccessLevel | null
+    accessLevel: ZetkinObjectAccess['level'] | null
   ): Omit<GridColDef, 'field'> {
     return {
       headerAlign: 'center',
@@ -54,7 +54,7 @@ export default class LocalBoolColumnType implements IColumnType {
     personId: number,
     data: boolean,
     ev: MuiEvent<KeyboardEvent<HTMLElement>>,
-    accessLevel: ListAccessLevel | null
+    accessLevel: ZetkinObjectAccess['level'] | null
   ): void {
     if (accessLevel == 'readonly') {
       return;

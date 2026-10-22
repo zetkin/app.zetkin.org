@@ -1,6 +1,5 @@
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 import useTagging from 'features/tags/hooks/useTagging';
 import {
   cellUpdate,
@@ -70,13 +69,7 @@ export default function useViewGrid(
     actionOnLoad: () => rowsLoad(viewId),
     actionOnSuccess: (rows) => rowsLoaded([viewId, rows]),
     loader: () =>
-      fetchAllPaginated<ZetkinViewRow>(
-        (page, size) =>
-          apiClient.get<ZetkinViewRow[]>(
-            `/api2/orgs/${orgId}/lists/${viewId}/rows?size=${size}&page=${page}`
-          ),
-        10000
-      ),
+      apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/rows`),
   });
 
   const removeRows = async (rows: number[]): Promise<void> => {
