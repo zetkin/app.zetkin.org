@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Call } from 'features/callAssignments/apiTypes';
 import { callUpdated } from 'features/callAssignments/store';
 import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
@@ -23,6 +22,7 @@ import {
   ZetkinTag,
 } from 'utils/types/zetkin';
 import { personsDeleted } from 'features/profile/store';
+import { ZetkinCall } from 'features/call/types';
 
 const SUPPORTED_COLUMN_TYPES = new Set<string>(Object.values(COLUMN_TYPE));
 
@@ -532,7 +532,7 @@ function setTagOnRelevantRows(
 
 function updateCallOnRelevantRows(
   state: ViewsStoreSlice,
-  call: Call,
+  call: ZetkinCall,
   mutations: string[]
 ) {
   Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {

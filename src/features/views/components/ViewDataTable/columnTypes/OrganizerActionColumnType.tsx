@@ -5,11 +5,11 @@ import {
   Paper,
   Popper,
   PopperProps,
-  SxProps,
+  Stack,
   Typography,
 } from '@mui/material';
 import { Check, ListAlt, PriorityHigh } from '@mui/icons-material';
-import { FC, useMemo, useState } from 'react';
+import { FC, Fragment, useMemo, useState } from 'react';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 import { getEllipsedString } from 'utils/stringUtils';
@@ -158,7 +158,7 @@ interface PreviewPopperProps {
   calls: OrganizerActionViewCell;
 }
 
-const PreviewPopper: FC<PreviewPopperProps> = ({
+export const PreviewPopper: FC<PreviewPopperProps> = ({
   anchorEl,
   onOpenCalls,
   calls,
@@ -178,14 +178,6 @@ const PreviewPopper: FC<PreviewPopperProps> = ({
   const numSolved =
     calls?.filter((call) => !!call.organizer_action_taken).length || 0;
 
-  const headerSx: SxProps = {
-    color: 'grey',
-    fontSize: '1em',
-    fontWeight: 'bold',
-    paddingBottom: '1em',
-    textTransform: 'uppercase',
-  };
-
   return (
     <Popper
       anchorEl={anchorEl}
@@ -198,48 +190,32 @@ const PreviewPopper: FC<PreviewPopperProps> = ({
       }}
     >
       <Paper elevation={2}>
-        <Box p={2}>
-          <Typography sx={headerSx}>
+        <Stack sx={{ alignItems: 'flex-start', gap: 1, padding: 2 }}>
+          <Typography variant="h5">
             <Msg id={messageIds.cells.organizerAction.actionNeeded} />
           </Typography>
           {sortedUnsolved?.map((call) => (
-            <Box key={call.id}>
-              <Typography
-                sx={{
-                  color: 'grey',
-                  paddingBottom: '0.5em',
-                }}
-              >
+            <Fragment key={call.id}>
+              <Typography color="secondary">
                 <ZUIRelativeTime datetime={call.update_time} />
               </Typography>
-              <Typography
-                sx={{
-                  paddingBottom: '0.7em',
-                }}
-              >
+              <Typography>
                 {getEllipsedString(call.message_to_organizer || '', 70)}
               </Typography>
-            </Box>
+            </Fragment>
           ))}
           {numSolved > 0 ? (
-            <Typography sx={headerSx}>
+            <Typography color="secondary">
               <Msg
                 id={messageIds.cells.organizerAction.solvedIssues}
                 values={{ count: numSolved }}
               />
             </Typography>
           ) : null}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'end',
-            }}
-          >
-            <Button onClick={onOpenCalls} startIcon={<ListAlt />}>
-              <Msg id={messageIds.cells.organizerAction.showDetails} />
-            </Button>
-          </Box>
-        </Box>
+          <Button onClick={onOpenCalls} startIcon={<ListAlt />}>
+            <Msg id={messageIds.cells.organizerAction.showDetails} />
+          </Button>
+        </Stack>
       </Paper>
     </Popper>
   );
