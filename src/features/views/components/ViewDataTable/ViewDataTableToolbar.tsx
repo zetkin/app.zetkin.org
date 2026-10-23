@@ -3,6 +3,7 @@ import {
   Add,
   DeleteOutline,
   Launch,
+  PersonRemoveOutlined,
   RemoveCircleOutline,
 } from '@mui/icons-material';
 import {
@@ -33,6 +34,7 @@ import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { BULK_DELETE } from 'utils/featureFlags';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 import useRootOrganization from 'features/organizations/hooks/useRootOrganization';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 
 export interface ViewDataTableToolbarProps {
   disableBulkActions?: boolean;
@@ -43,6 +45,7 @@ export interface ViewDataTableToolbarProps {
   isSmartSearch: boolean;
   onColumnCreate: () => void;
   onBulkDelete: () => void;
+  onBulkRemoveFromOrg: () => void;
   onRowsRemove: () => void;
   onViewCreate: () => void;
   selection: number[];
@@ -61,6 +64,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   isLoading,
   isSmartSearch,
   onBulkDelete,
+  onBulkRemoveFromOrg,
   onColumnCreate,
   onRowsRemove,
   onViewCreate,
@@ -73,6 +77,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { orgId } = useNumericRouteParams();
   const rootOrg = useRootOrganization(orgId).data;
+  const org = useOrganization(orgId).data;
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletionString, setDeletionString] = useState('');
 
@@ -88,6 +93,17 @@ const ViewDataTableToolbar: React.FunctionComponent<
     });
   };
 
+  const onClickRemoveFromOrg = () => {
+    showConfirmDialog({
+      onSubmit: onBulkRemoveFromOrg,
+      title: messages.removeFromOrgDialog.title({
+        numPeople: selection.length,
+        orgTitle: org?.title ?? '',
+      }),
+      warningText: messages.removeFromOrgDialog.warningText(),
+    });
+  };
+
   const onClickDelete = () => {
     setDeleteDialogOpen(true);
   };
@@ -98,6 +114,15 @@ const ViewDataTableToolbar: React.FunctionComponent<
       icon: <RemoveCircleOutline />,
       label: messages.toolbar.bulk.removeFromList(),
       onClick: onClickRemoveRows,
+    },
+  ];
+
+  const bulkRemoveFromOrg = [
+    {
+      disabled: disabled,
+      icon: <PersonRemoveOutlined />,
+      label: messages.toolbar.bulk.removeFromOrg(),
+      onClick: onClickRemoveFromOrg,
     },
   ];
 
@@ -148,6 +173,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
                       onClick: onViewCreate,
                     },
                     ...(isSmartSearch ? [] : bulkActionsForStaticLists),
+                    ...bulkRemoveFromOrg,
 
                     ...(hasBulkDelete ? bulkDeletePersons : []),
                   ]}
