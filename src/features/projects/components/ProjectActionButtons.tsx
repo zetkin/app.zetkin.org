@@ -33,7 +33,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS, TASKS } from 'utils/featureFlags';
+import { AREA_ASSIGNMENTS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 import EventShiftModal from 'features/calendar/components/EventShiftModal';
@@ -56,7 +56,7 @@ const ProjectActionButtons: React.FunctionComponent<
   const projectMessages = useMessages(projectMessageIds);
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
   const { orgId, projectId } = useNumericRouteParams();
-  const hasAreaAssignments = useFeature(AREAS);
+  const hasAreaAssignments = useFeature(AREA_ASSIGNMENTS);
   const hasTasks = useFeature(TASKS);
 
   // Dialogs
