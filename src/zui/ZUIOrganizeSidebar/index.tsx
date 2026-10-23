@@ -3,16 +3,13 @@ import { useRouter } from 'next/router';
 import { ReactElement, useRef, useState } from 'react';
 import {
   Architecture,
-  Close,
   ExpandLess,
   ExpandMore,
   Explore,
-  FilterListOutlined,
   Groups,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
   LocalOffer,
-  Logout,
   Map,
   Search,
   Settings,
@@ -22,14 +19,12 @@ import {
   Avatar,
   Box,
   Button,
-  Divider,
   Drawer,
   IconButton,
   List,
   Menu,
   MenuItem,
   SxProps,
-  TextField,
   Tooltip,
   Typography,
   useMediaQuery,
@@ -42,12 +37,12 @@ import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import ZUIEllipsisMenu, {
-  MenuItem as ZUIEllipsisMenuItem,
-} from '../ZUIEllipsisMenu';
+import { MenuItem as ZUIEllipsisMenuItem } from '../ZUIEllipsisMenu';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
+import OrganizationFilterField from 'features/organizations/components/OrganizationSwitcher/OrganizationFilterField';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
+import SidebarUserFooter, { useUserMenuItems } from './SidebarUserFooter';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
@@ -249,22 +244,7 @@ const ZUIOrganizeSidebar = ({
     { icon: <Settings />, name: 'settings' },
   ] as const;
 
-  const userMenuItems = [
-    {
-      href: '/my',
-      label: messages.organizeSidebar.myPagesMenuItemLabel(),
-    },
-    {
-      divider: true,
-      href: '/my/settings',
-      label: messages.organizeSidebar.mySettingsMenuItemLabel(),
-    },
-    {
-      href: '/logout',
-      label: messages.organizeSidebar.signOut(),
-      startIcon: <Logout />,
-    },
-  ];
+  const userMenuItems = useUserMenuItems();
 
   const showOrgSwitcher = checked && open;
 
@@ -408,30 +388,8 @@ const ZUIOrganizeSidebar = ({
                         )}
 
                         {showOrgSwitcher && (
-                          <TextField
-                            aria-label={messages.organizeSidebar.filterLabel()}
-                            fullWidth
-                            InputProps={{
-                              endAdornment:
-                                searchString.length > 0 ? (
-                                  <Close
-                                    color="secondary"
-                                    onClick={() => setSearchString('')}
-                                    sx={{ cursor: 'pointer' }}
-                                  />
-                                ) : (
-                                  ''
-                                ),
-                              startAdornment: (
-                                <FilterListOutlined
-                                  color="secondary"
-                                  sx={{ marginRight: '0.5em' }}
-                                />
-                              ),
-                            }}
-                            onChange={(e) => setSearchString(e.target.value)}
-                            placeholder={messages.organizeSidebar.filter()}
-                            size="small"
+                          <OrganizationFilterField
+                            onChange={setSearchString}
                             value={searchString}
                           />
                         )}
@@ -459,6 +417,7 @@ const ZUIOrganizeSidebar = ({
                 open={showOrgSwitcher}
                 orgId={orgId}
                 searchString={searchString}
+                variant="overlay"
               />
             )}
           </Box>
@@ -529,70 +488,7 @@ const ZUIOrganizeSidebar = ({
               })}
             </List>
           </Box>
-          <Box flexGrow={0}>
-            <Divider />
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                mx: open ? 1 : 0.5,
-                my: 0.5,
-                py: open ? 1.25 : 1,
-              }}
-            >
-              {user && (
-                <>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex',
-                      mx: 1,
-                      width: '48px',
-                    }}
-                  >
-                    <Tooltip
-                      arrow
-                      placement={open ? 'top' : 'right'}
-                      title={messages.organizeSidebar.myPagesInfoText()}
-                    >
-                      <Link href="/my">
-                        <Box sx={{ alignItems: 'center', display: 'flex' }}>
-                          <ZUIUserAvatar
-                            personId={user.id}
-                            size={open ? 'sm' : 'md'}
-                          />
-                          <Typography
-                            sx={{
-                              display: open ? 'flex' : 'none',
-                              marginLeft: 1,
-                            }}
-                          >
-                            {user.first_name}
-                          </Typography>
-                        </Box>
-                      </Link>
-                    </Tooltip>
-                  </Box>
-                  <Box
-                    sx={{
-                      justifyContent: 'flex-end',
-                    }}
-                  >
-                    {open && (
-                      <ZUIEllipsisMenu
-                        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-                        items={userMenuItems}
-                        transformOrigin={{
-                          horizontal: 'right',
-                          vertical: 'bottom',
-                        }}
-                      />
-                    )}
-                  </Box>
-                </>
-              )}
-            </Box>
-          </Box>
+          <SidebarUserFooter open={open} />
         </Box>
       </Drawer>
     </Box>

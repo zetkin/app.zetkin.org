@@ -5,8 +5,8 @@ import ProceduralColorIcon from './ProceduralColorIcon';
 import { TreeItemData } from '../types';
 
 interface RecentOrganizationProps {
-  onSwitchOrg: () => void;
-  orgId: number;
+  onSwitchOrg: (orgId: number) => void;
+  orgId?: number;
   recentOrganizations: (TreeItemData | undefined)[];
 }
 
@@ -33,7 +33,7 @@ const RecentOrganizations: FC<RecentOrganizationProps> = ({
             underline={'none'}
           >
             <Box
-              onClick={onSwitchOrg}
+              onClick={() => onSwitchOrg(org.id)}
               sx={{
                 '&:hover': {
                   backgroundColor: theme.palette.grey[100],
