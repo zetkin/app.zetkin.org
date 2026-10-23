@@ -9,7 +9,6 @@ import {
 
 import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import { timeSpanToString } from 'zui/utils/timeSpanString';
-import { removeOffset } from 'utils/dateUtils';
 import useEventCallActions from '../hooks/useEventCallActions';
 import { useAppSelector } from 'core/hooks';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -106,8 +105,8 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
           key: 'time',
           labels: [
             timeSpanToString(
-              new Date(removeOffset(event.start_time)),
-              new Date(removeOffset(event.end_time)),
+              Temporal.PlainDateTime.from(event.start_time),
+              Temporal.PlainDateTime.from(event.end_time),
               intl
             ),
           ],
