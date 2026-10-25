@@ -1,0 +1,4453 @@
+glob:
+  accessLevels:
+    configure: Modification et configuration
+    edit: Modification
+    readonly: Lecture seule
+  genderOptions:
+    f: Femme
+    m: Homme
+    o: Autre
+    unspecified: Non précisé
+  personFields:
+    alt_phone: Numéro de téléphone secondaire
+    city: Ville
+    co_address: Complément d'adresse
+    country: Pays
+    email: E-mail
+    ext_id: ID externe
+    first_name: Prénom
+    gender: Genre
+    id: ID
+    is_user: Compte Zetkin
+    last_name: Nom
+    phone: Numéro de téléphone
+    street_address: Adresse
+    zip_code: Code postal
+  roles:
+    admin: Administrateur
+    organizer: Organisateur
+core:
+  err404:
+    assignmentNotFound: Mission introuvable
+    backToHomePage: Retour à la page d'accueil
+    eventNotFound: Événement introuvable
+    goToMyZetkin: Accéder à Mon Zetkin
+    goToOrganization: Accéder à l'organisation
+    loggedInOrgText: Essayez de trouver l'organisation dans votre liste d'organisations.
+    loggedOutOrgText: Si vous avez un compte Zetkin, vous pouvez vous connecter et
+      rechercher l'organisation dans votre liste d'organisations.
+    orgNotFound: Organisation introuvable
+    pageNotFound: Page introuvable
+  home:
+    redirecting: Redirection...
+    welcome: Ceci deviendra Zetkin
+  legacy:
+    continueButton: Continuer vers l'ancien Zetkin
+    header: Redirection en cours
+    info: Vous utilisez une préversion de Zetkin qui ne prend pas en charge la
+      fonctionnalité que vous souhaitez utiliser. Nous vous redirigeons vers
+      l'ancienne version de Zetkin, qui prend en charge cette fonctionnalité.
+feat:
+  account:
+    lostPassword:
+      actions:
+        sendEmail: Envoyer l'e-mail
+        sendLink: Renvoyer le lien
+        signIn: Se connecter
+      checkEmail: Consultez vos e-mails
+      description: Vous avez oublié votre mot de passe Zetkin ? Indiquez-nous votre
+        adresse e-mail et nous vous enverrons un lien pour choisir un nouveau
+        mot de passe.
+      descriptionCheck: Si un compte est associé à cette adresse e-mail, vous recevrez
+        les instructions de réinitialisation à l'adresse {email}
+      emailFieldLabel: E-mail
+      errors:
+        alreadyLoggedIn:
+          description: Vous ne pouvez pas réinitialiser votre mot de passe, car votre
+            session est déjà ouverte.
+          title: Session déjà ouverte
+        invalidEmail: Veuillez saisir une adresse e-mail valide.
+        unknownError: Une erreur s'est produite. Veuillez réessayer plus tard.
+        unknownErrorTitle: Erreur inattendue
+      footer:
+        readPolicy: Lire notre politique de confidentialité
+      title: Récupérer votre compte Zetkin
+    register:
+      actions:
+        createAccount: Créer un compte
+      description: Commencez dès maintenant à vous organiser avec Zetkin
+      error:
+        conflictError: Un compte existe déjà avec cette adresse e-mail ou ce numéro de
+          téléphone.
+        invalidParameter: Veuillez saisir une adresse e-mail et/ou un numéro de
+          téléphone valides.
+        phoneError: Veuillez saisir un numéro de téléphone valide.
+        unknownError: La création du compte a échoué. Réessayez plus tard.
+      instructions: 'Un message contenant des instructions a été envoyé à '
+      labels:
+        checkBox: J'accepte que mes informations soient traitées pour la gestion de mon
+          compte utilisateur Zetkin
+        email: Adresse e-mail
+        firstName: Prénom
+        lastName: Nom de famille
+        mobile: Numéro de téléphone portable
+        password: Mot de passe
+      title: Créer un nouveau compte
+      welcome: Bienvenue, {userName}
+    resetPassword:
+      actions:
+        labelPassword: Mot de passe
+        save: Enregistrer le mot de passe
+      description: Choisissez le nouveau mot de passe que vous utiliserez désormais.
+        Il doit contenir au moins 6 caractères.
+      descriptionUpdated: Votre mot de passe a été mis à jour. Vous pouvez vous
+        connecter avec votre nouveau mot de passe.
+      error:
+        errorMessage: Une erreur s'est produite, veuillez réessayer
+        title: Erreur
+      title: Réinitialiser le mot de passe
+      unexpectedError: Une erreur inattendue s'est produite lors de la
+        réinitialisation du mot de passe, veuillez réessayer.
+      validation: Le mot de passe doit contenir au moins 6 caractères.
+    verify:
+      description: Veuillez vérifier votre adresse e-mail pour continuer à utiliser
+        Zetkin. Nous avons envoyé un lien de vérification dans votre boîte de
+        réception. Si vous ne le voyez pas, consultez votre dossier de courriers
+        indésirables ou cliquez sur le bouton ci-dessous pour le renvoyer.
+      error: Une erreur s'est produite. Nous n'avons pas pu envoyer le lien de
+        vérification.
+      sendVerification: Envoyer un nouveau lien de vérification
+      success: Un nouvel e-mail de vérification a été envoyé
+      title: Vérifiez votre adresse e-mail
+  areaAssignments:
+    default:
+      title: Mission de porte-à-porte sans titre
+    instructions:
+      editor:
+        confirm: Voulez-vous supprimer toutes les modifications non enregistrées et
+          revenir aux instructions enregistrées ?
+        editorPlaceholder: Ajoutez des instructions pour vos bénévoles
+        revertLink: Revenir à la version enregistrée ?
+        saveButton: Enregistrer
+        savedMessage: Tout est à jour !
+        savingButton: Enregistrement...
+        unsavedMessage: Vous avez des modifications non enregistrées.
+      title: Instructions pour les personnes assignées
+    layout:
+      actions:
+        delete: Supprimer
+        deleteWarningText: Voulez-vous vraiment supprimer « {title} » ?
+        end: Terminer la mission
+        start: Démarrer la mission
+      basicAssignmentStats:
+        areas: '{numAreas, plural, =0 {Aucune zone} one {1 zone} other {# zones}}'
+        assignees: '{numAssignees, plural, =0 {Aucune personne assignée} one {1 personne
+          assignée} other {# personnes assignées}}'
+      tabs:
+        instructions: Instructions
+        map: Carte
+        overview: Vue d'ensemble
+        report: Compte rendu
+    map:
+      areaInfo:
+        assignees:
+          add: Assigner une personne
+          none: Aucune personne assignée
+          title: Personnes assignées
+        stats:
+          households: '{numHouseholds, plural, one {Foyer visité} other {Foyers visités}}'
+          locations: '{numLocations, plural, one {Lieu} other {Lieux}}'
+          successful: '{numSuccessfulVisits, plural, one {Visite réussie} other {Visites
+            réussies}}'
+      filter:
+        assignees:
+          assigned: Uniquement les zones assignées
+          label: Personnes assignées
+          unassigned: Uniquement les zones non assignées
+        description: Choisissez les zones affichées sur la carte
+        header: Filtres
+        ungroupedTags: Étiquettes sans groupe
+      findArea:
+        filterPlaceHolder: Filtrer
+        title: Zones
+      mapStyle:
+        area:
+          label: Couleur des zones
+          options:
+            assignees: Personnes assignées
+            outlined: Contour uniquement
+        title: Visualisation des données
+    overview:
+      empty:
+        description: Cette mission n'a pas encore été planifiée
+        startPlanningButton: Planifier maintenant
+      progress:
+        headers:
+          households: Foyers visités
+          locations: Lieux visités
+          successful: Visites réussies
+        statsTitle: Progression
+    report:
+      card:
+        definesSuccess: Critère de réussite
+        delete: Supprimer
+        description: Aucune description
+        question: Question sans titre
+        tooltip: Pour supprimer cette question, créez d'abord une nouvelle question à
+          choix qui indiquera si la visite a réussi.
+      dataCard:
+        header: Précision des données et confidentialité
+        household: par foyer (le plus précis)
+        info: Collecter les données...
+        location: par lieu (moins précis, plus de confidentialité)
+        subheader: Choisir où stocker les données revient à trouver l'équilibre entre
+          précision et confidentialité qui convient à votre cause
+      delete:
+        deleteWarningText: Pour supprimer « {title} », vous devez choisir une autre
+          question à choix qui indiquera si la visite a réussi
+        dialog: Voulez-vous vraiment supprimer cette question ? Cette action est
+          définitive et irréversible.
+        select: Choisir
+      lockCard:
+        add: Ajouter des questions
+        change: Changer la question qui définit une visite réussie
+        description: Cette mission a commencé. La modifier maintenant peut entraîner des
+          problèmes de données. Procédez avec prudence.
+        descriptionUnlock: Veillez à ne pas faire de modifications susceptibles
+          d'entraîner la perte ou la corruption de données.
+        fix: Corriger l'orthographe
+        header: Compte rendu verrouillé
+        headerUnlock: Compte rendu déverrouillé
+        rename: Reformuler des questions au point d'en changer le sens
+        safe: Sans risque
+        unsafe: Risqué
+      metricCard:
+        choice: Question à choix
+        ratingDescription: ' La personne assignée répondra en donnant une note de 1 à 5'
+        save: Enregistrer
+        scale: Question à échelle
+      successCard:
+        header: Visite réussie
+        subheader: Choisissez la question qui sert à compter les visites réussies. Si la
+          réponse à cette question est « oui », la visite sera comptée comme
+          réussie
+      toolBar:
+        title: Ajoutez des questions à votre mission de porte-à-porte.
+  areas:
+    areas:
+      areaDetails:
+        households: Foyers
+        locations: Lieux
+        title: Détails de la zone
+      areaSettings:
+        delete: Supprimer
+        edit:
+          cancelButton: Annuler
+          editButton: Modifier
+          saveButton: Enregistrer
+        tags:
+          title: Étiquettes de la zone
+      assignmentStats:
+        percentSuccessfulVisits: des visites ont abouti
+        percentVisited: des lieux visités
+        successfulVisits: visites réussies
+        title: Visites
+      controlLabels:
+        filters: Filtres
+        layers: Visualisation des données
+        select: Sélectionner
+      default:
+        description: Aucune description
+        title: Zone sans titre
+      draw:
+        cancelButton: Annuler
+        saveButton: Enregistrer
+        startButton: Dessiner
+      filter:
+        addFilterButton: Ajouter un filtre
+        openFiltersButton: Filtrer
+        ungroupedTagsLabel: Étiquettes sans groupe
+    page:
+      title: Géographie
+  breadcrumbs:
+    elements:
+      activities: Activités
+      archive: Archives
+      areaassignments: Missions de porte-à-porte
+      assignees: Personnes assignées
+      calendar: Calendrier
+      callassignments: Campagnes d'appels
+      callers: Appelants
+      closed: Clôturés
+      compose: Rédiger
+      conversation: Conversation
+      duplicates: Doublons
+      email: E-mail
+      emails: E-mails
+      events: Événements
+      fields: Champs
+      folders: Listes
+      geography: Géographie
+      incoming: Demandes reçues
+      insights: Statistiques
+      instances: Dossiers
+      joinforms: Formulaires d'adhésion
+      journeys: Parcours
+      manage: Gérer
+      milestones: Étapes
+      new: Nouveau
+      organize: Organiser
+      participants: Participants
+      people: Personnes
+      plan: Planification
+      projects: Projets
+      questions: Questions
+      settings: Paramètres
+      shared: Partagé avec nous
+      submissions: Réponses
+      suborgOverview: Vue d'ensemble des sous-organisations
+      surveys: Questionnaires
+      tags: Étiquettes
+      tasks: Tâches
+      themes: Thèmes
+      untitledEvent: Événement sans titre
+      views: Listes
+  calendar:
+    createMenu:
+      shiftEvent: Créer plusieurs événements formant des créneaux
+      singleEvent: Créer un événement unique
+    createOnDate: Créer un événement le {date}
+    dstEnds: Heure d'hiver
+    dstStarts: Heure d'été
+    event:
+      differentLocations: '{numLocations} lieux différents'
+      events: Événements
+      noContactSelected: Aucune personne de contact sélectionnée
+      remindersNotSent: 'Rappels non envoyés : {numNotSent}'
+      unbookedSignups: 'Inscriptions non confirmées : {numUnbooked}'
+      underbooked: 'Événements en sous-effectif : {numUnderbooked}'
+      withSignups: 'Avec inscriptions : {numWithSignups}'
+      withoutContact: 'Sans personne de contact : {numWithoutContact}'
+    eventFilter:
+      collapse: Réduire
+      expand: "{numOfOptions, plural, one {+ # autre type d'événement} other {+ #
+        autres types d'événements}}"
+      filter: Filtrer
+      filterOptions:
+        actionFilters:
+          missing: Personne de contact manquante
+          overbooked: En sureffectif
+          pending: Inscriptions en attente
+          title: Filtrer par action requise
+          underbooked: En sous-effectif
+          unsent: Notifications non envoyées
+        eventTypes:
+          title: Filtrer par type d'événement
+        stateFilters:
+          cancelled: Annulé
+          draft: Brouillon
+          published: Publié
+          scheduled: Programmé
+          title: Filtrer par état de publication
+      reset: Réinitialiser les filtres
+      toggle:
+        all: Tous
+        none: Aucun
+      type: Saisissez du texte pour filtrer le contenu
+    lastDayWithEvents: Il y a eu {numEvents, plural, one {un événement} other
+      {{numEvents} événements}} le dernier jour d'activité
+    loadMore: Afficher plus
+    moreEvents: '{numEvents, plural, one {# autre événement} other {# autres événements}}'
+    next: SUIVANT
+    prev: PRÉCÉDENT
+    rangeLabel: Choisissez une option
+    ranges:
+      day: Jour
+      month: Mois
+      week: Semaine
+    selectionBar:
+      deselect: Désélectionner
+      editEvents: Modifier les événements
+      editParticipants: Gérer les participants
+      ellipsisMenu:
+        cancel: Annuler
+        cancelWarning: Dans ce cas, n'oubliez pas d'informer l'ensemble des participants
+          et des personnes inscrites que les événements ont été annulés !
+        confirmCancel: Voulez-vous vraiment annuler les événements sélectionnés ?
+        confirmDelete: Voulez-vous vraiment supprimer les événements sélectionnés ?
+        delete: Supprimer
+        deleteWarning: Une fois les événements supprimés, vous ne pourrez plus y accéder.
+        print: Imprimer le planning
+        publish: Publier maintenant
+        unpublish: Annuler la publication
+      moveCopyButtons:
+        copy: Copier
+        copyMenuHeader: Copier les événements sélectionnés ({numberOfEvents})
+        createShift: Après chaque événement (créer un créneau)
+        duplicate: Même date et même heure (dupliquer)
+        nextDay: Jour suivant {dates}
+        nextWeek: Semaine suivante {dates}
+        reschedule: Reprogrammer
+        rescheduleMenuHeader: Reprogrammer les événements sélectionnés ({numberOfEvents})
+    shortWeek: sem. {weekNumber}
+    showMore: Afficher
+    today: Aujourd'hui
+  call:
+    about:
+      events: '{numEvents} événements'
+      noParticipation: "{name} n'a jamais participé à un événement."
+      participation: '{name} a participé à {events}, le plus récent étant {title} {time}'
+      previousActivityHeader: Historique d'activité
+      previousCalls:
+        callBackAfter: Rappeler {name} après {time}
+        calledBy: Appel passé par {name}.
+        hasNoPreviousCalls: Aucun appel précédent
+        note: 'Note : {note}'
+        status:
+          callBack: Nous devons rappeler
+          leftMessage: Nous avons laissé un message vocal
+          lineBusy: La ligne était occupée
+          noPickup: Nous n'avons pas pu joindre la personne
+          notAvailable: La personne n'était pas disponible pour parler
+          success: L'appel a réussi !
+          wrongNumber: Nous avions un mauvais numéro
+        title: Appels précédents
+      tagsHeader: Étiquettes
+      title: À propos de {name}
+    activities:
+      description: Vous agissez au nom de {name}
+      empty: Aucune activité
+      events:
+        alreadyBooked: '{name} participe déjà.'
+        noLocation: Aucun lieu physique
+        signUp: Inscrire
+        undoSignUp: Annuler l'inscription
+      filters:
+        basic:
+          alreadyIn: Participation prévue
+          events: Événements
+          surveys: Questionnaires
+          thisCall: Cet appel
+        events:
+          thisWeek: Cette semaine
+          today: Aujourd'hui
+          tomorrow: Demain
+        organizations:
+          noSelected: Organisations
+          selected: '{numOrgs, plural, =1{1 organisation} other{# organisations}}'
+        projects: '{numProjects, plural, =0{Contexte} =1{1 projet} other{# projets}}'
+      noBookings: Aucun événement prévu pour {name}.
+      projects:
+        wihoutProjectLabel: Sans projet
+      survey:
+        backButton: Retour aux activités
+        cancelButton: Annuler
+        clearButton: Effacer les réponses
+        confirmClearSurvey: Voulez-vous effacer les réponses au questionnaire « {title} » ?
+        editButton: Modifier
+        fillOutButton: Remplir
+        inProgress: Questionnaire en cours
+      title: Activités
+      untitled:
+        event: Événement sans titre
+        project: Projet sans titre
+        survey: Questionnaire sans titre
+    callAlert:
+      description: Il ne reste plus d'appels dans la file d'attente
+      title: File d'attente vide
+    callLog:
+      openCallLogButton: Journal d'appels
+      previousCall:
+        logNew: Enregistrer un nouvel appel
+      searchLabel: Tapez pour rechercher
+      title: Journal d'appels
+      unfinishedCall:
+        abandon: Abandonner
+        switch: Reprendre
+    callingInfo:
+      title: Comment appeler avec Zetkin
+      tutorial:
+        call:
+          description: Selon votre façon de passer les appels, vous appellerez soit avec
+            votre téléphone habituel, soit depuis l'ordinateur.
+          title: Passer l'appel
+        oldCalls:
+          description: En cliquant sur le bouton « Journal d'appels », vous pouvez faire
+            le compte rendu d'un nouvel appel avec une personne que vous avez
+            déjà appelée. C'est particulièrement utile si quelqu'un vous
+            rappelle.
+          title: Appels précédents
+        personInfo:
+          description: Vous verrez sur la page les activités passées de la personne ainsi
+            que ses informations.
+          title: Découvrir la personne
+        report:
+          description: Après avoir parlé à la personne, vous remplissez le compte rendu
+            d'appel.
+          title: Faire le compte rendu de l'appel
+        start:
+          description: Vous allez commencer une session d'appels. Lisez les instructions
+            de la campagne et préparez-vous. Cliquez ensuite sur « Appeler »
+            pour passer votre premier appel.
+          title: Commencer les appels
+    error:
+      description: Essayez d'actualiser la page. Si l'erreur persiste, essayez de vous
+        déconnecter puis de vous reconnecter. Si elle persiste encore, contactez
+        l'assistance.
+      title: Une erreur inattendue s'est produite.
+    header:
+      primaryButton:
+        call: Terminer et faire le compte rendu
+        report: Envoyer le compte rendu
+        start: Appeler
+        summary: Appel suivant
+      qrModal:
+        title: Scannez pour appeler depuis votre mobile
+      secondaryButton:
+        call: Ignorer
+        report: Ignorer
+        start: Quitter
+        summary: Faire une pause
+    instructions:
+      noInstructions: Cette campagne d'appels n'a pas d'instructions.
+      title: Instructions
+    newUIAlert:
+      description: Vous pouvez l'utiliser dès maintenant ou {link}
+      linkText: revenir à l'ancienne version.
+      title: Bienvenue dans la nouvelle interface d'appel ! {description}
+    report:
+      steps:
+        callBack:
+          question:
+            afterSpecificHourOptionLabel: Après {hour}
+            anyTimeOptionLabel: À tout moment de la journée
+            callBackButtonLabel: Rappeler après le {date}
+            dateLabel: À quelle date
+            examples:
+              nextWeek: La semaine prochaine
+              title: 'Raccourcis :'
+              today: Plus tard aujourd'hui
+              tomorrow: Demain
+            invalidDateButtonLabel: Date non valide
+            timeLabel: Après quelle heure
+            title: Quand faut-il rappeler ?
+          summary:
+            afterSpecificTime: Rappeler après {time}
+            anyTime: Nous rappellerons après le {date}
+            subtitle: En attendant, {firstName} quitte automatiquement la file d'attente
+        callerLog:
+          question:
+            noteLabel: Ajouter une note (facultatif)
+            saveWithNoteButton: Enregistrer avec la note
+            saveWithoutNoteButton: Enregistrer sans note
+            shortcutHint: Pendant la saisie, appuyez sur MAJ + ENTRÉE pour enregistrer avec
+              la note.
+            title: Voulez-vous laisser une note aux prochains appelants ?
+          summary:
+            withNote:
+              subtitle: 'Les prochains appelants verront votre note : {note}'
+              title: Vous avez laissé une note aux prochains appelants
+            withoutNote: Vous n'avez pas laissé de note aux prochains appelants
+        couldTalk:
+          question:
+            noButton: Non, rappeler
+            title: Est-ce que {firstName} avait le temps de parler ?
+            yesButton: Oui
+          summary:
+            couldNotTalk:
+              subtitle: Les prochains appelants verront qu'il fallait rappeler
+              title: "{firstName} n'avait pas le temps de parler"
+            couldTalk:
+              subtitle: Les prochains appelants verront que vous avez pu aller au bout de
+                l'appel
+              title: '{firstName} avait le temps de parler'
+        failureReason:
+          question:
+            lineBusy: Ligne occupée
+            noPickup: Pas de réponse
+            notAvailable: Indisponible pour le moment
+            title: Pour quelle raison ?
+            wrongNumber: Mauvais numéro
+          summary:
+            lineBusy: La ligne était occupée
+            noPickup: "{firstName} n'a pas répondu"
+            notAvailable: "{firstName} n'était pas disponible pour parler, il faut rappeler"
+            wrongNumber: Nous avons un mauvais numéro pour {firstName}
+        leftMessage:
+          question:
+            noButton: Non
+            title: Avez-vous laissé un message sur le répondeur ?
+            yesButton: Oui
+          summary:
+            didNotLeaveMessage: Aucun message laissé sur le répondeur
+            leftMessage:
+              subtitle: Les prochains appelants verront que vous avez laissé un message
+              title: Message laissé sur le répondeur
+        organizerAction:
+          question:
+            noButton: Non
+            title: Pendant l'appel, s'est-il passé quelque chose qui nécessite
+              l'intervention d'un organisateur ?
+            yesButton: Oui
+          summary:
+            orgActionNeeded:
+              subtitle: Un organisateur sera prévenu
+              title: Vous souhaitez qu'un organisateur se penche sur cet appel
+            orgActionNotNeeded: Aucune action n'est nécessaire
+        organizerLog:
+          question:
+            messageLabel: Ajouter un message (facultatif)
+            shortcutHint: Pendant la saisie, appuyez sur MAJ + ENTRÉE pour inclure le
+              message.
+            title: Expliquez le problème à l'organisateur
+            withMessageButton: Inclure le message
+            withoutMessageButton: Enregistrer sans message
+            wrongNumberMessages:
+              altPhone: 'Le numéro de téléphone secondaire est erroné : {altPhone}'
+              both: 'Les deux numéros de téléphone sont erronés : {phone} et {altPhone}'
+              phone: 'Le numéro de téléphone est erroné : {phone}'
+          summary:
+            withMessage:
+              subtitle: 'Les organisateurs verront votre message : {message}'
+              title: Vous avez laissé un message aux organisateurs
+            withoutMessage: Vous n'avez pas laissé de message aux organisateurs
+        successOrFailure:
+          question:
+            noButton: Non
+            title: Avez-vous pu joindre {firstName} ?
+            yesButton: Oui
+          summary:
+            failure:
+              subtitle: Les prochains appelants verront que vous n'avez pas parlé à
+                {firstName}
+              title: Nous n'avons pas pu joindre {firstName}
+            success:
+              subtitle: Les prochains appelants verront que vous avez parlé à {firstName}
+              title: Vous avez pu joindre {firstName}
+        wrongNumber:
+          question:
+            bothButton: Les deux
+            title: Quel numéro est erroné ?
+          summary:
+            phoneBoth: 'Les deux numéros sont erronés : {phone} et {altPhone}'
+            phoneSingle: 'Un numéro de téléphone est erroné : {phone}'
+      summary:
+        editButtonLabel: Modifier
+      title: Compte rendu
+    skipCallDialog:
+      cancelButton: Non, reprendre l'appel
+      confirmButton: Oui, ignorer {name}
+      title: Ignorer l'appel à {name} ?
+    stats:
+      callsMade: appels passés
+      description: Voici où en est la campagne d'appels
+      inTargetGroup: personnes dans le groupe cible
+      successful: réussis
+      successfulCalls: appels réussis
+      targets: cibles
+      title: Statistiques de la campagne
+    summary:
+      callSummary:
+        callBack: Vous avez joint {name}, mais il faudra rappeler.
+        leftMessage: "{name} n'a pas répondu, vous avez laissé un message sur son
+          répondeur."
+        lineBusy: La ligne était occupée, vous n'avez donc pas pu joindre {name}
+        noPickup: "{name} n'a pas répondu, vous n'avez pas laissé de message."
+        notAvailable: Nous rappellerons {name}.
+        success: Vous avez parlé à {name}
+        wrongNumber: Nous avions un mauvais numéro pour {name}
+      previousCallMissingError:
+        description: Le compte rendu a bien été envoyé et vous pouvez continuer à
+          appeler normalement
+        title: Impossible de charger l'appel précédent
+      reportSubmissionError:
+        description: "L'appel figure désormais parmi vos appels non terminés : vous
+          pouvez y revenir et réessayer d'envoyer le compte rendu."
+        title: Un problème est survenu lors de l'envoi du compte rendu.
+      title:
+        success: Appel terminé !
+      unfinishedCallsMessage: 'Mais avant de continuer : vous avez des appels non
+        terminés, occupez-vous-en !'
+    switchedAssignmentsAlert:
+      message: Vous avez changé de campagne. Vous appelez maintenant pour «
+        {assignmentTitle} »
+    unexpectedError:
+      backToMyZetkinButton: Revenir à Mon Zetkin
+      description: Un problème est survenu, toutes nos excuses ! Vous pouvez recharger
+        la campagne ou revenir à « Mon Zetkin ».
+      reloadButton: Recharger la campagne
+      title: Oups ! Une erreur inattendue s'est produite
+  callAssignments:
+    actions:
+      delete: Supprimer
+      end: Terminer la campagne
+      move: Déplacer
+      start: Démarrer la campagne
+      warning: La campagne « {title} » sera supprimée.
+    blocked:
+      callBackLater: Rappel demandé pour plus tard
+      calledTooRecently: Appel trop récent
+      cooldownHelperText: Définissez le délai minimum entre deux tentatives pour joindre une cible
+      cooldownLabel: Délai d'attente en heures
+      hours: '{cooldown, plural, =0 {Aucun} =1 {# heure} other {# heures}}'
+      missingPhoneNumber: Numéro de téléphone manquant
+      organizerActionNeeded: Intervention d'un organisateur requise
+      subtitle: Cibles qui ne peuvent pas encore être appelées
+      title: Bloqué
+      viewSheetButton: Voir la liste
+    callAssignmentChangeProjectDialog:
+      error: 'Erreur : impossible de déplacer la campagne vers le projet sélectionné'
+      success: Campagne « {assignmentTitle} » déplacée vers « {projectTitle} »
+      title: Déplacer la campagne
+    callers:
+      actions:
+        customize: Personnaliser la file d'attente
+        remove: Retirer de la campagne
+      add:
+        alreadyAdded: Déjà dans la campagne
+        placeholder: Commencez à taper pour rechercher ou ajouter un nouvel appelant
+      customize:
+        exclude:
+          h: Étiquettes exclues
+          intro: Ne jamais appeler les cibles ayant ces étiquettes.
+        prioritize:
+          h: Étiquettes prioritaires
+          intro: Appeler en priorité les cibles ayant ces étiquettes.
+        title: Personnaliser la file d'attente de {name}
+      customizeButton: Personnaliser
+      excludedTagsColumn: Étiquettes exclues
+      nameColumn: Nom
+      prioritizedTagsColumn: Étiquettes prioritaires
+      searchBox: Rechercher
+      title: Appelants
+    conversation:
+      instructions:
+        confirm: Voulez-vous supprimer toutes les modifications non enregistrées et
+          revenir aux instructions enregistrées ?
+        editorPlaceholder: Ajoutez des instructions pour vos appelants
+        revertLink: Revenir à la version enregistrée ?
+        saveButton: Enregistrer
+        savedMessage: Tout est à jour !
+        savingButton: Enregistrement...
+        title: Instructions pour les appelants
+        unsavedMessage: Vous avez des modifications non enregistrées.
+      settings:
+        notes:
+          message: Désactiver les notes des appelants peut accélérer le rythme des appels,
+            mais risque d'entraîner la perte d'informations importantes.
+          title: Autoriser les appelants à prendre des notes
+        targetData:
+          message: Le nom et le numéro de téléphone de la cible sont toujours visibles par
+            les appelants. Si vous activez les données supplémentaires, tous les
+            champs de la fiche de la personne seront partagés avec les
+            appelants.
+          title: Afficher des données supplémentaires sur la cible
+        title: Paramètres de la conversation
+    done:
+      defineButton: Modifier les critères d'achèvement
+      subtitle: Cibles qui remplissent les critères d'achèvement
+      title: Terminé
+    organizerActionPane:
+      markAsSolved: Marquer comme résolu
+      markAsUnsolved: Marquer comme non résolu
+      messagePlaceholder: Aucun message n'a été laissé
+      noteByCaller: Note de {person} {time}
+      subtitle: Notes sur {person}
+      title: Intervention d'un organisateur requise
+    ready:
+      allocated: Cibles attribuées à un appelant
+      queue: Cibles en file d'attente
+      subtitle: Cibles à appeler
+      title: Prêt
+    state:
+      active: Active
+      closed: Clôturée
+      draft: Brouillon
+      open: Ouverte
+      scheduled: Programmée
+    stats:
+      callers: '{numCallers, plural, =0 {Aucun appelant} one {# appelant} other {#
+        appelants}}'
+      targets: '{numTargets, plural, =0 {Aucune cible} one {# cible} other {# cibles}}'
+    statusSectionTitle: Statut
+    tabs:
+      callers: Appelants
+      conversation: Conversation
+      overview: Vue d'ensemble
+    targets:
+      defineButton: Définir le groupe cible
+      editButton: Modifier le groupe cible
+      subtitle: Utilisez la Smart Search pour définir le groupe cible de cette campagne.
+      title: Cibles
+  canvass:
+    default:
+      description: Aucune description
+      floor: Étage inconnu
+      location: Lieu sans titre
+    households:
+      bulkEditHouseholds:
+        floorLabel: Modifier l'étage
+        header: Modifier {numHouseholds, plural, one {# foyer} other {# foyers}}
+        saveButtonLabel: Enregistrer {numHouseholds, plural, one {# foyer} other {# foyers}}
+      colorPicker:
+        colorNames:
+          black: Noir
+          darkAqua: Cyan foncé
+          darkBlue: Bleu foncé
+          darkGreen: Vert foncé
+          darkIndigo: Indigo foncé
+          darkLime: Vert citron foncé
+          darkOrange: Orange foncé
+          darkPink: Rose foncé
+          darkPurple: Violet foncé
+          darkRed: Rouge foncé
+          darkTurqouise: Turquoise foncé
+          darkYellow: Jaune foncé
+          grey: Gris
+          lightAqua: Cyan clair
+          lightBlue: Bleu clair
+          lightGreen: Vert clair
+          lightIndigo: Indigo clair
+          lightLime: Vert citron clair
+          lightOrange: Orange clair
+          lightPink: Rose clair
+          lightPurple: Violet clair
+          lightRed: Rouge clair
+          lightTurquoise: Turquoise clair
+          lightYellow: Jaune clair
+          mediumAqua: Cyan moyen
+          mediumBlue: Bleu moyen
+          mediumGreen: Vert moyen
+          mediumIndigo: Indigo moyen
+          mediumLime: Vert citron moyen
+          mediumOrange: Orange moyen
+          mediumPink: Rose moyen
+          mediumPurple: Violet moyen
+          mediumRed: Rouge moyen
+          mediumTurqouise: Turquoise moyen
+          mediumYellow: Jaune moyen
+        inputLabel: Modifier la couleur du foyer
+        noColor: Aucune couleur
+      createMultiple:
+        createButtonLabel: Créer {numHouseholds, plural, one {# foyer} other {# foyers}}
+        header: Créer des foyers
+        numberOfFloorsInput: Nombre d'étages
+        numberOfHouseholdsInput: Foyers par étage
+      delete:
+        title: Supprimer le foyer
+        warningText: Voulez-vous vraiment supprimer le foyer ? Cette action est
+          irréversible.
+      editSingleHousehold:
+        floorLabel: Modifier l'étage
+        header: Modifier {title}
+        saveButtonLabel: Enregistrer
+        titleLabel: Modifier le titre
+      householdDefaultTitle: Foyer {householdNumber}
+      page:
+        empty: Ce lieu n'a encore aucun foyer
+        header: Foyers
+      single:
+        definesSuccess: Critère de réussite
+        logVisitButtonLabel: Enregistrer une visite
+        skipped: question passée
+        subtitle: Étage {floorNumber}
+        visit: Visite
+        wasNotVisited: Ce foyer n'a pas été visité dans le cadre de cette mission
+      stackItem:
+        detailsButtonLabel: Détails
+        visitButtonLabel: Visiter
+    instructions:
+      areas: Zones
+      instructionsHeader: Instructions
+      ready: Tout est prêt, vous pouvez commencer
+      selectArea: Choisir une zone
+      start: Commencer la mission
+      visitedHouseholds: Foyers visités
+      visitedLocations: Lieux visités
+    location:
+      edit:
+        descriptionLabel: Modifier la description
+        header: Modifier {title}
+        saveButtonLabel: Enregistrer
+        titleLabel: Modifier le titre
+      header: '{numVisitedHouseholds}/{numHouseholds} {numHouseholds, plural, one
+        {foyer visité} other {foyers visités}}'
+      page:
+        historySectionHeader: Historique
+        householdVisitedStatLabel: foyers visités
+        householdsButtonLabel: Foyers
+        householdsVisitedStat: '{numVisitedHouseholds} sur {numHouseholds}'
+        noHouseholds: Aucun foyer enregistré ici pour le moment
+        numberOfHouseholds: '{numHouseholds, plural, one {# foyer} other {# foyers}}'
+        quickReportButtonLabel: Compte rendu rapide
+      subheader: '{successfulVisits, plural, one {# visite réussie} other {# visites
+        réussies}}'
+    map:
+      addLocation:
+        add: Ajouter un lieu
+        cancel: Annuler
+        create: Créer le lieu
+        inputPlaceholder: Donnez un nom au lieu
+      initializationError: Une erreur s'est produite lors de l'initialisation de la
+        carte. Vérifiez que WebGL est pris en charge et activé dans votre
+        navigateur.
+    selectArea:
+      assignedToMe: Assignée à moi
+      noAreas: Aucune zone disponible
+    sidebar:
+      instructions:
+        title: Instructions
+      menuOptions:
+        home: Mes activités
+        logOut: Se déconnecter
+      progress:
+        allTime:
+          title: Depuis le début
+        header:
+          households: Foyers
+          householdsSuccessful: Visités avec succès
+          householdsVisited: Foyers visités
+          locations: Lieux
+          successfulVisits: Visites réussies
+          title: Progression
+          visits: Visites
+        session:
+          team: Équipe
+          title: Session (aujourd'hui)
+          you: Vous
+        sync:
+          label:
+            hasLoaded: Synchronisé {timestamp}
+            neverLoaded: Jamais chargé
+          syncButton:
+            label: Synchroniser maintenant
+            loading: Synchronisation en cours
+    visit:
+      household:
+        header: '{householdTitle} : enregistrer une visite'
+        noButtonLabel: Non
+        skipButtonLabel: Passer cette question
+        submitReportButtonLabel: Envoyer le compte rendu
+        yesButtonLabel: Oui
+      location:
+        average: '{numHouseholds, plural,one {# foyer} other {# foyers}}, moyenne de
+          {avgFixed}'
+        completed: '{numHouseholds, plural,one {# foyer} other {# foyers}}, {numYes} oui'
+        header: Enregistrez les visites ici
+        noInputLabel: Non
+        proceedButtonLabel: Continuer
+        submitButtonLabel: Envoyer
+        yesInputLabel: Oui
+  duplicates:
+    modal:
+      cancelButton: Annuler
+      fieldSettings:
+        data: Données
+        field: Champ
+        noValue: Aucune valeur
+        title: Données à fusionner
+      findCandidateManually: Tapez pour rechercher un doublon potentiel
+      isDuplicateButton: Inclure
+      lists:
+        hideManual: Masquer la recherche manuelle
+        showManual: Afficher la recherche manuelle
+      mergeButton: Fusionner
+      notDuplicateButton: Exclure
+      peopleNotBeingMerged: Personnes exclues de la fusion
+      peopleToMerge: Personnes à fusionner
+      possibleDuplicatesColumns:
+        email: E-mail
+        name: Nom
+        phone: Téléphone
+      title: Fusionner les doublons
+      warningMessage: Toutes les données liées à chacune de ces fiches seront
+        transférées vers la personne fusionnée. Cela inclut les participations
+        aux événements, les réponses aux questionnaires, les étiquettes, etc. En
+        revanche, les valeurs que vous écartez dans les champs ci-dessous seront
+        perdues.
+      warningTitle: Risque de perte de données
+    page:
+      dismiss: Ignorer
+      noDuplicates: Aucun doublon
+      noDuplicatesContactUs: Si vous constatez que l'algorithme de détection ne trouve
+        pas assez de doublons, veuillez contacter la Zetkin Foundation pour nous
+        faire part de votre cas d'usage.
+      noDuplicatesDescription: Zetkin n'a trouvé aucun doublon probable dans votre
+        base de données de personnes. La base de données est analysée chaque
+        jour et les doublons potentiels s'afficheront ici.
+      possibleDuplicates: Doublons possibles
+      possibleDuplicatesDescription: Ces {numPeople} personnes se ressemblent beaucoup
+      resolve: Résoudre
+  emails:
+    blocked:
+      blacklisted: Sur la liste de blocage
+      missingEmail: Adresse e-mail manquante
+      subtitle: Cibles indisponibles.
+      title: Bloquées
+      unsubscribed: Désabonnées
+    deliveryProblems:
+      contentError: Le contenu de votre e-mail comporte des erreurs. Accédez à
+        l'éditeur dans l'onglet Rédiger pour les corriger.
+      empty: Votre e-mail est vide. Accédez à l'onglet Rédiger pour ajouter du
+        contenu.
+      noSubject: Votre e-mail n'a pas d'objet. Accédez à l'onglet Rédiger pour en
+        ajouter un.
+      notTargeted: Votre e-mail n'a aucune cible. Accédez à la section Cibles de
+        l'onglet Vue d'ensemble pour créer une Smart Search qui définira vos
+        cibles.
+      targetsNotLocked: Les cibles ne sont pas verrouillées. Accédez à la section
+        Cibles de l'onglet Vue d'ensemble pour les verrouiller.
+    deliveryStatus:
+      notLocked: Non verrouillé, non programmé
+      notProcessed: Envoi programmé dès que possible
+      notScheduled: Non programmé
+      wasSent: Envoyé le {datetime}
+      willSend: Sera envoyé le {datetime}
+    editor:
+      readOnlyModeInfo: Cet e-mail est en lecture seule, car son envoi est programmé
+        ou il a déjà été envoyé. Si son envoi est programmé et que vous
+        souhaitez y apporter des modifications, vous devez d'abord annuler
+        l'envoi.
+      settings:
+        tabs:
+          content: Contenu
+          preview:
+            confirmation: Un aperçu a été envoyé à votre adresse e-mail.
+            instructions: 'Vous pouvez ici vous envoyer cet e-mail pour avoir un aperçu de
+              ce que verront les destinataires. '
+            invalidEmailAddress: Cette adresse e-mail n'est pas valide
+            okButton: OK !
+            previewInBrowser: Aperçu dans le navigateur
+            previewInBrowserInstructions: Utilisez le bouton ci-dessous pour afficher un
+              aperçu de l'e-mail dans votre navigateur.
+            sendButton: Envoyer
+            sendTo: "L'e-mail sera envoyé à cette adresse :"
+            title: Aperçu
+          settings:
+            senderAddressInputLabel: Adresse de l'expéditeur
+            senderInputLabel: Expéditeur
+            subjectInputLabel: Objet
+            title: Paramètres
+          theme:
+            themeTitle: Thème {themeId}
+            title: Thème
+      tools:
+        button:
+          block:
+            noButtonText: Cliquez pour modifier ce texte !
+          settings:
+            buttonTextWarning: N'oubliez pas d'ajouter votre texte au bouton
+            invalidUrl: Ce lien n'est pas valide
+            testLink: Cliquez pour tester le lien
+            urlLabel: URL du lien
+          title: Bouton
+        header:
+          title: Titre
+        libraryImage:
+          changeImage: Changer l'image
+          title: Image
+        link:
+          addUrl: Ajouter un lien
+          invalidUrl: Ce lien n'est pas valide
+          testLink: Cliquez pour tester le lien
+          title: Lien
+        paragraph:
+          invalidUrls: Ce bloc de texte contient un ou plusieurs liens non valides.
+          title: Texte
+        variable:
+          title: Variable
+    emailActionButtons:
+      cancel: Annuler
+      delete: Supprimer
+      delivery: Envoi
+      deliveryDate: Date d'envoi
+      deliveryTime: Heure d'envoi
+      duplicate: Dupliquer
+      move: Déplacer
+      schedule: Programmer
+      sendAnyway: Envoyer quand même
+      sendLater: Envoyer plus tard
+      sendNow:
+        alert:
+          desc: Il existe peut-être un meilleur moment de la journée pour envoyer cet
+            e-mail. Programmer l'envoi permet aussi aux autres organisateurs de
+            se coordonner avec vous.
+          title: Un envoi immédiat n'est peut-être pas idéal
+        header: Envoyer maintenant
+      setDate: Définissez une date d'envoi pour continuer
+      timeZone: Fuseau horaire
+      warning: Voulez-vous vraiment supprimer cet e-mail ? Cette action est définitive
+        et irréversible.
+    emailChangeProjectDialog:
+      error: "Erreur : impossible de déplacer l'e-mail vers le projet sélectionné"
+      success: E-mail « {emailTitle} » déplacé vers « {projectTitle} »
+      title: Déplacer l'e-mail
+    emailFeatureIsBlocked:
+      errorMessage: Votre organisation n'a pas accès à la fonctionnalité e-mail pour
+        le moment.
+      goBackButton: Retour
+    insights:
+      clicked:
+        descriptions:
+          ctor: Le taux de clics par ouverture (CTOR) correspond à la part des personnes
+            ayant ouvert l'e-mail qui ont aussi cliqué sur l'un des liens. Un
+            taux élevé indique un e-mail bien ciblé et un texte convaincant.
+          ctr: Le taux de clics (CTR) correspond au pourcentage de destinataires qui ont
+            non seulement ouvert l'e-mail, mais aussi cliqué sur l'un des liens.
+            Un taux élevé indique un e-mail bien ciblé et un texte convaincant.
+        gauge:
+          headers:
+            ctor: CTOR
+            ctr: CTR
+        header: Clics
+        metrics:
+          ctor: CTOR
+          ctr: CTR
+      comparison:
+        label: Comparer avec
+      opened:
+        chart:
+          afterSend: Après l'envoi
+          opened: 'Ouvertures : {count}'
+          spans:
+            allTime: Toute la période
+            first24: 24 premières heures
+            first48: 48 premières heures
+            firstMonth: 30 premiers jours
+            firstWeek: 7 premiers jours
+        description: Le taux d'ouverture correspond au pourcentage de destinataires
+          ayant ouvert l'e-mail. Un taux élevé indique un bon ciblage et un
+          objet accrocheur.
+        gauge:
+          header: Taux d'ouverture
+        header: Ouvertures
+    ready:
+      missingEmailsDescription: "{numPeople, plural, one {Une personne du groupe cible
+        n'a pas d'adresse e-mail. Si vous y remédiez, elle sera incluse dans le
+        groupe cible.} other {Des personnes du groupe cible n'ont pas d'adresse
+        e-mail. Si vous y remédiez, elles seront incluses dans le groupe
+        cible.}}"
+      sentSubtitle: Cibles qui étaient disponibles pour l'envoi
+      subtitle: Cibles actuellement disponibles pour l'envoi
+      title: Prêtes
+    state:
+      draft: Brouillon
+      scheduled: Programmé
+      sent: Envoyé
+    stats:
+      lockedTargets: '{numLocked, plural, =0 {Aucune cible verrouillée} one {1 cible
+        verrouillée} other {# cibles verrouillées}}'
+      targets: '{numTargets, plural, =0 {Aucune cible} one {1 cible} other {# cibles}}'
+    tabs:
+      compose: Rédiger
+      insights: Statistiques
+      overview: Vue d'ensemble
+    targets:
+      defineButton: Définir le groupe cible
+      editButton: Modifier le groupe cible
+      loading: Chargement...
+      lockButton: Verrouiller pour l'envoi
+      locked: Les cibles sont verrouillées pour l'envoi
+      lockedChip: Verrouillées
+      subtitle:
+        notTargeted: Utilisez la Smart Search pour définir les destinataires de cet e-mail.
+        scheduled: L'envoi de cet e-mail est programmé. Si vous souhaitez déverrouiller
+          les cibles pour modifier la Smart Search, annulez d'abord l'envoi.
+        sent: Vous pouvez consulter la Smart Search qui a servi à définir les
+          destinataires de cet e-mail
+        targetedAndLocked: Passez à l'envoi, ou déverrouillez les destinataires si vous
+          souhaitez modifier la Smart Search qui sert à les définir.
+        targetedNotLocked: Modifiez la Smart Search qui sert à définir les destinataires
+          de cet e-mail, ou verrouillez le groupe cible pour permettre l'envoi.
+      title: Cibles
+      unlockAlert: Le déverrouillage peut ajouter des personnes au groupe cible ou en
+        retirer, selon les résultats que produira la Smart Search.
+      unlockButton: Déverrouiller
+      viewButton: Voir le groupe cible
+    unsubscribePage:
+      consent: Je comprends
+      h: Se désabonner de {org}
+      info: Après votre désabonnement, vous ne recevrez plus d'e-mails groupés de
+        cette organisation. Vous pourrez toutefois continuer à recevoir des
+        rappels et d'autres e-mails qui vous sont adressés personnellement dans
+        le cadre de vos activités au sein de l'organisation.
+      senderDetails: '{senderName} <{senderEmail}>'
+      senderH: 'Se désabonner de :'
+      senderInfo: Après votre désabonnement, vous ne recevrez plus d'e-mails de cet
+        expéditeur. Vous pourrez toutefois continuer à recevoir des e-mails
+        d'autres expéditeurs de cette organisation, ainsi que d'autres e-mails
+        qui vous sont adressés personnellement dans le cadre de vos activités au
+        sein de l'organisation.
+      unsubButton: Me désabonner
+    unsubscribedPage:
+      h: Désabonnement effectué !
+      info: Votre désabonnement des e-mails groupés de {org} a bien été pris en
+        compte.
+      senderInfo: Votre désabonnement des e-mails de {senderName} <{senderEmail}> a
+        bien été pris en compte.
+    urlCard:
+      nowAccepting: Tout le monde peut consulter l'e-mail via ce lien
+      open: Version publique
+      preview: Futur lien direct
+      previewPortal: Aperçu de l'e-mail
+      visitPortal: Voir l'e-mail
+      willAccept: Tout le monde pourra consulter l'e-mail via ce lien
+    varDefaults:
+      target: destinataire
+  events:
+    addPerson:
+      addButton: Ajouter une personne
+      addPlaceholder: Commencez à taper pour ajouter une personne
+      status:
+        booked: Participation déjà confirmée
+        signedUp: Inscription en attente
+    common:
+      allDay: Toute la journée
+      noActivity: Sans catégorie
+      noLocation: Aucun lieu physique
+      noTitle: Événement sans titre
+    eventActionButtons:
+      cancel: Annuler l'événement
+      delete: Supprimer
+      duplicate: Dupliquer
+      move: Déplacer
+      publish: Publier
+      restore: Rétablir l'événement
+      sendEmailToParticipants:
+        buttonTitle: Envoyer un e-mail aux participants
+        emailSubject: 'Re : {eventTitle}'
+      unpublish: Annuler la publication
+      warning: « {eventTitle} » sera supprimé.
+      warningCancel: « {eventTitle} » sera annulé.
+      warningRestore: « {eventTitle} » sera rétabli.
+    eventChangeProjectDialog:
+      error: "Erreur : impossible de déplacer l'événement vers le projet sélectionné"
+      success: Événement « {eventTitle} » déplacé vers « {projectTitle} »
+      title: Déplacer l'événement
+    eventContactCard:
+      header: Personne de contact
+      noContact: Aucune personne de contact désignée !
+      removeButton: Retirer
+      selectPlaceholder: Sélectionner une personne de contact
+      warningText: "{name} ne sera plus la personne de contact, mais sa participation
+        à l'événement restera confirmée"
+    eventOverviewCard:
+      buttonEndDate: + Date de fin
+      createLocation: Créer un nouveau lieu
+      description: Description
+      editButton: Modifier les informations de l'événement
+      endDate: Fin
+      endTime: Heure de fin
+      location: Lieu
+      noLocation: Aucun lieu physique
+      startDate: Début
+      startTime: Heure de début
+      url: Lien
+    eventParticipantsCard:
+      confirmed: Présences confirmées
+      contact: Personne de contact
+      header: Participants
+      noContact: Non désignée
+      notifications: Notifications
+      participantList: Voir les participants
+      pending: Inscriptions en attente
+      reqParticipantsHelperText: Nombre minimum de participants requis
+      reqParticipantsLabel: Participants requis
+    eventParticipantsList:
+      attendance: Présence
+      bookedParticipants: Participations confirmées
+      buttonAttended: Présent
+      buttonBook: Confirmer
+      buttonCancel: Annuler
+      buttonCancelled: Annulé
+      buttonDelete: Supprimer
+      buttonNoshow: Absent
+      cancelledParticipants: Participations annulées
+      columnAction: Action
+      columnEmail: E-mail
+      columnName: Nom
+      columnNotified: Rappel envoyé
+      columnPhone: Téléphone
+      columnSignedUp: Inscription
+      contactTooltip: Personne de contact
+      descriptionBooked: Voici les personnes dont vous avez confirmé la participation
+        et sur qui vous comptez pour l'événement. Pour annuler leur
+        participation, elles doivent vous contacter ; vous pouvez alors
+        l'annuler manuellement.
+      descriptionCancelled: Ces personnes ont annulé leur participation pour une
+        raison ou une autre. Nous les gardons ici pour que vous ne tentiez pas
+        de les confirmer à nouveau.
+      descriptionSignups: Ces personnes se sont inscrites via le portail militant.
+        Elles peuvent encore annuler leur inscription à tout moment.
+      descriptionUnverifiedSignups: Ces personnes se sont inscrites elles-mêmes, sans
+        compte utilisateur. Vous devez les confirmer.
+      dropDownAttended: Présence confirmée
+      dropDownNoshow: Absence constatée
+      participantTooltip: Désigner comme personne de contact
+      signUps: Inscriptions
+      unverifiedSignups: Inscriptions non vérifiées
+    eventPopper:
+      backToEvents: Retour à la liste des événements
+      backToLocations: Retour aux lieux
+      backToShifts: Retour à la liste des créneaux
+      bookAll: Tout confirmer
+      booked: Personnes confirmées
+      cancel: Annuler l'événement
+      cancelWarning: Si vous l'annulez, pensez à en informer toutes les personnes
+        confirmées ou inscrites !
+      confirmCancel: Voulez-vous vraiment annuler cet événement ?
+      confirmDelete: Voulez-vous vraiment supprimer cet événement ?
+      confirmRemindersMessage: Veuillez confirmer l'envoi d'un rappel à {numReminders,
+        plural, =1 {une personne} other {# personnes}}
+      confirmRemindersTitle: Confirmer l'envoi des rappels
+      contactPerson: Personne de contact
+      dateAndTime: Date et heure
+      delete: Supprimer
+      deleteWarning: Une fois l'événement supprimé, vous ne pourrez plus y accéder.
+      description: Description
+      duplicate: Dupliquer
+      eventPageLink: Aller à la page de l'événement
+      events: Événements
+      location: Lieu
+      locations: Lieux
+      multiEvent: Plusieurs événements
+      multiLocation: Événement sur plusieurs lieux
+      multiShift: Événement à plusieurs créneaux
+      noContact: Aucune personne de contact n'a été désignée
+      notified: Rappels envoyés
+      pendingSignups: Des inscriptions sont en attente
+      publish: Publier
+      reminded: Rappel envoyé
+      shifts: Créneaux
+      signups: Inscriptions
+      unsentReminders: "{numMissing, plural, =1 {Une personne n'a pas encore reçu de
+        rappel} other {# personnes n'ont pas encore reçu de rappel}}"
+    eventRelatedCard:
+      header: Événements liés
+    eventShiftModal:
+      addShift: Ajouter un créneau
+      customTitle: Titre personnalisé
+      date: Date
+      description: Description
+      draft: Enregistrer en brouillon
+      end: Fin
+      error: Impossible de créer l'événement à plusieurs créneaux. Veuillez réessayer.
+      event: Événement
+      eventDuration: Durée de l'événement
+      header: Créer un événement à plusieurs créneaux
+      hours: '{no, plural, one {# heure} other {# heures}}'
+      hoursShort: h
+      invalidDate: Date non valide
+      invalidTime: Heure non valide
+      link: Lien
+      location: Lieu
+      minutes: '{no, plural, one {# minute} other {# minutes}}'
+      minutesShort: min
+      noEvents: Cela va créer {no} événements
+      noTitle: Événement à plusieurs créneaux sans titre
+      participation: Participation
+      participationDescription: Nombre de participants souhaité par créneau
+      publish: Publier
+      reset: Réinitialiser
+      shiftDuration: Durée du créneau
+      shiftStart: Début du créneau {no}
+      shifts: '{no, plural, one {# créneau} other {# créneaux}}'
+      shiftsHeader: Créneaux
+      showMoreSettingsButton: Plus de paramètres
+      start: Début
+      successDraft: '{no, plural, one {# événement créé en brouillon} other {#
+        événements créés en brouillon}}'
+      successPublish: '{no, plural, one {# créneau publié} other {# créneaux publiés}}'
+      type: Type
+    eventStatus:
+      cancelled: Annulé
+      draft: Brouillon
+      ended: Terminé
+      open: Ouvert
+      scheduled: Programmé
+      unknown: Inconnu
+    filterButtonLabels:
+      eventTypes: "{numEventTypes, plural,=0 {Types d'événements} =1
+        {{singleEventType}} other {# types d'événements}}"
+    linkSignupDialog:
+      bookButton: Confirmer
+      cancelButton: Annuler
+      createPersonButton: Créer une personne
+      helperText: Confirmez cette inscription en sélectionnant une personne, ou
+        créez-en une si aucune ne correspond.
+      keepTyping: Continuez à taper pour lancer la recherche
+      noResults: Aucune personne correspondante trouvée
+      searchLabel: Rechercher une personne
+      searchPlaceholder: Rechercher par nom, e-mail ou téléphone
+      signupDetails: Détails de l'inscription
+      title: Aucune correspondance exacte trouvée. Veuillez choisir une personne.
+    list:
+      events: Événements
+      noEvents: Aucun événement...
+    locationModal:
+      cancel: Annuler
+      createLocation: Créer un nouveau lieu
+      description: Description
+      infoText: Vous pouvez cliquer et faire glisser pour déplacer la carte, et pincer
+        ou faire défiler pour zoomer. Pour créer un nouveau lieu, vous pouvez
+        cliquer sur un emplacement vide de la carte.
+      move: Déplacer
+      moveInstructions: Faites glisser le marqueur pour choisir le lieu.
+      noDescription: Aucune description
+      noRelatedEvents: Aucun autre événement n'a lieu ici à la même période.
+      relatedEvents: Autres événements ici à la même période
+      save: Enregistrer
+      saveLocation: Enregistrer le lieu
+      searchBox: Rechercher un lieu
+      title: Nom du lieu
+      useLocation: Utiliser ce lieu
+    participantSummaryCard:
+      bookButton: Tout confirmer
+      booked: Notifications
+      cancelled: Annulations
+      confirmed: Présences confirmées
+      header: Participants
+      noshow: ({noshows, plural, =1 {1 absence} other {# absences}})
+      pending: Inscriptions en attente
+      recordButton: Saisir les présences
+      remindButton: Envoyer les rappels
+      remindButtondisabledTooltip: Vous devez désigner une personne de contact avant d'envoyer des rappels
+      reqParticipantsHelperText: Nombre minimum de participants requis
+      reqParticipantsLabel: Participants requis
+    participantsModal:
+      affected:
+        empty: Vous n'avez encore effectué aucune modification. Choisissez un événement
+          pour déplacer des participants.
+        header: Personnes concernées
+      discardButton: Abandonner les modifications
+      emptyStates:
+        booked: Aucune participation n'est confirmée pour cet événement. Vous pouvez
+          ajouter des participants depuis le vivier.
+        pending: Il n'y a pas d'autres participants dans le vivier. Vous pouvez déplacer
+          des participants d'un événement vers le vivier pour les gérer ici.
+      participants:
+        buttons:
+          addBack: Rajouter
+          addHere: Ajouter ici
+          move: Déplacer
+          undo: Annuler
+        headers:
+          booked: Cet événement
+          pending: Personnes pouvant être ajoutées
+        states:
+          added: Va rejoindre cet événement
+          pending: Dans le vivier
+          removed: Va quitter cet événement
+      statusText: '{personCount, plural, =1 {Une personne va être déplacée} other {#
+        personnes vont être déplacées}}'
+      submitButton: Appliquer
+      title: Gérer les participants
+    publicEventSignup:
+      alert:
+        error: Erreur
+        signupSuccessful: Inscription réussie
+        thankYou: Merci pour votre inscription !
+      errors:
+        emailOrPhoneRequired: Une adresse e-mail ou un numéro de téléphone est requis
+        gdprConsentRequired: Vous devez accepter les conditions
+        invalidEmail: Veuillez saisir une adresse e-mail valide
+        nameRequired: Le prénom et le nom sont obligatoires
+        phoneFormat: Le numéro de téléphone doit être au format international, par ex.
+          +46701234567
+        signupError: Une erreur s'est produite lors de l'inscription
+        signupFailed: Échec de l'inscription
+      fields:
+        email: E-mail
+        firstName: Prénom
+        lastName: Nom
+        phone: Téléphone
+      info:
+        description: Indiquez votre nom et au moins un moyen de contact pour que
+          l'équipe organisatrice puisse vous joindre.
+        title: Inscrivez-vous
+      privacyPolicy: Lorsque vous vous inscrivez à un événement, les informations que
+        vous fournissez seront enregistrées et traitées dans Zetkin par
+        l'organisation responsable de l'événement, afin d'organiser des actions
+        militantes et conformément à la politique de confidentialité de Zetkin.
+      submit:
+        button: S'inscrire
+        submitting: Inscription en cours...
+    search: Rechercher
+    state:
+      cancelled: Annulé
+      draft: Brouillon
+      ended: Terminé
+      open: Ouvert
+      scheduled: Programmé
+    stats:
+      participants: '{participants, plural, one {# participant} other {# participants}}'
+    tabs:
+      overview: Vue d'ensemble
+      participants: Participants
+    tooltipContent: Les événements sans titre affichent leur type comme titre
+    type:
+      createType: Créer « {type} »
+      deleteMessage: Voulez-vous vraiment supprimer le type d'événement « {eventType}
+        » pour toute l'organisation ?
+      deleteWarning: Voulez-vous vraiment supprimer le type d'événement « {eventType}
+        » pour l'ensemble de {orgTitle} ?
+      tooltip: Cliquez pour changer de type
+      uncategorized: Sans catégorie
+    unverifiedSignups:
+      actionFailed: Une erreur s'est produite. Veuillez réessayer.
+      booked: La participation de {name} a bien été confirmée.
+      exactMatchBooked: Correspondance exacte trouvée. Cette inscription est désormais
+        confirmée au nom de {name}.
+    urlCard:
+      nowAccepting: Les inscriptions sont ouvertes via ce lien
+      open: Inscriptions ouvertes
+      preview: Aperçu de l'événement
+      previewPortal: Aperçu de l'événement sur le portail militant
+      visitPortal: Voir l'événement sur le portail militant
+      willAccept: Les inscriptions seront ouvertes via ce lien
+  files:
+    fileUpload:
+      dropToUpload: Déposez le fichier ici pour l'importer
+      instructions: ' ou glissez-déposez'
+      selectClick: Cliquez pour importer
+    image:
+      dimensions: '{width} × {height} pixels'
+    libraryDialog:
+      preview:
+        backButton: Retour à la bibliothèque
+        cropLandscape: Recadrage paysage
+        cropSquare: Recadrage carré
+        cropWarning: Dans certains cas, Zetkin recadrera votre image selon des
+          proportions proches de celles-ci pour l'afficher.
+        cropWide: Recadrage panoramique
+        previewsSection: Aperçus
+        useButton: Utiliser
+      title: Bibliothèque
+    searching:
+      label: Rechercher
+    sorting:
+      label: Trier par
+      options:
+        date: Date
+        originalName: Nom de fichier d'origine
+    typeFilter:
+      anyOption: Tous les types
+      label: Type
+      options:
+        image: Images
+  home:
+    activityList:
+      actions:
+        areaAssignment: Participer
+        call: Commencer les appels
+        connectAndSignUp: Rejoindre et s'inscrire
+        details: En savoir plus
+        loginToSignUp: Se connecter pour s'inscrire
+        signUp: S'inscrire
+        undoSignup: Annuler l'inscription
+      emptyListMessage: Vous ne participez à aucune activité
+      eventStatus:
+        booked: Votre participation à cet événement est confirmée et les organisateurs
+          vous attendent. Contactez {org} si vous devez annuler.
+        needed: On a besoin de vous
+        signedUp: Votre inscription est enregistrée
+      filters:
+        call: Appels
+        canvass: Zones
+        event: Événements
+    allEventsList:
+      emptyList:
+        message: Aucun événement trouvé
+        removeFiltersButton: Effacer les filtres
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organisations} =1 {1 organisation} other {#
+          organisations}}'
+        selectDate: Choisir une date
+        thisWeek: Cette semaine
+        today: Aujourd'hui
+        tomorrow: Demain
+    defaultTitles:
+      areaAssignment: Mission de porte-à-porte sans titre
+      callAssignment: Campagne d'appels sans titre
+      event: Événement sans titre
+      noLocation: Aucun lieu physique
+    footer:
+      privacyPolicy: Politique de confidentialité
+    ics:
+      joinEvent: "Rejoindre l'événement ici : {eventLink}"
+    myOrgs:
+      followButton: Suivre
+      organizeButton: Organiser
+      unfollowButton: Ne plus suivre
+    newLandingPageAlert:
+      description: Si vous cherchez les pages destinées aux organisateurs, vous les
+        trouverez désormais en cliquant sur le bouton dans l'en-tête ci-dessous.
+      title: Voici votre nouvelle page d'accueil
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Ajoutez une adresse e-mail à votre compte pour pouvoir vous
+            connecter avec un mot de passe.
+          changeInstructions: Pour modifier votre adresse e-mail, vous devez contacter
+            info@zetkin.org.
+          errorText: Une erreur s'est produite. Réessayez ou contactez la Zetkin
+            Foundation pour obtenir de l'aide.
+          label: Adresse e-mail
+          saveButton: Enregistrer
+        header: Paramètres du compte
+      appPreferences:
+        header: Préférences de l'application
+        lang:
+          auto: Automatique (configurée dans le navigateur)
+          label: Langue
+          saveButton: Enregistrer et recharger
+    tabs:
+      feed: Tous les événements
+      home: Mes activités
+      orgs: Mes organisations
+      settings: Paramètres
+    title: Mon Zetkin
+  import:
+    actionButtons:
+      back: Retour
+      close: Fermer
+      configure: Configurer
+      done: Terminé
+      import: Importer
+      restart: Recommencer
+      validate: Valider
+    configuration:
+      configure:
+        dates:
+          customFormatDescription: Décrivez le format des valeurs de cette colonne avec
+            les lettres Y (année), M (mois) et D (jour), ainsi que les
+            caractères qui les séparent. Par exemple, si vos dates s'écrivent
+            23/03/1998, indiquez DD/MM/YYYY.
+          customFormatLabel: Format de date personnalisé
+          dateConfigDescription: Sélectionnez le format des valeurs de cette colonne pour
+            qu'elles soient importées comme des dates valides.
+          dateInputLabel: Format de date
+          dropDownLabel: Sélectionner un format
+          emptyPreview: Impossible à interpréter
+          header: Configurer le format de date
+          invalidDateFormatWarning: Certaines valeurs de la colonne ne semblent pas
+            correspondre à ce format. Avez-vous bien sélectionné le bon format ?
+          listSubHeaders:
+            custom: Personnalisé
+            dates: Formats de date
+            personNumbers: Numéros d'identification personnels
+          noCustomFormatWarning: Vous n'avez pas indiqué de format de date personnalisé.
+          personNumberFormat:
+            dk:
+              description: Les dates seront extraites des numéros CPR danois à 10 chiffres de
+                cette colonne (DDMMYY-XXXX ou DDMMYYXXXX).
+              label: Numéro CPR danois
+            no:
+              description: Les dates seront extraites des fødselsnummer norvégiens à 11
+                chiffres de cette colonne (DDMMYYXXXXX ou DDMMYY-XXXXX).
+              label: Fødselsnummer norvégien
+            se:
+              description: Les dates seront extraites des personnummer suédois à 10 ou 12
+                chiffres de cette colonne (YYMMDD-XXXX ou YYYYMMDD-XXXX).
+              label: Personnummer suédois
+        enum:
+          header: Associer les valeurs aux options
+          none: Aucune
+          numberOfRows: '{numRows, plural, =1 {1 ligne} other {# lignes}}'
+          value: Valeur
+        genders:
+          label: Genre
+          selectLabels:
+            f: Femme
+            m: Homme
+            o: Autre
+            unknown: Inconnu
+        ids:
+          confirmIDChange:
+            description: Vous êtes sur le point de remplacer l'ID d'import {currentImportID}
+              par {newImportID}.
+            title: Confirmer le changement d'ID d'import
+          externalIDInfo: Un ID externe est un ID qui provient d'un autre système que
+            Zetkin, par exemple une base de données de membres distincte. Il
+            permet de retrouver et d'identifier des personnes dans Zetkin.
+          field:
+            email: E-mail
+            ext_id: ID externe
+            id: ID Zetkin
+          importCheckboxDescription: Ce champ servira à retrouver les personnes déjà
+            présentes dans Zetkin ; chaque ligne devrait idéalement avoir une
+            valeur unique
+          importCheckboxLabel: Utiliser {importID} comme ID d'import
+          importID: ID d'import
+          importIDDescription: "{importID, select, id {L'ID Zetkin servira à retrouver et
+            à identifier les personnes dans Zetkin.} email {L'e-mail peut servir
+            à retrouver et à identifier les personnes dans Zetkin.} other {L'ID
+            externe peut servir à retrouver et à identifier les personnes dans
+            Zetkin.}}"
+          skipRowDescription: Aucune nouvelle personne ne sera créée
+          wrongEmailFormatWarning: Certaines valeurs de cette colonne ne sont pas des
+            adresses e-mail valides.
+          wrongIDFormatWarning: Les valeurs de cette colonne ne ressemblent pas à des ID
+            Zetkin. Un ID Zetkin ne contient que des chiffres. Si certaines
+            cellules contiennent par exemple des lettres, elles ne peuvent pas
+            servir d'ID Zetkin.
+          zetkinIDInfo: Un ID Zetkin est l'ID d'une personne déjà présente dans Zetkin.
+            Vous le trouverez dans un fichier si vous avez exporté des données
+            depuis Zetkin.
+        orgs:
+          guess: Deviner les organisations
+          header: Associer les valeurs aux organisations
+          organizations: Organisation
+          scoreImperfect: La correspondance n'est pas parfaite
+          showOrganizationSelectButton: Associer à...
+          status: Statut
+        tags:
+          empty: Vide
+          guess: Deviner les étiquettes
+          header: Associer les valeurs aux étiquettes
+          numberOfRows: '{numRows, plural, =1 {1 ligne} other {# lignes}}'
+          scoreImperfect: La correspondance n'est pas parfaite
+          tagsHeader: Étiquettes
+      hide: Masquer
+      mapping:
+        configButton: Configurer
+        defaultColumnHeader: Colonne {columnIndex}
+        email: E-mail
+        emptyStateMessage: Commencez par associer les colonnes du fichier.
+        externalID: ID externe
+        fileHeader: Fichier
+        finishedMappingDates: Conversion de {numValues, plural, =1 {1 valeur} other {#
+          valeurs}} au format {dateFormat, select, se {personnummer suédois} no
+          {fødselsnummer norvégien} dk {numéro CPR danois} other {{dateFormat}}}
+          en dates
+        finishedMappingOrganizations: '{numPeople, plural, =1 {1 personne associée}
+          other {# personnes associées}} à {numMappedTo, plural, =1 {1
+          organisation} other {# organisations}}'
+        finishedMappingTags: Association de {numRows, plural, =1 {1 ligne} other {#
+          lignes}} à {numMappedTo, plural, =1 {1 étiquette} other {#
+          étiquettes}}
+        header: Correspondance des colonnes
+        infoButton: Infos
+        mapValuesButton: Associer les valeurs
+        messages:
+          manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
+            plural, =1 {une autre valeur} other {# autres valeurs}} et
+            {numEmpty, plural, =1 {une ligne vide} other {# lignes vides}}.'
+          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} et {numMoreValues,
+            plural, =1 {une autre valeur} other {# autres valeurs}}.'
+          oneValueAndEmpty: '{firstValue} et {numEmpty, plural, =1 {une ligne vide} other
+            {# lignes vides}}.'
+          oneValueNoEmpty: '{firstValue}.'
+          onlyEmpty: '{numEmpty, plural, =1 {Une ligne vide} other {# lignes vides}}.'
+          readOnlyField: '{title} (lecture seule)'
+          threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} et {numEmpty,
+            plural, =1 {une ligne vide} other {# lignes vides}}.'
+          threeValuesNoEmpty: '{firstValue}, {secondValue} et {thirdValue}.'
+          twoValuesAndEmpty: '{firstValue}, {secondValue} et {numEmpty, plural, =1 {une
+            ligne vide} other {# lignes vides}}.'
+          twoValuesNoEmpty: '{firstValue} et {secondValue}.'
+        notEnoughRows: Votre fichier ne contient pas assez de lignes pour importer des données
+        organization: Organisation
+        selectZetkinField: Importer en tant que...
+        tags: Étiquettes
+        unfinished:
+          date: Vous devez configurer le format de date
+          enum: Vous devez associer les valeurs
+          gender: Vous devez associer les valeurs
+          id: Vous devez configurer les ID
+          org: Vous devez associer les valeurs
+          tag: Vous devez associer les valeurs
+        zetkinFieldGroups:
+          fields: Champs
+          id: ID
+          other: Autres
+        zetkinHeader: Zetkin
+        zetkinID: ID Zetkin
+      preview:
+        columnHeader:
+          gender: Genre
+          org: Organisation
+          tags: Étiquettes
+        genders:
+          f: Femme
+          m: Homme
+          o: Autre
+          unknown: Inconnu
+        ids:
+          email: E-mail
+          ext_id: ID externe
+          id: ID Zetkin
+        next: Suivant
+        noOrg: Aucune organisation
+        noTags: Aucune étiquette
+        noValue: Aucune valeur
+        previous: Précédent
+        title: Aperçu de la correspondance
+      settings:
+        firstRowIsHeaders: La première ligne contient les en-têtes
+        header: Paramètres
+        sheetSelectHelpText: Votre fichier contient plusieurs feuilles. Sélectionnez
+          celle à utiliser.
+        sheetSelectLabel: Feuille
+        skipUnknown: Ignorer les lignes dont l'ID est inconnu (ne jamais créer de
+          nouvelles personnes)
+      show: Afficher
+      statusMessage:
+        done: Import configuré pour {numConfiguredPeople, plural, =1 {1 personne} other
+          {# personnes}}
+        notDone: Votre configuration est incomplète
+      title: Importer des personnes
+    impactSummary:
+      future:
+        created: '{number} {numPeople, plural, =1 {nouvelle personne sera créée} other
+          {nouvelles personnes seront créées}}'
+        defaultDesc: '{numPeople} dont le champ {field} sera modifié'
+        organization: organisation
+        orgs: '{numPeople} à ajouter à une {org}'
+        tags: étiquettes
+        tagsDesc: '{numPeople} à qui des {tags} seront ajoutées'
+        updated: '{number} {numPeople, plural, =1 {personne sera mise à jour} other
+          {personnes seront mises à jour}}'
+      past:
+        created: '{number} {numPeople, plural, =1 {nouvelle personne a été créée} other
+          {nouvelles personnes ont été créées}}'
+        defaultDesc: '{numPeople} dont le champ {field} a été modifié'
+        organization: organisation
+        orgs: '{numPeople} désormais dans une {org}'
+        tags: étiquettes
+        tagsDesc: '{numPeople} à qui des {tags} ont été ajoutées'
+        updated: '{number} {numPeople, plural, =1 {personne a été mise à jour} other
+          {personnes ont été mises à jour}}'
+      people: '{number} {numPeople, plural, =1 {personne} other {personnes}}'
+      peopleToSubOrg: '{orgName} ({num})'
+    importStatus:
+      completed:
+        desc: Vos données ont été importées dans Zetkin
+        title: Import terminé
+      completedChanges: Modifications effectuées
+      error:
+        desc: Aucune donnée n'a été importée dans Zetkin
+        title: Échec de l'import
+      loadingState: Import en cours
+      scheduled:
+        desc: "Vous pouvez fermer cette fenêtre sans problème : nous vous enverrons un
+          e-mail une fois l'import terminé."
+        title: Cet import est volumineux et mettra un certain temps à arriver dans
+          Zetkin !
+    preflight:
+      headers:
+        messages: Messages
+        summary: Résumé
+      messages:
+        common:
+          back: Revenir en arrière
+          checkbox: Je comprends et je souhaite continuer malgré tout
+          fewRows: Ce problème concerne les lignes {commaRows} et {lastRow}.
+          manyRows: Ce problème concerne les lignes {commaRows} et {additionalRows,
+            plural, =1 {1 autre ligne} other {# autres lignes}}.
+          singleRow: Ce problème concerne la ligne {row}.
+        invalidFormat:
+          title: 'Format incorrect pour le champ : {field}'
+        invalidOrgCountry:
+          description: Il est donc impossible de deviner, par exemple, l'indicatif pays
+            des numéros de téléphone. Contactez le support pour corriger ce
+            problème.
+          title: "Code pays de l'organisation peut-être invalide : {code}"
+        majorChange:
+          description: Cet avertissement s'affiche lorsque plus de 30 % des personnes
+            importées sont concernées. Vérifiez que vous avez correctement
+            configuré les colonnes
+          title: Cet import écrasera le champ « {field} » pour {amount} personnes
+        missingIdAndName:
+          description: Chaque ligne doit contenir au moins un nom complet ou l'ID d'une
+            personne déjà présente dans Zetkin.
+          title: Certaines lignes n'ont pas d'identifiant
+        noImpact:
+          description: Le fichier ne contient peut-être aucune nouvelle donnée, ou une
+            erreur inconnue s'est produite.
+          descriptionSkipped: Le fichier ne contient peut-être aucune nouvelle donnée, ou
+            toutes les nouvelles données ont été ignorées selon vos paramètres.
+            Dans de rares cas, cela peut être dû à une erreur inconnue.
+          title: Cet import n'aurait aucun effet
+        ok:
+          description: Vérifiez que le résumé est correct, puis cliquez sur « Importer »
+            pour lancer l'import.
+          title: Aucun problème détecté !
+        unconfiguredId:
+          description: Cela créera des doublons dans la base de données. S'il s'agit de
+            votre premier import, nous vous recommandons de revenir en arrière
+            et de choisir un ID externe que vous pourrez réutiliser à l'avenir.
+          title: Vous n'avez pas choisi de colonne d'ID
+        unconfiguredIdAndName:
+          description: Chaque import doit contenir au moins des noms complets ou les ID de
+            personnes déjà présentes dans Zetkin.
+          title: Vous n'avez pas configuré de colonnes d'identification
+        unexpectedError:
+          description: Aucune personne n'a été importée. Vous pouvez revenir en arrière et
+            vérifier les paramètres d'import, ou sélectionner un nouveau fichier
+            à importer. Le formulaire envoyé contenait des erreurs. Veuillez
+            réessayer en veillant à renseigner toutes les informations
+            nécessaires. Si l'erreur persiste, vous pouvez contacter le support
+            à l'adresse info@zetkin.org
+          title: Une erreur s'est produite et l'import a été interrompu
+        unknownError:
+          description: Contactez le support si vous avez besoin d'aide pour comprendre le
+            problème.
+          title: Une erreur inconnue s'est produite
+        unknownPerson:
+          description: Vous avez configuré une colonne comme ID Zetkin, mais elle contient
+            des ID qui n'existent pas. Vouliez-vous utiliser l'ID externe, ou
+            certaines personnes ont-elles été supprimées depuis la création du
+            fichier ?
+          title: Tentative de mise à jour d'enregistrements inexistants
+        validating: Validation en cours
+    steps:
+      configure: Configurer
+      import: Importer
+      upload: Choisir un fichier
+      validate: Valider
+    uploadDialog:
+      dialogButtons:
+        configure: Configurer
+        restart: Recommencer
+      instructions: '{link} ou glissez-déposez-le ici'
+      loading: Chargement du fichier...
+      release: Déposez le fichier ici
+      selectClick: Cliquez pour importer un fichier
+      types: CSV, XLS ou XLSX
+      unsupportedFile: Format de fichier non pris en charge.
+    validation:
+      messages: Messages
+      people: '{numPeople, plural, =1 {personne} other {personnes}}'
+      statusMessages:
+        create: Cet import créera {numCreated, plural, =1 {1 personne} other {#
+          personnes}}.
+        createAndUpdate: Cet import créera {numCreated, plural, =1 {1 personne} other {#
+          personnes}} et mettra à jour {numUpdated, plural, =1 {1 personne}
+          other {# personnes}}.
+        error: Vous devez corriger les erreurs avant de pouvoir importer
+        update: Cet import mettra à jour {numUpdated, plural, =1 {1 personne} other {#
+          personnes}}.
+  joinForms:
+    defaultTitle: Formulaire sans titre
+    deleteJoinForm:
+      success: Le formulaire « {title} » a été supprimé
+      title: Supprimer le formulaire d'adhésion
+      warning: Voulez-vous vraiment supprimer « {title} » ?
+    embedding:
+      copyLink: Copier l'URL d'intégration
+      delete: Supprimer
+      formSubmitted: Formulaire envoyé
+      linkCopied: URL d'intégration copiée.
+      openLink: Ouvrir
+      submitButton: Envoyer
+    formPane:
+      labels:
+        addField: Ajouter un champ
+        description: Description
+        requireEmailVerification: Exiger la vérification de l'adresse e-mail
+        shareWithSuborgs: Partager avec les sous-organisations
+        title: Titre
+      title: Modifier le formulaire
+    forms: Formulaires
+    states:
+      accepted: Approuvée
+      pending: En attente
+    status: Statut
+    submissionList:
+      approveButton: Approuver
+      firstName: Prénom
+      form: Formulaire
+      lastName: Nom
+      noFilteringResults: Aucun résultat ne correspond à vos filtres.
+      rejectButton: Refuser
+      timestamp: Horodatage
+    submissionPane:
+      allForms: Tous les formulaires
+      allStatuses: Tous
+      approveButton: Approuver
+      form: Formulaire
+      rejectButton: Refuser
+    submissionVerifiedPage:
+      h: Merci !
+      info: Votre demande a été vérifiée et l'équipe de {org} l'examinera
+        prochainement.
+    submitToken:
+      copySubmitToken: Copier le jeton d'envoi
+      submitTokenCopied: Jeton d'envoi copié.
+  journeys:
+    instance:
+      addAssigneeButton: Ajouter une personne assignée
+      addSubjectButton: Ajouter une personne
+      addSubjectLabel: Ajouter une personne
+      assignPersonLabel: Assigner une personne
+      closeButton:
+        dialog:
+          outcomeFieldPlaceholder: Décrivez le résultat de ce dossier ({singularLabel})
+          outcomeLabel: Résultat
+          outcomeTagsDescription: Ajoutez les étiquettes qui décrivent le résultat.
+          outcomeTagsLabel: Étiquettes de résultat
+        error: Une erreur s'est produite lors de la clôture du dossier ({singularLabel})
+        label: Clôturer le dossier ({singularLabel})
+      collapseButton: Réduire
+      createAndApplyTagButton: Créer et appliquer
+      created: Créé {relative}
+      deadlineLabel: '(Échéance : {date})'
+      dueDateInputClear: Effacer
+      dueDateInputLabel: Échéance
+      editButton: Modifier
+      ellipsisMenu:
+        convert: Convertir en...
+        deletion:
+          delete: Supprimer « {instanceTitle} »
+          warning: Le dossier « {instanceTitle} » sera supprimé. Cette action est
+            irréversible.
+      expandButton: Développer
+      markedCompleteLabel: Marquée comme terminée {relativeTime}
+      newInstance:
+        draft: Brouillon
+        openingNote: Note d'ouverture
+        submitLabel: Créer le dossier ({journey})
+        title: Nouveau dossier ({journey})
+      noMilestones: Il n'y a aucune étape.
+      noOutcomeDetails: Aucun détail fourni sur le résultat.
+      percentComplete: '{percentComplete} % terminé'
+      reopenButton:
+        error: Une erreur s'est produite lors de la réouverture du dossier
+          ({singularLabel})
+        label: Rouvrir le dossier ({singularLabel})
+      sections:
+        assigned: Assigné à
+        members: Membres
+        milestones: Étapes
+        outcome: Ce dossier ({journeyTitle}) est clôturé.
+        summary: Résumé
+        timeline: Notes
+      summaryPlaceholder: Décrivez brièvement l'état d'avancement de ce dossier ({journeyTitle}).
+      updated: dernière activité {relative}
+    instances:
+      columns:
+        assignees: Assigné à
+        created: Créé
+        id: ID
+        nextMilestoneDeadline: Échéance de la prochaine étape
+        nextMilestoneTitle: Prochaine étape
+        outcome: Notes sur le résultat
+        subjects: Personnes
+        summary: Résumé
+        tagsFree: Étiquettes
+        title: Titre
+        updated: Dernière mise à jour
+      export:
+        headers:
+          assignees: Personnes assignées
+          closed: Clôturé le
+          created: Créé le
+          id: ID
+          journey: Parcours
+          nextMilestone: Prochaine étape
+          nextMilestoneDeadline: Échéance de la prochaine étape
+          outcome: Résultat
+          subjects: Personnes concernées
+          summary: Résumé
+          title: Titre
+          unsortedTags: Étiquettes sans groupe
+          updated: Mis à jour le
+      filters:
+        doesNotHaveOperator: ne contient pas
+        doesNotIncludeOperator: n'inclut pas
+        hasOperator: contient
+        includesOperator: inclut
+        isEmptyOperator: est vide
+        isNotOperator: n'est pas
+        isOperator: est
+        milestoneLabel: Étape
+        personLabel: Personne
+        tagLabel: Étiquette
+      menu:
+        downloadCsv: Télécharger les {pluralLabel} au format CSV
+        downloadXlsx: Télécharger les {pluralLabel} au format Excel
+    journeys:
+      buttonClose: Clôturer
+      buttonOpen: Ouvrir
+      cardCTA: Tout voir
+      closedCount: 'Clôturés : {numberClosed}'
+      conversionSnackbar:
+        error: Une erreur s'est produite lors de la conversion du parcours.
+        success: Conversion du parcours réussie !
+      editJourneyTitleAlert:
+        error: "Erreur : le titre n'a pas été mis à jour."
+        success: Titre mis à jour !
+      lastActivity: Dernière activité
+      menu:
+        downloadCsv: Tout télécharger au format CSV
+        downloadXlsx: Tout télécharger au format Excel
+      nextMilestone: Prochaine étape
+      openCount: 'Ouverts : {numberOpen}'
+      overview:
+        overviewTitle: Tous les parcours
+      statusClosed: Clôturé
+      statusOpen: Ouvert
+      tabs:
+        closed: Clôturés
+        manage: Gérer
+        milestones: Étapes
+        open: Ouverts
+        overview: Vue d'ensemble
+        timeline: Chronologie
+      title: Parcours
+  organizations:
+    allEventsList:
+      emptyList:
+        message: Aucun événement trouvé
+        removeFiltersButton: Effacer les filtres
+      filterButtonLabels:
+        locations: '{count} lieux'
+        organizations: '{numOrgs, plural, =0 {Organisations} =1 {1 organisation} other
+          {# organisations}}'
+        selectDate: Choisir une date
+        thisWeek: Cette semaine
+        today: Aujourd'hui
+        tomorrow: Demain
+    authDialog:
+      cancelButton: Annuler
+      content: Vous devez avoir un compte Zetkin pour vous inscrire à des événements.
+      label: S'inscrire
+      loginButton: Se connecter et revenir
+    eventPage:
+      cancelSignup: Annuler l'inscription
+      cancelledHeader: Cet événement a été annulé
+      cancelledParagraph: Vous ne pouvez plus vous y inscrire et, si votre inscription
+        était déjà enregistrée, votre présence n'est plus attendue.
+      contactPerson:
+        default: '{name} est la personne de contact'
+        you: Vous êtes la personne de contact
+      defaultTitle: Événement sans titre
+      haveAccount: J'ai un compte
+      loading: Chargement...
+      noDescription: Cet événement n'a pas de description
+      noLocation: Aucun lieu physique
+      partOfProject: Fait partie du projet {projectLink}
+      participatingInfo: '{participatingCount, plural, =1 {# personne participe} other
+        {# personnes participent}}'
+      today: Aujourd'hui
+    gen3:
+      description: Voici la nouvelle application web pour les organisateurs (3e
+        génération). Si vous avez l'habitude de l'ancienne, vous y trouverez de
+        nombreuses nouvelles fonctionnalités et une interface améliorée. Mais si
+        vous le souhaitez, vous pouvez encore utiliser l'ancienne application
+        pendant quelque temps.
+      gen2Button: Accéder à l'ancienne interface
+      title: Bienvenue dans le nouveau Zetkin !
+    home:
+      footer:
+        privacyPolicy: Politique de confidentialité
+      header:
+        calendarLinkCopied: Lien du calendrier copié
+        connect: Rejoindre
+        copyIcsUrl: Copier l'URL d'abonnement au calendrier
+        follow: Suivre
+        login: Se connecter et rejoindre
+        organize: Organiser
+        unfollow: Ne plus suivre
+        userMenu: Menu du compte ({initials})
+      map:
+        viewInList: Afficher en liste
+        viewOnMap: Afficher sur la carte
+      menu:
+        logout: Se déconnecter
+        myZetkin: Mon Zetkin
+        organize: Organiser
+        settings: Paramètres
+      tabs:
+        calendar: Calendrier
+        suborgs: Explorer
+    noEventsBlurb:
+      description: "{org} n'a aucun événement à venir."
+      headline: Aucun événement à venir
+    notOrganizer:
+      description: Cette partie de Zetkin est réservée aux personnes qui ont reçu un
+        accès organisateur de la part des responsables de leur organisation.
+        Vous n'avez actuellement pas le niveau d'accès nécessaire. Si vous
+        pensez qu'il s'agit d'une erreur, contactez les responsables Zetkin de
+        votre organisation locale ou la Zetkin Foundation.
+      myPageButton: Accéder au portail militant
+      title: Vous n'avez pas d'accès organisateur
+    overview:
+      suborgs:
+        title: Sous-organisations
+    page:
+      title: 'Sélectionnez une organisation :'
+    sidebar:
+      allOrganizations: Toutes les organisations
+      filter:
+        noResults: Aucune organisation ne correspond à ce filtre
+        topLevel: Organisation de premier niveau
+      filtered: Filtrées
+      recent:
+        clear: Effacer
+        title: Organisations récentes
+    signupChoiceModal:
+      description: "Utilisez votre compte Zetkin pour vous inscrire à un événement. Si
+        vous n'avez pas de compte, pas d'inquiétude : vous pouvez tout de même
+        vous inscrire sans compte."
+      title: Comment souhaitez-vous vous inscrire ?
+      withAccount: Avec un compte
+      withoutAccount: Sans compte
+    subOrgEventBlurb:
+      description: Il y a {eventsElem} {numEvents, plural, =1 {autre événement} other
+        {autres événements}} dans {orgsElem} {numOrgs, plural, =1
+        {sous-organisation} other {sous-organisations}}.
+      headline: Aller plus loin
+      showButton: Afficher tous les événements
+  profile:
+    customFields:
+      notEditable: Ce champ ne peut pas être modifié par votre organisation
+    delete:
+      button: Supprimer la personne
+      confirm: Voulez-vous vraiment supprimer {name} de {org} et de toutes les
+        organisations liées ? Cette action est définitive.
+      title: Supprimer la personne
+      warning: Cette action est irréversible !
+    details:
+      title: Détails
+    editButton: Modifier {title}
+    editButtonClose: Terminer la modification de {title}
+    editButtonLabel: Modifier les détails
+    editPersonHeader: Modifier {person}
+    ellipsisMenu:
+      merge: Fusionner avec...
+    events:
+      noPast: Aucun événement passé
+      noUpcoming: Aucun événement à venir
+      past: Événements passés
+      upcoming: Événements à venir
+    genders:
+      f: Femme
+      m: Homme
+      o: Autre
+      unknown: Non précisé
+    journeys:
+      addButton: Démarrer un nouveau parcours
+      title: Parcours
+    notes:
+      addNoteButton: Ajouter une note
+      cancelButton: Annuler
+      note:
+        author: '{authorName} a ajouté une note'
+        delete: Supprimer
+        deleteWarningDescription: Voulez-vous vraiment supprimer cette note sur {name} ?
+          La suppression d'une note est irréversible.
+        deleteWarningTitle: Supprimer la note
+      placeHolder: Écrire une note
+      title: Notes
+    numberOfChangesMessage: '{number, plural, =1 {1 champ sera mis à jour} other {#
+      champs seront mis à jour}}'
+    organizations:
+      add: Ajouter une nouvelle sous-organisation
+      addError: Impossible d'ajouter cette organisation
+      removeError: Impossible de retirer cette organisation
+      title: Organisations
+    resetButton: Réinitialiser
+    role:
+      noRole: Aucun rôle
+    saveButton: Enregistrer
+    surveySubmissions:
+      showMore: + {numExtra} de plus
+      title: Réponses aux questionnaires
+    tabs:
+      events: Événements
+      manage: Gestion
+      profile: Profil
+    tags:
+      createAndApplyLabel: Créer et appliquer
+    user:
+      hasAccount: Compte Zetkin associé
+      noAccount: Aucun compte Zetkin associé
+  projects:
+    activeProjects:
+      header: Actifs
+    activitiesOverview:
+      button: Parcourir toutes les activités
+      empty: Rien de prévu pour ce jour
+      endsTomorrow: se termine demain
+      extraActivities: + {numExtra} de plus
+      goToActivities: Voir toutes les activités à venir.
+      noActivities: Aucune activité cette semaine.
+      noDescription:
+        addOneNow: En ajouter une maintenant.
+        text: Aucune description n'a encore été ajoutée à ce projet. {addOneNow}
+      nothingTomorrow: Rien de prévu demain
+      startsTomorrow: commence demain
+      subtitles:
+        endsLater: Se termine {relative}
+        endsToday: Se termine aujourd'hui
+        sentEarlier: Envoyé {relative}
+        sentLater: Sera envoyé {relative}
+        startsLater: Commence {relative}
+        startsToday: Commence aujourd'hui
+      thisWeekCard: Également cette semaine
+      title: Activités à venir
+      todayCard: Aujourd'hui
+      tomorrowCard: Demain
+    activityList:
+      eventItem:
+        contact: Aucune personne de contact n'a été assignée
+        locations: '{count} lieux'
+        reminders: "{numMissing, plural, =1 {Un participant n'a pas encore reçu de
+          rappel} other {# participants n'ont pas encore reçu de rappel}}"
+        signups: Des inscriptions sont en attente
+    all:
+      cardAriaLabel: Ouvrir le projet {title}
+      cardCTA: Accéder au projet
+      create: Créer un projet
+      creating: Création du projet en cours
+      filter:
+        areaAssignments: Missions de porte-à-porte
+        calls: Campagnes d'appels
+        emails: E-mails
+        filter: Filtrer les résultats
+        standalones: Événements hors projet
+        surveys: Questionnaires
+      header: Projets
+      indefinite: Durée indéterminée
+      projectFilterPlaceholder: Tapez pour filtrer les projets
+      unsorted: Projets non classés
+      upcoming: 'Événements à venir : {numEvents, number}.'
+    allProjects:
+      noActivities: Si votre organisation a des activités qui n'appartiennent à aucun
+        projet, elles apparaîtront ici.
+      viewArchive: Voir les archives
+    archivedProjects:
+      header: Archivés
+      hideShowButton:
+        hide: Masquer les projets archivés
+        show: Afficher les projets archivés
+    assigneeActions: Actions des personnes assignées
+    calendarView: Tout voir dans le calendrier
+    changeProjectDialog:
+      moveButtonLabel: Déplacer
+    createButton:
+      createActivity: Créer
+      createAreaAssignment: Mission de porte-à-porte
+      createCallAssignment: Campagne d'appels
+      createEmail: E-mail
+      createEvent: Événement
+      createMultiShiftEvent: Événement à plusieurs créneaux
+      createSurvey: Questionnaire
+      createTask: Tâche
+      creatingActivity: Création en cours
+    events: Événements
+    feedback:
+      copy: Recueillir des retours (lors de campagnes d'appels ou de façon autonome)
+        peut vous aider à travailler plus efficacement
+      create: Créer un questionnaire
+      heading: Retours et questionnaires (aucun élément configuré)
+    form:
+      archiveProject:
+        archive: Archiver le projet
+        unarchive: Sortir des archives
+      createActivity:
+        error: Une erreur s'est produite lors de la création de l'activité
+      createAreaAssignment:
+        defaultQuestion: Avez-vous terminé la tâche ?
+      createCallAssignment:
+        newCallAssignment: Ma campagne d'appels
+      createEmail:
+        newEmail: E-mail sans titre
+      createProject:
+        create: Créer le projet
+        error: Une erreur s'est produite lors de la création du projet
+        newProject: Mon projet
+      createSurvey:
+        newSurvey: Mon questionnaire
+      createTask:
+        title: Créer une tâche
+      deleteProject:
+        cancel: Annuler
+        error: Une erreur s'est produite lors de la suppression du projet
+        submitButton: Confirmer la suppression
+        title: Supprimer le projet
+        warning: Voulez-vous vraiment supprimer ce projet ? Cette action est définitive.
+      description: Description
+      edit: Modifier le projet
+      editProjectTitle:
+        error: Erreur lors de la mise à jour du titre du projet
+        success: Titre du projet mis à jour
+      manager:
+        label: Responsable du projet
+      name: Nom
+      requestError: Une erreur s'est produite. Veuillez réessayer.
+      required: Obligatoire
+      status:
+        draft: Brouillon
+        heading: Statut
+        published: Publié
+      visibility:
+        heading: Visibilité
+        private: Privé
+        public: Public
+    indefinite: Période indéterminée
+    layout:
+      activities: Activités
+      allProjects: Tous les projets et activités
+      archive: Archives
+      calendar: Calendrier
+      insights: Statistiques
+      overview: Vue d'ensemble
+    linkGroup:
+      createActivity: Créer
+      createAreaAssignment: Mission de porte-à-porte
+      createCallAssignment: Campagne d'appels
+      createEmail: E-mail
+      createEvent: Événement
+      createSurvey: Questionnaire
+      createTask: Tâche
+      public: Page publique
+      settings: Modifier les paramètres
+    mobilization:
+      copy: Organiser une campagne d'appels pour mobiliser votre organisation
+        permettra de multiplier la participation
+      create: Créer une campagne d'appels
+      heading: Mobilisation et prise de contact (aucun élément configuré)
+    noManager: Pas de responsable de projet
+    publicProjectPage:
+      calendarLinkCopied: Lien du calendrier copié
+      copyIcsUrl: Copier l'URL d'abonnement au calendrier
+      eventList:
+        emptyList:
+          message: Aucun événement trouvé
+          removeFiltersButton: Effacer les filtres
+        filterButtonLabels:
+          locations: '{count} lieux'
+          selectDate: Choisir une date
+          thisWeek: Cette semaine
+          today: Aujourd'hui
+          tomorrow: Demain
+        noEventsBlurb:
+          description: "{project} n'a aucun événement à venir."
+          headline: Aucun événement à venir
+      map:
+        viewInListButton: Voir en liste
+        viewOnMapButton: Voir sur la carte
+    shared:
+      cta: Voir les activités partagées
+      noActivities: Toutes les activités en cours partagées avec votre organisation
+        apparaîtront ici.
+      noArchives: Toutes les activités terminées qui ont été partagées avec votre
+        organisation apparaîtront ici.
+      title: Partagé avec nous
+    sharedLayout:
+      alertMsg: "Ce projet contient uniquement des activités partagées par d'autres
+        organisations : vous pouvez le consulter, mais pas le modifier."
+      subtitle: '{numOfActivities, plural, =1 {1 activité} other {# activités}}'
+      tabs:
+        activities: Activités
+        archive: Archives
+        overview: Vue d'ensemble
+      title: Partagé avec nous
+    singleProject:
+      filterActivities: Tapez pour filtrer
+      noActivities: Ce projet ne contient encore aucune activité.
+      noSearchResults: Votre filtre n'a donné aucun résultat.
+      showPublicPage: Afficher la page d'inscription publique
+      status:
+        archived: Archivé
+        draft: Brouillon
+        private: Privé
+        public: Public
+      viewArchive: Voir les archives
+    taskLayout:
+      tabs:
+        assignees: Personnes assignées
+        insights: Statistiques
+        summary: Résumé
+    tasks: Tâches
+    urlCard:
+      nowAccepting: Les inscriptions sont ouvertes via ce lien
+      open: Inscriptions ouvertes
+      preview: Aperçu du projet
+      previewPortal: Aperçu du projet dans le portail militant
+      visitPortal: Voir le projet dans le portail militant
+      willAccept: Les inscriptions seront ouvertes via ce lien
+  search:
+    error: Une erreur s'est produite
+    groups:
+      callassignment: Campagnes d'appels
+      campaign: Projets
+      journeyinstance: Parcours
+      person: Personnes
+      survey: Questionnaires
+      task: Tâches
+      view: Listes
+    label: Rechercher
+    noResults: Aucun résultat
+    placeholder: Tapez pour rechercher
+    results:
+      project: Projet
+    showOnly:
+      callassignment: Afficher uniquement les campagnes d'appels
+      campaign: Afficher uniquement les projets
+      journeyinstance: Afficher uniquement les parcours
+      person: Afficher uniquement les personnes
+      survey: Afficher uniquement les questionnaires
+      task: Afficher uniquement les tâches
+      view: Afficher uniquement les listes
+  settings:
+    email:
+      themes:
+        addTheme: Créer un thème
+        delete:
+          action: Supprimer
+          confirmDialog:
+            confirmButton: Oui, supprimer le thème {themeId}
+            title: Supprimer le thème {themeId} ?
+            warningText: Voulez-vous vraiment supprimer le thème {themeId} ? Cette action
+              est irréversible.
+        duplicateTheme: Dupliquer le thème
+        overview:
+          description: Un thème définit l'apparence et la mise en page générales de vos
+            e-mails, des couleurs et des polices jusqu'aux espacements, aux
+            boutons et aux blocs de contenu.
+          title: Thèmes
+        themeCard:
+          duplicate: Dupliquer
+          edit: Modifier
+          title: Thème {themeId}
+        themeEditor:
+          jsonError: JSON non valide
+          previewTitle: Aperçu
+          saveButton: Enregistrer
+          tabs:
+            block: Blocs
+            css: CSS
+            frame: Cadre
+          title: Thème {themeId}
+        themePreview:
+          button: Inscrivez-vous ici
+          heading:
+            paragraphPart1: Bonjour
+            paragraphPart2: Nous avons le plaisir de vous inviter à une table ronde le 1er mai
+            paragraphPart3: 'Voici ce qui vous attend :'
+          paragraph:
+            paragraph1: "Un spectre hante l'Europe : le spectre du communisme. Toutes les
+              puissances de la vieille Europe se sont unies en une
+              sainte-alliance pour exorciser ce spectre : le pape et le tsar,
+              Metternich et Guizot, les radicaux français et les mouchards de la
+              police allemande."
+            paragraph2: Quel est le parti d'opposition qui n'a pas été taxé de communisme
+              par ses adversaires au pouvoir ? Quelle est l'opposition qui, à
+              son tour, n'a pas renvoyé l'accusation infamante de communisme aux
+              partis d'opposition plus avancés comme à ses adversaires
+              réactionnaires ?
+            paragraph3: 'Il en résulte deux choses :'
+            paragraph4: Le communisme est déjà reconnu par toutes les puissances européennes
+              comme une puissance à part entière.
+            paragraph5: Il est grand temps que les communistes exposent ouvertement, à la
+              face du monde entier, leurs conceptions, leurs buts et leurs
+              tendances, et qu'ils opposent à cette légende du spectre du
+              communisme un manifeste du parti lui-même.
+            paragraph6: 'Pour lire le manifeste en entier, cliquez '
+            paragraph7: ici
+        title: Thèmes
+        unsavedChanges:
+          confirmLeaving: Quitter sans enregistrer
+          warning: Vous avez des modifications non enregistrées. Voulez-vous vraiment
+            quitter la page ?
+    fields:
+      access:
+        onlyThisOrg: Cette organisation uniquement
+        suborgRead: Visible par les sous-organisations
+        suborgReadAndWrite: Modifiable par les sous-organisations
+      accessTypes:
+        onlyThisOrg: Non
+        suborgRead: Oui, elles peuvent voir les données
+        suborgReadAndWrite: Oui, elles peuvent voir et modifier les données
+      confirmDeletion:
+        confirmButton: Oui, supprimer « {fieldTitle} »
+        title: Supprimer le champ « {fieldTitle} » ?
+        warningText: Voulez-vous vraiment supprimer le champ « {fieldTitle} » ? Cette
+          action est irréversible.
+      create:
+        accessInput: Partager avec les sous-organisations ?
+        accessInputHelper: Les administrateurs de cette organisation pourront toujours
+          voir et modifier ces données sur les personnes.
+        createButton: Créer
+        errorMessage: Une erreur inattendue s'est produite lors de la création du champ.
+          Veuillez réessayer. Si le problème persiste, contactez l'assistance.
+        optionsInput: Options (séparées par des virgules)
+        slugInput: Identifiant
+        slugInputHelper: Les identifiants doivent être uniques et ne contenir que les
+          caractères a-z, 0-9 et _
+        title: Créer un champ
+        titleInput: Titre
+        typeInput: Type
+      customFieldTypes:
+        date: Date
+        enum: Options
+        json: JSON
+        lnglat: Longitude et latitude
+        text: Texte
+        url: URL
+      edit:
+        cancelButton: Annuler
+        deleteButton: Supprimer le champ
+        errorMessage: Impossible de mettre à jour le champ.
+        optionsInput: Options (séparées par des virgules)
+        saveButton: Enregistrer
+        slugInput: Identifiant
+        title: Modification du champ « {fieldTitle} »
+        titleInput: Titre
+        typeInput: Type
+      errors:
+        '400': Impossible d'enregistrer ce champ. Veuillez vérifier l'identifiant et les
+          options.
+        '409': Cet identifiant est déjà utilisé. Veuillez en choisir un autre.
+      list:
+        editButton: Modifier
+        headers:
+          access: Accès
+          slug: Identifiant
+          title: Titre
+          type: Type
+        title: Champs
+    officials:
+      addPerson:
+        addAdmin: Ajouter un administrateur
+        addOrganizer: Ajouter un organisateur
+        administrators: administrateurs
+        alreadyInList: Déjà dans la liste
+        organizers: organisateurs
+        placeholder: Saisissez un nom pour ajouter une personne aux {list}
+      administrators:
+        columns:
+          name: Nom
+        description: Les administrateurs disposent d'un accès complet pour créer,
+          modifier et supprimer tout type de contenu.
+        empty: Vous n'avez encore ajouté aucun administrateur.
+        roleInheritance: Administrateur de
+        title: Administrateurs
+      organizers:
+        columns:
+          inheritance: Rôle hérité
+          name: Nom
+        description: Les organisateurs disposent de droits suffisants pour, par exemple,
+          organiser des projets et gérer les campagnes d'appels existantes.
+        empty: Vous n'avez encore ajouté aucun organisateur.
+        roleInheritance: Organisateur de
+        title: Organisateurs
+      tableButtons:
+        demote: Rétrograder
+        promote: Promouvoir
+        remove: Retirer
+      urlCard:
+        linkToPub: Lien vers la page publique de l'organisation
+        subTitle: Chaque personne doit d'abord rejoindre l'organisation pour pouvoir
+          accéder à Zetkin en tant que responsable.
+      you: Vous
+    settingsLayout:
+      access: Accès
+      email: E-mail
+      fields: Champs
+      title: Paramètres
+  smartSearch:
+    buttonLabels:
+      add: Enregistrer la sélection
+      addNewFilter: Ajouter / retirer des personnes
+      cancel: Annuler
+      close: Fermer
+      goBack: Revenir à la requête
+      save: Enregistrer
+    filterGallery:
+      categories:
+        basicInformation:
+          description: Sélectionnez des personnes selon leurs informations personnelles
+          title: Informations de base
+        crossReferencing:
+          description: Sélectionnez des personnes à partir de listes et de Smart Search
+          title: Croisement de données
+        email:
+          description: Trouvez des personnes à partir des données recueillies lors de
+            l'envoi d'e-mails.
+          title: E-mails
+        events:
+          description: Sélectionnez des personnes à partir des données des événements
+          title: Événements
+        journey:
+          description: Sélectionnez des personnes à partir des données des parcours
+          title: Parcours
+        misc:
+          description: Autres façons de sélectionner des personnes
+          title: Divers
+        phoneBanking:
+          description: Utilisez les données d'appels pour sélectionner des personnes
+          title: Campagnes d'appels
+        surveys:
+          description: Sélectionnez des personnes selon leurs réponses aux questionnaires
+          title: Questionnaires
+        tasks:
+          description: Sélectionnez des personnes à partir des données des tâches
+          title: Tâches
+      filters:
+        action_participation:
+          description: Quelles personnes se sont inscrites ou ont été confirmées pour un
+            événement précis ?
+          title: Participation à un événement précis
+        all:
+          description: Trouvez des personnes selon les sous-organisations dont elles font
+            partie.
+          title: Toutes les personnes d'une sous-organisation
+        area:
+          description: Recherchez selon des champs de localisation, à l'intérieur ou en
+            dehors d'une zone géographique
+          title: Localisation (zone)
+        call_history:
+          description: Trouvez les personnes appelées, qu'elles aient été jointes ou non.
+          title: Historique des appels
+        caller:
+          description: Trouvez les personnes assignées comme appelants.
+          title: Appelants
+        caller_participation:
+          description: Trouvez les personnes qui ont enregistré des appels en tant
+            qu'appelants.
+          title: Appelants ayant enregistré des appels
+        campaign_participation:
+          description: Inscription ? Confirmation ? Ou rien du tout ? Trouvez les
+            personnes concernées !
+          title: Participation aux événements
+        email_blacklist:
+          description: 'E-mails rejetés, adresses incorrectes, messages non reçus : voici
+            les personnes concernées.'
+          title: Personnes bloquées pour les e-mails
+        email_click:
+          description: Clic ou pas de clic ?
+          title: Selon leurs interactions avec les liens des e-mails.
+        email_history:
+          description: Qui a reçu quoi, et quand ?
+          title: Selon leur historique d'e-mails
+        joinform:
+          description: Trouvez les personnes arrivées via un formulaire d'adhésion.
+          title: Selon le formulaire d'adhésion d'origine
+        journey_subjects:
+          description: Trouvez les personnes qui suivent un parcours ou l'ont déjà terminé
+          title: Personnes dans un parcours
+        official:
+          description: Trouvez les personnes qui ont un accès organisateur ou
+            administrateur dans une organisation
+          title: Selon leur niveau d'accès
+        person_data:
+          description: Nom, adresse, e-mail et plus encore !
+          title: Informations personnelles
+        person_field:
+          description: Comme les informations personnelles de base, mais en recherchant
+            dans les champs propres à cette organisation.
+          title: Champs personnalisés
+        person_tags:
+          description: Pour trouver les personnes qui ont, ou non, certaines étiquettes.
+          title: Étiquettes
+        person_view:
+          description: Pour trouver les personnes qui figurent, ou non, dans une liste.
+          title: Personnes d'une liste
+        random:
+          description: Ajoutez ou retirez des personnes au hasard.
+          title: Sélection aléatoire
+        sub_query:
+          description: Utilisez une autre Smart Search pour affiner celle-ci.
+          title: Personnes correspondant à une requête Smart Search enregistrée
+        survey_option:
+          description: 'Utilisez les réponses à vos questionnaires pour leur noble mission
+            : trouver les bonnes personnes !'
+          title: Réponses aux questions à choix
+        survey_response:
+          description: 'Utilisez les réponses à vos questionnaires pour leur noble mission
+            : trouver les bonnes personnes !'
+          title: Réponses aux questions ouvertes
+        survey_submission:
+          description: Questionnaire rempli ou non ? Trouvez les personnes concernées ici !
+          title: Questionnaire rempli
+        task:
+          description: Ajoutez ou retirez des personnes selon leur participation aux tâches
+          title: Tâches
+        user:
+          description: Trouvez les personnes qui sont liées, ou non, à un compte Zetkin
+          title: Utilisateurs Zetkin
+    filters:
+      all:
+        inputString: Commencer avec {startWithSelect}.
+        startWithSelect:
+          'false': une liste vide
+          'true': une liste de toutes les personnes de l'organisation
+      allInSuborg:
+        examples:
+          one: 'Ajouter les personnes qui font partie de la sous-organisation suivante :
+            Section locale de Littleton'
+          two: Retirer les personnes qui font partie de n'importe quelle
+            sous-organisation.
+        inputString:
+          any: '{addRemoveSelect} les personnes qui font partie de {suborgScopeSelect}.'
+          multiple: '{addRemoveSelect} les personnes qui font partie de
+            {suborgScopeSelect} : {multipleSuborgsSelect}'
+          single: '{addRemoveSelect} les personnes qui font partie de {suborgScopeSelect}
+            : {singleSuborgSelect}'
+        suborgScopeSelect:
+          any: n'importe quelle sous-organisation
+          multiple: l'une des sous-organisations suivantes
+          single: la sous-organisation suivante
+      area:
+        examples:
+          one: Ajouter les personnes dont le champ Domicile se situe dans la zone Malmö
+          two: Retirer les personnes dont le champ Adresse du siège se situe en dehors de
+            la zone Copenhague
+        inputString: '{addRemoveSelect} les personnes dont le champ {lnglatFieldSelect}
+          se situe {withinOutsideSelect} la zone {areaSelect}'
+        slice:
+          in: dans
+          out: en dehors de
+      callBlocked:
+        inputString: "{addRemoveSelect} les personnes bloquées pour les appels, quelle
+          qu'en soit la raison"
+      callHistory:
+        assignmentSelect:
+          any: n'importe quelle campagne d'appels
+          assignment: la campagne d'appels « {assignmentTitle} »
+          none: Cette organisation n'a pas encore de campagne d'appels
+        callSelect:
+          called: ont été appelées
+          notreached: n'ont pas été jointes
+          reached: ont été jointes
+        examples:
+          one: Ajouter les personnes qui ont été jointes au moins 2 fois dans n'importe
+            quelle campagne d'appels, quelle que soit la date.
+          two: Retirer les personnes qui ont été appelées au moins 1 fois dans la campagne
+            d'appels « Réactiver les anciens membres » au cours des 30 derniers
+            jours.
+        inputString: '{addRemoveSelect} les personnes qui {callSelect} {minTimes} dans
+          {assignmentSelect} {timeFrame}.'
+        minTimes: '{minTimes, plural, one {une fois} other {# fois}}'
+        minTimesInput: au moins {input} {minTimes, plural, one {fois} other {fois}}
+      caller:
+        assignmentSelect:
+          any: n'importe quelle campagne d'appels
+          assignment: la campagne d'appels « {assignmentTitle} »
+          none: Cette organisation n'a pas encore de campagne d'appels
+        callerSelect:
+          assigned: sont assignées comme appelants
+          notassigned: ne sont pas assignées comme appelants
+        examples:
+          one: Ajouter les personnes qui sont actuellement assignées comme appelants.
+          two: Retirer les personnes qui sont assignées comme appelants dans la campagne
+            d'appels « Réactiver les anciens membres ».
+        inputString: '{addRemoveSelect} les personnes qui {callerSelect} dans
+          {assignmentSelect}.'
+        previewString: '{addRemoveSelect} les personnes qui {callerSelect} dans
+          {assignmentSelect}.'
+      callerParticipation:
+        assignmentSelect:
+          any: n'importe quelle campagne d'appels
+          assignment: la campagne d'appels « {assignmentTitle} »
+          none: Cette organisation n'a pas encore de campagne d'appels
+        callCount:
+          edit:
+            between: '{callCountSelect} {minInput} et {maxInput} appels'
+            max: '{callCountSelect} {maxInput} {max, plural, one {appel} other {appels}}'
+            min: '{callCountSelect} {minInput} {min, plural, one {appel} other {appels}}'
+            once: '{callCountSelect} appel'
+          labels:
+            between: entre
+            max: au plus
+            min: au moins
+            once: au moins un
+          preview:
+            between: entre {min} et {max} appels
+            max: au plus {max} {max, plural, one {appel} other {appels}}
+            min: au moins {min} {min, plural, one {appel} other {appels}}
+            once: au moins un appel
+        examples:
+          one: Ajouter les personnes qui ont enregistré au moins 50 appels.
+          two: Retirer les personnes qui ont enregistré au plus 5 appels dans la campagne
+            d'appels « Réactiver les anciens membres ».
+        inputString: '{addRemoveSelect} les personnes qui ont enregistré
+          {callCountSelect} dans {assignmentSelect}.'
+        previewString: '{addRemoveSelect} les personnes qui ont enregistré
+          {callCountSelect} dans {assignmentSelect}.'
+      emailBlacklist:
+        inputString: "{addRemoveSelect} les personnes qui ne recevront pas d'e-mails
+          {reasonSelect}"
+        reasonSelect:
+          any: pour quelque raison que ce soit
+          unsubOrg: parce qu'elles se sont désabonnées
+      emailClick:
+        inputString: '{addRemoveSelect} les personnes qui {operatorSelect}
+          {linkScopeSelect} {emailSelect} {projectSelect} {timeFrame}
+          {linkSelect}'
+        linkScopeSelect:
+          anyFollowingLinks: l'un des liens suivants de l'e-mail
+          anyLink: un lien de n'importe quel e-mail
+          anyLinkInEmail: un lien de l'e-mail
+          linkInEmailFromProject: un lien de n'importe quel e-mail du projet
+        operatorSelect:
+          clicked: ont cliqué sur
+          notClicked: n'ont pas cliqué sur
+      emailHistory:
+        emailScopeSelect:
+          any: un e-mail quel qu'il soit
+          email: l'e-mail
+          project: un e-mail du projet
+        inputString: '{addRemoveSelect} les personnes qui {operatorSelect}
+          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame}'
+        operatorSelect:
+          notOpened: n'ont pas ouvert
+          notSent: n'ont pas reçu
+          opened: ont ouvert
+          sent: ont reçu
+      eventParticipation:
+        bookedSelect:
+          booked: ont été confirmées
+          signed_up: se sont inscrites
+        error: Une erreur s'est produite lors du chargement des événements
+        example: Ajouter les personnes qui ont été confirmées pour un événement et y
+          étaient présentes.
+        inputString: "{addRemoveSelect} les personnes qui {bookedSelect} pour
+          l'événement {eventSelect} {statusSelect}"
+        statusSelect:
+          any: quelle que soit leur présence
+          attended: et étaient présentes
+          cancelled: et ont annulé
+          noshow: et étaient absentes
+      joinForm:
+        anyForm: n'importe quel formulaire d'adhésion
+        form: « {title} »
+        inputString: '{addRemoveSelect} les personnes arrivées via {formSelect} {timeFrame}'
+      journey:
+        condition:
+          conditionSelect:
+            all: et a chacune
+            any: et a l'une
+            none: et n'a aucune
+            regardlessTags: quelles que soient ses étiquettes
+            some: et a au moins
+          preview:
+            all: et a chacune
+            any: et a l'une
+            none: et n'a aucune
+            regardlessTags: quelles que soient ses étiquettes
+            some: et a au moins {minMatching}
+        followingTags: des étiquettes suivantes
+        inputString: '{addRemoveSelect} les personnes du parcours {journeySelect} dont
+          le dossier a été ouvert {openedTimeFrame} et {stateSelect}
+          {closedTimeFrame} {condition} {tagsDesc} {tags}'
+        stateOptions:
+          closed: a été clôturé
+          open: est toujours en cours
+      mostActive:
+        examples:
+          one: Ajouter les 100 personnes les plus actives de l'organisation avant
+            aujourd'hui.
+          two: Retirer les 5 personnes les plus actives de l'organisation, quelle que soit
+            la date.
+        inputString: "{addRemoveSelect} les {numPeopleSelect} {numPeople} les plus
+          actives de l'organisation {timeFrame}."
+        numPeople: '{numPeople, plural, one {personne} other {personnes}}'
+        numPeopleSelect: '{numPeopleSelect}'
+      official:
+        examples:
+          one: Ajouter toutes les personnes qui ont un accès organisateur ou
+            administrateur.
+          two: Retirer toutes les personnes qui ont un accès administrateur.
+        inputString: '{addRemoveSelect} les personnes qui ont un accès {roleSelect}.'
+        roleSelect:
+          admin: administrateur
+          any: organisateur ou administrateur
+          organizer: organisateur
+      personData:
+        ellipsis: ...
+        examples:
+          one: Ajouter les personnes dont le prénom est « Clara » et le nom est « Zetkin
+            ».
+          two: Retirer les personnes dont la ville est Stockholm.
+        fieldMatches: '{field} correspond à {value}'
+        fieldSelect:
+          alt_phone: le numéro de téléphone secondaire
+          city: la ville
+          co_address: le complément d'adresse
+          email: l'adresse e-mail
+          first_name: le prénom
+          gender: le genre
+          last_name: le nom
+          phone: le numéro de téléphone
+          remove: Retirer ce critère
+          street_address: l'adresse
+          zip_code: le code postal
+        fieldTuple: '{first} et {second}'
+        genders:
+          f: femme
+          m: homme
+          o: autre
+          unknown: non précisé
+        inputString: '{addRemoveSelect} les personnes dont {criteria}.'
+      personField:
+        edit:
+          date: le champ {fieldSelect} est {timeFrame}
+          enum: le champ {fieldSelect} est « {selectInput} »
+          none: Cette organisation n'a pas encore de champ personnalisé.
+          text: le champ {fieldSelect} correspond à « {freeTextInput} »
+          url: le champ {fieldSelect} correspond à « {freeTextInput} »
+        fieldSelect:
+          any: champ personnalisé
+        inputString: '{addRemoveSelect} les personnes dont {field}.'
+        preview:
+          date: le champ {fieldName} est {timeFrame}
+          enum: le champ {fieldName} est « {searchTerm} »
+          text: le champ {fieldName} correspond à « {searchTerm} »
+          url: le champ {fieldName} correspond à « {searchTerm} »
+      personTags:
+        addAllFromGroupButton: Tout ajouter
+        condition:
+          conditionSelect:
+            all: ont toutes
+            any: ont l'une
+            none: n'ont aucune
+            some: ont au moins
+          edit:
+            all: '{conditionSelect} les'
+            any: '{conditionSelect} des'
+            none: '{conditionSelect} des'
+            some: '{conditionSelect} {minMatchingInput} des'
+          preview:
+            all: ont toutes les
+            any: ont l'une des
+            none: n'ont aucune des
+            some: ont au moins {minMatching} des
+        examples:
+          one: 'Ajouter les personnes qui ont au moins une des étiquettes suivantes : «
+            Membre », « Activiste »'
+          two: 'Retirer les personnes qui ont toutes les étiquettes suivantes : « Membre
+            du bureau »'
+        inputString: '{addRemoveSelect} les personnes qui {condition} étiquettes
+          suivantes : {tags}'
+        noGroup: Sans groupe
+      personView:
+        examples:
+          one: Ajouter les personnes qui figurent dans la liste « Membres actifs 2022 ».
+          two: Retirer les personnes qui ne figurent pas dans la liste « Membres actifs
+            2022 ».
+        inSelect:
+          in: figurent dans
+          notin: ne figurent pas dans
+        inputString: '{addRemoveSelect} les personnes qui {inSelect} la liste {viewSelect}.'
+        viewSelect:
+          none: Cette organisation n'a pas encore de liste
+      projectParticipation:
+        activitySelect:
+          activity: type « {activity} »
+          any: n'importe quel type
+        bookedSelect:
+          booked: confirmées
+          signed_up: inscrites
+        examples:
+          one: Ajouter les personnes qui ont été inscrites et étaient présentes pour des
+            événements dans n'importe quel projet, de n'importe quel type, dans
+            le lieu « Dorfplatz », quelle que soit la date
+          two: Retirer les personnes qui n'ont pas été confirmées, quelle que soit leur
+            présence, pour des événements dans n'importe quel projet, de type «
+            Coller des affiches », dans n'importe quel lieu, avant aujourd'hui.
+        haveSelect:
+          in: ont été
+          notin: n'ont pas été
+        inputString: '{addRemoveSelect} les personnes qui {haveSelect} {bookedSelect}
+          {statusSelect} pour des événements dans {projectSelect} de
+          {activitySelect} dans {locationSelect} {timeFrame}'
+        locationSelect:
+          any: n'importe quel lieu
+          location: le lieu « {location} »
+        projectSelect:
+          any: n'importe quel projet
+          project: le projet « {project} »
+        statusSelect:
+          any: quelle que soit leur présence
+          attended: et étaient présentes
+          cancelled: et ont annulé
+          noshow: et étaient absentes
+      random:
+        addLimitRemoveSelect:
+          add: Ajouter
+          limit: Garder uniquement
+          sub: Retirer
+        examples:
+          one: Ajouter au hasard 20 personnes de l'organisation.
+          two: Retirer au hasard 15 % des personnes de l'organisation.
+        inputString: "{addRemoveSelect} au hasard {quantity} de l'organisation."
+      subQuery:
+        examples:
+          one: Retirer les personnes qui correspondent à la requête Smart Search «
+            Personnes vivant à Stockholm ».
+          two: Ajouter les personnes qui correspondent au groupe cible de la campagne
+            d'appels « Campagne 1 ».
+        inputString: '{addRemoveSelect} les personnes qui {matchSelect} {query}.'
+        matchSelect:
+          in: correspondent
+          notin: ne correspondent pas
+        noSmartSearches: Il n'y a pas encore de Smart Search dans cette organisation.
+        query:
+          edit:
+            callassignment_goal: "{querySelect} de la campagne d'appels « {titleSelect} »"
+            callassignment_target: "{querySelect} de la campagne d'appels « {titleSelect} »"
+            email_target: "{querySelect} de l'e-mail « {titleSelect} »"
+            none: '{querySelect}'
+            standalone: '{querySelect} « {titleSelect} »'
+          preview:
+            callassignment_goal: au groupe objectif de la campagne d'appels « {queryTitle} »
+            callassignment_target: au groupe cible de la campagne d'appels « {queryTitle} »
+            email_target: au groupe cible de l'e-mail « {queryTitle} »
+            none: à {queryTitle}
+            standalone: à la requête Smart Search « {queryTitle} »
+          selectLabel:
+            callassignment_goal: au groupe objectif
+            callassignment_target: au groupe cible
+            email_target: au groupe cible
+            none: à une requête Smart Search
+            standalone: à la requête Smart Search
+          selectOptions:
+            callassignment_goal: le groupe objectif d'une campagne d'appels
+            callassignment_target: le groupe cible d'une campagne d'appels
+            email_target: le groupe cible d'un e-mail
+            none: Cette organisation n'a pas encore de campagne d'appels ni de requête Smart
+              Search.
+            standalone: une requête Smart Search autonome
+      surveyOption:
+        conditionSelect:
+          all: ont choisi chacune
+          any: ont choisi l'une
+          none: n'ont choisi aucune
+          some: ont choisi certaines
+        examples:
+          one: 'Retirer toutes les personnes qui ont choisi chacune des options suivantes
+            dans le questionnaire « Enquête membres 2020 » (question « Question
+            un ») : « Parfois », « Jamais »'
+          two: "Ajouter toutes les personnes qui ont choisi l'une des options suivantes
+            dans le questionnaire « Enquête membres » (question « Question deux
+            ») : « Option deux »"
+        inputString: '{addRemoveSelect} les personnes qui {conditionSelect} des options
+          suivantes dans {surveySelect} ({questionSelect}) : {options}'
+        questionSelect:
+          any: une question
+          none: Ce questionnaire ne contient aucune question à choix
+          question: question « {question} »
+        surveySelect:
+          any: un questionnaire
+          none: Cette organisation n'a pas encore de questionnaire
+          survey: le questionnaire « {surveyTitle} »
+      surveyResponse:
+        examples:
+          one: Les personnes dont la réponse donnée dans le questionnaire « Enquête
+            membres » (n'importe quelle question) contient « organiser ».
+          two: Les personnes dont la réponse donnée dans le questionnaire « Enquête
+            membres » (question « Question un ») correspond exactement à «
+            organiser ».
+        inputString: '{addRemoveSelect} les personnes dont la réponse donnée dans
+          {surveySelect} ({questionSelect}) {matchSelect} « {freeTextInput} »'
+        matchSelect:
+          eq: correspond exactement à
+          in: contient
+          noteq: n'est pas
+          notin: ne contient pas
+        questionSelect:
+          any: n'importe quelle question
+          none: Ce questionnaire ne contient aucune question ouverte
+          question: question « {question} »
+        surveySelect:
+          any: n'importe quel questionnaire
+          none: Cette organisation n'a pas encore de questionnaire
+          survey: le questionnaire « {surveyTitle} »
+      surveySubmission:
+        examples:
+          one: Les personnes qui ont rempli le questionnaire « Enquête membres 2020 »
+            avant aujourd'hui.
+          two: Les personnes qui ont rempli le questionnaire « Enquête membres 2020 » au
+            cours des 30 derniers jours.
+        inputString: '{addRemoveSelect} les personnes qui ont rempli {surveySelect}
+          {timeFrame}.'
+        surveySelect:
+          any: un questionnaire
+          none: Cette organisation n'a pas encore de questionnaire
+          survey: le questionnaire « {surveyTitle} »
+      task:
+        examples:
+          one: Ajouter les personnes qui ont terminé la tâche « Parlez-en à vos amis » au
+            moins une fois, quelle que soit la date
+          two: Ajouter les personnes qui ont ignoré n'importe quelle tâche dans n'importe
+            quel projet entre 2 et 5 fois avant aujourd'hui
+        inputString: '{addRemoveSelect} les personnes qui {taskStatusSelect}
+          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
+        projectSelect:
+          any: n'importe quel projet
+          in: ' dans '
+          project: le projet « {project} »
+        taskSelect:
+          any: n'importe quelle tâche
+          task: la tâche « {task} »
+        taskStatusSelect:
+          assigned: ont été assignées à
+          completed: ont terminé
+          ignored: ont ignoré
+      user:
+        connectedSelect:
+          'false': ne sont pas liées
+          'true': sont liées
+        examples:
+          one: Retirer toutes les personnes qui sont liées à un utilisateur Zetkin.
+          two: Ajouter toutes les personnes qui ne sont pas liées à un utilisateur Zetkin.
+        inputString: '{addRemoveSelect} les personnes qui {connectedSelect} à un
+          utilisateur Zetkin.'
+    headers:
+      examples: Exemples
+      gallery: Comment souhaitez-vous sélectionner des personnes ?
+    matching:
+      edit:
+        between: '{matchingSelect} {minInput} et {maxInput} fois'
+        max: '{matchingSelect} {maxInput} {max, plural, one {fois} other {fois}}'
+        min: '{matchingSelect} {minInput} {min, plural, one {fois} other {fois}}'
+        once: '{matchingSelect}'
+      labels:
+        between: entre
+        max: au plus
+        min: au moins
+        once: au moins une fois
+      options:
+        between: entre
+        max: au plus
+        min: au moins
+        once: au moins une fois
+      preview:
+        between: entre {min} et {max} fois
+        max: au plus {max} {max, plural, one {fois} other {fois}}
+        min: au moins {min} {max, plural, one {fois} other {fois}}
+        once: au moins une fois
+    misc:
+      noOptions: Aucune étiquette correspondante
+      noOptionsEmailNotSent: E-mail non envoyé. Les liens contenus dans l'e-mail sont
+        ajoutés une fois celui-ci envoyé.
+      noOptionsInvalidEmail: E-mail non valide. Sélectionnez d'abord un e-mail.
+      noOptionsLinks: Aucun lien correspondant
+    operators:
+      add: Ajouter
+      limit: Garder uniquement
+      sub: Retirer
+    orgScope:
+      all: Recherche dans toutes les organisations
+      few: Recherche dans {first} et {last}
+      many: Recherche dans {first} et {additional} autres organisations
+      single: Recherche dans {value}
+      suborgs: Recherche dans toutes les sous-organisations
+    quantity:
+      edit:
+        integer: '{numInput} {quantitySelect}'
+        percent: '{numInput} {quantitySelect}'
+      preview:
+        integer: '{people} {people, plural, one {personne} other {personnes}}'
+        percent: '{people} % des personnes'
+      quantitySelectLabel:
+        integer: '{people, plural, one {personne} other {personnes}}'
+        percent: '% des personnes'
+      quantitySelectOptions:
+        integer: un nombre de personnes
+        percent: un pourcentage de personnes
+    readOnly: Cette requête Smart Search est en lecture seule et ne peut pas être
+      modifiée.
+    resultHint:
+      countLabel: '{count, plural, =1 {une personne} other {# personnes}}'
+      hint: Pour vous, cette Smart Search renvoie actuellement {count}.
+    smartSearch: Smart Search
+    statsPopper:
+      change: variation
+      details: "La Smart Search est dynamique : le nombre de résultats peut donc
+        varier au fil du temps. D'autres utilisateurs peuvent obtenir des
+        résultats différents s'ils ont accès à plus ou moins de personnes."
+      exit: Résultat
+      headline: Impact de la sélection
+      info: Cette sélection est dynamique et les chiffres peuvent évoluer au fil du
+        temps.
+      input: avant
+      matches: correspondances
+      output: après
+    timeFrame:
+      edit:
+        afterDate: '{timeFrameSelect} le {afterDateSelect}'
+        beforeDate: '{timeFrameSelect} le {beforeDateSelect}'
+        beforeToday: '{timeFrameSelect}'
+        between: '{timeFrameSelect} le {afterDateSelect} et le {beforeDateSelect}'
+        ever: '{timeFrameSelect}'
+        future: '{timeFrameSelect}'
+        lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {dernier jour} other
+          {derniers jours}}'
+        onDate: '{onTimeFrameSelect} {onDateSelect}'
+      preview:
+        afterDate: après le {afterDate}
+        beforeDate: avant le {beforeDate}
+        beforeToday: avant aujourd'hui
+        between: entre le {afterDate} et le {beforeDate}
+        ever: quelle que soit la date
+        future: dans le futur
+        lastFew: '{days, plural, one {au cours du dernier jour} other {au cours des
+          {days} derniers jours}}'
+        onDate: le {onDate}
+      timeFrameSelectLabel:
+        afterDate: après
+        beforeDate: avant
+        beforeToday: avant aujourd'hui
+        between: entre
+        ever: quelle que soit la date
+        future: dans le futur
+        lastFew: au cours des
+        onDate: le
+      timeFrameSelectOptions:
+        afterDate: après une date donnée
+        beforeDate: avant une date donnée
+        beforeToday: avant aujourd'hui
+        between: entre deux dates
+        ever: quelle que soit la date
+        future: dans le futur
+        lastFew: récemment
+        onDate: à une date donnée
+  surveys:
+    addBlocks:
+      choiceQuestionButton: Question à choix
+      openQuestionButton: Question ouverte
+      textButton: Texte
+      title: Choisissez un type de bloc pour ajouter du contenu à votre questionnaire
+    alert:
+      editable: Ce questionnaire appartient à {orgTitle} et vous ne pouvez le modifier
+        qu'à partir de son emplacement d'origine.
+      goOriginal: Aller à l'original
+      notEditable: Ce questionnaire appartient à {orgTitle} et vous ne pouvez pas le
+        modifier.
+    autoLink:
+      close: Fermer
+      columns:
+        matchedEmail: E-mail correspondant
+        matchedFirstName: Prénom correspondant
+        matchedLastName: Nom correspondant
+        submissionEmail: E-mail
+        submissionFirstName: Prénom
+        submissionLastName: Nom
+      error: Erreur lors de la liaison automatique. ({msg})
+      linkSelected: Lier la sélection
+      success: '{count, plural, =1 {Une réponse liée automatiquement} other {#
+        réponses liées automatiquement}} !'
+      title: Vérifier les réponses pouvant être liées automatiquement
+      tooltips:
+        notEnoughRowsSelected: Sélectionnez au moins une ligne pour commencer
+        startAutoLinking: Lancer la liaison automatique
+    blocks:
+      choice:
+        addOption: Ajouter une option
+        addOptionsBulk: Ajouter plusieurs options
+        bulk:
+          cancelButton: Annuler
+          placeholder: Saisissez ou collez une option par ligne
+          submitButton: Tout ajouter
+        description: Description
+        emptyDescription: Description
+        emptyOption: Option vide
+        emptyQuestion: Titre
+        question: Question
+        widget: Type de champ
+        widgets:
+          checkbox: Choix multiple (cases à cocher)
+          radio: Choix unique (boutons radio)
+          select: Choix unique (liste déroulante)
+      deleteBlockDialog:
+        title: Supprimer la question
+        warningText: Voulez-vous vraiment supprimer cette question ? Cette action est
+          définitive et irréversible.
+      deleteOptionDialog:
+        title: Supprimer l'option
+        warningText: Voulez-vous vraiment supprimer cette option ? Cette action est
+          définitive et irréversible.
+      open:
+        description: Description
+        empty: Question ouverte sans titre
+        fieldTypePreview: de texte
+        label: Titre
+        multiLine: Plusieurs lignes
+        singleLine: Une ligne
+        textFieldType: Type de champ de texte
+      text:
+        content: Description
+        empty: Bloc sans titre
+        header: Titre
+    chart:
+      header: Réponses au questionnaire
+      placeholder: Commencez à recueillir des réponses pour voir leur évolution ici
+      subheader: 'Réponses cumulées au cours {days, plural, =1 {du dernier jour} other
+        {des # derniers jours}}'
+      tooltip:
+        submissions: '{count, plural, =1 {1 réponse} other {# réponses}}'
+    editWarning:
+      editing:
+        header: Questionnaire déverrouillé
+        safe:
+          bullet1: Corriger des fautes d'orthographe
+          bullet2: Réorganiser les blocs
+          bullet3: Masquer des questions
+          bullet4: Ajouter des questions ou des options
+          header: Sans risque
+        subheader: Veillez à ne pas faire de modifications qui pourraient entraîner la
+          perte ou l'altération des réponses.
+        unsafe:
+          bullet1: Supprimer des questions (masquez-les plutôt)
+          bullet2: Renommer des questions ou des options d'une manière qui en change le
+            sens
+          header: Risqué
+      locked:
+        header: Questionnaire verrouillé
+        subheader: Ce questionnaire a déjà reçu des réponses. Le modifier maintenant
+          peut entraîner des problèmes dans les données. Procédez avec prudence.
+    insights:
+      error: Une erreur inconnue s'est produite lors du chargement.
+      export:
+        errorUnknown: Une erreur inconnue s'est produite lors de l'export.
+        toPdf: Exporter en PDF
+        toPng: Exporter en PNG
+      optionsFields:
+        displayInsights:
+          absoluteCount: Nombre
+          percentCount: Pourcentage
+        subheader: Au total, il y a eu {answerCount, plural, =1 {1 réponse} other {#
+          réponses}} et {totalSelectedOptionsCount, plural, =1 {1 option
+          sélectionnée} other {# options sélectionnées}}.
+        tabs:
+          barPlot: Barres
+          piePlot: Secteurs
+        warningMultipleSelectedOptionsPie: Notez que cette question permet aux personnes
+          interrogées de choisir plusieurs options, et que {respondentCount,
+          plural, =1 {1 personne l'a fait} other {# personnes l'ont fait}}. Le
+          diagramme circulaire peut donc être trompeur.
+      textFields:
+        copyResponse:
+          copy: Copier dans le presse-papiers
+          wasCopied: Copié !
+        subheader: Au total, il y a eu {answerCount, plural, =1 {1 réponse} other {#
+          réponses}}, {totalWordCount, plural, =1 {1 mot} other {# mots}} et
+          {totalUniqueWordCount, plural, =1 {1 mot distinct} other {# mots
+          distincts}}.
+        tabs:
+          responses: Réponses
+          wordCloud: Nuage de mots
+          wordFrequencies: Barres
+    layout:
+      actions:
+        createList: Créer une liste à partir des réponses
+        delete: Supprimer
+        duplicate: Dupliquer
+        move: Déplacer
+        publish: Publier le questionnaire
+        unpublish: Dépublier le questionnaire
+        warning: Le questionnaire « {surveyTitle} » sera supprimé.
+      stats:
+        questions: '{numQuestions, plural, one {# question} other {# questions}}'
+        submissions: '{numSubmissions, plural, one {# réponse} other {# réponses}}'
+      unknownTitle: Questionnaire sans titre
+    optionCollapse:
+      collapse: Réduire
+      more: '{numOfOptions, plural, one {Afficher # option de plus} other {Afficher #
+        options de plus}}'
+    organizerActionPane:
+      subtitle: Notes sur les appels à {person}
+      title: Intervention d'un organisateur requise
+    overview:
+      noQuestions:
+        button: Créer des questions
+        title: Ce questionnaire ne contient encore aucune question
+    shareSuborgsCard:
+      caption: Lorsque cette option est activée, les responsables des
+        sous-organisations peuvent consulter les questionnaires remplis par les
+        personnes rattachées à leur organisation et y faire des recherches.
+      title: Partager avec les sous-organisations
+    state:
+      draft: Brouillon
+      published: Publié
+      scheduled: Programmé
+      unpublished: Dépublié
+    submissionPane:
+      anonymous: Anonyme
+      hidden: Masquée
+      linked: Profil lié
+      subtitle: '{person} {date}'
+    submissions:
+      anonymous: Anonyme
+      createPersonSubmit: Enregistrer et lier
+      createPersonTitle: Créer une personne
+      dateColumn: Date
+      delete: Supprimer
+      deleteSuccess: Réponse supprimée
+      deleteTitle: Supprimer la réponse
+      deleteWarningText: Voulez-vous vraiment supprimer cette réponse au questionnaire ?
+      emailColumn: E-mail
+      firstNameColumn: Prénom
+      lastNameColumn: Nom
+      link: Lier
+      personRecordColumn: Profil
+      suggestedPeople: Personnes suggérées
+      unlink: Dissocier
+    surveyChangeProjectDialog:
+      error: 'Erreur : impossible de déplacer le questionnaire vers le projet
+        sélectionné'
+      success: Questionnaire « {surveyTitle} » déplacé vers « {projectTitle} »
+      title: Déplacer le questionnaire
+    surveyDialog:
+      add: Ajouter
+      cancel: Ne pas ajouter
+      description: La personne que vous venez de lier n'a pas d'adresse e-mail, mais
+        la réponse au questionnaire en contient une. Voulez-vous l'ajouter à
+        cette personne ?
+      new: Nouvelle
+      old: Ancienne
+      title: Ajouter l'adresse e-mail
+    surveyDialogDifferentEmail:
+      description: La personne que vous venez de lier a une adresse e-mail différente
+        de celle de la réponse au questionnaire. Voulez-vous utiliser l'adresse
+        de la réponse comme nouvelle adresse e-mail de cette personne ?
+      keep: Non, garder l'ancienne adresse
+      title: Mettre à jour l'adresse e-mail
+      update: Oui, mettre à jour l'adresse
+    surveyDuplicated:
+      error: 'Erreur : impossible de dupliquer le questionnaire'
+      success: Votre questionnaire a été dupliqué.
+      title: Questionnaire dupliqué
+    surveyEditor:
+      required: Exiger une réponse à cette question
+    surveyForm:
+      accept: J'accepte les conditions ci-dessous
+      error: Une erreur s'est produite lors de l'envoi de vos réponses. Veuillez
+        réessayer plus tard.
+      policy:
+        text: Cliquez ici pour lire l'intégralité de la politique de confidentialité de
+          Zetkin
+      required: obligatoire
+      sign:
+        anonymous: Signer anonymement
+        nameAndEmail: Signer avec votre nom et votre adresse e-mail
+      submit: Envoyer
+      terms:
+        description: Lorsque vous envoyez ce questionnaire, les informations que vous
+          fournissez sont enregistrées et traitées dans Zetkin par
+          {organization} afin d'organiser des actions militantes, conformément à
+          la politique de confidentialité de Zetkin.
+        title: Politique de confidentialité
+    surveyFormSubmitted:
+      retakeSurvey: Répondre à nouveau
+      text: Vos réponses à « {title} » ont bien été envoyées.
+      title: Questionnaire envoyé
+    surveySignature:
+      email:
+        email: E-mail
+        firstName: Prénom
+        lastName: Nom
+      title: Choisissez comment signer
+      type:
+        anonymous: Signer anonymement
+        email: Signer avec votre nom et votre adresse e-mail
+        user: Signer en tant que {person} avec l'adresse e-mail {email}
+    surveyToList:
+      error: Impossible de créer une liste à partir des réponses au questionnaire en
+        raison d'une erreur inconnue.
+      title: Réponses au questionnaire {surveyTitle}
+    tabs:
+      insights: Statistiques
+      overview: Vue d'ensemble
+      questions: Questions
+      submissions: Réponses
+    unlinkedCard:
+      description: Lorsqu'une personne remplit un questionnaire sans être connectée,
+        sa réponse n'est liée à aucun profil. La recherche de personnes dans
+        Zetkin à partir de leurs réponses aux questionnaires ne fonctionne pas
+        avec les réponses non liées.
+      header: Réponses non liées
+      openLink: '{numUnlink, plural, one {Lier la réponse maintenant} other {Lier les
+        réponses maintenant}}'
+    unlinkedWarningAlert:
+      autoLink:
+        canBeAutoLinkedText: '{countStr, plural, =1 {1 réponse peut être liée} other {#
+          réponses peuvent être liées}} automatiquement.'
+        openDialogButton: Lier automatiquement les réponses
+      default:
+        description: "{numUnlink, plural, one {Une réponse au questionnaire n'a pas été
+          liée à un profil Zetkin et ne sera donc pas prise en compte dans les
+          recherches.} other {Certaines réponses au questionnaire n'ont pas été
+          liées à des profils Zetkin et ne seront donc pas prises en compte dans
+          les recherches.}}"
+        header: Réponses non liées
+        viewUnlinked: Afficher uniquement les réponses non liées
+      filtered:
+        description: La liste est filtrée et n'affiche que les réponses signées qui
+          n'ont pas été liées à un profil.
+        header: Affichage des réponses non liées uniquement
+        viewAll: Tout afficher
+    urlCard:
+      nowAccepting: Les réponses sont désormais acceptées via ce lien
+      open: Ouvert aux réponses
+      preview: Aperçu du questionnaire
+      previewPortal: Voir l'aperçu du questionnaire dans le portail militant
+      visitPortal: Voir le questionnaire dans le portail militant
+      willAccept: Les réponses seront acceptées via ce lien
+  tags:
+    dialog:
+      colorErrorText: Veuillez saisir un code hexadécimal valide
+      colorLabel: Couleur
+      createTagButton: Créer
+      createTitle: Créer une étiquette
+      deleteButtonLabel: Supprimer
+      deleteWarning: Voulez-vous vraiment supprimer cette étiquette ? La suppression
+        d'une étiquette est irréversible.
+      editTitle: Modifier l'étiquette
+      groupCreatePrompt: Ajouter « {groupName} »
+      groupLabel: Groupe
+      groupSelectPlaceholder: Tapez pour rechercher ou créer un groupe
+      titleErrorText: Le nom de l'étiquette est obligatoire
+      titleLabel: Nom de l'étiquette
+      typeLabel: Type d'étiquette
+      types:
+        none: Simple (sans valeur)
+        text: Valeurs textuelles
+      updateTagButton: Mettre à jour
+    groupDialog:
+      deleteTitle: Supprimer « {groupName} »
+      deleteWarning: Voulez-vous vraiment supprimer ce groupe ? La suppression d'un
+        groupe est irréversible. Les étiquettes de ce groupe ne seront pas
+        supprimées, mais resteront sans groupe.
+      editButton: Modifier
+      editTitle: Modifier le groupe
+      titleLabel: Nom du groupe
+    manager:
+      addTag: Ajouter une étiquette
+      addValue: Ajouter une valeur pour « {tag} »
+      createNamedTag: "Créer l'étiquette : {name}"
+      createTag: Nouvelle étiquette
+      groupTags: Regrouper les étiquettes
+      title: Étiquettes
+      ungroupedHeader: Sans groupe
+      valueTagForm:
+        typeHint: "{type, select, text {Saisissez un texte} other {Saisissez une
+          valeur}} à associer à l'étiquette."
+    tagsPage:
+      createTagButton: Créer
+      noTags: Votre organisation n'a pas encore d'étiquettes
+      overviewTabLabel: Vue d'ensemble
+      title: Étiquettes
+      ungroupedHeader: Sans groupe
+  tasks:
+    actions:
+      delete: Supprimer
+      edit: Modifier
+      move: Déplacer
+    assignees:
+      completedStates:
+        completed: Effectuée {time}
+        ignored: Ignorée {time}
+        notCompleted: Pas encore effectuée
+      links:
+        create: Créer une Smart Search
+        edit: Modifier la Smart Search
+        readOnly: Voir la Smart Search
+      queryStates:
+        assigned: Cette tâche a été assignée à toutes les personnes correspondant à la
+          requête Smart Search de ciblage.
+        editable: Une fois publiée, cette tâche sera assignée aux personnes
+          correspondant à la requête Smart Search de ciblage.
+        new: Cette tâche ciblera les personnes correspondant à une requête Smart Search.
+          Avant de pouvoir la publier, vous devez créer un groupe cible à l'aide
+          de la Smart Search.
+        published: Cette tâche est en cours d'assignation à toutes les personnes
+          correspondant à la requête Smart Search de ciblage...
+      title: Assignée à {numPeople, plural, one {# personne} other {# personnes}}
+    common:
+      notSet: Non défini
+    configs:
+      collectDemographics:
+        fields:
+          demographic: Données à demander
+          dempographicOptions:
+            city: Ville
+            country: Pays
+            email: Adresse e-mail
+            gender: Identité de genre
+            streetAddress: Adresse
+            zipCode: Code postal
+        title: Configuration de la collecte de données démographiques
+      shareLink:
+        fields:
+          defaultMessage: Message par défaut que la personne enverra
+          url: URL à partager
+        title: Configuration du partage de lien
+      visitLink:
+        fields:
+          url: URL à consulter
+        title: Configuration de la consultation de lien
+    deleteTask:
+      cancel: Annuler
+      error: Une erreur s'est produite lors de la suppression de la tâche
+      submitButton: Confirmer la suppression
+      title: Supprimer la tâche
+      warning: Voulez-vous vraiment supprimer cette tâche ? Cette action est
+        définitive et irréversible.
+    editTask:
+      title: Modifier la tâche
+    form:
+      fields:
+        deadline: Échéance
+        expires: Date d'expiration
+        instructions: Instructions
+        project: Projet
+        published: Date de publication
+        reassignInterval: Réassigner après réalisation
+        reassignIntervalOptions:
+          days: '{days, plural, =1 {Le lendemain} other {Après # jours}}'
+          hours: Après {hours, plural, =1 {une heure} other {# heures}}
+          noReassign: Ne jamais réassigner
+        reassignLimit: 'Nombre maximal de (ré)assignations :'
+        timeEstimate: Durée estimée de réalisation
+        timeEstimateOptions:
+          hoursAndMinutes: '{hours, plural, =0{} one{# heure} other{# heures}} {minutes,
+            plural, =0{} one {# minute} other {# minutes}}'
+          lessThanOneMinute: Moins d'une minute
+          noEstimate: Aucune estimation
+        timeValidationErrors:
+          deadlineNotSecond: Cette date doit être postérieure à la date de publication et
+            antérieure à la date d'expiration
+          expiresNotThird: Cette date doit être la dernière
+          publishedNotFirst: Cette date doit être la première
+        title: Titre
+        type: Type de tâche
+        types:
+          demographic: Collecter des données démographiques
+          offline: Hors ligne
+          share_link: Partager un lien
+          visit_link: Consulter un lien
+          watch_video: Regarder une vidéo
+      invalidUrl: Veuillez saisir une URL valide
+      requestError: Une erreur s'est produite. Veuillez réessayer.
+      required: Obligatoire
+      title: Créer une tâche
+    noTasksCreatePrompt: Aucune tâche... Cliquez ici pour en créer une.
+    publishButton:
+      publish: Publier
+      tooltip:
+        alreadyPublished: Déjà publiée
+        missingAssignees: Aucune personne assignée
+        missingFields: Champs obligatoires manquants
+        missingFieldsAndAssignees: Champs obligatoires manquants et aucune personne assignée
+    publishTask:
+      cancel: Annuler
+      submitButton: Publier la tâche maintenant
+      title: Publier la tâche
+      warning: Veuillez confirmer la publication de cette tâche. Elle sera envoyée à
+        toutes les personnes assignées.
+    showExpiredTasksPrompt: Afficher les tâches expirées...
+    statuses:
+      active: Active
+      closed: Clôturée
+      draft: Brouillon
+      expired: Expirée
+      scheduled: Programmée
+    taskChangeProjectDialog:
+      error: 'Erreur : impossible de déplacer la tâche vers le projet sélectionné'
+      success: Tâche « {taskTitle} » déplacée vers « {projectTitle} »
+      title: Déplacer la tâche
+    taskDetails:
+      deadlineTime: Échéance
+      editButton: Modifier
+      expiresTime: Date d'expiration
+      instructionsLabel: Instructions
+      publishedTime: Date de publication
+      reassignInterval:
+        label: Intervalle de réassignation
+        value: Réassignée {value, plural, =1{une heure} other{# heures}} après
+          réalisation
+      reassignLimit:
+        label: Limite de réassignations
+        value: Se répète au maximum {value, plural, =1{une fois} other{# fois}} par
+          personne
+      statusLabel: Statut
+      timeEstimateLabel: Durée estimée de réalisation
+      title: Détails de la tâche
+      titleLabel: Titre
+      typeLabel: Type
+    taskLayout:
+      tabs:
+        assignees: Personnes assignées
+        insights: Statistiques
+        summary: Résumé
+    taskListItem:
+      relativeTimes:
+        active: Échéance {time}
+        closed: Clôturée {time}
+        expired: Expirée {time}
+        expires: Expire {time}
+        indefinite: Publiée {time}
+        scheduled: Sera publiée {time}
+    taskPreview:
+      addImage: Ajouter une image de couverture
+      sectionTitle: Aperçu
+      timeEstimate: "{minutes, plural, =0 {Moins d'une minute} =1 {Une minute} other
+        {# minutes}}"
+    taskTypeDetails:
+      demographic:
+        title: Paramètres de la collecte de données démographiques
+      share_link:
+        title: Paramètres du partage de lien
+      visit_link:
+        title: Paramètres de la consultation de lien
+    types:
+      demographic: Collecter des données démographiques
+      offline: Hors ligne
+      share_link: Partager un lien
+      visit_link: Consulter un lien
+      watch_video: Regarder une vidéo
+  views:
+    actions:
+      create: Créer
+      createError: Une erreur s'est produite
+      createFolder: Créer un dossier
+      createJoinForm: Créer un formulaire d'adhésion
+      createPerson: Créer une personne
+      createView: Créer une liste
+      creating: Création en cours
+      importPeople: Importer des personnes
+    browser:
+      backToFolder: Retour à {folder}
+      backToRoot: Retour à toutes les listes
+      confirmDelete:
+        folder:
+          title: Supprimer le dossier et son contenu
+          warning: La suppression de ce dossier et de toutes les listes qu'il contient est
+            définitive et irréversible. Voulez-vous vraiment continuer ?
+        view:
+          title: Supprimer la liste
+          warning: La suppression de cette liste est définitive et irréversible.
+            Voulez-vous vraiment continuer ?
+      menu:
+        delete: Supprimer
+        duplicate: Dupliquer
+        move: Déplacer
+        rename: Renommer
+        viewCopy: '{viewName} - copie'
+      moveToFolder: Déplacer vers {folder}
+      moveToRoot: Déplacer vers toutes les listes
+    browserLayout:
+      tabs:
+        duplicates: Doublons
+        incoming: Demandes reçues
+        joinForms: Formulaires d'adhésion
+        views: Listes
+      title: Personnes
+    cells:
+      localPerson:
+        alreadyInView: Déjà dans la liste
+        clearLabel: Retirer l'assignation
+        otherPeople: Autres personnes
+        restrictedMode: Modification impossible dans les listes partagées.
+        searchLabel: Sélectionner une personne
+      organizerAction:
+        actionNeeded: Intervention d'un organisateur requise
+        showDetails: Afficher les détails
+        solvedIssues: '{count, plural, =1 {1 problème résolu} other {# problèmes résolus}}'
+      personTag:
+        emptyValue: Valeur vide
+    columnDialog:
+      categories:
+        basic:
+          description: Champs d'information simples sur les personnes.
+          title: Informations de base
+        categorizing:
+          description: Pour regrouper, catégoriser ou présélectionner des personnes,
+            librement ou à partir des données de Zetkin.
+          title: Catégorisation
+        crossReferencing:
+          description: Croisez vos listes avec les données de Zetkin grâce à la Smart
+            Search.
+          title: Croisement de données
+        outreach:
+          description: Planifiez, déléguez et réalisez la prise de contact, puis faites un
+            compte rendu une fois le travail terminé
+          title: Prise de contact
+        surveys:
+          description: Explorez, recherchez et filtrez selon les réponses des personnes
+            aux questionnaires.
+          title: Questionnaires
+        utility:
+          description: Des colonnes pratiques que vous réutiliserez dans de nombreuses
+            situations
+          title: Utilitaires
+      choices:
+        delegate:
+          columnTitleAssignee: Personne assignée
+          columnTitleContacted: Contact pris
+          columnTitleNotes: Notes
+          columnTitleResponded: A répondu
+          description: Ajoute un ensemble de colonnes couramment utilisées pour déléguer
+            la prise de contact à une personne assignée.
+          title: Délégation
+        email:
+          description: Ajoutez une colonne contenant les adresses e-mail
+          keywords: e-mail courriel mail
+          title: Adresse e-mail
+        firstName:
+          description: Ajoutez une colonne contenant les prénoms
+          keywords: prénom
+          title: Prénom
+        followUp:
+          columnTitleCheckbox: Case à cocher
+          columnTitleNotes: Notes
+          description: Ajoute une colonne de cases à cocher et une colonne de notes
+          title: Suivi
+        fullName:
+          description: Deux colonnes contenant le prénom et le nom de famille
+          keywords: nom de famille
+          title: Nom complet
+        lastName:
+          description: Ajoutez une colonne contenant les noms de famille
+          keywords: nom de famille patronyme
+          title: Nom de famille
+        localPerson:
+          columnTitle: Personne assignée
+          description: Vous permet de choisir une personne assignée pour chaque ligne
+          title: Personne assignée
+        localQuery:
+          columnTitle: Dans la Smart Search ?
+          description: Vérifiez si chaque personne correspond aux critères d'une Smart
+            Search
+          title: Croisement personnalisé
+        localText:
+          columnTitle: Notes
+          description: Ajoutez une colonne pour prendre des notes sur une personne.
+          title: Notes
+        personFields:
+          description: 'Ajoutez les colonnes de votre choix : e-mail, numéro de téléphone,
+            etc.'
+          keywords: adresse code postal ville pays
+          title: Choisir des champs
+        phone:
+          description: Ajoutez une colonne contenant les numéros de téléphone
+          keywords: numéro de téléphone
+          title: Numéro de téléphone
+        queryBooked:
+          columnTitle: Participation confirmée
+          description: La personne est-elle confirmée pour un événement à venir ?
+          keywords: actif confirmé
+          title: Participations confirmées à venir
+        queryParticipated:
+          columnTitle: A participé
+          description: La personne a-t-elle déjà été confirmée pour un événement ?
+          keywords: actif confirmé
+          title: A déjà participé
+        queryReached:
+          columnTitle: Appel réussi
+          description: Avons-nous déjà réussi à joindre cette personne lors d'une campagne
+            d'appels ?
+          keywords: téléphone appel joint
+          title: Contact téléphonique réussi
+        surveyResponse:
+          allOptions: Toutes les options (une seule colonne)
+          allOptionsHeader: Toutes les options
+          allOptionsSeparated: Toutes les options (colonnes séparées)
+          description: Incluez la réponse à une question de n'importe quel questionnaire.
+          keywords: champ multiple
+          oneOption: Une option
+          optionsLabel: Quelles colonnes voulez-vous ajouter ?
+          questionField: Questions
+          surveyField: Questionnaires
+          textField: Les réponses sont en texte libre et seront affichées dans une seule
+            colonne
+          title: Question unique
+        surveyResponses:
+          description: Incluez les réponses à plusieurs questions d'un questionnaire.
+          keywords: champ multiple
+          questionField: Questions
+          surveyField: Questionnaires
+          title: Plusieurs questions
+        surveySubmitDate:
+          description: Vérifiez si une personne a répondu à un questionnaire, et à quelle
+            date
+          noSurveys: Votre organisation n'a aucun questionnaire.
+          title: Date de réponse au questionnaire
+        tag:
+          description: Ajoutez ou retirez une étiquette pour chaque personne de la liste
+          title: Étiquette
+        toggle:
+          columnTitle: Case à cocher
+          description: Colonne de cases à cocher
+          title: Case à cocher
+      commonHeaders:
+        email: Adresse e-mail
+        first_name: Prénom
+        last_name: Nom de famille
+        phone: Numéro de téléphone
+      editor:
+        alreadyInView: Déjà dans la liste
+        buttonLabels:
+          addColumns: Ajouter {columns, plural, one {# colonne} other {{columns} colonnes}}
+          change: Changer le type de colonne
+        defaultTitle: Nouvelle colonne
+        fieldLabels:
+          field: Champ
+          question: Question
+          smartSearch: Smart Search
+          survey: Questionnaire
+          tag: Étiquette
+      gallery:
+        add: Ajouter
+        alreadyInView: Déjà dans la liste
+        columns: Colonnes
+        configure: Configurer
+        header: Ajouter une colonne à la liste
+        noSearchResults: Aucune colonne ne correspond à « {searchString} »
+        searchPlaceholder: Rechercher une colonne
+        searchResults: Résultats pour « {searchString} »
+    columnMenu:
+      configure: Configurer la colonne
+      confirmDelete: Voulez-vous vraiment retirer cette colonne ? Elle contient des
+        données qui seront définitivement supprimées. Cette action est
+        irréversible.
+      delete: Supprimer la colonne
+      rename: Renommer la colonne
+    columnRenameDialog:
+      save: Enregistrer
+      title: Titre
+    customFilters:
+      choose: Choisir
+      date:
+        dayOfMonth:
+          label: Jour du mois
+        month:
+          label: Mois
+          months:
+            April: Avril
+            August: Août
+            December: Décembre
+            February: Février
+            January: Janvier
+            July: Juillet
+            June: Juin
+            March: Mars
+            May: Mai
+            November: Novembre
+            October: Octobre
+            September: Septembre
+    dataTableErrors:
+      create_column: Une erreur s'est produite lors de la création de la colonne
+      delete_column: Une erreur s'est produite lors de la suppression de la colonne
+      modify_column: Une erreur s'est produite lors de la modification de la colonne
+      remove_rows: Une erreur s'est produite lors du retrait d'une ou plusieurs lignes
+    defaultColumnTitles:
+      journey_assignee: Dossiers assignés
+      local_bool: Case à cocher
+      local_person: Référence à une personne
+      organizer_action: Appels signalés
+      person_notes: Notes
+    defaultViewTitles:
+      organizer_action: Intervention d'un organisateur requise
+    deleteDialog:
+      error: Une erreur s'est produite lors de la suppression de la liste
+      title: Supprimer la liste ?
+      warningText: Voulez-vous vraiment supprimer cette liste ? Toutes les données
+        enregistrées dans la liste, comme les notes et les cases cochées, seront
+        supprimées (mais les personnes ne seront pas supprimées de la base de
+        données).
+    deleteRowsDialog:
+      cancelButton: Annuler
+      confirmButton: 'Supprimer définitivement {numPeople, plural, =1 {la personne}
+        other {les # personnes}}'
+      confirmationInputLabel: Nom de l'organisation
+      destructiveAlert: Il s'agit d'une action définitive et destructrice, qui ne peut
+        pas être annulée. Veuillez lire attentivement les informations
+        ci-dessous avant de continuer.
+      instruction: Pour confirmer que vous comprenez les conséquences, saisissez
+        {rootOrgSlug} dans le champ ci-dessous.
+      tagetOrgWarning: Toutes les données de ces personnes seront supprimées dans
+        {rootOrgTitle} et dans toutes ses sous-organisations.
+      title: "Supprimer toutes les données {numPeople, plural, =1 {d'une personne}
+        other {de # personnes}}"
+    editViewTitleAlert:
+      error: "Erreur : le titre n'a pas été mis à jour"
+      success: Titre mis à jour !
+    empty:
+      dynamic:
+        configureButton: Configurer
+        description: Créez une liste dynamique dans laquelle les personnes sont ajoutées
+          et retirées automatiquement grâce à une Smart Search.
+        headline: Configurer une liste Smart Search
+      notice:
+        dynamic: Cette liste est basée sur une Smart Search, mais aucune personne ne
+          correspond à la requête
+        static: Vous n'avez encore ajouté aucune ligne
+      static:
+        description: Ajoutez une première personne pour créer une liste statique dans
+          laquelle les personnes sont ajoutées et retirées manuellement.
+        headline: Ajouter des personnes manuellement
+    filterOptions:
+      any: Tous
+      no: Non
+      yes: Oui
+    folder:
+      summary:
+        empty: Vide
+        folderCount: '{count, plural, =1 {1 dossier} other {# dossiers}}'
+        viewCount: '{count, plural, =1 {1 liste} other {# listes}}'
+    footer:
+      addPlaceholder: Commencez à taper pour ajouter une personne à la liste
+      alreadyInView: Déjà dans la liste
+    moveViewDialog:
+      cancel: Annuler
+      emptyFolder: Dossier vide
+      moveHere: Déplacer ici
+    newFolderTitle: Nouveau dossier
+    newViewFields:
+      title: Nouvelle liste
+    removeDialog:
+      action: Voulez-vous vraiment retirer ces lignes de cette liste ?
+      title: Retirer des personnes de la liste
+    shareDialog:
+      download:
+        buttons:
+          csv: Télécharger le fichier CSV
+          xlsx: Télécharger le fichier Excel
+        shareLink: partager des données en toute sécurité
+        tabLabel: Télécharger
+        warning1: Évitez autant que possible d'exporter des données depuis Zetkin, afin
+          que toutes les données restent bien organisées.
+        warning2: Vous pouvez {shareLink} dans Zetkin. L'export est utile lorsque vous
+          souhaitez copier des données vers un autre système.
+      share:
+        addPlaceholder: Ajouter un collaborateur
+        collabInstructions: Après avoir ajouté des collaborateurs, copiez le {viewLink}
+          et envoyez-le-leur
+        showOfficials: Afficher les responsables
+        statusLabel: Partagée avec {collaborators, plural, =1 {1 collaborateur} other {#
+          collaborateurs}} ; {officials, plural, =1 {1 responsable peut} other
+          {# responsables peuvent}} accéder à toutes les listes.
+        tabLabel: Partager
+        viewLink: lien à accès restreint
+      title: Partager « {title} »
+    suggested:
+      created: Créée par {name}
+      sectionTitle: Suggestions
+    surveyOptionCell:
+      notSelected: Non sélectionnée
+      selected: Sélectionnée
+    surveyPreview:
+      mostRecent:
+        header: Réponse la plus récente
+        openButton: Afficher la réponse complète
+      older:
+        header: Réponses plus anciennes
+        openButton: Afficher
+    toolbar:
+      bulk:
+        createList: Créer une liste à partir de la sélection
+        delete: Supprimer de l'organisation les personnes sélectionnées
+        handleSelection: Gérer la sélection ({numSelected})
+        removeFromList: Retirer de la liste les personnes sélectionnées
+      createColumn: Nouvelle colonne
+    viewLayout:
+      actions:
+        share: Partager
+      ellipsisMenu:
+        delete: Supprimer la liste
+        duplicate: Dupliquer
+        editQuery: Modifier la requête Smart Search
+        makeDynamic: Convertir en liste Smart Search
+        makeStatic:
+          confirmDialogInfo: Si vous convertissez cette liste en liste statique, la Smart
+            Search sera supprimée et toutes les personnes qu'elle renvoyait ne
+            figureront plus dans la liste.
+          confirmDialogSubmitLabel: Convertir
+          confirmDialogTitle: Convertir en liste statique
+          label: Convertir en liste statique
+      jumpMenu:
+        placeholder: Commencez à taper pour trouver une liste
+      subtitle:
+        collaborators: '{count, plural, =1 {1 collaborateur externe} other {#
+          collaborateurs externes}}'
+        columns: '{count, plural, =0 {Aucune colonne} =1 {1 colonne} other {#
+          colonnes}}'
+        people: '{count, plural, =0 {Vide} =1 {1 personne} other {# personnes}}'
+    viewsList:
+      columns:
+        created: Date de création
+        owner: Propriétaire
+        title: Titre
+      empty: Vous n'avez encore créé aucune liste.
+zui:
+  accessList:
+    added: Accès accordé par {sharer} {updated}
+    removeAccess: Retirer l'accès
+  autocomplete:
+    noOptionsDefaultText: Aucune option ne correspond à votre recherche
+  breadcrumbs:
+    showMore: '{number} de plus...'
+  collapse:
+    collapse: Réduire
+    expand: Développer
+  confirmDialog:
+    button: Confirmer
+    defaultTitle: Confirmation
+    defaultWarningText: Voulez-vous vraiment effectuer cette action ? Elle est irréversible.
+  copyToClipboard:
+    copied: Copié
+    copiedValue: 'Copié : « {value} »'
+    copy: Copier
+  createPerson:
+    cancel: Annuler
+    createBtn: Créer
+    defaultitle: Créer une personne
+    enumFields:
+      noneOption: Aucune valeur
+    genders:
+      f: Femme
+      m: Homme
+      o: Autre
+      unknown: Inconnu
+    location:
+      dialog:
+        clearButton: Effacer la position
+        doneButton: Terminé
+        helperText: Coordonnées de latitude et de longitude
+        mapInfo: Cliquez et faites glisser pour déplacer la carte. Pincez ou faites
+          défiler pour zoomer. Cliquez ou appuyez pour choisir une position sur
+          la carte.
+      helperText: Coordonnées de latitude et de longitude
+      mapIconTooltip: Modifier sur la carte
+    showAllFields: Afficher tous les champs
+    submitLabel:
+      add: Créer et ajouter
+      assign: Créer et assigner
+      default: Créer
+    tagCreateAndApplyLabel: Créer et appliquer
+    title:
+      addToJourney: Créer une personne et l'ajouter à {journey}
+      addToList: Créer une personne et l'ajouter à {list}
+      assignToAreaAssignment: Créer une personne et l'assigner à {areaAss}
+      assignToJourney: Créer une personne et l'assigner à {journey}
+      caller: Créer une personne et l'ajouter comme appelant
+      contact: Créer une personne et la désigner comme personne de contact
+      default: Créer une personne
+      participant: Créer une personne et l'ajouter comme participant
+    validationWarning:
+      email: Veuillez saisir une adresse e-mail valide
+      name: Ce champ ne peut pas être vide
+      phone: Veuillez saisir un numéro de téléphone valide
+      url: Veuillez saisir une URL valide
+  dataTableSearch:
+    button: Rechercher
+    placeholder: Tapez pour rechercher (min. {minSearchLength} caractères)
+    placeholderWithIdSearch: 'Rechercher – utilisez # pour les ID, par ex. #123
+      (min. {minSearchLength} caractères)'
+    title: Recherche
+  dataTableSorting:
+    addButton: Ajouter une colonne de tri
+    ascending: Croissant
+    button: Trier
+    descending: Décroissant
+    hint: 'Astuce : maintenez la touche {shiftKeyIcon} enfoncée en cliquant sur
+      plusieurs colonnes'
+    title: Tri
+  dateRange:
+    draft: Aucune date de début
+    end: Fin
+    finite: Visible du {start} au {end}
+    indefinite: Visible à partir du {start}
+    invisible: Ni visible ni programmé
+    start: Début
+  dateSpan:
+    multiDay: '{startDate} - {endDate}'
+    multiDayEndsToday: "{startDate} - Aujourd'hui"
+    multiDayToday: Aujourd'hui - {endDate}
+    singleDay: '{date}'
+    singleDayToday: Aujourd'hui
+  drawerModal:
+    close: Fermer
+  duration:
+    days: '{n, plural, =1 {1 jour} other {# jours}}'
+    h: '{n} h'
+    m: '{n} min'
+    ms: '{n} ms'
+    s: '{n} s'
+  editTextInPlace:
+    tooltip:
+      edit: Cliquez pour modifier
+      noEmpty: Ce champ ne peut pas être vide
+  editableImage:
+    add: Cliquez pour ajouter une image
+  ellipsisMenu:
+    ariaLabel: Plus d'options
+  eventWarningIcons:
+    contact: Aucune personne de contact n'a été assignée
+    reminders: "{numMissing, plural, =1 {Un participant n'a pas encore reçu de
+      rappel} other {# participants n'ont pas encore reçu de rappel}}"
+    signUps: Des inscriptions sont en attente
+  expandableText:
+    showLess: Afficher moins
+    showMore: Afficher plus
+  footer:
+    privacyPolicy: Politique de confidentialité
+  futures:
+    errorLoading: Une erreur s'est produite lors du chargement des données.
+  header:
+    collapseButton:
+      collapse: Réduire
+      expand: Développer
+  lists:
+    showMore: Afficher plus...
+  mobileOrganizeHeader:
+    sideBarMenuButtonDescription: Ouvrir le menu latéral
+    userMenuButtonDescription: Ouvrir le menu utilisateur
+  orgScopeSelect:
+    orgPlaceholder: Sélectionner des organisations
+    orgSelectionLabel: 'Sélection : {count}'
+    scope:
+      all: '{org} et toutes ses sous-organisations'
+      specific: Certaines organisations
+      suborgs: Uniquement les sous-organisations
+      this: Uniquement {org}
+  organizeSidebar:
+    collapse: Réduire la barre latérale
+    expand: Développer la barre latérale
+    filter: Tapez pour filtrer
+    filterLabel: Filtrer les organisations
+    geography: Géographie
+    home: Accueil
+    journeys: Parcours
+    myPagesInfoText: Aller à mes pages
+    myPagesMenuItemLabel: Mes pages
+    mySettingsMenuItemLabel: Mes paramètres
+    organizationAvatarAltText: Icône de l'organisation
+    organizationSwitcher:
+      hide: Masquer le sélecteur d'organisation
+      show: Afficher le sélecteur d'organisation
+    overview: Vue d'ensemble
+    people: Personnes
+    projects: Projets et activités
+    search: Rechercher
+    settings: Paramètres
+    signOut: Se déconnecter
+    tags: Étiquettes
+    userSettings: Paramètres utilisateur
+  personGridEditCell:
+    keepTyping: Continuez à taper...
+    noResult: Aucune personne correspondante trouvée
+    otherPeople: Autres personnes
+    restrictedMode: Non modifiable dans les listes partagées.
+    searchResults: Résultats de recherche
+  personSelect:
+    bulkAdd:
+      backButton: Retour
+      cancelButton: Annuler
+      confirmMessage: "{entityToAddTo, select, undefined {Vous êtes sur le point
+        d'ajouter {count, number, integer} personnes. Voulez-vous vraiment
+        continuer ?} other {Vous êtes sur le point d'ajouter {count, number,
+        integer} personnes à « {entityToAddTo} ». Voulez-vous vraiment continuer
+        ?}}"
+      confirmTitle: Confirmer l'ajout de personnes
+      fromView: Depuis la liste « {viewTitle} »
+      openButton: Ajouter en masse
+      submitButton: '{numSelected, plural, =0 {Sélectionner} =1 {Sélectionner 1
+        personne} other {Sélectionner {numSelected, number, integer}
+        personnes}}'
+      title: '{entityToAddTo, select, undefined {Ajouter des personnes} other {Ajouter
+        des personnes à « {entityToAddTo} »}}'
+    keepTyping: Continuez la saisie pour lancer la recherche
+    noResult: Aucune personne correspondante
+    search: Saisissez du texte pour lancer la recherche
+    searching: Recherche en cours...
+  privacyPolicyLink: https://zetkin.org/privacy
+  publicFooter:
+    hostingOrganization: Cette instance de Zetkin est hébergée et gérée par {name}.
+    links:
+      foundation: Zetkin Foundation
+      privacy: Politique de confidentialité
+    text: Zetkin est une plateforme pour organiser l'action militante. Zetkin est
+      développé par la Zetkin Foundation, qui a pour mission d'œuvrer à un
+      changement radical de la société dans une direction socialiste, féministe,
+      antiraciste et durable.
+  signUpChip:
+    booked: Participation confirmée
+    callSignUp: Inscription de {name} enregistrée
+    needed: Nous avons besoin de vous
+    signedUp: Inscription enregistrée
+  snackbar:
+    error: Oups, une erreur s'est produite
+    success: Opération réussie !
+    warning: Attention !
+  statusChip:
+    cancelled: Annulé
+    closed: Clôturé
+    draft: Brouillon
+    ended: Terminé
+    published: Publié
+    scheduled: Programmé
+  submitOrCancel:
+    cancel: Annuler
+    submit: Valider
+  suffixedNumber:
+    thousands: '{num} k'
+  timeSpan:
+    multiDay: '{startDate}, {start} - {endDate}, {end}'
+    multiDayEndsToday: "{startDate}, {start} - aujourd'hui, {end}"
+    multiDayToday: Aujourd'hui, {start} - {endDate}, {end}
+    singleDay: '{date}, {start} - {end}'
+    singleDayAllDay: Aujourd'hui, toute la journée
+    singleDayToday: Aujourd'hui, {start} - {end}
+  timeZonePicker:
+    gmt: GMT
+    noOptionsText: Aucun lieu ne correspond à votre recherche
+    placeholder: Saisissez un lieu à rechercher
+    timeZone: Fuseau horaire
+  timeline:
+    addNotePlaceholder: Saisissez un texte pour ajouter une note
+    email:
+      headers:
+        cc: Cc
+        from: De
+        to: À
+    expand: afficher toute la chronologie
+    fileUploadErrorMessage: Impossible d'ajouter la note. Elle est peut-être trop longue
+    filter:
+      byType:
+        all: Tout
+        files: Fichiers
+        journey: Parcours
+        milestones: Étapes
+        notes: Notes
+        people: Personnes
+        tags: Étiquettes
+      filterSelectLabel: 'Afficher : {filter}'
+      warning: La chronologie est filtrée. Cliquez ici pour retirer le filtre.
+    updates:
+      any:
+        addtags: '{actor} a ajouté {count, plural, =1 {une étiquette} other {#
+          étiquettes}}'
+        removetags: '{actor} a retiré {count, plural, =1 {une étiquette} other {#
+          étiquettes}}'
+      journeyinstance:
+        addassignee: '{actor} a assigné {assignee}'
+        addnote: '{actor} a ajouté une note'
+        addsubject: '{actor} a ajouté {subject}'
+        close:
+          header: '{actor} a clôturé le dossier'
+        convert: '{actor} a converti {oldLabel} en {newLabel}'
+        create:
+          header: '{actor} a ouvert un nouveau dossier'
+        open: '{actor} a rouvert le dossier'
+        removeassignee: '{actor} a retiré {assignee} des personnes assignées'
+        removesubject: '{actor} a retiré {subject}'
+        update:
+          readMore: Lire la suite
+          summary: '{actor} a modifié le résumé'
+          title: '{actor} a modifié le titre'
+        updatemilestone:
+          complete: '{actor} a terminé une étape'
+          deadline: "{actor} a modifié l'échéance d'une étape"
+          deadlineRemove: l'échéance a été supprimée
+          deadlineUpdate: 'nouvelle échéance : {datetime}'
+          incomplete: '{actor} a marqué une étape comme non terminée'
