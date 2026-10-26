@@ -199,6 +199,7 @@ export const PreviewPopper: FC<PreviewPopperProps> = ({
               <Typography color="secondary">
                 <ZUIRelativeTime datetime={call.update_time} />
               </Typography>
+              <Typography color="secondary">{call.assignment.title}</Typography>
               <Typography>
                 {getEllipsedString(call.message_to_organizer || '', 70)}
               </Typography>

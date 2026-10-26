@@ -126,6 +126,12 @@ export default makeMessages('feat.settings', {
       titleInput: m('Title'),
       typeInput: m('Type'),
     },
+    errors: {
+      400: m(
+        'This field could not be saved. Please check the slug and options.'
+      ),
+      409: m('This slug is already in use. Please choose a different one.'),
+    },
     list: {
       editButton: m('Edit'),
       headers: {

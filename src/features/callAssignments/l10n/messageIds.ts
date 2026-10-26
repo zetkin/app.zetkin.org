@@ -135,9 +135,11 @@ export default makeMessages('feat.callAssignments', {
     markAsSolved: m('Mark as solved'),
     markAsUnsolved: m('Mark as unsolved'),
     messagePlaceholder: m('Caller did not leave a message'),
-    noteByCaller: m<{ person: ReactElement; time: ReactElement }>(
-      'Note by {person} {time}'
-    ),
+    note: m<{
+      assignment: string;
+      person: ReactElement;
+      time: ReactElement;
+    }>('Note by {person} {time} in {assignment}'),
     subtitle: m<{ person: ReactElement }>('Notes on {person}'),
     title: m('Organizer action needed'),
   },

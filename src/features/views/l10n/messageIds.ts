@@ -5,10 +5,12 @@ import { m, makeMessages } from 'core/i18n/messages';
 export default makeMessages('feat.views', {
   actions: {
     create: m('Create'),
+    createError: m('There was an error'),
     createFolder: m('Create folder'),
     createJoinForm: m('Create join form'),
     createPerson: m('Create person'),
     createView: m('Create list'),
+    creating: m('Creating'),
     importPeople: m('Import people'),
   },
   browser: {
