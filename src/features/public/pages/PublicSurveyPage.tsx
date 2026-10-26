@@ -83,8 +83,6 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({
       } catch (e) {
         setStatus('error');
       } finally {
-        // Reset here rather than on status change, because a repeated
-        // error leaves status unchanged and would keep the button loading.
         setIsLoading(false);
       }
     },
