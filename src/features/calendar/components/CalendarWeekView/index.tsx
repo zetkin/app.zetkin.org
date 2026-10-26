@@ -1,17 +1,11 @@
 import { Box, lighten } from '@mui/system';
 import { useIntl } from 'react-intl';
-import { Event, SplitscreenOutlined } from '@mui/icons-material';
-import {
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import DayHeader from './DayHeader';
 import EventCluster from '../EventCluster';
+import EventCreateMenu from '../EventCreateMenu';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
 import EventShiftModal from '../EventShiftModal';
@@ -20,12 +14,10 @@ import {
   legacyDateFromPlainDate,
   legacyDateFromPlainDateTime,
 } from 'utils/dateUtils';
-import messageIds from 'features/calendar/l10n/messageIds';
-import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import { getDstChangeAtDate } from '../utils';
-import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import useCreateEmptyEvent from 'features/events/hooks/useCreateEmptyEvent';
 import { useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 
@@ -88,7 +80,6 @@ export interface CalendarWeekViewProps {
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const intl = useIntl();
-  const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<
     [Temporal.PlainDateTime, Temporal.PlainDateTime] | null
@@ -97,7 +88,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     null
   );
   const { orgId, projectId } = useNumericRouteParams();
-  const createEvent = useCreateEvent(orgId);
+  const { createEmptyEvent, creating } = useCreateEmptyEvent(orgId);
   const focusWeekStartDay = focusDate.subtract({
     days: focusDate.dayOfWeek - 1,
   });
@@ -334,67 +325,37 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
                           height={pendingHeight * 100 + '%'}
                           y={pendingTop * 100 + '%'}
                         />
-                        {ghostAnchorEl && !creating && (
-                          <Menu
+                        {ghostAnchorEl && !shiftModalOpen && (
+                          <EventCreateMenu
                             anchorEl={ghostAnchorEl}
-                            anchorOrigin={{
-                              horizontal: index > 3 ? 'left' : 'right',
-                              vertical: 'bottom',
-                            }}
+                            disabled={creating}
                             onClose={() => {
                               setPendingEvent(null);
                               setGhostAnchorEl(null);
                             }}
-                            open={true}
-                            transformOrigin={{
-                              horizontal: index > 3 ? 'right' : 'left',
-                              vertical: 'top',
+                            onCreateShifts={() => {
+                              setGhostAnchorEl(null);
+                              setShiftModalOpen(true);
                             }}
-                          >
-                            <MenuItem
-                              onClick={async () => {
-                                setCreating(true);
-                                setGhostAnchorEl(null);
-                                await createEvent({
-                                  activity_id: null,
-                                  campaign_id: projectId,
-                                  end_time: pendingEvent[1].toString(),
-                                  location_id: null,
-                                  start_time: pendingEvent[0].toString(),
-                                  title: null,
-                                });
-                                setPendingEvent(null);
-                                setCreating(false);
-                              }}
-                            >
-                              <ListItemIcon>
-                                <Event />
-                              </ListItemIcon>
-                              <ListItemText>
-                                <Msg id={messageIds.createMenu.singleEvent} />
-                              </ListItemText>
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                setCreating(true);
-                                setGhostAnchorEl(null);
-                                setShiftModalOpen(true);
-                              }}
-                            >
-                              <ListItemIcon>
-                                <SplitscreenOutlined />
-                              </ListItemIcon>
-                              <ListItemText>
-                                <Msg id={messageIds.createMenu.shiftEvent} />
-                              </ListItemText>
-                            </MenuItem>
-                          </Menu>
+                            onCreateSingle={async () => {
+                              const event = await createEmptyEvent({
+                                campaign_id: projectId,
+                                end_time: pendingEvent[1].toString(),
+                                start_time: pendingEvent[0].toString(),
+                              });
+                              if (event) {
+                                setPendingEvent((current) =>
+                                  current === pendingEvent ? null : current
+                                );
+                              }
+                            }}
+                            openTowardsLeft={index > 3}
+                          />
                         )}
                         <EventShiftModal
                           close={() => {
                             setShiftModalOpen(false);
                             setPendingEvent(null);
-                            setCreating(false);
                           }}
                           dates={[
                             legacyDateFromPlainDateTime(pendingEvent[0]),

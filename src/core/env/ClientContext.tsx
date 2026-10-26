@@ -29,6 +29,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 import { NonceContext } from 'core/hooks/useNonce';
+import { PromiseCacheProvider } from 'core/caching/PromiseCache';
 
 type ClientContextProps = {
   children: ReactNode;
@@ -79,43 +80,45 @@ const ClientContext: FC<ClientContextProps> = ({
 
   return (
     <ReduxProvider store={storeRef.current}>
-      <StyledEngineProvider injectFirst>
-        <CacheProvider value={cache.current}>
-          <NonceContext.Provider value={nonce}>
-            <ThemeProvider theme={oldThemeWithLocale(lang)}>
-              <EnvProvider env={env}>
-                <UserProvider user={user}>
-                  <LocalizationProvider
-                    adapterLocale={lang}
-                    dateAdapter={AdapterDayjs}
-                  >
-                    <IntlProvider
-                      defaultLocale="en"
-                      locale={lang}
-                      messages={messages}
+      <PromiseCacheProvider>
+        <StyledEngineProvider injectFirst>
+          <CacheProvider value={cache.current}>
+            <NonceContext.Provider value={nonce}>
+              <ThemeProvider theme={oldThemeWithLocale(lang)}>
+                <EnvProvider env={env}>
+                  <UserProvider user={user}>
+                    <LocalizationProvider
+                      adapterLocale={lang}
+                      dateAdapter={AdapterDayjs}
                     >
-                      <AppRouterCacheProvider>
-                        <ZUISnackbarProvider>
-                          <IntlProvider
-                            defaultLocale="en"
-                            locale={lang}
-                            messages={messages}
-                          >
-                            <ZUIConfirmDialogProvider>
-                              <CssBaseline />
-                              <Suspense>{children}</Suspense>
-                            </ZUIConfirmDialogProvider>
-                          </IntlProvider>
-                        </ZUISnackbarProvider>
-                      </AppRouterCacheProvider>
-                    </IntlProvider>
-                  </LocalizationProvider>
-                </UserProvider>
-              </EnvProvider>
-            </ThemeProvider>
-          </NonceContext.Provider>
-        </CacheProvider>
-      </StyledEngineProvider>
+                      <IntlProvider
+                        defaultLocale="en"
+                        locale={lang}
+                        messages={messages}
+                      >
+                        <AppRouterCacheProvider>
+                          <ZUISnackbarProvider>
+                            <IntlProvider
+                              defaultLocale="en"
+                              locale={lang}
+                              messages={messages}
+                            >
+                              <ZUIConfirmDialogProvider>
+                                <CssBaseline />
+                                <Suspense>{children}</Suspense>
+                              </ZUIConfirmDialogProvider>
+                            </IntlProvider>
+                          </ZUISnackbarProvider>
+                        </AppRouterCacheProvider>
+                      </IntlProvider>
+                    </LocalizationProvider>
+                  </UserProvider>
+                </EnvProvider>
+              </ThemeProvider>
+            </NonceContext.Provider>
+          </CacheProvider>
+        </StyledEngineProvider>
+      </PromiseCacheProvider>
     </ReduxProvider>
   );
 };

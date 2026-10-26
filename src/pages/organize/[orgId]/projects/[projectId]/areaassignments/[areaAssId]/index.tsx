@@ -4,7 +4,7 @@ import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import { AREAS } from 'utils/featureFlags';
+import { AREA_ASSIGNMENTS } from 'utils/featureFlags';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import { PageWithLayout } from 'utils/types';
 import NumberCard from 'features/areaAssignments/components/NumberCard';
@@ -18,7 +18,7 @@ import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  featuresRequired: [AREAS],
+  featuresRequired: [AREA_ASSIGNMENTS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

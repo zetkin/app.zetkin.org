@@ -34,7 +34,7 @@ import {
 import { omit } from 'lodash';
 import Head from 'next/head';
 
-import { AREAS } from 'utils/featureFlags';
+import { AREA_ASSIGNMENTS } from 'utils/featureFlags';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import messagesIds from 'features/areaAssignments/l10n/messageIds';
 import MetricCard from 'features/areaAssignments/components/MetricCard';
@@ -57,7 +57,7 @@ import useSortedMetrics from 'features/canvass/hooks/useSortedMetrics';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  featuresRequired: [AREAS],
+  featuresRequired: [AREA_ASSIGNMENTS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

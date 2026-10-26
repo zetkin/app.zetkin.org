@@ -123,7 +123,8 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
         setDeactivated(false);
         showSnackbar('error', messages.deleteDialog.error());
       } finally {
-        router.push(`/organize/${orgId}/people`);
+        const folderPath = view.folder ? `/folders/${view.folder.id}` : '';
+        router.push(`/organize/${orgId}/people${folderPath}`);
       }
     }
   };

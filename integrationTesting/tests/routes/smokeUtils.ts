@@ -306,6 +306,7 @@ export async function addSessionCookie(
 
 export function setupFeatureFlags() {
   process.env.FEAT_AREAS = '*';
+  process.env.FEAT_AREA_ASSIGNMENTS = '*';
   process.env.FEAT_CALL = '*';
   process.env.FEAT_OFFICIALS = '*';
   process.env.FEAT_TASKS = '*';
@@ -419,6 +420,13 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   moxy.setZetkinApiMock('/orgs/1/people/1/tags', 'get', [
     ActivistTag,
     OrganizerTag,
+  ]);
+  moxy.setZetkinApiMock('/orgs/1/people/1/timeline', 'get', [
+    {
+      data: { action: SmokeEvent },
+      event: 'action',
+      timestamp: SmokeEvent.start_time,
+    },
   ]);
   moxy.setZetkinApiMock('/orgs/1/people/duplicates', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/people/fields', 'get', AllCustomFields);

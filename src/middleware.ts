@@ -47,6 +47,7 @@ function setupCsp(path: string) {
   const cspHeader = `
   default-src 'self' ${mapTiler};
   script-src ${scriptSrc};
+  worker-src 'self' blob:;
   style-src ${styleSrc};
   style-src-attr 'unsafe-inline';
   img-src 'self' blob: data: ${tileServer} ${
@@ -117,7 +118,8 @@ export const config = {
         { key: 'next-router-prefetch', type: 'header' },
         { key: 'purpose', type: 'header', value: 'prefetch' },
       ],
-      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+      source:
+        '/((?!api|_next/static|_next/image|favicon.ico|call/companion).*)',
     },
   ],
 };

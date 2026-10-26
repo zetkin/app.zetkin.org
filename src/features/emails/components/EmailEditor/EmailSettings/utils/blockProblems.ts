@@ -1,4 +1,5 @@
 import isURL from 'validator/lib/isURL';
+import isMailtoURI from 'validator/lib/isMailtoURI';
 import { OutputBlockData } from '@editorjs/editorjs';
 
 import { BLOCK_TYPES, BlockProblem } from 'features/emails/types';
@@ -7,7 +8,11 @@ export default function blockProblems(block: OutputBlockData): BlockProblem[] {
   const blockProblems: BlockProblem[] = [];
 
   if (block.type === BLOCK_TYPES.BUTTON) {
-    if (!block.data.url || !isURL(block.data.url, { require_protocol: true })) {
+    if (
+      !block.data.url ||
+      (!isURL(block.data.url, { require_protocol: true }) &&
+        !isMailtoURI(block.data.url))
+    ) {
       blockProblems.push(BlockProblem.INVALID_BUTTON_URL);
     }
 
@@ -22,7 +27,11 @@ export default function blockProblems(block: OutputBlockData): BlockProblem[] {
     const anchors = [...container.querySelectorAll('a')];
 
     if (
-      anchors.some((anchor) => !isURL(anchor.href, { require_protocol: true }))
+      anchors.some(
+        (anchor) =>
+          !isURL(anchor.href, { require_protocol: true }) &&
+          !isMailtoURI(anchor.href)
+      )
     ) {
       blockProblems.push(BlockProblem.INVALID_LINK_URL);
     }
