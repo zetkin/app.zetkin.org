@@ -28,10 +28,14 @@ const useGuessTags = (orgId: number, uiDataColumn: UIDataColumn<TagColumn>) => {
 
           // If there is a match, guess it
           if (results.length > 0) {
+            const bestTag = results.sort(
+              (a, b) => (a.score ?? 1) - (b.score ?? 1)
+            )[0];
             return [
               ...acc,
               {
-                tags: [{ id: results[0].item.id }],
+                score: bestTag.score,
+                tags: [{ id: bestTag.item.id }],
                 value: cellValue,
               },
             ];

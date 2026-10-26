@@ -107,6 +107,13 @@ const ActivistPortalHeader: FC<Props> = ({
                 />
               )}
               <Button
+                aria-expanded={!!logoutMenuAnchorEl}
+                aria-haspopup="menu"
+                aria-label={messages.home.header.userMenu({
+                  initials: (
+                    user.first_name.slice(0, 1) + user.last_name.slice(0, 1)
+                  ).toUpperCase(),
+                })}
                 onClick={(event) => setLogoutMenuAnchorEl(event.currentTarget)}
                 sx={{
                   marginLeft: 'auto',

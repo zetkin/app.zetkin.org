@@ -34,7 +34,7 @@ import {
 import { omit } from 'lodash';
 import Head from 'next/head';
 
-import { AREAS } from 'utils/featureFlags';
+import { AREA_ASSIGNMENTS } from 'utils/featureFlags';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import messagesIds from 'features/areaAssignments/l10n/messageIds';
 import MetricCard from 'features/areaAssignments/components/MetricCard';
@@ -53,11 +53,11 @@ import {
 } from 'features/areaAssignments/types';
 import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 import ZUILockCard from 'zui/ZUILockCard';
-import sortMetrics from 'features/canvass/utils/sortMetrics';
+import useSortedMetrics from 'features/canvass/hooks/useSortedMetrics';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  featuresRequired: [AREAS],
+  featuresRequired: [AREA_ASSIGNMENTS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
@@ -88,7 +88,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   const messages = useMessages(messagesIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const metricsList = useAreaAssignmentMetrics(parseInt(orgId), areaAssId);
-  const metrics = sortMetrics(metricsList);
+  const metrics = useSortedMetrics(metricsList);
 
   const [metricBeingCreated, setMetricBeingCreated] =
     useState<Partial<ZetkinMetric> | null>(null);

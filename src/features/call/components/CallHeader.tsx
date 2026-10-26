@@ -1,4 +1,4 @@
-import { SkipNext } from '@mui/icons-material';
+import { QrCode, SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
@@ -24,6 +24,10 @@ import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useFilteredActivities from '../hooks/useFilteredActivities';
 import notEmpty from 'utils/notEmpty';
+import ZUILink from 'zui/components/ZUILink';
+import QRCodeImage from './QRCodeImage';
+import ZUIIconButton from 'zui/components/ZUIIconButton';
+import ZUIModal from 'zui/components/ZUIModal';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -44,6 +48,7 @@ const CallHeader: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
+  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   const { surveys } = useFilteredActivities(assignment.organization.id);
   const { selectedSurveyId } = useAppSelector(
@@ -68,6 +73,14 @@ const CallHeader: FC<Props> = ({
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
   const submitReport = useSubmitReport(assignment.organization.id);
+
+  const phoneNumbers = [call?.target.phone, call?.target.alt_phone].filter(
+    notEmpty
+  );
+
+  const encodedName = encodeURIComponent(
+    `${call?.target.first_name} ${call?.target.last_name}`
+  );
 
   return (
     <Box
@@ -145,10 +158,29 @@ const CallHeader: FC<Props> = ({
               sx={{ fontFamily: 'monospace' }}
               variant="headingLg"
             >
-              {[call.target.phone, call.target.alt_phone]
-                .filter(notEmpty)
-                .join('/')}
+              {phoneNumbers.flatMap((phone, index) => {
+                return [
+                  index > 0 ? '/' : null,
+                  <ZUILink key={phone} href={`tel:${phone}`} text={phone} />,
+                ];
+              })}
             </ZUIText>
+            <ZUIIconButton
+              icon={QrCode}
+              onClick={() => {
+                setQrModalOpen(true);
+              }}
+            />
+            <ZUIModal
+              onClose={() => setQrModalOpen(false)}
+              open={qrModalOpen}
+              title={messages.header.qrModal.title()}
+            >
+              <QRCodeImage
+                clickable
+                url={`${location.origin}/call/companion?name=${encodedName}&numbers=${phoneNumbers.join(',')}`}
+              />
+            </ZUIModal>
           </>
         )}
       </Box>
@@ -193,6 +225,7 @@ const CallHeader: FC<Props> = ({
           disabled={
             !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
           }
+          isLoading={isAllocatingCall || submittingReport}
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
             if (lane.step == LaneStep.START) {
@@ -280,11 +313,9 @@ const CallHeader: FC<Props> = ({
             }
           }}
           variant={
-            isAllocatingCall || submittingReport
-              ? 'loading'
-              : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
-                ? 'secondary'
-                : 'primary'
+            lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
+              ? 'secondary'
+              : 'primary'
           }
         />
       </Box>

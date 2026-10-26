@@ -17,16 +17,17 @@ export default makeMessages('feat.call', {
       callBackAfter: m<{ name: string; time: JSX.Element }>(
         'Call {name} back after {time}'
       ),
+      calledBy: m<{ name: string }>('Called by {name}.'),
       hasNoPreviousCalls: m('Never been called'),
       note: m<{ note: string }>('Note: {note}'),
       status: {
-        callBack: m('Call back later'),
-        leftMessage: m('Left voice mail'),
-        lineBusy: m('Line busy'),
-        noPickup: m('Did not reach them'),
-        notAvailable: m('Not available to talk'),
-        success: m('Successful'),
-        wrongNumber: m('Wrong number'),
+        callBack: m('We need to call back'),
+        leftMessage: m('We left a voice mail'),
+        lineBusy: m('The line was busy'),
+        noPickup: m('We did not reach them'),
+        notAvailable: m('They were not available to talk'),
+        success: m('The call was successful!'),
+        wrongNumber: m('We had the wrong number'),
       },
       title: m('Previous calls'),
     },
@@ -152,6 +153,9 @@ export default makeMessages('feat.call', {
       start: m('Call'),
       summary: m('Next call'),
     },
+    qrModal: {
+      title: m('Scan to call with smartphone'),
+    },
     secondaryButton: {
       call: m('Skip'),
       report: m('Skip'),
@@ -162,6 +166,15 @@ export default makeMessages('feat.call', {
   instructions: {
     noInstructions: m('This assignment does not have any instructions.'),
     title: m('Instructions'),
+  },
+  newUIAlert: {
+    description: m<{ link: JSX.Element }>(
+      'You can start using it right away or {link}'
+    ),
+    linkText: m('go back to the old version.'),
+    title: m<{ description: JSX.Element }>(
+      'Welcome to the redesigned caller interface! {description}'
+    ),
   },
   report: {
     steps: {

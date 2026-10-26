@@ -69,9 +69,10 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
         <Box key={call?.id} mt={4}>
           <Typography variant="body2">
             <Msg
-              id={messageIds.organizerActionPane.noteByCaller}
+              id={messageIds.organizerActionPane.note}
               values={{
-                person: call && (
+                assignment: call.assignment.title,
+                person: (
                   <ZUIPersonLink
                     person={
                       call.caller as {
@@ -83,7 +84,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
                     }
                   />
                 ),
-                time: call && <ZUIRelativeTime datetime={call.update_time} />,
+                time: <ZUIRelativeTime datetime={call.update_time} />,
               }}
             />
           </Typography>

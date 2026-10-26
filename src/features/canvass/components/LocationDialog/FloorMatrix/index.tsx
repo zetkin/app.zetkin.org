@@ -15,6 +15,7 @@ import FloorEditor from './FloorEditor';
 import { EditedFloor } from './types';
 import AddFloorButton from './AddFloorButton';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import useSortedMetrics from 'features/canvass/hooks/useSortedMetrics';
 
 const naturalCmp = new Intl.Collator(undefined, { numeric: true }).compare;
 
@@ -44,10 +45,11 @@ const FloorMatrix: FC<Props> = ({
   const households = useHouseholds(location.organization_id, location.id);
   const isMobile = useIsMobile();
 
-  const metrics = useAreaAssignmentMetrics(
+  const metricsUnsorted = useAreaAssignmentMetrics(
     location.organization_id,
     assignment.id
   );
+  const metrics = useSortedMetrics(metricsUnsorted);
 
   const { lastVisitByHouseholdId } = useVisitReporting(
     location.organization_id,
@@ -197,8 +199,12 @@ const FloorMatrix: FC<Props> = ({
 
               return {
                 household,
+                lastVisitMetrics: mostRecentVisit
+                  ? mostRecentVisit.metrics
+                  : null,
                 lastVisitSuccess,
                 lastVisitTime: mostRecentVisit?.created ?? null,
+                metrics,
               };
             });
 

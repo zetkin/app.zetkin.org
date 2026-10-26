@@ -87,9 +87,14 @@ export default makeMessages('feat.canvass', {
       header: m('Households'),
     },
     single: {
+      definesSuccess: m('Defines success'),
       logVisitButtonLabel: m('Log visit'),
+      skipped: m('skipped'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
-      wasVisited: m('This household has been visited in this assignment'),
+      visit: m('Visit'),
+      wasNotVisited: m(
+        'This household has not been visited in this assignment'
+      ),
     },
     stackItem: {
       detailsButtonLabel: m('Details'),
@@ -145,6 +150,7 @@ export default makeMessages('feat.canvass', {
     ),
   },
   selectArea: {
+    assignedToMe: m('Assigned to me'),
     noAreas: m('No areas available'),
   },
   sidebar: {

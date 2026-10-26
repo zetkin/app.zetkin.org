@@ -1,7 +1,9 @@
 /* eslint-disable react/no-danger */
-import DOMPurify from 'isomorphic-dompurify';
-import { Box, BoxProps } from '@mui/material';
-import { useMemo } from 'react';
+'use client';
+
+import DOMPurify from 'dompurify';
+import { Box, BoxProps, Skeleton } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 interface ZUICleanHtmlProps {
   dirtyHtml: string;
@@ -12,7 +14,22 @@ const ZUICleanHtml = ({
   BoxProps,
   dirtyHtml,
 }: ZUICleanHtmlProps): JSX.Element => {
-  const cleanHtml = useMemo(() => DOMPurify.sanitize(dirtyHtml), [dirtyHtml]);
+  const [cleanHtml, setCleanHtml] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCleanHtml(DOMPurify.sanitize(dirtyHtml));
+  }, [dirtyHtml]);
+
+  if (cleanHtml === null) {
+    return (
+      <Box {...BoxProps}>
+        <Skeleton width="100%" />
+        <Skeleton width="100%" />
+        <Skeleton width="60%" />
+      </Box>
+    );
+  }
+
   return <Box dangerouslySetInnerHTML={{ __html: cleanHtml }} {...BoxProps} />;
 };
 

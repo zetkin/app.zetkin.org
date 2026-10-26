@@ -11,10 +11,9 @@ export default function useOrgUsers(orgId: number): ZetkinOrgUser[] {
     actionOnLoad: () => orgUsersLoad(),
     actionOnSuccess: (data) => orgUsersLoaded(data),
     // TODO: Use search API instead of loading all users
-    loader: async () => {
-      return await fetchAllPaginated<ZetkinOrgUser>((page) =>
+    loader: () =>
+      fetchAllPaginated<ZetkinOrgUser>((page) =>
         apiClient.get(`/api2/orgs/${orgId}/users?size=100&page=${page}`)
-      );
-    },
+      ),
   });
 }

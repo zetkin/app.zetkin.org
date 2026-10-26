@@ -10,7 +10,6 @@ import ActivityListItem from './ActivityListItem';
 import { ClusteredEvent } from 'features/projects/hooks/useClusteredActivities';
 import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
 import getEventUrl from 'features/events/utils/getEventUrl';
-import { removeOffset } from 'utils/dateUtils';
 import useEventClusterData from 'features/events/hooks/useEventClusterData';
 import { useEventPopper } from 'features/events/components/EventPopper/EventPopperProvider';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
@@ -70,8 +69,8 @@ const EventListItem: FC<EventListeItemProps> = ({ cluster }) => {
               icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
               label: (
                 <ZUITimeSpan
-                  end={new Date(removeOffset(endTime))}
-                  start={new Date(removeOffset(startTime))}
+                  end={Temporal.PlainDateTime.from(endTime)}
+                  start={Temporal.PlainDateTime.from(startTime)}
                 />
               ),
             },

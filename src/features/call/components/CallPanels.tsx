@@ -25,7 +25,6 @@ type Props = {
   assignment: ZetkinCallAssignment;
   call: UnfinishedCall | null;
   lane: LaneState;
-  onAbandonUnfinishedCall: (assignmentId: number, callId: number) => void;
   onOpenCallLog: () => void;
   onSwitchToUnfinishedCall: (callId: number, assignmentId: number) => void;
   report: Report;
@@ -36,7 +35,6 @@ const CallPanels: FC<Props> = ({
   assignment,
   call,
   lane,
-  onAbandonUnfinishedCall,
   onOpenCallLog,
   onSwitchToUnfinishedCall,
   report,
@@ -298,12 +296,6 @@ const CallPanels: FC<Props> = ({
       >
         <CallSummary
           assignmentId={assignment.id}
-          onAbandonUnfinishedCall={(
-            unfinshedCallAssignmentId,
-            unfinishedCallId
-          ) =>
-            onAbandonUnfinishedCall(unfinshedCallAssignmentId, unfinishedCallId)
-          }
           onSwitchToUnfinishedCall={(unfinishedCallId, assignmentId) =>
             onSwitchToUnfinishedCall(unfinishedCallId, assignmentId)
           }
@@ -343,12 +335,13 @@ const CallPanels: FC<Props> = ({
                   onClick={() =>
                     onSwitchToUnfinishedCall(c.id, c.assignment_id)
                   }
-                  sx={{
+                  sx={(theme) => ({
+                    border: `4px solid ${theme.palette.background.default}`,
                     borderRadius: '2rem',
                     cursor: 'pointer',
                     display: 'flex',
                     padding: 0,
-                  }}
+                  })}
                 >
                   <ZUIPersonAvatar
                     firstName={c.target.first_name}
