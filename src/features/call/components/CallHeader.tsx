@@ -211,7 +211,9 @@ const MobileHeader: FC<HeaderProps> = ({
           display: 'flex',
           gap: 1,
           justifyContent:
-            lane.step === LaneStep.CALL ? 'space-between' : 'flex-end',
+            lane.step === LaneStep.CALL || lane.step === LaneStep.REPORT
+              ? 'space-between'
+              : 'flex-end',
           position: 'absolute',
           right: 16,
           width: 'calc(100% - 32px)',
@@ -220,7 +222,7 @@ const MobileHeader: FC<HeaderProps> = ({
       >
         {lane.step === LaneStep.REPORT && (
           <ZUIButton
-            label="Back to call"
+            label={messages.mobile.report.back()}
             onClick={() => {
               dispatch(updateLaneStep(LaneStep.CALL));
             }}
@@ -231,27 +233,38 @@ const MobileHeader: FC<HeaderProps> = ({
         {lane.step === LaneStep.CALL && call && !call.target.alt_phone && (
           <ZUIButton
             fullWidth
-            href={`tel:${call?.target.phone}`}
-            label={`Call ${call?.target.first_name}`}
+            href={`tel:${call.target.phone}`}
+            label={messages.mobile.call.onlyOne({
+              name: call?.target.name,
+            })}
             variant="primary"
           />
         )}
-        {lane.step === LaneStep.CALL && call && call.target.alt_phone && (
-          <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
-            <ZUIButton
-              fullWidth
-              href={`tel:${call.target.alt_phone}`}
-              label={`Call ${call.target.first_name} alternative`}
-              variant="primary"
-            />
-            <ZUIButton
-              fullWidth
-              href={`tel:${call.target.phone}`}
-              label={`Call ${call.target.first_name} main`}
-              variant="primary"
-            />
-          </Box>
-        )}
+        {lane.step === LaneStep.CALL &&
+          call &&
+          call.target.phone &&
+          call.target.alt_phone && (
+            <Box sx={{ display: 'flex', gap: 1, width: '85%' }}>
+              <ZUIButton
+                clampLines={3}
+                fullWidth
+                href={`tel:${call.target.alt_phone}`}
+                label={messages.mobile.call.alt({
+                  number: call?.target.alt_phone,
+                })}
+                variant="primary"
+              />
+              <ZUIButton
+                clampLines={3}
+                fullWidth
+                href={`tel:${call.target.phone}`}
+                label={messages.mobile.call.main({
+                  number: call?.target.phone,
+                })}
+                variant="primary"
+              />
+            </Box>
+          )}
         <ZUIButton
           disabled={
             !!queueError || (lane.step == LaneStep.REPORT && !report.completed)
