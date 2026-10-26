@@ -1,6 +1,7 @@
 export { default as hasFeature } from './hasFeature';
 
 export const AREAS = 'FEAT_AREAS';
+export const AREA_ASSIGNMENTS = 'FEAT_AREA_ASSIGNMENTS';
 export const CALL = 'FEAT_CALL';
 export const OFFICIALS = 'FEAT_OFFICIALS';
 export const TASKS = 'FEAT_TASKS';
