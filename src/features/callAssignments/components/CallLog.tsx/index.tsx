@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-import { Avatar, Box, Tooltip, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 
 import { useMessages } from 'core/i18n';
 import useCalls from 'features/callAssignments/hooks/useCalls';
@@ -14,6 +14,7 @@ import CallerNoteCell from './CallerNoteCell';
 import CallStatusFilterInput from './CallStatusFilterInput';
 import { colors, icons, states } from './utils';
 import OrganizerActionFilterInput from './OrganizerActionFilterInput';
+import ZUIAvatar from 'zui/ZUIAvatar';
 
 type Props = {
   callAssId: number;
@@ -34,8 +35,9 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
       renderCell: (params) => (
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <ZUIPersonHoverCard personId={params.row.target.id}>
-            <Avatar
-              src={`/api/orgs/${orgId}/people/${params.row.target.id}/avatar`}
+            <ZUIAvatar
+              size="md"
+              url={`/api/orgs/${orgId}/people/${params.row.target.id}/avatar`}
             />
           </ZUIPersonHoverCard>
         </Box>
@@ -212,8 +214,9 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
             sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}
           >
             <ZUIPersonHoverCard personId={params.row.caller.id}>
-              <Avatar
-                src={`/api/orgs/${orgId}/people/${params.row.caller.id}/avatar`}
+              <ZUIAvatar
+                size="md"
+                url={`/api/orgs/${orgId}/people/${params.row.caller.id}/avatar`}
               />
             </ZUIPersonHoverCard>
           </Box>
