@@ -370,8 +370,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewGrid.removeRows, showError, setWaiting]);
 
-  const onViewCreate = useCallback(() => {
-    createView(view.folder?.id ?? 0, selection);
+  const onViewCreate = useCallback(async () => {
+    await createView(view.folder?.id ?? 0, selection);
   }, [createView, view.folder, selection]);
 
   const avatarColumn: GridColDef = useMemo(

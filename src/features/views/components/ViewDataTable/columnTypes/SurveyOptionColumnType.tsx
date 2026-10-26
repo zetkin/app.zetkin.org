@@ -28,7 +28,8 @@ export default class SurveyOptionColumnType implements IColumnType<
 > {
   cellToString(cell: SurveyOptionViewCell): string {
     const pickedThisOption = cell?.filter((submission) => submission.selected);
-    return pickedThisOption?.length ? pickedThisOption[0].submitted : '';
+    const length = pickedThisOption?.length;
+    return length ? pickedThisOption[length - 1].submitted : '';
   }
 
   getColDef(): Omit<GridColDef<SurveyOptionViewColumn>, 'field'> {
