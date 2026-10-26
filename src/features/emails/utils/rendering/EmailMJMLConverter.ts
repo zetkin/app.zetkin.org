@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys */
+import isMailtoURI from 'validator/lib/isMailtoURI';
 import { MJMLJsonObject } from 'mjml-core';
 
 import insertAtPlaceholder from './insertAtPlaceholder';
@@ -35,7 +36,7 @@ export default class EmailMJMLConverter {
         });
       } else if (block.kind == 'button') {
         let href = escapeAttribute(block.data.href);
-        if (href.match(/^https?:\/\/.*/) == null) {
+        if (href.match(/^https?:\/\/.*/) == null && !isMailtoURI(href)) {
           href = '';
         }
 
@@ -123,7 +124,7 @@ function inlineNodesToPlainHTML(nodes: EmailContentInlineNode[]): string {
       output += `<i>${htmlContent}</i>`;
     } else if (node.kind == 'link') {
       let href = escapeAttribute(node.href);
-      if (href.match(/^https?:\/\/.*/) == null) {
+      if (href.match(/^https?:\/\/.*/) == null && !isMailtoURI(href)) {
         href = '';
       }
       const htmlContent = inlineNodesToPlainHTML(node.content);
