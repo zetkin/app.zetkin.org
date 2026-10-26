@@ -48,13 +48,16 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
     },
     {
       field: 'name',
+      flex: 1,
       headerName: messages.calls.columns.name(),
+      minWidth: 250,
       valueGetter: (value, row) => row.target.name,
-      width: 250,
     },
     {
       field: 'allocation_time',
+      flex: 0.5,
       headerName: messages.calls.columns.time(),
+      minWidth: 250,
       renderCell: (params) => (
         <Typography>
           <ZUIDateTime datetime={params.row.allocation_time} />
@@ -62,7 +65,6 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
       ),
       type: 'dateTime',
       valueGetter: (value, cell) => new Date(cell.allocation_time),
-      width: 250,
     },
     {
       field: 'status',
@@ -195,6 +197,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
     },
     {
       field: 'caller_note',
+      flex: 0.5,
       getSortComparator: (sortDirection) => {
         const modifier = sortDirection === 'desc' ? -1 : 1;
         return (v1: string, v2: string) => {
@@ -211,6 +214,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
         };
       },
       headerName: messages.calls.columns.callerNote(),
+      minWidth: 100,
       renderCell: (params) => {
         if (!params.row.notes) {
           return null;
@@ -239,7 +243,6 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
       },
       resizable: false,
       valueGetter: (value, cell) => cell.caller.name,
-      width: 80,
     },
     {
       field: 'caller_name',
