@@ -2,7 +2,7 @@ import { alpha } from '@mui/material/styles';
 import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
-import { MenuItem } from '@mui/material';
+import { CircularProgress, MenuItem } from '@mui/material';
 import { FC, MouseEvent, ReactNode, useState } from 'react';
 
 import oldTheme from 'theme';
@@ -18,6 +18,7 @@ type ZUIButtonMenuProps = {
   }[];
   label: string;
   loading?: boolean;
+  loadingVariant?: 'default' | 'persistent';
   startIcon?: ReactNode;
   variant?: 'text' | 'outlined' | 'contained';
 };
@@ -28,12 +29,16 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   items,
   label,
   loading,
+  loadingVariant = 'default',
   startIcon,
   variant = 'contained',
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (loading) {
+      return;
+    }
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -43,10 +48,27 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   return (
     <div>
       <Button
-        endIcon={<ArrowDropDown />}
-        loading={loading}
+        aria-disabled={loading}
+        endIcon={
+          loadingVariant === 'persistent' && loading ? (
+            <CircularProgress color="inherit" size={16} />
+          ) : (
+            <ArrowDropDown />
+          )
+        }
+        loading={loadingVariant === 'persistent' ? false : loading}
         onClick={handleClick}
         startIcon={startIcon}
+        sx={
+          loadingVariant === 'persistent' && loading
+            ? (theme) => ({
+                '&.Mui-disabled': {
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.primary.contrastText,
+                },
+              })
+            : undefined
+        }
         variant={variant}
       >
         {label}

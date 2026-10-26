@@ -43,7 +43,13 @@ export async function GET(
   const lang =
     user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
 
-  const ics = await icsFromEvents(org.title, [event], org, lang);
+  const ics = await icsFromEvents(
+    org.title,
+    [event],
+    org,
+    lang,
+    process.env.TIMEZONE
+  );
 
   return new Response(ics, {
     headers: { 'Content-Type': 'text/calendar' },

@@ -66,6 +66,9 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({
 type CustomRenderResult = RenderResult & {
   findByMessageId(message: AnyMessage): ReturnType<RenderResult['findByText']>;
   getByMessageId(message: AnyMessage): ReturnType<RenderResult['getByText']>;
+  queryByMessageId(
+    message: AnyMessage
+  ): ReturnType<RenderResult['queryByText']>;
 };
 
 /**
@@ -93,6 +96,7 @@ const customRender = (
     ...result,
     findByMessageId: (message) => result.findByText(message._id),
     getByMessageId: (message) => result.getByText(message._id),
+    queryByMessageId: (message) => result.queryByText(message._id),
   };
 };
 

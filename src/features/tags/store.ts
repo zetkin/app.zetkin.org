@@ -11,6 +11,7 @@ import {
   remoteListLoad,
   remoteListLoaded,
 } from 'utils/storeUtils';
+import { personsMerged } from 'features/profile/store';
 import {
   ZetkinAppliedTag,
   ZetkinTag,
@@ -30,6 +31,15 @@ const initialState: TagsStoreSlice = {
 };
 
 const tagsSlice = createSlice({
+  extraReducers: (builder) =>
+    builder.addCase(personsMerged, (state, action) => {
+      // The first person is the one the others were merged into,
+      // so it now has the tags of all of them
+      const [basePersonId] = action.payload;
+      if (state.tagsByPersonId[basePersonId]) {
+        state.tagsByPersonId[basePersonId].isStale = true;
+      }
+    }),
   initialState: initialState,
   name: 'tags',
   reducers: {
