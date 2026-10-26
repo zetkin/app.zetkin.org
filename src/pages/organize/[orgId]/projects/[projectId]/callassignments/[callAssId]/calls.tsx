@@ -7,7 +7,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useCallAssignment from 'features/callAssignments/hooks/useCallAssignment';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
-import CallLog from 'features/callAssignments/components/CallLog.tsx';
+import CallLog from 'features/callAssignments/components/CallLog';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
