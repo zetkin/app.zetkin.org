@@ -1,12 +1,13 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { Box, Button, Paper, Popper, Stack, Typography } from '@mui/material';
 
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import useCall from 'features/callAssignments/hooks/useCall';
 import messageIds from 'features/callAssignments/l10n/messageIds';
 import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { ZetkinCall } from 'features/call/types';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 type Props = {
   call: ZetkinCall;
@@ -21,6 +22,8 @@ const CallerNoteCell: FC<Props> = ({ call, orgId }) => {
     (ev) => setAnchorEl(ev.currentTarget),
     () => setAnchorEl(null)
   );
+  const messages = useMessages(messageIds);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const note = call.notes;
 
@@ -61,10 +64,15 @@ const CallerNoteCell: FC<Props> = ({ call, orgId }) => {
               loading={loading}
               onClick={async () => {
                 setLoading(true);
-                await updateCall(orgId, call.id, {
-                  notes: null,
-                });
-                setLoading(false);
+                try {
+                  await updateCall(orgId, call.id, {
+                    notes: null,
+                  });
+                } catch {
+                  showSnackbar('error', messages.calls.callerNote.error());
+                } finally {
+                  setLoading(false);
+                }
               }}
             >
               <Msg id={messageIds.calls.callerNote.delete} />

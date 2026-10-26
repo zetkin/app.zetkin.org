@@ -66,6 +66,9 @@ export default makeMessages('feat.callAssignments', {
     },
     callerNote: {
       delete: m('Delete note'),
+      error: m(
+        'There was an error deleting the note. Refresh page and try again.'
+      ),
       title: m('Caller note'),
     },
     columns: {
