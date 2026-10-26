@@ -42,18 +42,18 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
           </ZUIPersonHoverCard>
         </Box>
       ),
+      resizable: false,
       sortable: false,
+      width: 80,
     },
     {
       field: 'name',
-      flex: 1,
       headerName: messages.calls.columns.name(),
       valueGetter: (value, row) => row.target.name,
       width: 250,
     },
     {
       field: 'allocation_time',
-      flex: 1,
       headerName: messages.calls.columns.time(),
       renderCell: (params) => (
         <Typography>
@@ -122,6 +122,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
           </Box>
         );
       },
+      resizable: false,
       sortComparator: (a, b) => b - a,
       valueGetter: (value, cell) => cell.state,
     },
@@ -166,6 +167,7 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
 
         return <OrganizerActionCell call={value} orgId={orgId} />;
       },
+      resizable: false,
       sortComparator: (a, b) => {
         if (a.actionNeeded && b.actionNeeded) {
           if (!a.actionTaken && !b.actionTaken) {
@@ -193,7 +195,21 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
     },
     {
       field: 'caller_note',
-      flex: 1,
+      getSortComparator: (sortDirection) => {
+        const modifier = sortDirection === 'desc' ? -1 : 1;
+        return (v1: string, v2: string) => {
+          if (!v1 && !v2) {
+            return 0;
+          }
+          if (!v1) {
+            return 1;
+          }
+          if (!v2) {
+            return -1;
+          }
+          return modifier * v1.localeCompare(v2);
+        };
+      },
       headerName: messages.calls.columns.callerNote(),
       renderCell: (params) => {
         if (!params.row.notes) {
@@ -203,7 +219,6 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
         return <CallerNoteCell call={params.row} orgId={orgId} />;
       },
       valueGetter: (value, cell) => cell.notes,
-      width: 250,
     },
     {
       field: 'caller',
@@ -222,7 +237,9 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
           </Box>
         );
       },
+      resizable: false,
       valueGetter: (value, cell) => cell.caller.name,
+      width: 80,
     },
     {
       field: 'caller_name',
