@@ -1,5 +1,8 @@
+'use client';
+
 import { BoxProps } from '@mui/material';
 import { marked } from 'marked';
+import { useMemo } from 'react';
 
 import ZUICleanHtml from './ZUICleanHtml';
 
@@ -14,24 +17,27 @@ const ZUIMarkdown: React.FC<ZUIMarkdownProps> = ({
   markdown,
   forceTargetBlank = true,
 }) => {
-  const dirtyHtml = marked(markdown, { breaks: true });
-  const targetBlankRef = forceTargetBlank
-    ? (element: HTMLDivElement | null) => {
-        if (element) {
-          const aNodes = element.querySelectorAll('a');
-          aNodes.forEach((node) => {
-            node.setAttribute('target', '_blank');
-          });
-        }
-      }
-    : null;
+  const dirtyHtml = useMemo(() => {
+    const renderer = new marked.Renderer();
+    const baseLinkRenderer = renderer.link.bind(renderer);
 
-  return (
-    <ZUICleanHtml
-      BoxProps={{ ref: targetBlankRef, ...BoxProps }}
-      dirtyHtml={dirtyHtml}
-    />
-  );
+    renderer.link = (href, title, text) => {
+      const html = baseLinkRenderer(href, title, text);
+
+      if (!forceTargetBlank) {
+        return html;
+      }
+
+      return html.replace(
+        /^<a /,
+        '<a target="_blank" rel="noopener noreferrer" '
+      );
+    };
+
+    return marked(markdown, { breaks: true, renderer });
+  }, [markdown, forceTargetBlank]);
+
+  return <ZUICleanHtml BoxProps={BoxProps} dirtyHtml={dirtyHtml} />;
 };
 
 export default ZUIMarkdown;

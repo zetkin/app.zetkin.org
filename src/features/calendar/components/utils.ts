@@ -1,24 +1,23 @@
 import dayjs from 'dayjs';
 
 import range from 'utils/range';
-import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
-  CampaignActivity,
+  ProjectActivity,
   EventActivity,
-} from 'features/campaigns/types';
+} from 'features/projects/types';
 
-export function isAllDay(start: string, end: string): boolean {
-  const startDate = new Date(removeOffset(start));
-  const endDate = new Date(removeOffset(end));
-
+export function isAllDay(
+  start: Temporal.PlainDateTime,
+  end: Temporal.PlainDateTime
+): boolean {
   // Check if the start and end dates are not on the same day
-  if (startDate.toDateString() !== endDate.toDateString()) {
-    // If start time and end time are 00:00:00 return true
+  if (!start.toPlainDate().equals(end.toPlainDate())) {
+    const midnight = Temporal.PlainTime.from('00:00:00');
     if (
-      startDate.toString().split(' ')[4] == '00:00:00' &&
-      endDate.toString().split(' ')[4] == '00:00:00'
+      start.toPlainTime().equals(midnight) &&
+      end.toPlainTime().equals(midnight)
     ) {
       return true;
     }
@@ -40,7 +39,7 @@ const startOfDay = (date: Temporal.PlainDateTime) =>
   date.with({ hour: 0, minute: 0, second: 0 });
 
 export const getActivitiesByDay = (
-  activities: CampaignActivity[]
+  activities: ProjectActivity[]
 ): Record<string, DaySummary> => {
   const dateHashmap: Record<string, DaySummary> = {};
   const applyToHashmap = (date: Temporal.PlainDate, event: EventActivity) => {

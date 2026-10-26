@@ -22,6 +22,12 @@ export default makeMessages('feat.profile', {
   ellipsisMenu: {
     merge: m('Merge with...'),
   },
+  events: {
+    noPast: m('No past events'),
+    noUpcoming: m('No upcoming events'),
+    past: m('Past events'),
+    upcoming: m('Upcoming events'),
+  },
   genders: {
     f: m('Female'),
     m: m('Male'),
@@ -60,10 +66,14 @@ export default makeMessages('feat.profile', {
     noRole: m('No role'),
   },
   saveButton: m('Save'),
+  surveySubmissions: {
+    showMore: m<{ numExtra: number }>('+ {numExtra} more'),
+    title: m('Survey Submissions'),
+  },
   tabs: {
+    events: m('Events'),
     manage: m('Manage'),
     profile: m('Profile'),
-    timeline: m('Timeline'),
   },
   tags: {
     createAndApplyLabel: m('Create and apply'),

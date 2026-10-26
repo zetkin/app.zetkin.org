@@ -2,12 +2,11 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import createNew from '../rpc/createNew/client';
-import { ZetkinView } from '../components/types';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { viewCreate, viewCreated } from '../store';
 
 interface useCreateViewReturn {
-  createView: (folderId?: number, rows?: number[]) => void;
+  createView: (folderId?: number, rows?: number[]) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -20,7 +19,7 @@ export default function useCreateView(orgId: number): useCreateViewReturn {
   const createView = async (
     folderId = 0,
     rows: number[] = []
-  ): Promise<ZetkinView> => {
+  ): Promise<void> => {
     setIsLoading(true);
     dispatch(viewCreate(orgId));
     const view = await apiClient.rpc(createNew, {
@@ -31,7 +30,6 @@ export default function useCreateView(orgId: number): useCreateViewReturn {
     dispatch(viewCreated([orgId, view]));
     router.push(`/organize/${view.organization.id}/people/lists/${view.id}`);
     setIsLoading(false);
-    return view;
   };
 
   return { createView, isLoading };

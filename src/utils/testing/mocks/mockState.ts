@@ -33,23 +33,12 @@ export default function mockState(overrides?: RootState) {
     },
     callAssignments: {
       assignmentList: remoteList(),
-      callAssignmentIdsByCampaignId: {},
+      callAssignmentIdsByProjectId: {},
       callList: remoteList(),
       callersById: {},
       simpleStatsById: {},
       statsById: {},
       userAssignmentList: remoteList(),
-    },
-    campaigns: {
-      campaignList: remoteList(),
-      campaignsByOrgId: {},
-      filters: {
-        customDatesToFilterBy: [null, null],
-        dateFilterState: null,
-        eventTypesToFilterBy: [],
-        geojsonToFilterBy: [],
-      },
-      recentlyCreatedCampaign: null,
     },
     canvass: {
       householdsByLocationId: {},
@@ -83,8 +72,8 @@ export default function mockState(overrides?: RootState) {
     events: {
       allEventsList: remoteList(),
       eventList: remoteList(),
-      eventsByCampaignId: {},
       eventsByDate: {},
+      eventsByProjectId: {},
       filters: {
         selectedActions: [],
         selectedStates: [],
@@ -145,12 +134,25 @@ export default function mockState(overrides?: RootState) {
       userMembershipList: remoteList(),
     },
     profiles: {
+      eventsByPersonId: {},
       fieldCreateError: null,
       fieldUpdateError: null,
       fieldsList: remoteList(),
       notesByPersonId: {},
       orgsByPersonId: {},
       personById: {},
+      surveySubmissionsByPersonId: {},
+    },
+    projects: {
+      filters: {
+        customDatesToFilterBy: [null, null],
+        dateFilterState: null,
+        eventTypesToFilterBy: [],
+        geojsonToFilterBy: [],
+      },
+      projectList: remoteList(),
+      projectsByOrgId: {},
+      recentlyCreatedProject: null,
     },
     search: {
       matchesByQuery: {},
@@ -159,17 +161,20 @@ export default function mockState(overrides?: RootState) {
       officialMembershipsList: remoteList(),
     },
     smartSearch: {
+      eventsByOrgId: {},
       queryList: remoteList(),
+      recursiveEventsByOrgId: {},
       statsByFilterSpec: {},
     },
     surveys: {
+      autoLinkableSubmissionsBySurveyId: {},
       elementsBySurveyId: {},
       extendedSurveyBySurveyId: {},
       responseStatsBySurveyId: {},
       statsBySurveyId: {},
       submissionList: remoteList(),
       submissionsBySurveyId: {},
-      surveyIdsByCampaignId: {},
+      surveyIdsByProjectId: {},
       surveyList: remoteList(),
       surveysWithElementsList: remoteList(),
     },
@@ -181,7 +186,7 @@ export default function mockState(overrides?: RootState) {
     tasks: {
       assignedTasksByTaskId: {},
       statsById: {},
-      taskIdsByCampaignId: {},
+      taskIdsByProjectId: {},
       tasksList: remoteList(),
     },
     user: {

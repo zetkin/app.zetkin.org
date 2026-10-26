@@ -26,10 +26,10 @@ export default makeMessages('feat.callAssignments', {
     title: m('Blocked'),
     viewSheetButton: m('View list'),
   },
-  callAssignmentChangeCampaignDialog: {
+  callAssignmentChangeProjectDialog: {
     error: m('Error: Could not move the assignment to the selected project'),
-    success: m<{ assignmentTitle: string; campaignTitle: string }>(
-      'Assignment "{assignmentTitle}" moved to "{campaignTitle}"'
+    success: m<{ assignmentTitle: string; projectTitle: string }>(
+      'Assignment "{assignmentTitle}" moved to "{projectTitle}"'
     ),
     title: m('Move assignment'),
   },
@@ -98,9 +98,11 @@ export default makeMessages('feat.callAssignments', {
     markAsSolved: m('Mark as solved'),
     markAsUnsolved: m('Mark as unsolved'),
     messagePlaceholder: m('Caller did not leave a message'),
-    noteByCaller: m<{ person: ReactElement; time: ReactElement }>(
-      'Note by {person} {time}'
-    ),
+    note: m<{
+      assignment: string;
+      person: ReactElement;
+      time: ReactElement;
+    }>('Note by {person} {time} in {assignment}'),
     subtitle: m<{ person: ReactElement }>('Notes on {person}'),
     title: m('Organizer Action Needed'),
   },

@@ -18,34 +18,52 @@ export type SurveyResponseViewCell = {
   text: string | null;
 }[];
 
+const getCellValueString = (value: SurveyResponseViewCell): string => {
+  if (!value?.length) {
+    return '';
+  }
+
+  const sortedSubmissions = value.concat().sort((sub0, sub1) => {
+    const d0 = new Date(sub0.submitted);
+    const d1 = new Date(sub1.submitted);
+    return d1.getTime() - d0.getTime();
+  });
+  const mostRecentSubmission = sortedSubmissions[0];
+
+  return mostRecentSubmission.text || '';
+};
+
 export default class SurveyResponseColumnType implements IColumnType<
   SurveyResponseViewColumn,
   SurveyResponseViewCell
 > {
   cellToString(cell: SurveyResponseViewCell): string {
-    return cell?.length && cell[0].text ? cell[0].text : '';
+    return getCellValueString(cell);
   }
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
       filterable: true,
+      getSortComparator: (sortDirection) => {
+        const modifier = sortDirection === 'desc' ? -1 : 1;
+        return (v1: string, v2: string) => {
+          if (!v1 && !v2) {
+            return 0;
+          }
+          if (!v1) {
+            return 1;
+          }
+          if (!v2) {
+            return -1;
+          }
+          return modifier * v1.localeCompare(v2);
+        };
+      },
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
       valueGetter: (value: SurveyResponseViewCell) => {
-        if (!value?.length) {
-          return '';
-        }
-
-        const sortedSubmissions = value.concat().sort((sub0, sub1) => {
-          const d0 = new Date(sub0.submitted);
-          const d1 = new Date(sub1.submitted);
-          return d1.getTime() - d0.getTime();
-        });
-        const mostRecentSubmission = sortedSubmissions[0];
-
-        return mostRecentSubmission.text || '';
+        return getCellValueString(value);
       },
       width: 250,
     };

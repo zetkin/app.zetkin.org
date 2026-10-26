@@ -27,7 +27,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
   children,
   fixedHeight = false,
 }) => {
-  const { orgId, campId, emailId } = useNumericRouteParams();
+  const { orgId, projectId, emailId } = useNumericRouteParams();
   const router = useRouter();
   const messages = useMessages(messageIds);
   const { data: email, updateEmail } = useEmail(orgId, emailId);
@@ -64,7 +64,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
         actionButtons={
           <EmailActionButtons email={email} orgId={orgId} state={emailState} />
         }
-        baseHref={`/organize/${orgId}/projects/${campId}/emails/${emailId}`}
+        baseHref={`/organize/${orgId}/projects/${projectId}/emails/${emailId}`}
         belowActionButtons={
           emailState !== EmailState.SENT ? (
             <DeliveryStatusMessage email={email} />

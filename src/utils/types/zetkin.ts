@@ -14,7 +14,7 @@ import {
 } from '../../features/views/components/types';
 import { Latitude, Longitude } from 'features/areas/types';
 
-export interface ZetkinCampaign {
+export interface ZetkinProject {
   archived: boolean;
   color: string;
   info_text: string;
@@ -29,8 +29,8 @@ export interface ZetkinCampaign {
   published: boolean;
 }
 
-export interface ZetkinCampaignPostBody extends Partial<
-  Omit<ZetkinCampaign, 'organization' | 'manager'>
+export interface ZetkinProjectPostBody extends Partial<
+  Omit<ZetkinProject, 'organization' | 'manager'>
 > {
   title: string;
   manager_id?: number;
@@ -216,6 +216,17 @@ export interface ZetkinCustomField {
   org_write: 'sameorg' | 'suborgs';
 }
 
+export type ZetkinTimelineAction = {
+  data: {
+    action: ZetkinEvent;
+  };
+  event: 'action';
+  id: string;
+  timestamp: string;
+};
+
+export type ZetkinTimeline = Omit<ZetkinTimelineAction, 'id'>[];
+
 export interface ZetkinSession {
   created: string;
   level: number;
@@ -388,18 +399,20 @@ export type ZetkinSurveySignaturePayload =
       last_name: string;
     };
 
+export type ZetkinSurveySubmissionRespondent = {
+  email: string;
+  first_name: string;
+  id: number | null;
+  last_name: string;
+};
+
 export interface ZetkinSurveySubmission {
   id: number;
   organization: {
     id: number;
     title: string;
   };
-  respondent: {
-    email: string;
-    first_name: string;
-    id: number | null;
-    last_name: string;
-  } | null;
+  respondent: ZetkinSurveySubmissionRespondent | null;
   survey: {
     id: number;
     title: string;

@@ -3,6 +3,12 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
+import {
+  getAutoLinkableSubmissions,
+  ZetkinSurveySubmissionWithRespondent,
+} from 'features/surveys/rpc/getAutoLinkableSubmissions';
+
+const AUTO_LINK_STAT_CAP = 10;
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -11,6 +17,7 @@ const paramsSchema = z.object({
 
 type Params = z.input<typeof paramsSchema>;
 export type SurveyStats = {
+  autoLinkableSubmissionCount: string;
   id: number;
   submissionCount: number;
   submissionsByDay: {
@@ -40,9 +47,27 @@ async function handle(
   );
 
   let sum = 0;
-  const unlinkedCount = submissions.filter(
+  const unlinked = submissions.filter(
     (sub) => sub.respondent && !sub.respondent.id
-  ).length;
+  );
+  const unlinkedWithEmail = unlinked.filter(
+    (sub) => sub.respondent?.email
+  ) as ZetkinSurveySubmissionWithRespondent[];
+
+  const unlinkedCapped =
+    unlinkedWithEmail.length > AUTO_LINK_STAT_CAP
+      ? unlinkedWithEmail.slice(0, AUTO_LINK_STAT_CAP)
+      : unlinkedWithEmail;
+
+  const autoLinkable = await getAutoLinkableSubmissions(
+    unlinkedCapped,
+    orgId,
+    apiClient
+  );
+  const autoLinkableCountText =
+    unlinkedWithEmail.length > AUTO_LINK_STAT_CAP
+      ? `${autoLinkable.length - 1}+`
+      : autoLinkable.length.toString();
 
   const sortedSubmissions = submissions
     .filter((sub) => sub.submitted)
@@ -77,9 +102,10 @@ async function handle(
   }
 
   return {
+    autoLinkableSubmissionCount: autoLinkableCountText,
     id: surveyId,
     submissionCount: submissions.length,
     submissionsByDay: submissionsByDay.slice(-365),
-    unlinkedSubmissionCount: unlinkedCount,
+    unlinkedSubmissionCount: unlinked.length,
   };
 }

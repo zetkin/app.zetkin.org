@@ -5,12 +5,12 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 interface EmptyOverviewProps {
-  campId: string;
+  projectId: string;
   orgId: string;
   surveyId: string;
 }
 
-const EmptyOverview = ({ campId, orgId, surveyId }: EmptyOverviewProps) => {
+const EmptyOverview = ({ projectId, orgId, surveyId }: EmptyOverviewProps) => {
   return (
     <Box
       alignItems="center"
@@ -26,7 +26,7 @@ const EmptyOverview = ({ campId, orgId, surveyId }: EmptyOverviewProps) => {
         <Msg id={messageIds.overview.noQuestions.title} />
       </Typography>
       <Link
-        href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/questions`}
+        href={`/organize/${orgId}/projects/${projectId}/surveys/${surveyId}/questions`}
         sx={{ marginTop: 4 }}
         underline="none"
       >

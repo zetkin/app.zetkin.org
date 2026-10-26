@@ -1,7 +1,7 @@
 import { Close } from '@mui/icons-material';
 import { Box, Button, Dialog, Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import EventShiftDetails from './EventShiftDetails';
 import EventShiftTime from './EventShiftTime';
@@ -24,7 +24,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   );
 
   const messages = useMessages(messageIds);
-  const { orgId, campId } = useNumericRouteParams();
+  const { orgId, projectId } = useNumericRouteParams();
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const [type, setType] = useState<ZetkinEvent['activity']>(null);
@@ -49,6 +49,16 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   ]);
 
   const createEvent = useCreateEvent(orgId);
+  const mountedRef = useRef(false);
+  const submittingRef = useRef(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const isNotPublishable =
     invalidDate ||
@@ -57,6 +67,11 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     invalidShiftTimes.includes(true);
 
   async function publishShifts(publish: boolean) {
+    if (submittingRef.current) {
+      return;
+    }
+    submittingRef.current = true;
+    setSubmitting(true);
     try {
       await Promise.all(
         eventShifts.map((shift, index) => {
@@ -65,23 +80,32 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
               ? dayjs(eventShifts[index + 1])
               : dayjs(eventEndTime);
 
-          let startDate: Dayjs = dayjs(eventDate);
-          startDate = startDate
-            .set('hour', shift.hour() + 2)
-            .set('minute', shift.minute());
+          const startDate = new Date(
+            Date.UTC(
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
+              shift.hour(),
+              shift.minute()
+            )
+          );
 
-          let endDate: Dayjs = dayjs(eventDate);
-          endDate = endDate
-            .set('hour', endTime.hour() + 2)
-            .set('minute', endTime.minute());
-
-          const now = dayjs();
+          const endDate = new Date(
+            Date.UTC(
+              eventDate.year(),
+              eventDate.month(),
+              eventDate.date(),
+              endTime.hour(),
+              endTime.minute()
+            )
+          );
+          const now = new Date();
           const published = startDate < now ? startDate : now;
 
           return createEvent(
             {
               activity_id: type ? type.id : null,
-              campaign_id: campId,
+              campaign_id: projectId,
               end_time: endDate.toISOString(),
               info_text: eventDescription,
               location_id: locationId,
@@ -113,9 +137,17 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         )
       );
 
-      close();
+      // A dismissed dialog's save must not close a newer form.
+      if (mountedRef.current) {
+        close();
+      }
     } catch {
       showSnackbar('error', messages.eventShiftModal.error());
+    } finally {
+      submittingRef.current = false;
+      if (mountedRef.current) {
+        setSubmitting(false);
+      }
     }
   }
 
@@ -223,7 +255,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             {messages.eventShiftModal.noEvents({ no: eventShifts.length })}
           </Typography>
           <Button
-            disabled={isNotPublishable}
+            disabled={isNotPublishable || submitting}
             onClick={async () => {
               await publishShifts(false);
             }}
@@ -232,7 +264,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             {messages.eventShiftModal.draft().toUpperCase()}
           </Button>
           <Button
-            disabled={isNotPublishable}
+            disabled={isNotPublishable || submitting}
             onClick={async () => {
               await publishShifts(true);
             }}
