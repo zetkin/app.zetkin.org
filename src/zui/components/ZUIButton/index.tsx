@@ -19,6 +19,14 @@ export interface ZUIButtonProps {
   actionType?: 'button' | 'reset' | 'submit';
 
   /**
+   * The number of lines of
+   * text visible on the label.
+   *
+   * Defaults to undefined
+   */
+  clampLines?: number;
+
+  /**
    * To pass in an id for testing purposes.
    */
   dataTestId?: string;
@@ -153,6 +161,7 @@ const getTextPadding = (
 
 const ZUIButton: FC<ZUIButtonProps> = ({
   actionType,
+  clampLines,
   disabled,
   dataTestId,
   endIcon: EndIcon,
@@ -235,6 +244,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
           ...textStyle,
           borderColor: theme.palette.primary.light,
           boxShadow: 'none',
+          display: 'inline-flex',
           minWidth: '2.188rem',
           padding: isLoading
             ? getLoadingIndicatorPadding(size)
@@ -250,10 +260,15 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         <Box
           component="span"
           sx={{
+            WebkitBoxOrient: clampLines ? 'vertical' : undefined,
+            WebkitLineClamp: clampLines,
+            display: clampLines ? '-webkit-box' : 'block',
             maxWidth: noWrap ? '100%' : undefined,
-            overflow: noWrap ? 'hidden' : undefined,
-            textOverflow: noWrap ? 'ellipsis' : undefined,
+            overflow: noWrap || clampLines ? 'hidden' : undefined,
+            textAlign: 'center',
+            textOverflow: noWrap || clampLines ? 'ellipsis' : undefined,
             whiteSpace: noWrap ? 'nowrap' : undefined,
+            wordBreak: clampLines ? 'break-word' : undefined,
           }}
         >
           {label}
