@@ -125,7 +125,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.9",
     "@jest/globals": "^29.0.0",
-    "@playwright/test": "~1.56.1",
+    "@playwright/test": "^1.61.0",
     "@storybook/addon-docs": "9.1.19",
     "@storybook/addon-links": "9.1.19",
     "@storybook/nextjs": "9.1.19",

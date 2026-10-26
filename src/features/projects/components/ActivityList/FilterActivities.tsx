@@ -13,7 +13,7 @@ import { ACTIVITIES } from 'features/projects/types';
 import messageIds from 'features/projects/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS, TASKS } from 'utils/featureFlags';
+import { AREA_ASSIGNMENTS, TASKS } from 'utils/featureFlags';
 
 interface FilterActivitiesProps {
   filters: ACTIVITIES[];
@@ -31,7 +31,7 @@ const FilterActivities = ({
   onSearchStringChange,
 }: FilterActivitiesProps) => {
   const messages = useMessages(messageIds);
-  const hasAreaAssignments = useFeature(AREAS);
+  const hasAreaAssignments = useFeature(AREA_ASSIGNMENTS);
   const hasTasks = useFeature(TASKS);
 
   return (
