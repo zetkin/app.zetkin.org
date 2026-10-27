@@ -20,6 +20,7 @@
 - Prefer simple solutions. Avoid unrelated refactors, dependency churn, and generated file changes.
 - Do not run npm tasks or test the work. The contributor must test their own work.
 - Do not provide test instructions, checklists, or commands.
+- Limit the scope to a single task which can be tested and reviewed easily.
 
 ## Project Interactions
 
