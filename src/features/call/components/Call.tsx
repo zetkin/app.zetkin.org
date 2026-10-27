@@ -131,6 +131,8 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
     [allUserAssignments, assignmentSwitchedTo]
   );
 
+  const onStartStep = lane.step === LaneStep.START;
+
   if (onServer) {
     return (
       <Box
@@ -155,7 +157,7 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
           overflow: 'hidden',
         })}
       >
-        {lane.step === LaneStep.START && (
+        {onStartStep && (
           <NewUIAlert assignmentId={assignment.id} isMobile={isMobile} />
         )}
         <CallHeader
@@ -169,7 +171,19 @@ const Call: FC<Props> = ({ onResetAfterError }) => {
           report={report}
         />
         <Box
-          height={`calc(100dvh - ${isMobile && lane.step !== LaneStep.START ? `${HEIGHT_OF_HEADER} +  20px` : HEIGHT_OF_HEADER} ${lane.step === LaneStep.START ? `- ${isMobile ? '100px' : HEIGHT_OF_NEW_UI_ALERT}` : ''})`}
+          height={() => {
+            if (onStartStep) {
+              if (isMobile) {
+                return `calc(100dvh - ${HEIGHT_OF_HEADER} - 100px)`;
+              }
+              return `calc(100dvh - ${HEIGHT_OF_HEADER} - ${HEIGHT_OF_NEW_UI_ALERT})`;
+            } else {
+              if (isMobile) {
+                return `calc(100dvh - ${HEIGHT_OF_HEADER} + 20px)`;
+              }
+              return `calc(100dvh - ${HEIGHT_OF_HEADER})`;
+            }
+          }}
           position="relative"
           width="100%"
         >
