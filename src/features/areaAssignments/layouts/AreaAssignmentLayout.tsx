@@ -23,15 +23,15 @@ import messageIds from '../l10n/messageIds';
 
 type AreaAssignmentLayoutProps = {
   areaAssId: number;
-  campId: number;
   children: ReactNode;
   orgId: number;
+  projectId: number;
 };
 
 const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
   children,
   orgId,
-  campId,
+  projectId,
   areaAssId,
 }) => {
   const messages = useMessages(messageIds);
@@ -96,7 +96,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
           />
         </Box>
       }
-      baseHref={`/organize/${orgId}/projects/${campId}/areaassignments/${areaAssId}`}
+      baseHref={`/organize/${orgId}/projects/${projectId}/areaassignments/${areaAssId}`}
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={areaAssignment.end_date || null}

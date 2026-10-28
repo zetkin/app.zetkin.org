@@ -67,11 +67,14 @@ export default class PersonFieldColumnType implements IColumnType<
       },
       type: isDate ? 'date' : undefined,
       valueGetter: (value: SimpleData) => {
-        if (isDate && typeof value === 'string') {
-          // For date fields, MUI expects a Date object
-          return new Date(value);
+        if (isDate) {
+          if (!value) {
+            return null;
+          } else if (typeof value === 'string') {
+            // For date fields, MUI expects a Date object
+            return new Date(value);
+          }
         }
-
         return getValue(value, column);
       },
     };

@@ -192,7 +192,7 @@ describe('makeSankeySegments()', () => {
           filter: {
             config: {},
             op: OPERATION.ADD,
-            type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+            type: FILTER_TYPE.PROJECT_PARTICIPATION,
           },
           matches: 5,
           result: 80,
@@ -311,7 +311,7 @@ describe('makeSankeySegments()', () => {
           filter: {
             config: {},
             op: OPERATION.SUB,
-            type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+            type: FILTER_TYPE.PROJECT_PARTICIPATION,
           },
           matches: 5,
           result: 80,
@@ -450,7 +450,7 @@ describe('makeSankeySegments()', () => {
           filter: {
             config: {},
             op: OPERATION.LIMIT,
-            type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+            type: FILTER_TYPE.PROJECT_PARTICIPATION,
           },
           matches: 40,
           result: 60,
@@ -515,7 +515,7 @@ describe('makeSankeySegments()', () => {
           filter: {
             config: {},
             op: OPERATION.LIMIT,
-            type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+            type: FILTER_TYPE.PROJECT_PARTICIPATION,
           },
           matches: 99,
           result: 1,

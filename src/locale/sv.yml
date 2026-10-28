@@ -217,7 +217,6 @@ feat:
       calendar: Kalender
       callassignments: Ringuppdrag
       callers: Ringare
-      campaigns: Projekt
       closed: Stängd
       compose: Skapa
       conversation: Samtal
@@ -506,9 +505,9 @@ feat:
       subtitle: Målgruppen är inte redo att bli uppringd
       title: Blockerade
       viewSheetButton: Visa lista
-    callAssignmentChangeCampaignDialog:
+    callAssignmentChangeProjectDialog:
       error: 'Fel: Kunde inte flytta uppdraget till valt projekt'
-      success: Uppdraget "{assignmentTitle}" flyttat till "{campaignTitle}"
+      success: Uppdraget "{assignmentTitle}" flyttat till "{projectTitle}"
       title: Flytta uppdrag
     callers:
       actions:
@@ -590,8 +589,8 @@ feat:
       editButton: Ändra målgrupp
       subtitle: Använd en Smart sökning för att definiera målgruppen för detta uppdrag.
       title: Målgrupp
-  campaigns:
-    activeCampaigns:
+  projects:
+    activeProjects:
       header: Aktiv
     activitiesOverview:
       button: Bläddra bland alla aktiviteter
@@ -623,7 +622,7 @@ feat:
           fått en påminnelse'
         signups: Det finns väntande anmälningar
     all:
-      campaignFilterPlaceholder: Skriv för att filtrera projekt
+      projectFilterPlaceholder: Skriv för att filtrera projekt
       cardCTA: Gå till projekt
       create: Skapa nytt projekt
       filter:
@@ -641,14 +640,14 @@ feat:
       noActivities: Om din organisation har aktiviteter som inte hör till ett projekt
         kommer de att visas här.
       viewArchive: Visa arkiv
-    archivedCampaigns:
+    archivedProjects:
       header: Arkiverat
       hideShowButton:
         hide: Dölj arkiverade projekt
         show: Visa arkiverade projekt
     assigneeActions: Uppgifter för ansvarig
     calendarView: Se alla i kalendern
-    changeCampaignDialog:
+    changeProjectDialog:
       moveButtonLabel: Flytta
     createButton:
       createActivity: Skapa
@@ -665,23 +664,23 @@ feat:
       create: Skapa enkät
       heading: Feedback och Enkäter (ingen konfiguerad)
     form:
-      archiveCampaign:
+      archiveProject:
         archive: Arkivera projekt
       createAreaAssignment:
         defaultQuestion: Har du slutfört uppgiften?
       createCallAssignment:
         newCallAssignment: Mitt ringuppdrag
-      createCampaign:
+      createProject:
         create: Skapa projekt
         error: Något gick fel när projektet skapades
-        newCampaign: Mitt projekt
+        newProject: Mitt projekt
       createEmail:
         newEmail: Icke namngivet e-post
       createSurvey:
         newSurvey: Min enkät
       createTask:
         title: Skapa uppgift
-      deleteCampaign:
+      deleteProject:
         cancel: Avbryt
         error: Något gick fel när projektet raderades
         submitButton: Bekräfta att du vill radera
@@ -690,7 +689,7 @@ feat:
           detta beslut.
       description: Beskrivning
       edit: Redigera projekt
-      editCampaignTitle:
+      editProjectTitle:
         error: Fel när projekttiteln uppdaterades
         success: Projekttiteln uppdaterades
       manager:
@@ -709,7 +708,7 @@ feat:
     indefinite: Obestämd tidslinje
     layout:
       activities: Aktiviteter
-      allCampaigns: Alla projekt och aktiviteter
+      allProjects: Alla projekt och aktiviteter
       archive: Arkiv
       calendar: Kalender
       insights: Insikter
@@ -1062,9 +1061,9 @@ feat:
       timeZone: Tidszon
       warning: Är du säker på att du vill radera utskicket? Det är permanent och går
         inte att ångra.
-    emailChangeCampaignDialog:
+    emailChangeProjectDialog:
       error: 'Fel: E-postmeddelandet kunde inte flyttas till det valda projektet'
-      success: E-post "{emailTitle}" flyttat till "{campaignTitle}"
+      success: E-post "{emailTitle}" flyttat till "{projectTitle}"
       title: Flytta e-post
     emailFeatureIsBlocked:
       errorMessage: Din organisation har inte tillgång till e-post i Zetkin just nu.
@@ -1184,9 +1183,9 @@ feat:
       warning: '"{eventTitle}" kommer tas bort.'
       warningCancel: '"{eventTitle}" kommer ställas in.'
       warningRestore: '"{eventTitle}" kommer återställas.'
-    eventChangeCampaignDialog:
+    eventChangeProjectDialog:
       error: 'Fel: Eventet kunde inte flyttas till det valda projektet'
-      success: Eventet flyttades till "{campaignTitle}"
+      success: Eventet flyttades till "{projectTitle}"
       title: Flytta event
     eventContactCard:
       header: Kontakt
@@ -2203,7 +2202,7 @@ feat:
           description: Hitta personer som har blivit uppringda, nådda eller fått
             samtalsförsök.
           title: Ringhistorik
-        campaign_participation:
+        project_participation:
           description: Vem anmälde sig? Vem blev bokad? Vem blev det inte? Hitta dem!
           title: Deltagande i events
         email_blacklist:
@@ -2301,16 +2300,16 @@ feat:
           {assignmentSelect} {timeFrame}'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
         minTimesInput: minst {input} {minTimes, plural, one {gång} other {gånger}}
-      campaignParticipation:
+      projectParticipation:
         activitySelect:
           activity: typen "{activity}"
           any: vilken typ som helst
         bookedSelect:
           booked: blivit bokade på
           signed_up: anmält sig till
-        campaignSelect:
+        projectSelect:
           any: vilket projekt som helst
-          campaign: projektet "{campaign}"
+          project: projektet "{project}"
         examples:
           one: Lägg till personer som har anmält sig till event i vilket projekt som helst
             på platsen 'Möllevången' någonsin
@@ -2320,7 +2319,7 @@ feat:
           in: har
           notin: inte har
         inputString: '{addRemoveSelect} alla som {haveSelect} {bookedSelect}
-          {statusSelect} på event i {campaignSelect} av typen {activitySelect}
+          {statusSelect} på event i {projectSelect} av typen {activitySelect}
           på {locationSelect} {timeFrame}'
         locationSelect:
           any: vilken plats som helst
@@ -2561,9 +2560,9 @@ feat:
           none: Organisationen har inga enkäter än
           survey: enkäten "{surveyTitle}"
       task:
-        campaignSelect:
+        projectSelect:
           any: vilket projekt som helst
-          campaign: projektet "{campaign}"
+          project: projektet "{project}"
           in: i
         examples:
           one: Lägg till personer som har slutfört uppgiften "Berätta för dina vänner"
@@ -2571,7 +2570,7 @@ feat:
           two: Lägg till personer som har ignorerat vilken uppgift som helst i vilket
             projekt som helst mellan 2 och 5 gånger innan idag
         inputString: '{addRemoveSelect} personer som har {taskStatusSelect} {taskSelect}
-          {campaignSelect} {matchingSelect} {timeFrame}'
+          {projectSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: vilken uppgift som helst
           task: uppgiften "{task}"
@@ -2833,9 +2832,9 @@ feat:
       personRecordColumn: Svarande
       suggestedPeople: Föreslagna personer
       unlink: Avlänka
-    surveyChangeCampaignDialog:
+    surveyChangeProjectDialog:
       error: 'Fel: Kunde inte flytta enkäten till valt projekt'
-      success: Enkäten "{surveyTitle}" flyttad till "{campaignTitle}"
+      success: Enkäten "{surveyTitle}" flyttad till "{projectTitle}"
       title: Flytta enkät
     surveyDialog:
       add: Lägg till
@@ -3008,7 +3007,7 @@ feat:
       title: Redigera uppgift
     form:
       fields:
-        campaign: Kampanj
+        project: Kampanj
         deadline: Deadline för slutförande
         expires: Går ut
         instructions: Instruktioner
@@ -3063,9 +3062,9 @@ feat:
       draft: Utkast
       expired: Utgången
       scheduled: Schemalagd
-    taskChangeCampaignDialog:
+    taskChangeProjectDialog:
       error: 'Fel: Kunde inte flytta uppgift till valt projekt'
-      success: Uppgift "{taskTitle}" flyttad till "{campaignTitle}"
+      success: Uppgift "{taskTitle}" flyttad till "{projectTitle}"
       title: Flytta uppgift
     taskDetails:
       deadlineTime: Deadline

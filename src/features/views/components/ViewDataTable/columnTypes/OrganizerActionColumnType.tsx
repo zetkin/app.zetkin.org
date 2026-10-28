@@ -204,14 +204,10 @@ const PreviewPopper: FC<PreviewPopperProps> = ({
           </Typography>
           {sortedUnsolved?.map((call) => (
             <Box key={call.id}>
-              <Typography
-                sx={{
-                  color: 'grey',
-                  paddingBottom: '0.5em',
-                }}
-              >
+              <Typography color="secondary">
                 <ZUIRelativeTime datetime={call.update_time} />
               </Typography>
+              <Typography color="secondary">{call.assignment.title}</Typography>
               <Typography
                 sx={{
                   paddingBottom: '0.7em',

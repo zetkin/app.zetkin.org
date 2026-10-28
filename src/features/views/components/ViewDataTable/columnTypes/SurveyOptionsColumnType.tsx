@@ -20,6 +20,20 @@ export type SurveyOptionsViewCell =
     }[]
   | null;
 
+const getCellValueString = (value: SurveyOptionsViewCell): string => {
+  if (!value?.length) {
+    return '';
+  }
+  const sortedSubmissions = value.concat().sort((sub0, sub1) => {
+    const d0 = new Date(sub0.submitted);
+    const d1 = new Date(sub1.submitted);
+    return d1.getTime() - d0.getTime();
+  });
+  const mostRecentSubmission = sortedSubmissions[0];
+  const selectedOptions = mostRecentSubmission.selected.map((s) => s.text);
+  return selectedOptions.join('|');
+};
+
 const surveyOptionsColumnSortRank = (allOptionsJoined: string) => {
   const options = allOptionsJoined.split('|');
   const lastOption = options[options.length - 1];
@@ -31,7 +45,7 @@ export default class SurveyOptionsColumnType implements IColumnType<
   SurveyOptionsViewCell
 > {
   cellToString(cell: SurveyOptionsViewCell): string {
-    return cell?.length ? cell[0].selected.map((o) => o.text).toString() : '';
+    return getCellValueString(cell);
   }
 
   getColDef(): Omit<GridColDef, 'field'> {
@@ -46,20 +60,7 @@ export default class SurveyOptionsColumnType implements IColumnType<
         );
       },
       valueGetter: (value: SurveyOptionsViewCell) => {
-        if (!value?.length) {
-          return '';
-        }
-
-        const sortedSubmissions = value.concat().sort((sub0, sub1) => {
-          const d0 = new Date(sub0.submitted);
-          const d1 = new Date(sub1.submitted);
-          return d1.getTime() - d0.getTime();
-        });
-        const mostRecentSubmission = sortedSubmissions[0];
-        const selectedOptions = mostRecentSubmission.selected.map(
-          (s) => s.text
-        );
-        return selectedOptions.join('|');
+        return getCellValueString(value);
       },
     };
   }

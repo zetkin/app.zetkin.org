@@ -24,6 +24,9 @@ const Page: FC<Props> = async ({ params }) => {
 
   const { orgId, surveyId } = params;
 
+  const privacyUrl =
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
+
   let survey: ZetkinSurveyExtended;
   try {
     survey = await apiClient.get<ZetkinSurveyExtended>(
@@ -44,7 +47,9 @@ const Page: FC<Props> = async ({ params }) => {
     user = null;
   }
 
-  return <PublicSurveyPage survey={survey} user={user} />;
+  return (
+    <PublicSurveyPage privacyUrl={privacyUrl} survey={survey} user={user} />
+  );
 };
 
 export default Page;

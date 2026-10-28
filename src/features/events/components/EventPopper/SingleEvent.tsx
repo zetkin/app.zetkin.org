@@ -24,7 +24,6 @@ import messageIds from 'features/events/l10n/messageIds';
 import { MultiDayEvent } from 'features/calendar/components/utils';
 import ParticipantAvatars from './ParticipantAvatars';
 import Quota from './Quota';
-import { removeOffset } from 'utils/dateUtils';
 import StatusDot from './StatusDot';
 import { useAppDispatch } from 'core/hooks';
 import useDuplicateEvent from 'features/events/hooks/useDuplicateEvent';
@@ -39,7 +38,7 @@ import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
-import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../../projects/components/ChangeProjectDialog';
 import useEventParticipantsMutations from 'features/events/hooks/useEventParticipantsMutations';
 
 interface SingleEventProps {
@@ -99,18 +98,18 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     setIsMoveDialogOpen(true);
   };
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedEvent = await updateEvent({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedEvent = await updateEvent({ campaign_id: projectId });
     onClickAway();
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
+      `/organize/${orgId}/projects/${projectId}/events/${event.id}`
     );
 
     showSnackbar(
       'success',
-      messages.eventChangeCampaignDialog.success({
-        campaignTitle: updatedEvent.campaign!.title,
+      messages.eventChangeProjectDialog.success({
         eventTitle: event.title!,
+        projectTitle: updatedEvent.campaign!.title,
       })
     );
   };
@@ -185,24 +184,16 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         </Box>
         <Typography color="secondary" variant="body2">
           <ZUITimeSpan
-            end={
-              new Date(
-                removeOffset(
-                  'originalEndTime' in event
-                    ? event.originalEndTime
-                    : event.end_time
-                )
-              )
-            }
-            start={
-              new Date(
-                removeOffset(
-                  'originalStartTime' in event
-                    ? event.originalStartTime
-                    : event.start_time
-                )
-              )
-            }
+            end={Temporal.PlainDateTime.from(
+              'originalEndTime' in event
+                ? event.originalEndTime
+                : event.end_time
+            )}
+            start={Temporal.PlainDateTime.from(
+              'originalStartTime' in event
+                ? event.originalStartTime
+                : event.start_time
+            )}
           />
         </Typography>
       </Box>
@@ -415,12 +406,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </NextLink>
 
           <ZUIEllipsisMenu items={ellipsisMenuItems} />
-          <ChangeCampaignDialog
-            errorMessage={messages.eventChangeCampaignDialog.error()}
-            onCampaignSelected={handleOnCampaignSelected}
+          <ChangeProjectDialog
+            errorMessage={messages.eventChangeProjectDialog.error()}
             onClose={() => setIsMoveDialogOpen(false)}
+            onProjectSelected={handleOnProjectSelected}
             open={isMoveDialogOpen}
-            title={messages.eventChangeCampaignDialog.title()}
+            title={messages.eventChangeProjectDialog.title()}
           />
         </Box>
       )}

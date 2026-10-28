@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { CircularProgress, Link, SxProps } from '@mui/material';
+import { CircularProgress, Link, Skeleton, SxProps } from '@mui/material';
 import { FC, MouseEvent, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
@@ -9,14 +9,27 @@ import useViewBrowserMutations from 'features/views/hooks/useViewBrowserMutation
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 import { BrowserRowContext } from './BrowserRow';
 import messageIds from 'features/views/l10n/messageIds';
+import RenameTextField from 'features/views/components/ViewBrowser/RenameTextField';
 
 interface BrowserItemProps {
   basePath: string;
   item: ViewBrowserItem;
   onClick: (ev: MouseEvent) => void;
+  renaming: boolean;
+  onRenamed: (
+    item: ViewBrowserItem,
+    newTitle: string,
+    canceled?: boolean
+  ) => void;
 }
 
-const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, onClick }) => {
+const BrowserItem: FC<BrowserItemProps> = ({
+  basePath,
+  item,
+  onClick,
+  renaming,
+  onRenamed,
+}) => {
   const dropProps = useContext(BrowserRowContext);
   const { orgId } = useNumericRouteParams();
   const { itemIsRenaming } = useViewBrowserMutations(orgId);
@@ -30,7 +43,9 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, onClick }) => {
     textDecoration: 'none',
   };
 
-  if (item.type == 'back') {
+  if (item.type === 'loading') {
+    return <Skeleton variant={'rounded'} width={400} />;
+  } else if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
 
     return (
@@ -57,6 +72,8 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, onClick }) => {
         </Link>
       </NextLink>
     );
+  } else if (renaming) {
+    return <RenameTextField item={item} onRenamed={onRenamed} />;
   } else {
     return (
       <BrowserDraggableItem item={item}>

@@ -114,9 +114,10 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
               <ZUIButton
                 actionType="submit"
                 disabled={alreadyLoggedIn || loading || !email}
+                isLoading={loading}
                 label={messages.lostPassword.actions.sendEmail()}
                 size="large"
-                variant={loading ? 'loading' : 'primary'}
+                variant="primary"
               />
             </Box>
           </form>

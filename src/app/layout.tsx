@@ -27,14 +27,19 @@ export default async function RootLayout({
   const lang =
     user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
   const messages = await getMessages(lang);
+  const nonce = headers().get('x-nonce') ?? undefined;
 
   return (
-    <html lang="en">
+    <html lang={lang}>
+      <head>
+        <meta content={nonce} property={'csp-nonce'} />
+      </head>
       <body>
         <AppRouterCacheProvider>
           <ClientContext
             envVars={{
               FEAT_AREAS: process.env.FEAT_AREAS,
+              FEAT_AREA_ASSIGNMENTS: process.env.FEAT_AREA_ASSIGNMENTS,
               FEAT_BULK_DELETE: process.env.FEAT_BULK_DELETE,
               FEAT_EMAIL_SETTINGS: process.env.FEAT_EMAIL_SETTINGS,
               FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
@@ -51,6 +56,7 @@ export default async function RootLayout({
               ZETKIN_APP_HOST: process.env.ZETKIN_APP_HOST,
               ZETKIN_CLIENT_ID: process.env.ZETKIN_CLIENT_ID,
               ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
+              ZETKIN_GEN2_CALL_URL: process.env.ZETKIN_GEN2_CALL_URL,
               ZETKIN_PRIVACY_POLICY_LINK:
                 process.env.ZETKIN_PRIVACY_POLICY_LINK,
               ZETKIN_USE_TLS: process.env.ZETKIN_USE_TLS,
@@ -58,6 +64,7 @@ export default async function RootLayout({
             headers={headersObject}
             lang={lang}
             messages={messages}
+            nonce={nonce}
             user={user}
           >
             {children}
@@ -67,3 +74,5 @@ export default async function RootLayout({
     </html>
   );
 }
+
+export const dynamic = 'force-dynamic';

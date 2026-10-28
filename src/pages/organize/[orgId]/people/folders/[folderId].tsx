@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import FolderLayout from 'features/views/layout/FolderLayout';
+import FolderLayout, { FolderHeader } from 'features/views/layout/FolderLayout';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
@@ -57,15 +57,14 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({
       <ViewBrowser
         basePath={`/organize/${orgId}/people`}
         folderId={parseInt(folderId)}
+        header={<FolderHeader folderId={+folderId} />}
       />
     </>
   );
 };
 
-PeopleViewsPage.getLayout = function getLayout(page, props) {
-  return (
-    <FolderLayout folderId={parseInt(props.folderId)}>{page}</FolderLayout>
-  );
+PeopleViewsPage.getLayout = function getLayout(page) {
+  return <FolderLayout>{page}</FolderLayout>;
 };
 
 export default PeopleViewsPage;

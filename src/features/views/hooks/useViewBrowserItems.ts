@@ -2,6 +2,10 @@ import useViewTree from './useViewTree';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
+export interface ViewBrowserLoadingItem {
+  type: 'loading';
+}
+
 export interface ViewBrowserFolderItem {
   id: number | string;
   type: 'folder';
@@ -28,6 +32,7 @@ export type ViewBrowserBackItem = {
 };
 
 export type ViewBrowserItem =
+  | ViewBrowserLoadingItem
   | ViewBrowserFolderItem
   | ViewBrowserViewItem
   | ViewBrowserBackItem;

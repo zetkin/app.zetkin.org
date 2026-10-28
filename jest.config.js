@@ -1,5 +1,5 @@
 module.exports = {
-  setupFiles: ['<rootDir>/src/utils/testing/setup.ts'],
+  setupFiles: ['<rootDir>/src/utils/testing/setup.ts', 'fake-indexeddb/auto'],
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: [
     '<rootDir>/integrationTesting/',

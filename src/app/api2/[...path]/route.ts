@@ -70,6 +70,11 @@ async function proxy(
   }
 
   let zetkinResponse: Response = await makeZetkinApiRequest();
+
+  if (zetkinResponse.status == 204) {
+    return new NextResponse(null, { status: 204 });
+  }
+
   let payload = await zetkinResponse.json();
 
   if (zetkinResponse.status == 401) {
@@ -100,9 +105,5 @@ async function proxy(
     }
   }
 
-  if (zetkinResponse.status == 204) {
-    return new NextResponse(null, { status: 204 });
-  } else {
-    return NextResponse.json(payload, { status: zetkinResponse.status });
-  }
+  return NextResponse.json(payload, { status: zetkinResponse.status });
 }

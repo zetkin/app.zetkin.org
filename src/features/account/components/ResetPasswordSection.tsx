@@ -101,10 +101,11 @@ const ResetPasswordSection: FC<ResetPasswordSectionProps> = ({
               />
               <ZUIButton
                 actionType="submit"
-                disabled={loading || !newPassword}
+                disabled={!newPassword}
                 fullWidth
+                isLoading={loading}
                 label={messages.resetPassword.actions.save()}
-                variant={loading ? 'loading' : 'primary'}
+                variant="primary"
               />
             </Box>
           </form>

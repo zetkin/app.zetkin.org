@@ -26,6 +26,7 @@ import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
 import PersonNotes from 'features/profile/components/PersonNotes';
 import { PERSON_NOTES } from 'utils/featureFlags';
 import useFeature from 'utils/featureFlags/useFeature';
+import PersonSurveySubmissionsCard from 'features/profile/components/PersonSurveySubmissionsCard';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -147,6 +148,9 @@ const PersonProfilePage: PageWithLayout = () => {
         )}
         <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
+        </Grid>
+        <Grid size={{ lg: 4, xs: 12 }}>
+          <PersonSurveySubmissionsCard orgId={orgId} person={person} />
         </Grid>
         {hasPersonNotesFeature && (
           <Grid size={{ lg: 4, xs: 12 }}>

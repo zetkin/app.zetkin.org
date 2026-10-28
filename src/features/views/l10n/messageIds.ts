@@ -5,10 +5,12 @@ import { m, makeMessages } from 'core/i18n/messages';
 export default makeMessages('feat.views', {
   actions: {
     create: m('Create'),
+    createError: m('There was an error'),
     createFolder: m('Create folder'),
     createJoinForm: m('Create join form'),
     createPerson: m('Create person'),
     createView: m('Create list'),
+    creating: m('Creating'),
     importPeople: m('Import people'),
   },
   browser: {
@@ -331,11 +333,22 @@ export default makeMessages('feat.views', {
     ),
   },
   deleteRowsDialog: {
+    cancelButton: m('Cancel'),
+    confirmButton: m<{ numPeople: number }>(
+      'Delete {numPeople, plural, =1 {the person} other {# persons}} permanently'
+    ),
+    confirmationInputLabel: m('Organization name'),
+    destructiveAlert: m(
+      'This is a permanent and destructive action. It cannot be undone. Please read the information below carefully before continuing.'
+    ),
+    instruction: m<{ rootOrgSlug: ReactElement }>(
+      'To confirm you understand the consequences, type {rootOrgSlug} in the textbox below.'
+    ),
+    tagetOrgWarning: m<{ rootOrgTitle: ReactElement }>(
+      'This will delete all records of these persons in {rootOrgTitle} and all its child organizations.'
+    ),
     title: m<{ numPeople: number }>(
       'Delete all records of {numPeople, plural, =1 {one person} other {# persons}}'
-    ),
-    warning: m(
-      'If you confirm this action, all records of these people will be deleted from the entire organization.'
     ),
   },
   editViewTitleAlert: {
@@ -360,6 +373,11 @@ export default makeMessages('feat.views', {
       ),
       headline: m('Add people manually'),
     },
+  },
+  filterOptions: {
+    any: m('Any'),
+    no: m('No'),
+    yes: m('Yes'),
   },
   folder: {
     summary: {

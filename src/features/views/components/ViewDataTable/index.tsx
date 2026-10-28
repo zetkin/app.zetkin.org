@@ -94,7 +94,7 @@ declare module '@mui/x-data-grid-pro' {
     isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
-    onRowsDelete: () => void;
+    onBulkDelete: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -353,7 +353,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setColumnToRename, updateColumn]
   );
 
-  const onRowsDelete = useCallback(async () => {
+  const onBulkDelete = useCallback(async () => {
     bulkDeletePersons(selection);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
@@ -370,8 +370,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewGrid.removeRows, showError, setWaiting]);
 
-  const onViewCreate = useCallback(() => {
-    createView(view.folder?.id ?? 0, selection);
+  const onViewCreate = useCallback(async () => {
+    await createView(view.folder?.id ?? 0, selection);
   }, [createView, view.folder, selection]);
 
   const avatarColumn: GridColDef = useMemo(
@@ -546,8 +546,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         gridColumns,
         isLoading,
         isSmartSearch: !!view.content_query,
+        onBulkDelete,
         onColumnCreate,
-        onRowsDelete,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,
         onViewCreate,
@@ -577,7 +577,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
-      onRowsDelete,
+      onBulkDelete,
       setQuickSearch,
       modelGridProps.sortModel,
     ]
@@ -600,10 +600,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const localeText = useMemo(
     () => ({
       ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
+      filterValueAny: messages.filterOptions.any(),
+      filterValueFalse: messages.filterOptions.no(),
+      filterValueTrue: messages.filterOptions.yes(),
       noRowsLabel: messages.empty.notice[contentSource](),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [theme.components, messages.empty.notice]
+    [theme.components, messages.empty.notice, messages.filterOptions]
   );
 
   const onCellEditStart = useCallback(
@@ -727,6 +730,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         checkboxSelection={!!selectionModel?.mode}
         columns={gridColumns}
         disableRowSelectionOnClick={true}
+        filterDebounceMs={400}
         getRowClassName={getRowClassName}
         hideFooter={
           disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC

@@ -1,7 +1,8 @@
 import { HouseholdWithColor } from '../types';
 import { useApiClient, useAppSelector } from 'core/hooks';
-import { householdLoad, householdLoaded } from '../store';
+import { householdError, householdLoad, householdLoaded } from '../store';
 import useRemoteItem from 'core/hooks/useRemoteItem';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 export default function useHousehold(
   orgId: number,
@@ -16,6 +17,8 @@ export default function useHousehold(
   );
 
   return useRemoteItem(item, {
+    actionOnError: (err) =>
+      householdError([locationId, householdId, serializeError(err)]),
     actionOnLoad: () => householdLoad([locationId, householdId]),
     actionOnSuccess: (data) => householdLoaded([locationId, data]),
     loader: () =>

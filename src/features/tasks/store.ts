@@ -12,14 +12,14 @@ import { ZetkinAssignedTask, ZetkinTask } from './components/types';
 export interface TasksStoreSlice {
   assignedTasksByTaskId: Record<number, RemoteList<ZetkinAssignedTask>>;
   statsById: Record<number, RemoteItem<TaskStats>>;
-  taskIdsByCampaignId: Record<number, RemoteList<{ id: string | number }>>;
+  taskIdsByProjectId: Record<number, RemoteList<{ id: string | number }>>;
   tasksList: RemoteList<ZetkinTask>;
 }
 
 const initialState: TasksStoreSlice = {
   assignedTasksByTaskId: {},
   statsById: {},
-  taskIdsByCampaignId: {},
+  taskIdsByProjectId: {},
   tasksList: remoteList(),
 };
 
@@ -43,21 +43,21 @@ const tasksSlice = createSlice({
       state.assignedTasksByTaskId[assignedTaskId].loaded =
         new Date().toISOString();
     },
-    campaignTaskIdsLoad: (state, action: PayloadAction<number>) => {
-      const campaignId = action.payload;
-      if (!state.taskIdsByCampaignId[campaignId]) {
-        state.taskIdsByCampaignId[campaignId] = remoteList();
+    projectTaskIdsLoad: (state, action: PayloadAction<number>) => {
+      const projectId = action.payload;
+      if (!state.taskIdsByProjectId[projectId]) {
+        state.taskIdsByProjectId[projectId] = remoteList();
       }
-      state.taskIdsByCampaignId[campaignId].isLoading = true;
+      state.taskIdsByProjectId[projectId].isLoading = true;
     },
-    campaignTaskIdsLoaded: (
+    projectTaskIdsLoaded: (
       state,
       action: PayloadAction<[number, { id: number | string }[]]>
     ) => {
-      const [campaignId, taskIds] = action.payload;
+      const [projectId, taskIds] = action.payload;
       const timestamp = new Date().toISOString();
-      state.taskIdsByCampaignId[campaignId] = remoteList(taskIds);
-      state.taskIdsByCampaignId[campaignId].loaded = timestamp;
+      state.taskIdsByProjectId[projectId] = remoteList(taskIds);
+      state.taskIdsByProjectId[projectId].loaded = timestamp;
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
@@ -80,10 +80,10 @@ const tasksSlice = createSlice({
       state.tasksList.items.push(remoteItem(task.id, { data: task }));
 
       if (task.campaign) {
-        if (!state.taskIdsByCampaignId[task.campaign.id]) {
-          state.taskIdsByCampaignId[task.campaign.id] = remoteList();
+        if (!state.taskIdsByProjectId[task.campaign.id]) {
+          state.taskIdsByProjectId[task.campaign.id] = remoteList();
         }
-        state.taskIdsByCampaignId[task.campaign.id].items.push(
+        state.taskIdsByProjectId[task.campaign.id].items.push(
           remoteItem(task.id, { data: task })
         );
       }
@@ -96,14 +96,14 @@ const tasksSlice = createSlice({
         state.tasksList.isStale = true;
       }
 
-      for (const campaignId in state.taskIdsByCampaignId) {
-        const item = state.taskIdsByCampaignId[campaignId].items.find(
+      for (const projectId in state.taskIdsByProjectId) {
+        const item = state.taskIdsByProjectId[projectId].items.find(
           (item) => item.id === taskId
         );
 
         if (item) {
           item.deleted = true;
-          state.taskIdsByCampaignId[campaignId].isStale = true;
+          state.taskIdsByProjectId[projectId].isStale = true;
         }
       }
     },
@@ -157,8 +157,8 @@ export default tasksSlice;
 export const {
   assignedTasksLoad,
   assignedTasksLoaded,
-  campaignTaskIdsLoad,
-  campaignTaskIdsLoaded,
+  projectTaskIdsLoad,
+  projectTaskIdsLoaded,
   statsLoad,
   statsLoaded,
   taskCreate,

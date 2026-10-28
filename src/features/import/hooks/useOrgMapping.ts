@@ -1,6 +1,6 @@
 import { columnUpdate } from '../store';
 import { useAppDispatch } from 'core/hooks';
-import { CellData, Column, ColumnKind } from '../types';
+import { CellData, Column, ColumnKind, OrgColumn } from '../types';
 
 export default function useOrgMapping(column: Column, columnIndex: number) {
   const dispatch = useAppDispatch();
@@ -13,13 +13,21 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
     return null;
   };
 
+  const getScore = (value: CellData): number | null => {
+    if (column.kind == ColumnKind.ORGANIZATION) {
+      const map = column.mapping.find((m) => m.value === value);
+      return map?.score || null;
+    }
+    return null;
+  };
+
   const selectOrg = (orgId: number, value: CellData) => {
     if (column.kind == ColumnKind.ORGANIZATION) {
       // Check if there is already a map for this row value to an org ID
       const map = column.mapping.find((map) => map.value == value);
       // If no map for that value
       if (!map) {
-        const newMap = { orgId: orgId, value: value };
+        const newMap = { orgId: orgId, score: undefined, value: value };
         dispatch(
           // Add value to mapping for the column
           columnUpdate([
@@ -35,7 +43,7 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
         // Find mappings that are not for this row value
         const filteredMapping = column.mapping.filter((m) => m.value != value);
         // New orgId for that row value
-        const updatedMap = { ...map, orgId: orgId };
+        const updatedMap = { ...map, orgId: orgId, score: undefined };
 
         dispatch(
           columnUpdate([
@@ -50,7 +58,7 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
     }
   };
 
-  const selectOrgs = (mapping: { orgId: number; value: CellData }[]) => {
+  const selectOrgs = (mapping: OrgColumn['mapping']) => {
     if (column.kind == ColumnKind.ORGANIZATION) {
       dispatch(
         columnUpdate([
@@ -83,5 +91,11 @@ export default function useOrgMapping(column: Column, columnIndex: number) {
     }
   };
 
-  return { deselectOrg, getSelectedOrgId, selectOrg, selectOrgs };
+  return {
+    deselectOrg,
+    getScore,
+    getSelectedOrgId,
+    selectOrg,
+    selectOrgs,
+  };
 }

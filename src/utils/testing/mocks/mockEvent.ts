@@ -13,7 +13,7 @@ const event: ZetkinEvent = {
   },
   campaign: {
     id: 1,
-    title: 'Testcampaign Title',
+    title: 'Testproject Title',
   },
   cancelled: null,
   contact: null,

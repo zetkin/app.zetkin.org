@@ -65,6 +65,7 @@ export default makeMessages('feat.organizations', {
       login: m('Login & connect'),
       organize: m('Organize'),
       unfollow: m('Unfollow'),
+      userMenu: m<{ initials: string }>('User menu ({initials})'),
     },
     map: {
       viewInList: m('View in list'),

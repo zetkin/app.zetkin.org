@@ -36,7 +36,6 @@ import ZUIButton from 'zui/components/ZUIButton';
 import useMyEvents from 'features/my/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
-import { removeOffset } from 'utils/dateUtils';
 import useUserMemberships from 'features/public/hooks/useUserMemberships';
 import useUser from 'core/hooks/useUser';
 import { PublicEventSignup } from 'features/organizations/components/PublicEventSignup';
@@ -47,9 +46,10 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 type Props = {
   eventId: number;
   orgId: number;
+  privacyUrl: string;
 };
 
-export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
+export const PublicEventPage: FC<Props> = ({ eventId, orgId, privacyUrl }) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const myEvents = useMyEvents();
@@ -246,7 +246,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 padding={2}
                 width={isFullScreen && showDescriptionSection ? '40%' : '100%'}
               >
-                <SignUpSection event={event} />
+                <SignUpSection event={event} privacyUrl={privacyUrl} />
                 <DateAndLocation event={event} />
                 {isLoggedInAsContactPerson && (
                   <ParticipatingInfo
@@ -331,7 +331,8 @@ const ContactPersonSection: FC<{
 
 const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
-}> = ({ event }) => {
+  privacyUrl: string;
+}> = ({ event, privacyUrl }) => {
   const messages = useMessages(messageIds);
   const user = useUser();
   const pathname = usePathname();
@@ -374,6 +375,7 @@ const SignUpSection: FC<{
               <PublicEventSignup
                 event={event}
                 onSignupSuccess={() => setSignupSuccessful(true)}
+                privacyUrl={privacyUrl}
               />
             </Box>
             {!signupSuccessful && (
@@ -402,11 +404,11 @@ const DateAndLocation: FC<{
   const env = useEnv();
   const isMobile = useIsMobile();
   const startTime = useMemo(
-    () => new Date(removeOffset(event.start_time)),
+    () => Temporal.PlainDateTime.from(event.start_time),
     [event]
   );
   const endTime = useMemo(
-    () => new Date(removeOffset(event.end_time)),
+    () => Temporal.PlainDateTime.from(event.end_time),
     [event]
   );
 

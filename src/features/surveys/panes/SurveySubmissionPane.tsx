@@ -75,7 +75,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                   color={'inherit'}
                   component={NextLink}
                   href={`/organize/${sub.organization.id}/projects/${
-                    sub.campaign ? sub.campaign.id : 'standalone'
+                    sub.project ? sub.project.id : 'standalone'
                   }/surveys/${sub.survey.id}`}
                   underline={'hover'}
                 >

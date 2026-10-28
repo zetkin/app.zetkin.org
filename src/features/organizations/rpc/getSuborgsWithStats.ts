@@ -69,7 +69,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
               state: 'booked',
             },
             op: OPERATION.ADD,
-            type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+            type: FILTER_TYPE.PROJECT_PARTICIPATION,
           },
         ],
       }),

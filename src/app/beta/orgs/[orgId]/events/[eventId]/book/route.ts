@@ -6,9 +6,9 @@ import { distance } from 'fast-levenshtein';
 
 import { EventSignupModel } from 'features/events/models';
 import { ApiClientError } from 'core/api/errors';
-import BackendApiClient from 'core/api/client/BackendApiClient';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import IApiClient from 'core/api/client/IApiClient';
 
 type RouteMeta = {
   params: {
@@ -22,7 +22,7 @@ type BookRequestBody = {
 };
 
 type MatchArgs = {
-  apiClient: BackendApiClient;
+  apiClient: IApiClient;
   email?: string;
   firstName: string;
   lastName: string;

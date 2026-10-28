@@ -4,29 +4,33 @@ import { FC } from 'react';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
-import { ZetkinLocation } from 'features/areaAssignments/types';
+import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
 import useHousehold from 'features/canvass/hooks/useHousehold';
+import { VisitDetails } from 'features/canvass/components/LocationDialog/VisitDetails';
+import { HouseholdVisit } from 'features/canvass/hooks/useVisitReporting';
 
 type HouseholdPageProps = {
   householdId: number;
+  lastVisit: HouseholdVisit | null;
   location: ZetkinLocation;
+  metrics: ZetkinMetric[];
   onBack: () => void;
   onClose: () => void;
   onDelete: () => void;
   onEdit: () => void;
   onHouseholdVisitStart: () => void;
-  visitedInThisAssignment: boolean;
 };
 
 const HouseholdPage: FC<HouseholdPageProps> = ({
   householdId,
+  lastVisit,
   location,
+  metrics,
   onBack,
   onClose,
   onDelete,
   onEdit,
   onHouseholdVisitStart,
-  visitedInThisAssignment,
 }) => {
   const messages = useMessages(messageIds);
   const household = useHousehold(
@@ -39,17 +43,12 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
     <PageBase
       actions={
         <Box display="flex" flexDirection="column">
-          {visitedInThisAssignment && (
-            <Typography>
-              <Msg id={messageIds.households.single.wasVisited} />
-            </Typography>
-          )}
           <Button onClick={onHouseholdVisitStart} variant="contained">
             <Msg id={messageIds.households.single.logVisitButtonLabel} />
           </Button>
         </Box>
       }
-      color={household.color}
+      color={household.color === 'clear' ? null : household.color}
       onBack={onBack}
       onClose={onClose}
       onDelete={onDelete}
@@ -62,7 +61,14 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
           : messages.default.floor()
       }
       title={household.title}
-    />
+    >
+      {!lastVisit && (
+        <Typography>
+          <Msg id={messageIds.households.single.wasNotVisited} />
+        </Typography>
+      )}
+      {lastVisit && <VisitDetails metrics={metrics} visit={lastVisit} />}
+    </PageBase>
   );
 };
 

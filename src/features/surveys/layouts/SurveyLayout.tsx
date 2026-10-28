@@ -29,21 +29,21 @@ import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
-import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
+import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
 import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
 import { useApiClient } from 'core/hooks';
 import surveyToList from 'features/surveys/rpc/surveyToList';
 import duplicateSurvey from '../rpc/duplicateSurvey';
 
 interface SurveyLayoutProps {
-  campId: string;
+  projectId: string;
   children: React.ReactNode;
   orgId: string;
   surveyId: string;
 }
 
 const SurveyLayout: React.FC<SurveyLayoutProps> = ({
-  campId,
+  projectId,
   children,
   orgId,
   surveyId,
@@ -66,7 +66,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
   const originalOrgId = surveyFuture.data?.organization.id;
-  const isShared = campId === 'shared';
+  const isShared = projectId === 'shared';
   const orgs = useOfficialMemberships().data ?? [];
   const apiClient = useApiClient();
 
@@ -98,14 +98,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
 
   const handleDuplicate = async () => {
     const res = await apiClient.rpc(duplicateSurvey, {
-      campId: parseInt(campId),
       orgId: parsedOrg,
+      projectId: parseInt(projectId),
       surveyId: parseInt(surveyId),
     });
 
     if (res) {
       await router.push(
-        `/organize/${res.organization.id}/projects/${campId}/surveys/${res.id}`
+        `/organize/${res.organization.id}/projects/${projectId}/surveys/${res.id}`
       );
       showSnackbar('success', messages.surveyDuplicated.success());
     } else {
@@ -113,15 +113,15 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     }
   };
 
-  const handleOnCampaignSelected = async (campaignId: number) => {
-    const updatedSurvey = await updateSurvey({ campaign_id: campaignId });
+  const handleOnProjectSelected = async (projectId: number) => {
+    const updatedSurvey = await updateSurvey({ campaign_id: projectId });
     await router.push(
-      `/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`
+      `/organize/${orgId}/projects/${projectId}/surveys/${surveyId}`
     );
     showSnackbar(
       'success',
-      messages.surveyChangeCampaignDialog.success({
-        campaignTitle: updatedSurvey.campaign!.title,
+      messages.surveyChangeProjectDialog.success({
+        projectTitle: updatedSurvey.campaign!.title,
         surveyTitle: surveyFuture.data!.title,
       })
     );
@@ -280,12 +280,12 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
               }}
             </ZUIFutures>
           </Box>
-          <ChangeCampaignDialog
-            errorMessage={messages.surveyChangeCampaignDialog.error()}
-            onCampaignSelected={handleOnCampaignSelected}
+          <ChangeProjectDialog
+            errorMessage={messages.surveyChangeProjectDialog.error()}
             onClose={() => setIsMoveDialogOpen(false)}
+            onProjectSelected={handleOnProjectSelected}
             open={isMoveDialogOpen}
-            title={messages.surveyChangeCampaignDialog.title()}
+            title={messages.surveyChangeProjectDialog.title()}
           />
         </Box>
       }

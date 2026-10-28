@@ -2,7 +2,7 @@ import { Box, Tooltip } from '@mui/material';
 
 import { EventState } from 'features/events/hooks/useEventState';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
-import { STATUS_COLORS } from 'features/campaigns/components/ActivitiesOverview/items/OverviewListItem';
+import { STATUS_COLORS } from 'features/projects/components/ActivitiesOverview/items/OverviewListItem';
 import oldTheme from 'theme';
 
 interface DotProps {

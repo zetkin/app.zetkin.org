@@ -48,8 +48,8 @@ export const Destructive: Story = {
 
 export const Loading: Story = {
   args: {
+    isLoading: true,
     label: 'Loading',
-    variant: 'loading',
   },
 };
 
