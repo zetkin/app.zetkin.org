@@ -35,7 +35,7 @@ type PreviousCallsInfoProps = {
   call: UnfinishedCall;
 };
 
-export const icons: Record<FinishedCall['state'], MUIIcon> = {
+export const iconByCallState: Record<FinishedCall['state'], MUIIcon> = {
   [CallState.SUCCESSFUL]: Phone,
   [CallState.NO_PICKUP]: PhoneMissed,
   [CallState.LINE_BUSY]: KeyboardTab,
@@ -45,13 +45,13 @@ export const icons: Record<FinishedCall['state'], MUIIcon> = {
   [CallState.WRONG_NUMBER]: WarningAmber,
 };
 
-export const colors: Record<
+export const colorByCallState: Record<
   FinishedCall['state'],
-  'success' | 'warning' | 'error'
+  'success' | 'warning' | 'error' | 'secondary'
 > = {
   [CallState.SUCCESSFUL]: 'success',
-  [CallState.NO_PICKUP]: 'error',
-  [CallState.LINE_BUSY]: 'error',
+  [CallState.NO_PICKUP]: 'secondary',
+  [CallState.LINE_BUSY]: 'secondary',
   [CallState.CALL_BACK]: 'warning',
   [CallState.NOT_AVAILABLE]: 'warning',
   [CallState.LEFT_MESSAGE]: 'warning',
@@ -81,7 +81,7 @@ const MostRecentCall: FC<{ call: FinishedCall }> = ({ call }) => {
         display="flex"
         gap={1}
         sx={(theme) => {
-          const color = colors[call.state];
+          const color = colorByCallState[call.state];
           if (color == 'warning') {
             return { color: theme.palette.warning.dark };
           } else {
@@ -90,8 +90,8 @@ const MostRecentCall: FC<{ call: FinishedCall }> = ({ call }) => {
         }}
       >
         <ZUIIcon
-          color={colors[call.state]}
-          icon={icons[call.state]}
+          color={colorByCallState[call.state]}
+          icon={iconByCallState[call.state]}
           size="small"
         />
         <ZUIText color="inherit" variant="bodySmRegular">
@@ -185,8 +185,8 @@ const PreviousCall: FC<{
             placement="top"
           >
             <ZUIIcon
-              color={colors[previousCall.state]}
-              icon={icons[previousCall.state]}
+              color={colorByCallState[previousCall.state]}
+              icon={iconByCallState[previousCall.state]}
               size="small"
             />
           </ZUITooltip>
@@ -216,7 +216,7 @@ const PreviousCall: FC<{
             display="flex"
             gap={1}
             sx={(theme) => {
-              const color = colors[previousCall.state];
+              const color = colorByCallState[previousCall.state];
               if (color == 'warning') {
                 return { color: theme.palette.warning.dark };
               } else {

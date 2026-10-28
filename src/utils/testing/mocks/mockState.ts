@@ -36,6 +36,7 @@ export default function mockState(overrides?: RootState) {
       callAssignmentIdsByProjectId: {},
       callList: remoteList(),
       callersById: {},
+      callsByAssignmentId: {},
       simpleStatsById: {},
       statsById: {},
       userAssignmentList: remoteList(),
