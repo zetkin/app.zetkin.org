@@ -387,6 +387,7 @@ export default makeMessages('feat.smartSearch', {
         '{addRemoveSelect} people who will not receive email because {reasonSelect}'
       ),
       reasonSelect: {
+        allBounces: m('emails have bounced'),
         any: m('of any reason'),
         unsubOrg: m('they have unsubscribed'),
       },
