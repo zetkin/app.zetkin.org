@@ -229,8 +229,6 @@ const CallHeader: FC<Props> = ({
           label={messages.header.primaryButton[lane.step]()}
           onClick={async () => {
             if (lane.step == LaneStep.START) {
-              // The store moves the lane to the CALL step when a call is
-              // allocated, and keeps it on START if the queue is empty.
               await allocateCall();
             } else if (lane.step == LaneStep.CALL) {
               dispatch(updateLaneStep(LaneStep.REPORT));
