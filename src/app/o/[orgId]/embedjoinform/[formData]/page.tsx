@@ -7,20 +7,22 @@ import { EmbeddedJoinFormData } from 'features/joinForms/types';
 import { getNonce } from 'core/utils/getNonce';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     formData: string;
     orgId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     stylesheet?: string;
-  };
+  }>;
 };
 
 function sanitizeUrl(urlStr: string): string {
   return new URL(urlStr).toString();
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { formData } = params;
 
   try {
@@ -31,7 +33,7 @@ export default async function Page({ params, searchParams }: PageProps) {
       Iron.defaults
     )) as EmbeddedJoinFormData;
 
-    const nonce = getNonce(Object.fromEntries(headers().entries()));
+    const nonce = getNonce(Object.fromEntries((await headers()).entries()));
 
     return (
       <div>
