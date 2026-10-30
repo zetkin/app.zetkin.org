@@ -11,25 +11,20 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUISwitch from 'zui/components/ZUISwitch';
 import { EmailChannel } from '../types';
 import ZUIAlert from 'zui/components/ZUIAlert';
-import { useEnv } from 'core/hooks';
-import { stringToBool } from 'utils/stringUtils';
 
 type Props = {
   email: string;
   initialChannels: EmailChannel[];
   org: ZetkinOrganization;
-  token: string;
 };
 
 const SubscriptionsManagementPage: FC<Props> = ({
   email,
   initialChannels,
   org,
-  token,
 }) => {
   const [blockAll, setBlockAll] = useState(false);
   const [channels, setChannels] = useState(initialChannels);
-  const env = useEnv();
 
   return (
     <Box
@@ -113,38 +108,9 @@ const SubscriptionsManagementPage: FC<Props> = ({
                             disabled={blockAll}
                             label={isActive ? 'On' : 'Off'}
                             labelPlacement="start"
-                            onChange={async (newState) => {
-                              const apiHost = env.vars.ZETKIN_API_HOST;
-                              const apiPort = env.vars.ZETKIN_API_PORT;
-                              const ssl = stringToBool(env.vars.ZETKIN_USE_TLS);
-
-                              const protocol = ssl ? 'https' : 'http';
-                              const apiHostAndPort =
-                                apiHost + (apiPort ? `:${apiPort}` : '');
-                              const apiBase = `${protocol}://${apiHostAndPort}/v2/`;
-
-                              const patchRes = await fetch(
-                                `${apiBase}/orgs/${org.id}/channels/${channel.id}`,
-                                {
-                                  body: JSON.stringify({
-                                    is_blocked: !newState,
-                                  }),
-                                  headers: new Headers({
-                                    Authorization: `Bearer ${token}`,
-                                    'Content-Type': 'application/json',
-                                  }),
-                                  method: 'patch',
-                                }
-                              );
-                              const updatedChannel: EmailChannel =
-                                await patchRes.json();
-                              // Find and replace channel
-                              setChannels([
-                                ...channels.filter(
-                                  (chan) => chan.id === updatedChannel.id
-                                ),
-                                updatedChannel,
-                              ]);
+                            onChange={() => {
+                              //TODO: Change channel subscription state
+                              setChannels([]);
                             }}
                           />
                         </ListItem>

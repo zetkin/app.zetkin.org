@@ -89,7 +89,7 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                       scope: [
                         'channel.list',
                         'channel.read',
-                        'channel.update_subscription:own',
+                        'channel_preferences.update:own',
                       ],
                     }),
                     headers: {
