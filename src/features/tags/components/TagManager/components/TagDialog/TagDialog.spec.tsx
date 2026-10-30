@@ -45,6 +45,7 @@ describe('<TagDialog />', () => {
     expect(onSubmit).toBeCalledWith({
       color: undefined,
       group_id: null,
+      hidden: false,
       title: 'Spongeworthy',
     });
   });
@@ -81,6 +82,7 @@ describe('<TagDialog />', () => {
     expect(onSubmit).toBeCalledWith({
       color: undefined,
       group: { title: 'New Group' },
+      hidden: false,
       title: 'Tag Title',
     });
   });
@@ -149,6 +151,7 @@ describe('<TagDialog />', () => {
     expect(onSubmit).toBeCalledWith({
       color: `#${color}`,
       group_id: null,
+      hidden: false,
       id: 1000,
       title: title,
     });
