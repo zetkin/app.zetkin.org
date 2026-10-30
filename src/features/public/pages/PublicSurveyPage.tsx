@@ -82,6 +82,8 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({
         setStatus(newState);
       } catch (e) {
         setStatus('error');
+      } finally {
+        setIsLoading(false);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,12 +105,6 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMessageRef.current]);
-
-  useEffect(() => {
-    if (status == 'submitted' || status == 'error') {
-      setIsLoading(false);
-    }
-  }, [status]);
 
   const showForm = status == 'editing' || status == 'error';
   const showSuccess = status == 'submitted';

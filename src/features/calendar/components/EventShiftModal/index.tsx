@@ -1,7 +1,7 @@
 import { Close } from '@mui/icons-material';
 import { Box, Button, Dialog, Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import EventShiftDetails from './EventShiftDetails';
 import EventShiftTime from './EventShiftTime';
@@ -49,6 +49,16 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
   ]);
 
   const createEvent = useCreateEvent(orgId);
+  const mountedRef = useRef(false);
+  const submittingRef = useRef(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const isNotPublishable =
     invalidDate ||
@@ -57,6 +67,11 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
     invalidShiftTimes.includes(true);
 
   async function publishShifts(publish: boolean) {
+    if (submittingRef.current) {
+      return;
+    }
+    submittingRef.current = true;
+    setSubmitting(true);
     try {
       await Promise.all(
         eventShifts.map((shift, index) => {
@@ -122,9 +137,17 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
         )
       );
 
-      close();
+      // A dismissed dialog's save must not close a newer form.
+      if (mountedRef.current) {
+        close();
+      }
     } catch {
       showSnackbar('error', messages.eventShiftModal.error());
+    } finally {
+      submittingRef.current = false;
+      if (mountedRef.current) {
+        setSubmitting(false);
+      }
     }
   }
 
@@ -232,7 +255,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             {messages.eventShiftModal.noEvents({ no: eventShifts.length })}
           </Typography>
           <Button
-            disabled={isNotPublishable}
+            disabled={isNotPublishable || submitting}
             onClick={async () => {
               await publishShifts(false);
             }}
@@ -241,7 +264,7 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
             {messages.eventShiftModal.draft().toUpperCase()}
           </Button>
           <Button
-            disabled={isNotPublishable}
+            disabled={isNotPublishable || submitting}
             onClick={async () => {
               await publishShifts(true);
             }}

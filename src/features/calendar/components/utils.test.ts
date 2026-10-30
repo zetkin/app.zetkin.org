@@ -2,7 +2,7 @@ import { describe, it, expect } from '@jest/globals';
 
 import { ProjectActivity } from 'features/projects/types';
 import { mockEvent } from 'features/projects/hooks/useClusteredActivities.spec';
-import { getActivitiesByDay } from './utils';
+import { getActivitiesByDay, isAllDay } from './utils';
 
 describe('getActivitiesByDay', () => {
   it('returns an empty object when given no activities', () => {
@@ -94,5 +94,84 @@ describe('getActivitiesByDay', () => {
         },
       ],
     });
+  });
+});
+
+describe('isAllDay', () => {
+  it('returns true for a single-day all-day event (starts at midnight and ends at midnight next day)', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T00:00:00'),
+        Temporal.PlainDateTime.from('2026-05-11T00:00:00')
+      )
+    ).toBe(true);
+  });
+
+  it('returns true for a multi-day all-day event', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T00:00:00'),
+        Temporal.PlainDateTime.from('2026-05-13T00:00:00')
+      )
+    ).toBe(true);
+  });
+
+  it('returns true for all-day events with timezone offset', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T00:00:00+02:00'),
+        Temporal.PlainDateTime.from('2026-05-11T00:00:00+02:00')
+      )
+    ).toBe(true);
+  });
+
+  it('returns false when start date and end date are on the same day', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T10:00:00'),
+        Temporal.PlainDateTime.from('2026-05-10T12:00:00')
+      )
+    ).toBe(false);
+  });
+
+  it('returns false for zero-duration event starting and ending at midnight on the same day', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T00:00:00'),
+        Temporal.PlainDateTime.from('2026-05-10T00:00:00')
+      )
+    ).toBe(false);
+  });
+
+  it('returns false when event starts at midnight but ends at a non-midnight time', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T00:00:00'),
+        Temporal.PlainDateTime.from('2026-05-11T12:00:00')
+      )
+    ).toBe(false);
+  });
+
+  it('returns false when event starts at a non-midnight time and ends at midnight', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T10:00:00'),
+        Temporal.PlainDateTime.from('2026-05-11T00:00:00')
+      )
+    ).toBe(false);
+  });
+
+  it('returns false for multi-day events that do not start and end at midnight', () => {
+    expect(
+      isAllDay(
+        Temporal.PlainDateTime.from('2026-05-10T10:00:00'),
+        Temporal.PlainDateTime.from('2026-05-12T15:00:00')
+      )
+    ).toBe(false);
+  });
+
+  it('returns true for an event that starts today', () => {
+    const today = Temporal.Now.plainDateISO().toPlainDateTime();
+    expect(isAllDay(today, today.add({ days: 1 }))).toBe(true);
   });
 });

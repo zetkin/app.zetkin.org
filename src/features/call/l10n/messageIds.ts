@@ -153,6 +153,9 @@ export default makeMessages('feat.call', {
       start: m('Call'),
       summary: m('Next call'),
     },
+    qrModal: {
+      title: m('Scan to call with smartphone'),
+    },
     secondaryButton: {
       call: m('Skip'),
       report: m('Skip'),
@@ -163,6 +166,16 @@ export default makeMessages('feat.call', {
   instructions: {
     noInstructions: m('This assignment does not have any instructions.'),
     title: m('Instructions'),
+  },
+  mobile: {
+    call: {
+      alt: m<{ number: string }>('Call {number}'),
+      main: m<{ number: string }>('Call {number}'),
+      onlyOne: m<{ name: string }>('Call {name}'),
+    },
+    report: {
+      back: m('Back to call'),
+    },
   },
   newUIAlert: {
     description: m<{ link: JSX.Element }>(

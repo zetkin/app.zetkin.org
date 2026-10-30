@@ -32,6 +32,7 @@ export type PersonOrgData = {
 type SerializedError = {
   message: string;
   name: string;
+  status: number | null;
 };
 
 export interface ProfilesStoreSlice {
