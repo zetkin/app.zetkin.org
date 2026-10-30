@@ -31,6 +31,7 @@ export type EnvVars = {
   INSTANCE_OWNER_NAME?: string;
   MAPLIBRE_STYLE?: string;
   MUIX_LICENSE_KEY?: string;
+  NOMINATIM_API?: string;
   TILESERVER?: string;
   TIMEZONE?: string;
   ZETKIN_APP_DOMAIN?: string;

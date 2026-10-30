@@ -455,7 +455,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                         onCreateLocation={(
                           newLocation: Partial<ZetkinLocation>
                         ) => {
-                          addLocation(newLocation);
+                          return addLocation(newLocation);
                         }}
                         onMapClose={() => {
                           setLocationModalOpen(false);
