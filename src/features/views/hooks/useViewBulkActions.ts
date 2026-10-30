@@ -1,6 +1,7 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinPersonImportPostBody } from 'features/import/types';
 import { personsDeleted } from 'features/profile/store';
+import { personsRemovedFromOrg } from '../store';
 
 export default function useViewBulkActions(orgId: number) {
   const apiClient = useApiClient();
@@ -26,6 +27,27 @@ export default function useViewBulkActions(orgId: number) {
       );
 
       dispatch(personsDeleted(personIds));
+    },
+    async bulkRemovePersonsFromOrg(personIds: number[]) {
+      await apiClient.post<ZetkinPersonImportPostBody>(
+        `/api/orgs/${orgId}/bulk/execute`,
+        {
+          ops: personIds.map((id) => ({
+            key: {
+              id: id,
+            },
+            op: 'person.get',
+            ops: [
+              {
+                op: 'person.removefromorg',
+                org_id: orgId,
+              },
+            ],
+          })),
+        }
+      );
+
+      dispatch(personsRemovedFromOrg([orgId, personIds]));
     },
   };
 }

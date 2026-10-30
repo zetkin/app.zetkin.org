@@ -407,6 +407,14 @@ export default makeMessages('feat.views', {
     action: m('Are you sure you want to remove these rows from this list?'),
     title: m('Remove people from list'),
   },
+  removeFromOrgDialog: {
+    title: m<{ numPeople: number; orgTitle: string }>(
+      'Remove {numPeople, plural, =1 {one person} other {# people}} from {orgTitle}'
+    ),
+    warningText: m(
+      'They will stay in any other organizations they are part of.'
+    ),
+  },
   shareDialog: {
     download: {
       buttons: {
@@ -462,6 +470,7 @@ export default makeMessages('feat.views', {
         'Handle selection ({numSelected})'
       ),
       removeFromList: m('Remove selected people from list'),
+      removeFromOrg: m('Remove selected people from this organization'),
     },
     createColumn: m('New column'),
   },

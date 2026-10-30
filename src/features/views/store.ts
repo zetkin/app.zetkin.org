@@ -362,6 +362,22 @@ const viewsSlice = createSlice({
       state.officialList = remoteList(action.payload);
       state.officialList.loaded = new Date().toISOString();
     },
+    personsRemovedFromOrg: (
+      state,
+      action: PayloadAction<[number, number[]]>
+    ) => {
+      const [orgId, personIds] = action.payload;
+      state.viewsByOrgId[orgId]?.items.forEach((viewItem) => {
+        const rowList = state.rowsByViewId[viewItem.id];
+        if (rowList) {
+          rowList.items = rowList.items.filter(
+            (item) => !personIds.some((personId) => personId == item.id)
+          );
+          // Reload in case people are still in a view through another org
+          rowList.isStale = true;
+        }
+      });
+    },
     rowAdded: (state, action: PayloadAction<[number, ZetkinViewRow]>) => {
       const [viewId, row] = action.payload;
       const list = state.rowsByViewId[viewId];
@@ -708,6 +724,7 @@ export const {
   folderUpdated,
   officialsLoad,
   officialsLoaded,
+  personsRemovedFromOrg,
   rowAdded,
   rowRemoved,
   rowsLoad,

@@ -95,6 +95,7 @@ declare module '@mui/x-data-grid-pro' {
     isSmartSearch: boolean;
     onColumnCreate: () => void;
     onBulkDelete: () => void;
+    onBulkRemoveFromOrg: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -218,7 +219,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
-  const { bulkDeletePersons } = useViewBulkActions(orgId);
+  const { bulkDeletePersons, bulkRemovePersonsFromOrg } =
+    useViewBulkActions(orgId);
 
   const showError = useCallback(
     (error: VIEW_DATA_TABLE_ERROR) => {
@@ -355,6 +357,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const onBulkDelete = useCallback(async () => {
     bulkDeletePersons(selection);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selection]);
+
+  const onBulkRemoveFromOrg = useCallback(async () => {
+    bulkRemovePersonsFromOrg(selection);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
 
@@ -547,6 +554,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         isLoading,
         isSmartSearch: !!view.content_query,
         onBulkDelete,
+        onBulkRemoveFromOrg,
         onColumnCreate,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,
@@ -578,6 +586,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       onViewCreate,
       selection,
       onBulkDelete,
+      onBulkRemoveFromOrg,
       setQuickSearch,
       modelGridProps.sortModel,
     ]
