@@ -16,9 +16,9 @@ export default function useEventLocations(
     actionOnLoad: () => locationsLoad(),
     actionOnSuccess: (data) => locationsLoaded(data),
     loader: async () => {
-      const locations = await fetchAllPaginated<ZetkinLocation>((page) =>
+      const locations = await fetchAllPaginated<ZetkinLocation>((page, size) =>
         apiClient.get(
-          `/api2/orgs/${orgId}/locations?size=100&page=${page}&type=event`
+          `/api2/orgs/${orgId}/locations?size=${size}&page=${page}&type=event`
         )
       );
 
