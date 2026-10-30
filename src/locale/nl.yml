@@ -13,7 +13,7 @@ glob:
     city: Plaats
     co_address: Per adres
     country: Land
-    email: Email
+    email: E-mail
     ext_id: Externe ID
     first_name: Voornaam
     gender: Gender
@@ -28,7 +28,15 @@ glob:
     organizer: Organisator
 core:
   err404:
+    assignmentNotFound: Opdracht niet gevonden
     backToHomePage: Terug naar de startpagina
+    eventNotFound: Gebeurtenis niet gevonden
+    goToMyZetkin: Ga naar Mijn Zetkin
+    goToOrganization: Ga naar organisatie
+    loggedInOrgText: Probeer de organisatie in je organisatielijst te vinden.
+    loggedOutOrgText: Als je een Zetkingebruiker bent kun je inloggen en proberen om
+      de organisatie te vinden in je lijst met organisaties
+    orgNotFound: Organisatie niet gevonden
     pageNotFound: Pagina niet gevonden
   home:
     redirecting: Omleiden...
@@ -40,10 +48,196 @@ core:
       je wilt gebruiken niet ondersteunt. Je wordt doorgestuurd naar de oudere
       versie van Zetkin die deze functie wel ondersteunt.
 feat:
+  account:
+    lostPassword:
+      actions:
+        sendEmail: Stuur e-mail
+        sendLink: Stuur link opnieuw
+        signIn: Log in
+      checkEmail: Check je e-mail
+      description: Ben je je Zetkin-wachtwoord vergeten? Geef ons je e-mailadres en we
+        sturen je een link waar je een nieuw wachtwoord mee in kan stellen.
+      descriptionCheck: Als er een account bestaat met dit e-mailadres ontvang je een
+        e-mail met instructies op {email}
+      emailFieldLabel: E-mail
+      errors:
+        alreadyLoggedIn:
+          description: Je kunt je wachtwoord niet resetten omdat je al ingelogt bent.
+          title: Je bent al ingelogt
+        invalidEmail: Voer a.u.b. een geldig e-mailadres in.
+        unknownError: Er ging iets fout. Probeer het later nog een keer.
+        unknownErrorTitle: Onverwachte fout
+      footer:
+        readPolicy: Lees ons privacybeleid
+      title: Herstel je Zetkinaccount
+    register:
+      actions:
+        createAccount: Maak account aan
+      description: Begin direct te organizen met Zetkin
+      error:
+        conflictError: 'Er bestaat al een account met dit e-mailadres of telefoonnummer. '
+        invalidParameter: Voer alsjeblieft een geldig e-mailadres en/of telefoonnummer in.
+        phoneError: Voer alsjeblieft een geldig telefoonummer in.
+        unknownError: Registratie mislukt. Probeer het later nog een keer.
+      instructions: Een bericht met instructies is verzonden naar
+      labels:
+        checkBox: Ik geef toestemming voor het verwerken van mijn gegevens om een
+          Zetkin-account aan te maken.
+        email: E-mailadres
+        firstName: Voornaam
+        lastName: Achternaam
+        mobile: Mobiel telefoonnummer
+        password: Wachtwoord
+      title: Maak nieuw account aan
+      welcome: Welkom, {userName}
+    resetPassword:
+      actions:
+        labelPassword: Wachtwoord
+        save: Sla wachtwoord op
+      description: Stel een nieuw wachtwoord in wat je vanaf nu wilt gebruiken. Deze
+        moet minimaal 6 tekens lang zijn.
+      descriptionUpdated: Je wachtwoord is aangepast. Je kunt vanaf nu inloggen met je
+        nieuwe wachtwoord.
+      error:
+        errorMessage: Er ging iets fout, probeer het nog een keer.
+        title: Fout
+      title: Reset wachtwoord
+      unexpectedError: Er was een onverwachte fout bij het resetten van het
+        wachtwoord, probeer het nog een keer.
+      validation: Wachtwoord moet minimaal 6 tekens lang zijn.
+    verify:
+      description: Bevestig alsjeblieft je e-mailadres om verder te gaan met het
+        gebruiken van Zetkin. We hebben een verificatie e-mail verstuurd naar je
+        inbox. Check je spamfolder als je deze niet ziet of gebruik de knop
+        hieronder om een nieuwe te versturen.
+      error: Er is iets fout gegaan. We konden de verificatielink niet versturen.
+      sendVerification: Stuur een nieuwe verificatie
+      success: Er is een nieuwe verificatiemail verzonden
+      title: Bevestig je e-mailadres
+  areaAssignments:
+    default:
+      title: Gebiedstoewijzing zonder titel
+    instructions:
+      editor:
+        confirm: Wil je alle onopgeslagen wijzigingen verwijderen en terug gaan naar de
+          opgeslagen instructies?
+        editorPlaceholder: Voeg instructies toe voor je activisten
+        revertLink: Terugzetten naar opgeslagen versie?
+        saveButton: Opslaan
+        savedMessage: Alles is up to date!
+        savingButton: Opslaan...
+        unsavedMessage: Je hebt onopgeslagen wijzigingen.
+      title: Instructies voor toegewezen persoon.
+    layout:
+      actions:
+        delete: Verwijder
+        deleteWarningText: Weet je zeker dat je {title} wil verwijderen?
+        end: Beëindig opdracht
+        start: Begin opdracht
+      tabs:
+        instructions: Instructies
+        map: Kaart
+        overview: Overzicht
+        report: Rapporteer
+    map:
+      filter:
+        header: Filters
+        ungroupedTags: Tags zonder groep
+      findArea:
+        filterPlaceHolder: Filter
+        title: Gebieden
+      mapStyle:
+        area:
+          label: Gebiedskleur
+        title: Datavisualisatie
+    overview:
+      empty:
+        description: Deze opdracht staat nog niet ingepland
+        startPlanningButton: Plan nu
+      progress:
+        headers:
+          households: Huishoudens bezocht
+          locations: Locaties bezocht
+          successful: Succesvolle bezoeken
+        statsTitle: Voortgang
+    report:
+      card:
+        delete: Verwijder
+        description: Geen omschrijving
+        question: Vraag zonder titel
+      dataCard:
+        household: Per huishouden (meest precies)
+        info: Verzamel data...
+        location: per locatie (minder precies, meer privacy)
+        subheader: Instellen waar de data opgeslagen wordt is een goede balans vinden
+          tussen precisie en privacy.
+      delete:
+        dialog: Weet je zeker dat je deze vraag wil verwijderen? Deze handeling is
+          permanent en kan niet ongedaan gemaakt worden.
+        select: Selecteer
+      lockCard:
+        add: Vragen toevoegen
+        change: Verander de vraag die een succesvol bezoek definieert
+        description: Deze opdracht is begonnen. Als je deze nu aanpast kan dit problemen
+          veroorzaken met de data. Wees voorzichtig.
+        descriptionUnlock: Pas op dat je geen wijzigingen maakt die voor dataverlies
+          kunnen zorgen.
+        fix: Spelling fixen.
+        header: Verslag vergrendelt
+        headerUnlock: Verslag ontgrendelt
+        rename: Een vraag op een manier aanpassen waardoor de betekenis verandert
+        safe: Veilig
+        unsafe: Onveilig
+      metricCard:
+        choice: Multiple choice vraag
+        save: Opslaan
+        scale: Schaal-vraag
+      successCard:
+        header: Succesvol bezoek
+        subheader: Kies een vraag om te gebruiken om een bezoek als succesvol te tellen.
+          'Ja' antwoorden op deze vraag zorgt er voor dat het bezoek als
+          succesvol telt.
+  areas:
+    areas:
+      areaDetails:
+        households: Huishoudens
+        locations: Locaties
+        title: Gebiedsdetails
+      areaSettings:
+        delete: Verwijder
+        edit:
+          cancelButton: Annuleer
+          editButton: Bewerk
+          saveButton: Opslaan
+        tags:
+          title: Gebiedstags
+      assignmentStats:
+        percentSuccessfulVisits: van de bezoeken was succesvol
+        percentVisited: van de locaties bezocht
+        successfulVisits: succesvolle bezoeken
+        title: Bezoeken
+      controlLabels:
+        filters: Filters
+        layers: Datavisualisatie
+        select: Selecteer
+      default:
+        description: Lege omschrijving
+        title: Gebied zonder titel
+      draw:
+        cancelButton: Annuleer
+        saveButton: Opslaan
+        startButton: Teken
+      filter:
+        addFilterButton: Voeg filter toe
+        openFiltersButton: Filter
+        ungroupedTagsLabel: Tags zonder groep
+    page:
+      title: Geografie
   breadcrumbs:
     elements:
       activities: Activiteiten
       archive: Archief
+      areaassignments: Gebiedstoewijzingen
       assignees: Verantwoordelijke personen
       calendar: Kalender
       callassignments: Bel opdrachten
@@ -52,9 +246,12 @@ feat:
       compose: Samenstellen
       conversation: Gesprek
       duplicates: Kopieën
+      email: E-mail
       emails: E-mails
       events: Gebeurtenissen
+      fields: Velden
       folders: Lijsten
+      geography: Geografie
       incoming: Inkomend
       insights: Inzichten
       instances: Voorvallen
@@ -72,9 +269,11 @@ feat:
       settings: Instellingen
       shared: Gedeeld met ons
       submissions: Aanmeldingen
+      suborgOverview: Suborganisatieoverzicht
       surveys: Vragenlijsten
       tags: Tags
       tasks: Taken
+      themes: Themas
       untitledEvent: Naamloze gebeurtenis
       views: Lijsten
   calendar:
@@ -151,13 +350,219 @@ feat:
         duplicate: Zelfde tijd en datum (kopiëren)
         nextDay: Volgende dag {dates}
         nextWeek: Volgende week {dates}
+        reschedule: Opnieuw plannen
     shortWeek: w {weekNumber}
     showMore: Toon
     today: Vandaag
+  call:
+    about:
+      events: '{numEvents} activiteiten'
+      noParticipation: '{name} heeft nog nooit aan een activiteit meegedaan.'
+      participation: '{name} heeft meegedaan aan {events}, de meest recente was
+        {title} {time}'
+      previousCalls:
+        callBackAfter: Bel {naam} terug na {tijd}
+        hasNoPreviousCalls: Is nog nooit gebeld
+        note: 'Aantekening: {note}'
+        status:
+          callBack: Bel later terug
+          leftMessage: Heeft voicemail achtergelaten
+          lineBusy: In gesprek
+          noPickup: Heb ze niet gesproken
+          notAvailable: Geen tijd om te praten
+          success: Succesvol
+          wrongNumber: Foutief nummer
+        title: Vorige belletjes
+      tagsHeader: Tags
+      title: Over {naam}
+    activities:
+      events:
+        noLocation: Geen fysieke locatie
+      projects:
+        wihoutProjectLabel: Geen project
+      survey:
+        backButton: Terug naar activiteiten
+        cancelButton: Annuleer
+        clearButton: Wis reacties
+        confirmClearSurvey: Wil je de inzendingen voor {title} verwijderen?
+        editButton: Bewerk
+        fillOutButton: Invullen
+        inProgress: Vragenlijst gestart
+      title: Activiteiten
+      untitled:
+        event: Activiteit zonder naam
+        project: Project zonder naam
+        survey: Vragenlijst zonder naam
+    callAlert:
+      description: Geen oproepen meer in de wachtrij
+      title: Lege wachtrij
+    callLog:
+      openCallLogButton: Gespreksverslag
+      previousCall:
+        logNew: Registreer nog een gesprek
+      searchLabel: Typ om te vinden
+      title: Gespreksverslag
+      unfinishedCall:
+        abandon: Verlaat
+        switch: Wissel naar
+    callingInfo:
+      title: Hoe bel ik met Zetkin?
+      tutorial:
+        oldCalls:
+          title: Vorige telefoongesprekken
+        personInfo:
+          title: Leer de persoon kennen
+        report:
+          description: Je vult het gespreksverslag in nadat je de persoon gesproken hebt.
+        start:
+          description: Je staat op het punt om te beginnen met bellen. Lees de instructies
+            van de belopdracht en bereid je voor. Begin met bellen door op
+            "Bellen" te drukken.
+          title: Begin met bellen
+    error:
+      description: Probeer de pagina te verversen. Als de foutmelding blijft, probeer
+        dan uit- en weer in- te loggen. Contacteer support als de foutmelding
+        daarna nog blijft.
+      title: Er is een onverwachte fout opgetreden.
+    header:
+      primaryButton:
+        call: Afronden en verslag maken
+        report: Verstuur verslag
+        start: Bellen
+        summary: Volgende gesprek
+      secondaryButton:
+        call: Overslaan
+        report: Overslaan
+        start: Afsluiten
+        summary: Neem pauze
+    instructions:
+      noInstructions: Deze belopdracht heeft geen instructies.
+      title: Instructies
+    newUIAlert:
+      description: Je kunt direct beginnen of {link}
+      linkText: ga terug naar de oude versie
+      title: Welkom in de nieuwe bel-interface! {description}
+    report:
+      steps:
+        callBack:
+          question:
+            afterSpecificHourOptionLabel: Na {hour}
+            anyTimeOptionLabel: Elk moment van de dag
+            callBackButtonLabel: Bel terug na {datum}
+            dateLabel: Op welke datum
+            examples:
+              nextWeek: Volgende week
+              today: Later vandaag
+              tomorrow: Morgen
+            invalidDateButtonLabel: Ongeldige datum
+            timeLabel: Na welke tijd
+            title: Wanneer kunnen we terug bellen?
+          summary:
+            afterSpecificTime: Bel terug na {time}
+            anyTime: We bellen terug na {date}
+            subtitle: Ondertussen wordt {name} automatisch uit de wachtrij gehaald
+        callerLog:
+          question:
+            noteLabel: Voeg eventueel een notitie toe
+            saveWithNoteButton: Opslaan met notitie
+            saveWithoutNoteButton: Opslaan zonder notitie
+            shortcutHint: Druk tijdens het typen op SHIFT + ENTER om op te slaan met notitie
+            title: Wil je een notitie voor volgende bellers achterlaten?
+          summary:
+            withNote:
+              subtitle: 'Volgende bellers zien je notitie: {note}'
+              title: Je hebt een notitie gemaakt voor volgende bellers
+            withoutNote: Je hebt geen aantekening gemaakt voor toekomstige bellers
+        couldTalk:
+          question:
+            noButton: Nee, bel terug
+            title: Had {firstName} tijd om te praten?
+            yesButton: Ja
+          summary:
+            couldNotTalk:
+              subtitle: Toekomstige bellers zulle nzien dat we terug moeten bellen
+              title: '{firstName} had geen tijd om te praten'
+            couldTalk:
+              title: '{firstName} had tijd om te praten'
+        failureReason:
+          question:
+            lineBusy: In gesprek
+            noPickup: Er werd niet opgenomen
+            notAvailable: Nu geen tijd
+            title: Waarom niet?
+            wrongNumber: Verkeerd nummer
+          summary:
+            lineBusy: Was in gesprek
+            noPickup: '{firstName} nam niet op'
+            notAvailable: '{firstName} had geen tijd om te praten, we moeten later terug
+              bellen'
+            wrongNumber: We hebben een verkeerd nummber voor {firstName}
+        leftMessage:
+          question:
+            noButton: Nee
+            title: Heb je een voicemail ingesproken?
+            yesButton: Ja
+          summary:
+            didNotLeaveMessage: Heb geen voicemail ingesproken
+            leftMessage:
+              subtitle: Toekomstige bellers zullen zien dat je de voicemail hebt ingesproken
+              title: Heeft voicemail ingesproken
+        organizerAction:
+          question:
+            noButton: Nee
+            title: Is er iets gebeurd wat door een administrator opgepakt moet worden?
+            yesButton: Ja
+          summary:
+            orgActionNeeded:
+              subtitle: Een administrator krijgt bericht
+              title: Je wil dat een administrator naar dit gesprek kijkt
+            orgActionNotNeeded: Geen actie nodig
+        organizerLog:
+          question:
+            messageLabel: Voeg optioneel bericht toe
+            shortcutHint: Druk op SHIFT + ENTER terwijl je aan het typen bent om een bericht
+              toe te voegen.
+            title: Leg het probleem aan de administrator uit
+            withoutMessageButton: Opslaan zonder notitie
+            wrongNumberMessages:
+              altPhone: 'Alternatief telefoonnummer is fout: {altPhone}'
+              both: Beide telefoonnummers zijn verkeerd, {phone} en {altPhone}
+              phone: 'Telefoonnummer is onjuist: {phone}'
+          summary:
+            withMessage:
+              subtitle: 'De administrators zullen je bericht zien: {message}'
+              title: Je hebt een bericht voor de administrators achtergelaten
+            withoutMessage: Je hebt geen bericht voor de administrators achtergelaten
+        successOrFailure:
+          question:
+            noButton: Nee
+            title: Heb je {firstName} gesproken?
+            yesButton: Ja
+    summary:
+      callSummary:
+        notAvailable: We bellen {name} terug.
+        success: Je hebt gesproken met {name}
+        wrongNumber: We hadden het verkeerde nummer voor ${name}
+      previousCallMissingError:
+        description: Het verslag is verzonden en je kunt door blijven bellen.
+        title: Kon vorig gesprek niet laden
+      reportSubmissionError:
+        title: Er ging iets fout tijdens het versturen van het verslag.
+      title:
+        success: Gesprek klaar!
+    switchedAssignmentsAlert:
+      message: Van opdracht gewisseld. Je belt nu in {assignmentTitle}
+    unexpectedError:
+      backToMyZetkinButton: Ga terug naar Mijn Zetkin
+      description: Sorry! Er is iets fout gegaan. Je kunt de opdracht herladen of
+        terug gaan naar 'Mijn Zetkin'.
+      reloadButton: Herlaad opdracht
+      title: Oeps! Er heeft zich een onverwachte fout voorgedaan
   callAssignments:
     actions:
       delete: Verwijder
       end: Taak eindigen
+      move: Verplaats
       start: Taak starten
       warning: '"{title}" wordt verwijderd.'
     blocked:
@@ -171,6 +576,10 @@ feat:
       subtitle: Targets die we nog niet kunnen bellen
       title: Geblokkeerd
       viewSheetButton: Bekijk lijst
+    callAssignmentChangeProjectDialog:
+      error: 'Fout: Kon opdracht niet naar het geselecteerde project verplaatsen'
+      success: Opdracht "{assignmentTitle}" verplaatst naar "{projectTitle}"
+      title: Verplaats opdracht
     callers:
       actions:
         customize: Wachtrij aanpassen
@@ -249,164 +658,153 @@ feat:
       editButton: Pas target-groep aan
       subtitle: Gebruik slim-zoeken om de targets voor deze opdracht te definiëren.
       title: Targets
-  projects:
-    activitiesOverview:
-      button: Doorzoek alle activiteiten
-      empty: Op deze dag staat niets gepland
-      endsTomorrow: eindigt morgen
-      extraActivities: + {numExtra} meer
-      goToActivities: Bekijk alle aankomende activiteiten.
-      noActivities: Er zijn deze week geen activiteiten.
-      nothingTomorrow: Er staat niets gepland voor morgen
-      startsTomorrow: Begint morgen
-      subtitles:
-        endsLater: Eindigt {relative}
-        endsToday: Eindigt vandaag
-        sentEarlier: Verzonden naar {relative}
-        sentLater: Moet verzonden worden naar {relative}
-        startsLater: Begint {relative}
-        startsToday: Begint vandaag
-      thisWeekCard: Ook deze week
-      title: Aankomende activiteiten
-      todayCard: Vandaag
-      tomorrowCard: Morgen
-    activityList:
-      eventItem:
-        contact: Geen contactpersoon toegewezen
-        locations: '{count} locaties'
-        reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
-          hebben nog geen herinnering ontvangen'
-        signups: Er zijn nog inschrijvingen in behandeling
-    all:
-      cardCTA: Ga naar project
-      create: Maak nieuw project
-      filter:
-        calls: Bel opdrachten
-        emails: E-mails
-        filter: Filter resultaten
-        standalones: Op zichzelf staande gebeurtenissen
-        surveys: Vragenlijsten
-      indefinite: Onbepaald
-      unsorted: Ongesorteerde projecten
-      upcoming: '{numEvents, number} aankomende gebeurtenissen.'
-    allProjects:
-      noActivities: Als je organisatie activiteiten heeft die niet tot een project
-        behoren, worden deze hier weergegeven.
-      viewArchive: Bekijk archief
-    assigneeActions: Acties voor verantwoordelijke persoon
-    calendarView: Bekijk alles in kalender
-    createButton:
-      createActivity: Maken
-      createCallAssignment: Bel opdracht
-      createEmail: E-mail
-      createEvent: Gebeurtenis
-      createSurvey: Vragenlijst
-      createTask: Taak
-    events: Gebeurtenissen
-    feedback:
-      copy: Het verzamelen van feedback (tijdens bel-acties of op zichzelf staand) kan
-        je helpen efficiënter te werken
-      create: Vragenlijst maken
-      heading: Feedback en vragenlijsten (niet geconfigureerd)
-    form:
-      createCallAssignment:
-        newCallAssignment: Mijn bel-opdracht
-      createProject:
-        create: Project maken
-        error: Er is een fout opgetreden bij het aanmaken van het project
-        newProject: Mijn project
-      createEmail:
-        newEmail: E-mail zonder titel
-      createSurvey:
-        newSurvey: Mijn vragenlijst
-      createTask:
-        title: Taak aanmaken
-      deleteProject:
-        cancel: Annuleren
-        error: Er is een error opgetreden tijdens het verwijderen van het project
-        submitButton: Bevestig verwijdering
-        title: Verwijder project
-        warning: Weet je zeker dat je dit project wilt verwijderen? Deze handeling kun
-          je niet ongedaan maken.
-      description: Beschrijving
-      edit: Bewerk project
-      editProjectTitle:
-        error: Error updaten project titel
-        success: Project titel geüpdatet
-      manager:
-        label: Project manager
-      name: Naam
-      requestError: Er is een error opgetreden. Gelieve opnieuw te proberen.
-      required: Vereist
-      status:
-        draft: Voorlopige versie
-        heading: Status
-        published: Gepubliceerd
-      visibility:
-        heading: Zichtbaarheid
-        private: Privé
-        public: Openbaar
-    indefinite: Nog onbepaalde tijdlijn
-    layout:
-      activities: Activiteiten
-      allProjects: Alle Projecten & Activiteiten
-      archive: Archiveren
-      calendar: Kalender
-      insights: Inzichten
-      overview: Overzicht
-    linkGroup:
-      createActivity: Voeg toe
-      createCallAssignment: Bel opdracht
-      createEmail: E-mail
-      createEvent: Gebeurtenis
-      createSurvey: Vragenlijst
-      createTask: Taak
-      public: Openbare pagina
-      settings: Instellingen bewerken
-    mobilization:
-      copy: Het organiseren van een bel-actie om je leden te mobiliseren zal de
-        deelname enorm verhogen
-      create: Bel-opdracht aanmaken
-      heading: Mobilisering en outreach (niet geconfigureerd)
-    noManager: Geen project manager
-    shared:
-      cta: Ga naar project
-      noActivities: Alle lopende activiteiten die met je organisatie worden gedeeld,
-        worden hier weergegeven.
-      noArchives: Alle verlopen activiteiten die met je organisatie worden gedeeld,
-        worden hier weergegeven.
-      title: Met ons gedeeld
-    sharedLayout:
-      alertMsg: Dit project bevat alleen activiteiten die door andere organisaties
-        worden gedeeld. Je kunt deze bekijken, maar niet wijzigen.
-      subtitle: '{numOfActivities, plural, =1 {1 activity} other {# activities}}'
-      tabs:
-        activities: Activiteiten
-        archive: Archief
-        overview: Overzicht
-      title: Met ons gedeeld
-    singleProject:
-      filterActivities: Typ om te filteren
-      noActivities: Er staan nog geen activiteiten in dit project.
-      noSearchResults: Je filters hebben geen resultaten opgeleverd.
-      showPublicPage: Toon openbare aanmeld-pagina.
-      viewArchive: Bekijk archief
-    taskLayout:
-      tabs:
-        assignees: Verantwoordelijke personen
-        insights: Inzichten
-        summary: Samenvatting
-    tasks: Taken
+  canvass:
+    default:
+      description: Lege omschrijving
+      floor: Onbekende verdieping
+      location: Locatie zonder titel
+    households:
+      bulkEditHouseholds:
+        floorLabel: Bewerk verdieping
+      colorPicker:
+        colorNames:
+          black: Zwart
+          darkAqua: Donker aqua
+          darkBlue: Donker blauw
+          darkGreen: Donker groen
+          darkIndigo: Donker indigo
+          darkLime: Donker limegroen
+          darkOrange: Donker oranje
+          darkPink: Donker roze
+          darkPurple: Donker paars
+          darkRed: Donker rood
+          darkTurqouise: Donker turqouise
+          darkYellow: Donker geel
+          grey: Grijs
+          lightAqua: Licht aqua
+          lightBlue: Licht blauw
+          lightGreen: Licht groen
+          lightIndigo: Licht indigo
+          lightLime: Licht limegroen
+          lightOrange: Licht oranje
+          lightPink: Licht roze
+          lightPurple: Licht paars
+          lightRed: Licht rood
+          lightTurquoise: Licht turquoise
+          lightYellow: Licht geel
+          mediumAqua: Medium aqua
+          mediumBlue: Medium blauw
+          mediumGreen: Medium groen
+          mediumIndigo: Medium indigo
+          mediumLime: Medium limegroen
+          mediumOrange: Medium oranje
+          mediumPink: Medium roze
+          mediumPurple: Medium paars
+          mediumRed: Medium rood
+          mediumTurqouise: Medium turqouise
+          mediumYellow: Medium geel
+        inputLabel: Bewerk kleur van huishouden
+        noColor: Geen kleur
+      createMultiple:
+        header: Maak huishoudens aan
+        numberOfFloorsInput: Aantal verdiepingen
+        numberOfHouseholdsInput: Huishoudens per verdieping
+      delete:
+        title: Verwijder huishouden
+        warningText: Weet je zeker dat je dit huishouden wilt verwijderen? Dit kan niet
+          ongedaan gemaakt worden.
+      editSingleHousehold:
+        floorLabel: Bewerk verdieping
+        header: Bewerk {title}
+        saveButtonLabel: Opslaan
+        titleLabel: Bewerk titel
+      householdDefaultTitle: Huishouden {householdNumber}
+      page:
+        empty: Deze locatie heeft nog geen huishoudens
+        header: Huishoudens
+      single:
+        logVisitButtonLabel: Registreer bezoek
+        skipped: overgeslagen
+        subtitle: Verdieping {floorNumber}
+        visit: Bezoek
+        wasNotVisited: Dit huishouden is tijdens deze opdracht nog niet bezocht
+      stackItem:
+        detailsButtonLabel: Details
+        visitButtonLabel: Bezoek
+    instructions:
+      areas: Gebieden
+      instructionsHeader: Instructies
+      ready: Je bent klaar om te gaan
+      visitedHouseholds: Huishoudens bezocht
+      visitedLocations: Locaties bezocht
+    location:
+      edit:
+        descriptionLabel: Bewerk omschrijving
+        header: Bewerk {title}
+        saveButtonLabel: Opslaan
+        titleLabel: Bewerk titel
+      page:
+        historySectionHeader: Geschiedenis
+        householdVisitedStatLabel: Bezochte huishoudens
+        householdsButtonLabel: Huishoudens
+        householdsVisitedStat: '{numVisitedHouseholds} van de {numHouseholds}'
+        noHouseholds: Er zijn hier nog geen huishoudens geregistreerd
+        quickReportButtonLabel: Snel rapporteren
+    map:
+      addLocation:
+        add: Voeg locatie toe
+        cancel: Annuleer
+        create: Maak locatie aan
+        inputPlaceholder: Geef de locatie een naam
+      initializationError: Er was een fout bij het inladen van de kaart. Check of je
+        browser WebGL ondersteunt en of dit ingeschakeld is.
+    selectArea:
+      assignedToMe: Aan mij toegewezen
+      noAreas: Geen gebieden beschikbaar
+    sidebar:
+      instructions:
+        title: Instructies
+      menuOptions:
+        home: Mijn activiteiten
+        logOut: Log uit
+      progress:
+        allTime:
+          title: Altijd
+        header:
+          households: Huishoudens
+          householdsSuccessful: Succesvol bezocht
+          householdsVisited: Bezochte huishoudens
+          locations: Locaties
+          successfulVisits: Succesvolle bezoeken
+          title: Voortgang
+          visits: Bezoeken
+        session:
+          team: Team
+          title: Sessie (vandaag)
+          you: Jij
+        sync:
+          label:
+            hasLoaded: 'Gesynchroniseerd op: {timestamp}'
+            neverLoaded: Nooit geladen
+          syncButton:
+            label: Synchroniseer nu
+            loading: Syncing
+    visit:
+      household:
+        noButtonLabel: Nee
+        skipButtonLabel: Sla deze vraag over
+        yesButtonLabel: Ja
+      location:
+        noInputLabel: Nee
+        proceedButtonLabel: Doorgaan
+        submitButtonLabel: Versturen
+        yesInputLabel: Ja
   duplicates:
     modal:
       cancelButton: Annuleren
       fieldSettings:
         data: Data
         field: Veld
-        gender:
-          f: Vrouwelijk
-          m: Mannelijk
-          o: Anders
         noValue: Geen gegevens
         title: Samen te voegen data
       findCandidateManually: Typ om een potentiële kopie te vinden
@@ -471,19 +869,28 @@ feat:
             confirmation: Er is een voorbeeld naar je e-mailadres verzonden.
             instructions: Hier kun je deze e-mail naar jezelf sturen, zodat je alvast kunt
               zien hoe de e-mail er voor de ontvangers uitziet.
+            invalidEmailAddress: Dit is geen geldig e-mailadres
             okButton: OK!
+            previewInBrowser: Preview in browser
+            previewInBrowserInstructions: Gebruik de knop hier onder om een preview van de
+              e-mail in je browser te bekijken.
             sendButton: Verzenden
             sendTo: 'De e-mail wordt verzonden naar dit adres:'
             title: Voorbeeld
           settings:
             senderAddressInputLabel: Adres verzender
+            senderInputLabel: Afzender
             subjectInputLabel: Onderwerp
             title: Instellingen
+          theme:
+            themeTitle: Thema {themeId}
+            title: Thema
       tools:
         button:
           block:
             noButtonText: Klik om deze tekst aan te passen!
           settings:
+            buttonTextWarning: Zorg ervoor dat je tekst aan de knop toevoegt
             invalidUrl: Deze link is niet geldig
             testLink: Klik om de link te testen
             urlLabel: Link URL
@@ -510,6 +917,7 @@ feat:
       deliveryDate: Bezorg datum
       deliveryTime: Bezorg tijd
       duplicate: Kopie
+      move: Verplaats
       schedule: Planning
       sendAnyway: Toch versturen
       sendLater: Later versturen
@@ -524,6 +932,10 @@ feat:
       timeZone: Tijdzone
       warning: Weet je zeker dat je deze e-mail wil verwijderen? Deze actie is
         permanent en kan niet teruggedraaid worden.
+    emailChangeProjectDialog:
+      error: 'Fout: kon de e-mail niet naar het geselecteerde project verplaatsen'
+      success: E-mail "{emailTitle}" verplaatst naar "{projectTitle}"
+      title: Verplaats e-mail
     emailFeatureIsBlocked:
       errorMessage: Je organisatie heeft op het moment geen toegang tot de e-mail optie.
       goBackButton: Terug gaan
@@ -589,6 +1001,18 @@ feat:
       lockButton: Vastzetten voor verzending
       locked: Doelen zijn vastgezet voor verzending
       lockedChip: Vastgezet
+      subtitle:
+        notTargeted: Gebruik Smart Search om de ontvangers van deze e-mail te bepalen.
+        scheduled: Deze e-mail staat al ingepland voor aflevering. Als je de ontvangers
+          wilt ontgrendelen om de Smart Search aan te passen moet je eerst de
+          aflevering annuleren.
+        sent: Je kan naar de Smart Search kijken die is gebruikt om de ontvangers van
+          deze e-mail te selecteren.
+        targetedAndLocked: Ga verder naar aflevering of ontgrendel de ontvangers als je
+          de Smart Search die de ontvangers bepaalt nog aan wil passen.
+        targetedNotLocked: Bewerk de Smart Search die gebruikt wordt om de ontvangers
+          van deze e-mail te selecteren of vergrendel de doelgroep om de e-mail
+          te kunnen verzenden.
       title: Doelen
       unlockAlert: Aan de hand van de Smart Search zul je mensen toevoegen of
         verwijderen van de target groep door te ontgrendelen.
@@ -600,10 +1024,23 @@ feat:
       info: Na uitschrijving zal je geen massa e-mails meer ontvangen van deze
         organisatie. Mogelijk ontvang je nog steeds herinneringen en andere
         e-mails die specifiek voor jou bedoeld zijn.
+      senderDetails: '{senderName} <{senderEmail}>'
+      senderH: 'Meld je af voor:'
+      senderInfo: Nadat je je afmeldt ontvang je geen e-mails meer van deze afzender.
+        Het kan zijn dat je nog wel e-mails ontvangt van andere afzenders in
+        deze organisatie of andere e-mails die specifiek aan jou gericht zijn
+        vanwege je inzet voor deze organisatie.
       unsubButton: Schrijf me uit
     unsubscribedPage:
       h: Uitgeschreven!
       info: Je bent uitgeschreven van de massa e-mail van {org}.
+      senderInfo: Je bent afgemeld voor e-mails van {senderName} <{senderEmail}>.
+    urlCard:
+      nowAccepting: Iedereen kan de e-mail via deze link bekijken
+      open: Publieke weergave
+      preview: Toekomstige directe link
+      previewPortal: Preview e-mail
+      willAccept: Iedereen kan de e-mail bekijken via deze link
     varDefaults:
       target: Lezer
   events:
@@ -625,6 +1062,9 @@ feat:
       move: Verplaatsen
       publish: Publiceren
       restore: Herstellen
+      sendEmailToParticipants:
+        buttonTitle: Stuur e-mail naar deelnemers
+        emailSubject: 'Over: {eventTitle}'
       unpublish: Publiceren ongedaan maken
       warning: '"{eventTitle}" zal verwijderd worden.'
       warningCancel: '"{eventTitle}" zal geannuleerd worden.'
@@ -633,6 +1073,7 @@ feat:
       error: 'Foutsituatie: Kan gebeurtenis niet verplaatsen naar het geselecteerde
         project'
       success: Gebeurtenis verplaatst naar "{projectTitle}"
+      title: Verplaats gebeurtenis
     eventContactCard:
       header: Contacteer
       noContact: Geen contactpersoon toegewezen!
@@ -672,10 +1113,12 @@ feat:
       buttonDelete: Verwijderen
       buttonNoshow: Niet op komen dagen
       cancelledParticipants: Geannuleerde deelnemers
+      columnAction: Actie
       columnEmail: E-mail
       columnName: Naam
       columnNotified: Op de hoogte gebracht
       columnPhone: Telefoon
+      columnSignedUp: Opgegeven
       contactTooltip: Contactpersoon
       descriptionBooked: Dit zijn de mensen die je hebt geboekt en op wie je rekent
         voor het evenement. Om hun deelname te annuleren, moeten ze contact met
@@ -685,20 +1128,25 @@ feat:
         boeken.
       descriptionSignups: Deze mensen hebben zich aangemeld in het activistenportaal.
         Ze kunnen hun aanmelding op elk moment annuleren.
+      descriptionUnverifiedSignups: Deze mensen hebben zichzelf opgegeven zonder
+        gebruikersaccount. Je moet ze bevestigen.
       dropDownAttended: Bevestigde aanwezigheid
       dropDownNoshow: Niet op komen dagen
       participantTooltip: Maak contactpersoon
       signUps: Aanmeldingen
+      unverifiedSignups: Onbevestigde registraties
     eventPopper:
       backToEvents: Terug naar de evenement-lijst
       backToLocations: Terug naar locaties
       backToShifts: Terug naar shift lijst
+      bookAll: Boek allemaal
       booked: Geboekt
       cancel: Annuleren
       cancelWarning: Als je dit doet, vergeet dan niet om alle deelnemers en
         inschrijvers te informeren dat het evenement is geannuleerd!
       confirmCancel: Weet je zeker dat dit evenement wil annuleren?
       confirmDelete: Weet je zeker dat dit evenement wil verwijderen?
+      confirmRemindersTitle: Bevestig versturen van herinneringen
       contactPerson: Contactpersoon
       dateAndTime: Datum & Tijd
       delete: Verwijderen
@@ -761,6 +1209,18 @@ feat:
       open: Open
       scheduled: Ingepland
       unknown: Onbekend
+    linkSignupDialog:
+      bookButton: Boek
+      cancelButton: Annuleer
+      createPersonButton: Maak nieuw persoon aan
+      helperText: Boek deze registraties door een persoon te selecteren of maak een
+        persoon aan als ze nog niet in het systeem staan.
+      keepTyping: Blijf typen om te beginnen met zoeken
+      noResults: Geen matchende personen gevonden
+      searchLabel: Zoek een persoon
+      searchPlaceholder: Zoek op naam, e-mail of telefoonnummer
+      signupDetails: Registratiedetails
+      title: Geen perfecte match gevonden. Kies a.u.b. een persoon.
     list:
       events: Gebeurtenissen
       noEvents: Geen gebeurtenissen...
@@ -822,6 +1282,34 @@ feat:
         worden verplaatst'
       submitButton: Uitvoeren
       title: Deelnemers bewerken
+    publicEventSignup:
+      alert:
+        error: Fout
+        signupSuccessful: Registratie gelukt
+        thankYou: Bedankt dat je je hebt opgegeven!
+      errors:
+        emailOrPhoneRequired: Een e-mailadres of telefoonnummer is verplicht
+        gdprConsentRequired: Je moet de voorwaarden nog accepteren
+        invalidEmail: Voer a.u.b. een geldig e-mailadres in
+        nameRequired: Voor- en achternaam zijn verplicht
+        phoneFormat: 'Je telefoonnummer moet in international notering bijv: +31612345678'
+        signupError: Er heeft zich een fout voorgedaan bij de registratie
+        signupFailed: Registratie mislukt
+      fields:
+        email: E-mail
+        firstName: Voornaam
+        lastName: Achternaam
+        phone: Telefoonnummer
+      info:
+        description: Voer je naam in en ten minste één manier waarop de organisatoren je
+          kunnen bereiken.
+        title: Tijd om je op te geven
+      privacyPolicy: Wanneer je je opgeeft voor een activiteit wordt de informatie die
+        je verstrekt opgeslagen en verwerkt in Zetkin door deze organisatie in
+        lijn met het privacybeleid van Zetkin.
+      submit:
+        button: Geef je op
+        submitting: Versturen...
     search: Zoeken
     state:
       cancelled: Geannuleerd
@@ -843,6 +1331,16 @@ feat:
         verwijderen voor heel {orgTitle}?
       tooltip: Klik om type te veranderen
       uncategorized: Ongecategoriseerd
+    unverifiedSignups:
+      actionFailed: Er is iets fout gegaan. Probeer het opnieuw.
+      booked: '{name} is succesvol geboekt.'
+      exactMatchBooked: Exacte match gevonden. Deze registratie is nu geboekt als {name}.
+    urlCard:
+      open: Open voor registraties
+      preview: Preview evenement
+      previewPortal: Preview evenement in activistenportaal
+      visitPortal: Bekijk evenement in activistenportaal
+      willAccept: Accepteert registraties via deze link
   files:
     fileUpload:
       dropToUpload: Verplaats bestand hierheen om up te loaden
@@ -853,6 +1351,12 @@ feat:
     libraryDialog:
       preview:
         backButton: Terug naar bibliotheek
+        cropLandscape: Liggende uitsnede
+        cropSquare: Vierkante uitsnede
+        cropWarning: In sommige gevallen snijdt Zetkin je afbeeldingen bij met ongeveer
+          deze verhoudingen.
+        cropWide: Wijde uitsnede
+        previewsSection: Previews
         useButton: Gebruik
       title: Bibliotheek
     searching:
@@ -907,11 +1411,34 @@ feat:
               label: Swedish Personnummer
         enum:
           header: Wijs waarden toe aan opties
+          none: Geen
           numberOfRows: '{numRows, plural, =1 {1 row} other {# rows}}'
           value: Waarde
+        genders:
+          label: Gender
+          selectLabels:
+            f: Vrouw
+            m: Man
+            o: Anders
+            unknown: Onbekend
         ids:
+          confirmIDChange:
+            description: Je staat op het punt om de import-ID te wijzigen van
+              {currentImportID} naar {newImportID}.
+            title: Bevestig wijziging van import-ID
           externalIDInfo: Een extern ID is een ID van een ander systeem. Je kunt het
             gebruiken om personen te vinden in Zetkin.
+          field:
+            email: E-mail
+            ext_id: Externe-ID
+            id: Zetkin-ID
+          importCheckboxDescription: Dit veld zal gebruikt worden om mensen te vinden die
+            al in Zetkin staan, elke regel zou idealiter een unieke waarden
+            bevatten.
+          importCheckboxLabel: Gebruik {importID} als import-ID
+          importID: Import-ID
+          skipRowDescription: Er zullen geen nieuwe mensen worden aangemaakt
+          wrongEmailFormatWarning: Er zijn waarden in deze kolom die geen geldige E-mailadressen zijn.
           wrongIDFormatWarning: De waarde in deze kolom zijn geen of voldoen niet aan de
             standaard voor Zetkin ID's (cijfers).
           zetkinIDInfo: Zetkin ID is de ID van een persoon in Zetkin. Zit in het bestand
@@ -920,6 +1447,7 @@ feat:
           guess: Gok de organisaties
           header: Wijs waarden toe aan organisaties
           organizations: Organisatie
+          scoreImperfect: Dit is geen perfecte match
           showOrganizationSelectButton: Wijs toe aan...
           status: Status
         tags:
@@ -927,11 +1455,13 @@ feat:
           guess: Raad tags
           header: Wijs waarden toe aan tags
           numberOfRows: '{numRows, plural, =1 {1 row} other {# rows}}'
+          scoreImperfect: Dit is geen perfecte match
           tagsHeader: Tags
       hide: Verberg
       mapping:
         configButton: Configureer
         defaultColumnHeader: Kolom {columnIndex}
+        email: E-mail
         emptyStateMessage: Start met toewijzen van bestands kolommen
         externalID: Externe ID
         fileHeader: bestand
@@ -964,6 +1494,7 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} and {numEmpty, plural, =1 {one
             empty row} other {# empty rows}}.'
           twoValuesNoEmpty: '{firstValue} and {secondValue}.'
+        notEnoughRows: Je bestand heeft niet genoeg rijen om data te kunnen importeren
         organization: Organisatie
         selectZetkinField: Importeren als...
         tags: Tags
@@ -982,8 +1513,18 @@ feat:
         zetkinID: Zetkin ID
       preview:
         columnHeader:
+          gender: Gender
           org: Organisatie
           tags: Tags
+        genders:
+          f: Vrouw
+          m: Man
+          o: Anders
+          unknown: Onbekend
+        ids:
+          email: E-mail
+          undefined: Externe ID
+          id: Zetkin ID
         next: Volgende
         noOrg: Geen organisatie
         noTags: Geen tags
@@ -995,6 +1536,7 @@ feat:
         header: Settings
         sheetSelectHelpText: Dit bestand heeft meerdere bladen. Kies er een.
         sheetSelectLabel: Blad
+        skipUnknown: Sla rijen met onbekende ID's over (nooit nieuwe mensen aanmaken)
       show: Toon
       statusMessage:
         done: Configureert import van {numConfiguredPeople, plural, =1 {1 person} other
@@ -1023,6 +1565,7 @@ feat:
         updated: '{number} {numPeople, plural, =1 {person} other {people}} zijn
           geüpdatet'
       people: '{number} {numPeople, plural, =1 {person} other {people}}'
+      peopleToSubOrg: '{orgName} ({num})'
     importStatus:
       completed:
         desc: Je data is geïmporteerd naar Zetkin
@@ -1049,6 +1592,10 @@ feat:
           singleRow: Dit probleem komt voor bij rij {row}
         invalidFormat:
           title: 'Verkeerd formaat of veld:  {field}'
+        invalidOrgCountry:
+          description: Dit maakt het onmogelijk om landcodes van telefoonnummers te
+            gokken. Neem contact op met support om dit op te lossen.
+          title: 'Mogelijk ongeldige landcode van organisatie: {code}'
         majorChange:
           description: Let op! Minimaal 30% worden aangepast. Check of de kolommen juist
             zijn geconfigureerd.
@@ -1060,6 +1607,9 @@ feat:
         noImpact:
           description: Dit kan gebeuren omdat er geen nieuwe data in het bestand zit, of
             wegens een onbekende fout.
+          descriptionSkipped: Dit kan zijn omdat het bestand geen nieuwe data bevat of
+            omdat alle nieuwe data in je instellingen overgeslagen is. In
+            zeldzame gevallen kan het ook komen door een onbekende foutmelding.
           title: Deze import heeft geen effect
         ok:
           description: Zorg dat de samenvatting er goed uit ziet en klik dan op 'import'.
@@ -1115,8 +1665,13 @@ feat:
           people}}.
   joinForms:
     defaultTitle: Naamloos formulier
+    deleteJoinForm:
+      success: '{title} is verwijderd'
+      title: Verwijder inschrijfformulier
+      warning: Weet je zeker dat je "{title}" wil verwijderen?
     embedding:
       copyLink: Copy embed URL
+      delete: Verwijder
       formSubmitted: Formulier ingediend
       linkCopied: Embed URL gekopieerd
       openLink: Bezoek nu
@@ -1126,6 +1681,7 @@ feat:
         addField: Veld toevoegen
         description: Beschrijving
         requireEmailVerification: Mailverificatie nodig
+        shareWithSuborgs: Deel met suborganisaties
         title: Titel
       title: Bewerk formulier
     forms: Formulieren
@@ -1174,6 +1730,8 @@ feat:
       editButton: Wijzig
       ellipsisMenu:
         convert: Wijzig naar...
+        deletion:
+          delete: Verwijder "{instanceTitle}"
       expandButton: Uitklappen
       markedCompleteLabel: Markeer als compleet {relativeTime}
       newInstance:
@@ -1234,7 +1792,7 @@ feat:
         isOperator: is
         milestoneLabel: Milestone
         personLabel: persoon
-        tagLabel: tag
+        tagLabel: Tag
       menu:
         downloadCsv: Download {pluralLabel} als .CSV
         downloadXlsx: Download {pluralLabel} als Excelbestand
@@ -1270,7 +1828,11 @@ feat:
   home:
     activityList:
       actions:
+        areaAssignment: Doe mee
         call: Start met bellen
+        connectAndSignUp: Verbind & registreer
+        details: Lees meer
+        loginToSignUp: Log in om je op te geven
         signUp: Aanmelden
         undoSignup: Aanmelden annuleren
       emptyListMessage: Je hebt geen activiteiten
@@ -1290,20 +1852,81 @@ feat:
       filterButtonLabels:
         organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {#
           organizations}}'
+        selectDate: Kies een datum
         thisWeek: Deze week
         today: vandaag
         tomorrow: morgen
     defaultTitles:
+      areaAssignment: Gebiedstoewijzing zonder titel
       callAssignment: Belopdracht zonder titel
       event: Evenement zonder titel
       noLocation: Geen fysieke locatie
     footer:
       privacyPolicy: Privacy policy
+    myOrgs:
+      followButton: ' Volgen'
+      organizeButton: Organize
+      unfollowButton: Ontvolgen
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Voeg een e-mailadres aan je account toe om in te kunnen loggen
+            met een wachtwoord.
+          changeInstructions: Neem contact op via info@zetkin.org om je e-mailadres aan te passen.
+          errorText: Er heeft zich een fout voorgedaan. Probeer het opnieuw of neem
+            contact op met de Zetkin Foundation voor ondersteuning
+          label: E-mailadres
+          saveButton: Opslaan
+        header: Accountinstellingen
+      appPreferences:
+        header: Appvoorkeuren
+        lang:
+          auto: Automatisch (geconfigureerd in browser)
+          label: Taal
+          saveButton: Opslaan & herladen
     tabs:
       feed: Alle gebeurtenissen
       home: Mijn activiteiten
+      orgs: Mijn organisaties
+      settings: Instellingen
     title: Mijn Zetkin
+    ics:
+      joinEvent: 'Doe hier mee met het evenement: {eventLink}'
+    newLandingPageAlert:
+      description: 'Als je op zoek bent naar de organizer-paginas: die kun je vanaf nu
+        vinden door op de knop in onderstaande header te drukken.'
+      title: Dit is je nieuwe landingspagina
   organizations:
+    allEventsList:
+      emptyList:
+        message: Kon geen evenementen vinden
+        removeFiltersButton: Wis filters
+      filterButtonLabels:
+        locations: '{count} locaties'
+        selectDate: Kies een datum
+        thisWeek: Deze week
+        today: Vandaag
+        tomorrow: Morgen
+    authDialog:
+      cancelButton: Annuleren
+      content: Je hebt een Zetkin-account nodig op je voor evenementen op te geven.
+      label: Registreer
+      loginButton: Log in & kom terug
+    eventPage:
+      cancelSignup: Annuleer registratie
+      cancelledHeader: Dit evenement is geannuleerd
+      cancelledParagraph: Je kunt je niet meer opgeven en als je je had opgegeven
+        wordt je aanwezigheid niet meer verwacht.
+      contactPerson:
+        default: '{name} is de contactpersoon'
+        you: Jij bent de contactpersoon
+      defaultTitle: Evenement zonder titel
+      haveAccount: Ik heb een account
+      loading: Laden...
+      noDescription: Deze gebeurtenis heeft geen omschrijving
+      noLocation: Geen fysieke locatie
+      partOfProject: Onderdeel van {projectLink}
+      today: Vandaag
     gen3:
       description: Dit is de nieuwe (generatie 3) organizer-webapp. Als je gewend bent
         aan de oude, vind je hier veel nieuwe functies en een verbeterde
@@ -1311,6 +1934,29 @@ feat:
         even blijven gebruiken.
       gen2Button: Ga naar de oude interface
       title: Welkom bij de nieuwe Zetkin!
+    home:
+      footer:
+        privacyPolicy: Privacybeleid
+      header:
+        connect: Verbind
+        follow: Volg
+        login: Log in & verbind
+        organize: Organize
+        unfollow: Ontvolg
+      map:
+        viewInList: Bekijk in lijst
+        viewOnMap: Bekijk op de kaart
+      menu:
+        logout: Uitloggen
+        myZetkin: Mijn Zetkin
+        organize: Organize
+        settings: Instellingen
+      tabs:
+        calendar: Kalender
+        suborgs: Verken
+    noEventsBlurb:
+      description: '{org} heeft geen geplande evenementen.'
+      headline: Er zijn geen geplande evenementen
     notOrganizer:
       description: Dit onderdeel van Zetkin is alleen beschikbaar voor gebruikers die
         organisatortoegang hebben gekregen van een andere medewerker van de
@@ -1319,6 +1965,9 @@ feat:
         Zetkin-medewerker of met de Zetkin Foundation.
       myPageButton: Ga naar activisten-portaal
       title: Je hebt geen toegang als organizer
+    overview:
+      suborgs:
+        title: Sub-organisaties
     page:
       title: 'Selecteer organisatie:'
     sidebar:
@@ -1330,7 +1979,18 @@ feat:
       recent:
         clear: Wis
         title: Recente organisaties
+    signupChoiceModal:
+      description: Gebruik je Zetkin-account om je voor een evenement op te geven. Heb
+        je geen account? Geen zorgen, dan kun je je alsnog opgeven.
+      title: Hoe wil je je opgeven?
+      withAccount: Met account
+      withoutAccount: Zonder account
+    subOrgEventBlurb:
+      headline: Graaf dieper
+      showButton: Toon alle gebeurtenissen.
   profile:
+    customFields:
+      notEditable: Dit veld kan niet door je organisatie bewerkt worden.
     delete:
       button: Verwijder persoon
       confirm: Weet u zeker dat u {name} uit {org} en alle gerelateerde organisaties
@@ -1345,9 +2005,25 @@ feat:
     editPersonHeader: Bewerk {person}
     ellipsisMenu:
       merge: Voeg samen met...
+    genders:
+      f: Vrouw
+      m: Man
+      o: Anders
+      unknown: Onbekend
     journeys:
       addButton: Start nieuwe journey
       title: Journeys
+    notes:
+      addNoteButton: Notitie toevoegen
+      cancelButton: Annuleer
+      note:
+        author: '{authorName} heeft een aantekening gemaakt'
+        delete: Verwijder
+        deleteWarningDescription: Weet je zeker dat je deze aantekening over {name} wil
+          verwijderen? Dit kan niet ongedaan gemaakt worden.
+        deleteWarningTitle: Verwijder aantekening
+      placeHolder: Maak een aantekening
+      title: Aantekeningen
     numberOfChangesMessage: Dit update {number, plural, =1 {1 field} other {# fields}}
     organizations:
       add: Voeg nieuwe sub-organisatie toe
@@ -1355,30 +2031,342 @@ feat:
       removeError: Deze organisatie kon niet worden verwijderd
       title: Organisaties
     resetButton: Reset
+    role:
+      noRole: Geen rol
     saveButton: Bewaar
+    surveySubmissions:
+      showMore: + {numExtra} meer
+      title: Formulierinzendingen
     tabs:
       manage: Beheer
       profile: Profiel
-      timeline: Tijdlijn
     tags:
       createAndApplyLabel: Maak en pas toe
     user:
       hasAccount: Connected to a Zetkin-account
       noAccount: Not connected to a Zetkin-account
+  projects:
+    activeProjects:
+      header: Actief
+    activitiesOverview:
+      button: Doorzoek alle activiteiten
+      empty: Op deze dag staat niets gepland
+      endsTomorrow: eindigt morgen
+      extraActivities: + {numExtra} meer
+      goToActivities: Bekijk alle aankomende activiteiten.
+      noActivities: Er zijn deze week geen activiteiten.
+      noDescription:
+        addOneNow: Voeg er nu een toe.
+        text: Er is nog geen omschrijving voor dit evenement. {addOneNow}
+      nothingTomorrow: Er staat niets gepland voor morgen
+      startsTomorrow: Begint morgen
+      subtitles:
+        endsLater: Eindigt {relative}
+        endsToday: Eindigt vandaag
+        sentEarlier: Verzonden naar {relative}
+        sentLater: Moet verzonden worden naar {relative}
+        startsLater: Begint {relative}
+        startsToday: Begint vandaag
+      thisWeekCard: Ook deze week
+      title: Aankomende activiteiten
+      todayCard: Vandaag
+      tomorrowCard: Morgen
+    activityList:
+      eventItem:
+        contact: Geen contactpersoon toegewezen
+        locations: '{count} locaties'
+        reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
+          hebben nog geen herinnering ontvangen'
+        signups: Er zijn nog inschrijvingen in behandeling
+    all:
+      cardAriaLabel: Open {title} project
+      cardCTA: Ga naar project
+      create: Maak nieuw project
+      filter:
+        areaAssignments: Gebiedstoewijzigingen
+        calls: Bel opdrachten
+        emails: E-mails
+        filter: Filter resultaten
+        standalones: Op zichzelf staande gebeurtenissen
+        surveys: Vragenlijsten
+      header: Projecten
+      indefinite: Onbepaald
+      projectFilterPlaceholder: Typ om projecten te filteren
+      unsorted: Ongesorteerde projecten
+      upcoming: '{numEvents, number} aankomende gebeurtenissen.'
+    allProjects:
+      noActivities: Als je organisatie activiteiten heeft die niet tot een project
+        behoren, worden deze hier weergegeven.
+      viewArchive: Bekijk archief
+    archivedProjects:
+      header: Gearchiveerd
+      hideShowButton:
+        hide: Verberg gearchiveerde projecten
+        show: Toon gearchiveerde projecten
+    assigneeActions: Acties voor verantwoordelijke persoon
+    calendarView: Bekijk alles in kalender
+    changeProjectDialog:
+      moveButtonLabel: Verplaats
+    createButton:
+      createActivity: Maken
+      createAreaAssignment: Gebiedstoewijzing
+      createCallAssignment: Bel opdracht
+      createEmail: E-mail
+      createEvent: Gebeurtenis
+      createSurvey: Vragenlijst
+      createTask: Taak
+    events: Gebeurtenissen
+    feedback:
+      copy: Het verzamelen van feedback (tijdens bel-acties of op zichzelf staand) kan
+        je helpen efficiënter te werken
+      create: Vragenlijst maken
+      heading: Feedback en vragenlijsten (niet geconfigureerd)
+    form:
+      archiveProject:
+        archive: Archiveer project
+        unarchive: Breng terug uit archief
+      createAreaAssignment:
+        defaultQuestion: Heb je de taak volbracht?
+      createCallAssignment:
+        newCallAssignment: Mijn bel-opdracht
+      createEmail:
+        newEmail: E-mail zonder titel
+      createProject:
+        create: Project maken
+        error: Er is een fout opgetreden bij het aanmaken van het project
+        newProject: Mijn project
+      createSurvey:
+        newSurvey: Mijn vragenlijst
+      createTask:
+        title: Taak aanmaken
+      deleteProject:
+        cancel: Annuleren
+        error: Er is een error opgetreden tijdens het verwijderen van het project
+        submitButton: Bevestig verwijdering
+        title: Verwijder project
+        warning: Weet je zeker dat je dit project wilt verwijderen? Deze handeling kun
+          je niet ongedaan maken.
+      description: Beschrijving
+      edit: Bewerk project
+      editProjectTitle:
+        error: Error updaten project titel
+        success: Project titel geüpdatet
+      manager:
+        label: Project manager
+      name: Naam
+      requestError: Er is een error opgetreden. Gelieve opnieuw te proberen.
+      required: Vereist
+      status:
+        draft: Voorlopige versie
+        heading: Status
+        published: Gepubliceerd
+      visibility:
+        heading: Zichtbaarheid
+        private: Privé
+        public: Openbaar
+    indefinite: Nog onbepaalde tijdlijn
+    layout:
+      activities: Activiteiten
+      allProjects: Alle Projecten & Activiteiten
+      archive: Archiveren
+      calendar: Kalender
+      insights: Inzichten
+      overview: Overzicht
+    linkGroup:
+      createActivity: Voeg toe
+      createAreaAssignment: Gebiedstoewijzing
+      createCallAssignment: Bel opdracht
+      createEmail: E-mail
+      createEvent: Gebeurtenis
+      createSurvey: Vragenlijst
+      createTask: Taak
+      public: Openbare pagina
+      settings: Instellingen bewerken
+    mobilization:
+      copy: Het organiseren van een bel-actie om je leden te mobiliseren zal de
+        deelname enorm verhogen
+      create: Bel-opdracht aanmaken
+      heading: Mobilisering en outreach (niet geconfigureerd)
+    noManager: Geen project manager
+    publicProjectPage:
+      calendarLinkCopied: Succesvol agenda-URL gekopieerd
+      copyIcsUrl: Kopieer agenda-URL
+      eventList:
+        emptyList:
+          message: Kon geen evenementen vinden
+          removeFiltersButton: Wis filters
+        filterButtonLabels:
+          locations: '{count} locaties'
+          selectDate: Kies een datum
+          thisWeek: Deze week
+          today: Vandaag
+          tomorrow: Morgen
+        noEventsBlurb:
+          description: '{project} heeft geen geplande evenementen.'
+          headline: Er zijn geen evenementen gepland
+      map:
+        viewInListButton: Bekijk in lijst
+        viewOnMapButton: Bekijk op kaart
+    shared:
+      cta: Ga naar project
+      noActivities: Alle lopende activiteiten die met je organisatie worden gedeeld,
+        worden hier weergegeven.
+      noArchives: Alle verlopen activiteiten die met je organisatie worden gedeeld,
+        worden hier weergegeven.
+      title: Met ons gedeeld
+    sharedLayout:
+      alertMsg: Dit project bevat alleen activiteiten die door andere organisaties
+        worden gedeeld. Je kunt deze bekijken, maar niet wijzigen.
+      subtitle: '{numOfActivities, plural, =1 {1 activity} other {# activities}}'
+      tabs:
+        activities: Activiteiten
+        archive: Archief
+        overview: Overzicht
+      title: Met ons gedeeld
+    singleProject:
+      filterActivities: Typ om te filteren
+      noActivities: Er staan nog geen activiteiten in dit project.
+      noSearchResults: Je filters hebben geen resultaten opgeleverd.
+      showPublicPage: Toon openbare aanmeld-pagina.
+      status:
+        archived: Gearchiveerd
+        draft: Concept
+        private: Privé
+        public: Publiek
+      viewArchive: Bekijk archief
+    taskLayout:
+      tabs:
+        assignees: Verantwoordelijke personen
+        insights: Inzichten
+        summary: Samenvatting
+    tasks: Taken
+    urlCard:
+      nowAccepting: Accepteert nu registraties via deze link
+      open: Open voor registraties
+      preview: Preview project
+      previewPortal: Preview project in activistenportaal
+      visitPortal: Bekijk project in activistenportaal
+      willAccept: Accepteert registraties via deze link
   search:
     error: Er is een fout opgetreden
     label: Zoek
     noResults: Geen resultaten
     placeholder: Type iets om te zoeken
     results:
-      callassignment: Bel-opdracht
-      people: Personen
-      person: Persoon
       project: Project
-      survey: Vragenlijst
-      task: Taak
-      view: Lijst
   settings:
+    email:
+      themes:
+        addTheme: Maak een nieuw thema aan
+        delete:
+          action: Verwijder
+          confirmDialog:
+            confirmButton: Ja, verwijder Thema {themeId}
+            title: Verwijder Thema {themeId}?
+            warningText: Weet u zeker dat u Thema {themeId} wilt verwijderen? Dit kan niet
+              ongedaan worden gemaakt.
+        duplicateTheme: Dupliceer thema
+        overview:
+          description: Een thema bepaalt de algemene uitstraling en lay-out van je
+            e-mails, van kleuren en lettertypen tot afstand, knoppen en
+            inhoudsblokken.
+          title: Thema's
+        themeCard:
+          duplicate: Dupliceer
+          edit: Bewerk
+          title: Thema {themeId}
+        themeEditor:
+          jsonError: Ongeldige JSON
+          previewTitle: Preview
+          saveButton: Bewaar
+          tabs:
+            block: Blok
+            css: CSS
+            frame: Frame
+          title: Thema {themeId}
+        themePreview:
+          button: Meld je hier aan
+          heading:
+            paragraphPart1: Hallo
+            paragraphPart2: We nodigen u graag uit voor een paneldiscussie op 1 mei
+            paragraphPart3: 'Dit kun je verwachten:'
+          paragraph:
+            paragraph1: 'Een spook waart door Europa – het spook van het communisme. Alle
+              machten van het oude Europa hebben een heilig verbond gesloten om
+              dit spook te verdrijven: paus en tsaar, Metternich en Guizot,
+              Franse radicalen en Duitse politieagenten.'
+            paragraph2: Welke oppositiepartij is er niet door haar tegenstanders aan de
+              macht als communistisch bestempeld? En welke oppositie heeft niet
+              het verwijt van communisme teruggeslingerd naar de meer
+              progressieve oppositiepartijen, én naar haar reactionaire
+              tegenstanders?
+            paragraph3: 'Twee dingen volgen uit dit feit:'
+            paragraph4: Het communisme wordt nu al door alle Europese grootmachten erkend
+              als een macht op zich.
+            paragraph5: Het is hoog tijd dat communisten openlijk, voor de hele wereld, hun
+              opvattingen, doelen en strevingen publiceren en dat sprookje over
+              het spook van het communisme beantwoorden met een manifest van de
+              partij zelf.
+            paragraph6: Klik hier om het volledige manifest te lezen
+            paragraph7: hier
+        title: Thema's
+        unsavedChanges:
+          confirmLeaving: Verlaat pagina zonder op te slaan
+          warning: Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je de pagina
+            wilt verlaten?
+    fields:
+      access:
+        onlyThisOrg: Alleen deze organisatie
+        suborgRead: Suborganisaties kunnen zien
+        suborgReadAndWrite: Suborganisaties kunnen bewerken
+      accessTypes:
+        onlyThisOrg: Nee
+        suborgRead: Ja, ze kunnen de gegevens zien
+        suborgReadAndWrite: Ja, ze kunnen de gegevens zowel inzien als bewerken
+      confirmDeletion:
+        confirmButton: Ja, verwijder {fieldTitle}
+        title: '{fieldTitle} verwijderen?'
+        warningText: Weet u zeker dat u {fieldTitle} wilt verwijderen? Dit kan niet
+          ongedaan worden gemaakt.
+      create:
+        accessInput: Delen met suborganisaties?
+        accessInputHelper: Beheerders in deze organisatie kunnen deze gegevens van
+          personen altijd zowel inzien als bewerken.
+        createButton: Maak
+        errorMessage: Er is een onverwachte fout opgetreden bij het aanmaken van het
+          veld. Probeer het opnieuw. Als het blijft mislukken, neem dan contact
+          op met de ondersteuning.
+        optionsInput: Opties (gescheiden door komma's)
+        slugInput: Slug
+        slugInputHelper: Slugs moeten uniek zijn en mogen alleen bestaan uit a-z, 0-9 en _
+        title: Maak nieuw veld
+        titleInput: Titel
+        typeInput: Type
+      customFieldTypes:
+        date: Datum
+        enum: Opties
+        json: JSON
+        lnglat: Lengte- & breedtegraad
+        text: Tekst
+        url: URL
+      edit:
+        cancelButton: Annuleer
+        deleteButton: Verwijder veld
+        errorMessage: Veld kon niet geüpdatet worden
+        optionsInput: Opties (kommagescheiden)
+        saveButton: Opslaan
+        slugInput: Slug
+        title: '{fieldTitle} bewerken'
+        titleInput: Titel
+        typeInput: Type
+      list:
+        editButton: Bewerk
+        headers:
+          access: Toegang
+          slug: Slug
+          title: Titel
+          type: Type
+        title: Velden
     officials:
       addPerson:
         addAdmin: Add administrator
@@ -1392,6 +2380,7 @@ feat:
           name: Naam
         description: Beheerders hebben volledige toegang tot het maken, bewerken en
           verwijderen van elk type inhoud.
+        empty: Je hebt nog geen administrators toegevoegd.
         roleInheritance: Administrator in
         title: Administrator in
       organizers:
@@ -1400,11 +2389,9 @@ feat:
           name: Naam
         description: Organisatoren hebben voldoende rechten om bijvoorbeeld campagnes te
           organiseren en bestaande oproeptoewijzingen te beheren.
+        empty: Je hebt nog geen organizers toegevoegd.
         roleInheritance: Organizer in
         title: Organisers
-      settingsLayout:
-        access: Toegang
-        title: Settings
       tableButtons:
         demote: Demote
         promote: Promote
@@ -1414,6 +2401,11 @@ feat:
         subTitle: Gebruikers moeten verbinding maken met de organisatie voordat ze als
           functionaris toegang krijgen tot Zetkin.
       you: Jij
+    settingsLayout:
+      access: Toegang
+      email: Email
+      fields: Velden
+      title: Instellingen
   smartSearch:
     buttonLabels:
       add: Bewaar selectie
@@ -1452,10 +2444,26 @@ feat:
           description: Selecteer op taak-data
           title: Taken
       filters:
+        action_participation:
+          description: Wie heeft zich aangemeld of geboekt voor bepaalde evenementen?
+          title: Deelname aan een specifiek evenement
+        all:
+          description: Vind mensen op basis van de suborganisatie waar ze in zitten.
+          title: Iedereen in een suborganisatie
+        area:
+          description: Zoek gebaseerd op locatievelden binnen of buiten een geografisch
+            gebied
+          title: Locatie (gebied)
         call_history:
           description: Zoek naar mensen die gebeld, bereikt of geprobeerd zijn te bereiken.
           title: Belgeschiedenis
-        project_participation:
+        caller:
+          description: Zoek mensen die als beller opgegeven zijn.
+          title: Bellers
+        caller_participation:
+          description: Vind mensen die belletjes gelogt hebben als beller.
+          title: Bellers die in het verleden belletjes gelogt hebben
+        campaign_participation:
           description: Wie heeft zich aangemeld? Geboekt? Wie niet? Vind ze!
           title: Deelname bij gebeurtenissen
         email_blacklist:
@@ -1473,6 +2481,10 @@ feat:
         journey_subjects:
           description: Vind personen in een journey of die daar al klaar mee zijn
           title: Personen in een journey
+        official:
+          description: Zoek personen met organisator- of beheerderstoegang in een
+            organisatie
+          title: Gebaseerd op hun toegangsniveau
         person_data:
           description: Naam, adres, e-mail en meer!
           title: Persoonlijke info
@@ -1513,6 +2525,30 @@ feat:
         startWithSelect:
           'false': Een lege lijst
           'true': Een lijst van alle personen in de organisatie
+      allInSuborg:
+        examples:
+          one: Voeg iedereen toe die in de specifieke suborganisatie Littleton Local
+            Branch zit
+          two: Verwijder iedereen die in een suborganisatie zit.
+        inputString:
+          any: '{addRemoveSelect} iedereen die in {suborgScopeSelect} zit.'
+          multiple: '{addRemoveSelect} iedereen die in {suborgScopeSelect}:
+            {multipleSuborgsSelect} zit'
+          single: '{addRemoveSelect} everyone who is in {suborgScopeSelect}
+            {singleSuborgSelect}'
+        suborgScopeSelect:
+          any: een suborganisatie
+          multiple: een van de volgende suborganisaties
+          single: de specifieke suborganisatie
+      area:
+        examples:
+          one: Voeg mensen toe wiens thuisadres in het gebied Malmö ligt
+          two: Verwijder mensen wiens vestigingsadres buiten het gebied Kopenhagen ligt
+        inputString: '{addRemoveSelect} mensen wiens {lnglatFieldSelect} in
+          {withinOutsideSelect} het gebied {areaSelect}'
+        slice:
+          in: binnen
+          out: buiten
       callBlocked:
         inputString: '{addRemoveSelect} personen die zijn geblokt voor bellen om welke
           reden dan ook'
@@ -1533,29 +2569,29 @@ feat:
           {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes, plural, one {once} other {# times}}'
         minTimesInput: tenminste {input} {minTimes, plural, one {time} other {times}}
-      projectParticipation:
-        activitySelect:
-          activity: type "{activity}"
-          any: elk type
-        bookedSelect:
-          booked: is geboekt
-          signed_up: aangemeld
-        projectSelect:
-          any: elk project
-          project: project "{project}"
+      caller:
+        assignmentSelect:
+          any: een willekeurige opdracht
+          assignment: opdracht "{assignmentTitle}"
+          none: Deze organisatie heeft nog geen belopdrachten.
+        callerSelect:
+          assigned: zijn toegewezen als beller
+          notassigned: zijn niet toegewezen als beller
         examples:
-          one: Voeg mensen toe die zich aanmeldden voor gebeurtenissen in elk project of
-            van elk type op locatie 'De Dam' op elke tijd mogelijk
-          two: Verwijder personen die tot vandaag nog niet geboekt zijn voor
-            gebeurtenissen in een project van het type 'Posters ophangen' op een
-            locatie.
-        haveSelect:
-          in: heeft
-          notin: heeft niet
-        inputString: ''
-        locationSelect:
-          any: welke locatie dan ook
-          location: locatie "{location}"
+          one: Voeg mensen toe die op dit moment als bellers zijn toegewezen.
+      callerParticipation:
+        assignmentSelect:
+          any: een opdracht
+        callCount:
+          labels:
+            between: tussen
+            max: maximaal
+            min: ten minste
+            once: Ten minste één
+          preview:
+            between: Tussen {min} en {max} keer gebeld
+        examples:
+          one: Voeg mensen toe die minimaal 50 keer gebeld hebben
       emailBlacklist:
         inputString: '{addRemoveSelect} personen die geen mail zullen ontvangen vanwege
           {reasonSelect}'
@@ -1585,6 +2621,20 @@ feat:
           notSent: niet verstuurd
           opened: geopend
           sent: verstuurd
+      eventParticipation:
+        bookedSelect:
+          booked: geboekt
+          signed_up: |
+            Aangemeld
+        error: Er is een fout opgetreden bij het laden van evenementen
+        example: Voeg personen toe die zijn geboekt en een evenement hebben bijgewoond.
+        inputString: '{addRemoveSelect} personen die {bookedSelect} {statusSelect}
+          hebben voor {eventSelect}'
+        statusSelect:
+          any: afgezien van hun aanwezigheid
+          attended: en waren aanwezig
+          cancelled: en gecanceld
+          noshow: en is niet op komen dagen
       joinForm:
         anyForm: elk aanmeldformulier
         form: '"{title}"'
@@ -1620,6 +2670,15 @@ feat:
           in de organisatie {timeFrame}.'
         numPeople: '{numPeople, plural, one {person} other {people}}'
         numPeopleSelect: '{numPeopleSelect}'
+      official:
+        examples:
+          one: Voeg alle mensen toe die toegang hebben als organizer of administrator
+          two: Verwijder alle mensen die toegang hebben als administrator
+        inputString: '{addRemoveSelect} alle mensen die toegang hebben als {roleSelect}.'
+        roleSelect:
+          admin: beheerders
+          any: Organizer of administrator
+          organizer: organisatoren
       personData:
         ellipsis: ...
         examples:
@@ -1632,12 +2691,18 @@ feat:
           co_address: co-adres
           email: E-mail
           first_name: Voornaam
+          gender: gender
           last_name: Achternaam
           phone: Telefoonnummer
           remove: Verwijder dit criterium
           street_address: Straatnaam
           zip_code: Postcode
         fieldTuple: '{first} en {second}'
+        genders:
+          f: vrouw
+          m: man
+          o: anders
+          unknown: onbekend
         inputString: '{addRemoveSelect} iedereen met {criteria}.'
       personField:
         edit:
@@ -1655,6 +2720,7 @@ feat:
           text: '{fieldName} komt overeen met "{searchTerm}"'
           url: '{fieldName} komt overeen met "{searchTerm}"'
       personTags:
+        addAllFromGroupButton: Voeg allen toe
         condition:
           conditionSelect:
             all: alle
@@ -1675,6 +2741,7 @@ feat:
           one: "Voeg mensen toe met minstens één van de volgende tags: 'Lid', 'Activist'"
           two: "Verwijder personen met alle volgende tags: 'Bestuurslid'"
         inputString: '{addRemoveSelect} mensen met {condition} van de volgende tags: {tags}'
+        noGroup: Geen groep
       personView:
         examples:
           one: Voeg personen toe die in de lijst 'actieve leden 2022' voorkomen
@@ -1685,6 +2752,36 @@ feat:
         inputString: '{addRemoveSelect} personen uit {inSelect} de lijst {viewSelect}.'
         viewSelect:
           none: Deze organisatie heeft nog geen lijsten
+      projectParticipation:
+        activitySelect:
+          activity: type "{activity}"
+          any: elk type
+        bookedSelect:
+          booked: is geboekt
+          signed_up: aangemeld
+        examples:
+          one: Voeg mensen toe die zich aanmeldden voor gebeurtenissen in elk project of
+            van elk type op locatie 'De Dam' op elke tijd mogelijk
+          two: Verwijder personen die tot vandaag nog niet geboekt zijn voor
+            gebeurtenissen in een project van het type 'Posters ophangen' op een
+            locatie.
+        haveSelect:
+          in: heeft
+          notin: heeft niet
+        inputString: '{addRemoveSelect} personen die {haveSelect} {bookedSelect}
+          {statusSelect} voor evenementen in {projectSelect}, van
+          {activitySelect}, op {locationSelect}, {timeFrame}'
+        locationSelect:
+          any: welke locatie dan ook
+          location: locatie "{location}"
+        projectSelect:
+          any: elk project
+          project: project "{project}"
+        statusSelect:
+          any: afgezien van hun aanwezigheid
+          attended: en was aanwezig
+          cancelled: en gecanceld
+          noshow: en kwam niet opdagen
       random:
         addLimitRemoveSelect:
           add: voeg toe
@@ -1709,21 +2806,25 @@ feat:
           edit:
             callassignment_goal: '{querySelect} van bel-opdracht "{titleSelect}"'
             callassignment_target: '{querySelect} van bel-opdracht "{titleSelect}"'
+            email_target: '{querySelect} van e-mail "{titleSelect}"'
             none: '{querySelect}'
             standalone: '{querySelect} "{titleSelect}"'
           preview:
             callassignment_goal: De doelgroep  (purpose group) van van bel-opdracht "{queryTitle}"
             callassignment_target: De doelgroep (target group) van van bel-opdracht "{queryTitle}"
+            email_target: de doelgroep van e-mail "{queryTitle}"
             none: '{queryTitle}'
             standalone: Slim Zoeken opdracht "{queryTitle}"
           selectLabel:
             callassignment_goal: De doelgroep  (purpose group)
             callassignment_target: De doelgroep (target group)
+            email_target: de doelgroep
             none: een Slim Zoeken opdracht
             standalone: Slim Zoeken opdracht
           selectOptions:
             callassignment_goal: De doelgroep (purpose group) van een bel-opdracht
             callassignment_target: De doelgroep (target group) van een bel-opdracht
+            email_target: de doelgroep van een e-mail
             none: Deze organisatie heeft nog geen bel-opdrachten of Slim Zoeken vragen
             standalone: een zelfstandige Slim Zoeken opdracht
       surveyOption:
@@ -1778,17 +2879,17 @@ feat:
           none: Deze organisatie heeft nog geen vragenlijsten
           survey: Vragenlijst "{surveyTitle}"
       task:
-        projectSelect:
-          any: elk project
-          project: project "{project}"
-          in: in
         examples:
           one: Voeg mensen toe die de taak "Vertel het je vrienden" minstens één keer
             hebben voltooid
           two: Voeg mensen toe die vóór vandaag 2 tot 5 keer een taak in een project
             hebben genegeerd
         inputString: '{addRemoveSelect} people who have {taskStatusSelect}
-          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
+          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
+        projectSelect:
+          any: elk project
+          in: in
+          project: project "{project}"
         taskSelect:
           any: elke taak
           task: taak "{task}"
@@ -1884,6 +2985,7 @@ feat:
         ever: '{timeFrameSelect}'
         future: '{timeFrameSelect}'
         lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}'
+        onDate: '{onTimeFrameSelect} {onDateSelect}'
       preview:
         afterDate: na {afterDate}
         beforeDate: voor {beforeDate}
@@ -1892,6 +2994,7 @@ feat:
         ever: op elk moment
         future: in de toekomst
         lastFew: gedurende de laatste {days} {days, plural, one {day} other {days}}
+        onDate: op {onDate}
       timeFrameSelectLabel:
         afterDate: na
         beforeDate: voor
@@ -1900,6 +3003,7 @@ feat:
         ever: op elk moment
         future: in de toekomst
         lastFew: gedurende de laatste
+        onDate: op
       timeFrameSelectOptions:
         afterDate: na een bepaalde datum
         beforeDate: voor een bepaalde datum
@@ -1908,6 +3012,7 @@ feat:
         ever: op elk moment
         future: in de toekomst
         lastFew: onlangs
+        onDate: op een bepaalde datum
   surveys:
     addBlocks:
       choiceQuestionButton: Meerkeuzevraag
@@ -1919,6 +3024,23 @@ feat:
         bewerken vanaf de oorspronkelijke locatie.
       goOriginal: Ga naar het origineel
       notEditable: Deze vragenlijst hoort bij by {orgTitle}, je kunt deze niet bewerken
+    autoLink:
+      close: Sluit
+      columns:
+        matchedEmail: Overeenkomende email
+        matchedFirstName: Overeenkomende voornaam
+        matchedLastName: Overeenkomende achternaam
+        submissionEmail: Email
+        submissionFirstName: Voornaam
+        submissionLastName: Achternaam
+      error: Fout tijdens automatisch koppelen. ({msg})
+      linkSelected: Link geselecteerd
+      success: 'Automatisch gekoppeld: {count, plural, =1 {one submission} other {#
+        submissions}}!'
+      title: Beoordeel automatisch koppelbare inzendingen
+      tooltips:
+        notEnoughRowsSelected: U moet ten minste één rij selecteren om te kunnen starten
+        startAutoLinking: Start automatisch koppelen
     blocks:
       choice:
         addOption: Voeg optie toe
@@ -1982,9 +3104,45 @@ feat:
         subheader: Er zijn inzendingen ontvangen voor deze vragenlijst. Het bewerken van
           de vragenlijst kan problemen met de gegevens veroorzaken. Wees daarom
           voorzichtig.
+    insights:
+      error: Er is een onbekende fout opgetreden bij het laden.
+      export:
+        errorUnknown: Er is een onbekende fout opgetreden bij het exporteren.
+        toPdf: Exporteer als pdf
+        toPng: Exporteer als png
+      optionsFields:
+        displayInsights:
+          absoluteCount: Hoeveelheid
+          percentCount: Procent
+        subheader: In totaal zijn er {answerCount, plural, =1 {1 answer} other {#
+          answers}} en {totalSelectedOptionsCount, plural, =1 {1 selected
+          option} other {# selected options}}.
+        tabs:
+          barPlot: Staaf
+          piePlot: Taart
+        warningMultipleSelectedOptionsPie: >
+          Let op: bij deze vraag konden respondenten meer dan één antwoord
+          kiezen, en dat hebben {respondentCount, plural, =1 {1 respondent}
+          other {# respondenten}} gedaan. Dit kan de cirkeldiagram een vertekend
+          beeld geven.
+      textFields:
+        copyResponse:
+          copy: Kopieer naar clipboard
+          wasCopied: Gekopieerd!
+        subheader: In totaal waren er {answerCount, plural, =1 {1 answer} other {#
+          answers}}, {totalWordCount, plural, =1 {1 word} other {# words}} en
+          {totalUniqueWordCount, plural, =1 {1 unique word} other {# unique
+          words}}.
+        tabs:
+          responses: Inzending
+          wordCloud: Wolk
+          wordFrequencies: Staaf
     layout:
       actions:
+        createList: Maak lijst van inzendingen
         delete: Verwijder vragenlijst
+        duplicate: Dupliceer
+        move: Verplaats
         publish: Publiceer vragenlijst
         unpublish: De-publiceer vragenlijst
         warning: '"{surveyTitle}" wordt verwijderd.'
@@ -2020,7 +3178,13 @@ feat:
       subtitle: '{person} {date}'
     submissions:
       anonymous: anoniem
+      createPersonSubmit: Opslaan en linken
+      createPersonTitle: Creëer nieuw persoon
       dateColumn: Datum
+      delete: Verwijder
+      deleteSuccess: Succesvol verwijderd
+      deleteTitle: Verwijder inzending
+      deleteWarningText: Weet je zeker dat je deze enquêteinzending wil verwijderen?
       emailColumn: E-mail
       firstNameColumn: Voornaam
       lastNameColumn: Achternaam
@@ -2028,12 +3192,30 @@ feat:
       personRecordColumn: Respondent
       suggestedPeople: Voorgestelde personen
       unlink: Link verwijderen
+    surveyChangeProjectDialog:
+      error: 'Fout: De enquête kon niet naar het geselecteerde project worden
+        verplaatst.'
+      success: Enquête "{surveyTitle}" verplaatst naar "{projectTitle}"
+      title: Vragenlijst verplaatsen
     surveyDialog:
       add: Voeg toe
       cancel: Voeg niet toe
       description: De persoon die je wil koppelen, heeft geen e-mailadres, terwijl de
         vragenlijst-antwoorden dat wel hebben. Wil je de persoon toevoegen?
+      new: Nieuw
+      old: Oud
       title: Voeg mailadres toe
+    surveyDialogDifferentEmail:
+      description: De persoon die je net gekoppeld hebt heeft een ander e-mailadres
+        dan in het ingevulde formulier staat. Wil je het e-mailadres uit het
+        formulier instellen als het nieuwe e-mailadres voor dit persoon?
+      keep: Nee, bewaar oude e-mailadres
+      title: Update e-mailadres
+      update: Ja, update e-mail
+    surveyDuplicated:
+      error: 'Fout: Kon enquête niet dupliceren'
+      success: Je enquête is gedupliceerd
+      title: Enquête gedupliceerd
     surveyForm:
       accept: Ik accepteer de voorwaarden hieronder
       error: Er is iets misgegaan bij het indienen van je antwoorden. Probeer het
@@ -2051,6 +3233,7 @@ feat:
           organiseren en in overeenstemming met het privacybeleid van Zetkin.
         title: Privacy Policy
     surveyFormSubmitted:
+      retakeSurvey: Vul enquête opnieuw in
       text: Je reacties op "{title}" zijn verzonden.
       title: Vragenlijst ingediend
     surveySignature:
@@ -2063,7 +3246,11 @@ feat:
         anonymous: Teken anoniem
         email: Teken met naam en e-mail
         user: Teken als {person} with e-mail {email}
+    surveyToList:
+      error: Kon geen lijst maken van enquêteinzendingen vanwege een onbekende fout.
+      title: Inzendingen van {surveyTitle}
     tabs:
+      insights: Inzichten
       overview: Overzicht
       questions: Vragen
       submissions: Inzendingen
@@ -2076,6 +3263,10 @@ feat:
       openLink: '{numUnlink, plural, one {Link submission now} other {Link submissions
         now}}'
     unlinkedWarningAlert:
+      autoLink:
+        canBeAutoLinkedText: '{countStr, plural, =1 {1 submission} other {#
+          submissions}} kunnen automatisch worden gekoppeld.'
+        openDialogButton: Automatisch ingezonden links koppelen
       default:
         description: "{numUnlink, plural, one {One survey submission has not been linked to a Zetkin profile, which means that it won't be included when searching.} other {There are survey submissions that have not been linked to Zetkin profiles, which means that they won't be included when searching.}}"
         header: Niet-gekoppelde inzendingen
@@ -2112,6 +3303,14 @@ feat:
         none: Basis (geen waardes)
         text: Tekst waarden
       updateTagButton: Update
+    groupDialog:
+      deleteTitle: Verwijder "{groupName}"
+      deleteWarning: Weet je zeekr dat je deze groep wilt verwijderen? Het verwijderen
+        van een groep kan niet ongedaan gemaakt worden. Tags in deze groep
+        worden niet verwijderd maar blijven ontoegewezen.
+      editButton: Bewerk
+      editTitle: Bewerk groep
+      titleLabel: Groepsnaam
     manager:
       addTag: Voeg tag toe
       addValue: Voeg waarde toe voor "{tag}"
@@ -2130,6 +3329,10 @@ feat:
       title: tags
       ungroupedHeader: Geen groep
   tasks:
+    actions:
+      delete: Verwijder
+      edit: Bewerk
+      move: Verplaats
     assignees:
       completedStates:
         completed: Voltooid {time}
@@ -2160,6 +3363,7 @@ feat:
             city: Stad
             country: Land
             email: E-mailadres
+            gender: Genderidentiteit
             streetAddress: Straatadres
             zipCode: Postcode
         title: Demografische configuratie verzamelen
@@ -2182,10 +3386,10 @@ feat:
       title: Bewerk taak
     form:
       fields:
-        project: Campagne
         deadline: Deadline voor completering
         expires: Verloopdatum
         instructions: Instructies
+        project: Campagne
         published: Moment van publicatie
         reassignInterval: Opnieuw toewijzen na completering
         reassignIntervalOptions:
@@ -2237,6 +3441,10 @@ feat:
       draft: Draft
       expired: Verlopen
       scheduled: Ingepland
+    taskChangeProjectDialog:
+      error: 'Fout: De taak kon niet worden verplaatst naar het geselecteerde project'
+      success: Taak {taskTitle} is verplaatst naar {projectTitle}
+      title: Verplaats taak
     taskDetails:
       deadlineTime: Deadline tijdstip
       editButton: Bewerk
@@ -2317,7 +3525,7 @@ feat:
       tabs:
         duplicates: Kopieën
         incoming: Binnenkomend
-        joinForms: Voeg formulieren samen
+        joinForms: Aanmeldformulieren
         views: lijst
       title: Personen
     cells:
@@ -2364,6 +3572,7 @@ feat:
           columnTitleResponded: Geantwoord
           description: Voegt een reeks kolommen toe die doorgaans worden gebruikt om
             benader-werk te delegeren aan een bepaalde persoon.
+          keywords: ' '
           title: Delegeer
         email:
           description: Voeg kolom toe met mailadressen
@@ -2492,6 +3701,26 @@ feat:
     columnRenameDialog:
       save: Bewaar
       title: Titel
+    customFilters:
+      choose: Kies
+      date:
+        dayOfMonth:
+          label: Dag van de maand
+        month:
+          label: Maand
+          months:
+            January: Januari
+            February: Februari
+            March: Maart
+            April: April
+            May: Mei
+            June: Juni
+            July: Juli
+            August: Augustus
+            September: September
+            October: Oktober
+            November: November
+            December: December
     dataTableErrors:
       create_column: Het maken van de kolom ging fout
       delete_column: Het verwijderen van de kolom ging fout
@@ -2510,6 +3739,20 @@ feat:
       title: Verwijder lijst?
       warningText: Weet je zeker dat je de lijst wil verwijderen? Aantekeningen etc
         worden verwijderd (maar niet de personen).
+    deleteRowsDialog:
+      cancelButton: Annuleren
+      confirmButton: '{numPeople, plural, =1 {De persoon} other {# personen}}
+        definitief verwijderen'
+      confirmationInputLabel: Naam van organisatie
+      destructiveAlert: Dit is een permanente en destructieve handeling. Dit kan niet
+        ongedaan worden gemaakt. Lees de onderstaande informatie zorgvuldig door
+        voordat u verdergaat.
+      instruction: Typ {rootOrgSlug} in het onderstaande tekstvak om te bevestigen dat
+        u de gevolgen begrijpt.
+      tagetOrgWarning: Dit verwijdert alle gegevens van deze personen in
+        {rootOrgTitle} en alle onderliggende organisaties.
+      title: Wis alle gegevens van {numPeople, plural, =1 {one person} other {#
+        persons}}
     editViewTitleAlert:
       error: Error. Titel niet geüpdatet
       success: Geüpdatete titel!
@@ -2579,12 +3822,18 @@ feat:
         header: Oudere toevoegingen
         openButton: Toon
     toolbar:
+      bulk:
+        createList: Maak lijst van selectie
+        delete: Verwijder mensen uit organisatie
+        handleSelection: Selectie verwerken
+        removeFromList: Verwijder geselecteerde mensen uit lijst
       createColumn: Nieuwe kolom
     viewLayout:
       actions:
         share: Deel
       ellipsisMenu:
         delete: Verwijder lijst
+        duplicate: Dupliceren
         editQuery: Bewerk slim zoeken vraag
         makeDynamic: Omzetten naar slim zoeken lijst
         makeStatic:
@@ -2657,6 +3906,10 @@ zui:
   accessList:
     added: Toegevoegd door {sharer} {updated}
     removeAccess: Toegang verwijderen
+  autocomplete:
+    noOptionsDefaultText: Geen opties voor je zoekopdracht
+  breadcrumbs:
+    showMore: '{number} meer...'
   collapse:
     collapse: Inklappen
     expand: Uitklappen
@@ -2680,6 +3933,15 @@ zui:
       m: Man
       o: Anders
       unknown: Onbekend
+    location:
+      dialog:
+        clearButton: Locatie wissen
+        doneButton: Klaar
+        helperText: Breedte- en lengtegraadcoördinaten
+        mapInfo: Klik en sleep om de kaart te verschuiven. Knijp of scroll om te zoomen.
+          Klik of tik om een locatie op de kaart te selecteren.
+      helperText: Breedte- en lengtegraadcoördinaten
+      mapIconTooltip: Bewerk op kaart
     showAllFields: Laat alle velden zien
     submitLabel:
       add: Maak aan en voeg toe
@@ -2689,6 +3951,7 @@ zui:
     title:
       addToJourney: Maak een persoon aan en voeg deze toe aan {journey}
       addToList: Maak een persoon aan en voeg deze toe aan {list}
+      assignToAreaAssignment: Maak persoon aan en wijs toe aan {areaAss}
       assignToJourney: Maak een persoon aan en wijs deze toe aan {journey}
       caller: Maak een persoon aan en voeg deze als beller toe
       contact: Maak een persoon aan en wijs deze aan als contactpersoon
@@ -2706,7 +3969,9 @@ zui:
     title: Zoeken
   dataTableSorting:
     addButton: Voeg een kolom waarop je wilt sorteren toe
+    ascending: Oplopend
     button: Sorteer
+    descending: Aflopend
     hint: 'Hint: hou de {shiftKeyIcon} vast terwijl je op meerdere kolommen klikt'
     title: Sorteren
   dateRange:
@@ -2722,6 +3987,8 @@ zui:
     multiDayToday: Vandaag - {endDate}
     singleDay: '{date}'
     singleDayToday: Vandaag
+  drawerModal:
+    close: Sluiten
   duration:
     days: '{n, plural, =1 {1 day} other {# days}}'
     h: '{n}h'
@@ -2734,6 +4001,18 @@ zui:
       noEmpty: Dit kan niet leeg blijven
   editableImage:
     add: Klik om afbeelding toe te voegen
+  ellipsisMenu:
+    ariaLabel: Meer opties
+  eventWarningIcons:
+    contact: Er is geen contactpersoon toegewezen
+    reminders: '{numMissing, plural, =1 {Eén deelnemer} other {# deelnemers}} heeft
+      nog geen herinneringen ontvangen'
+    signUps: Er zijn openstaande aanmeldingen
+  expandableText:
+    showLess: Toon minder
+    showMore: Toon meer
+  footer:
+    privacyPolicy: Privacybeleid
   futures:
     errorLoading: Er is een foutsituatie opgetreden bij het inlezen van de data.
   header:
@@ -2742,6 +4021,9 @@ zui:
       expand: Uitklappen
   lists:
     showMore: Lees meer...
+  mobileOrganizeHeader:
+    sideBarMenuButtonDescription: Open zijbalkmenu
+    userMenuButtonDescription: Open gebruikersmenu
   orgScopeSelect:
     orgPlaceholder: Selecteer organisaties
     orgSelectionLabel: '{count} geselecteerd'
@@ -2751,9 +4033,21 @@ zui:
       suborgs: Alleen sub-organisaties
       this: Alleen {org}
   organizeSidebar:
+    collapse: Zijbalk inklappen
+    expand: Zijbalk uitklappen
     filter: Typ om te filteren
+    filterLabel: Filter organisaties
+    geography: Geografie
     home: Thuis
     journeys: Reizen
+    myPagesInfoText: Ga naar mijn pagina's
+    myPagesMenuItemLabel: Mijn pagina's
+    mySettingsMenuItemLabel: Mijn instellingen
+    organizationAvatarAltText: Organisatie-icoon
+    organizationSwitcher:
+      hide: Verberg organisatieswitcher
+      show: Toon organisatieswitcher
+    overview: Overzicht
     people: Mensen
     projects: Projecten en activiteiten
     search: Zoeken
@@ -2768,15 +4062,43 @@ zui:
     restrictedMode: Kan niet in gedeelde lijsten gewijzigd worden.
     searchResults: Zoekresultaten
   personSelect:
+    bulkAdd:
+      backButton: Terug
+      cancelButton: Annuleren
+      confirmTitle: Bevestig het toevoegen van mensen
+      fromView: Van '{viewTitle}'
+      openButton: Toevoegen in bulk
     keepTyping: Blijf doortypen om te zoeken
     noResult: Geen match met persoon gevonden
     search: Typ hier om te zoeken
     searching: Aan het zoeken...
+  privacyPolicyLink: https://zetkin.org/privacy
+  publicFooter:
+    hostingOrganization: Deze instance van Zetkin wordt gehost en beheerd door {name}
+    links:
+      foundation: Zetkin Foundation
+      privacy: Privacybeleid
+    text: Zetkin is een platform voor het organiseren van activisme. Zetkin wordt
+      ontwikkeld door de Zetkin Foundation die zich inzet voor een radicale
+      verandering in de maatschappij in een socialistische, feministische,
+      antiracistische en duurzame richting.
+  signUpChip:
+    booked: Je bent geboekt
+    callSignUp: '{name} heeft zich opgegeven'
+    needed: Je bent nodig
+    signedUp: Je hebt je ingeschreven
   snackbar:
     error: Oh nee, er ging iets mis
     info: ...
     success: Gelukt!
     warning: Let op!
+  statusChip:
+    cancelled: Geannuleerd
+    closed: Gesloten
+    draft: Concept
+    ended: Geëindigd
+    published: Gepubliceerd
+    scheduled: Ingepland
   submitOrCancel:
     cancel: Annuleer
     submit: Voeg toe
@@ -2784,8 +4106,14 @@ zui:
     thousands: '{num}K'
   timeSpan:
     multiDay: '{startDate}, {start} - {endDate}, {end}'
-    multiDayEndsToday: '{startDate}, {start} - Today, {end}'
+    multiDayEndsToday: '{startDate}, {start} - Vandaag, {end}'
     multiDayToday: Vandaag, {start} - {endDate}, {end}
     singleDay: '{date}, {start} - {end}'
     singleDayAllDay: Hele dag vandaag
     singleDayToday: Vandaag, {start} - {end}
+  timeZonePicker:
+    gmt: GMT
+    noOptionsText: Er zijn geen locaties gevonden voor je zoekopdracht
+    placeholder: |
+      Begin met typen om een locatie te zoeken
+    timeZone: Tijdzone
