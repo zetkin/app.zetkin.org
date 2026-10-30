@@ -5,6 +5,10 @@ on:
     branches:
       - 'release'
 
+concurrency:
+  group: release-image
+  cancel-in-progress: false
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -32,6 +36,37 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Determine release version
+        id: release-version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          OWNER_TYPE: ${{ github.event.repository.owner.type }}
+          PACKAGE_NAME: ${{ github.event.repository.name }}
+        run: |
+          release_date="$(date -u +%y%m%d)"
+
+          if [[ "$OWNER_TYPE" == "Organization" ]]; then
+            package_endpoint="/orgs/$OWNER/packages/container/$PACKAGE_NAME/versions"
+          else
+            package_endpoint="/users/$OWNER/packages/container/$PACKAGE_NAME/versions"
+          fi
+
+          latest_subversion="$({
+            gh api --paginate "$package_endpoint?per_page=100" \
+              --jq '.[].metadata.container.tags[]' 2>/dev/null || true
+          } | sed -n "s/^${release_date}\.\([0-9][0-9]*\)$/\1/p" \
+            | sort -n \
+            | tail -1)"
+
+          if [[ -z "$latest_subversion" ]]; then
+            next_subversion=0
+          else
+            next_subversion=$((latest_subversion + 1))
+          fi
+
+          echo "version=${release_date}.${next_subversion}" >> "$GITHUB_OUTPUT"
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -40,8 +75,8 @@ jobs:
           # The image will be tagged YYMMDD and YYMMDD-abcdef,
           # where abcdef is the shortform hash of the last commit
           tags: |
-            type=sha,prefix={{date 'YYMMDD'}}-
-            type=raw,value={{date 'YYMMDD'}}
+            type=sha,prefix=${{ steps.release-version.outputs.version }}-
+            type=raw,value=${{ steps.release-version.outputs.version }}
             type=raw,value=latest
 
       - name: Build and push Docker image
@@ -51,6 +86,8 @@ jobs:
           context: .
           file: ./env/frontend/Dockerfile
           push: true
+          build-args: |
+            ZETKIN_APP_VERSION=${{ steps.release-version.outputs.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
