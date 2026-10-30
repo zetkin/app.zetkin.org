@@ -394,6 +394,10 @@ export default makeMessages('feat.views', {
     addPlaceholder: m('Start typing to add person to list'),
     alreadyInView: m('Already in list'),
   },
+  loadError: {
+    message: m('This list could not be loaded. Please try again.'),
+    retry: m('Try again'),
+  },
   moveViewDialog: {
     cancel: m('Cancel'),
     emptyFolder: m('Empty folder'),
