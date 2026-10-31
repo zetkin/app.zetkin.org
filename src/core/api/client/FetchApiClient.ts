@@ -48,6 +48,10 @@ export default class FetchApiClient implements IApiClient {
 
     await assertOk(res);
 
+    if (res.status === 204) {
+      return null as DataType;
+    }
+
     const body = await res.json();
     return body.data;
   }
@@ -65,6 +69,10 @@ export default class FetchApiClient implements IApiClient {
     });
 
     await assertOk(res);
+
+    if (res.status === 204) {
+      return null as DataType;
+    }
 
     const body = await res.json();
     return body?.data;
@@ -88,6 +96,10 @@ export default class FetchApiClient implements IApiClient {
     const res = await this._fetch(path, options);
 
     await assertOk(res);
+
+    if (res.status === 204) {
+      return null as DataType;
+    }
 
     try {
       const body = await res.json();
@@ -114,6 +126,10 @@ export default class FetchApiClient implements IApiClient {
       },
       method: 'POST',
     });
+
+    if (res.status === 204) {
+      return null as ResultType;
+    }
 
     const body = (await res.json()) as RPCResponseBody<ResultType>;
 
