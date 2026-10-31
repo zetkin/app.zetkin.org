@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import NextLink from 'next/link';
-import { Avatar, Box, Button, Link, Typography } from '@mui/material';
+import { Avatar, Box, Button, Link, Tooltip, Typography } from '@mui/material';
+import { WarningAmber } from '@mui/icons-material';
 
 import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
@@ -9,6 +10,8 @@ import PaneHeader from 'utils/panes/PaneHeader';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJoinSubmission from '../hooks/useJoinSubmission';
 import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
+import usePotentialDuplicates from '../hooks/usePotentialDuplicates';
+import PotentialDuplicateDialog from '../components/PotentialDuplicateDialog';
 import { useMessages } from 'core/i18n';
 import ZUIDateTime from 'zui/ZUIDateTime';
 
@@ -23,6 +26,11 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
   const { approveSubmission } = useJoinSubmissionMutations(orgId);
+  const { data: potentialDuplicates } = usePotentialDuplicates(orgId);
+  const potentialDuplicate = potentialDuplicates?.find(
+    (dup) => dup.id == submissionId
+  );
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   if (!joinSubmission) {
     return null;
@@ -97,18 +105,46 @@ const JoinSubmissionPane: FC<Props> = ({ orgId, submissionId }) => {
         />
       </Box>
       {!joinSubmission.accepted && (
-        <Box display="flex" gap={1} justifyContent="stretch" my={4}>
+        <Box
+          alignItems="center"
+          display="flex"
+          gap={1}
+          justifyContent="stretch"
+          my={4}
+        >
           {/* TODO: Handle rejectButton click */}
           {/* <Button sx={{ flexGrow: 1 }} variant="outlined">
             {messages.submissionPane.rejectButton()}
           </Button> */}
           <Button
-            onClick={() => approveSubmission(submissionId)}
+            onClick={() => {
+              if (potentialDuplicate) {
+                setDialogOpen(true);
+              } else {
+                approveSubmission(submissionId);
+              }
+            }}
             sx={{ width: '50%' }}
             variant="contained"
           >
             {messages.submissionPane.approveButton()}
           </Button>
+          {potentialDuplicate && (
+            <Tooltip title={messages.submissionList.potentialDuplicate()}>
+              <WarningAmber color="warning" fontSize="small" />
+            </Tooltip>
+          )}
+          <PotentialDuplicateDialog
+            onClose={() => setDialogOpen(false)}
+            onSubmit={() => {
+              approveSubmission(submissionId);
+              setDialogOpen(false);
+            }}
+            orgId={orgId}
+            potentialDuplicate={
+              dialogOpen ? (potentialDuplicate ?? null) : null
+            }
+          />
         </Box>
       )}
       <Box>

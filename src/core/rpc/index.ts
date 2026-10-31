@@ -20,6 +20,7 @@ import { getEmailInsightsDef } from 'features/emails/rpc/getEmailInsights';
 import { renderEmailDef } from 'features/emails/rpc/renderEmail/server';
 import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCallAssignment';
 import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbedData';
+import { getPotentialDuplicatesDef } from 'features/joinForms/rpc/getPotentialDuplicates';
 import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
 import { submitHouseholdVisitsDef } from 'features/canvass/rpc/submitHouseholdVisits';
 import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
@@ -69,6 +70,7 @@ export function createRPCRouter() {
   rpcRouter.register(renderEmailDef);
   rpcRouter.register(createCallAssignmentDef);
   rpcRouter.register(getJoinFormEmbedDataDef);
+  rpcRouter.register(getPotentialDuplicatesDef);
   rpcRouter.register(createHouseholdsDef);
   rpcRouter.register(connectToOrgDef);
   rpcRouter.register(submitSurveysDef);
