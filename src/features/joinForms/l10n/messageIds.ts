@@ -37,6 +37,14 @@ export default makeMessages('feat.joinForms', {
     form: m('Form'),
     lastName: m('Last name'),
     noFilteringResults: m('Your filtering yielded no results.'),
+    potentialDuplicate: m('Potential duplicate'),
+    potentialDuplicateExisting: m<{ count: number }>(
+      '{count, plural, =1 {Similar looking person} other {Similar looking people}} in the database'
+    ),
+    potentialDuplicateSubmission: m('Submission'),
+    potentialDuplicateWarning: m<{ count: number }>(
+      '{count, plural, =1 {A similar looking person already exists} other {Similar looking people already exist}} in the database. Are you sure you want to approve this submission?'
+    ),
     rejectButton: m('Reject'),
     timestamp: m('Timestamp'),
   },
