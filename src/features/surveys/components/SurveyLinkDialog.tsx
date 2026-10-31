@@ -13,6 +13,7 @@ import {
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
+import hasEmailConflict, { normalizeEmail } from '../utils/hasEmailConflict';
 import usePersonMutations from 'features/profile/hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
@@ -32,7 +33,7 @@ const SurveyLinkDialog = ({
   const { orgId } = useNumericRouteParams();
   const { updatePerson } = usePersonMutations(orgId, person.id);
 
-  if (person.email && email !== person.email) {
+  if (normalizeEmail(person.email) && hasEmailConflict(email, person.email)) {
     return (
       <Dialog open={open}>
         <DialogTitle>{messages.surveyDialogDifferentEmail.title()}</DialogTitle>

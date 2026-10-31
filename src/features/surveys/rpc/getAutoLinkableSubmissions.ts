@@ -7,6 +7,7 @@ import {
   ZetkinSurveySubmission,
   ZetkinSurveySubmissionRespondent,
 } from 'utils/types/zetkin';
+import { normalizeEmail } from '../utils/hasEmailConflict';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -88,12 +89,17 @@ export const getAutoLinkableSubmissions = async (
   );
   const autoLinkable: AutoLinkCandidate[] = suggestions
     .map((sub) => {
+      const emailMatches = sub.suggestions.filter(
+        (sug) =>
+          normalizeEmail(sug.email) ===
+          normalizeEmail(sub.submission.respondent.email)
+      );
       return {
         submission: sub.submission,
         suggestions:
-          sub.suggestions.length <= 1
-            ? sub.suggestions
-            : sub.suggestions.filter((sug) => {
+          emailMatches.length <= 1
+            ? emailMatches
+            : emailMatches.filter((sug) => {
                 return (
                   sug.first_name.toLowerCase() ===
                     sub.submission.respondent.first_name.toLowerCase() &&
