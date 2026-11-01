@@ -16,6 +16,16 @@ import {
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import {
+  canUseIsSet,
+  Criterion,
+  criteriaFromFields,
+  DATA_FIELD_OPERATOR,
+  fieldsFromCriteria,
+  getDefaultCriteria,
+  getOperatorsForField,
+  isSubmittable,
+} from './utils';
 const localMessageIds = messageIds.filters.personData;
 
 // set default select option
@@ -33,11 +43,6 @@ interface PersonDataProps {
   onCancel: () => void;
 }
 
-interface Criterion {
-  field: DATA_FIELD;
-  value: string;
-}
-
 const PersonData = ({
   onSubmit,
   onCancel,
@@ -49,36 +54,37 @@ const PersonData = ({
     });
 
   const ALL_FIELDS = Object.values(DATA_FIELD);
-  const ALL_FIELDS_SORTED = ALL_FIELDS.sort((af1, af2) => {
-    return af1.localeCompare(af2);
-  });
 
-  // check which fields are present in the filter config, and load their key-value pairs into an array
-  const initialCriteria = ALL_FIELDS_SORTED.filter(
-    (f) => f in filter.config.fields
-  ).map((f) => ({ field: f, value: filter.config.fields[f] || '' }));
+  // A saved filter is loaded from its config. A new filter starts with an
+  // empty "first name matches" criterion, which must not be read as "is set".
+  const [criteria, setCriteria] = useState<Criterion[]>(() =>
+    'config' in initialFilter
+      ? criteriaFromFields(initialFilter.config.fields)
+      : getDefaultCriteria()
+  );
 
-  const [criteria, setCriteria] = useState<Criterion[]>(initialCriteria);
-
-  // check that there are no blank fields before submitting
-  const submittable = criteria.every((c) => c.value.length);
+  const submittable = isSubmittable(criteria);
 
   const currentFields = criteria.map((c) => c.field);
 
   useEffect(() => {
-    const fields = criteria.reduce((acc, c) => {
-      return { ...acc, [c.field]: c.value };
-    }, {});
     setConfig({
       ...filter.config,
-      fields,
+      fields: fieldsFromCriteria(criteria),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [criteria]);
 
   const addCriteria = (field: string) => {
     if (field !== REMOVE_FIELD) {
-      setCriteria([...criteria, { field: field as DATA_FIELD, value: '' }]);
+      setCriteria([
+        ...criteria,
+        {
+          field: field as DATA_FIELD,
+          operator: DATA_FIELD_OPERATOR.MATCHES,
+          value: '',
+        },
+      ]);
     }
   };
 
@@ -98,6 +104,17 @@ const PersonData = ({
     );
   };
 
+  const handleOperatorChange = (
+    operator: DATA_FIELD_OPERATOR,
+    c: Criterion
+  ) => {
+    setCriteria(
+      criteria.map((criterion) =>
+        criterion.field === c.field ? { ...criterion, operator } : criterion
+      )
+    );
+  };
+
   const handleSelectChange = (field: string, c: Criterion) => {
     if (field === REMOVE_FIELD) {
       setCriteria(criteria.filter((criterion) => criterion.field !== c.field));
@@ -112,10 +129,15 @@ const PersonData = ({
       if (c.field === DATA_FIELD.GENDER) {
         value = '';
       }
+      // Keep the operator unless the new field does not support it
+      const operator = canUseIsSet(field as DATA_FIELD)
+        ? c.operator
+        : DATA_FIELD_OPERATOR.MATCHES;
+
       setCriteria(
         criteria.map((criterion) => {
           return criterion.field === c.field
-            ? { field: field as DATA_FIELD, value }
+            ? { field: field as DATA_FIELD, operator, value }
             : criterion;
         })
       );
@@ -148,12 +170,14 @@ const PersonData = ({
     const globalOptions = ALL_FIELDS.filter((f) => !currentFields.includes(f));
     criteria.forEach((c) => {
       const options = [c.field].concat(globalOptions);
+      const operators = getOperatorsForField(c.field);
       existing = (
         <Msg
-          id={localMessageIds.fieldMatches}
+          id={localMessageIds.fieldCondition}
           values={{
             field: (
               <StyledSelect
+                data-testid={`PersonData-fieldSelect-${c.field}`}
                 onChange={(e) => handleSelectChange(e.target.value, c)}
                 value={c.field}
               >
@@ -169,8 +193,31 @@ const PersonData = ({
                 ))}
               </StyledSelect>
             ),
+            operator:
+              operators.length > 1 ? (
+                <StyledSelect
+                  data-testid={`PersonData-operatorSelect-${c.field}`}
+                  onChange={(e) =>
+                    handleOperatorChange(
+                      e.target.value as DATA_FIELD_OPERATOR,
+                      c
+                    )
+                  }
+                  value={c.operator}
+                >
+                  {operators.map((op) => (
+                    <MenuItem key={op} value={op}>
+                      <Msg id={localMessageIds.operatorSelect[op]} />
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : (
+                <Msg id={localMessageIds.operatorSelect.matches} />
+              ),
             value:
-              c.field === DATA_FIELD.GENDER ? (
+              c.operator === DATA_FIELD_OPERATOR.IS_SET ? (
+                ''
+              ) : c.field === DATA_FIELD.GENDER ? (
                 <StyledSelect
                   onChange={(e) => {
                     handleValueChange(e.target.value, c);
@@ -185,6 +232,7 @@ const PersonData = ({
                 </StyledSelect>
               ) : (
                 <StyledTextInput
+                  data-testid={`PersonData-valueInput-${c.field}`}
                   inputString={c.value} // for dynamic width
                   onChange={(e) => handleValueChange(e.target.value, c)}
                   value={c.value}
@@ -224,6 +272,8 @@ const PersonData = ({
           <Msg id={localMessageIds.examples.one} />
           <br />
           <Msg id={localMessageIds.examples.two} />
+          <br />
+          <Msg id={localMessageIds.examples.three} />
         </>
       )}
       renderSentence={() => (

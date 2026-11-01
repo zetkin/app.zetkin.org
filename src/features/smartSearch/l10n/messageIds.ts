@@ -556,8 +556,15 @@ export default makeMessages('feat.smartSearch', {
         one: m(
           "Add any person whose first name is 'Clara' and whose last name is 'Zetkin'."
         ),
+        three: m('Limit to people whose phone number is set.'),
         two: m('Remove any person whose city is Stockholm.'),
       },
+      fieldCondition: m<{
+        field: ReactElement;
+        operator: ReactElement;
+        value: ReactElement | string;
+      }>('{field} {operator} {value}'),
+      fieldIsSet: m<{ field: ReactElement }>('{field} is set'),
       fieldMatches: m<{ field: ReactElement; value: ReactElement | string }>(
         '{field} matches {value}'
       ),
@@ -587,6 +594,10 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         criteria: ReactElement | string | null;
       }>('{addRemoveSelect} any person whose {criteria}.'),
+      operatorSelect: {
+        is_set: m('is set'),
+        matches: m('matches'),
+      },
     },
     personField: {
       edit: {

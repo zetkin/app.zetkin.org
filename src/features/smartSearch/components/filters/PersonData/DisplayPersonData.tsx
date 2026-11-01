@@ -1,5 +1,7 @@
+import { canUseIsSet } from './utils';
 import {
   DATA_FIELD,
+  Gender,
   OPERATION,
   PersonDataFilterConfig,
   SmartSearchFilterWithId,
@@ -25,19 +27,28 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
     let existing;
     let criteriaString: JSX.Element | null = null;
     Object.values(DATA_FIELD).forEach((c) => {
+      if (!(c in fields)) {
+        return;
+      }
       const field = fields[c];
+      const fieldMsg = <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />;
 
-      if (field) {
+      // An empty value means "is set" (see ./utils.ts)
+      if (field === '' && canUseIsSet(c)) {
+        existing = (
+          <Msg id={localMessageIds.fieldIsSet} values={{ field: fieldMsg }} />
+        );
+      } else if (field) {
         existing = (
           <Msg
             id={localMessageIds.fieldMatches}
             values={{
-              field: <UnderlinedMsg id={localMessageIds.fieldSelect[c]} />,
+              field: fieldMsg,
               value: (
                 <UnderlinedText
                   text={
-                    field === fields.gender
-                      ? messages.genders[field || 'unknown']()
+                    c === DATA_FIELD.GENDER
+                      ? messages.genders[(field as Gender) || 'unknown']()
                       : field
                   }
                 />
@@ -45,20 +56,22 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
             }}
           />
         );
+      } else {
+        return;
+      }
 
-        if (criteriaString) {
-          criteriaString = (
-            <UnderlinedMsg
-              id={localMessageIds.fieldTuple}
-              values={{
-                first: criteriaString,
-                second: existing,
-              }}
-            />
-          );
-        } else {
-          criteriaString = existing;
-        }
+      if (criteriaString) {
+        criteriaString = (
+          <UnderlinedMsg
+            id={localMessageIds.fieldTuple}
+            values={{
+              first: criteriaString,
+              second: existing,
+            }}
+          />
+        );
+      } else {
+        criteriaString = existing;
       }
     });
     return criteriaString;

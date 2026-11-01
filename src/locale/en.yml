@@ -1631,7 +1631,10 @@ feat:
         ellipsis: ...
         examples:
           one: Add any person whose first name is 'Clara' and whose last name is 'Zetkin'.
+          three: Limit to people whose phone number is set.
           two: Remove any person whose city is Stockholm.
+        fieldCondition: '{field} {operator} {value}'
+        fieldIsSet: '{field} is set'
         fieldMatches: '{field} matches {value}'
         fieldSelect:
           alt_phone: alternative phone number
@@ -1652,6 +1655,9 @@ feat:
           o: other
           unknown: unknown
         inputString: '{addRemoveSelect} any person whose {criteria}.'
+        operatorSelect:
+          is_set: is set
+          matches: matches
       personField:
         edit:
           date: '{fieldSelect} is {timeFrame}'
