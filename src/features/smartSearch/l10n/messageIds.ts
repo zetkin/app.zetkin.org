@@ -556,7 +556,9 @@ export default makeMessages('feat.smartSearch', {
         one: m(
           "Add any person whose first name is 'Clara' and whose last name is 'Zetkin'."
         ),
-        three: m('Limit to people whose phone number is set.'),
+        three: m(
+          'Remove any person whose phone number is set, to keep only people without one.'
+        ),
         two: m('Remove any person whose city is Stockholm.'),
       },
       fieldCondition: m<{

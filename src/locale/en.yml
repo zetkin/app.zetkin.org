@@ -1631,7 +1631,7 @@ feat:
         ellipsis: ...
         examples:
           one: Add any person whose first name is 'Clara' and whose last name is 'Zetkin'.
-          three: Limit to people whose phone number is set.
+          three: Remove any person whose phone number is set, to keep only people without one.
           two: Remove any person whose city is Stockholm.
         fieldCondition: '{field} {operator} {value}'
         fieldIsSet: '{field} is set'
