@@ -17,7 +17,7 @@ const localMessageIds = messageIds.filters.emailBlacklist;
 
 export const MESSAGE_KEY_BY_REASON = {
   any: 'any',
-  bounced: 'allBounces',
+  bounce: 'allBounces',
   unsub_org: 'unsubOrg',
 } as const;
 
@@ -88,7 +88,7 @@ const EmailBlacklist = ({
                   <Msg id={localMessageIds.reasonSelect.unsubOrg} />
                 </MenuItem>
 
-                <MenuItem value="bounced">
+                <MenuItem value="bounce">
                   <Msg id={localMessageIds.reasonSelect.allBounces} />
                 </MenuItem>
 
