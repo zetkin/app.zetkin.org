@@ -138,7 +138,7 @@
     "@types/marked": "^4.0.3",
     "@types/mjml-browser": "4.15.0",
     "@types/negotiator": "^0.6.1",
-    "@types/node": "22",
+    "@types/node": "24",
     "@types/nprogress": "^0.2.0",
     "@types/papaparse": "^5.3.10",
     "@types/qrcode": "^1.5.6",
@@ -179,7 +179,7 @@
     "typescript-7": "npm:typescript@rc"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "lint-staged": {
     "*": [
