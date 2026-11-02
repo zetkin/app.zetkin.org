@@ -5,6 +5,7 @@ import * as query from './query';
 import * as surveys from './surveys';
 
 const choices: Record<CHOICES, ColumnChoice> = {
+  [CHOICES.CHANNEL_SUBSCRIPTION]: misc.channelSubscription,
   [CHOICES.FULL_NAME]: fields.fullName,
   [CHOICES.EMAIL]: fields.email,
   [CHOICES.PHONE]: fields.phone,

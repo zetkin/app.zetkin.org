@@ -50,6 +50,14 @@ export default makeMessages('feat.views', {
     title: m('People'),
   },
   cells: {
+    channelSubscription: {
+      hardBounce: m('Hard bounce'),
+      muted: m('Channel muted'),
+      orgMuted: m('Muted all emails from organization'),
+      received: m('Has received emails'),
+      softBounce: m('Soft bounce'),
+      subscribed: m('Subscribed'),
+    },
     localPerson: {
       alreadyInView: m('Already in list'),
       clearLabel: m('Unassign'),
@@ -106,6 +114,14 @@ export default makeMessages('feat.views', {
       },
     },
     choices: {
+      channelSubscription: {
+        description: m(
+          'See if each person is subscribed to an email channel, has muted it or bounced'
+        ),
+        keywords: m('email newsletter subscription channel mute bounce'),
+        noChannels: m('Your organization does not have any email channels.'),
+        title: m('Email channel'),
+      },
       delegate: {
         columnTitleAssignee: m('Assignee'),
         columnTitleContacted: m('Contacted'),
@@ -248,6 +264,7 @@ export default makeMessages('feat.views', {
       },
       defaultTitle: m('New Column'),
       fieldLabels: {
+        channel: m('Channel'),
         field: m('Field'),
         question: m('Question'),
         smartSearch: m('Smart Search'),

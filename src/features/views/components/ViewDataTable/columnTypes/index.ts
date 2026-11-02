@@ -2,6 +2,7 @@ import { KeyboardEvent } from 'react';
 import { GridColDef, MuiEvent } from '@mui/x-data-grid-pro';
 
 import IApiClient from 'core/api/client/IApiClient';
+import ChannelSubscriptionColumnType from './ChannelSubscriptionColumnType';
 import LocalBoolColumnType from './LocalBoolColumnType';
 import LocalPersonColumnType from './LocalPersonColumnType';
 import LocalQueryColumnType from './LocalQueryColumnType';
@@ -96,6 +97,7 @@ class UnsupportedColumnType implements IColumnType {
  * the value correctly.
  */
 const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
+  [COLUMN_TYPE.CHANNEL_SUBSCRIPTION]: new ChannelSubscriptionColumnType(),
   [COLUMN_TYPE.LOCAL_BOOL]: new LocalBoolColumnType(),
   [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
   [COLUMN_TYPE.LOCAL_QUERY]: new LocalQueryColumnType(),

@@ -7,6 +7,7 @@ import {
 import messageIds from 'features/views/l10n/messageIds';
 
 export enum CHOICES {
+  CHANNEL_SUBSCRIPTION = 'channelSubscription',
   DELEGATE = 'delegate',
   FULL_NAME = 'fullName',
   EMAIL = 'email',

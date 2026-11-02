@@ -45,6 +45,7 @@ export interface ZetkinViewColumnBase {
 }
 
 export enum COLUMN_TYPE {
+  CHANNEL_SUBSCRIPTION = 'channel_subscription',
   LOCAL_BOOL = 'local_bool',
   LOCAL_PERSON = 'local_person',
   LOCAL_QUERY = 'local_query',
@@ -58,6 +59,13 @@ export enum COLUMN_TYPE {
   SURVEY_RESPONSE = 'survey_response',
   SURVEY_SUBMITTED = 'survey_submitted',
   UNSUPPORTED = 'unsupported',
+}
+
+export interface ChannelSubscriptionViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.CHANNEL_SUBSCRIPTION;
+  config: {
+    channel_id: number;
+  };
 }
 
 export interface LocalBoolViewColumn extends ZetkinViewColumnBase {
@@ -147,6 +155,7 @@ export interface UnsupportedViewColumn extends ZetkinViewColumnBase {
 }
 
 export type ZetkinViewColumn =
+  | ChannelSubscriptionViewColumn
   | LocalBoolViewColumn
   | LocalPersonViewColumn
   | LocalQueryViewColumn

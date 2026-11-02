@@ -3,10 +3,12 @@ import {
   Description,
   EventNote,
   LocalOffer,
+  Notifications,
   Person,
   PersonAdd,
 } from '@mui/icons-material';
 
+import ChannelSubscriptionConfig from '../ChannelSubscriptionConfig';
 import { ColumnChoice } from './types';
 import DoubleIconCardVisual from '../DoubleIconCardVisual';
 import getUniqueColumnName from '../../../utils/getUniqueColumnName';
@@ -17,6 +19,19 @@ import oldTheme from 'theme';
 import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
 
 const { blue, purple, red } = oldTheme.palette.viewColumnGallery;
+
+export const channelSubscription: ColumnChoice = {
+  color: purple,
+  renderCardVisual: (color: string) => (
+    <SingleIconCardVisual color={color} icon={Notifications} />
+  ),
+  renderConfigForm: (props: {
+    existingColumns: ZetkinViewColumn[];
+    onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+  }) => (
+    <ChannelSubscriptionConfig onOutputConfigured={props.onOutputConfigured} />
+  ),
+};
 
 export const personTag: ColumnChoice = {
   color: blue,
