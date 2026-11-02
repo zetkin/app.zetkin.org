@@ -13,6 +13,7 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { stringToBool } from 'utils/stringUtils';
+import { useApiClient } from 'core/hooks';
 
 type Props = {
   org: ZetkinOrganization;
@@ -23,6 +24,7 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
   const [emailValidationError, setEmailValidationError] = useState(false);
   const [submitted, setSubmitted] = useState(false); // Currently only allows one submit per page load
   const env = useEnv();
+  const apiClient = useApiClient();
 
   // Reset error state when retrying to type email
   useEffect(() => {
@@ -68,34 +70,18 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                   }
 
                   const clientId = env.vars.ZETKIN_CLIENT_ID;
-                  const apiHost = env.vars.ZETKIN_API_HOST;
-                  const apiPort = env.vars.ZETKIN_API_PORT;
                   const ssl = stringToBool(env.vars.ZETKIN_USE_TLS);
-
                   const protocol = ssl ? 'https' : 'http';
-                  const apiHostAndPort =
-                    apiHost + (apiPort ? `:${apiPort}` : '');
-                  const apiBase = `${protocol}://${apiHostAndPort}/v2`;
 
                   const appHost = env.vars.ZETKIN_APP_HOST;
-                  const linkUri = `${protocol}://${appHost}/o/${org.id}/subscriptions`;
+                  const linkUri = `${protocol}://${appHost}/magic?redir=/o/${org.id}/subscriptions`;
 
-                  await fetch(`${apiBase}/email_tokens`, {
-                    body: JSON.stringify({
-                      client_id: clientId,
-                      email,
-                      link_uri: linkUri,
-                      org_id: org.id,
-                      scope: [
-                        'channel.list',
-                        'channel.read',
-                        'channel_preferences.update:own',
-                      ],
-                    }),
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    method: 'POST',
+                  await apiClient.post(`/api2/email_tokens`, {
+                    client_id: clientId,
+                    email,
+                    link_uri: linkUri,
+                    org_id: org.id,
+                    scope: ['level1'],
                   });
 
                   setSubmitted(true);

@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinOrganization, ZetkinUser } from 'utils/types/zetkin';
 import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsManagementPage';
 import SubscriptionsTokenRequestPage from 'features/public/pages/SubscriptionsTokenRequestPage';
 
@@ -10,18 +10,21 @@ type PageProps = {
   params: {
     orgId: string;
   };
-  searchParams: {
-    email?: string;
-  };
 };
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const { orgId } = params;
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
-  const email = searchParams.email;
+
+  let user: ZetkinUser | null;
+  try {
+    user = await apiClient.get<ZetkinUser>('/api/users/me');
+  } catch (e) {
+    user = null;
+  }
 
   let org: ZetkinOrganization | null = null;
   try {
@@ -30,13 +33,13 @@ export default async function Page({ params, searchParams }: PageProps) {
     return notFound();
   }
 
-  if (!email) {
+  if (!user) {
     return <SubscriptionsTokenRequestPage org={org} />;
   }
 
   return (
     <SubscriptionsManagementPage
-      email={email}
+      email={user.email}
       initialChannels={[
         {
           id: 234,

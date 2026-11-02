@@ -5,6 +5,7 @@ import { notFound, redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
 
 import requiredEnvVar from 'utils/requiredEnvVar';
+import { stringToBool } from 'utils/stringUtils';
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get('token');
@@ -34,7 +35,14 @@ export async function GET(request: NextRequest) {
   const client_secret = process.env.ZETKIN_CLIENT_SECRET;
 
   try {
-    const res = await fetch('http://api.dev.zetkin.org/v1/oauth/token', {
+    const protocol = stringToBool(process.env.ZETKIN_USE_TLS)
+      ? 'https'
+      : 'http';
+    const protocolPort = stringToBool(process.env.ZETKIN_USE_TLS) ? 443 : 80;
+    const host = process.env.ZETKIN_API_HOST;
+    const port = process.env.ZETKIN_API_PORT || protocolPort;
+
+    const res = await fetch(`${protocol}://${host}:${port}/v1/oauth/token`, {
       body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${token}`,
       headers: {
         authorization: 'Basic ' + btoa(`${client_id}:${client_secret}`),
