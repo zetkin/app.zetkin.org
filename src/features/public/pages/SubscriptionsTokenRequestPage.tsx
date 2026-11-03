@@ -22,13 +22,16 @@ type Props = {
 const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
   const [email, setEmail] = useState('');
   const [emailValidationError, setEmailValidationError] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // Currently only allows one submit per page load
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false); // Currently only allows one submit per page load
+  const [submissionError, setSubmissionError] = useState(false);
   const env = useEnv();
   const apiClient = useApiClient();
 
   // Reset error state when retrying to type email
   useEffect(() => {
     if (emailValidationError) {
+      setSubmissionError(false);
       setEmailValidationError(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,20 +79,27 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                   const appHost = env.vars.ZETKIN_APP_HOST;
                   const linkUri = `${protocol}://${appHost}/email-auth?redir=/o/${org.id}/subscriptions`;
 
-                  await apiClient.post(`/api2/email_tokens`, {
-                    client_id: clientId,
-                    email,
-                    link_uri: linkUri,
-                    org_id: org.id,
-                    scope: ['level1'],
-                  });
-
-                  setSubmitted(true);
+                  try {
+                    setLoading(true);
+                    await apiClient.post(`/api2/email_tokens`, {
+                      client_id: clientId,
+                      email,
+                      link_uri: linkUri,
+                      org_id: org.id,
+                      scope: ['level1'],
+                    });
+                    throw new Error('Wrong');
+                    setSuccess(true);
+                  } catch {
+                    setSubmissionError(true);
+                  } finally {
+                    setLoading(false);
+                  }
                 }}
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <ZUITextField
-                    disabled={submitted}
+                    disabled={loading || success}
                     error={emailValidationError}
                     helperText={
                       emailValidationError ? 'Email is invalid' : undefined
@@ -101,11 +111,12 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
 
                   <ZUIButton
                     actionType="submit"
-                    disabled={email.length === 0 || submitted}
-                    label={submitted ? 'Link requested' : 'Request link'}
+                    disabled={email.length === 0 || success}
+                    isLoading={loading}
+                    label={success ? 'Link requested' : 'Request link'}
                     variant="primary"
                   />
-                  {submitted && (
+                  {success && (
                     <ZUIAlert
                       button={{
                         label: 'Try again',
@@ -116,6 +127,13 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                       description={`If ${email} has an account, you will recieve a link to manage your subscription. Please allow a few minutes to recieve the link before trying again`}
                       severity="success"
                       title="Submitted!"
+                    />
+                  )}
+                  {submissionError && (
+                    <ZUIAlert
+                      description="Something went wrong when requesting an email, please try again!"
+                      severity="error"
+                      title="Error"
                     />
                   )}
                 </Box>
