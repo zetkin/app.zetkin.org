@@ -88,7 +88,6 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                       org_id: org.id,
                       scope: ['level1'],
                     });
-                    throw new Error('Wrong');
                     setSuccess(true);
                   } catch {
                     setSubmissionError(true);

@@ -1,10 +1,14 @@
 import { headers } from 'next/headers';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { getIronSession } from 'iron-session';
+import { cookies } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization, ZetkinUser } from 'utils/types/zetkin';
 import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsManagementPage';
 import SubscriptionsTokenRequestPage from 'features/public/pages/SubscriptionsTokenRequestPage';
+import { AppSession } from 'utils/types';
+import requiredEnvVar from 'utils/requiredEnvVar';
 
 type PageProps = {
   params: {
@@ -24,6 +28,14 @@ export default async function Page({ params }: PageProps) {
     user = await apiClient.get<ZetkinUser>('/api/users/me');
   } catch (e) {
     user = null;
+    const cookieStore = cookies();
+    const session = await getIronSession<AppSession>(cookieStore, {
+      cookieName: 'zsid',
+      password: requiredEnvVar('SESSION_PASSWORD'),
+    });
+    if (session.tokenData) {
+      return redirect(`/logout?redir=/o/${orgId}/subscriptions`);
+    }
   }
 
   let org: ZetkinOrganization | null = null;
