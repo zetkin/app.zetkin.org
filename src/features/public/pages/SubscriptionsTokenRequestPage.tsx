@@ -74,7 +74,7 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                   const protocol = ssl ? 'https' : 'http';
 
                   const appHost = env.vars.ZETKIN_APP_HOST;
-                  const linkUri = `${protocol}://${appHost}/magic?redir=/o/${org.id}/subscriptions`;
+                  const linkUri = `${protocol}://${appHost}/email-auth?redir=/o/${org.id}/subscriptions`;
 
                   await apiClient.post(`/api2/email_tokens`, {
                     client_id: clientId,
