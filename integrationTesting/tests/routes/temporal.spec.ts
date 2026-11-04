@@ -5,6 +5,7 @@ import SmokeEvent from '../../mockData/orgs/KPD/projects/ReferendumSignatures/ev
 import {
   addSessionCookie,
   expectRouteHealthy,
+  mockBetaRouteHandlers,
   setupFeatureFlags,
   setupSmokeApiMocks,
 } from './smokeUtils';
@@ -15,6 +16,7 @@ test.describe('Temporal without native browser support', () => {
     login();
     setupSmokeApiMocks(moxy);
     await addSessionCookie(context, appUri);
+    await mockBetaRouteHandlers(page);
 
     await page.addInitScript(() => {
       Object.defineProperty(globalThis, 'Temporal', {
