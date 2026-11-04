@@ -49,12 +49,7 @@ const PersonEmailPreferencesCard: FC<Props> = ({ orgId, person }) => {
     <ThemeProvider theme={newTheme}>
       <ZUIFuture
         future={preferencesFuture}
-        skeleton={
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
-            <Skeleton variant="rounded" width={190} />
-            <Skeleton height={300} variant="rounded" />
-          </Box>
-        }
+        skeleton={<Skeleton height={300} variant="rounded" />}
       >
         {(preferences) => (
           <EmailPreferencesSection
@@ -84,6 +79,7 @@ const EmailPreferencesSection: FC<
     useState<HTMLElement | null>(null);
 
   const name = `${person.first_name} ${person.last_name}`;
+  const hasChannels = preferences.channels.length > 0;
 
   const run = async (mutation: () => Promise<void>) => {
     try {
@@ -179,6 +175,11 @@ const EmailPreferencesSection: FC<
         {
           renderContent: () => (
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              {!hasChannels && (
+                <ZUIText color="secondary">
+                  {messages.emailPreferences.channels.empty({ name })}
+                </ZUIText>
+              )}
               {preferences.channels.map((preference, index) => {
                 const { channel, status } = preference;
                 const isMuted = status == 'muted';
@@ -219,7 +220,9 @@ const EmailPreferencesSection: FC<
               })}
             </Box>
           ),
-          subtitle: messages.emailPreferences.channels.description({ name }),
+          subtitle: hasChannels
+            ? messages.emailPreferences.channels.description({ name })
+            : undefined,
           title: messages.emailPreferences.channels.title(),
         },
         {
