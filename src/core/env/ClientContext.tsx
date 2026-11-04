@@ -16,6 +16,7 @@ import 'dayjs/locale/da';
 import 'dayjs/locale/nn';
 import 'dayjs/locale/sv';
 import 'dayjs/locale/nl';
+import 'temporal-polyfill/global';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment, { EnvVars } from 'core/env/Environment';
