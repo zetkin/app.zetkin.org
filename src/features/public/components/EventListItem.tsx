@@ -10,7 +10,6 @@ import MyActivityListItem from 'features/my/components/MyActivityListItem';
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
-import { removeOffset } from 'utils/dateUtils';
 import { timeSpanToString } from 'zui/utils/timeSpanString';
 import { EventSignupButton } from './EventSignupButton';
 
@@ -57,8 +56,8 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
           key: 'time',
           labels: [
             timeSpanToString(
-              new Date(removeOffset(event.start_time)),
-              new Date(removeOffset(event.end_time)),
+              Temporal.PlainDateTime.from(event.start_time),
+              Temporal.PlainDateTime.from(event.end_time),
               intl
             ),
           ],
