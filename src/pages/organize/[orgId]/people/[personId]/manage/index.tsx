@@ -40,7 +40,7 @@ const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
           {person?.first_name} {person?.last_name}
         </title>
       </Head>
-      <Grid container direction="row" spacing={6}>
+      <Grid container direction="row" spacing={3}>
         {hasEmailSettingsFeature && (
           <Grid
             size={{ lg: 6, xs: 12 }}
