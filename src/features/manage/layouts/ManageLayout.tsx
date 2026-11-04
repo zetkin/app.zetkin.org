@@ -1,0 +1,40 @@
+'use server';
+
+import { Box } from '@mui/material';
+import { FC, ReactNode } from 'react';
+
+import ManageSidebar from 'features/manage/components/ManageSidebar';
+import oldTheme from 'theme';
+
+type Props = {
+  children: ReactNode;
+  pathname: string;
+  title: string;
+};
+
+const ManageLayout: FC<Props> = ({ children, title, pathname }) => {
+  const pathParts = pathname.split('/').filter(Boolean);
+
+  const segment = pathParts[1] as 'users';
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="row"
+      height="100vh"
+      sx={{
+        [oldTheme.breakpoints.down('sm')]: {
+          paddingTop: '3.5rem',
+        },
+      }}
+      width="100vw"
+    >
+      <ManageSidebar segment={segment} title={title} />
+      <Box display="flex" flex={1} flexDirection="column" overflow="hidden">
+        {children}
+      </Box>
+    </Box>
+  );
+};
+
+export default ManageLayout;
