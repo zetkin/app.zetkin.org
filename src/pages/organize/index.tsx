@@ -1,23 +1,38 @@
-import { AutoAwesome } from '@mui/icons-material';
-import { Alert, AlertTitle, Box, Link, Typography } from '@mui/material';
-import NextLink from 'next/link';
+import { GroupWorkOutlined } from '@mui/icons-material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import { getUserOrgTreeDef } from 'features/organizations/rpc/getUserOrgTree';
 import messageIds from 'features/organizations/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { Msg, useMessages } from 'core/i18n';
-import UserOrganizations from 'features/organizations/components/OrganizationsList';
-import ZUILogo from 'zui/ZUILogo';
-import { useEnv } from 'core/hooks';
+import OrganizeHomeSidebar from 'features/organizations/components/OrganizeHomeSidebar';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['feat.organizations'],
+  localeScope: ['feat.organizations', 'zui'],
 };
 
-export const getServerSideProps: GetServerSideProps = scaffold(async () => {
+export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    const tree = await getUserOrgTreeDef.handler({}, apiClient);
+
+    if (tree.length == 1 && tree[0].children.length == 0) {
+      return {
+        redirect: {
+          destination: `/organize/${tree[0].id}/projects`,
+          permanent: false,
+        },
+      };
+    }
+  } catch (err) {
+    // Fall back to showing the organization picker
+  }
+
   return {
     props: {},
   };
@@ -25,39 +40,34 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 
 const OrganizePage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
-  const env = useEnv();
+  const theme = useTheme();
 
   return (
     <>
       <Head>
         <title>{messages.page.title()}</title>
       </Head>
-      <Box maxWidth={800} mx="auto" my={2}>
-        <Box textAlign="center">
-          <ZUILogo htmlColor="black" size={100} />
+      <Box display="flex" height="100vh">
+        <OrganizeHomeSidebar />
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          flexGrow={1}
+          justifyContent="center"
+          px={2}
+          textAlign="center"
+        >
+          <GroupWorkOutlined
+            sx={{ color: theme.palette.grey[400], fontSize: 128 }}
+          />
+          <Typography component="h1" mt={2} variant="h5">
+            <Msg id={messageIds.page.heading} />
+          </Typography>
+          <Typography color="secondary" mt={1}>
+            <Msg id={messageIds.page.description} />
+          </Typography>
         </Box>
-        <Box my={1}>
-          <Alert icon={<AutoAwesome fontSize="inherit" />} severity="info">
-            <AlertTitle>
-              <Msg id={messageIds.gen3.title} />
-            </AlertTitle>
-            <Typography>
-              <Msg id={messageIds.gen3.description} />
-            </Typography>
-            <Typography my={1}>
-              <NextLink
-                href={env.vars.ZETKIN_GEN2_ORGANIZE_URL || ''}
-                legacyBehavior
-                passHref
-              >
-                <Link>
-                  <Msg id={messageIds.gen3.gen2Button} />
-                </Link>
-              </NextLink>
-            </Typography>
-          </Alert>
-        </Box>
-        <UserOrganizations />
       </Box>
     </>
   );
