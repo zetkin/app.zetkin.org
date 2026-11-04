@@ -42,11 +42,14 @@ const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
       </Head>
       <Grid container direction="row" spacing={6}>
         {hasEmailSettingsFeature && (
-          <Grid size={{ lg: 6, xs: 12 }}>
+          <Grid
+            size={{ lg: 6, xs: 12 }}
+            sx={{ '&:empty': { display: 'none' } }}
+          >
             <PersonEmailPreferencesCard orgId={orgId} person={person} />
           </Grid>
         )}
-        <Grid size={{ lg: 4 }}>
+        <Grid size={{ lg: 4, xs: 12 }}>
           <PersonDeleteCard orgId={orgId} person={person} />
         </Grid>
       </Grid>
