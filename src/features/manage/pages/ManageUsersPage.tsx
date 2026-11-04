@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Box, Skeleton } from '@mui/material';
 import { FC, useMemo } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
@@ -9,6 +9,68 @@ import { ZetkinUser } from 'utils/types/zetkin';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/manage/l10n/messageIds';
 import ZUIButton from 'zui/components/ZUIButton';
+import range from 'utils/range';
+
+const skeletonHeight = '2.7rem';
+const actionColumnWidth = 140;
+
+const ManageUsersSkeletonRow = ({
+  height,
+  isHeader,
+}: {
+  height?: string;
+  isHeader?: boolean;
+}) => {
+  const rowHeight = height ?? skeletonHeight;
+
+  return (
+    <Box display="flex" flexDirection="row" gap="1rem">
+      {isHeader ? (
+        <Box height={rowHeight} width={skeletonHeight} />
+      ) : (
+        <Skeleton
+          height={rowHeight}
+          variant={'circular'}
+          width={skeletonHeight}
+        />
+      )}
+      <Skeleton
+        height={rowHeight}
+        sx={{
+          flex: 1,
+        }}
+        variant={'rounded'}
+      />
+      <Skeleton
+        height={rowHeight}
+        sx={{
+          flex: 1,
+        }}
+        variant={'rounded'}
+      />
+      {isHeader ? (
+        <Box height={rowHeight} width={`${actionColumnWidth}px`} />
+      ) : (
+        <Skeleton
+          height={rowHeight}
+          variant={'rounded'}
+          width={`${actionColumnWidth}px`}
+        />
+      )}
+    </Box>
+  );
+};
+
+export const ManageUsersSkeleton = () => {
+  return (
+    <Box display="flex" flexDirection="column" gap="1rem">
+      <ManageUsersSkeletonRow height={'3.5rem'} isHeader={true} />
+      {range(40).map((i) => (
+        <ManageUsersSkeletonRow key={i} />
+      ))}
+    </Box>
+  );
+};
 
 const ManageUsersPage: FC = () => {
   const messages = useMessages(messageIds);
@@ -59,7 +121,7 @@ const ManageUsersPage: FC = () => {
         field: 'action',
         filterable: false,
         headerName: '',
-        minWidth: 140,
+        minWidth: actionColumnWidth,
         renderCell: ({ row }) => {
           return (
             <Box
