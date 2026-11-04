@@ -1,5 +1,7 @@
 'use client';
 
+import 'temporal-polyfill/global';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { CacheProvider } from '@emotion/react';
