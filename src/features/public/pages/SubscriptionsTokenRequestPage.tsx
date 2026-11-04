@@ -85,7 +85,6 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                       client_id: clientId,
                       email,
                       link_uri: linkUri,
-                      org_id: org.id,
                       scope: ['level1'],
                     });
                     setSuccess(true);
