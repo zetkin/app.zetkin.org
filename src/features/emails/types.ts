@@ -237,3 +237,25 @@ export type ZetkinEmailStats = {
   num_sent: number;
   num_target_matches: number;
 };
+
+export type ZetkinEmailChannel = {
+  description: string | null;
+  double_opt_in: boolean;
+  id: number;
+  is_public: boolean;
+  title: string;
+};
+
+export type ZetkinChannelPreferenceStatus = 'muted' | 'received' | 'subscribed';
+
+export type ZetkinChannelPreference = {
+  channel: ZetkinEmailChannel;
+  status: ZetkinChannelPreferenceStatus;
+  updated_by_user_id: number | null;
+};
+
+export type ZetkinPersonEmailPreferences = {
+  channels: ZetkinChannelPreference[];
+  muted: boolean;
+  muted_by_user_id: number | null;
+};

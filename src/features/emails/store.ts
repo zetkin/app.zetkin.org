@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { EmailInsights, EmailTheme, ZetkinEmailStats } from './types';
+import {
+  EmailInsights,
+  EmailTheme,
+  ZetkinChannelPreferenceStatus,
+  ZetkinEmailChannel,
+  ZetkinEmailStats,
+  ZetkinPersonEmailPreferences,
+} from './types';
 import {
   RemoteItem,
   remoteItem,
@@ -14,11 +21,15 @@ type SerializedError = {
   name: string;
 };
 
+type PersonEmailPreferences = ZetkinPersonEmailPreferences & { id: number };
+
 export interface EmailStoreSlice {
+  channelList: RemoteList<ZetkinEmailChannel>;
   configList: RemoteList<ZetkinEmailConfig>;
   emailList: RemoteList<ZetkinEmail>;
   themeList: RemoteList<EmailTheme>;
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
+  preferencesByPersonId: Record<number, RemoteItem<PersonEmailPreferences>>;
   statsById: Record<number, RemoteItem<ZetkinEmailStats>>;
   insightsByEmailId: Record<number, RemoteItem<EmailInsights>>;
   themeUpdateError: SerializedError | null;
@@ -27,10 +38,12 @@ export interface EmailStoreSlice {
 }
 
 const initialState: EmailStoreSlice = {
+  channelList: remoteList(),
   configList: remoteList(),
   emailList: remoteList(),
   insightsByEmailId: {},
   linksByEmailId: {},
+  preferencesByPersonId: {},
   statsById: {},
   themeEditorValue: { block_attributes: '', css: '', frame_mjml: '' },
   themeJsonError: { block_attributes: false, css: false, frame_mjml: false },
@@ -42,6 +55,13 @@ const emailsSlice = createSlice({
   initialState,
   name: 'emails',
   reducers: {
+    channelsLoad: (state) => {
+      state.channelList.isLoading = true;
+    },
+    channelsLoaded: (state, action: PayloadAction<ZetkinEmailChannel[]>) => {
+      state.channelList = remoteList(action.payload);
+      state.channelList.loaded = new Date().toISOString();
+    },
     configsLoad: (state) => {
       state.configList.isLoading = true;
     },
@@ -158,6 +178,54 @@ const emailsSlice = createSlice({
         data: insights,
         loaded: new Date().toISOString(),
       });
+    },
+    personChannelPreferenceUpdated: (
+      state,
+      action: PayloadAction<
+        [number, number, ZetkinChannelPreferenceStatus, number | null]
+      >
+    ) => {
+      const [personId, channelId, status, userId] = action.payload;
+      const preferences = state.preferencesByPersonId[personId]?.data;
+      if (preferences) {
+        const preference = preferences.channels.find(
+          (preference) => preference.channel.id == channelId
+        );
+        if (preference) {
+          preference.status = status;
+          preference.updated_by_user_id = userId;
+        } else {
+          state.preferencesByPersonId[personId].isStale = true;
+        }
+      }
+    },
+    personEmailPreferencesLoad: (state, action: PayloadAction<number>) => {
+      const personId = action.payload;
+      state.preferencesByPersonId[personId] = remoteItem(personId, {
+        data: state.preferencesByPersonId[personId]?.data,
+        isLoading: true,
+      });
+    },
+    personEmailPreferencesLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinPersonEmailPreferences]>
+    ) => {
+      const [personId, preferences] = action.payload;
+      state.preferencesByPersonId[personId] = remoteItem(personId, {
+        data: { ...preferences, id: personId },
+        loaded: new Date().toISOString(),
+      });
+    },
+    personOrgMuteUpdated: (
+      state,
+      action: PayloadAction<[number, boolean, number | null]>
+    ) => {
+      const [personId, muted, userId] = action.payload;
+      const preferences = state.preferencesByPersonId[personId]?.data;
+      if (preferences) {
+        preferences.muted = muted;
+        preferences.muted_by_user_id = userId;
+      }
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -305,6 +373,8 @@ const emailsSlice = createSlice({
 
 export default emailsSlice;
 export const {
+  channelsLoad,
+  channelsLoaded,
   configsLoad,
   configsLoaded,
   emailCreate,
@@ -321,6 +391,10 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
+  personChannelPreferenceUpdated,
+  personEmailPreferencesLoad,
+  personEmailPreferencesLoaded,
+  personOrgMuteUpdated,
   themeCreate,
   themeCreated,
   themeDeleted,
