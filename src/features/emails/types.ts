@@ -246,11 +246,9 @@ export type ZetkinEmailChannel = {
   title: string;
 };
 
-export type ZetkinChannelPreferenceStatus = 'muted' | 'received' | 'subscribed';
-
 export type ZetkinChannelPreference = {
   channel: ZetkinEmailChannel;
-  status: ZetkinChannelPreferenceStatus;
+  status: 'muted' | 'received' | 'subscribed';
   updated_by_user_id: number | null;
 };
 

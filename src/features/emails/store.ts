@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   EmailInsights,
   EmailTheme,
-  ZetkinChannelPreferenceStatus,
   ZetkinEmailChannel,
   ZetkinEmailStats,
   ZetkinPersonEmailPreferences,
@@ -179,25 +178,12 @@ const emailsSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
-    personChannelPreferenceUpdated: (
+    personEmailPreferencesInvalidated: (
       state,
-      action: PayloadAction<
-        [number, number, ZetkinChannelPreferenceStatus, number | null]
-      >
+      action: PayloadAction<number>
     ) => {
-      const [personId, channelId, status, userId] = action.payload;
-      const preferences = state.preferencesByPersonId[personId]?.data;
-      if (preferences) {
-        const preference = preferences.channels.find(
-          (preference) => preference.channel.id == channelId
-        );
-        if (preference) {
-          preference.status = status;
-          preference.updated_by_user_id = userId;
-        } else {
-          state.preferencesByPersonId[personId].isStale = true;
-        }
-      }
+      const personId = action.payload;
+      state.preferencesByPersonId[personId].isStale = true;
     },
     personEmailPreferencesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
@@ -215,17 +201,6 @@ const emailsSlice = createSlice({
         data: { ...preferences, id: personId },
         loaded: new Date().toISOString(),
       });
-    },
-    personOrgMuteUpdated: (
-      state,
-      action: PayloadAction<[number, boolean, number | null]>
-    ) => {
-      const [personId, muted, userId] = action.payload;
-      const preferences = state.preferencesByPersonId[personId]?.data;
-      if (preferences) {
-        preferences.muted = muted;
-        preferences.muted_by_user_id = userId;
-      }
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -391,10 +366,9 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
-  personChannelPreferenceUpdated,
+  personEmailPreferencesInvalidated,
   personEmailPreferencesLoad,
   personEmailPreferencesLoaded,
-  personOrgMuteUpdated,
   themeCreate,
   themeCreated,
   themeDeleted,

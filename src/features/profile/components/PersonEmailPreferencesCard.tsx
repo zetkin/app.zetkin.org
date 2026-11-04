@@ -12,6 +12,7 @@ import {
 import messageIds from '../l10n/messageIds';
 import newTheme from 'zui/theme';
 import useEmailChannels from 'features/emails/hooks/useEmailChannels';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 import usePersonEmailPreferences from 'features/emails/hooks/usePersonEmailPreferences';
 import usePersonEmailPreferencesMutations from 'features/emails/hooks/usePersonEmailPreferencesMutations';
 import { useMessages } from 'core/i18n';
@@ -28,6 +29,7 @@ import ZUISwitch from 'zui/components/ZUISwitch';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
+  ZetkinChannelPreference,
   ZetkinEmailChannel,
   ZetkinPersonEmailPreferences,
 } from 'features/emails/types';
@@ -38,6 +40,16 @@ type Props = {
 };
 
 const PersonEmailPreferencesCard: FC<Props> = ({ orgId, person }) => {
+  const configs = useEmailConfigs(orgId).data;
+
+  if (!configs?.length) {
+    return null;
+  }
+
+  return <EmailPreferences orgId={orgId} person={person} />;
+};
+
+const EmailPreferences: FC<Props> = ({ orgId, person }) => {
   const channelsFuture = useEmailChannels(orgId);
   const preferencesFuture = usePersonEmailPreferences(orgId, person.id);
 
@@ -180,44 +192,25 @@ const EmailPreferencesSection: FC<
                   {messages.emailPreferences.channels.empty({ name })}
                 </ZUIText>
               )}
-              {preferences.channels.map((preference, index) => {
-                const { channel, status } = preference;
-                const isMuted = status == 'muted';
-                const color = isMuted ? 'secondary' : 'primary';
-
-                return (
-                  <Box key={channel.id}>
-                    {index > 0 && <ZUIDivider />}
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        gap: '0.75rem',
-                        paddingY: '0.75rem',
-                      }}
-                    >
-                      <ZUIIcon color={color} icon={MailOutline} />
-                      <Box sx={{ flex: 1 }}>
-                        <ZUIText color={color}>{channel.title}</ZUIText>
-                      </Box>
-                      <ZUISwitch
-                        checked={!isMuted}
-                        label=""
-                        onChange={(checked) => {
-                          if (checked) {
-                            confirmUnmute(
-                              preference.updated_by_user_id === null,
-                              () => run(() => unmuteChannel(channel.id))
-                            );
-                          } else {
-                            run(() => muteChannel(channel.id));
-                          }
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                );
-              })}
+              {preferences.channels.map((preference, index) => (
+                <Box key={preference.channel.id}>
+                  {index > 0 && <ZUIDivider />}
+                  <ChannelPreferenceRow
+                    onChange={(checked) => {
+                      const channelId = preference.channel.id;
+                      if (checked) {
+                        confirmUnmute(
+                          preference.updated_by_user_id === null,
+                          () => run(() => unmuteChannel(channelId))
+                        );
+                      } else {
+                        run(() => muteChannel(channelId));
+                      }
+                    }}
+                    preference={preference}
+                  />
+                </Box>
+              ))}
             </Box>
           ),
           subtitle: hasChannels
@@ -246,6 +239,31 @@ const EmailPreferencesSection: FC<
       ]}
       title={messages.emailPreferences.title()}
     />
+  );
+};
+
+const ChannelPreferenceRow: FC<{
+  onChange: (checked: boolean) => void;
+  preference: ZetkinChannelPreference;
+}> = ({ onChange, preference }) => {
+  const isMuted = preference.status == 'muted';
+  const color = isMuted ? 'secondary' : 'primary';
+
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        gap: '0.75rem',
+        paddingY: '0.75rem',
+      }}
+    >
+      <ZUIIcon color={color} icon={MailOutline} />
+      <Box sx={{ flex: 1 }}>
+        <ZUIText color={color}>{preference.channel.title}</ZUIText>
+      </Box>
+      <ZUISwitch checked={!isMuted} label="" onChange={onChange} />
+    </Box>
   );
 };
 
