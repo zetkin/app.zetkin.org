@@ -2,6 +2,24 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
   email: {
+    channels: {
+      addChannel: m('Create new channel'),
+      list: {
+        headers: {
+          noReply: m('No reply'),
+          senderEmail: m('Sender email'),
+          senderName: m('Sender name'),
+        },
+        noReply: {
+          canNotRespond: m('No reply'),
+          canRespond: m('Recipients can respond'),
+        },
+      },
+      overview: {
+        description: m('These are the channels that you can send email from.'),
+        title: m('Channels'),
+      },
+    },
     themes: {
       addTheme: m('Create new theme'),
       delete: {
