@@ -227,6 +227,12 @@ export default makeMessages('feat.settings', {
     },
     you: m('You'),
   },
+  pageTitles: {
+    access: m('Access settings'),
+    email: m('Email settings'),
+    fields: m('Field settings'),
+    theme: m<{ themeId: number }>('Theme {themeId}'),
+  },
   settingsLayout: {
     access: m('Access'),
     email: m('Email'),
