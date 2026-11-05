@@ -9,7 +9,6 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
 
-import compareTags from 'features/tags/utils/compareTags';
 import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import IApiClient from 'core/api/client/IApiClient';
 import { IColumnType } from '../';
@@ -27,6 +26,7 @@ import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
 import { tagLoad, tagLoaded } from 'features/tags/store';
 import { RemoteList } from 'utils/storeUtils';
 import ZUITagChip from 'zui/components/ZUITagChip';
+import compareTags from 'features/tags/utils/compareTags';
 
 type PersonTagViewCell = null | {
   value?: string;
@@ -69,6 +69,30 @@ export default class PersonTagColumnType implements IColumnType {
     return {
       align: 'center',
       editable: !accessLevel && tag?.value_type !== null,
+      getSortComparator: (sortDirection) => {
+        return (v1: ZetkinAppliedTag | null, v2: ZetkinAppliedTag | null) => {
+          if (
+            (v1 && v1.value_type !== null) ||
+            (v2 && v2.value_type !== null)
+          ) {
+            const modifier = sortDirection === 'desc' ? -1 : 1;
+            if (!v1 && !v2) {
+              return 0;
+            }
+            if (!v1) {
+              return 1;
+            }
+            if (!v2) {
+              return -1;
+            }
+            return modifier * compareTags(v1, v2);
+          } else {
+            return sortDirection === 'desc'
+              ? compareTags(v2, v1)
+              : compareTags(v1, v2);
+          }
+        };
+      },
       headerAlign: 'center',
       renderCell: (
         params: GridRenderCellParams<ZetkinViewRow, ZetkinAppliedTag>
@@ -82,9 +106,6 @@ export default class PersonTagColumnType implements IColumnType {
       renderEditCell: (params) => (
         <ValueTagEditCell tagColor={tag?.color} {...params} />
       ),
-      sortComparator: (v1: ZetkinAppliedTag, v2: ZetkinAppliedTag) => {
-        return compareTags(v1, v2);
-      },
     };
   }
 
