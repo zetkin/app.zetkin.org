@@ -8,7 +8,7 @@ export default function useUserActions(userId?: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const sendPasswordReset = useCallback(async () => {
+  const sendVerificationCode = useCallback(async () => {
     if (typeof userId === 'undefined') {
       return;
     }
@@ -32,7 +32,7 @@ export default function useUserActions(userId?: number) {
   );
 
   return useMemo(
-    () => ({ sendPasswordReset, updateUser }),
-    [updateUser, sendPasswordReset]
+    () => ({ sendVerificationCode, updateUser }),
+    [updateUser, sendVerificationCode]
   );
 }

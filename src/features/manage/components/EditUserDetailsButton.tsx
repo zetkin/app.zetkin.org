@@ -159,7 +159,7 @@ const EditDetailsButton = ({ user }: { user: ZetkinUser }) => {
             justifyContent="flex-end"
           >
             <ZUIButton
-              label={messages.users.details.edit.cancel()}
+              label={messages.dialog.cancel()}
               onClick={() => {
                 setEditedUser({ ...user });
                 setEditDetailsOpen(false);
@@ -169,7 +169,7 @@ const EditDetailsButton = ({ user }: { user: ZetkinUser }) => {
             <ZUIButton
               actionType="submit"
               isLoading={userUpdating}
-              label={messages.users.details.edit.save()}
+              label={messages.dialog.save()}
               onClick={onClickUpdateUser}
               variant="primary"
             />

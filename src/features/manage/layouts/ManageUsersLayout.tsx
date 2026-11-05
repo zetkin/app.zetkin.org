@@ -10,7 +10,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { Key } from '@mui/icons-material';
+import { Mail } from '@mui/icons-material';
 
 import { BreadcrumbTreeItem } from 'zui/components/ZUIBreadcrumbs';
 import ZUIHeader from 'zui/components/ZUIHeader';
@@ -65,14 +65,15 @@ const ManageUsersLayout: FC<Props> = ({
   const showBreadcrums =
     pathParts.length > 1 && (pathParts[1] !== 'users' || pathParts.length > 2);
 
-  const { updateUser, sendPasswordReset } = useUserActions(visitedUser?.id);
+  const { updateUser, sendVerificationCode } = useUserActions(visitedUser?.id);
 
-  const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+  const [verificationCodeModalOpen, setVerificationCodeModalOpen] =
+    useState(false);
   const [
-    resetEmailVerificationWithPasswordReset,
-    setResetEmailVerificationWithPasswordReset,
-  ] = useState(false);
-  const [sendingPasswordReset, setSendingPasswordReset] = useState(false);
+    resetEmailVerificationWhenSendingCode,
+    setResetEmailVerificationWhenSendingCode,
+  ] = useState(true);
+  const [sendingVerificationCode, setSendingVerificationCode] = useState(false);
 
   const ellipsisMenuItems: WithRequired<MenuItemType, 'startIcon'>[] =
     useMemo(() => {
@@ -81,12 +82,12 @@ const ManageUsersLayout: FC<Props> = ({
       }
       return [
         {
-          label: messages.users.passwordReset.actionButton(),
-          onClick: () => setPasswordResetModalOpen(true),
-          startIcon: Key,
+          label: messages.users.verifyEmail.actionButton(),
+          onClick: () => setVerificationCodeModalOpen(true),
+          startIcon: Mail,
         },
       ];
-    }, [messages.users.passwordReset, visitedUser]);
+    }, [messages.users.verifyEmail, visitedUser]);
 
   const avatar: Omit<ZUIPersonAvatarProps, 'variant' | 'size'> | undefined =
     useMemo(
@@ -100,7 +101,7 @@ const ManageUsersLayout: FC<Props> = ({
       [visitedUser]
     );
 
-  const onPasswordResetClick = useCallback(
+  const onSendVerificationCodeClick = useCallback(
     async (e: MouseEvent) => {
       e.preventDefault();
       if (!visitedUser) {
@@ -108,23 +109,23 @@ const ManageUsersLayout: FC<Props> = ({
       }
 
       try {
-        setSendingPasswordReset(true);
-        if (resetEmailVerificationWithPasswordReset) {
+        setSendingVerificationCode(true);
+        if (resetEmailVerificationWhenSendingCode) {
           await updateUser({ email_is_verified: false });
         }
-        await sendPasswordReset();
-        showSnackbar('success', messages.users.passwordReset.resetSuccess());
+        await sendVerificationCode();
+        showSnackbar('success', messages.users.verifyEmail.sendSuccess());
       } catch (err) {
-        showSnackbar('error', messages.users.passwordReset.failed());
+        showSnackbar('error', messages.users.verifyEmail.failed());
       }
 
-      setPasswordResetModalOpen(false);
-      setSendingPasswordReset(false);
+      setVerificationCodeModalOpen(false);
+      setSendingVerificationCode(false);
     },
     [
-      messages.users.passwordReset,
-      resetEmailVerificationWithPasswordReset,
-      sendPasswordReset,
+      messages.users.verifyEmail,
+      resetEmailVerificationWhenSendingCode,
+      sendVerificationCode,
       showSnackbar,
       updateUser,
       visitedUser,
@@ -149,39 +150,47 @@ const ManageUsersLayout: FC<Props> = ({
       <ZUIModal
         keepMounted={true}
         onClose={() => {
-          setPasswordResetModalOpen(false);
-          setResetEmailVerificationWithPasswordReset(false);
+          setVerificationCodeModalOpen(false);
+          setResetEmailVerificationWhenSendingCode(false);
         }}
-        open={passwordResetModalOpen}
+        open={verificationCodeModalOpen}
         size={'medium'}
-        title={messages.users.passwordReset.modalTitle()}
+        title={messages.users.verifyEmail.modalTitle()}
       >
-        <ZUISwitch
-          checked={resetEmailVerificationWithPasswordReset}
-          label={messages.users.passwordReset.alsoResetEmailVerification()}
-          onChange={setResetEmailVerificationWithPasswordReset}
-        />
-
         <Box
+          component="form"
           display="flex"
-          flexDirection="row"
-          gap="0.5rem"
-          justifyContent="flex-end"
+          flexDirection="column"
+          gap="1rem"
+          width="100%"
         >
-          <ZUIButton
-            label={messages.users.details.edit.cancel()}
-            onClick={() => {
-              setPasswordResetModalOpen(false);
-            }}
-            variant="secondary"
+          <ZUISwitch
+            checked={resetEmailVerificationWhenSendingCode}
+            label={messages.users.verifyEmail.alsoResetEmailVerification()}
+            onChange={setResetEmailVerificationWhenSendingCode}
           />
-          <ZUIButton
-            actionType="submit"
-            isLoading={sendingPasswordReset}
-            label={messages.users.details.edit.save()}
-            onClick={onPasswordResetClick}
-            variant="primary"
-          />
+
+          <Box
+            display="flex"
+            flexDirection="row"
+            gap="0.5rem"
+            justifyContent="flex-end"
+          >
+            <ZUIButton
+              label={messages.dialog.cancel()}
+              onClick={() => {
+                setVerificationCodeModalOpen(false);
+              }}
+              variant="secondary"
+            />
+            <ZUIButton
+              actionType="submit"
+              isLoading={sendingVerificationCode}
+              label={messages.dialog.save()}
+              onClick={onSendVerificationCodeClick}
+              variant="primary"
+            />
+          </Box>
         </Box>
       </ZUIModal>
       {children}

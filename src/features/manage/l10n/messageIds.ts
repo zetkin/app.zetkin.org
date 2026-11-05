@@ -1,6 +1,10 @@
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.manage', {
+  dialog: {
+    cancel: m('Cancel'),
+    save: m('Save'),
+  },
   manageSidebar: {
     items: {
       users: m('Users'),
@@ -24,8 +28,6 @@ export default makeMessages('feat.manage', {
       },
       edit: {
         button: m('Edit details'),
-        cancel: m('Cancel'),
-        save: m('Save'),
         title: m('Edit details'),
         updateError: m('Failed to update details!'),
         updateSuccess: m('Updated details!'),
@@ -47,12 +49,12 @@ export default makeMessages('feat.manage', {
         button: m('Connect'),
       },
     },
-    passwordReset: {
-      actionButton: m('Send password reset'),
-      alsoResetEmailVerification: m('Also reset email verification'),
-      failed: m('Failed to send password reset email.'),
-      modalTitle: m('Password reset'),
-      resetSuccess: m('Password reset email sent.'),
+    verifyEmail: {
+      actionButton: m('Send email verification'),
+      alsoResetEmailVerification: m('Reset "email verified"'),
+      failed: m('Failed to send verification code.'),
+      modalTitle: m('Send email verification'),
+      sendSuccess: m('Verification code has been sent.'),
     },
   },
 });
