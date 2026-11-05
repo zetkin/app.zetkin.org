@@ -127,10 +127,6 @@ export default class FetchApiClient implements IApiClient {
       method: 'POST',
     });
 
-    if (res.status === 204) {
-      return null as ResultType;
-    }
-
     const body = (await res.json()) as RPCResponseBody<ResultType>;
 
     return body.result;
