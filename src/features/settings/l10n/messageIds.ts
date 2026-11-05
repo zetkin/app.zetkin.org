@@ -4,6 +4,24 @@ export default makeMessages('feat.settings', {
   email: {
     channels: {
       addChannel: m('Create new channel'),
+      createDialog: {
+        cancelButton: m('Cancel'),
+        createButton: m('Create'),
+        createErrorMessage: m(
+          'Something went wrong when creating the channel, please try again!'
+        ),
+        createSuccessMessage: m<{ title: string }>(
+          'Email channel {title} was created!'
+        ),
+        emailErrorMessage: m('Email is invalid'),
+        emailInputLabel: m('Sender email'),
+        noReplyCheckboxDescription: m(
+          'If you make the channel no-reply, it means recipients cannot respond to emails from this channel.'
+        ),
+        noReplyCheckboxLabel: m('No reply'),
+        senderInputLabel: m('Sender name'),
+        title: m('Create new email channel'),
+      },
       list: {
         headers: {
           noReply: m('No reply'),
@@ -16,7 +34,9 @@ export default makeMessages('feat.settings', {
         },
       },
       overview: {
-        description: m('These are the channels that you can send email from.'),
+        description: m(
+          'These are the channels that you can select as sender when you create an email.'
+        ),
         title: m('Channels'),
       },
     },
