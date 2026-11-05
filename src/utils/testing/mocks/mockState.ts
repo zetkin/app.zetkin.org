@@ -119,6 +119,7 @@ export default function mockState(overrides?: RootState) {
     },
     manage: {
       users: undefined,
+      usersById: {},
     },
     organizations: {
       eventsByOrgId: {},

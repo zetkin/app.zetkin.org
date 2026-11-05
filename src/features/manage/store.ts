@@ -1,20 +1,44 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  remoteItem,
+  RemoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import { ZetkinUser } from 'utils/types/zetkin';
 
 export interface ManageStoreSlice {
   users: RemoteList<ZetkinUser> | undefined;
+  usersById: Record<number, RemoteItem<ZetkinUser>>;
 }
 
 const initialState: ManageStoreSlice = {
   users: undefined,
+  usersById: {},
 };
 
 const searchSlice = createSlice({
   initialState,
   name: 'manage',
   reducers: {
+    userError: (state, action: PayloadAction<[number, string]>) => {
+      const [userId, serializedError] = action.payload;
+      state.usersById[userId] = remoteItem(userId);
+      state.usersById[userId].error = serializedError;
+      state.usersById[userId].loaded = new Date().toISOString();
+    },
+    userLoad: (state, action: PayloadAction<number>) => {
+      const userId = action.payload;
+      state.usersById[userId] = remoteItem(userId);
+      state.usersById[userId].isLoading = true;
+    },
+    userLoaded: (state, action: PayloadAction<ZetkinUser>) => {
+      const user = action.payload;
+      state.usersById[user.id] = remoteItem(user.id);
+      state.usersById[user.id].data = user;
+      state.usersById[user.id].loaded = new Date().toISOString();
+    },
     usersError: (state, action: PayloadAction<string>) => {
       const serializedError = action.payload;
       state.users = remoteList();
@@ -25,12 +49,30 @@ const searchSlice = createSlice({
       state.users = remoteList();
     },
     usersLoaded: (state, action: PayloadAction<ZetkinUser[]>) => {
+      const now = new Date().toISOString();
+
       const users = action.payload;
       state.users = remoteList(users);
-      state.users.loaded = new Date().toISOString();
+      state.users.loaded = now;
+      state.usersById = users.reduce(
+        (prev, cur) => {
+          prev[cur.id] = remoteItem(cur.id);
+          prev[cur.id].data = cur;
+          prev[cur.id].loaded = now;
+          return prev;
+        },
+        {} as Record<number, RemoteItem<ZetkinUser>>
+      );
     },
   },
 });
 
 export default searchSlice;
-export const { usersError, usersLoad, usersLoaded } = searchSlice.actions;
+export const {
+  usersError,
+  usersLoad,
+  usersLoaded,
+  userError,
+  userLoad,
+  userLoaded,
+} = searchSlice.actions;

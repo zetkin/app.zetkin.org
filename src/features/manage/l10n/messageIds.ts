@@ -15,6 +15,24 @@ export default makeMessages('feat.manage', {
       email: m('Email'),
       name: m('Name'),
     },
+    details: {
+      checkboxes: {
+        email_is_verified: m('Email verified'),
+        is_verified: m('Verified'),
+        phone_is_verified: m('Phone verified'),
+      },
+      editButton: m('Edit details'),
+      fields: {
+        email: m('Email'),
+        first_name: m('First name'),
+        lang: m('Language'),
+        last_name: m('Last name'),
+        phone: m('Phone'),
+        username: m('Username'),
+      },
+      title: m('Details'),
+    },
+    errorLoadingPage: m('Error loading page. Please try again.'),
     manage: m('Manage'),
   },
 });
