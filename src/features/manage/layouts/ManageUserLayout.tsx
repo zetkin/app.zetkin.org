@@ -30,7 +30,7 @@ type Props = {
   children: ReactNode;
   pathname: string;
   title: string;
-  visitedUser?: ZetkinUser;
+  visitedUser: ZetkinUser;
 };
 
 const ManageUserLayout: FC<Props> = ({
@@ -65,7 +65,7 @@ const ManageUserLayout: FC<Props> = ({
   const showBreadcrums =
     pathParts.length > 1 && (pathParts[1] !== 'users' || pathParts.length > 2);
 
-  const { updateUser, sendVerificationCode } = useUserActions(visitedUser?.id);
+  const { updateUser, sendVerificationCode } = useUserActions(visitedUser.id);
 
   const [verificationCodeModalOpen, setVerificationCodeModalOpen] =
     useState(false);
@@ -75,29 +75,25 @@ const ManageUserLayout: FC<Props> = ({
   ] = useState(true);
   const [sendingVerificationCode, setSendingVerificationCode] = useState(false);
 
-  const ellipsisMenuItems: WithRequired<MenuItemType, 'startIcon'>[] =
-    useMemo(() => {
-      if (!visitedUser) {
-        return [];
-      }
-      return [
-        {
-          label: messages.users.verifyEmail.actionButton(),
-          onClick: () => setVerificationCodeModalOpen(true),
-          startIcon: Mail,
-        },
-      ];
-    }, [messages.users.verifyEmail, visitedUser]);
+  const ellipsisMenuItems: WithRequired<MenuItemType, 'startIcon'>[] = useMemo(
+    () => [
+      {
+        label: messages.users.verifyEmail.actionButton(),
+        onClick: () => setVerificationCodeModalOpen(true),
+        startIcon: Mail,
+      },
+    ],
+    [messages.users.verifyEmail]
+  );
 
   const avatar: Omit<ZUIPersonAvatarProps, 'variant' | 'size'> | undefined =
     useMemo(
-      () =>
-        visitedUser && {
-          firstName: visitedUser.first_name,
-          id: visitedUser.id,
-          isUser: true,
-          lastName: visitedUser.last_name,
-        },
+      () => ({
+        firstName: visitedUser.first_name,
+        id: visitedUser.id,
+        isUser: true,
+        lastName: visitedUser.last_name,
+      }),
       [visitedUser]
     );
 

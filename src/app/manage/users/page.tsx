@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
-import ManageUserLayout from 'features/manage/layouts/ManageUserLayout';
+import ManageUsersLayout from 'features/manage/layouts/ManageUsersLayout';
 import ManageUsersPage, {
   ManageUsersSkeleton,
   ManageUsersError,
@@ -20,7 +20,7 @@ export default async function Page() {
   const pathname = headersList.get('x-requested-path') || '';
 
   return (
-    <ManageUserLayout pathname={pathname} title={'Users'}>
+    <ManageUsersLayout pathname={pathname} title={'Users'}>
       {/*Enables client side resource loading via suspense*/}
       <NoSsr>
         <ErrorBoundary fallback={<ManageUsersError />}>
@@ -29,6 +29,6 @@ export default async function Page() {
           </Suspense>
         </ErrorBoundary>
       </NoSsr>
-    </ManageUserLayout>
+    </ManageUsersLayout>
   );
 }
