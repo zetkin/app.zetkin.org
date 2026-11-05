@@ -2,9 +2,11 @@
 
 import {
   createContext,
+  Dispatch,
   MouseEvent,
   PropsWithChildren,
   ReactNode,
+  SetStateAction,
   useCallback,
   useContext,
   useMemo,
@@ -19,7 +21,10 @@ import messageIds from 'features/manage/l10n/messageIds';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 export type ConfirmationDialogProps = {
-  content?: () => ReactNode;
+  content?: (props: {
+    setSubmitDisabled: Dispatch<SetStateAction<boolean>>;
+    submitDisabled: boolean;
+  }) => ReactNode;
   errorMessage: string;
   submit: () => Promise<unknown>;
   successMessage: string;
@@ -40,6 +45,7 @@ export const ConfirmationDialogProvider = ({ children }: PropsWithChildren) => {
   const [confirmationDialogProps, setConfirmationDialogProps] =
     useState<ConfirmationDialogProps | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const confirmationDialogCtx = useMemo(
     () => ({
@@ -86,7 +92,10 @@ export const ConfirmationDialogProvider = ({ children }: PropsWithChildren) => {
           gap="1rem"
           width="100%"
         >
-          {confirmationDialogProps?.content?.()}
+          {confirmationDialogProps?.content?.({
+            setSubmitDisabled,
+            submitDisabled,
+          })}
 
           <Box
             display="flex"
@@ -103,6 +112,7 @@ export const ConfirmationDialogProvider = ({ children }: PropsWithChildren) => {
             />
             <ZUIButton
               actionType="submit"
+              disabled={submitDisabled}
               isLoading={submitting}
               label={
                 confirmationDialogProps?.type === 'send'

@@ -2,10 +2,13 @@
 
 import { Box } from '@mui/material';
 import {
+  Dispatch,
   MutableRefObject,
+  SetStateAction,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -35,10 +38,12 @@ export const languageOptions: Record<SupportedLanguage, string> = {
 };
 
 const EditDetailsForm = ({
-  editedUserRef,
+  diffUserRef,
+  setSubmitDisabled,
   user,
 }: {
-  editedUserRef: MutableRefObject<ZetkinUser | null>;
+  diffUserRef: MutableRefObject<Partial<ZetkinUser> | null>;
+  setSubmitDisabled: Dispatch<SetStateAction<boolean>>;
   user: ZetkinUser;
 }) => {
   const messages = useMessages(messageIds);
@@ -48,9 +53,26 @@ const EditDetailsForm = ({
     setEditedUser({ ...user });
   }, [user]);
 
+  const diffUser = useMemo(() => {
+    const diffUser: Partial<ZetkinUser> = {};
+
+    const copyIfChanged = <K extends keyof ZetkinUser>(key: K) => {
+      if (user[key] !== editedUser[key]) {
+        diffUser[key] = editedUser[key];
+      }
+    };
+
+    for (const key of Object.keys(editedUser)) {
+      copyIfChanged(key as keyof ZetkinUser);
+    }
+
+    return diffUser;
+  }, [editedUser, user]);
+
   useEffect(() => {
-    editedUserRef.current = editedUser;
-  }, [editedUser, editedUserRef]);
+    diffUserRef.current = diffUser;
+    setSubmitDisabled(Object.keys(diffUser).length === 0);
+  }, [diffUser, diffUserRef, setSubmitDisabled]);
 
   return (
     <Box
@@ -119,31 +141,23 @@ const EditDetailsButton = ({ user }: { user: ZetkinUser }) => {
   const { openConfirmationDialog } = useContext(ConfirmationDialogContext);
 
   const { updateUser } = useUserActions(user);
-  const editedUserRef = useRef<ZetkinUser | null>(null);
+  const diffUserRef = useRef<ZetkinUser | null>(null);
 
   const openEditDialog = useCallback(() => {
-    editedUserRef.current = null;
+    diffUserRef.current = null;
     openConfirmationDialog({
-      content: () => (
-        <EditDetailsForm editedUserRef={editedUserRef} user={user} />
+      content: ({ setSubmitDisabled }) => (
+        <EditDetailsForm
+          diffUserRef={diffUserRef}
+          setSubmitDisabled={setSubmitDisabled}
+          user={user}
+        />
       ),
       errorMessage: messages.users.details.edit.updateError(),
       submit: async () => {
-        const editedUser = editedUserRef.current;
-        if (!editedUser) {
-          throw new Error('Missing edited user');
-        }
-
-        const diffUser: Partial<ZetkinUser> = {};
-
-        const copyIfChanged = <K extends keyof ZetkinUser>(key: K) => {
-          if (user[key] !== editedUser[key]) {
-            diffUser[key] = editedUser[key];
-          }
-        };
-
-        for (const key of Object.keys(editedUser)) {
-          copyIfChanged(key as keyof ZetkinUser);
+        const diffUser = diffUserRef.current;
+        if (!diffUser) {
+          throw new Error('Missing diff');
         }
 
         if (typeof diffUser.id !== 'undefined') {
@@ -158,7 +172,7 @@ const EditDetailsButton = ({ user }: { user: ZetkinUser }) => {
       },
       successMessage: messages.users.details.edit.updateSuccess(),
       title: messages.users.details.edit.title(),
-      type: 'send',
+      type: 'save',
     });
   }, [messages.users.details.edit, openConfirmationDialog, updateUser, user]);
 
