@@ -22,6 +22,7 @@ import {
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 import messageIds from 'features/views/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import sortEmptyCellsAtBottom from 'features/views/utils/sortEmptyCellsAtBottom';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
@@ -42,21 +43,10 @@ export default class LocalPersonColumnType implements IColumnType<
       align: 'center',
       editable: true,
       filterable: true,
-      getSortComparator: (sortDirection) => {
-        const modifier = sortDirection === 'desc' ? -1 : 1;
-        return (v1, v2) => {
-          if (!v1 && !v2) {
-            return 0;
-          }
-          if (!v1) {
-            return 1;
-          }
-          if (!v2) {
-            return -1;
-          }
-          return modifier * makeName(v1).localeCompare(makeName(v2));
-        };
-      },
+      getSortComparator: (sortDirection) =>
+        sortEmptyCellsAtBottom<ZetkinPerson>(sortDirection, (v1, v2) =>
+          makeName(v1).localeCompare(makeName(v2))
+        ),
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams) => {
         return <ZUIPersonGridCell person={params.value} />;

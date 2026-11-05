@@ -10,6 +10,7 @@ import { IColumnType } from '.';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { LocalTextViewColumn, ZetkinViewRow } from '../../types';
+import sortEmptyCellsAtBottom from 'features/views/utils/sortEmptyCellsAtBottom';
 
 type LocalTextViewCell = string | null;
 
@@ -33,25 +34,15 @@ export default class LocalTextColumnType implements IColumnType {
         by overwriting the `isEditable` prop of the Textarea component directly.
       */
       editable: true,
-      getSortComparator: (sortDirection) => {
-        const modifier = sortDirection === 'desc' ? -1 : 1;
-        return (v1: string, v2: string) => {
-          if (!v1 && !v2) {
-            return 0;
-          }
-          if (!v1) {
-            return 1;
-          }
-          if (!v2) {
-            return -1;
-          }
-          return modifier * v1.localeCompare(v2);
-        };
-      },
+      getSortComparator: (sortDirection) =>
+        sortEmptyCellsAtBottom<string>(sortDirection, (v1, v2) =>
+          v1.localeCompare(v2)
+        ),
       renderCell: (params) => <Cell cell={params.value} />,
       renderEditCell: (params) => (
         <Textarea {...params} isEditable={accessLevel != 'readonly'} />
       ),
+      valueGetter: (note: string | null) => note?.trim(),
       width: 250,
     };
   }
