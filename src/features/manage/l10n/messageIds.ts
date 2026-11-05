@@ -4,6 +4,7 @@ export default makeMessages('feat.manage', {
   dialog: {
     cancel: m('Cancel'),
     save: m('Save'),
+    send: m('Send'),
   },
   manageSidebar: {
     items: {
@@ -48,6 +49,12 @@ export default makeMessages('feat.manage', {
       add: {
         button: m('Connect'),
       },
+    },
+    passwordReset: {
+      actionButton: m('Send password reset'),
+      failed: m('Failed to send password reset.'),
+      modalTitle: m('Send password reset'),
+      sendSuccess: m('Password reset email has been sent.'),
     },
     verifyEmail: {
       actionButton: m('Send email verification'),

@@ -10,7 +10,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { Mail } from '@mui/icons-material';
+import { Key, Mail } from '@mui/icons-material';
 
 import { BreadcrumbTreeItem } from 'zui/components/ZUIBreadcrumbs';
 import ZUIHeader from 'zui/components/ZUIHeader';
@@ -65,7 +65,8 @@ const ManageUserLayout: FC<Props> = ({
   const showBreadcrums =
     pathParts.length > 1 && (pathParts[1] !== 'users' || pathParts.length > 2);
 
-  const { updateUser, sendVerificationCode } = useUserActions(visitedUser.id);
+  const { updateUser, sendVerificationCode, sendPasswordReset } =
+    useUserActions(visitedUser);
 
   const [verificationCodeModalOpen, setVerificationCodeModalOpen] =
     useState(false);
@@ -75,6 +76,9 @@ const ManageUserLayout: FC<Props> = ({
   ] = useState(true);
   const [sendingVerificationCode, setSendingVerificationCode] = useState(false);
 
+  const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+  const [sendingPasswordReset, setSendingPasswordReset] = useState(false);
+
   const ellipsisMenuItems: WithRequired<MenuItemType, 'startIcon'>[] = useMemo(
     () => [
       {
@@ -82,8 +86,13 @@ const ManageUserLayout: FC<Props> = ({
         onClick: () => setVerificationCodeModalOpen(true),
         startIcon: Mail,
       },
+      {
+        label: messages.users.passwordReset.actionButton(),
+        onClick: () => setPasswordResetModalOpen(true),
+        startIcon: Key,
+      },
     ],
-    [messages.users.verifyEmail]
+    [messages.users.passwordReset, messages.users.verifyEmail]
   );
 
   const avatar: Omit<ZUIPersonAvatarProps, 'variant' | 'size'> | undefined =
@@ -128,6 +137,27 @@ const ManageUserLayout: FC<Props> = ({
     ]
   );
 
+  const onSendPasswordResetClick = useCallback(
+    async (e: MouseEvent) => {
+      e.preventDefault();
+      if (!visitedUser) {
+        return;
+      }
+
+      try {
+        setSendingPasswordReset(true);
+        await sendPasswordReset();
+        showSnackbar('success', messages.users.passwordReset.sendSuccess());
+      } catch (err) {
+        showSnackbar('error', messages.users.passwordReset.failed());
+      }
+
+      setPasswordResetModalOpen(false);
+      setSendingPasswordReset(false);
+    },
+    [messages.users.passwordReset, sendPasswordReset, showSnackbar, visitedUser]
+  );
+
   return (
     <Box
       display="flex"
@@ -147,7 +177,6 @@ const ManageUserLayout: FC<Props> = ({
         keepMounted={true}
         onClose={() => {
           setVerificationCodeModalOpen(false);
-          setResetEmailVerificationWhenSendingCode(false);
         }}
         open={verificationCodeModalOpen}
         size={'medium'}
@@ -182,8 +211,47 @@ const ManageUserLayout: FC<Props> = ({
             <ZUIButton
               actionType="submit"
               isLoading={sendingVerificationCode}
-              label={messages.dialog.save()}
+              label={messages.dialog.send()}
               onClick={onSendVerificationCodeClick}
+              variant="primary"
+            />
+          </Box>
+        </Box>
+      </ZUIModal>
+      <ZUIModal
+        keepMounted={true}
+        onClose={() => {
+          setPasswordResetModalOpen(false);
+        }}
+        open={passwordResetModalOpen}
+        size={'medium'}
+        title={messages.users.passwordReset.modalTitle()}
+      >
+        <Box
+          component="form"
+          display="flex"
+          flexDirection="column"
+          gap="1rem"
+          width="100%"
+        >
+          <Box
+            display="flex"
+            flexDirection="row"
+            gap="0.5rem"
+            justifyContent="flex-end"
+          >
+            <ZUIButton
+              label={messages.dialog.cancel()}
+              onClick={() => {
+                setPasswordResetModalOpen(false);
+              }}
+              variant="secondary"
+            />
+            <ZUIButton
+              actionType="submit"
+              isLoading={sendingPasswordReset}
+              label={messages.dialog.send()}
+              onClick={onSendPasswordResetClick}
               variant="primary"
             />
           </Box>

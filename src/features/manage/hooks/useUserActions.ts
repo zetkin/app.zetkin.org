@@ -4,13 +4,21 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { userUpdated } from 'features/manage/store';
 
-export default function useUserActions(userId: number) {
+export default function useUserActions(user: ZetkinUser) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
   const sendVerificationCode = useCallback(
-    () => apiClient.post(`/api/users/${userId}/verification_codes`, ''),
-    [apiClient, userId]
+    () => apiClient.post(`/api/users/${user.id}/verification_codes`, ''),
+    [apiClient, user.id]
+  );
+
+  const sendPasswordReset = useCallback(
+    () =>
+      apiClient.post(`/api/password_reset_tokens`, {
+        email: user.email,
+      }),
+    [apiClient, user.email]
   );
 
   const updateUser = useCallback(
@@ -19,13 +27,13 @@ export default function useUserActions(userId: number) {
         .patch<
           ZetkinUser,
           Partial<ZetkinUser>
-        >(`/api/users/${userId}`, diffUser)
+        >(`/api/users/${user.id}`, diffUser)
         .then((resultingUser) => dispatch(userUpdated(resultingUser))),
-    [apiClient, dispatch, userId]
+    [apiClient, dispatch, user]
   );
 
   return useMemo(
-    () => ({ sendVerificationCode, updateUser }),
-    [updateUser, sendVerificationCode]
+    () => ({ sendPasswordReset, sendVerificationCode, updateUser }),
+    [updateUser, sendVerificationCode, sendPasswordReset]
   );
 }

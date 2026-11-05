@@ -38,7 +38,7 @@ const EditDetailsButton = ({ user }: { user: ZetkinUser }) => {
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
-  const { updateUser } = useUserActions(user.id);
+  const { updateUser } = useUserActions(user);
 
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
