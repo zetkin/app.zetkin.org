@@ -2,13 +2,13 @@
 
 import NextLink from 'next/link';
 import {
+  MouseEvent,
   ReactElement,
   ReactNode,
-  useRef,
-  useState,
-  MouseEvent,
   useCallback,
   useMemo,
+  useRef,
+  useState,
 } from 'react';
 import {
   Groups,
@@ -35,7 +35,6 @@ import {
 import SidebarListItem from 'features/manage/components/ManageSidebar/SidebarListItem';
 import messageIds from 'features/manage/l10n/messageIds';
 import zuiMessageIds from 'zui/l10n/messageIds';
-import useLocalStorage from 'zui/hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import ZUIEllipsisMenu, {
   MenuItem as ZUIEllipsisMenuItem,
@@ -45,6 +44,7 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { ZetkinUser } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
 import useUser from 'core/hooks/useUser';
+import useCookie from 'zui/hooks/useCookie';
 
 const drawerWidth = 300;
 
@@ -184,9 +184,11 @@ const menuItemsMap = [{ icon: <Groups />, name: 'users' }] as const;
 
 const ManageSidebar = ({
   title,
+  sidebarOpenInitialCookieValue,
   segment,
 }: {
   segment: 'users';
+  sidebarOpenInitialCookieValue?: boolean;
   title?: string | ReactElement;
 }): ReactNode => {
   const messages = useMessages(messageIds);
@@ -195,7 +197,11 @@ const ManageSidebar = ({
   const expandButton = useRef<HTMLButtonElement>(null);
   const collapseButton = useRef<HTMLButtonElement>(null);
 
-  const [lastOpen, setLastOpen] = useLocalStorage('manageSidebarOpen', true);
+  const [lastOpen, setLastOpen] = useCookie(
+    'sidebarOpen',
+    true,
+    sidebarOpenInitialCookieValue
+  );
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(isMobile ? true : lastOpen);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);

@@ -2,6 +2,7 @@
 
 import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
+import { cookies } from 'next/headers';
 
 import ManageSidebar from 'features/manage/components/ManageSidebar';
 import oldTheme from 'theme';
@@ -13,10 +14,16 @@ type Props = {
   title: string;
 };
 
-const ManageLayout: FC<Props> = ({ children, title, pathname }) => {
+const ManageLayout: FC<Props> = async ({ children, title, pathname }) => {
   const pathParts = pathname.split('/').filter(Boolean);
 
   const segment = pathParts[1] as 'users';
+
+  const cookieList = await cookies();
+  const sidebarOpenCookie = cookieList.get('sidebarOpen');
+  const sidebarOpenInitialValue = sidebarOpenCookie
+    ? (JSON.parse(sidebarOpenCookie.value) as boolean)
+    : undefined;
 
   return (
     <Box
@@ -30,7 +37,11 @@ const ManageLayout: FC<Props> = ({ children, title, pathname }) => {
       }}
       width="100vw"
     >
-      <ManageSidebar segment={segment} title={title} />
+      <ManageSidebar
+        segment={segment}
+        sidebarOpenInitialCookieValue={sidebarOpenInitialValue}
+        title={title}
+      />
       <Box display="flex" flex={1} flexDirection="column" overflow="hidden">
         <ConfirmationDialogProvider>{children}</ConfirmationDialogProvider>
       </Box>
