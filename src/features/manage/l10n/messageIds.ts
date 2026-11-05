@@ -16,12 +16,20 @@ export default makeMessages('feat.manage', {
       name: m('Name'),
     },
     details: {
+      autoLanguage: m('Automatic (configured in  browser)'),
       checkboxes: {
         email_is_verified: m('Email verified'),
         is_verified: m('Verified'),
         phone_is_verified: m('Phone verified'),
       },
-      editButton: m('Edit details'),
+      edit: {
+        button: m('Edit details'),
+        cancel: m('Cancel'),
+        save: m('Save'),
+        title: m('Edit details'),
+        updateError: m('Failed to update details!'),
+        updateSuccess: m('Updated details!'),
+      },
       fields: {
         email: m('Email'),
         first_name: m('First name'),

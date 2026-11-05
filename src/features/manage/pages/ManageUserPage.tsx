@@ -12,10 +12,17 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUISection from 'zui/components/ZUISection';
 import ZUILabel from 'zui/components/ZUILabel';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import ZUIButton from 'zui/components/ZUIButton';
 import { ZetkinUser } from 'utils/types/zetkin';
 import ZUIIconLabelRow from 'zui/components/ZUIIconLabelRow';
 import { ZUIIconLabelProps } from 'zui/components/ZUIIconLabel';
+import {
+  detailsCheckboxesKeys,
+  detailsFieldKeys,
+} from 'features/manage/utils/fieldKeys';
+import EditDetailsButton, {
+  languageOptions,
+} from 'features/manage/components/EditUserDetailsButton';
+import { SupportedLanguage } from 'core/i18n/languages';
 
 export const ManageUserSkeleton = () => {
   return (
@@ -36,46 +43,43 @@ export const ManageUserError = () => {
 };
 
 const UserDetailsRow = ({
+  fieldKey,
   label,
   value,
 }: {
+  fieldKey: keyof ZetkinUser;
   label: string;
   value?: string | null;
 }) => {
+  const messages = useMessages(messageIds);
+
+  const emptyFieldFallback =
+    fieldKey === 'lang' ? messages.users.details.autoLanguage() : '–';
+  const resolvedValue =
+    value && fieldKey === 'lang' && languageOptions[value as SupportedLanguage]
+      ? languageOptions[value as SupportedLanguage]
+      : value;
+
   return (
     <Box display="flex" flexDirection="column" mt="0.5rem">
-      <ZUIText variant="bodyMdRegular">{value || '–'}</ZUIText>
+      <ZUIText variant="bodyMdRegular">
+        {resolvedValue || emptyFieldFallback}
+      </ZUIText>
       <ZUILabel>{label}</ZUILabel>
       <ZUIDivider />
     </Box>
   );
 };
 
-const detailsFieldKeys: (keyof ZetkinUser &
-  keyof typeof messageIds.users.details.fields)[] = [
-  'first_name',
-  'last_name',
-  'username',
-  'email',
-  'phone',
-  'lang',
-];
-
-const detailsCheckboxesKeys: (keyof ZetkinUser &
-  keyof typeof messageIds.users.details.checkboxes)[] = [
-  'is_verified',
-  'email_is_verified',
-  'phone_is_verified',
-];
-
 const ManageUsersPage: FC<{ userId: number }> = ({ userId }) => {
   const messages = useMessages(messageIds);
 
-  const user = useUser(userId);
+  const [user, updateUser, userUpdating] = useUser(userId);
 
   const detailsRows = useMemo(
     () =>
       detailsFieldKeys.map((key) => ({
+        fieldKey: key,
         label: messages.users.details.fields[key](),
         value: user[key],
       })),
@@ -103,7 +107,11 @@ const ManageUsersPage: FC<{ userId: number }> = ({ userId }) => {
           </Box>
         )}
         renderRightHeaderContent={() => (
-          <ZUIButton label={messages.users.details.editButton()} />
+          <EditDetailsButton
+            updateUser={updateUser}
+            user={user}
+            userUpdating={userUpdating}
+          />
         )}
         title={messages.users.details.title()}
       />
