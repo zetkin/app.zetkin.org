@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { GetServerSideProps } from 'next';
 import { OpenInNew } from '@mui/icons-material';
 import { Box, Grid, Link, Skeleton, Typography } from '@mui/material';
+import Head from 'next/head';
 
 import AddOfficialButton from 'features/settings/components/officials/AddOfficialButton';
 import messageIds from 'features/settings/l10n/messageIds';
@@ -47,114 +48,119 @@ const SettingsPage: PageWithLayout = () => {
   }
 
   return (
-    <Grid container spacing={2}>
-      <Grid
-        size={{ md: 8 }}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
-      >
-        <Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1,
-              paddingBottom: 2,
-            }}
-          >
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography variant="h4">
-                <Msg id={messageIds.officials.administrators.title} />
-              </Typography>
-              <AddOfficialButton
-                disabled={membershipsLoading}
-                orgId={orgId}
-                peopleToDisable={admins}
-                roleType="admin"
-              />
-            </Box>
-            <Typography variant="body2">
-              <Msg id={messageIds.officials.administrators.description} />
-            </Typography>
-          </Box>
-          {membershipsLoading ? (
-            <Skeleton sx={{ height: '156px', transform: 'scale(1)' }} />
-          ) : (
-            <OfficialList
-              emptyListMessage={messages.officials.administrators.empty()}
-              officialList={admins}
-              orgId={orgId}
-            />
-          )}
-        </Box>
-        <Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1,
-              paddingBottom: 2,
-            }}
-          >
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography variant="h4">
-                <Msg id={messageIds.officials.organizers.title} />
-              </Typography>
-              <AddOfficialButton
-                disabled={membershipsLoading}
-                orgId={orgId}
-                peopleToDisable={organizers}
-                roleType="organizer"
-              />
-            </Box>
-            <Typography variant="body2">
-              <Msg id={messageIds.officials.organizers.description} />
-            </Typography>
-          </Box>
-          {membershipsLoading ? (
-            <Skeleton sx={{ height: '156px', transform: 'scale(1)' }} />
-          ) : (
-            <OfficialList
-              emptyListMessage={messages.officials.organizers.empty()}
-              officialList={organizers}
-              orgId={orgId}
-            />
-          )}
-        </Box>
-      </Grid>
-      <Grid size={{ md: 4 }}>
-        <ZUICard
-          header={messages.officials.urlCard.linkToPub()}
-          subheader={messages.officials.urlCard.subTitle()}
+    <>
+      <Head>
+        <title>{messages.pageTitles.access()}</title>
+      </Head>
+      <Grid container spacing={2}>
+        <Grid
+          size={{ md: 8 }}
+          sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
         >
-          <Box display="flex" paddingBottom={2}>
-            <ZUITextfieldToClipboard copyText={publicOrgUrl}>
-              {publicOrgUrl}
-            </ZUITextfieldToClipboard>
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                paddingBottom: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography variant="h4">
+                  <Msg id={messageIds.officials.administrators.title} />
+                </Typography>
+                <AddOfficialButton
+                  disabled={membershipsLoading}
+                  orgId={orgId}
+                  peopleToDisable={admins}
+                  roleType="admin"
+                />
+              </Box>
+              <Typography variant="body2">
+                <Msg id={messageIds.officials.administrators.description} />
+              </Typography>
+            </Box>
+            {membershipsLoading ? (
+              <Skeleton sx={{ height: '156px', transform: 'scale(1)' }} />
+            ) : (
+              <OfficialList
+                emptyListMessage={messages.officials.administrators.empty()}
+                officialList={admins}
+                orgId={orgId}
+              />
+            )}
           </Box>
-          <Link
-            display="flex"
-            href={publicOrgUrl}
-            sx={{ alignItems: 'center', gap: 1 }}
-            target="_blank"
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                paddingBottom: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography variant="h4">
+                  <Msg id={messageIds.officials.organizers.title} />
+                </Typography>
+                <AddOfficialButton
+                  disabled={membershipsLoading}
+                  orgId={orgId}
+                  peopleToDisable={organizers}
+                  roleType="organizer"
+                />
+              </Box>
+              <Typography variant="body2">
+                <Msg id={messageIds.officials.organizers.description} />
+              </Typography>
+            </Box>
+            {membershipsLoading ? (
+              <Skeleton sx={{ height: '156px', transform: 'scale(1)' }} />
+            ) : (
+              <OfficialList
+                emptyListMessage={messages.officials.organizers.empty()}
+                officialList={organizers}
+                orgId={orgId}
+              />
+            )}
+          </Box>
+        </Grid>
+        <Grid size={{ md: 4 }}>
+          <ZUICard
+            header={messages.officials.urlCard.linkToPub()}
+            subheader={messages.officials.urlCard.subTitle()}
           >
-            <OpenInNew fontSize="inherit" />
-            {messages.officials.urlCard.linkToPub()}
-          </Link>
-        </ZUICard>
+            <Box display="flex" paddingBottom={2}>
+              <ZUITextfieldToClipboard copyText={publicOrgUrl}>
+                {publicOrgUrl}
+              </ZUITextfieldToClipboard>
+            </Box>
+            <Link
+              display="flex"
+              href={publicOrgUrl}
+              sx={{ alignItems: 'center', gap: 1 }}
+              target="_blank"
+            >
+              <OpenInNew fontSize="inherit" />
+              {messages.officials.urlCard.linkToPub()}
+            </Link>
+          </ZUICard>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 
