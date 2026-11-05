@@ -33,6 +33,11 @@ export type ZUIModalProps = {
   children?: ReactNode;
 
   /**
+   * Always keeps the modal contents in the DOM for desktop.
+   */
+  keepMounted?: boolean;
+
+  /**
    * If provided the user will be able to close the modal by
    *  clicking X-icon in corner, or outside the modal.
    */
@@ -78,6 +83,7 @@ const ZUIModal: FC<ZUIModalProps> = ({
   children,
   secondaryButton,
   size,
+  keepMounted,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -96,6 +102,7 @@ const ZUIModal: FC<ZUIModalProps> = ({
   ) : (
     <DesktopModal
       allowPropagation={allowPropagation}
+      keepMounted={keepMounted}
       onClose={onClose}
       open={open}
       primaryButton={primaryButton}
