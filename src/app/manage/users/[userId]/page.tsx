@@ -14,7 +14,7 @@ import { ZetkinUser } from 'utils/types/zetkin';
 
 type Props = {
   params: Promise<{
-    userId: number;
+    userId: string;
   }>;
 };
 
@@ -27,6 +27,12 @@ export default async function Page({ params }: Props) {
     return null; // handled by layout
   }
 
+  const { userId: visitedUserIdStr } = await params;
+  const visitedUserId = parseInt(visitedUserIdStr);
+  if (!isFinite(visitedUserId) || isNaN(visitedUserId)) {
+    return null;
+  }
+
   const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -34,7 +40,6 @@ export default async function Page({ params }: Props) {
 
   const pathname = headersList.get('x-requested-path') || '';
 
-  const { userId: visitedUserId } = await params;
   const visitedUser = await apiClient.get<ZetkinUser>(
     `/api/users/${visitedUserId}`
   );
