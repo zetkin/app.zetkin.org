@@ -1,15 +1,7 @@
 'use client';
 
 import { Box } from '@mui/material';
-import {
-  FC,
-  MouseEvent,
-  ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { FC, ReactNode, useContext, useMemo, useState } from 'react';
 import { Key, Mail } from '@mui/icons-material';
 
 import { BreadcrumbTreeItem } from 'zui/components/ZUIBreadcrumbs';
@@ -21,10 +13,8 @@ import { useMessages } from 'core/i18n';
 import { WithRequired } from 'utils/types';
 import { MenuItem as MenuItemType } from 'zui/components/ZUIMenu';
 import useUserActions from 'features/manage/hooks/useUserActions';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ZUIModal from 'zui/components/ZUIModal';
 import ZUISwitch from 'zui/components/ZUISwitch';
-import ZUIButton from 'zui/components/ZUIButton';
+import { ConfirmationDialogContext } from 'features/manage/components/ConfirmationDialogContext';
 
 type Props = {
   children: ReactNode;
@@ -40,7 +30,7 @@ const ManageUserLayout: FC<Props> = ({
   pathname,
 }) => {
   const messages = useMessages(messageIds);
-  const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { openConfirmationDialog } = useContext(ConfirmationDialogContext);
 
   const pathParts = useMemo(
     () => pathname.split('/').filter(Boolean),
@@ -68,32 +58,10 @@ const ManageUserLayout: FC<Props> = ({
   const { updateUser, sendVerificationCode, sendPasswordReset } =
     useUserActions(visitedUser);
 
-  const [verificationCodeModalOpen, setVerificationCodeModalOpen] =
-    useState(false);
   const [
     resetEmailVerificationWhenSendingCode,
     setResetEmailVerificationWhenSendingCode,
   ] = useState(true);
-  const [sendingVerificationCode, setSendingVerificationCode] = useState(false);
-
-  const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
-  const [sendingPasswordReset, setSendingPasswordReset] = useState(false);
-
-  const ellipsisMenuItems: WithRequired<MenuItemType, 'startIcon'>[] = useMemo(
-    () => [
-      {
-        label: messages.users.verifyEmail.actionButton(),
-        onClick: () => setVerificationCodeModalOpen(true),
-        startIcon: Mail,
-      },
-      {
-        label: messages.users.passwordReset.actionButton(),
-        onClick: () => setPasswordResetModalOpen(true),
-        startIcon: Key,
-      },
-    ],
-    [messages.users.passwordReset, messages.users.verifyEmail]
-  );
 
   const avatar: Omit<ZUIPersonAvatarProps, 'variant' | 'size'> | undefined =
     useMemo(
@@ -106,56 +74,56 @@ const ManageUserLayout: FC<Props> = ({
       [visitedUser]
     );
 
-  const onSendVerificationCodeClick = useCallback(
-    async (e: MouseEvent) => {
-      e.preventDefault();
-      if (!visitedUser) {
-        return;
-      }
-
-      try {
-        setSendingVerificationCode(true);
-        if (resetEmailVerificationWhenSendingCode) {
-          await updateUser({ email_is_verified: false });
-        }
-        await sendVerificationCode();
-        showSnackbar('success', messages.users.verifyEmail.sendSuccess());
-      } catch (err) {
-        showSnackbar('error', messages.users.verifyEmail.failed());
-      }
-
-      setVerificationCodeModalOpen(false);
-      setSendingVerificationCode(false);
-    },
+  const ellipsisMenuItems: WithRequired<MenuItemType, 'startIcon'>[] = useMemo(
+    () => [
+      {
+        label: messages.users.verifyEmail.actionButton(),
+        onClick: () => {
+          openConfirmationDialog({
+            content: () => (
+              <ZUISwitch
+                checked={resetEmailVerificationWhenSendingCode}
+                label={messages.users.verifyEmail.alsoResetEmailVerification()}
+                onChange={setResetEmailVerificationWhenSendingCode}
+              />
+            ),
+            errorMessage: messages.users.verifyEmail.failed(),
+            submit: async () => {
+              if (resetEmailVerificationWhenSendingCode) {
+                await updateUser({ email_is_verified: false });
+              }
+              await sendVerificationCode();
+            },
+            successMessage: messages.users.verifyEmail.sendSuccess(),
+            title: messages.users.verifyEmail.modalTitle(),
+            type: 'send',
+          });
+        },
+        startIcon: Mail,
+      },
+      {
+        label: messages.users.passwordReset.actionButton(),
+        onClick: () => {
+          openConfirmationDialog({
+            errorMessage: messages.users.passwordReset.failed(),
+            submit: sendPasswordReset,
+            successMessage: messages.users.passwordReset.sendSuccess(),
+            title: messages.users.verifyEmail.modalTitle(),
+            type: 'send',
+          });
+        },
+        startIcon: Key,
+      },
+    ],
     [
+      messages.users.passwordReset,
       messages.users.verifyEmail,
+      openConfirmationDialog,
       resetEmailVerificationWhenSendingCode,
+      sendPasswordReset,
       sendVerificationCode,
-      showSnackbar,
       updateUser,
-      visitedUser,
     ]
-  );
-
-  const onSendPasswordResetClick = useCallback(
-    async (e: MouseEvent) => {
-      e.preventDefault();
-      if (!visitedUser) {
-        return;
-      }
-
-      try {
-        setSendingPasswordReset(true);
-        await sendPasswordReset();
-        showSnackbar('success', messages.users.passwordReset.sendSuccess());
-      } catch (err) {
-        showSnackbar('error', messages.users.passwordReset.failed());
-      }
-
-      setPasswordResetModalOpen(false);
-      setSendingPasswordReset(false);
-    },
-    [messages.users.passwordReset, sendPasswordReset, showSnackbar, visitedUser]
   );
 
   return (
@@ -173,90 +141,6 @@ const ManageUserLayout: FC<Props> = ({
         ellipsisMenuItems={ellipsisMenuItems}
         title={title}
       />
-      <ZUIModal
-        keepMounted={true}
-        onClose={() => {
-          setVerificationCodeModalOpen(false);
-        }}
-        open={verificationCodeModalOpen}
-        size={'medium'}
-        title={messages.users.verifyEmail.modalTitle()}
-      >
-        <Box
-          component="form"
-          display="flex"
-          flexDirection="column"
-          gap="1rem"
-          width="100%"
-        >
-          <ZUISwitch
-            checked={resetEmailVerificationWhenSendingCode}
-            label={messages.users.verifyEmail.alsoResetEmailVerification()}
-            onChange={setResetEmailVerificationWhenSendingCode}
-          />
-
-          <Box
-            display="flex"
-            flexDirection="row"
-            gap="0.5rem"
-            justifyContent="flex-end"
-          >
-            <ZUIButton
-              label={messages.dialog.cancel()}
-              onClick={() => {
-                setVerificationCodeModalOpen(false);
-              }}
-              variant="secondary"
-            />
-            <ZUIButton
-              actionType="submit"
-              isLoading={sendingVerificationCode}
-              label={messages.dialog.send()}
-              onClick={onSendVerificationCodeClick}
-              variant="primary"
-            />
-          </Box>
-        </Box>
-      </ZUIModal>
-      <ZUIModal
-        keepMounted={true}
-        onClose={() => {
-          setPasswordResetModalOpen(false);
-        }}
-        open={passwordResetModalOpen}
-        size={'medium'}
-        title={messages.users.passwordReset.modalTitle()}
-      >
-        <Box
-          component="form"
-          display="flex"
-          flexDirection="column"
-          gap="1rem"
-          width="100%"
-        >
-          <Box
-            display="flex"
-            flexDirection="row"
-            gap="0.5rem"
-            justifyContent="flex-end"
-          >
-            <ZUIButton
-              label={messages.dialog.cancel()}
-              onClick={() => {
-                setPasswordResetModalOpen(false);
-              }}
-              variant="secondary"
-            />
-            <ZUIButton
-              actionType="submit"
-              isLoading={sendingPasswordReset}
-              label={messages.dialog.send()}
-              onClick={onSendPasswordResetClick}
-              variant="primary"
-            />
-          </Box>
-        </Box>
-      </ZUIModal>
       {children}
     </Box>
   );

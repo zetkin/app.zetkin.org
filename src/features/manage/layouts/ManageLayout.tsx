@@ -5,6 +5,7 @@ import { FC, ReactNode } from 'react';
 
 import ManageSidebar from 'features/manage/components/ManageSidebar';
 import oldTheme from 'theme';
+import { ConfirmationDialogProvider } from 'features/manage/components/ConfirmationDialogContext';
 
 type Props = {
   children: ReactNode;
@@ -31,7 +32,7 @@ const ManageLayout: FC<Props> = ({ children, title, pathname }) => {
     >
       <ManageSidebar segment={segment} title={title} />
       <Box display="flex" flex={1} flexDirection="column" overflow="hidden">
-        {children}
+        <ConfirmationDialogProvider>{children}</ConfirmationDialogProvider>
       </Box>
     </Box>
   );
