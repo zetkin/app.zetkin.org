@@ -1,37 +1,38 @@
 import { useCallback, useMemo } from 'react';
 
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { userUpdated } from 'features/manage/store';
 
 export default function useUserActions(userId?: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const userUpdating = !!useAppSelector(
-    (state) => userId && state.manage.updatingById[userId]
-  );
 
-  const sendPasswordReset = useCallback(
-    async (resetEmailVerification: boolean) => {
+  const sendPasswordReset = useCallback(async () => {
+    if (typeof userId === 'undefined') {
+      return;
+    }
+
+    await apiClient.post(`/api/users/${userId}/verification_codes`, '');
+  }, [apiClient, userId]);
+
+  const updateUser = useCallback(
+    async (diffUser: Partial<Omit<ZetkinUser, 'id'>>) => {
       if (typeof userId === 'undefined') {
         return;
       }
 
-      if (resetEmailVerification) {
-        const resultingUser = await apiClient.patch<
-          ZetkinUser,
-          Partial<ZetkinUser>
-        >(`/api/users/${userId}`, { email_is_verified: false });
-        dispatch(userUpdated(resultingUser));
-      }
-
-      await apiClient.post(`/api/users/${userId}/verification_codes`, '');
+      const resultingUser = await apiClient.patch<
+        ZetkinUser,
+        Partial<ZetkinUser>
+      >(`/api/users/${userId}`, diffUser);
+      dispatch(userUpdated(resultingUser));
     },
     [apiClient, dispatch, userId]
   );
 
   return useMemo(
-    () => ({ sendPasswordReset, userUpdating }),
-    [sendPasswordReset, userUpdating]
+    () => ({ sendPasswordReset, updateUser }),
+    [updateUser, sendPasswordReset]
   );
 }

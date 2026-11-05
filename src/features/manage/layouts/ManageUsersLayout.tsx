@@ -65,7 +65,7 @@ const ManageUsersLayout: FC<Props> = ({
   const showBreadcrums =
     pathParts.length > 1 && (pathParts[1] !== 'users' || pathParts.length > 2);
 
-  const { sendPasswordReset } = useUserActions(visitedUser?.id);
+  const { updateUser, sendPasswordReset } = useUserActions(visitedUser?.id);
 
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
   const [
@@ -109,7 +109,10 @@ const ManageUsersLayout: FC<Props> = ({
 
       try {
         setSendingPasswordReset(true);
-        await sendPasswordReset(resetEmailVerificationWithPasswordReset);
+        if (resetEmailVerificationWithPasswordReset) {
+          await updateUser({ email_is_verified: false });
+        }
+        await sendPasswordReset();
         showSnackbar('success', messages.users.passwordReset.resetSuccess());
       } catch (err) {
         showSnackbar('error', messages.users.passwordReset.failed());
@@ -123,6 +126,7 @@ const ManageUsersLayout: FC<Props> = ({
       resetEmailVerificationWithPasswordReset,
       sendPasswordReset,
       showSnackbar,
+      updateUser,
       visitedUser,
     ]
   );

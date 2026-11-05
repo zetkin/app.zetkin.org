@@ -1,7 +1,13 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { useEffect, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  MouseEvent,
+} from 'react';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/manage/l10n/messageIds';
@@ -16,6 +22,8 @@ import {
   detailsCheckboxesKeys,
   detailsFieldKeys,
 } from 'features/manage/utils/fieldKeys';
+import useUserActions from 'features/manage/hooks/useUserActions';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 export const languageOptions: Record<SupportedLanguage, string> = {
   da: 'Dansk',
@@ -26,23 +34,52 @@ export const languageOptions: Record<SupportedLanguage, string> = {
   sv: 'Svenska',
 };
 
-const EditDetailsButton = ({
-  updateUser,
-  user,
-  userUpdating,
-}: {
-  updateUser: (newUser: ZetkinUser) => Promise<void>;
-  user: ZetkinUser;
-  userUpdating?: boolean;
-}) => {
+const EditDetailsButton = ({ user }: { user: ZetkinUser }) => {
   const messages = useMessages(messageIds);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+
+  const { updateUser } = useUserActions(user.id);
 
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
+  const [userUpdating, setUserUpdating] = useState(false);
 
   useEffect(() => {
     setEditedUser({ ...user });
   }, [user]);
+
+  const onClickUpdateUser = useCallback(
+    async (e: MouseEvent) => {
+      e.preventDefault();
+
+      const diffUser: Partial<ZetkinUser> = {};
+
+      const copyIfChanged = <K extends keyof ZetkinUser>(key: K) => {
+        if (user[key] !== editedUser[key]) {
+          diffUser[key] = editedUser[key];
+        }
+      };
+
+      for (const key of Object.keys(editedUser)) {
+        copyIfChanged(key as keyof ZetkinUser);
+      }
+
+      try {
+        if (typeof diffUser.id !== 'undefined') {
+          throw new Error('Cannot update id');
+        }
+
+        await updateUser(diffUser);
+        showSnackbar('success', messages.users.details.edit.updateSuccess());
+        setEditDetailsOpen(false);
+      } catch (err) {
+        showSnackbar('error', messages.users.details.edit.updateError());
+      }
+
+      setUserUpdating(false);
+    },
+    [editedUser, messages.users.details.edit, showSnackbar, updateUser, user]
+  );
 
   return (
     <>
@@ -133,12 +170,7 @@ const EditDetailsButton = ({
               actionType="submit"
               isLoading={userUpdating}
               label={messages.users.details.edit.save()}
-              onClick={(e) => {
-                e.preventDefault();
-                updateUser(editedUser).then(() => {
-                  setEditDetailsOpen(false);
-                });
-              }}
+              onClick={onClickUpdateUser}
               variant="primary"
             />
           </Box>

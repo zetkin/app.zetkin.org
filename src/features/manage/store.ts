@@ -10,13 +10,11 @@ import {
 import { ZetkinUser } from 'utils/types/zetkin';
 
 export interface ManageStoreSlice {
-  updatingById: Record<number, boolean | undefined>;
   users: RemoteList<ZetkinUser> | undefined;
   usersById: Record<number, RemoteItem<ZetkinUser> | undefined>;
 }
 
 const initialState: ManageStoreSlice = {
-  updatingById: {},
   users: undefined,
   usersById: {},
 };
@@ -42,20 +40,11 @@ const searchSlice = createSlice({
       state.usersById[user.id]!.data = user;
       state.usersById[user.id]!.loaded = new Date().toISOString();
     },
-    userUpdate: (state, action: PayloadAction<number>) => {
-      const userId = action.payload;
-      state.updatingById[userId] = true;
-    },
-    userUpdateError: (state, action: PayloadAction<[number, string]>) => {
-      const [userId] = action.payload;
-      state.updatingById[userId] = false;
-    },
     userUpdated: (state, action: PayloadAction<ZetkinUser>) => {
       const user = action.payload;
       state.usersById[user.id] = remoteItem(user.id);
       state.usersById[user.id]!.data = user;
       state.usersById[user.id]!.loaded = new Date().toISOString();
-      state.updatingById[user.id] = false;
       if (state.users) {
         remoteItemUpdated(state.users, user);
       }
@@ -93,8 +82,6 @@ export const {
   usersError,
   usersLoad,
   usersLoaded,
-  userUpdateError,
-  userUpdate,
   userUpdated,
   userError,
   userLoad,

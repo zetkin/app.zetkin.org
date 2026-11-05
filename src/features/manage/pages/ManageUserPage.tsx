@@ -74,7 +74,7 @@ const UserDetailsRow = ({
 const ManageUsersPage: FC<{ userId: number }> = ({ userId }) => {
   const messages = useMessages(messageIds);
 
-  const [user, updateUser, userUpdating] = useUser(userId);
+  const user = useUser(userId);
 
   const detailsRows = useMemo(
     () =>
@@ -106,13 +106,7 @@ const ManageUsersPage: FC<{ userId: number }> = ({ userId }) => {
             ))}
           </Box>
         )}
-        renderRightHeaderContent={() => (
-          <EditDetailsButton
-            updateUser={updateUser}
-            user={user}
-            userUpdating={userUpdating}
-          />
-        )}
+        renderRightHeaderContent={() => <EditDetailsButton user={user} />}
         title={messages.users.details.title()}
       />
     </Box>
