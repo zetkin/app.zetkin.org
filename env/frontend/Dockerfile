@@ -9,4 +9,7 @@ RUN npm ci
 COPY . /var/app
 RUN npm run build
 
+ARG ZETKIN_APP_VERSION
+ENV ZETKIN_APP_VERSION=$ZETKIN_APP_VERSION
+
 CMD ./run.sh

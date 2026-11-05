@@ -34,6 +34,7 @@ export type EnvVars = {
   TILESERVER?: string;
   TIMEZONE?: string;
   ZETKIN_APP_DOMAIN?: string;
+  ZETKIN_APP_VERSION?: string;
   ZETKIN_GEN2_CALL_URL?: string;
   ZETKIN_GEN2_ORGANIZE_URL?: string;
   ZETKIN_PRIVACY_POLICY_LINK?: string;
