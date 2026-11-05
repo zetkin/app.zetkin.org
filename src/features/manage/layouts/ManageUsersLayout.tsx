@@ -3,18 +3,23 @@
 import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-import ZUIText from 'zui/components/ZUIText';
-import ZUIBreadcrumbs, {
-  BreadcrumbTreeItem,
-} from 'zui/components/ZUIBreadcrumbs';
+import { BreadcrumbTreeItem } from 'zui/components/ZUIBreadcrumbs';
+import ZUIHeader from 'zui/components/ZUIHeader';
+import { ZUIPersonAvatarProps } from 'zui/components/ZUIPersonAvatar';
 
 type Props = {
+  avatar?: Omit<ZUIPersonAvatarProps, 'variant' | 'size'>;
   children: ReactNode;
   pathname: string;
   title: string;
 };
 
-const ManageUsersLayout: FC<Props> = ({ children, title, pathname }) => {
+const ManageUsersLayout: FC<Props> = ({
+  avatar,
+  children,
+  title,
+  pathname,
+}) => {
   const pathParts = pathname.split('/').filter(Boolean);
 
   const breadcrumbs = pathParts.reduceRight<BreadcrumbTreeItem[]>(
@@ -28,6 +33,9 @@ const ManageUsersLayout: FC<Props> = ({ children, title, pathname }) => {
     []
   );
 
+  const showBreadcrums =
+    pathParts.length > 1 && (pathParts[1] !== 'users' || pathParts.length > 2);
+
   return (
     <Box
       display="flex"
@@ -36,12 +44,11 @@ const ManageUsersLayout: FC<Props> = ({ children, title, pathname }) => {
       overflow="hidden"
       p="1rem"
     >
-      <Box alignItems="center" display="flex" flexDirection="row">
-        {!!breadcrumbs[0].children.length && (
-          <ZUIBreadcrumbs breadcrumbs={breadcrumbs} />
-        )}
-        <ZUIText variant="headingSm">{title}</ZUIText>
-      </Box>
+      <ZUIHeader
+        avatar={avatar}
+        breadcrumbs={showBreadcrums ? breadcrumbs : undefined}
+        title={title}
+      />
       {children}
     </Box>
   );
