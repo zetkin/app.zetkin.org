@@ -3,7 +3,7 @@ import { NoSsr } from '@mui/material';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import ManageUsersLayout from 'features/manage/layouts/ManageUsersLayout';
+import ManageUserLayout from 'features/manage/layouts/ManageUserLayout';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import ManageUserPage, {
   ManageUserError,
@@ -40,7 +40,7 @@ export default async function Page({ params }: Props) {
   );
 
   return (
-    <ManageUsersLayout
+    <ManageUserLayout
       pathname={pathname}
       title={`${visitedUser.first_name} ${visitedUser.last_name}`}
       visitedUser={visitedUser}
@@ -53,6 +53,6 @@ export default async function Page({ params }: Props) {
           </Suspense>
         </ErrorBoundary>
       </NoSsr>
-    </ManageUsersLayout>
+    </ManageUserLayout>
   );
 }

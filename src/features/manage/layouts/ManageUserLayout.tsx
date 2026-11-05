@@ -33,7 +33,7 @@ type Props = {
   visitedUser?: ZetkinUser;
 };
 
-const ManageUsersLayout: FC<Props> = ({
+const ManageUserLayout: FC<Props> = ({
   visitedUser,
   children,
   title,
@@ -198,4 +198,4 @@ const ManageUsersLayout: FC<Props> = ({
   );
 };
 
-export default ManageUsersLayout;
+export default ManageUserLayout;
