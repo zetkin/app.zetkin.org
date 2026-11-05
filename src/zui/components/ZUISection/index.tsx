@@ -341,7 +341,9 @@ const ZUISection: FC<SectionProps> = (props) => {
             width: '100%',
           }}
         >
-          <ZUIDivider />
+          <Box sx={{ marginX: '-1.25rem' }}>
+            <ZUIDivider />
+          </Box>
           {props.renderContent()}
         </Box>
       )}

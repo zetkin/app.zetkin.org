@@ -22,6 +22,39 @@ export default makeMessages('feat.profile', {
   ellipsisMenu: {
     merge: m('Merge with...'),
   },
+  emailPreferences: {
+    channels: {
+      description: m<{ name: string }>(
+        'These are the channels {name} has interacted with. If a channel is not in this list it means they have not subscribed to or muted the channel and may receive emails from it in the future.'
+      ),
+      empty: m<{ name: string }>(
+        '{name} has not subscribed to or muted any channels. They may receive emails from any channel in the future.'
+      ),
+      title: m('Channels'),
+    },
+    muteAll: {
+      button: m('Mute all'),
+      description: m<{ name: string }>(
+        '{name} will still receive reminders and other emails sent specifically to them as part of work they do in the organization.'
+      ),
+      title: m('Mute all channels'),
+    },
+    orgMuted: {
+      button: m('Unmute'),
+      description: m(
+        'They will not receive mass emails and can not subscribe to new channels while the organization is muted. They will still receive reminders and other emails sent specifically to them as part of work they do in the organization.'
+      ),
+      title: m('Organization is muted'),
+    },
+    subscribe: {
+      button: m('Subscribe'),
+      noChannels: m('No public channels to subscribe to'),
+    },
+    title: m('Email preferences'),
+    unmuteWarning: m<{ name: string }>(
+      '{name} muted this themselves. Only unmute it if they have asked you to.'
+    ),
+  },
   events: {
     noPast: m('No past events'),
     noUpcoming: m('No upcoming events'),
