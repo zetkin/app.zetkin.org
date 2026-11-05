@@ -11,7 +11,6 @@ export const detailsFieldKeys: (keyof ZetkinUser &
   keyof typeof messageIds.users.details.fields)[] = [
   'first_name',
   'last_name',
-  'username',
   'email',
   'phone',
   'lang',
