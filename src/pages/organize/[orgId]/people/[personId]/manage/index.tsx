@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import Head from 'next/head';
 
 import { PageWithLayout } from 'utils/types';
@@ -40,19 +40,19 @@ const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
           {person?.first_name} {person?.last_name}
         </title>
       </Head>
-      <Grid container direction="row" spacing={3}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+          width: { lg: '50%', xs: '100%' },
+        }}
+      >
         {hasEmailSettingsFeature && (
-          <Grid
-            size={{ lg: 6, xs: 12 }}
-            sx={{ '&:empty': { display: 'none' } }}
-          >
-            <PersonEmailPreferencesCard orgId={orgId} person={person} />
-          </Grid>
+          <PersonEmailPreferencesCard orgId={orgId} person={person} />
         )}
-        <Grid size={{ lg: 4, xs: 12 }}>
-          <PersonDeleteCard orgId={orgId} person={person} />
-        </Grid>
-      </Grid>
+        <PersonDeleteCard orgId={orgId} person={person} />
+      </Box>
     </>
   );
 };
