@@ -8,6 +8,10 @@ export default function useUsers(): ZetkinUser[] {
   const apiClient = useApiClient();
   const list = useAppSelector((state) => state.manage.users);
 
+  if (list?.error) {
+    throw new Error(serializeError(list.error));
+  }
+
   return useRemoteList(list, {
     actionOnError: (err) => usersError(serializeError(err)),
     actionOnLoad: () => usersLoad(),

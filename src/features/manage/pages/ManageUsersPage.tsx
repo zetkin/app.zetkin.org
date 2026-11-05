@@ -10,6 +10,7 @@ import { useMessages } from 'core/i18n';
 import messageIds from 'features/manage/l10n/messageIds';
 import ZUIButton from 'zui/components/ZUIButton';
 import range from 'utils/range';
+import ZUIAlert from 'zui/components/ZUIAlert';
 
 const skeletonHeight = '2.7rem';
 const actionColumnWidth = 140;
@@ -68,6 +69,16 @@ export const ManageUsersSkeleton = () => {
       {range(40).map((i) => (
         <ManageUsersSkeletonRow key={i} />
       ))}
+    </Box>
+  );
+};
+
+export const ManageUsersError = () => {
+  const messages = useMessages(messageIds);
+
+  return (
+    <Box display="flex" flexDirection="column" gap="1rem">
+      <ZUIAlert severity={'error'} title={messages.users.errorLoadingPage()} />
     </Box>
   );
 };
