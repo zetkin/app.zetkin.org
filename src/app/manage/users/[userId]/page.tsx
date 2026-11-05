@@ -41,14 +41,9 @@ export default async function Page({ params }: Props) {
 
   return (
     <ManageUsersLayout
-      avatar={{
-        firstName: visitedUser.first_name,
-        id: visitedUser.id,
-        isUser: true,
-        lastName: visitedUser.last_name,
-      }}
       pathname={pathname}
       title={`${visitedUser.first_name} ${visitedUser.last_name}`}
+      visitedUser={visitedUser}
     >
       {/*Enables client side resource loading via suspense*/}
       <NoSsr>

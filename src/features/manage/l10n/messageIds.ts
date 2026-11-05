@@ -42,5 +42,17 @@ export default makeMessages('feat.manage', {
     },
     errorLoadingPage: m('Error loading page. Please try again.'),
     manage: m('Manage'),
+    orgs: {
+      add: {
+        button: m('Connect'),
+      },
+    },
+    passwordReset: {
+      actionButton: m('Send password reset'),
+      alsoResetEmailVerification: m('Also reset email verification'),
+      failed: m('Failed to send password reset email.'),
+      modalTitle: m('Password reset'),
+      resetSuccess: m('Password reset email sent.'),
+    },
   },
 });
