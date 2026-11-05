@@ -28,7 +28,6 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 
@@ -245,9 +244,8 @@ const ManageSidebar = ({
   );
 
   const theme = useTheme();
-  const isSmall = useMediaQuery(theme.breakpoints.up('sm'));
   const fullDrawerWidth = `${drawerWidth}px`;
-  const smallDrawerWidth = `calc(${theme.spacing(isSmall ? 8 : 7)} + 1px)`;
+  const smallDrawerWidth = `calc(${theme.spacing(8)} + 1px)`;
 
   let width = fullDrawerWidth;
   if (!isMobile && !open) {
