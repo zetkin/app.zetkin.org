@@ -49,6 +49,34 @@ export default makeMessages('feat.manage', {
       add: {
         button: m('Connect'),
       },
+      disconnect: {
+        actionButton: m('Disconnect from organization'),
+        failed: m('Failed to disconnect user.'),
+        modalDescription: m(
+          'Disconnecting also disconnects the user from all sub-organization.'
+        ),
+        modalTitle: m('Disconnect from organization'),
+        success: m('Successfully disconnected user.'),
+      },
+      editRole: {
+        actionButton: m('Edit role'),
+        failed: m('Failed to update user role.'),
+        modalDescription: m(
+          'Updating a role also updates inherited roles in sub-organizations.'
+        ),
+        modalTitle: m('Edit role'),
+        roleToUpdate: m('Role'),
+        success: m('Successfully updated user role.'),
+      },
+      goToProfile: m('Go to profile'),
+      noneConnected: m('User not connected to any organization'),
+      roles: {
+        admin: m('Admin'),
+        inheritedBadge: m<{ role: string }>('{role} (inherited)'),
+        noRole: m('No official role'),
+        organizer: m('Organizer'),
+      },
+      title: m('Connected organizations'),
     },
     passwordReset: {
       actionButton: m('Send password reset'),

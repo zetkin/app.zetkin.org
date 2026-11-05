@@ -118,6 +118,7 @@ export default function mockState(overrides?: RootState) {
       timelineUpdatesByInstanceId: {},
     },
     manage: {
+      membershipsByUserId: {},
       users: undefined,
       usersById: {},
     },
