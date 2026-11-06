@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   remoteItem,
   RemoteItem,
-  remoteItemUpdated,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
@@ -14,13 +13,11 @@ export interface ManageStoreSlice {
     number,
     RemoteList<ZetkinMembership & { id: number }> | undefined
   >;
-  users: RemoteList<ZetkinUser> | undefined;
   usersById: Record<number, RemoteItem<ZetkinUser> | undefined>;
 }
 
 const initialState: ManageStoreSlice = {
   membershipsByUserId: {},
-  users: undefined,
   usersById: {},
 };
 
@@ -71,43 +68,12 @@ const searchSlice = createSlice({
       state.usersById[user.id] = remoteItem(user.id);
       state.usersById[user.id]!.data = user;
       state.usersById[user.id]!.loaded = new Date().toISOString();
-      if (state.users) {
-        remoteItemUpdated(state.users, user);
-      }
-    },
-    usersError: (state, action: PayloadAction<string>) => {
-      const serializedError = action.payload;
-      state.users = remoteList();
-      state.users.error = serializedError;
-      state.users.loaded = new Date().toISOString();
-    },
-    usersLoad: (state) => {
-      state.users = remoteList();
-    },
-    usersLoaded: (state, action: PayloadAction<ZetkinUser[]>) => {
-      const now = new Date().toISOString();
-
-      const users = action.payload;
-      state.users = remoteList(users);
-      state.users.loaded = now;
-      state.usersById = users.reduce(
-        (prev, cur) => {
-          prev[cur.id] = remoteItem(cur.id);
-          prev[cur.id].data = cur;
-          prev[cur.id].loaded = now;
-          return prev;
-        },
-        {} as Record<number, RemoteItem<ZetkinUser>>
-      );
     },
   },
 });
 
 export default searchSlice;
 export const {
-  usersError,
-  usersLoad,
-  usersLoaded,
   userUpdated,
   userError,
   userLoad,
