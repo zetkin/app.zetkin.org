@@ -14,13 +14,14 @@ import { getSeoTags } from 'utils/seoTags';
 
 type Props = {
   children: ReactNode;
-  params: {
+  params: Promise<{
     orgId: string;
     surveyId: string;
-  };
+  }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const { orgId, surveyId } = params;
   const apiClient = new BackendApiClient({});
 
@@ -44,11 +45,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 }
 
-const SurveyLayout: FC<Props> = async ({
-  children,
-  params,
-}): Promise<ReactElement> => {
-  const headersList = headers();
+const SurveyLayout: FC<Props> = async (props): Promise<ReactElement> => {
+  const params = await props.params;
+
+  const { children } = props;
+
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);

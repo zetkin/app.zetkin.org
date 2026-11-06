@@ -35,7 +35,7 @@ async function proxy(
   const hostAndPort = host + (port ? `:${port}` : '');
   const apiBase = `${protocol}://${hostAndPort}/v2/`;
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const session = await getIronSession<AppSession>(cookieStore, {
     cookieName: 'zsid',

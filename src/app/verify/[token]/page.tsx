@@ -5,15 +5,16 @@ import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     token: string;
-  };
+  }>;
 }
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   await redirectIfLoginNeeded();
 
   const { token } = params;
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
