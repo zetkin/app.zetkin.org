@@ -139,27 +139,14 @@ const UserOrganizationRow = ({
       {
         label: (
           <ZUIIconLabel
-            icon={LinkOff}
-            label={messages.users.orgs.disconnect.actionButton()}
+            icon={Person}
+            label={messages.users.orgs.goToProfile()}
           />
         ),
         onSelect: () => {
-          openConfirmationDialog({
-            content: () => (
-              <ZUIText variant="bodyMdRegular">
-                {messages.users.orgs.disconnect.modalDescription()}
-              </ZUIText>
-            ),
-            errorMessage: messages.users.orgs.disconnect.failed(),
-            submit: () =>
-              disconnectFromOrg(
-                membership.organization.id,
-                membership.profile.id
-              ),
-            successMessage: messages.users.orgs.disconnect.success(),
-            title: messages.users.orgs.disconnect.actionButton(),
-            type: 'save',
-          });
+          push(
+            `/organize/${membership.organization.id}/people/${membership.profile.id}`
+          );
         },
       },
       {
@@ -197,14 +184,27 @@ const UserOrganizationRow = ({
       {
         label: (
           <ZUIIconLabel
-            icon={Person}
-            label={messages.users.orgs.goToProfile()}
+            icon={LinkOff}
+            label={messages.users.orgs.disconnect.actionButton()}
           />
         ),
         onSelect: () => {
-          push(
-            `/organize/${membership.organization.id}/people/${membership.profile.id}`
-          );
+          openConfirmationDialog({
+            content: () => (
+              <ZUIText variant="bodyMdRegular">
+                {messages.users.orgs.disconnect.modalDescription()}
+              </ZUIText>
+            ),
+            errorMessage: messages.users.orgs.disconnect.failed(),
+            submit: () =>
+              disconnectFromOrg(
+                membership.organization.id,
+                membership.profile.id
+              ),
+            successMessage: messages.users.orgs.disconnect.success(),
+            title: messages.users.orgs.disconnect.actionButton(),
+            type: 'save',
+          });
         },
       },
     ],
