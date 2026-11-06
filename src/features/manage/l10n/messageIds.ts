@@ -92,6 +92,12 @@ export default makeMessages('feat.manage', {
       modalTitle: m('Send password reset'),
       sendSuccess: m('Password reset email has been sent.'),
     },
+    search: {
+      label: m('Search by email or name'),
+      noResults: m('No users found.'),
+      prompt: m('Enter an email address or name to search for users.'),
+    },
+    title: m('Users'),
     verifyEmail: {
       actionButton: m('Send email verification'),
       alsoResetEmailVerification: m('Reset "email verified"'),
