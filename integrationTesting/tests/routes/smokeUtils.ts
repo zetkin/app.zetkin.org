@@ -375,6 +375,7 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
   moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', [SpeakToFriend]);
   moxy.setZetkinApiMock('/orgs/1/emails', 'get', [SmokeEmail]);
   moxy.setZetkinApiMock('/orgs/1/emails/1', 'get', SmokeEmail);
+  moxy.setZetkinApiMock('/orgs/1/emails/1/bounces', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/emails/1/links', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/emails/1/recipients', 'get', []);
   moxy.setZetkinApiMock('/orgs/1/emails/1/stats', 'get', {

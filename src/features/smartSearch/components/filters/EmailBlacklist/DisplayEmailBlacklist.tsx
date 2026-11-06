@@ -6,6 +6,7 @@ import {
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedMsg from '../../UnderlinedMsg';
+import { MESSAGE_KEY_BY_REASON } from '.';
 
 const localMessageIds = messageIds.filters.emailBlacklist;
 
@@ -17,7 +18,7 @@ const DisplayEmailBlacklist = ({
   filter,
 }: DisplayEmailBlacklistProps): JSX.Element => {
   const op = filter.op || OPERATION.ADD;
-  const reason = filter.config.reason === 'unsub_org' ? 'unsubOrg' : 'any';
+  const reason = MESSAGE_KEY_BY_REASON[filter.config.reason || 'any'];
 
   return (
     <Msg
