@@ -91,6 +91,7 @@ export const ConfirmationDialogProvider = ({ children }: PropsWithChildren) => {
           display="flex"
           flexDirection="column"
           gap="1rem"
+          pt="1rem"
           width="100%"
         >
           {confirmationDialogProps?.content?.({
