@@ -28,6 +28,7 @@ import Memberships from '../../mockData/orgs/KPD/Memberships';
 import OrganizerTag from '../../mockData/orgs/KPD/tags/Organizer';
 import ReferendumSignatures from '../../mockData/orgs/KPD/projects/ReferendumSignatures';
 import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
+import RosaLuxemburgUser from '../../mockData/users/RosaLuxemburgUser';
 import SmokeArea from '../../mockData/orgs/KPD/areas/SmokeArea';
 import SmokeCallAssignment from '../../mockData/orgs/KPD/projects/ReferendumSignatures/callAssignments/SmokeCallAssignment';
 import SmokeEmail from '../../mockData/orgs/KPD/projects/ReferendumSignatures/emails/SmokeEmail';
@@ -134,7 +135,7 @@ export function collectPageRouteTemplates(): string[] {
   ).sort();
 }
 
-type RouteBucket = 'authenticated' | 'public' | 'redirect';
+type RouteBucket = 'authenticated' | 'public' | 'redirect' | 'superuser';
 
 const ROUTE_BUCKET_RULES: [pattern: string, bucket: RouteBucket][] = [
   ['/', 'redirect'],
@@ -142,6 +143,7 @@ const ROUTE_BUCKET_RULES: [pattern: string, bucket: RouteBucket][] = [
   ['/logout', 'redirect'],
   ['/call/*', 'authenticated'],
   ['/canvass/*', 'authenticated'],
+  ['/manage/*', 'superuser'],
   ['/my/*', 'authenticated'],
   ['/organize/*', 'authenticated'],
   ['/verify/*', 'authenticated'],
@@ -193,6 +195,7 @@ const ROUTE_PARAM_VALUES: Record<string, string> = {
   taskId: String(SpeakToFriend.id),
   themeId: '1',
   token: 'test-token',
+  userId: String(RosaLuxemburgUser.id),
   viewId: String(AllMembers.id),
 };
 
@@ -254,6 +257,10 @@ export const PUBLIC_PAGE_ROUTES: SmokeRoute[] = [
 
 export const AUTHENTICATED_PAGE_ROUTES: SmokeRoute[] = buildRoutes(
   templatesForBucket('authenticated')
+);
+
+export const SUPERUSER_PAGE_ROUTES: SmokeRoute[] = buildRoutes(
+  templatesForBucket('superuser')
 );
 
 export async function mockBetaRouteHandlers(page: Page) {
