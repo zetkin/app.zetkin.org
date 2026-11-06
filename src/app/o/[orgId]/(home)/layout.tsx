@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...baseTags,
       openGraph: {
         ...baseTags.openGraph,
-        ...getOrganizationOpenGraphTags(org),
+        ...(await getOrganizationOpenGraphTags(org)),
       },
       robots: { follow: true, index: org.is_public },
     };

@@ -29,7 +29,7 @@ export default async function redirectIfLoginNeeded(
 ) {
   const { allowUnverified } = config;
 
-  const headersList = headers();
+  const headersList = await headers();
   const path = headersList.get('x-requested-path') || '';
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);

@@ -10,7 +10,7 @@ export default async function submitJoinForm(
   prevState: EmbeddedJoinFormStatus,
   inputFormData: FormData
 ): Promise<EmbeddedJoinFormStatus> {
-  const headersList = headers();
+  const headersList = await headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
