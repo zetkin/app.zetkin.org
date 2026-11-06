@@ -8,6 +8,31 @@ export default function useUserMembershipActions(userId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
+  const connectToOrg = useCallback(
+    async (orgId: number) => {
+      await apiClient.post(`/api/orgs/${orgId}/join_requests`, {
+        user_id: userId,
+      });
+      const memberships = await apiClient.get<ZetkinMembership[]>(
+        `/api/users/${userId}/memberships`
+      );
+      const membership =
+        memberships.find((m) => m.organization.id === orgId) || null;
+      if (membership) {
+        try {
+          await apiClient.put(`/api/users/${userId}/following/${orgId}`, {
+            follow: true,
+          });
+          membership.follow = true;
+        } catch {
+          // follow update errors ignored
+        }
+      }
+      dispatch(userMembershipsLoaded([userId, memberships]));
+    },
+    [apiClient, dispatch, userId]
+  );
+
   const disconnectFromOrg = useCallback(
     async (orgId: number, personId: number) => {
       await apiClient.delete(
@@ -39,7 +64,7 @@ export default function useUserMembershipActions(userId: number) {
   );
 
   return useMemo(
-    () => ({ disconnectFromOrg, updateUserRole }),
-    [disconnectFromOrg, updateUserRole]
+    () => ({ connectToOrg, disconnectFromOrg, updateUserRole }),
+    [connectToOrg, disconnectFromOrg, updateUserRole]
   );
 }

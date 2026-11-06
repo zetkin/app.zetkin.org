@@ -46,8 +46,11 @@ export default makeMessages('feat.manage', {
     errorLoadingPage: m('Error loading page. Please try again.'),
     manage: m('Manage'),
     orgs: {
-      add: {
-        button: m('Connect'),
+      connect: {
+        actionButton: m('Connect'),
+        failed: m('Failed to connect user.'),
+        modalTitle: m('Connect to organization'),
+        success: m('Successfully connected user.'),
       },
       disconnect: {
         actionButton: m('Disconnect from organization'),
@@ -75,6 +78,11 @@ export default makeMessages('feat.manage', {
         inheritedBadge: m<{ role: string }>('{role} (inherited)'),
         noRole: m('No official role'),
         organizer: m('Organizer'),
+      },
+      select: {
+        failed: m('Failed to load organizations. Please try again.'),
+        noResults: m('No organizations found.'),
+        search: m('Search organization name'),
       },
       title: m('Connected organizations'),
     },

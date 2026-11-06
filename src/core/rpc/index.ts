@@ -38,6 +38,7 @@ import { addParticipantsDef } from 'features/events/rpc/addParticipants';
 import { getAutoLinkableSubmissionsDef } from 'features/surveys/rpc/getAutoLinkableSubmissions';
 import { getRootOrganizationDef } from 'features/organizations/rpc/getRootOrganization';
 import { createEmailFromEventParticipantsDef } from 'features/events/rpc/createEmailFromEventParticipants';
+import { searchOrganizationsDef } from 'features/organizations/rpc/searchOrganizations';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -81,6 +82,7 @@ export function createRPCRouter() {
   rpcRouter.register(getPublicOrganizationsDef);
   rpcRouter.register(addParticipantsDef);
   rpcRouter.register(getRootOrganizationDef);
+  rpcRouter.register(searchOrganizationsDef);
 
   return rpcRouter;
 }

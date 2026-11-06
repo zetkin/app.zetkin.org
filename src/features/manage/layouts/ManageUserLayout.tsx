@@ -1,7 +1,15 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC, ReactNode, useContext, useMemo, useState } from 'react';
+import {
+  FC,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Key, Mail } from '@mui/icons-material';
 
 import { BreadcrumbTreeItem } from 'zui/components/ZUIBreadcrumbs';
@@ -15,6 +23,8 @@ import { MenuItem as MenuItemType } from 'zui/components/ZUIMenu';
 import useUserActions from 'features/manage/hooks/useUserActions';
 import ZUISwitch from 'zui/components/ZUISwitch';
 import { ConfirmationDialogContext } from 'features/manage/components/ConfirmationDialogContext';
+import useUserMembershipActions from 'features/manage/hooks/useUserMembershipActions';
+import OrganizationSelect from 'features/manage/components/OrganizationSelect';
 
 type Props = {
   children: ReactNode;
@@ -31,6 +41,8 @@ const ManageUserLayout: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   const { openConfirmationDialog } = useContext(ConfirmationDialogContext);
+
+  const { connectToOrg } = useUserMembershipActions(visitedUser.id);
 
   const pathParts = useMemo(
     () => pathname.split('/').filter(Boolean),
@@ -108,7 +120,7 @@ const ManageUserLayout: FC<Props> = ({
             errorMessage: messages.users.passwordReset.failed(),
             submit: sendPasswordReset,
             successMessage: messages.users.passwordReset.sendSuccess(),
-            title: messages.users.verifyEmail.modalTitle(),
+            title: messages.users.passwordReset.modalTitle(),
             type: 'send',
           });
         },
@@ -126,6 +138,32 @@ const ManageUserLayout: FC<Props> = ({
     ]
   );
 
+  const toConnectOrgIdRef = useRef<number | null>(null);
+
+  const onConnectToOrgClick = useCallback(() => {
+    toConnectOrgIdRef.current = null;
+    openConfirmationDialog({
+      content: ({ setSubmitDisabled }) => (
+        <OrganizationSelect
+          onSelect={(organization) => {
+            toConnectOrgIdRef.current = organization?.id ?? null;
+          }}
+          setSubmitDisabled={setSubmitDisabled}
+        />
+      ),
+      errorMessage: messages.users.orgs.connect.failed(),
+      submit: async () => {
+        if (toConnectOrgIdRef.current === null) {
+          throw new Error('No organization selected');
+        }
+        await connectToOrg(toConnectOrgIdRef.current);
+      },
+      successMessage: messages.users.orgs.connect.success(),
+      title: messages.users.orgs.connect.modalTitle(),
+      type: 'save',
+    });
+  }, [openConfirmationDialog, messages.users.orgs.connect, connectToOrg]);
+
   return (
     <Box
       display="flex"
@@ -135,10 +173,11 @@ const ManageUserLayout: FC<Props> = ({
       p="1rem"
     >
       <ZUIHeader
-        actionButtonLabel={messages.users.orgs.add.button()}
+        actionButtonLabel={messages.users.orgs.connect.actionButton()}
         avatar={avatar}
         breadcrumbs={showBreadcrums ? breadcrumbs : undefined}
         ellipsisMenuItems={ellipsisMenuItems}
+        onActionButtonClick={onConnectToOrgClick}
         title={title}
       />
       {children}

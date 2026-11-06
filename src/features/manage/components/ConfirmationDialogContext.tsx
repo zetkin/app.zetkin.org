@@ -50,6 +50,7 @@ export const ConfirmationDialogProvider = ({ children }: PropsWithChildren) => {
   const confirmationDialogCtx = useMemo(
     () => ({
       openConfirmationDialog: (props: ConfirmationDialogProps) => {
+        setSubmitDisabled(false);
         setConfirmationDialogProps(props);
       },
     }),
