@@ -227,18 +227,25 @@ const UserOrganizationRow = ({
       flexDirection="row"
       justifyContent="space-between"
     >
-      <Box alignItems="center" display="flex" flexDirection="row" gap="0.5rem">
+      <Box
+        alignItems="center"
+        display="flex"
+        flexDirection="row"
+        flexWrap="wrap"
+        gap="0.5rem"
+      >
         <Link
           key={membership.organization.id}
-          alignItems="center"
           component={NextLink}
-          display="flex"
-          flexDirection="row"
-          gap="0.5rem"
           href={`/organize/${membership.organization.id}`}
           sx={{
             '&:hover': {
               textDecoration: 'underline',
+            },
+            '> *': {
+              display: 'inline-block',
+              mx: '0.25rem',
+              verticalAlign: 'middle',
             },
             textDecoration: 'none',
           }}
@@ -264,7 +271,7 @@ const UserOrganizationRow = ({
               padding: '0.1rem 0.5rem',
             })}
           >
-            <Typography variant="bodySmRegular">
+            <Typography variant="bodySmRegular" whiteSpace="noWrap">
               {membership.inherited
                 ? messages.users.orgs.roles.inheritedBadge({
                     role: messages.users.orgs.roles[
