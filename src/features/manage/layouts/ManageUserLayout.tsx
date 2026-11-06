@@ -3,6 +3,7 @@
 import { Box } from '@mui/material';
 import {
   FC,
+  MutableRefObject,
   ReactNode,
   useCallback,
   useContext,
@@ -15,7 +16,6 @@ import { Key, Mail } from '@mui/icons-material';
 import { BreadcrumbTreeItem } from 'zui/components/ZUIBreadcrumbs';
 import ZUIHeader from 'zui/components/ZUIHeader';
 import { ZUIPersonAvatarProps } from 'zui/components/ZUIPersonAvatar';
-import { ZetkinUser } from 'utils/types/zetkin';
 import messageIds from 'features/manage/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { WithRequired } from 'utils/types';
@@ -25,22 +25,41 @@ import ZUISwitch from 'zui/components/ZUISwitch';
 import { ConfirmationDialogContext } from 'features/manage/components/ConfirmationDialogContext';
 import useUserMembershipActions from 'features/manage/hooks/useUserMembershipActions';
 import OrganizationSelect from 'features/manage/components/OrganizationSelect';
+import useUser from 'features/manage/hooks/useUser';
 
 type Props = {
   children: ReactNode;
   pathname: string;
   title: string;
-  visitedUser: ZetkinUser;
+  userId: number;
 };
 
-const ManageUserLayout: FC<Props> = ({
-  visitedUser,
-  children,
-  title,
-  pathname,
+const EmailVerificationOptions = ({
+  resetVerificationRef,
+}: {
+  resetVerificationRef: MutableRefObject<boolean>;
 }) => {
   const messages = useMessages(messageIds);
+  const [resetVerification, setResetVerification] = useState(
+    resetVerificationRef.current
+  );
+
+  return (
+    <ZUISwitch
+      checked={resetVerification}
+      label={messages.users.verifyEmail.alsoResetEmailVerification()}
+      onChange={(checked) => {
+        setResetVerification(checked);
+        resetVerificationRef.current = checked;
+      }}
+    />
+  );
+};
+
+const ManageUserLayout: FC<Props> = ({ userId, children, title, pathname }) => {
+  const messages = useMessages(messageIds);
   const { openConfirmationDialog } = useContext(ConfirmationDialogContext);
+  const visitedUser = useUser(userId);
 
   const { connectToOrg } = useUserMembershipActions(visitedUser.id);
 
@@ -70,10 +89,7 @@ const ManageUserLayout: FC<Props> = ({
   const { updateUser, sendVerificationCode, sendPasswordReset } =
     useUserActions(visitedUser);
 
-  const [
-    resetEmailVerificationWhenSendingCode,
-    setResetEmailVerificationWhenSendingCode,
-  ] = useState(true);
+  const resetVerificationRef = useRef(true);
 
   const avatar: Omit<ZUIPersonAvatarProps, 'variant' | 'size'> | undefined =
     useMemo(
@@ -91,17 +107,16 @@ const ManageUserLayout: FC<Props> = ({
       {
         label: messages.users.verifyEmail.actionButton(),
         onClick: () => {
+          resetVerificationRef.current = true;
           openConfirmationDialog({
             content: () => (
-              <ZUISwitch
-                checked={resetEmailVerificationWhenSendingCode}
-                label={messages.users.verifyEmail.alsoResetEmailVerification()}
-                onChange={setResetEmailVerificationWhenSendingCode}
+              <EmailVerificationOptions
+                resetVerificationRef={resetVerificationRef}
               />
             ),
             errorMessage: messages.users.verifyEmail.failed(),
             submit: async () => {
-              if (resetEmailVerificationWhenSendingCode) {
+              if (resetVerificationRef.current) {
                 await updateUser({ email_is_verified: false });
               }
               await sendVerificationCode();
@@ -131,7 +146,6 @@ const ManageUserLayout: FC<Props> = ({
       messages.users.passwordReset,
       messages.users.verifyEmail,
       openConfirmationDialog,
-      resetEmailVerificationWhenSendingCode,
       sendPasswordReset,
       sendVerificationCode,
       updateUser,
