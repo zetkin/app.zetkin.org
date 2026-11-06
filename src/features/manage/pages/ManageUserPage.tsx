@@ -157,6 +157,7 @@ const UserOrganizationRow = ({
           />
         ),
         onSelect: () => {
+          targetRoleRef.current = membership.role as ZetkinRole;
           openConfirmationDialog({
             content: () => (
               <Box>
