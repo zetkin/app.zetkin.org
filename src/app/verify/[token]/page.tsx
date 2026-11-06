@@ -10,7 +10,7 @@ interface PageProps {
   };
 }
 export default async function Page({ params }: PageProps) {
-  await redirectIfLoginNeeded();
+  await redirectIfLoginNeeded({ allowUnverified: true });
 
   const { token } = params;
   const headersList = headers();
