@@ -169,8 +169,12 @@ const ManageUserLayout: FC<Props> = ({
       display="flex"
       flexDirection="column"
       gap="1rem"
-      overflow="hidden"
+      height="100%"
       p="1rem"
+      sx={{
+        overflowX: 'hidden',
+        overflowY: 'auto',
+      }}
     >
       <ZUIHeader
         actionButtonLabel={messages.users.orgs.connect.actionButton()}
