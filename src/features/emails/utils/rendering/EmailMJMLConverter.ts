@@ -31,8 +31,14 @@ export default class EmailMJMLConverter {
 
         blockChildren.push({
           tagName: 'mj-text',
-          attributes: {},
-          content: `<p>${contentHtml}</p>`,
+          attributes: block.data.signature
+            ? {
+                'font-size': '12px',
+                'line-height': '16px',
+                padding: '10px 25px',
+              }
+            : {},
+          content: block.data.signature ? contentHtml : `<p>${contentHtml}</p>`,
         });
       } else if (block.kind == 'button') {
         let href = escapeAttribute(block.data.href);

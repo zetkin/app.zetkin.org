@@ -5,6 +5,7 @@ export enum BLOCK_TYPES {
   HEADER = 'header',
   LIBRARY_IMAGE = 'libraryImage',
   PARAGRAPH = 'paragraph',
+  SIGNATURE = 'signature',
 }
 
 export enum InlineNodeKind {
@@ -91,8 +92,15 @@ export type ImageBlock = {
 export type ParagraphBlock = {
   data: {
     content: EmailContentInlineNode[];
+    signature?: SignatureData;
   };
   kind: BlockKind.PARAGRAPH;
+};
+
+export type SignatureData = {
+  email: string;
+  name: string;
+  phone?: string;
 };
 
 export type EmailContentBlock =
@@ -110,6 +118,8 @@ export enum BlockProblem {
   DEFAULT_BUTTON_TEXT = 'defaultButtonText',
   BUTTON_TEXT_MISSING = 'buttonTextMissing',
   INVALID_LINK_URL = 'invalidLinkURL',
+  SIGNATURE_NAME_MISSING = 'signatureNameMissing',
+  INVALID_SIGNATURE_EMAIL = 'invalidSignatureEmail',
 }
 
 export enum DeliveryProblem {

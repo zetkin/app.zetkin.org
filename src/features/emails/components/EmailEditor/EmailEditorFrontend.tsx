@@ -10,6 +10,7 @@ import EditorJS, {
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
+import Signature from './tools/Signature';
 import { EmailTheme } from 'features/emails/types';
 import LibraryImage from './tools/LibraryImage';
 import { linkToolFactory } from './tools/InlineLink';
@@ -111,6 +112,15 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         },
         paragraph: {
           class: ParagraphWithSpanPaste as unknown as ToolConstructable,
+        },
+        signature: {
+          class: Signature as unknown as ToolConstructable,
+          config: {
+            placeholder: messages.editor.tools.signature.title(),
+          },
+          toolbox: {
+            title: messages.editor.tools.signature.title(),
+          },
         },
         variable: {
           class: variableToolFactory(messages.editor.tools.variable.title()),

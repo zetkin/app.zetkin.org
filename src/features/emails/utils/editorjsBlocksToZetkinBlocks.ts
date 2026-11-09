@@ -1,6 +1,7 @@
 import { OutputBlockData } from '@editorjs/editorjs';
 
 import htmlToInlineNodes from './htmlToInlineNodes';
+import signatureToParagraph from './signatureToParagraph';
 import { BLOCK_TYPES, BlockKind, EmailContentBlock } from '../types';
 
 export default function editorjsBlocksToZetkinBlocks(
@@ -35,6 +36,8 @@ export default function editorjsBlocksToZetkinBlocks(
         },
         kind: BlockKind.IMAGE,
       });
+    } else if (editorjsBlock.type === BLOCK_TYPES.SIGNATURE) {
+      zetkinBlocks.push(signatureToParagraph(editorjsBlock.data));
     } else if (editorjsBlock.type === BLOCK_TYPES.PARAGRAPH) {
       zetkinBlocks.push({
         data: {

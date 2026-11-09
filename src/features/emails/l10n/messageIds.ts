@@ -98,6 +98,14 @@ export default makeMessages('feat.emails', {
         ),
         title: m('Text'),
       },
+      signature: {
+        email: m('Email'),
+        invalidEmail: m('Enter a valid email address'),
+        name: m('Name'),
+        nameRequired: m('Enter the sender’s name'),
+        phone: m('Phone number (optional)'),
+        title: m('Signature'),
+      },
       variable: {
         title: m('Variable'),
       },
