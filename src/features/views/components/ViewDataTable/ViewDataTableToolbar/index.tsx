@@ -185,9 +185,9 @@ const ViewDataTableToolbar: React.FunctionComponent<
       </Box>
       <BulkTagDialog
         numPeople={selection.length}
+        onBulkTag={onBulkTag}
         onClose={() => setTagDialogOpen(false)}
         open={tagDialogOpen}
-        onBulkTag={onBulkTag}
       />
       <BulkDeleteDialog
         numPeople={selection.length}

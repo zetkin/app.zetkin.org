@@ -93,6 +93,7 @@ const BulkDeleteDialog: FC<Props> = ({
         <Button
           color="error"
           disabled={!hasConfirmedDeletion}
+          loading={isLoading}
           onClick={async () => {
             try {
               setErrorDeleting(false);
