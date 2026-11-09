@@ -43,7 +43,6 @@ const BulkTagDialog: FC<Props> = ({ numPeople, onBulkTag, onClose, open }) => {
       <DialogContent>
         <TagManager
           assignedTags={selectedTags}
-          disableValueTags={true}
           groupTags
           onAssignTag={(tag) => {
             const newAssignedTags = selectedTags.concat([

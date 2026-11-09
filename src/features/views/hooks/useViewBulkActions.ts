@@ -30,7 +30,6 @@ export default function useViewBulkActions(orgId: number) {
       dispatch(personsDeleted(personIds));
     },
     async bulkTagPeople(personIds: number[], tags: ZetkinAppliedTag[]) {
-      const tagIds = tags.map((tag) => tag.id);
       await apiClient.post<ZetkinPersonImportPostBody>(
         `/api/orgs/${orgId}/bulk/execute`,
         {
@@ -39,9 +38,10 @@ export default function useViewBulkActions(orgId: number) {
               id,
             },
             op: 'person.get',
-            ops: tagIds.map((tagId) => ({
+            ops: tags.map((tag) => ({
               op: 'person.tag',
-              tag_id: tagId,
+              tag_id: tag.id,
+              value: tag.value ?? undefined,
             })),
           })),
         }
