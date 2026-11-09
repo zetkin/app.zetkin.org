@@ -3,8 +3,8 @@ import {
   Add,
   DeleteOutline,
   Launch,
+  LocalOffer,
   RemoveCircleOutline,
-  Tag,
 } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
 import {
@@ -132,7 +132,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
                     },
                     {
                       disabled: disabled,
-                      icon: <Tag />,
+                      icon: <LocalOffer />,
                       label: messages.toolbar.bulk.addTag(),
                       onClick: () => setTagDialogOpen(true),
                     },
