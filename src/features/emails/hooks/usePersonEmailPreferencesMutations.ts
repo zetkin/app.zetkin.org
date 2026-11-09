@@ -1,6 +1,9 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { personEmailPreferencesInvalidated } from '../store';
-import { ZetkinChannelStatus } from '../types';
+import { personEmailPreferencesLoaded } from '../store';
+import {
+  ZetkinPersonChannelPreference,
+  ZetkinPersonEmailPreferences,
+} from '../types';
 
 export default function usePersonEmailPreferencesMutations(
   orgId: number,
@@ -11,16 +14,31 @@ export default function usePersonEmailPreferencesMutations(
 
   const preferencesUrl = `/api2/orgs/${orgId}/people/${personId}/email_preferences`;
 
+  const patch = async (url: string, data: Record<string, unknown>) => {
+    const preferences = await apiClient.patch<
+      ZetkinPersonEmailPreferences,
+      Record<string, unknown>
+    >(url, data);
+    dispatch(personEmailPreferencesLoaded([personId, preferences]));
+  };
+
+  const setChannelStatus = (
+    channelId: number,
+    status: 'channel_muted' | 'has_received' | 'subscribed'
+  ) => patch(`${preferencesUrl}/channels/${channelId}`, { status });
+
   return {
-    async setChannelStatus(channelId: number, status: ZetkinChannelStatus) {
-      await apiClient.patch(`${preferencesUrl}/channels/${channelId}`, {
-        status,
-      });
-      dispatch(personEmailPreferencesInvalidated(personId));
-    },
-    async setOrgMuted(muted: boolean) {
-      await apiClient.patch(preferencesUrl, { org_muted: muted });
-      dispatch(personEmailPreferencesInvalidated(personId));
+    muteChannel: (channelId: number) =>
+      setChannelStatus(channelId, 'channel_muted'),
+    setOrgMuted: (muted: boolean) =>
+      patch(preferencesUrl, { org_muted: muted }),
+    subscribeToChannel: (channelId: number) =>
+      setChannelStatus(channelId, 'subscribed'),
+    async unmuteChannel(channel: ZetkinPersonChannelPreference) {
+      await setChannelStatus(channel.id, 'has_received');
+      if (channel.subscribed && channel.published) {
+        await setChannelStatus(channel.id, 'subscribed');
+      }
     },
   };
 }

@@ -9,8 +9,6 @@ import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import usePerson from 'features/profile/hooks/usePerson';
 import { getPersonScaffoldProps, scaffoldOptions } from '../index';
-import { EMAIL_SETTINGS } from 'utils/featureFlags';
-import useFeature from 'utils/featureFlags/useFeature';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   getPersonScaffoldProps,
@@ -27,7 +25,6 @@ const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
   personId,
 }) => {
   const { data: person } = usePerson(orgId, personId);
-  const hasEmailSettingsFeature = useFeature(EMAIL_SETTINGS, orgId);
 
   if (!person) {
     return null;
@@ -48,9 +45,7 @@ const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
           width: { lg: '50%', xs: '100%' },
         }}
       >
-        {hasEmailSettingsFeature && (
-          <PersonEmailPreferencesCard orgId={orgId} person={person} />
-        )}
+        <PersonEmailPreferencesCard orgId={orgId} person={person} />
         <PersonDeleteCard orgId={orgId} person={person} />
       </Box>
     </>

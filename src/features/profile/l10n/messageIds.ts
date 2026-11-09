@@ -25,11 +25,9 @@ export default makeMessages('feat.profile', {
   emailPreferences: {
     channels: {
       description: m<{ name: string }>(
-        'These are the channels {name} has interacted with. If a channel is not in this list it means they have not subscribed to or muted the channel and may receive emails from it in the future.'
+        'Turn off a channel to stop {name} from receiving mass emails sent through it.'
       ),
-      empty: m<{ name: string }>(
-        '{name} has not subscribed to or muted any channels. They may receive emails from any channel in the future.'
-      ),
+      empty: m('This organization has no email channels yet.'),
       title: m('Channels'),
     },
     muteAll: {

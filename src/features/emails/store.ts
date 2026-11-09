@@ -168,13 +168,6 @@ const emailsSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
-    personEmailPreferencesInvalidated: (
-      state,
-      action: PayloadAction<number>
-    ) => {
-      const personId = action.payload;
-      state.preferencesByPersonId[personId].isStale = true;
-    },
     personEmailPreferencesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
       state.preferencesByPersonId[personId] = remoteItem(personId, {
@@ -354,7 +347,6 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
-  personEmailPreferencesInvalidated,
   personEmailPreferencesLoad,
   personEmailPreferencesLoaded,
   themeCreate,

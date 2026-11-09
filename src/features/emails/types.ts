@@ -238,7 +238,12 @@ export type ZetkinEmailStats = {
   num_target_matches: number;
 };
 
-export type ZetkinChannelStatus = 'muted' | 'received' | 'subscribed';
+export type ZetkinChannelStatus =
+  | 'channel_muted'
+  | 'has_received'
+  | 'no_relationship'
+  | 'org_muted'
+  | 'subscribed';
 
 export type ZetkinPersonChannelPreference = {
   description: string | null;

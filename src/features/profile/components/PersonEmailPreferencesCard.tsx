@@ -76,10 +76,8 @@ const EmailPreferencesSection: FC<
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const { setChannelStatus, setOrgMuted } = usePersonEmailPreferencesMutations(
-    orgId,
-    person.id
-  );
+  const { muteChannel, setOrgMuted, subscribeToChannel, unmuteChannel } =
+    usePersonEmailPreferencesMutations(orgId, person.id);
   const [subscribeAnchorEl, setSubscribeAnchorEl] =
     useState<HTMLElement | null>(null);
 
@@ -107,7 +105,9 @@ const EmailPreferencesSection: FC<
   };
 
   const subscribableChannels = preferences.channels.filter(
-    (channel) => !!channel.published && channel.status == 'received'
+    (channel) =>
+      !!channel.published &&
+      (channel.status == 'has_received' || channel.status == 'no_relationship')
   );
 
   const renderSubscribeButton = () => (
@@ -130,7 +130,7 @@ const EmailPreferencesSection: FC<
                 label: channel.title,
                 onClick: () => {
                   setSubscribeAnchorEl(null);
-                  run(() => setChannelStatus(channel.id, 'subscribed'));
+                  run(() => subscribeToChannel(channel.id));
                 },
               }))
             : [
@@ -181,7 +181,7 @@ const EmailPreferencesSection: FC<
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               {!hasChannels && (
                 <ZUIText color="secondary">
-                  {messages.emailPreferences.channels.empty({ name })}
+                  {messages.emailPreferences.channels.empty()}
                 </ZUIText>
               )}
               {preferences.channels.map((channel, index) => (
@@ -192,15 +192,10 @@ const EmailPreferencesSection: FC<
                     onChange={(checked) => {
                       if (checked) {
                         confirmUnmute(channel.muted_by_user_id === null, () =>
-                          run(() =>
-                            setChannelStatus(
-                              channel.id,
-                              channel.subscribed ? 'subscribed' : 'received'
-                            )
-                          )
+                          run(() => unmuteChannel(channel))
                         );
                       } else {
-                        run(() => setChannelStatus(channel.id, 'muted'));
+                        run(() => muteChannel(channel.id));
                       }
                     }}
                   />
@@ -241,7 +236,7 @@ const ChannelPreferenceRow: FC<{
   channel: ZetkinPersonChannelPreference;
   onChange: (checked: boolean) => void;
 }> = ({ channel, onChange }) => {
-  const isMuted = channel.status == 'muted';
+  const isMuted = channel.status == 'channel_muted';
   const color = isMuted ? 'secondary' : 'primary';
 
   return (
