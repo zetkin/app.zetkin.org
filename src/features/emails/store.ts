@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   EmailInsights,
   EmailTheme,
-  ZetkinEmailChannel,
   ZetkinEmailStats,
   ZetkinPersonEmailPreferences,
 } from './types';
@@ -23,7 +22,6 @@ type SerializedError = {
 type PersonEmailPreferences = ZetkinPersonEmailPreferences & { id: number };
 
 export interface EmailStoreSlice {
-  channelList: RemoteList<ZetkinEmailChannel>;
   configList: RemoteList<ZetkinEmailConfig>;
   emailList: RemoteList<ZetkinEmail>;
   themeList: RemoteList<EmailTheme>;
@@ -37,7 +35,6 @@ export interface EmailStoreSlice {
 }
 
 const initialState: EmailStoreSlice = {
-  channelList: remoteList(),
   configList: remoteList(),
   emailList: remoteList(),
   insightsByEmailId: {},
@@ -54,13 +51,6 @@ const emailsSlice = createSlice({
   initialState,
   name: 'emails',
   reducers: {
-    channelsLoad: (state) => {
-      state.channelList.isLoading = true;
-    },
-    channelsLoaded: (state, action: PayloadAction<ZetkinEmailChannel[]>) => {
-      state.channelList = remoteList(action.payload);
-      state.channelList.loaded = new Date().toISOString();
-    },
     configsLoad: (state) => {
       state.configList.isLoading = true;
     },
@@ -348,8 +338,6 @@ const emailsSlice = createSlice({
 
 export default emailsSlice;
 export const {
-  channelsLoad,
-  channelsLoaded,
   configsLoad,
   configsLoaded,
   emailCreate,

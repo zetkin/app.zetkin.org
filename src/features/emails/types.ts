@@ -238,22 +238,25 @@ export type ZetkinEmailStats = {
   num_target_matches: number;
 };
 
-export type ZetkinEmailChannel = {
+export type ZetkinChannelStatus = 'muted' | 'received' | 'subscribed';
+
+export type ZetkinPersonChannelPreference = {
   description: string | null;
   double_opt_in: boolean;
   id: number;
-  is_public: boolean;
+  muted: string | null;
+  muted_by_user_id: number | null;
+  published: string | null;
+  status: ZetkinChannelStatus;
+  subscribed: string | null;
+  subscribed_by_user_id: number | null;
   title: string;
 };
 
-export type ZetkinChannelPreference = {
-  channel: ZetkinEmailChannel;
-  status: 'muted' | 'received' | 'subscribed';
-  updated_by_user_id: number | null;
-};
-
 export type ZetkinPersonEmailPreferences = {
-  channels: ZetkinChannelPreference[];
-  muted: boolean;
-  muted_by_user_id: number | null;
+  channels: ZetkinPersonChannelPreference[];
+  org_muted: {
+    muted: string | null;
+    muted_by_user_id: number | null;
+  };
 };
