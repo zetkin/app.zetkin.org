@@ -95,7 +95,7 @@ declare module '@mui/x-data-grid-pro' {
     isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
-    onBulkDelete: () => void;
+    onBulkDelete: () => Promise<void>;
     onBulkTag: (tags: ZetkinAppliedTag[]) => Promise<void>;
     onRowsRemove: () => void;
     onViewCreate: () => void;
@@ -364,7 +364,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   );
 
   const onBulkDelete = useCallback(async () => {
-    bulkDeletePeople(selection);
+    await bulkDeletePeople(selection);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
 

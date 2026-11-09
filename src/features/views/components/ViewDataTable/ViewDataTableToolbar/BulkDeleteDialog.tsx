@@ -9,15 +9,16 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 
 import { Msg, useMessages } from 'core/i18n';
 import useRootOrganization from 'features/organizations/hooks/useRootOrganization';
 import messageIds from 'features/views/l10n/messageIds';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
 type Props = {
   numPeople: number;
-  onBulkDelete: () => void;
+  onBulkDelete: () => Promise<void>;
   onClose: () => void;
   open: boolean;
   orgId: number;
@@ -32,12 +33,17 @@ const BulkDeleteDialog: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   const rootOrg = useRootOrganization(orgId).data;
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const [deletionString, setDeletionString] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorDeleting, setErrorDeleting] = useState(false);
   const hasConfirmedDeletion = deletionString === rootOrg?.title;
 
   const close = () => {
     onClose();
     setDeletionString('');
+    setErrorDeleting(false);
   };
 
   return (
@@ -74,6 +80,11 @@ const BulkDeleteDialog: FC<Props> = ({
           value={deletionString}
           variant="outlined"
         />
+        {true && (
+          <Alert severity="error">
+            <Msg id={messageIds.deleteRowsDialog.errorMessage} />
+          </Alert>
+        )}
       </DialogContent>
       <DialogActions sx={{ padding: 2 }}>
         <Button onClick={() => close()}>
@@ -82,9 +93,23 @@ const BulkDeleteDialog: FC<Props> = ({
         <Button
           color="error"
           disabled={!hasConfirmedDeletion}
-          onClick={() => {
-            onBulkDelete();
-            close();
+          onClick={async () => {
+            try {
+              setErrorDeleting(false);
+              setIsLoading(true);
+              await onBulkDelete();
+              close();
+              showSnackbar(
+                'success',
+                messages.deleteRowsDialog.successMessage({
+                  numPeople,
+                })
+              );
+            } catch {
+              setErrorDeleting(true);
+            } finally {
+              setIsLoading(false);
+            }
           }}
           variant="contained"
         >

@@ -36,7 +36,7 @@ export interface ViewDataTableToolbarProps {
   isSmartSearch: boolean;
   onColumnCreate: () => void;
   onBulkTag: (tags: ZetkinAppliedTag[]) => Promise<void>;
-  onBulkDelete: () => void;
+  onBulkDelete: () => Promise<void>;
   onRowsRemove: () => void;
   onViewCreate: () => void;
   selection: number[];
