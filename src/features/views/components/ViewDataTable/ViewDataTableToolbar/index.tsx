@@ -4,6 +4,7 @@ import {
   DeleteOutline,
   Launch,
   RemoveCircleOutline,
+  Tag,
 } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
 import {
@@ -23,6 +24,8 @@ import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { BULK_DELETE } from 'utils/featureFlags';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 import BulkDeleteDialog from './BulkDeleteDialog';
+import BulkTagDialog from './BulkTagDialog';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface ViewDataTableToolbarProps {
   disableBulkActions?: boolean;
@@ -32,6 +35,7 @@ export interface ViewDataTableToolbarProps {
   isLoading: boolean;
   isSmartSearch: boolean;
   onColumnCreate: () => void;
+  onBulkTag: (tags: ZetkinAppliedTag[]) => Promise<void>;
   onBulkDelete: () => void;
   onRowsRemove: () => void;
   onViewCreate: () => void;
@@ -51,6 +55,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   isLoading,
   isSmartSearch,
   onBulkDelete,
+  onBulkTag,
   onColumnCreate,
   onRowsRemove,
   onViewCreate,
@@ -63,6 +68,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { orgId } = useNumericRouteParams();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [tagDialogOpen, setTagDialogOpen] = useState(false);
 
   const hasSelection = !!selection.length;
   const hasBulkDelete = useFeatureWithOrg(BULK_DELETE, orgId);
@@ -124,6 +130,12 @@ const ViewDataTableToolbar: React.FunctionComponent<
                       label: messages.toolbar.bulk.createList(),
                       onClick: onViewCreate,
                     },
+                    {
+                      disabled: disabled,
+                      icon: <Tag />,
+                      label: messages.toolbar.bulk.addTag(),
+                      onClick: () => setTagDialogOpen(true),
+                    },
                     ...(isSmartSearch ? [] : bulkActionsForStaticLists),
 
                     ...(hasBulkDelete ? bulkDeletePersons : []),
@@ -171,6 +183,12 @@ const ViewDataTableToolbar: React.FunctionComponent<
           </Box>
         </Box>
       </Box>
+      <BulkTagDialog
+        numPeople={selection.length}
+        onClose={() => setTagDialogOpen(false)}
+        open={tagDialogOpen}
+        onBulkTag={onBulkTag}
+      />
       <BulkDeleteDialog
         numPeople={selection.length}
         onBulkDelete={onBulkDelete}

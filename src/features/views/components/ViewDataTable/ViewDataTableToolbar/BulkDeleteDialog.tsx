@@ -75,7 +75,7 @@ const BulkDeleteDialog: FC<Props> = ({
           variant="outlined"
         />
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ padding: 2 }}>
         <Button onClick={() => close()}>
           <Msg id={messageIds.deleteRowsDialog.cancelButton} />
         </Button>
