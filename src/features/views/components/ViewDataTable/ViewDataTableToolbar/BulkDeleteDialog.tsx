@@ -80,7 +80,7 @@ const BulkDeleteDialog: FC<Props> = ({
           value={deletionString}
           variant="outlined"
         />
-        {true && (
+        {errorDeleting && (
           <Alert severity="error">
             <Msg id={messageIds.deleteRowsDialog.errorMessage} />
           </Alert>
