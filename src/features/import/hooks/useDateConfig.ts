@@ -59,9 +59,9 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const personNumberFormats: PersonNumberFormat[] = ['se', 'dk', 'no'];
 
   const dateFormats = {
-    ['MM-DD-YYYY']: '10-06-2024',
-    ['YY-MM-DD']: '24-10-06',
-    ['YYYY-MM-DD']: '2024-10-06',
+    ['MM-DD-YYYY']: '01-25-1991',
+    ['YY-MM-DD']: '91-01-25',
+    ['YYYY-MM-DD']: '1991-01-25',
   };
 
   const isPersonNumberFormat = (
