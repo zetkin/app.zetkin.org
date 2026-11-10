@@ -18,8 +18,10 @@ export default class LibraryImage {
 
   constructor({
     config,
-    data,
-  }: BlockToolConstructorOptions<LibraryImageData, LibraryImageConfig>) {
+    data = { fileId: 0, fileName: '', url: '' },
+  }: Partial<
+    BlockToolConstructorOptions<LibraryImageData, LibraryImageConfig>
+  >) {
     if (!config) {
       throw new Error('Config must be defined');
     }

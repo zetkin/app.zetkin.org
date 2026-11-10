@@ -2,11 +2,7 @@
 //@ts-ignore
 import Header from '@editorjs/header';
 import { Box, useTheme } from '@mui/material';
-import EditorJS, {
-  EditorConfig,
-  OutputData,
-  ToolConstructable,
-} from '@editorjs/editorjs';
+import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
@@ -74,7 +70,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       readOnly: readOnly,
       tools: {
         button: {
-          class: Button as unknown as ToolConstructable,
+          class: Button,
           config: {
             attributes: emailTheme?.block_attributes?.['button'] ?? {},
           },
@@ -88,7 +84,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           inlineToolbar: ['variable'],
         },
         libraryImage: {
-          class: LibraryImage as unknown as ToolConstructable,
+          class: LibraryImage,
           config: {
             attributes: emailTheme?.block_attributes?.['image'] ?? {},
             orgId,
