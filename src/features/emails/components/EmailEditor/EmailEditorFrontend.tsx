@@ -7,7 +7,7 @@ import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
 import Signature from './tools/Signature';
-import { EmailTheme } from 'features/emails/types';
+import { EmailTheme, SignatureData } from 'features/emails/types';
 import LibraryImage from './tools/LibraryImage';
 import { linkToolFactory } from './tools/InlineLink';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -16,6 +16,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import variableToolFactory from './tools/inlineVariable';
 import ParagraphWithSpanPaste from './tools/paragraphWithSpanPaste';
 import { useNonce } from 'core/hooks/useNonce';
+import useSignatureDefaults from 'features/emails/hooks/useSignatureDefaults';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -37,6 +38,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   const muiTheme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
+  const defaultSignatureData = useSignatureDefaults(orgId);
+  const signatureDefaults = useRef<SignatureData>({ email: '', name: '' });
+  signatureDefaults.current = defaultSignatureData;
   const editorInstance = useRef<EditorJS | null>(null);
   const blockIndexRef = useRef<number | null>(null);
 
@@ -112,6 +116,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
         signature: {
           class: Signature,
           config: {
+            getDefaultData: () => signatureDefaults.current,
             placeholder: messages.editor.tools.signature.title(),
           },
           toolbox: {

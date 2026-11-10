@@ -4,6 +4,11 @@ import { createRoot, Root } from 'react-dom/client';
 
 import { SignatureData } from 'features/emails/types';
 
+type SignatureConfig = {
+  getDefaultData?: () => SignatureData;
+  placeholder?: string;
+};
+
 export default class Signature {
   private _data: SignatureData;
   private _placeholder: string;
@@ -12,13 +17,15 @@ export default class Signature {
   constructor({
     config,
     data,
-  }: Partial<BlockToolConstructorOptions<SignatureData>>) {
+  }: Partial<BlockToolConstructorOptions<SignatureData, SignatureConfig>>) {
+    const initialData =
+      data && Object.keys(data).length ? data : config?.getDefaultData?.();
     this._data = {
-      email: data?.email || '',
-      name: data?.name || '',
-      organization: data?.organization,
-      phone: data?.phone || '',
-      title: data?.title,
+      email: initialData?.email || '',
+      name: initialData?.name || '',
+      organization: initialData?.organization,
+      phone: initialData?.phone || '',
+      title: initialData?.title,
     };
     this._placeholder = config?.placeholder || '';
   }
