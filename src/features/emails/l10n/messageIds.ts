@@ -103,7 +103,9 @@ export default makeMessages('feat.emails', {
         invalidEmail: m('Enter a valid email address'),
         name: m('Name'),
         nameRequired: m('Enter the sender’s name'),
+        organization: m('Organization (optional)'),
         phone: m('Phone number (optional)'),
+        senderTitle: m('Title (optional)'),
         title: m('Signature'),
       },
       variable: {

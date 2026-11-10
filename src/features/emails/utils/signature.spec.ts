@@ -15,6 +15,12 @@ const signature: SignatureData = {
   phone: '+49 123 456789',
 };
 
+const signatureWithTitleAndOrganization: SignatureData = {
+  ...signature,
+  organization: 'Example Organization',
+  title: 'Organizer',
+};
+
 describe('signature blocks', () => {
   it('preserves signature metadata when traversing email content', () => {
     const content = { blocks: [signatureToParagraph(signature)] };
@@ -41,25 +47,44 @@ describe('signature blocks', () => {
     );
   });
 
-  it.each([signature, { ...signature, phone: undefined }])(
-    'preserves contact details when saving and reopening',
-    (data) => {
-      const savedBlocks = editorjsBlocksToZetkinBlocks([
-        { data, type: BLOCK_TYPES.SIGNATURE },
-      ]);
-      expect(savedBlocks).toEqual([
-        {
-          data: { content: expect.any(Array), signature: data },
-          kind: BlockKind.PARAGRAPH,
-        },
-      ]);
-      expect(
-        zetkinBlocksToEditorjsBlocks(JSON.parse(JSON.stringify(savedBlocks)))
-      ).toEqual([
-        { data, id: expect.any(String), type: BLOCK_TYPES.SIGNATURE },
-      ]);
-    }
-  );
+  it.each([
+    signature,
+    { ...signature, phone: undefined },
+    signatureWithTitleAndOrganization,
+  ])('preserves contact details when saving and reopening', (data) => {
+    const savedBlocks = editorjsBlocksToZetkinBlocks([
+      { data, type: BLOCK_TYPES.SIGNATURE },
+    ]);
+    expect(savedBlocks).toEqual([
+      {
+        data: { content: expect.any(Array), signature: data },
+        kind: BlockKind.PARAGRAPH,
+      },
+    ]);
+    expect(
+      zetkinBlocksToEditorjsBlocks(JSON.parse(JSON.stringify(savedBlocks)))
+    ).toEqual([{ data, id: expect.any(String), type: BLOCK_TYPES.SIGNATURE }]);
+  });
+
+  it('renders the title and organization after the name', () => {
+    const paragraph = signatureToParagraph(signatureWithTitleAndOrganization);
+    delete paragraph.data.signature;
+    expect(zetkinBlocksToEditorjsBlocks([paragraph])[0].data.text).toEqual(
+      '<b>Alex Organizer</b><br>Organizer<br>Example Organization<br>alex@example.org<br>+49 123 456789'
+    );
+    const html = renderEmailHtml(
+      {
+        content: JSON.stringify({
+          blocks: [signatureToParagraph(signatureWithTitleAndOrganization)],
+        }),
+        theme: null,
+      } as ZetkinEmail,
+      {}
+    );
+    expect(html).toContain(
+      '<b>Alex Organizer</b><br>Organizer<br>Example Organization<br>alex@example.org'
+    );
+  });
 
   it('requires a name and valid email but allows an omitted phone', () => {
     expect(
@@ -111,7 +136,9 @@ describe('signature blocks', () => {
             signatureToParagraph({
               email: '<img src=x onerror=alert(1)>',
               name: '<script>alert(1)</script>',
+              organization: '<i>Organization</i>',
               phone: '<b>123</b>',
+              title: '<b>Organizer</b>',
             }),
           ],
         }),
@@ -122,6 +149,8 @@ describe('signature blocks', () => {
     expect(html).toContain('&lt;script&gt;');
     expect(html).toContain('&lt;img');
     expect(html).toContain('&lt;b&gt;123&lt;/b&gt;');
+    expect(html).toContain('&lt;i&gt;Organization&lt;/i&gt;');
+    expect(html).toContain('&lt;b&gt;Organizer&lt;/b&gt;');
     expect(html).not.toContain('<script>');
     expect(html).not.toContain('<img');
   });

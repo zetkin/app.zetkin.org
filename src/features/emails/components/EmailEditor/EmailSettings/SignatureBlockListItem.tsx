@@ -54,6 +54,18 @@ const SignatureBlockListItem: FC<SignatureBlockListItemProps> = ({
           value={values.name || ''}
         />
         <TextField
+          fullWidth
+          label={messages.senderTitle()}
+          onChange={(event) => updateField('title', event.target.value)}
+          value={values.title || ''}
+        />
+        <TextField
+          fullWidth
+          label={messages.organization()}
+          onChange={(event) => updateField('organization', event.target.value)}
+          value={values.organization || ''}
+        />
+        <TextField
           error={!isEmail(values.email || '')}
           fullWidth
           helperText={

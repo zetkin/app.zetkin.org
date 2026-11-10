@@ -16,7 +16,9 @@ export default class Signature {
     this._data = {
       email: data?.email || '',
       name: data?.name || '',
+      organization: data?.organization,
       phone: data?.phone || '',
+      title: data?.title,
     };
     this._placeholder = config?.placeholder || '';
   }
@@ -35,6 +37,8 @@ export default class Signature {
     this._root.render(
       <Box sx={{ fontSize: '12px', lineHeight: '16px', py: '10px' }}>
         <Box component="strong">{this._data.name || this._placeholder}</Box>
+        {this._data.title && <Box>{this._data.title}</Box>}
+        {this._data.organization && <Box>{this._data.organization}</Box>}
         {this._data.email && <Box>{this._data.email}</Box>}
         {this._data.phone && <Box>{this._data.phone}</Box>}
       </Box>

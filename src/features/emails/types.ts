@@ -100,7 +100,9 @@ export type ParagraphBlock = {
 export type SignatureData = {
   email: string;
   name: string;
+  organization?: string;
   phone?: string;
+  title?: string;
 };
 
 export type EmailContentBlock =

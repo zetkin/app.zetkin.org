@@ -14,15 +14,20 @@ export default function signatureToParagraph(
       content: [{ kind: InlineNodeKind.STRING, value: signature.name }],
       kind: InlineNodeKind.BOLD,
     },
-    { kind: InlineNodeKind.LINE_BREAK },
-    { kind: InlineNodeKind.STRING, value: signature.email },
   ];
 
-  if (signature.phone) {
-    content.push(
-      { kind: InlineNodeKind.LINE_BREAK },
-      { kind: InlineNodeKind.STRING, value: signature.phone }
-    );
+  for (const value of [
+    signature.title,
+    signature.organization,
+    signature.email,
+    signature.phone,
+  ]) {
+    if (value) {
+      content.push(
+        { kind: InlineNodeKind.LINE_BREAK },
+        { kind: InlineNodeKind.STRING, value }
+      );
+    }
   }
 
   return {
