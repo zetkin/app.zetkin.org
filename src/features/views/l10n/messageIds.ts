@@ -473,7 +473,7 @@ export default makeMessages('feat.views', {
   },
   toolbar: {
     bulk: {
-      addTag: m('Add tag/s to selected people'),
+      addTag: m('Add tags to selected people'),
       createList: m('Create list from selection'),
       delete: m('Delete selected people from organization'),
       handleSelection: m<{ numSelected: number }>(
