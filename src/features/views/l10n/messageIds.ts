@@ -51,6 +51,7 @@ export default makeMessages('feat.views', {
   },
   bulkTagDialog: {
     cancelButton: m('Cancel'),
+    emptyStateMessage: m('You have not selected any tags yet'),
     errorMessage: m('There was an error tagging people, please try again!'),
     submitButton: m<{ numPeople: number; numTags: number }>(
       'Add {numTags, plural, =0{tags} =1 {1 tag} other {{numTags} tags}} to {numPeople, plural, =1 {one person} other {# people}}'

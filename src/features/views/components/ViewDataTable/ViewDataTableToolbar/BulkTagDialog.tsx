@@ -4,6 +4,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogContentText,
   DialogTitle,
 } from '@mui/material';
 import { FC, useContext, useState } from 'react';
@@ -36,11 +37,21 @@ const BulkTagDialog: FC<Props> = ({ numPeople, onBulkTag, onClose, open }) => {
   };
 
   return (
-    <Dialog fullWidth onClose={() => close()} open={open}>
+    <Dialog
+      fullWidth
+      onClose={() => close()}
+      open={open}
+      slotProps={{ paper: { sx: { minHeight: 300 } } }}
+    >
       <DialogTitle>
         <Msg id={messageIds.bulkTagDialog.title} values={{ numPeople }} />
       </DialogTitle>
       <DialogContent>
+        {selectedTags.length === 0 && (
+          <DialogContentText>
+            <Msg id={messageIds.bulkTagDialog.emptyStateMessage} />
+          </DialogContentText>
+        )}
         <TagManager
           assignedTags={selectedTags}
           groupTags
