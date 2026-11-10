@@ -45,10 +45,8 @@ export default class SurveyResponseColumnType implements IColumnType<
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
       filterable: true,
-      getSortComparator: (sortDirection) =>
-        sortEmptyCellsAtBottom<string>(sortDirection, (v1, v2) =>
-          v1.localeCompare(v2)
-        ),
+      getSortComparator: (sortDirection) => (v1, v2) =>
+        sortEmptyCellsAtBottom<string>(sortDirection, v1, v2),
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },

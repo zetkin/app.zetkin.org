@@ -34,10 +34,8 @@ export default class LocalTextColumnType implements IColumnType {
         by overwriting the `isEditable` prop of the Textarea component directly.
       */
       editable: true,
-      getSortComparator: (sortDirection) =>
-        sortEmptyCellsAtBottom<string>(sortDirection, (v1, v2) =>
-          v1.localeCompare(v2)
-        ),
+      getSortComparator: (sortDirection) => (v1, v2) =>
+        sortEmptyCellsAtBottom<string>(sortDirection, v1, v2),
       renderCell: (params) => <Cell cell={params.value} />,
       renderEditCell: (params) => (
         <Textarea {...params} isEditable={accessLevel != 'readonly'} />
