@@ -3,11 +3,9 @@ import {
   Alert,
   Box,
   Button,
-  Checkbox,
   Dialog,
   DialogContent,
   Divider,
-  FormControlLabel,
   Skeleton,
   Stack,
   TextField,
@@ -31,7 +29,6 @@ const EmailChannelSettings: FC<{ orgId: number }> = ({ orgId }) => {
 
   const [senderName, setSenderName] = useState('');
   const [senderEmail, setSenderEmail] = useState('');
-  const [noReply, setNoReply] = useState(false);
   const [emailValidationError, setEmailValidationError] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const [loading, setLoading] = useState(false);
@@ -45,7 +42,6 @@ const EmailChannelSettings: FC<{ orgId: number }> = ({ orgId }) => {
     setEmailValidationError(false);
     setSenderName('');
     setErrorCreating(false);
-    setNoReply(false);
   };
 
   // Reset error state when retrying to type email
@@ -106,9 +102,6 @@ const EmailChannelSettings: FC<{ orgId: number }> = ({ orgId }) => {
                       id={messageIds.email.channels.list.headers.senderEmail}
                     />
                   </Typography>
-                  <Typography sx={{ flex: 1 }} variant="h5">
-                    <Msg id={messageIds.email.channels.list.headers.noReply} />
-                  </Typography>
                 </Box>
                 <Divider />
                 {channels.map((channel) => (
@@ -119,22 +112,6 @@ const EmailChannelSettings: FC<{ orgId: number }> = ({ orgId }) => {
                       </Typography>
                       <Typography color="secondary" sx={{ flex: 1 }}>
                         {channel.sender_email}
-                      </Typography>
-                      <Typography color="secondary" sx={{ flex: 1 }}>
-                        {channel.no_reply ? (
-                          <Msg
-                            id={
-                              messageIds.email.channels.list.noReply
-                                .canNotRespond
-                            }
-                          />
-                        ) : (
-                          <Msg
-                            id={
-                              messageIds.email.channels.list.noReply.canRespond
-                            }
-                          />
-                        )}
                       </Typography>
                     </Box>
                     <Divider />
@@ -167,7 +144,7 @@ const EmailChannelSettings: FC<{ orgId: number }> = ({ orgId }) => {
                 await createChannel({
                   config: {},
                   domain: senderEmail.split('@')[1],
-                  no_reply: noReply,
+                  no_reply: false,
                   sender_email: senderEmail,
                   sender_name: senderName,
                 });
@@ -211,26 +188,6 @@ const EmailChannelSettings: FC<{ orgId: number }> = ({ orgId }) => {
                 }}
                 value={senderEmail}
               />
-              <Box>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={noReply}
-                      onChange={(ev, newState) => setNoReply(newState)}
-                    />
-                  }
-                  label={messages.email.channels.createDialog.noReplyCheckboxLabel()}
-                />
-                <Typography color="secondary" variant="body2">
-                  <Msg
-                    id={
-                      messageIds.email.channels.createDialog
-                        .noReplyCheckboxDescription
-                    }
-                  />
-                </Typography>
-              </Box>
-              <Divider />
               {errorCreating && (
                 <Alert severity="error">
                   <Msg
