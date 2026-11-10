@@ -9,13 +9,16 @@ export default class Signature {
   private _placeholder: string;
   private _root?: Root;
 
-  constructor({ config, data }: BlockToolConstructorOptions<SignatureData>) {
+  constructor({
+    config,
+    data,
+  }: Partial<BlockToolConstructorOptions<SignatureData>>) {
     this._data = {
-      email: data.email || '',
-      name: data.name || '',
-      phone: data.phone || '',
+      email: data?.email || '',
+      name: data?.name || '',
+      phone: data?.phone || '',
     };
-    this._placeholder = config.placeholder;
+    this._placeholder = config?.placeholder || '';
   }
 
   destroy() {

@@ -114,7 +114,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           class: ParagraphWithSpanPaste as unknown as ToolConstructable,
         },
         signature: {
-          class: Signature as unknown as ToolConstructable,
+          class: Signature,
           config: {
             placeholder: messages.editor.tools.signature.title(),
           },
