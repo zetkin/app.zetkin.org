@@ -22,7 +22,7 @@ export default function sortEmptyCellsAtBottom<T>(
     return -1;
   }
 
-  const result = copmareCollator(v1.toString(), v2.toString());
+  const result = copmareCollator(v1.toString().trim(), v2.toString().trim());
 
   return modifier * result;
 }
