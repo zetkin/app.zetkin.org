@@ -175,7 +175,7 @@ export interface CallerParticipationFilterConfig {
 export interface EmailBlacklistFilterConfig {
   operator: 'blacklisted';
   organizations?: FilterConfigOrgOptions;
-  reason: 'unsub_org' | 'any';
+  reason: 'unsub_org' | 'bounced' | 'any';
 }
 export interface EmailClickFilterConfig {
   after?: string;
