@@ -281,7 +281,6 @@ const ChannelPreferenceRow: FC<{
         </ZUIText>
       </Box>
       <ZUISwitch
-        ariaLabel={channel.title}
         checked={!isMuted}
         disabled={disabled}
         label=""
