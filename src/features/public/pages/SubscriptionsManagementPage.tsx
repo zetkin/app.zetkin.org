@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, List, ListItem, Stack } from '@mui/material';
-import { Block, MailOutline } from '@mui/icons-material';
+import { Cancel, MailOutline } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import { ZetkinOrganization } from 'utils/types/zetkin';
@@ -11,6 +11,7 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUISwitch from 'zui/components/ZUISwitch';
 import { EmailChannel } from '../types';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import ZUIButton from 'zui/components/ZUIButton';
 
 type Props = {
   email: string;
@@ -23,7 +24,7 @@ const SubscriptionsManagementPage: FC<Props> = ({
   initialChannels,
   org,
 }) => {
-  const [blockAll, setBlockAll] = useState(false);
+  const [allMuted, setAllMuted] = useState(false);
   const [channels, setChannels] = useState(initialChannels);
 
   return (
@@ -50,124 +51,123 @@ const SubscriptionsManagementPage: FC<Props> = ({
           <ZUIText variant="bodyMdSemiBold">{org.title}</ZUIText>
         </Box>
 
-        <ZUISection
-          subSectionOrientation="vertical"
-          subSections={[
-            {
-              renderContent: () => (
-                <Stack gap={1} useFlexGap>
-                  {blockAll && (
-                    <ZUIAlert
-                      button={{
-                        label: 'Unblock',
-                        onClick: () => setBlockAll(false),
-                      }}
-                      description={`You have blocked all mass email from ${org.title}.`}
-                      severity="info"
-                      title="Mass email is blocked"
-                    />
-                  )}
-                  <List sx={{ padding: 0 }}>
-                    {channels.map((channel, index) => {
-                      const isActive = !channel.is_blocked;
-                      const isFirst = index === 0;
-                      const isLast = index === channels.length - 1;
-                      return (
-                        <ListItem
-                          key={channel.id}
-                          divider={!isLast}
-                          sx={{
-                            alignItems: 'center',
-                            display: 'flex',
-                            gap: 4,
-                            justifyContent: 'space-between',
-                            paddingBottom: 1,
-                            paddingTop: !isFirst ? 1 : 0,
-                            paddingX: 0,
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              alignItems: 'flex-start',
-                              display: 'flex',
-                              gap: 1,
-                            }}
-                          >
-                            <MailOutline
-                              color={blockAll ? 'disabled' : 'primary'}
-                              sx={() => ({
-                                fontSize: '1.5rem',
-                              })}
-                            />
-                            <ZUIText color={blockAll ? 'secondary' : 'primary'}>
-                              {channel.title}
-                            </ZUIText>
-                          </Box>
-                          <ZUISwitch
-                            checked={isActive}
-                            disabled={blockAll}
-                            label={isActive ? 'On' : 'Off'}
-                            labelPlacement="start"
-                            onChange={() => {
-                              //TODO: Change channel subscription state
-                              setChannels([]);
-                            }}
-                          />
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                </Stack>
-              ),
-              subtitle:
-                'These are the channels you have received emails from. Turn a channel off to stop receiving its emails.',
-              title: 'Channels',
-            },
-            {
-              renderContent: () => {
-                return (
-                  <Box>
+        {allMuted && (
+          <ZUISection
+            renderContent={() => (
+              <ZUIAlert
+                button={{ label: 'do thing' }}
+                severity="info"
+                title="alert!"
+              />
+            )}
+            subtitle={email}
+            title={`Email settings for`}
+          />
+        )}
+        {!allMuted && (
+          <ZUISection
+            subSectionOrientation="vertical"
+            subSections={[
+              {
+                renderContent: () => {
+                  return (
+                    <Stack gap={1} useFlexGap>
+                      <List sx={{ padding: 0 }}>
+                        {channels.map((channel, index) => {
+                          const isActive = !channel.is_blocked;
+                          const isFirst = index === 0;
+                          const isLast = index === channels.length - 1;
+
+                          return (
+                            <ListItem
+                              key={channel.id}
+                              divider={!isLast}
+                              sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                gap: 4,
+                                justifyContent: 'space-between',
+                                paddingBottom: 1,
+                                paddingTop: !isFirst ? 1 : 0,
+                                paddingX: 0,
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  alignItems: 'flex-start',
+                                  display: 'flex',
+                                  gap: 1,
+                                }}
+                              >
+                                <MailOutline
+                                  color={allMuted ? 'disabled' : 'primary'}
+                                  sx={() => ({
+                                    fontSize: '1.5rem',
+                                  })}
+                                />
+                                <ZUIText
+                                  color={allMuted ? 'secondary' : 'primary'}
+                                >
+                                  {channel.title}
+                                </ZUIText>
+                              </Box>
+                              <ZUISwitch
+                                checked={isActive}
+                                disabled={allMuted}
+                                label={isActive ? 'Active' : 'Muted'}
+                                labelPlacement="start"
+                                onChange={() => {
+                                  //TODO: Change channel subscription state
+                                  setChannels([]);
+                                }}
+                              />
+                              {}
+                            </ListItem>
+                          );
+                        })}
+                      </List>
+                    </Stack>
+                  );
+                },
+                subtitle:
+                  'These are the channels you have received emails from. You can mute and unmute them to stop or start receiving emails from them.',
+                title: 'Channels',
+              },
+              {
+                renderContent: () => {
+                  return (
                     <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        gap: 4,
-                        justifyContent: 'space-between',
-                        paddingBottom: 1,
-                      }}
+                      sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
                     >
+                      <ZUIText>
+                        You may still receive reminders and other email sent
+                        specifically to you as part of work you do in the
+                        organization.
+                      </ZUIText>
                       <Box
                         sx={{
-                          alignItems: 'flex-start',
                           display: 'flex',
-                          gap: 1,
+                          justifyContent: 'flex-end',
+                          width: '100%',
                         }}
                       >
-                        <Block
-                          sx={() => ({
-                            fontSize: '1.5rem',
-                          })}
+                        <ZUIButton
+                          label="Mute all"
+                          onClick={() => setAllMuted(true)}
+                          startIcon={Cancel}
+                          variant="secondary"
                         />
-                        <ZUIText>{'Block all mass emails'}</ZUIText>
                       </Box>
-                      <ZUISwitch
-                        checked={blockAll}
-                        label="Block"
-                        labelPlacement="start"
-                        onChange={(newState) => setBlockAll(newState)}
-                      />
                     </Box>
-                  </Box>
-                );
+                  );
+                },
+                title: `Mute all mass emails from ${org.title}`,
               },
-              subtitle:
-                'You may still receive reminders and other email sent specifically to you as part of work you do in the organization',
-              title: `Block all mass emails from ${org.title}`,
-            },
-          ]}
-          subtitle={email}
-          title={`Email settings`}
-        />
+            ]}
+            subtitle={email}
+            title={`Email settings for`}
+          />
+        )}
       </Box>
     </Box>
   );

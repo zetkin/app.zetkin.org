@@ -79,6 +79,35 @@ export default makeMessages('feat.home', {
         saveButton: m('Save & reload'),
       },
     },
+    email: {
+      allMuted: {
+        description: m(
+          'You will not receive mass emails and cannot subscribe to new channels while the organization is muted'
+        ),
+        title: m<{ orgTitle: string }>('{orgTitle} is muted'),
+        unmuteButton: m('Unmute'),
+      },
+      channels: {
+        description: m(
+          'These are the channels you have received emails from. You can mute and unmute them to stop or start receiving emailm from them.'
+        ),
+        title: m('Channels'),
+      },
+      muteAll: {
+        description: m(
+          'You may still receive reminders and other email sent specifically to you as part of work you do in the organization.'
+        ),
+        muteButton: m('Mute'),
+        title: m<{ orgTitle: string }>('Mute all email from {orgTitle}'),
+      },
+      organization: {
+        description: m(
+          'Select an organisation to configure email settings for'
+        ),
+        dropdownLabel: m('Organization'),
+      },
+      title: m('Email settings'),
+    },
   },
   tabs: {
     feed: m('All events'),

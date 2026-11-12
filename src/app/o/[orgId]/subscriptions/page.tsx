@@ -62,6 +62,15 @@ export default async function Page({ params }: PageProps) {
           sender_name: 'Catttt',
           title: 'Cat channel',
         },
+        {
+          id: 234,
+          is_blocked: false,
+          published: '20250212',
+          published_by_user_id: 1231,
+          sender_email: 'cutest@cat.com',
+          sender_name: 'Catttt',
+          title: 'Cat channel',
+        },
       ]}
       org={org}
     />
