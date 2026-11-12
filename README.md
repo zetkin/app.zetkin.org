@@ -16,6 +16,21 @@ process as easy and transparent as possible. Read all about it in the separate
 
 Also see [TESTING.md](./TESTING.md) for details about automated testing.
 
+### AI usage
+
+We are currently working on AI contribution guidelines. In the meantime, there is the [AGENTS.md] and the [CLAUDE.md] which limit AI work and set some boundaries.
+We want to prevent developers from just dropping tasks into an AI they don't understand, as this will cause us more work in the long run.
+Those are work-in-progress documents and just the start of the evaluation process. Feel free to start contributing to them or start a discussion with us in a PR.
+
+Things where we dislike AI usage are e.g.:
+
+- Getting AI-generated replies.
+- Filling the PR form or issues with AI.
+
+We kindly ask you to refrain from using AI-generated texts in human to human conversations in general.
+
+**Thank you for understanding and your contribution!**
+
 ## Instructions
 
 ### Getting the code
