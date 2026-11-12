@@ -392,6 +392,7 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     emailClick: {
+      emailSelectLabel: m('Email'),
       inputString: m<{
         addRemoveSelect: ReactElement;
         emailSelect: ReactElement | null;
@@ -417,6 +418,7 @@ export default makeMessages('feat.smartSearch', {
         clicked: m('clicked'),
         notClicked: m('not clicked'),
       },
+      projectSelectLabel: m('Project'),
     },
     emailHistory: {
       emailScopeSelect: {
@@ -424,6 +426,7 @@ export default makeMessages('feat.smartSearch', {
         email: m('the specific email'),
         project: m('any email from project'),
       },
+      emailSelectLabel: m('Email'),
       inputString: m<{
         addRemoveSelect: ReactElement;
         emailScopeSelect: ReactElement;
@@ -440,6 +443,7 @@ export default makeMessages('feat.smartSearch', {
         opened: m('opened'),
         sent: m('been sent'),
       },
+      projectSelectLabel: m('Project'),
     },
     eventParticipation: {
       bookedSelect: {

@@ -206,6 +206,8 @@ type Item = {
 export { type Item as AutocompleteItem };
 
 type Props<I extends Item> = {
+  // Names the input for assistive technology when there is no visible label
+  ariaLabel?: string;
   clearable?: boolean;
   items: I[];
   label?: string;
@@ -358,7 +360,17 @@ function StyledAutocomplete<I extends Item>(props: Props<I>) {
             position: 'relative',
           }}
         >
-          <TextField {...params} label={props.label} variant={'standard'} />
+          <TextField
+            {...params}
+            label={props.label}
+            slotProps={{
+              htmlInput: {
+                ...params.inputProps,
+                'aria-label': props.ariaLabel,
+              },
+            }}
+            variant={'standard'}
+          />
           <Typography
             sx={{
               fontSize: '34px',
