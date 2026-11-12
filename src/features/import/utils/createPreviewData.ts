@@ -9,6 +9,7 @@ export default function createPreviewData(
 ) {
   const personPreviewOp: Partial<ZetkinPersonImportOp> = {};
   const row = configuredSheet.rows[personIndex].data;
+  const lnglatValues: Record<string, { lat?: number; lng?: number }> = {};
 
   configuredSheet.columns.forEach((column, colIdx) => {
     if (column.selected) {
@@ -91,6 +92,23 @@ export default function createPreviewData(
         }
       }
 
+      if (column.kind === ColumnKind.LNGLAT) {
+        const value = row[colIdx];
+        const rawCoordinate =
+          typeof value == 'number' || typeof value == 'string'
+            ? value.toString().trim()
+            : '';
+        if (rawCoordinate) {
+          const coordinate = Number(rawCoordinate.replace(',', '.'));
+          if (!isNaN(coordinate)) {
+            lnglatValues[column.field] = {
+              ...lnglatValues[column.field],
+              [column.type]: coordinate,
+            };
+          }
+        }
+      }
+
       if (column.kind === ColumnKind.GENDER) {
         column.mapping.forEach((mappedColumn) => {
           if (
@@ -104,6 +122,16 @@ export default function createPreviewData(
           }
         });
       }
+    }
+  });
+
+  Object.entries(lnglatValues).forEach(([field, { lat, lng }]) => {
+    if (lat !== undefined && lng !== undefined) {
+      personPreviewOp.data = {
+        ...personPreviewOp.data,
+        [`${field}.lat`]: lat,
+        [`${field}.lng`]: lng,
+      };
     }
   });
 

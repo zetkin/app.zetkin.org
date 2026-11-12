@@ -404,4 +404,119 @@ describe('createPreviewData()', () => {
       },
     });
   });
+  it('converts lnglat fields to preview object', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lat',
+        },
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lng',
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: [59.33, 18.07],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({
+      data: {
+        'location.lat': 59.33,
+        'location.lng': 18.07,
+      },
+    });
+  });
+  it('omits lnglat field when only one coordinate column is mapped', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lng',
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: [18.07],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({});
+  });
+  it('omits lnglat field when one coordinate is empty or invalid', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lat',
+        },
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lng',
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: [59.33, ''],
+        },
+        {
+          data: ['abc', 18.07],
+        },
+      ],
+      title: 'My sheet',
+    };
+    expect(createPreviewData(configData, 0)).toEqual({});
+    expect(createPreviewData(configData, 1)).toEqual({});
+  });
+  it('parses lnglat string values with comma decimal separator', () => {
+    const configData: Sheet = {
+      columns: [
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lat',
+        },
+        {
+          field: 'location',
+          kind: ColumnKind.LNGLAT,
+          selected: true,
+          type: 'lng',
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: [' 59,33 ', '0'],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({
+      data: {
+        'location.lat': 59.33,
+        'location.lng': 0,
+      },
+    });
+  });
 });

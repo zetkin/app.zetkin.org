@@ -15,6 +15,7 @@ import useSheets from 'features/import/hooks/useSheets';
 import { ColumnKind, Sheet } from 'features/import/types';
 import EnumPreview from './EnumPreview';
 import GenderPreview from './GenderPreview';
+import LnglatPreview from './LnglatPreview';
 import useImportID from 'features/import/hooks/useImportID';
 import PreviewGrid from './PreviewGrid';
 
@@ -127,7 +128,7 @@ const Preview = () => {
                   return 0;
                 }
               })
-              .map((column, columnIdx) => {
+              .map((column, columnIdx, sortedColumns) => {
                 if (column.selected) {
                   if (column.kind === ColumnKind.UNKNOWN) {
                     const rowValue =
@@ -186,6 +187,26 @@ const Preview = () => {
                         fields={fields}
                       />
                     );
+                  }
+                  if (column.kind === ColumnKind.LNGLAT) {
+                    const lnglatFieldAlreadyRendered =
+                      sortedColumns.findIndex(
+                        (col) =>
+                          col.selected &&
+                          col.kind === ColumnKind.LNGLAT &&
+                          col.field === column.field
+                      ) < columnIdx;
+
+                    if (!lnglatFieldAlreadyRendered) {
+                      return (
+                        <LnglatPreview
+                          key={columnIdx}
+                          fieldKey={column.field}
+                          fields={fields}
+                          orgId={orgId}
+                        />
+                      );
+                    }
                   }
                   if (column.kind === ColumnKind.GENDER) {
                     return (

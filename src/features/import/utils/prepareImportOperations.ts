@@ -33,6 +33,7 @@ export default function prepareImportOperations(
     let emailId: string | null = null;
 
     const fields: Partial<ZetkinPerson> = {};
+    const lnglatValues: Record<string, { lat?: number; lng?: number }> = {};
     sheet.columns.forEach((col, index) => {
       if (col.selected) {
         const value = row.data[index];
@@ -66,6 +67,20 @@ export default function prepareImportOperations(
             } else if (col.idField == 'email') {
               emailId = value.toString().trim();
               fields.email = value.toString().trim();
+            }
+          }
+        } else if (col.kind == ColumnKind.LNGLAT) {
+          const rawCoordinate =
+            typeof value == 'number' || typeof value == 'string'
+              ? value.toString().trim()
+              : '';
+          if (rawCoordinate) {
+            const coordinate = Number(rawCoordinate.replace(',', '.'));
+            if (!isNaN(coordinate)) {
+              lnglatValues[col.field] = {
+                ...lnglatValues[col.field],
+                [col.type]: coordinate,
+              };
             }
           }
         } else if (col.kind == ColumnKind.DATE) {
@@ -118,6 +133,12 @@ export default function prepareImportOperations(
         extId = null;
       }
     }
+
+    Object.entries(lnglatValues).forEach(([field, { lat, lng }]) => {
+      if (lat !== undefined && lng !== undefined) {
+        fields[field] = { lat, lng };
+      }
+    });
 
     const hasFields = Object.keys(fields).length > 0;
     if (hasFields) {

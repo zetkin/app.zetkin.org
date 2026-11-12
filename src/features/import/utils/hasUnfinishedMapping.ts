@@ -1,7 +1,7 @@
 import { Column, ColumnKind } from '../types';
 
 export default function hasUnfinishedMapping(column: Column) {
-  if (column.kind === ColumnKind.FIELD) {
+  if (column.kind === ColumnKind.FIELD || column.kind === ColumnKind.LNGLAT) {
     return false;
   }
 

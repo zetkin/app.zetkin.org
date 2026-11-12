@@ -153,6 +153,10 @@ export default makeMessages('feat.import', {
       ),
       header: m('Mapping'),
       infoButton: m('Info'),
+      lnglat: {
+        lat: m<{ value: string }>('{value} - Latitude'),
+        lng: m<{ value: string }>('{value} - Longitude'),
+      },
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{
