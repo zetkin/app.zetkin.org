@@ -18,14 +18,16 @@ import useOrgSwitcher from './useOrgSwitcher';
 
 interface OrganizationSwitcherProps {
   open: boolean;
-  orgId: number;
+  orgId?: number;
   searchString: string;
+  variant: 'overlay' | 'inline';
 }
 
 const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
   open,
   orgId,
   searchString,
+  variant,
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
@@ -48,21 +50,28 @@ const OrganizationSwitcher: FC<OrganizationSwitcherProps> = ({
 
   return (
     <Box
-      sx={{
-        backgroundColor: theme.palette.background.paper,
-        borderBottomColor: open ? 'transparent' : theme.palette.grey[300],
-        borderBottomStyle: 'solid',
-        borderBottomWidth: 1,
-        height: open ? 'calc(100% - 130px)' : 0,
-        overflowY: 'auto',
-        position: 'absolute',
-        transition: theme.transitions.create(['borderBottomColor', 'height'], {
-          duration: theme.transitions.duration.short,
-          easing: theme.transitions.easing.sharp,
-        }),
-        width: '100%',
-        zIndex: 1000,
-      }}
+      sx={
+        variant == 'inline'
+          ? { backgroundColor: theme.palette.background.paper }
+          : {
+              backgroundColor: theme.palette.background.paper,
+              borderBottomColor: open ? 'transparent' : theme.palette.grey[300],
+              borderBottomStyle: 'solid',
+              borderBottomWidth: 1,
+              height: open ? 'calc(100% - 130px)' : 0,
+              overflowY: 'auto',
+              position: 'absolute',
+              transition: theme.transitions.create(
+                ['borderBottomColor', 'height'],
+                {
+                  duration: theme.transitions.duration.short,
+                  easing: theme.transitions.easing.sharp,
+                }
+              ),
+              width: '100%',
+              zIndex: 1000,
+            }
+      }
     >
       {showLoadingState && (
         <Box sx={{ display: 'flex', justifyContent: 'center', margin: 3 }}>
