@@ -117,6 +117,10 @@ export default function mockState(overrides?: RootState) {
       milestonesByInstanceId: {},
       timelineUpdatesByInstanceId: {},
     },
+    manage: {
+      membershipsByUserId: {},
+      usersById: {},
+    },
     organizations: {
       eventsByOrgId: {},
       filters: {

@@ -54,6 +54,8 @@ export interface ZetkinOfficial {
   last_name: string;
 }
 
+export type ZetkinRole = 'admin' | 'organizer' | null;
+
 export interface ZetkinEventResponse {
   action_id: number;
   id: number;
