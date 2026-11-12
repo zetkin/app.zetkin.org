@@ -208,8 +208,6 @@ export { type Item as AutocompleteItem };
 type Props<I extends Item> = {
   // Names the input for assistive technology when there is no visible label
   ariaLabel?: string;
-  // Focuses the input and opens the list of options when first rendered
-  autoOpen?: boolean;
   clearable?: boolean;
   items: I[];
   label?: string;
@@ -310,17 +308,6 @@ function StyledAutocomplete<I extends Item>(props: Props<I>) {
     }
   }, [valueItem]);
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const isRendered = valueItem !== undefined;
-
-  // Focus from an effect rather than with autoFocus, so that it happens after
-  // a closing menu (like the scope select) has handed focus back
-  useEffect(() => {
-    if (props.autoOpen && isRendered) {
-      inputRef.current?.focus();
-    }
-  }, [props.autoOpen, isRendered]);
-
   const onChange = useCallback(
     (
       event: React.SyntheticEvent,
@@ -344,7 +331,7 @@ function StyledAutocomplete<I extends Item>(props: Props<I>) {
     [props]
   );
 
-  if (!isRendered) {
+  if (valueItem === undefined) {
     return null;
   }
 
@@ -365,7 +352,6 @@ function StyledAutocomplete<I extends Item>(props: Props<I>) {
 
         setInputValue(value);
       }}
-      openOnFocus={props.autoOpen}
       options={options}
       renderGroup={(params) => params as unknown as React.ReactNode}
       renderInput={(params) => (
@@ -376,7 +362,6 @@ function StyledAutocomplete<I extends Item>(props: Props<I>) {
         >
           <TextField
             {...params}
-            inputRef={inputRef}
             label={props.label}
             slotProps={{
               htmlInput: {

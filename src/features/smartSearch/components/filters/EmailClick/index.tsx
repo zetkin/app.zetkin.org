@@ -151,9 +151,7 @@ const EmailClick = ({
               linkSelectScope === LINK_SELECT_SCOPE.ANY_LINK_IN_EMAIL ||
               linkSelectScope === LINK_SELECT_SCOPE.FOLLOWING_LINKS ? (
                 <StyledAutocomplete
-                  key="email"
                   ariaLabel={messages.emailSelectLabel()}
-                  autoOpen={!filter.config.email}
                   clearable={true}
                   items={emails.map((email) => ({
                     id: email.id,
@@ -275,9 +273,7 @@ const EmailClick = ({
             projectSelect:
               linkSelectScope === LINK_SELECT_SCOPE.LINK_IN_PROJECT ? (
                 <StyledAutocomplete
-                  key="project"
                   ariaLabel={messages.projectSelectLabel()}
-                  autoOpen={!filter.config.campaign}
                   clearable={true}
                   items={projects.map((project) => ({
                     id: project.id,
