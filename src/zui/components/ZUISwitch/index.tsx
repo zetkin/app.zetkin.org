@@ -4,6 +4,12 @@ import { FC } from 'react';
 import { ZUIMedium, ZUIPlacement, ZUISmall } from '../types';
 
 export type ZUISwitchProps = {
+  /**
+   * Accessible name for the switch. Use this when the label is empty
+   * because the switch is described by text elsewhere, e.g. in a list row.
+   */
+  ariaLabel?: string;
+
   checked: boolean;
 
   /**
@@ -29,6 +35,7 @@ export type ZUISwitchProps = {
 };
 
 const ZUISwitch: FC<ZUISwitchProps> = ({
+  ariaLabel,
   checked,
   disabled = false,
   label,
@@ -42,6 +49,7 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
         checked={checked}
         onChange={(event, newCheckedState) => onChange(newCheckedState)}
         size={size}
+        slotProps={{ input: { 'aria-label': ariaLabel } }}
       />
     }
     disabled={disabled}

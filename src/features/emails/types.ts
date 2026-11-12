@@ -265,3 +265,11 @@ export type ZetkinPersonEmailPreferences = {
     muted_by_user_id: number | null;
   };
 };
+
+export type ZetkinPersonEmailPreferencesPatchBody = {
+  org_muted: boolean;
+};
+
+export type ZetkinPersonChannelPreferencePatchBody = {
+  status: Exclude<ZetkinChannelStatus, 'no_relationship' | 'org_muted'>;
+};

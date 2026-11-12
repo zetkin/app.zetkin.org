@@ -1,9 +1,7 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
 
-import newTheme from 'zui/theme';
 import usePersonMutations from '../hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -48,23 +46,21 @@ const PersonDeleteCard: React.FunctionComponent<{
   };
 
   return (
-    <ThemeProvider theme={newTheme}>
-      <ZUISection
-        renderContent={() => (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <ZUIText color="secondary">{messages.delete.warning()}</ZUIText>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ZUIButton
-                label={messages.delete.button()}
-                onClick={handleDelete}
-                variant="destructive"
-              />
-            </Box>
+    <ZUISection
+      renderContent={() => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <ZUIText color="secondary">{messages.delete.warning()}</ZUIText>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ZUIButton
+              label={messages.delete.button()}
+              onClick={handleDelete}
+              variant="destructive"
+            />
           </Box>
-        )}
-        title={messages.delete.title()}
-      />
-    </ThemeProvider>
+        </Box>
+      )}
+      title={messages.delete.title()}
+    />
   );
 };
 

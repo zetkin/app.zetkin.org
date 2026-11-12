@@ -25,9 +25,14 @@ export default makeMessages('feat.profile', {
   emailPreferences: {
     channels: {
       description: m<{ name: string }>(
-        'Turn off a channel to stop {name} from receiving mass emails sent through it.'
+        'Mute a channel to stop {name} from receiving mass emails sent through it.'
       ),
       empty: m('This organization has no email channels yet.'),
+      status: {
+        muted: m('Muted'),
+        notSubscribed: m('Not subscribed'),
+        subscribed: m('Subscribed'),
+      },
       title: m('Channels'),
     },
     muteAll: {
@@ -39,8 +44,8 @@ export default makeMessages('feat.profile', {
     },
     orgMuted: {
       button: m('Unmute'),
-      description: m(
-        'They will not receive mass emails and can not subscribe to new channels while the organization is muted. They will still receive reminders and other emails sent specifically to them as part of work they do in the organization.'
+      description: m<{ name: string }>(
+        '{name} will not receive mass emails and cannot be subscribed to channels while the organization is muted. They will still receive reminders and other emails sent specifically to them as part of work they do in the organization.'
       ),
       title: m('Organization is muted'),
     },
@@ -49,9 +54,14 @@ export default makeMessages('feat.profile', {
       noChannels: m('No public channels to subscribe to'),
     },
     title: m('Email preferences'),
-    unmuteWarning: m<{ name: string }>(
-      '{name} muted this themselves. Only unmute it if they have asked you to.'
-    ),
+    unmuteConfirm: {
+      button: m('Unmute'),
+      channelTitle: m<{ channel: string }>('Unmute {channel}?'),
+      orgTitle: m('Unmute organization?'),
+      warning: m<{ name: string }>(
+        '{name} muted this themselves. Only unmute it if they have asked you to.'
+      ),
+    },
   },
   events: {
     noPast: m('No past events'),

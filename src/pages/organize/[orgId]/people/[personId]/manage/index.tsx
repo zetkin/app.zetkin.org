@@ -1,7 +1,9 @@
 import { GetServerSideProps } from 'next';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import Head from 'next/head';
 
+import newTheme from 'zui/theme';
 import { PageWithLayout } from 'utils/types';
 import PersonDeleteCard from 'features/profile/components/PersonDeleteCard';
 import PersonEmailPreferencesCard from 'features/profile/components/PersonEmailPreferencesCard';
@@ -37,17 +39,16 @@ const PersonManagePage: PageWithLayout<PersonManagePageProps> = ({
           {person?.first_name} {person?.last_name}
         </title>
       </Head>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 3,
-          width: { lg: '50%', xs: '100%' },
-        }}
-      >
-        <PersonEmailPreferencesCard orgId={orgId} person={person} />
-        <PersonDeleteCard orgId={orgId} person={person} />
-      </Box>
+      <ThemeProvider theme={newTheme}>
+        <Grid container direction="row" spacing={6}>
+          <Grid size={{ lg: 6, xs: 12 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <PersonEmailPreferencesCard orgId={orgId} person={person} />
+              <PersonDeleteCard orgId={orgId} person={person} />
+            </Box>
+          </Grid>
+        </Grid>
+      </ThemeProvider>
     </>
   );
 };
