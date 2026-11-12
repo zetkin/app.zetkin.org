@@ -48,8 +48,9 @@ const tagsSlice = createSlice({
 
       personIds.forEach((personId) => {
         tags.forEach((tag) => {
-          state.tagsByPersonId[personId] ||= remoteListCreated();
-          remoteItemUpdated(state.tagsByPersonId[personId], tag);
+          if (state.tagsByPersonId[personId]) {
+            remoteItemUpdated(state.tagsByPersonId[personId], tag);
+          }
         });
       });
     });
