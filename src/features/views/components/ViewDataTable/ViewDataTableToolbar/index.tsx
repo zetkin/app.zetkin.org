@@ -3,19 +3,10 @@ import {
   Add,
   DeleteOutline,
   Launch,
+  LocalOffer,
   RemoveCircleOutline,
 } from '@mui/icons-material';
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-} from '@mui/material';
+import { Box, Button } from '@mui/material';
 import {
   DataGridProProps,
   GridColDef,
@@ -32,7 +23,9 @@ import messageIds from 'features/views/l10n/messageIds';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { BULK_DELETE } from 'utils/featureFlags';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
-import useRootOrganization from 'features/organizations/hooks/useRootOrganization';
+import BulkDeleteDialog from './BulkDeleteDialog';
+import BulkTagDialog from './BulkTagDialog';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface ViewDataTableToolbarProps {
   disableBulkActions?: boolean;
@@ -42,7 +35,8 @@ export interface ViewDataTableToolbarProps {
   isLoading: boolean;
   isSmartSearch: boolean;
   onColumnCreate: () => void;
-  onBulkDelete: () => void;
+  onBulkTag: (tags: ZetkinAppliedTag[]) => Promise<void>;
+  onBulkDelete: () => Promise<void>;
   onRowsRemove: () => void;
   onViewCreate: () => void;
   selection: number[];
@@ -61,6 +55,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   isLoading,
   isSmartSearch,
   onBulkDelete,
+  onBulkTag,
   onColumnCreate,
   onRowsRemove,
   onViewCreate,
@@ -72,13 +67,11 @@ const ViewDataTableToolbar: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { orgId } = useNumericRouteParams();
-  const rootOrg = useRootOrganization(orgId).data;
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletionString, setDeletionString] = useState('');
+  const [tagDialogOpen, setTagDialogOpen] = useState(false);
 
   const hasSelection = !!selection.length;
   const hasBulkDelete = useFeatureWithOrg(BULK_DELETE, orgId);
-  const hasConfirmedDeletion = deletionString === rootOrg?.title;
 
   const onClickRemoveRows = () => {
     showConfirmDialog({
@@ -110,16 +103,6 @@ const ViewDataTableToolbar: React.FunctionComponent<
     },
   ];
 
-  const handleCloseDeleteDialog = () => {
-    setDeleteDialogOpen(false);
-    setDeletionString('');
-  };
-
-  const handleBulkDelete = () => {
-    handleCloseDeleteDialog();
-    onBulkDelete();
-  };
-
   return (
     <>
       <Box role="toolbar">
@@ -146,6 +129,12 @@ const ViewDataTableToolbar: React.FunctionComponent<
                       icon: <Launch />,
                       label: messages.toolbar.bulk.createList(),
                       onClick: onViewCreate,
+                    },
+                    {
+                      disabled: disabled,
+                      icon: <LocalOffer />,
+                      label: messages.toolbar.bulk.addTag(),
+                      onClick: () => setTagDialogOpen(true),
                     },
                     ...(isSmartSearch ? [] : bulkActionsForStaticLists),
 
@@ -194,62 +183,19 @@ const ViewDataTableToolbar: React.FunctionComponent<
           </Box>
         </Box>
       </Box>
-      <Dialog onClose={() => handleCloseDeleteDialog()} open={deleteDialogOpen}>
-        <DialogTitle>
-          <Msg
-            id={messageIds.deleteRowsDialog.title}
-            values={{ numPeople: selection.length }}
-          />
-        </DialogTitle>
-        <DialogContent
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >
-          <Alert severity="warning">
-            <Msg id={messageIds.deleteRowsDialog.destructiveAlert} />
-          </Alert>
-          <DialogContentText>
-            <Msg
-              id={messageIds.deleteRowsDialog.tagetOrgWarning}
-              values={{
-                rootOrgTitle: (
-                  <Box component="strong">{rootOrg?.title ?? ''}</Box>
-                ),
-              }}
-            />
-          </DialogContentText>
-          <DialogContentText>
-            <Msg
-              id={messageIds.deleteRowsDialog.instruction}
-              values={{
-                rootOrgSlug: <Box component="b">{rootOrg?.title ?? ''}</Box>,
-              }}
-            />
-          </DialogContentText>
-          <TextField
-            label={messages.deleteRowsDialog.confirmationInputLabel()}
-            onChange={(evt) => setDeletionString(evt.target.value)}
-            size="small"
-            value={deletionString}
-            variant="outlined"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleCloseDeleteDialog()}>
-            <Msg id={messageIds.deleteRowsDialog.cancelButton} />
-          </Button>
-          <Button
-            color="error"
-            disabled={!hasConfirmedDeletion}
-            onClick={() => handleBulkDelete()}
-            variant="contained"
-          >
-            <Msg
-              id={messageIds.deleteRowsDialog.confirmButton}
-              values={{ numPeople: selection.length }}
-            />
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <BulkTagDialog
+        numPeople={selection.length}
+        onBulkTag={onBulkTag}
+        onClose={() => setTagDialogOpen(false)}
+        open={tagDialogOpen}
+      />
+      <BulkDeleteDialog
+        numPeople={selection.length}
+        onBulkDelete={onBulkDelete}
+        onClose={() => setDeleteDialogOpen(false)}
+        open={deleteDialogOpen}
+        orgId={orgId}
+      />
     </>
   );
 };

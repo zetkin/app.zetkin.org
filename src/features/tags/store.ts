@@ -17,6 +17,7 @@ import {
   ZetkinTag,
   ZetkinTagGroup,
 } from 'utils/types/zetkin';
+import { rowsTagged } from 'features/views/store';
 
 export interface TagsStoreSlice {
   tagGroupList: RemoteList<ZetkinTagGroup>;
@@ -31,15 +32,29 @@ const initialState: TagsStoreSlice = {
 };
 
 const tagsSlice = createSlice({
-  extraReducers: (builder) =>
+  extraReducers: (builder) => {
     builder.addCase(personsMerged, (state, action) => {
-      // The first person is the one the others were merged into,
-      // so it now has the tags of all of them
-      const [basePersonId] = action.payload;
-      if (state.tagsByPersonId[basePersonId]) {
-        state.tagsByPersonId[basePersonId].isStale = true;
+      {
+        // The first person is the one the others were merged into,
+        // so it now has the tags of all of them
+        const [basePersonId] = action.payload;
+        if (state.tagsByPersonId[basePersonId]) {
+          state.tagsByPersonId[basePersonId].isStale = true;
+        }
       }
-    }),
+    });
+    builder.addCase(rowsTagged, (state, action) => {
+      const [personIds, tags] = action.payload;
+
+      personIds.forEach((personId) => {
+        tags.forEach((tag) => {
+          if (state.tagsByPersonId[personId]) {
+            remoteItemUpdated(state.tagsByPersonId[personId], tag);
+          }
+        });
+      });
+    });
+  },
   initialState: initialState,
   name: 'tags',
   reducers: {
