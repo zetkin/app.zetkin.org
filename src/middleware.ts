@@ -62,17 +62,20 @@ function setupCsp(path: string) {
   );
 
   const isEmbedJoinForm = /^\/o\/[^/]+\/embedjoinform(\/|$)/.test(path);
+  const isSurvey = /^\/o\/[^/]+\/surveys\/[^/]+(\/|$)/.test(path);
   const styleSrc = isEmbedJoinForm
     ? "* 'unsafe-inline'"
     : `'self' https://use.typekit.net https://p.typekit.net ${
         // TODO: switch after https://github.com/zetkin/app.zetkin.org/issues/3176 to: isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`
         "'unsafe-inline'"
       }`;
+  const scriptSrc = isDev
+    ? "'self' 'wasm-unsafe-eval' 'unsafe-eval' 'unsafe-inline'"
+    : `'self' 'nonce-${nonce}' 'wasm-unsafe-eval' 'strict-dynamic'`;
   const cspHeader = `
   default-src 'self' ${mapTiler};
-  script-src 'self' 'nonce-${nonce}' 'wasm-unsafe-eval' 'strict-dynamic' ${
-    isDev ? "'unsafe-eval'" : ''
-  };
+  script-src ${scriptSrc};
+  worker-src 'self' blob:;
   style-src ${styleSrc};
   style-src-attr 'unsafe-inline';
   img-src 'self' blob: data: ${tileServer} ${
@@ -82,7 +85,7 @@ function setupCsp(path: string) {
   object-src 'none';
   base-uri 'self';
   form-action 'self';
-  frame-ancestors ${isEmbedJoinForm ? '*' : "'none'"};
+  frame-ancestors ${isEmbedJoinForm || isSurvey ? '*' : "'none'"};
   upgrade-insecure-requests;
 `;
   const cspHeaderTrimmed = cspHeader.replace(/\s{2,}/g, ' ').trim();
@@ -143,7 +146,8 @@ export const config = {
         { key: 'next-router-prefetch', type: 'header' },
         { key: 'purpose', type: 'header', value: 'prefetch' },
       ],
-      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+      source:
+        '/((?!api|_next/static|_next/image|favicon.ico|call/companion).*)',
     },
   ],
 };

@@ -36,6 +36,7 @@ export default function mockState(overrides?: RootState) {
       callAssignmentIdsByProjectId: {},
       callList: remoteList(),
       callersById: {},
+      callsByAssignmentId: {},
       simpleStatsById: {},
       statsById: {},
       userAssignmentList: remoteList(),
@@ -134,6 +135,7 @@ export default function mockState(overrides?: RootState) {
       userMembershipList: remoteList(),
     },
     profiles: {
+      eventsByPersonId: {},
       fieldCreateError: null,
       fieldUpdateError: null,
       fieldsList: remoteList(),

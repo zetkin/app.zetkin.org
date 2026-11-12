@@ -24,10 +24,12 @@ import ChangeProjectDialog from '../../projects/components/ChangeProjectDialog';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
+  removePadding?: boolean;
 }
 
 const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   children,
+  removePadding = false,
 }) => {
   const messages = useMessages(messageIds);
   const { orgId, callAssId } = useNumericRouteParams();
@@ -127,6 +129,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           startIcon: <Delete />,
         },
       ]}
+      noPad={removePadding}
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
@@ -192,6 +195,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           href: '/conversation',
           label: messages.tabs.conversation(),
         },
+        { href: '/calls', label: messages.tabs.calls() },
       ]}
       title={
         <ZUIEditTextinPlace

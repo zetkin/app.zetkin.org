@@ -1,0 +1,81 @@
+import { Box, Link, Typography } from '@mui/material';
+import {
+  CategoryOutlined,
+  GroupWorkOutlined,
+  ScheduleOutlined,
+} from '@mui/icons-material';
+import NextLink from 'next/link';
+
+import ZUITimeSpan from 'zui/ZUITimeSpan';
+import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
+import { ZetkinEvent } from 'utils/types/zetkin';
+import { useMessages } from 'core/i18n';
+import eventMessageIds from 'features/events/l10n/messageIds';
+import getEventUrl from 'features/events/utils/getEventUrl';
+
+const PersonEventListItem = ({ event }: { event: ZetkinEvent }) => {
+  const eventMessages = useMessages(eventMessageIds);
+  return (
+    <NextLink href={getEventUrl(event)} legacyBehavior passHref>
+      <Link color="inherit" underline="none">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 2,
+          }}
+        >
+          <Typography>
+            {event.title ||
+              event.activity?.title ||
+              eventMessages.common.noTitle()}
+          </Typography>
+          <ZUIIconLabelRow
+            color="secondary"
+            iconLabels={[
+              {
+                icon: <ScheduleOutlined color="secondary" fontSize="inherit" />,
+                label: (
+                  <ZUITimeSpan
+                    end={Temporal.PlainDateTime.from(event.end_time)}
+                    start={Temporal.PlainDateTime.from(event.start_time)}
+                  />
+                ),
+              },
+              ...(event.campaign
+                ? [
+                    {
+                      icon: (
+                        <GroupWorkOutlined
+                          color="secondary"
+                          fontSize="inherit"
+                        />
+                      ),
+                      label: event.campaign.title,
+                    },
+                  ]
+                : []),
+              // Without a title, the activity is already shown as the title
+              ...(event.activity && event.title
+                ? [
+                    {
+                      icon: (
+                        <CategoryOutlined
+                          color="secondary"
+                          fontSize="inherit"
+                        />
+                      ),
+                      label: event.activity.title,
+                    },
+                  ]
+                : []),
+            ]}
+            size="sm"
+          />
+        </Box>
+      </Link>
+    </NextLink>
+  );
+};
+
+export default PersonEventListItem;

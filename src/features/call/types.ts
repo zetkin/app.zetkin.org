@@ -28,7 +28,7 @@ type CallBase = {
   message_to_organizer: string | null;
   notes: string | null;
   organizer_action_needed: boolean;
-  organizer_action_taken: string | null;
+  organizer_action_taken: boolean | null;
   target: ZetkinCallTarget;
   update_time: string;
 };

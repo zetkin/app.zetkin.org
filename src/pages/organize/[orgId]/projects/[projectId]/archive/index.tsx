@@ -30,10 +30,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const ProjectArchivePage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const { orgId, projectid } = useNumericRouteParams();
-  const archivedActivities = useActivityArchive(orgId, projectid);
+  const { orgId, projectId } = useNumericRouteParams();
+  const archivedActivities = useActivityArchive(orgId, projectId);
   const { filters, onFiltersChange, onSearchStringChange, searchString } =
-    useActivityFilters('archive', orgId, projectid);
+    useActivityFilters('archive', orgId, projectId);
 
   if (onServer) {
     return null;
@@ -45,7 +45,7 @@ const ProjectArchivePage: PageWithLayout = () => {
           if (data.length === 0) {
             return (
               <ZUIEmptyState
-                href={`/organize/${orgId}/projects/${projectid}/activities`}
+                href={`/organize/${orgId}/projects/${projectId}/activities`}
                 linkMessage={messages.activitiesOverview.goToActivities()}
                 message={messages.singleProject.noActivities()}
               />

@@ -156,7 +156,9 @@ function serializeFilterQueryString(filterModel: GridFilterModel): string {
     .map(
       (filter) =>
         `filter_${filter.field}_${filter.operator}` +
-        (filter.value ? `=${encodeURIComponent(filter.value)}` : '')
+        (filter.value || filter.value === false
+          ? `=${encodeURIComponent(filter.value)}`
+          : '')
     )
     .join('&');
 

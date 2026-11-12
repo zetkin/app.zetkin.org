@@ -10,8 +10,6 @@ import {
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import messageIds from '../../../l10n/messageIds';
-import { Msg } from 'core/i18n';
 
 const CallassigmentListItem: React.FunctionComponent<{
   callAssignment: ZetkinCallAssignment;
@@ -31,10 +29,7 @@ const CallassigmentListItem: React.FunctionComponent<{
               <HeadsetMic />
             </Avatar>
           </ListItemAvatar>
-          <ResultsListItemText
-            primary={callAssignment.title}
-            secondary={<Msg id={messageIds.results.callassignment} />}
-          />
+          <ResultsListItemText primary={callAssignment.title} />
         </ListItemButton>
       </ListItem>
     </Link>

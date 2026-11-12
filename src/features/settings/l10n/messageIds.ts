@@ -2,6 +2,44 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.settings', {
   email: {
+    channels: {
+      addChannel: m('Create new channel'),
+      createDialog: {
+        cancelButton: m('Cancel'),
+        createButton: m('Create'),
+        createErrorMessage: m(
+          'Something went wrong when creating the channel, please try again!'
+        ),
+        createSuccessMessage: m<{ title: string }>(
+          'Email channel {title} was created!'
+        ),
+        emailErrorMessage: m('Email is invalid'),
+        emailInputLabel: m('Sender email'),
+        noReplyCheckboxDescription: m(
+          'If you make the channel no-reply, it means recipients cannot respond to emails from this channel.'
+        ),
+        noReplyCheckboxLabel: m('No reply'),
+        senderInputLabel: m('Sender name'),
+        title: m('Create new email channel'),
+      },
+      list: {
+        headers: {
+          noReply: m('No reply'),
+          senderEmail: m('Sender email'),
+          senderName: m('Sender name'),
+        },
+        noReply: {
+          canNotRespond: m('No reply'),
+          canRespond: m('Recipients can respond'),
+        },
+      },
+      overview: {
+        description: m(
+          'These are the channels that you can select as sender when you create an email.'
+        ),
+        title: m('Channels'),
+      },
+    },
     themes: {
       addTheme: m('Create new theme'),
       delete: {
@@ -126,6 +164,12 @@ export default makeMessages('feat.settings', {
       titleInput: m('Title'),
       typeInput: m('Type'),
     },
+    errors: {
+      400: m(
+        'This field could not be saved. Please check the slug and options.'
+      ),
+      409: m('This slug is already in use. Please choose a different one.'),
+    },
     list: {
       editButton: m('Edit'),
       headers: {
@@ -182,6 +226,12 @@ export default makeMessages('feat.settings', {
       ),
     },
     you: m('You'),
+  },
+  pageTitles: {
+    access: m('Access settings'),
+    email: m('Email settings'),
+    fields: m('Field settings'),
+    theme: m<{ themeId: number }>('Theme {themeId}'),
   },
   settingsLayout: {
     access: m('Access'),

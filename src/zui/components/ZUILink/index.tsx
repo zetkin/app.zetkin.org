@@ -11,6 +11,11 @@ type ZUILinkProps = {
   href: string;
 
   /**
+   * Gets the color for the link text from the font color of the parent
+   */
+  inheritColor?: boolean;
+
+  /**
    * If true, the link will open in a new tab.
    *
    * Defaults to "false".
@@ -32,6 +37,7 @@ type ZUILinkProps = {
 
 const ZUILink: FC<ZUILinkProps> = ({
   href,
+  inheritColor = false,
   text,
   openInNewTab = false,
   size,
@@ -48,9 +54,14 @@ const ZUILink: FC<ZUILinkProps> = ({
       rel={openInNewTab ? 'noopener' : ''}
       sx={(theme) => ({
         '&:hover': {
-          textDecorationColor: theme.palette.text.primary,
+          textDecorationColor: inheritColor
+            ? 'inherit'
+            : theme.palette.text.primary,
         },
-        textDecorationColor: theme.palette.text.primary,
+        color: inheritColor ? 'inherit' : theme.palette.text.primary,
+        textDecorationColor: inheritColor
+          ? 'inherit'
+          : theme.palette.text.primary,
       })}
       target={openInNewTab ? '_blank' : ''}
       variant={size ? linkVariants[size] : undefined}

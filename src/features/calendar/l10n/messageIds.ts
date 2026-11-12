@@ -7,6 +7,7 @@ export default makeMessages('feat.calendar', {
     shiftEvent: m('Create multiple events that form shifts'),
     singleEvent: m('Create single event'),
   },
+  createOnDate: m<{ date: string }>('Create event on {date}'),
   dstEnds: m('Winter time'),
   dstStarts: m('Summer time'),
   event: {

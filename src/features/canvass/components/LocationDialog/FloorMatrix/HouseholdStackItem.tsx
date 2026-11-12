@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { FC } from 'react';
 
 import { Msg } from 'core/i18n';
@@ -6,6 +7,7 @@ import messageIds from 'features/canvass/l10n/messageIds';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { HouseholdItem } from './types';
 import HouseholdSquare from './HouseholdSquare';
+import { MetricIcon } from 'features/canvass/components/MetricIcon';
 
 type Props = {
   delay: number;
@@ -26,7 +28,13 @@ const HouseholdStackItem: FC<Props> = ({
   onClickVisit,
   selectionMode,
 }) => {
-  const { household, lastVisitSuccess, lastVisitTime } = item;
+  const {
+    household,
+    lastVisitMetrics,
+    lastVisitSuccess,
+    lastVisitTime,
+    metrics,
+  } = item;
 
   return (
     <Box
@@ -44,6 +52,10 @@ const HouseholdStackItem: FC<Props> = ({
       />
       {expanded && (
         <Box
+          onClick={(ev) => {
+            ev.stopPropagation();
+            onClickDetails();
+          }}
           sx={{
             '@keyframes enter': {
               from: {
@@ -62,18 +74,56 @@ const HouseholdStackItem: FC<Props> = ({
             flexDirection: 'row',
             flexGrow: 1,
             justifyContent: 'space-between',
+            minWidth: 0,
           }}
         >
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
+              minWidth: 0,
+              overflow: 'hidden',
             }}
           >
             <Typography variant="body1">{household.title}</Typography>
-            <Box alignItems="center" display="flex" gap={0.5}>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              sx={{
+                alignContent: 'flex-start',
+                columnGap: 1,
+                flexWrap: 'wrap',
+                height: lastVisitTime ? '1.4rem' : 0,
+                rowGap: 0,
+              }}
+            >
+              {!!lastVisitMetrics && (
+                <Box display="flex" flexShrink="0" gap={0.2}>
+                  {metrics.map((metric, i) => {
+                    const lastVisitMetric = lastVisitMetrics.find(
+                      (metricResponse) => metric.id === metricResponse.metric_id
+                    );
+                    return (
+                      <MetricIcon
+                        key={metric.id}
+                        first={i === 0}
+                        last={i === metrics.length - 1}
+                        metric={metric}
+                        response={lastVisitMetric?.response ?? null}
+                        variant={'small'}
+                      />
+                    );
+                  })}
+                </Box>
+              )}
               {!!lastVisitTime && (
-                <Typography color="secondary" variant="body2">
+                <Typography
+                  color="secondary"
+                  flexShrink="0"
+                  variant="body2"
+                  whiteSpace="nowrap"
+                >
                   <ZUIRelativeTime
                     datetime={addOffsetIfNecessary(lastVisitTime)}
                   />
@@ -85,7 +135,7 @@ const HouseholdStackItem: FC<Props> = ({
             sx={{
               alignItems: 'center',
               display: 'flex',
-              gap: 1,
+              paddingRight: 1,
             }}
           >
             <Button
@@ -93,9 +143,8 @@ const HouseholdStackItem: FC<Props> = ({
                 ev.stopPropagation();
                 onClickDetails();
               }}
-              variant="outlined"
             >
-              <Msg id={messageIds.households.stackItem.detailsButtonLabel} />
+              <InfoIcon />
             </Button>
             <Button
               onClick={(ev) => {

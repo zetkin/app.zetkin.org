@@ -3,13 +3,10 @@ import {
   callAssignmentCreate,
   callAssignmentCreated,
 } from 'features/callAssignments/store';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { surveyCreate, surveyCreated } from 'features/surveys/store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
-  ZetkinCallAssignment,
   ZetkinCallAssignmentPartial,
-  ZetkinSurvey,
   ZetkinSurveyExtended,
   ZetkinSurveyPostBody,
 } from 'utils/types/zetkin';
@@ -17,8 +14,8 @@ import {
 interface UseCreateProjectActivityReturn {
   createCallAssignment: (
     callAssignmentBody: ZetkinCallAssignmentPartial
-  ) => IFuture<ZetkinCallAssignment>;
-  createSurvey: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
+  ) => Promise<void>;
+  createSurvey: (surveyBody: ZetkinSurveyPostBody) => Promise<void>;
 }
 
 export default function useCreateProjectActivity(
@@ -28,41 +25,27 @@ export default function useCreateProjectActivity(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const createCallAssignment = (
+  const createCallAssignment = async (
     callAssignmentBody: ZetkinCallAssignmentPartial
-  ): IFuture<ZetkinCallAssignment> => {
+  ) => {
     dispatch(callAssignmentCreate());
+    const callAssignment = await apiClient.rpc(createCallAssignmentRpc, {
+      callAssignment: callAssignmentBody,
+      orgId,
+      projectId,
+    });
 
-    const promise = apiClient
-      .rpc(createCallAssignmentRpc, {
-        callAssignment: callAssignmentBody,
-        orgId,
-        projectId,
-      })
-      .then((callAssignment) => {
-        dispatch(callAssignmentCreated([callAssignment, projectId]));
-        return callAssignment;
-      });
-
-    return new PromiseFuture(promise);
+    dispatch(callAssignmentCreated([callAssignment, projectId]));
   };
 
-  const createSurvey = (
-    surveyBody: ZetkinSurveyPostBody
-  ): IFuture<ZetkinSurvey> => {
+  const createSurvey = async (surveyBody: ZetkinSurveyPostBody) => {
     dispatch(surveyCreate());
 
-    const promise = apiClient
-      .post<
-        ZetkinSurveyExtended,
-        ZetkinSurveyPostBody
-      >(`/api/orgs/${orgId}/campaigns/${projectId}/surveys`, surveyBody)
-      .then((survey) => {
-        dispatch(surveyCreated(survey));
-        return survey;
-      });
-
-    return new PromiseFuture(promise);
+    const survey = await apiClient.post<
+      ZetkinSurveyExtended,
+      ZetkinSurveyPostBody
+    >(`/api/orgs/${orgId}/campaigns/${projectId}/surveys`, surveyBody);
+    dispatch(surveyCreated(survey));
   };
 
   return { createCallAssignment, createSurvey };

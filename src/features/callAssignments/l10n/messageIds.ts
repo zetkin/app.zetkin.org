@@ -60,6 +60,43 @@ export default makeMessages('feat.callAssignments', {
     searchBox: m('Search'),
     title: m('Callers'),
   },
+  calls: {
+    callState: {
+      unfinished: m('Call assigned'),
+    },
+    callerNote: {
+      delete: m('Delete note'),
+      error: m(
+        'There was an error deleting the note. Refresh page and try again.'
+      ),
+      title: m('Caller note'),
+    },
+    columns: {
+      caller: m('Caller'),
+      callerName: m('Caller name'),
+      callerNote: m('Caller note'),
+      flagged: m('Flagged'),
+      name: m('Name'),
+      phone: m('Phone'),
+      status: m('Status'),
+      time: m('Time'),
+    },
+    filters: {
+      flagged: {
+        actionNeeded: m('Unsolved'),
+        actionTaken: m('Solved'),
+        none: m('No action needed'),
+        title: m('Flagged'),
+      },
+      is: m('Is'),
+      status: m('Call status'),
+    },
+    organizerActionNeeded: {
+      solve: m('Mark as solved'),
+      title: m('Organizer action needed'),
+      unsolve: m('Mark as unsolved'),
+    },
+  },
   conversation: {
     instructions: {
       confirm: m(
@@ -98,11 +135,13 @@ export default makeMessages('feat.callAssignments', {
     markAsSolved: m('Mark as solved'),
     markAsUnsolved: m('Mark as unsolved'),
     messagePlaceholder: m('Caller did not leave a message'),
-    noteByCaller: m<{ person: ReactElement; time: ReactElement }>(
-      'Note by {person} {time}'
-    ),
+    note: m<{
+      assignment: string;
+      person: ReactElement;
+      time: ReactElement;
+    }>('Note by {person} {time} in {assignment}'),
     subtitle: m<{ person: ReactElement }>('Notes on {person}'),
-    title: m('Organizer Action Needed'),
+    title: m('Organizer action needed'),
   },
   ready: {
     allocated: m('Targets allocated to caller'),
@@ -128,6 +167,7 @@ export default makeMessages('feat.callAssignments', {
   statusSectionTitle: m('Status'),
   tabs: {
     callers: m('Callers'),
+    calls: m('Call log'),
     conversation: m('Conversation'),
     overview: m('Overview'),
   },

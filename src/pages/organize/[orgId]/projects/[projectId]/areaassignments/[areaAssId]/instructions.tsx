@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { Box, Button, Link, Paper, Typography } from '@mui/material';
 import Head from 'next/head';
 
-import { AREAS } from 'utils/featureFlags';
+import { AREA_ASSIGNMENTS } from 'utils/featureFlags';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -16,7 +16,7 @@ import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment'
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  featuresRequired: [AREAS],
+  featuresRequired: [AREA_ASSIGNMENTS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

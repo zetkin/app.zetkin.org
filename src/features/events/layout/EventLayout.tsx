@@ -10,7 +10,6 @@ import EventStatusChip from '../components/EventStatusChip';
 import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
 import getEventUrl from '../utils/getEventUrl';
 import messageIds from '../l10n/messageIds';
-import { removeOffset } from 'utils/dateUtils';
 import useEvent from '../hooks/useEvent';
 import useEventMutations from '../hooks/useEventMutations';
 import useEventState from '../hooks/useEventState';
@@ -100,8 +99,10 @@ const EventLayout: React.FC<EventLayoutProps> = ({
             <Box marginX={1}>
               <ZUIFuture future={eventFuture}>
                 {(data) => {
-                  const startDate = new Date(removeOffset(data.start_time));
-                  const endDate = new Date(removeOffset(data.end_time));
+                  const startDate = Temporal.PlainDateTime.from(
+                    data.start_time
+                  );
+                  const endDate = Temporal.PlainDateTime.from(data.end_time);
 
                   const labels: ZUIIconLabelProps[] = [];
 

@@ -18,6 +18,7 @@ import zuiTheme from 'zui/theme';
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
 import mockApiClient from './mocks/mockApiClient';
+import { PromiseCacheProvider } from 'core/caching/PromiseCache';
 
 interface ZetkinAppProvidersProps {
   children: React.ReactNode;
@@ -65,6 +66,9 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({
 type CustomRenderResult = RenderResult & {
   findByMessageId(message: AnyMessage): ReturnType<RenderResult['findByText']>;
   getByMessageId(message: AnyMessage): ReturnType<RenderResult['getByText']>;
+  queryByMessageId(
+    message: AnyMessage
+  ): ReturnType<RenderResult['queryByText']>;
 };
 
 /**
@@ -92,6 +96,7 @@ const customRender = (
     ...result,
     findByMessageId: (message) => result.findByText(message._id),
     getByMessageId: (message) => result.getByText(message._id),
+    queryByMessageId: (message) => result.queryByText(message._id),
   };
 };
 
@@ -109,7 +114,9 @@ export const makeWrapper = (
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>
-          <UserProvider user={RosaLuxemburgUser}>{children}</UserProvider>
+          <PromiseCacheProvider>
+            <UserProvider user={RosaLuxemburgUser}>{children}</UserProvider>
+          </PromiseCacheProvider>
         </EnvProvider>
       </ReduxProvider>
     );

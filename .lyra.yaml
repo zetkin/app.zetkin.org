@@ -7,9 +7,12 @@ projects:
     translations:
       path: src/locale # relative path of translations folder relative from the above project path
     languages: # list of language codes supported in the project
+      - cs
       - da
       - de
       - en
+      - fr
       - nl
       - nn
+      - pl
       - sv

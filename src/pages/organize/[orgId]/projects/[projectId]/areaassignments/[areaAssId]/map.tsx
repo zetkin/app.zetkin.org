@@ -10,7 +10,7 @@ import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmen
 import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
-import { AREAS } from 'utils/featureFlags';
+import { AREA_ASSIGNMENTS } from 'utils/featureFlags';
 import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignmentAreaStats';
 import ZUIFutures from 'zui/ZUIFutures';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
@@ -27,7 +27,7 @@ const OrganizerMap = dynamic(
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  featuresRequired: [AREAS],
+  featuresRequired: [AREA_ASSIGNMENTS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

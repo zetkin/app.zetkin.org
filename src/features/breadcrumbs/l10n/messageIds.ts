@@ -9,6 +9,7 @@ export default makeMessages('feat.breadcrumbs', {
     calendar: m('Calendar'),
     callassignments: m('Call assignments'),
     callers: m('Callers'),
+    calls: m('Call log'),
     closed: m('Closed'),
     compose: m('Compose'),
     conversation: m('Conversation'),

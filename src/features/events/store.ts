@@ -104,6 +104,11 @@ const eventsSlice = createSlice({
   initialState,
   name: 'events',
   reducers: {
+    allEventsError: (state, error: PayloadAction<unknown>) => {
+      state.allEventsList.isLoading = false;
+      state.allEventsList.error = error;
+      state.allEventsList.loaded = new Date().toISOString();
+    },
     allEventsLoad: (state) => {
       state.allEventsList.isLoading = true;
     },
@@ -817,6 +822,7 @@ export default eventsSlice;
 export const {
   allEventsLoad,
   allEventsLoaded,
+  allEventsError,
   allEventsUnload,
   projectEventsLoad,
   projectEventsLoaded,

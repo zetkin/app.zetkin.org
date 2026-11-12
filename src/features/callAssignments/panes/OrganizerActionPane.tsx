@@ -36,7 +36,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   const messages = useMessages(messageIds);
   const { data: recipient } = usePerson(orgId, personId);
 
-  const { setOrganizerActionNeeded, setOrganizerActionTaken } = useCall();
+  const updateCall = useCall();
 
   const sorted: ZetkinOrganizerAction[] = useMemo(
     () =>
@@ -69,9 +69,10 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
         <Box key={call?.id} mt={4}>
           <Typography variant="body2">
             <Msg
-              id={messageIds.organizerActionPane.noteByCaller}
+              id={messageIds.organizerActionPane.note}
               values={{
-                person: call && (
+                assignment: call.assignment.title,
+                person: (
                   <ZUIPersonLink
                     person={
                       call.caller as {
@@ -83,7 +84,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
                     }
                   />
                 ),
-                time: call && <ZUIRelativeTime datetime={call.update_time} />,
+                time: <ZUIRelativeTime datetime={call.update_time} />,
               }}
             />
           </Typography>
@@ -101,10 +102,9 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               {!call.organizer_action_taken ? (
                 <Button
                   onClick={() =>
-                    setOrganizerActionTaken(
-                      call.assignment.organization_id,
-                      call.id
-                    )
+                    updateCall(call.assignment.organization_id, call.id, {
+                      organizer_action_taken: true,
+                    })
                   }
                   startIcon={<Check />}
                   variant="contained"
@@ -114,10 +114,9 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               ) : (
                 <Button
                   onClick={() =>
-                    setOrganizerActionNeeded(
-                      call.assignment.organization_id,
-                      call.id
-                    )
+                    updateCall(call.assignment.organization_id, call.id, {
+                      organizer_action_taken: false,
+                    })
                   }
                   startIcon={<PriorityHigh />}
                   variant="text"

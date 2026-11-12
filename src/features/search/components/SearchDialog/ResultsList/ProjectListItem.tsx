@@ -10,8 +10,6 @@ import {
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinProject } from 'utils/types/zetkin';
-import messageIds from '../../../l10n/messageIds';
-import { Msg } from 'core/i18n';
 
 const ProjectListItem: React.FunctionComponent<{
   project: ZetkinProject;
@@ -27,10 +25,7 @@ const ProjectListItem: React.FunctionComponent<{
               <Event />
             </Avatar>
           </ListItemAvatar>
-          <ResultsListItemText
-            primary={project.title}
-            secondary={<Msg id={messageIds.results.project} />}
-          />
+          <ResultsListItemText primary={project.title} />
         </ListItemButton>
       </ListItem>
     </Link>

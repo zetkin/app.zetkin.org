@@ -17,12 +17,20 @@ type SurveySubmittedViewCell =
     }[]
   | null;
 
+const getCellValue = (submissions: SurveySubmittedViewCell): Date | null => {
+  if (submissions?.length) {
+    const lastSub = submissions[submissions.length - 1];
+    return new Date(lastSub.submitted);
+  }
+  return null;
+};
+
 export default class SurveySubmittedColumnType implements IColumnType<
   SurveySubmittedViewColumn,
   SurveySubmittedViewCell
 > {
   cellToString(cell: SurveySubmittedViewCell): string {
-    return cell?.length ? new Date(cell[0].submitted).toLocaleDateString() : '';
+    return getCellValue(cell)?.toLocaleDateString() ?? '';
   }
   getColDef(): Omit<GridColDef<NonNullable<SurveySubmittedViewCell>>, 'field'> {
     return {
@@ -31,11 +39,7 @@ export default class SurveySubmittedColumnType implements IColumnType<
       },
       type: 'date',
       valueGetter: (submissions: SurveySubmittedViewCell) => {
-        if (submissions?.length) {
-          const lastSub = submissions[submissions.length - 1];
-          return new Date(lastSub.submitted);
-        }
-        return null;
+        return getCellValue(submissions);
       },
       width: 250,
     };

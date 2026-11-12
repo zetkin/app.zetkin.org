@@ -42,6 +42,14 @@ const emailsSlice = createSlice({
   initialState,
   name: 'emails',
   reducers: {
+    configCreate: (state) => {
+      state.configList.isLoading = true;
+    },
+    configCreated: (state, action: PayloadAction<ZetkinEmailConfig>) => {
+      const config = action.payload;
+      state.configList.isLoading = false;
+      state.configList.items.push(remoteItem(config.id, { data: config }));
+    },
     configsLoad: (state) => {
       state.configList.isLoading = true;
     },
@@ -305,6 +313,8 @@ const emailsSlice = createSlice({
 
 export default emailsSlice;
 export const {
+  configCreate,
+  configCreated,
   configsLoad,
   configsLoaded,
   emailCreate,

@@ -110,7 +110,10 @@ if (typeof ImageData === 'undefined') {
    *
    * Required when importing `maplibre-gl` in tests.
    */
-  if (typeof window.URL.createObjectURL === 'undefined') {
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.URL.createObjectURL === 'undefined'
+  ) {
     Object.defineProperty(window.URL, 'createObjectURL', { value: () => {} });
   }
 }

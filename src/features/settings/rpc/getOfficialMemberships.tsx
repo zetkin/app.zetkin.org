@@ -21,22 +21,20 @@ export default makeRPCDef<Params, Result>(getOfficialMembershipsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId } = params;
-  const memberships: ZetkinMembership[] = [];
 
   const officials = await apiClient.get<ZetkinOfficial[]>(
     `/api/orgs/${orgId}/officials`
   );
 
-  for (const official of officials) {
-    const membership = await apiClient.get<[ZetkinMembership]>(
-      `/api/orgs/${orgId}/people/${official.id}/connections`
-    );
-    const orgMembership = membership.find((m) => m.organization.id == orgId);
+  const memberships = await Promise.all(
+    officials.map((official) =>
+      apiClient.get<[ZetkinMembership]>(
+        `/api/orgs/${orgId}/people/${official.id}/connections`
+      )
+    )
+  );
 
-    if (orgMembership) {
-      memberships.push(orgMembership);
-    }
-  }
-
-  return memberships;
+  return memberships
+    .map((membership) => membership.find((m) => m.organization.id == orgId))
+    .filter((membership) => !!membership);
 }

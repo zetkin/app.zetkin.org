@@ -21,6 +21,7 @@ import IApiClient from 'core/api/client/IApiClient';
  */
 export type EnvVars = {
   FEAT_AREAS?: string;
+  FEAT_AREA_ASSIGNMENTS?: string;
   FEAT_BULK_DELETE?: string;
   FEAT_EMAIL_SETTINGS?: string;
   FEAT_OFFICIALS?: string;
@@ -31,7 +32,9 @@ export type EnvVars = {
   MAPLIBRE_STYLE?: string;
   MUIX_LICENSE_KEY?: string;
   TILESERVER?: string;
+  TIMEZONE?: string;
   ZETKIN_APP_DOMAIN?: string;
+  ZETKIN_GEN2_CALL_URL?: string;
   ZETKIN_GEN2_ORGANIZE_URL?: string;
   ZETKIN_PRIVACY_POLICY_LINK?: string;
 };

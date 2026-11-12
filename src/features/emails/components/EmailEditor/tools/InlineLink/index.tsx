@@ -88,6 +88,9 @@ export function linkToolFactory(title: string) {
       };
 
       this._input.onfocus = () => {
+        if (this._input !== undefined && this._input !== null) {
+          this._api.selection.expandToTag(this._input);
+        }
         this._focused = true;
       };
 
