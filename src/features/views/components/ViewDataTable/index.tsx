@@ -88,6 +88,7 @@ declare module '@mui/x-data-grid-pro' {
   }
 
   interface ToolbarPropsOverrides {
+    clearRowSelection: () => void;
     disableBulkActions?: boolean;
     disableConfigure?: boolean;
     disabled: boolean;
@@ -550,6 +551,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         },
       },
       toolbar: {
+        clearRowSelection: () => setSelection([]),
         disableBulkActions: selectionModel?.mode !== 'selectWithBulkActions',
         disableConfigure,
         disabled: waiting,
@@ -755,6 +757,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         pinnedColumns={pinnedColumns}
         processRowUpdate={processRowUpdate}
         rows={gridRows}
+        rowSelectionModel={selection}
         slotProps={componentsProps}
         slots={slots}
         style={style}
