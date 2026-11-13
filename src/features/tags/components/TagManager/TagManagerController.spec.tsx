@@ -111,6 +111,7 @@ describe('<TagManagerController />', () => {
 
     const tag1 = mockTag({
       group: { id: 2, title: 'Skills' },
+      hidden: false,
       id: 4,
       title: 'Phone banking',
     });
@@ -145,6 +146,7 @@ describe('<TagManagerController />', () => {
 
     const tag = mockTag({
       group: null,
+      hidden: false,
       id: 1857,
       title: 'Age',
       value_type: 'text',
@@ -358,6 +360,7 @@ describe('<TagManagerController />', () => {
       await waitFor(() =>
         expect(assignTagCallback).toBeCalledWith({
           group_id: null,
+          hidden: false,
           id: 1857,
           title: 'Age',
           value: '75',
