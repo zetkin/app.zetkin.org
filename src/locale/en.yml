@@ -398,7 +398,7 @@ feat:
       title: Merge duplicates
       warningMessage: All data related to any of the person records will transfer to
         the merged person. This includes event participation, survey
-        submissions, tags etc. But the values you discard in the fields above
+        submissions, tags etc. But the values you discard in the fields below
         will be lost.
       warningTitle: Risk of data loss
     page:
