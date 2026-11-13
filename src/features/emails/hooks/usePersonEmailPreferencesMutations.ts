@@ -1,6 +1,7 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { personEmailPreferencesLoaded } from '../store';
 import {
+  ZetkinChannel,
   ZetkinPersonChannelPreference,
   ZetkinPersonChannelPreferencePatchBody,
   ZetkinPersonEmailPreferences,
@@ -11,7 +12,10 @@ type UsePersonEmailPreferencesMutationsReturn = {
   muteChannel: (channelId: number) => Promise<void>;
   setOrgMuted: (muted: boolean) => Promise<void>;
   subscribeToChannel: (channelId: number) => Promise<void>;
-  unmuteChannel: (channel: ZetkinPersonChannelPreference) => Promise<void>;
+  unmuteChannel: (
+    channel: ZetkinChannel,
+    channelPreference: ZetkinPersonChannelPreference
+  ) => Promise<void>;
   unsubscribeFromChannel: (channelId: number) => Promise<void>;
 };
 
@@ -47,11 +51,11 @@ export default function usePersonEmailPreferencesMutations(
     setOrgMuted: (muted) => patch(preferencesUrl, { org_muted: muted }),
     subscribeToChannel: (channelId) =>
       setChannelStatus(channelId, 'subscribed'),
-    unmuteChannel: async (channel) => {
+    unmuteChannel: async (channel, channelPreference) => {
       // Setting has_received clears the mute. If the person was subscribed
       // before muting, subscribe them again.
       await setChannelStatus(channel.id, 'has_received');
-      if (channel.subscribed && channel.published) {
+      if (channelPreference.subscribed && channel.published) {
         await setChannelStatus(channel.id, 'subscribed');
       }
     },

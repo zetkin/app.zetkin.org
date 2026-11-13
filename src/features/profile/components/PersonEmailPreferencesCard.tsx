@@ -11,7 +11,6 @@ import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIButton from 'zui/components/ZUIButton';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import ZUISection from 'zui/components/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -19,10 +18,13 @@ import ZUISwitch from 'zui/components/ZUISwitch';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
-  ZetkinChannelStatus,
+  ZetkinChannel,
+  ZetkinChannelPreferenceStatus,
   ZetkinPersonChannelPreference,
   ZetkinPersonEmailPreferences,
 } from 'features/emails/types';
+import usePersonChannelPreferences from 'features/emails/hooks/usePersonChannelPreferences';
+import ZUIFutures from 'zui/ZUIFutures';
 
 type Props = {
   orgId: number;
@@ -41,28 +43,39 @@ const PersonEmailPreferencesCard: FC<Props> = ({ orgId, person }) => {
 
 const EmailPreferences: FC<Props> = ({ orgId, person }) => {
   const preferencesFuture = usePersonEmailPreferences(orgId, person.id);
+  const [channelPreferencesFuture, channels] = usePersonChannelPreferences(
+    orgId,
+    person.id
+  );
 
   return (
-    <ZUIFuture
-      future={preferencesFuture}
-      skeleton={<Skeleton height={300} variant="rounded" />}
+    <ZUIFutures
+      futures={{
+        channelPreferences: channelPreferencesFuture,
+        preferences: preferencesFuture,
+      }}
+      loadingIndicator={<Skeleton height={300} variant="rounded" />}
     >
-      {(preferences) => (
+      {({ data: { channelPreferences, preferences } }) => (
         <EmailPreferencesSection
+          channelPreferences={channelPreferences}
+          channels={channels}
           orgId={orgId}
           person={person}
           preferences={preferences}
         />
       )}
-    </ZUIFuture>
+    </ZUIFutures>
   );
 };
 
 const EmailPreferencesSection: FC<
   Props & {
+    channelPreferences: ZetkinPersonChannelPreference[];
+    channels: Record<number, ZetkinChannel | undefined>;
     preferences: ZetkinPersonEmailPreferences;
   }
-> = ({ orgId, person, preferences }) => {
+> = ({ channelPreferences, channels, orgId, person, preferences }) => {
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -76,8 +89,8 @@ const EmailPreferencesSection: FC<
   const [isPending, setIsPending] = useState(false);
 
   const name = `${person.first_name} ${person.last_name}`;
-  const orgMuted = !!preferences.org_muted.muted;
-  const hasChannels = preferences.channels.length > 0;
+  const orgMuted = preferences.org_status === 'muted';
+  const hasChannels = channelPreferences.length > 0;
 
   const run = async (mutation: () => Promise<void>) => {
     if (isPending) {
@@ -120,7 +133,7 @@ const EmailPreferencesSection: FC<
               label: messages.emailPreferences.orgMuted.button(),
               onClick: () =>
                 confirmUnmute(
-                  preferences.org_muted.muted_by_user_id === null,
+                  preferences.org_muted_by_user_id === null,
                   messages.emailPreferences.unmuteConfirm.orgTitle(),
                   () => run(() => setOrgMuted(false))
                 ),
@@ -139,10 +152,11 @@ const EmailPreferencesSection: FC<
   }
 
   const getRowAction = (
-    channel: ZetkinPersonChannelPreference
+    channel: ZetkinChannel,
+    channelPreference: ZetkinPersonChannelPreference
   ): ChannelRowAction | undefined => {
     // Unpublished channels can't be subscribed to again, so leave them as is
-    if (channel.status == 'subscribed' && !!channel.published) {
+    if (channelPreference.status == 'subscribed' && !!channel.published) {
       return {
         label: messages.emailPreferences.unsubscribe.button(),
         onClick: () => run(() => unsubscribeFromChannel(channel.id)),
@@ -151,7 +165,8 @@ const EmailPreferencesSection: FC<
 
     const canSubscribe =
       !!channel.published &&
-      (channel.status == 'has_received' || channel.status == 'no_relationship');
+      (channelPreference.status == 'has_received' ||
+        channelPreference.status == 'no_relationship');
 
     if (canSubscribe) {
       return {
@@ -173,29 +188,42 @@ const EmailPreferencesSection: FC<
                   {messages.emailPreferences.channels.empty()}
                 </ZUIText>
               )}
-              {preferences.channels.map((channel, index) => (
-                <Box key={channel.id}>
-                  {index > 0 && <ZUIDivider />}
-                  <ChannelPreferenceRow
-                    action={getRowAction(channel)}
-                    channel={channel}
-                    disabled={isPending}
-                    onChange={(checked) => {
-                      if (checked) {
-                        confirmUnmute(
-                          channel.muted_by_user_id === null,
-                          messages.emailPreferences.unmuteConfirm.channelTitle({
-                            channel: channel.title,
-                          }),
-                          () => run(() => unmuteChannel(channel))
-                        );
-                      } else {
-                        run(() => muteChannel(channel.id));
-                      }
-                    }}
-                  />
-                </Box>
-              ))}
+              {channelPreferences.map((channelPreference, index) => {
+                const channel = channels[channelPreference.channel_id];
+                if (!channel) {
+                  return null;
+                }
+
+                return (
+                  <Box key={channelPreference.channel_id}>
+                    {index > 0 && <ZUIDivider />}
+                    <ChannelPreferenceRow
+                      action={getRowAction(channel, channelPreference)}
+                      channel={channel}
+                      channelPreference={channelPreference}
+                      disabled={isPending}
+                      onChange={(checked) => {
+                        if (checked) {
+                          confirmUnmute(
+                            channelPreference.muted_by_user_id === null,
+                            messages.emailPreferences.unmuteConfirm.channelTitle(
+                              {
+                                channel: channel.title,
+                              }
+                            ),
+                            () =>
+                              run(() =>
+                                unmuteChannel(channel, channelPreference)
+                              )
+                          );
+                        } else {
+                          run(() => muteChannel(channelPreference.channel_id));
+                        }
+                      }}
+                    />
+                  </Box>
+                );
+              })}
             </Box>
           ),
           subtitle: hasChannels
@@ -235,20 +263,20 @@ type ChannelRowAction = {
 
 const ChannelPreferenceRow: FC<{
   action?: ChannelRowAction;
-  channel: ZetkinPersonChannelPreference;
+  channel: ZetkinChannel;
+  channelPreference: ZetkinPersonChannelPreference;
   disabled: boolean;
   onChange: (checked: boolean) => void;
-}> = ({ action, channel, disabled, onChange }) => {
+}> = ({ action, channel, channelPreference, disabled, onChange }) => {
   const messages = useMessages(messageIds);
-  const isMuted = channel.status == 'channel_muted';
+  const isMuted = channelPreference.status == 'channel_muted';
   const color = isMuted ? 'secondary' : 'primary';
 
   const statusMessages = messages.emailPreferences.channels.status;
-  const statusLabels: Record<ZetkinChannelStatus, string> = {
+  const statusLabels: Record<ZetkinChannelPreferenceStatus, string> = {
     channel_muted: statusMessages.muted(),
     has_received: statusMessages.notSubscribed(),
     no_relationship: statusMessages.notSubscribed(),
-    org_muted: statusMessages.muted(),
     subscribed: statusMessages.subscribed(),
   };
 
@@ -265,7 +293,7 @@ const ChannelPreferenceRow: FC<{
       <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
         <ZUIText color={color}>{channel.title}</ZUIText>
         <ZUIText color="secondary" variant="bodySmRegular">
-          {statusLabels[channel.status]}
+          {statusLabels[channelPreference.status]}
         </ZUIText>
       </Box>
       {action && (

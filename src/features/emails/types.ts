@@ -238,32 +238,36 @@ export type ZetkinEmailStats = {
   num_target_matches: number;
 };
 
-export type ZetkinChannelStatus =
+export type ZetkinChannelPreferenceStatus =
   | 'channel_muted'
   | 'has_received'
   | 'no_relationship'
-  | 'org_muted'
   | 'subscribed';
 
+export type ZetkinOrgEmailPreferenceStatus = 'muted' | 'unmuted';
+
 export type ZetkinPersonChannelPreference = {
+  channel_id: number;
+  muted: string | null;
+  muted_by_user_id: number | null;
+  status: ZetkinChannelPreferenceStatus;
+  subscribed: string | null;
+  subscribed_by_user_id: number | null;
+};
+
+export type ZetkinChannel = {
   description: string | null;
   double_opt_in: boolean;
   id: number;
-  muted: string | null;
-  muted_by_user_id: number | null;
+  organization_id: number;
   published: string | null;
-  status: ZetkinChannelStatus;
-  subscribed: string | null;
-  subscribed_by_user_id: number | null;
   title: string;
 };
 
 export type ZetkinPersonEmailPreferences = {
-  channels: ZetkinPersonChannelPreference[];
-  org_muted: {
-    muted: string | null;
-    muted_by_user_id: number | null;
-  };
+  org_muted_by_user_id: number | null;
+  org_muted: string | null;
+  org_status: ZetkinOrgEmailPreferenceStatus;
 };
 
 export type ZetkinPersonEmailPreferencesPatchBody = {
@@ -271,5 +275,8 @@ export type ZetkinPersonEmailPreferencesPatchBody = {
 };
 
 export type ZetkinPersonChannelPreferencePatchBody = {
-  status: Exclude<ZetkinChannelStatus, 'no_relationship' | 'org_muted'>;
+  status: Exclude<
+    ZetkinChannelPreferenceStatus,
+    'no_relationship' | 'org_muted'
+  >;
 };

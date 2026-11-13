@@ -52,6 +52,8 @@ export default function mockState(overrides?: RootState) {
       potentialDuplicatesList: remoteList(),
     },
     emails: {
+      channelPreferencesByPersonId: {},
+      channelsById: {},
       configList: remoteList(),
       emailList: remoteList(),
       insightsByEmailId: {},
