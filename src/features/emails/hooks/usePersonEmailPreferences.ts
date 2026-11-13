@@ -3,6 +3,7 @@ import { IFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinPersonEmailPreferences } from '../types';
 import {
+  personEmailPreferencesError,
   personEmailPreferencesLoad,
   personEmailPreferencesLoaded,
 } from '../store';
@@ -18,6 +19,7 @@ export default function usePersonEmailPreferences(
   );
 
   return loadItemIfNecessary(preferencesItem, dispatch, {
+    actionOnError: (err) => personEmailPreferencesError([personId, err]),
     actionOnLoad: () => personEmailPreferencesLoad(personId),
     actionOnSuccess: (preferences) =>
       personEmailPreferencesLoaded([personId, preferences]),
