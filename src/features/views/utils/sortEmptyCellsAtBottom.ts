@@ -5,10 +5,10 @@ export const copmareCollator = new Intl.Collator(undefined, {
   sensitivity: 'base',
 }).compare;
 
-export default function sortEmptyCellsAtBottom<T>(
+export default function sortEmptyCellsAtBottom(
   sortDirection: GridSortDirection,
-  v1?: T | null,
-  v2?: T | null
+  v1?: string | null,
+  v2?: string | null
 ) {
   const modifier = sortDirection === 'desc' ? -1 : 1;
 
@@ -22,7 +22,7 @@ export default function sortEmptyCellsAtBottom<T>(
     return -1;
   }
 
-  const result = copmareCollator(v1.toString().trim(), v2.toString().trim());
+  const result = copmareCollator(v1.trim(), v2.trim());
 
   return modifier * result;
 }
