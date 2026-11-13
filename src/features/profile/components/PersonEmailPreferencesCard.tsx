@@ -25,6 +25,7 @@ import {
 } from 'features/emails/types';
 import usePersonChannelPreferences from 'features/emails/hooks/usePersonChannelPreferences';
 import ZUIFutures from 'zui/ZUIFutures';
+import usePersonChannelPreferencesMutations from 'features/emails/hooks/usePersonChannelPreferencesMutations';
 
 type Props = {
   orgId: number;
@@ -79,13 +80,13 @@ const EmailPreferencesSection: FC<
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { setOrgMuted } = usePersonEmailPreferencesMutations(orgId, person.id);
   const {
     muteChannel,
-    setOrgMuted,
     subscribeToChannel,
     unmuteChannel,
-    unsubscribeFromChannel,
-  } = usePersonEmailPreferencesMutations(orgId, person.id);
+    clearSubscribeFromChannel,
+  } = usePersonChannelPreferencesMutations(orgId, person.id);
   const [isPending, setIsPending] = useState(false);
 
   const name = `${person.first_name} ${person.last_name}`;
@@ -159,7 +160,7 @@ const EmailPreferencesSection: FC<
     if (channelPreference.status == 'subscribed' && !!channel.published) {
       return {
         label: messages.emailPreferences.unsubscribe.button(),
-        onClick: () => run(() => unsubscribeFromChannel(channel.id)),
+        onClick: () => run(() => clearSubscribeFromChannel(channel.id)),
       };
     }
 
@@ -213,7 +214,7 @@ const EmailPreferencesSection: FC<
                             ),
                             () =>
                               run(() =>
-                                unmuteChannel(channel, channelPreference)
+                                unmuteChannel(channelPreference.channel_id)
                               )
                           );
                         } else {

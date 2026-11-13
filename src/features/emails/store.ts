@@ -11,6 +11,7 @@ import {
 import {
   RemoteItem,
   remoteItem,
+  remoteItemUpdated,
   RemoteList,
   remoteList,
   remoteListLoad,
@@ -194,6 +195,18 @@ const emailsSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    personChannelPreferenceUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinPersonChannelPreference]>
+    ) => {
+      const [personId, pref] = action.payload;
+      if (state.channelPreferencesByPersonId[personId]) {
+        remoteItemUpdated(state.channelPreferencesByPersonId[personId], {
+          ...pref,
+          id: pref.channel_id,
+        });
+      }
+    },
     personChannelPreferencesError: (
       state,
       action: PayloadAction<[number, string]>
@@ -201,6 +214,15 @@ const emailsSlice = createSlice({
       const [personId, error] = action.payload;
       state.channelPreferencesByPersonId[personId] = remoteList();
       state.channelPreferencesByPersonId[personId].error = error;
+    },
+    personChannelPreferencesInvalidated: (
+      state,
+      action: PayloadAction<number>
+    ) => {
+      const personId = action.payload;
+      if (state.channelPreferencesByPersonId[personId]) {
+        state.channelPreferencesByPersonId[personId].isStale = true;
+      }
     },
     personChannelPreferencesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
@@ -410,6 +432,8 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
+  personChannelPreferenceUpdated,
+  personChannelPreferencesInvalidated,
   personChannelPreferencesError,
   personChannelPreferencesLoad,
   personChannelPreferencesLoaded,

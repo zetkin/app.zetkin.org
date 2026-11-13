@@ -275,8 +275,5 @@ export type ZetkinPersonEmailPreferencesPatchBody = {
 };
 
 export type ZetkinPersonChannelPreferencePatchBody = {
-  status: Exclude<
-    ZetkinChannelPreferenceStatus,
-    'no_relationship' | 'org_muted'
-  >;
+  status: ZetkinChannelPreferenceStatus & ('subscribed' | 'channel_muted');
 };

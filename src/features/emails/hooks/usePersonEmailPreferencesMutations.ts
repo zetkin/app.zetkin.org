@@ -1,22 +1,14 @@
+import { useCallback, useMemo } from 'react';
+
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { personEmailPreferencesLoaded } from '../store';
 import {
-  ZetkinChannel,
-  ZetkinPersonChannelPreference,
-  ZetkinPersonChannelPreferencePatchBody,
+  ZetkinOrgEmailPreferenceStatus,
   ZetkinPersonEmailPreferences,
-  ZetkinPersonEmailPreferencesPatchBody,
 } from '../types';
 
 type UsePersonEmailPreferencesMutationsReturn = {
-  muteChannel: (channelId: number) => Promise<void>;
   setOrgMuted: (muted: boolean) => Promise<void>;
-  subscribeToChannel: (channelId: number) => Promise<void>;
-  unmuteChannel: (
-    channel: ZetkinChannel,
-    channelPreference: ZetkinPersonChannelPreference
-  ) => Promise<void>;
-  unsubscribeFromChannel: (channelId: number) => Promise<void>;
 };
 
 export default function usePersonEmailPreferencesMutations(
@@ -26,40 +18,21 @@ export default function usePersonEmailPreferencesMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const preferencesUrl = `/api2/orgs/${orgId}/people/${personId}/email_preferences`;
-
-  const patch = async (
-    url: string,
-    data:
-      | ZetkinPersonEmailPreferencesPatchBody
-      | ZetkinPersonChannelPreferencePatchBody
-  ) => {
-    const preferences = await apiClient.patch<
-      ZetkinPersonEmailPreferences,
-      typeof data
-    >(url, data);
-    dispatch(personEmailPreferencesLoaded([personId, preferences]));
-  };
-
-  const setChannelStatus = (
-    channelId: number,
-    status: ZetkinPersonChannelPreferencePatchBody['status']
-  ) => patch(`${preferencesUrl}/channels/${channelId}`, { status });
-
-  return {
-    muteChannel: (channelId) => setChannelStatus(channelId, 'channel_muted'),
-    setOrgMuted: (muted) => patch(preferencesUrl, { org_muted: muted }),
-    subscribeToChannel: (channelId) =>
-      setChannelStatus(channelId, 'subscribed'),
-    unmuteChannel: async (channel, channelPreference) => {
-      // Setting has_received clears the mute. If the person was subscribed
-      // before muting, subscribe them again.
-      await setChannelStatus(channel.id, 'has_received');
-      if (channelPreference.subscribed && channel.published) {
-        await setChannelStatus(channel.id, 'subscribed');
-      }
+  const setOrgStatus = useCallback(
+    async (status: ZetkinOrgEmailPreferenceStatus) => {
+      const preferences = await apiClient.patch<ZetkinPersonEmailPreferences>(
+        `/api2/orgs/${orgId}/people/${personId}/email_preferences`,
+        { org_status: status }
+      );
+      dispatch(personEmailPreferencesLoaded([personId, preferences]));
     },
-    unsubscribeFromChannel: (channelId) =>
-      setChannelStatus(channelId, 'has_received'),
-  };
+    [apiClient, dispatch, orgId, personId]
+  );
+
+  return useMemo(
+    () => ({
+      setOrgMuted: (muted) => setOrgStatus(muted ? 'muted' : 'unmuted'),
+    }),
+    [setOrgStatus]
+  );
 }
