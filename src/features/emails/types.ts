@@ -265,8 +265,8 @@ export type ZetkinChannel = {
 };
 
 export type ZetkinPersonEmailPreferences = {
-  org_muted_by_user_id: number | null;
   org_muted: string | null;
+  org_muted_by_user_id: number | null;
   org_status: ZetkinOrgEmailPreferenceStatus;
 };
 
