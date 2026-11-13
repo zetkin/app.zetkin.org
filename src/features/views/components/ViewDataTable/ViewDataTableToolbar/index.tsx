@@ -28,6 +28,7 @@ import BulkTagDialog from './BulkTagDialog';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface ViewDataTableToolbarProps {
+  clearRowSelection: () => void;
   disableBulkActions?: boolean;
   disableConfigure?: boolean;
   disabled: boolean;
@@ -48,6 +49,7 @@ export interface ViewDataTableToolbarProps {
 const ViewDataTableToolbar: React.FunctionComponent<
   ViewDataTableToolbarProps
 > = ({
+  clearRowSelection,
   disableBulkActions,
   disableConfigure,
   disabled,
@@ -186,13 +188,19 @@ const ViewDataTableToolbar: React.FunctionComponent<
       <BulkTagDialog
         numPeople={selection.length}
         onBulkTag={onBulkTag}
-        onClose={() => setTagDialogOpen(false)}
+        onClose={() => {
+          setTagDialogOpen(false);
+          clearRowSelection();
+        }}
         open={tagDialogOpen}
       />
       <BulkDeleteDialog
         numPeople={selection.length}
         onBulkDelete={onBulkDelete}
-        onClose={() => setDeleteDialogOpen(false)}
+        onClose={() => {
+          setDeleteDialogOpen(false);
+          clearRowSelection();
+        }}
         open={deleteDialogOpen}
         orgId={orgId}
       />
