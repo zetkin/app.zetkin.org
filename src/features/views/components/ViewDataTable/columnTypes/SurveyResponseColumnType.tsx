@@ -11,6 +11,7 @@ import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 import useToggleDebounce from 'utils/hooks/useToggleDebounce';
+import sortEmptyCellsAtBottom from 'features/views/utils/sortEmptyCellsAtBottom';
 
 export type SurveyResponseViewCell = {
   submission_id: number;
@@ -44,21 +45,8 @@ export default class SurveyResponseColumnType implements IColumnType<
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
       filterable: true,
-      getSortComparator: (sortDirection) => {
-        const modifier = sortDirection === 'desc' ? -1 : 1;
-        return (v1: string, v2: string) => {
-          if (!v1 && !v2) {
-            return 0;
-          }
-          if (!v1) {
-            return 1;
-          }
-          if (!v2) {
-            return -1;
-          }
-          return modifier * v1.localeCompare(v2);
-        };
-      },
+      getSortComparator: (sortDirection) => (v1: string, v2: string) =>
+        sortEmptyCellsAtBottom(sortDirection, v1, v2),
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
