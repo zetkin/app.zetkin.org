@@ -51,7 +51,6 @@ export default makeMessages('feat.profile', {
     },
     subscribe: {
       button: m('Subscribe'),
-      noChannels: m('No public channels to subscribe to'),
     },
     title: m('Email preferences'),
     unmuteConfirm: {
@@ -61,6 +60,9 @@ export default makeMessages('feat.profile', {
       warning: m<{ name: string }>(
         '{name} muted this themselves. Only unmute it if they have asked you to.'
       ),
+    },
+    unsubscribe: {
+      button: m('Unsubscribe'),
     },
   },
   events: {

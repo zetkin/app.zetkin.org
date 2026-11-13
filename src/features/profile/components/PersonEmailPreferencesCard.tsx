@@ -1,12 +1,6 @@
 import { FC, useContext, useState } from 'react';
 import { Box, Skeleton } from '@mui/material';
-import {
-  ExpandMore,
-  ForwardToInbox,
-  MailOutline,
-  Notifications,
-  VolumeOff,
-} from '@mui/icons-material';
+import { ForwardToInbox, MailOutline, VolumeOff } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
@@ -19,7 +13,6 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIIcon from 'zui/components/ZUIIcon';
-import ZUIMenu from 'zui/components/ZUIMenu';
 import ZUISection from 'zui/components/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUISwitch from 'zui/components/ZUISwitch';
@@ -73,10 +66,13 @@ const EmailPreferencesSection: FC<
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const { muteChannel, setOrgMuted, subscribeToChannel, unmuteChannel } =
-    usePersonEmailPreferencesMutations(orgId, person.id);
-  const [subscribeAnchorEl, setSubscribeAnchorEl] =
-    useState<HTMLElement | null>(null);
+  const {
+    muteChannel,
+    setOrgMuted,
+    subscribeToChannel,
+    unmuteChannel,
+    unsubscribeFromChannel,
+  } = usePersonEmailPreferencesMutations(orgId, person.id);
   const [isPending, setIsPending] = useState(false);
 
   const name = `${person.first_name} ${person.last_name}`;
@@ -142,46 +138,31 @@ const EmailPreferencesSection: FC<
     );
   }
 
-  const subscribableChannels = preferences.channels.filter(
-    (channel) =>
+  const getRowAction = (
+    channel: ZetkinPersonChannelPreference
+  ): ChannelRowAction | undefined => {
+    // Unpublished channels can't be subscribed to again, so leave them as is
+    if (channel.status == 'subscribed' && !!channel.published) {
+      return {
+        label: messages.emailPreferences.unsubscribe.button(),
+        onClick: () => run(() => unsubscribeFromChannel(channel.id)),
+      };
+    }
+
+    const canSubscribe =
       !!channel.published &&
-      (channel.status == 'has_received' || channel.status == 'no_relationship')
-  );
+      (channel.status == 'has_received' || channel.status == 'no_relationship');
+
+    if (canSubscribe) {
+      return {
+        label: messages.emailPreferences.subscribe.button(),
+        onClick: () => run(() => subscribeToChannel(channel.id)),
+      };
+    }
+  };
 
   return (
     <ZUISection
-      renderRightHeaderContent={() => (
-        <>
-          <ZUIButton
-            disabled={isPending}
-            endIcon={ExpandMore}
-            label={messages.emailPreferences.subscribe.button()}
-            onClick={(ev) => setSubscribeAnchorEl(ev.currentTarget)}
-            size="small"
-            startIcon={Notifications}
-            variant="secondary"
-          />
-          <ZUIMenu
-            anchorEl={subscribeAnchorEl}
-            invertHorizontalAnchor
-            menuItems={
-              subscribableChannels.length
-                ? subscribableChannels.map((channel) => ({
-                    label: channel.title,
-                    onClick: () => run(() => subscribeToChannel(channel.id)),
-                  }))
-                : [
-                    {
-                      disabled: true,
-                      label: messages.emailPreferences.subscribe.noChannels(),
-                      onClick: () => null,
-                    },
-                  ]
-            }
-            onClose={() => setSubscribeAnchorEl(null)}
-          />
-        </>
-      )}
       subSectionOrientation="vertical"
       subSections={[
         {
@@ -196,6 +177,7 @@ const EmailPreferencesSection: FC<
                 <Box key={channel.id}>
                   {index > 0 && <ZUIDivider />}
                   <ChannelPreferenceRow
+                    action={getRowAction(channel)}
                     channel={channel}
                     disabled={isPending}
                     onChange={(checked) => {
@@ -246,11 +228,17 @@ const EmailPreferencesSection: FC<
   );
 };
 
+type ChannelRowAction = {
+  label: string;
+  onClick: () => void;
+};
+
 const ChannelPreferenceRow: FC<{
+  action?: ChannelRowAction;
   channel: ZetkinPersonChannelPreference;
   disabled: boolean;
   onChange: (checked: boolean) => void;
-}> = ({ channel, disabled, onChange }) => {
+}> = ({ action, channel, disabled, onChange }) => {
   const messages = useMessages(messageIds);
   const isMuted = channel.status == 'channel_muted';
   const color = isMuted ? 'secondary' : 'primary';
@@ -280,6 +268,15 @@ const ChannelPreferenceRow: FC<{
           {statusLabels[channel.status]}
         </ZUIText>
       </Box>
+      {action && (
+        <ZUIButton
+          disabled={disabled}
+          label={action.label}
+          onClick={action.onClick}
+          size="small"
+          variant="secondary"
+        />
+      )}
       <ZUISwitch
         checked={!isMuted}
         disabled={disabled}
