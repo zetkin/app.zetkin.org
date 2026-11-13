@@ -3,7 +3,6 @@
 import Paragraph from '@editorjs/paragraph';
 import { BlockTool, HTMLPasteEvent } from '@editorjs/editorjs';
 
-//@ts-ignore
 export default class ParagraphWithSpanPaste
   extends Paragraph
   implements BlockTool
@@ -20,4 +19,7 @@ export default class ParagraphWithSpanPaste
       tags: ['P', 'SPAN'],
     };
   }
+
+  declare render: BlockTool['render'];
+  declare save: (block: HTMLElement) => { text: string };
 }
