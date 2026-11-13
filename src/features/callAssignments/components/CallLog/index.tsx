@@ -50,14 +50,12 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
       field: 'name',
       flex: 1,
       headerName: messages.calls.columns.name(),
-      minWidth: 250,
       valueGetter: (value, row) => row.target.name,
     },
     {
       field: 'allocation_time',
-      flex: 0.5,
+      flex: 1,
       headerName: messages.calls.columns.time(),
-      minWidth: 250,
       renderCell: (params) => (
         <Typography>
           <ZUIDateTime datetime={params.row.allocation_time} />
@@ -246,9 +244,9 @@ const CallLog: FC<Props> = ({ callAssId, orgId }) => {
     },
     {
       field: 'caller_name',
+      flex: 1,
       headerName: messages.calls.columns.callerName(),
       valueGetter: (value, cell) => cell.caller.name,
-      width: 250,
     },
   ];
 
