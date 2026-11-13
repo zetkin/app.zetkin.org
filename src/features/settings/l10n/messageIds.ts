@@ -15,22 +15,13 @@ export default makeMessages('feat.settings', {
         ),
         emailErrorMessage: m('Email is invalid'),
         emailInputLabel: m('Sender email'),
-        noReplyCheckboxDescription: m(
-          'If you make the channel no-reply, it means recipients cannot respond to emails from this channel.'
-        ),
-        noReplyCheckboxLabel: m('No reply'),
         senderInputLabel: m('Sender name'),
         title: m('Create new email channel'),
       },
       list: {
         headers: {
-          noReply: m('No reply'),
           senderEmail: m('Sender email'),
           senderName: m('Sender name'),
-        },
-        noReply: {
-          canNotRespond: m('No reply'),
-          canRespond: m('Recipients can respond'),
         },
       },
       overview: {
