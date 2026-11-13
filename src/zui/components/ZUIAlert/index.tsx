@@ -226,7 +226,9 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
           >
             <Button
               color="inherit"
+              endIcon={button.endIcon && <button.endIcon />}
               onClick={button.onClick}
+              startIcon={button.startIcon && <button.startIcon />}
               sx={(theme) => ({
                 boxShadow: 'none',
                 minWidth: 'max-content',
