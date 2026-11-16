@@ -19,6 +19,7 @@ type Props = {
 const AppPreferences: FC<Props> = ({ user }) => {
   const messages = useMessages(messageIds);
   const languageOptions: Record<SupportedLanguage, string> = {
+    cs: 'Čeština',
     da: 'Dansk',
     de: 'Deutsch',
     en: 'English',
