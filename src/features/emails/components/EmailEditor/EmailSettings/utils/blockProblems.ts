@@ -1,3 +1,4 @@
+import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
 import isMailtoURI from 'validator/lib/isMailtoURI';
 import { OutputBlockData } from '@editorjs/editorjs';
@@ -20,6 +21,13 @@ export default function blockProblems(block: OutputBlockData): BlockProblem[] {
       blockProblems.push(BlockProblem.DEFAULT_BUTTON_TEXT);
     } else if (!block.data.buttonText.replaceAll('&nbsp;', '').trim().length) {
       blockProblems.push(BlockProblem.BUTTON_TEXT_MISSING);
+    }
+  } else if (block.type === BLOCK_TYPES.SIGNATURE) {
+    if (!block.data.name?.trim()) {
+      blockProblems.push(BlockProblem.SIGNATURE_NAME_MISSING);
+    }
+    if (!isEmail(block.data.email || '')) {
+      blockProblems.push(BlockProblem.INVALID_SIGNATURE_EMAIL);
     }
   } else if (block.type === BLOCK_TYPES.PARAGRAPH) {
     const container = document.createElement('div');

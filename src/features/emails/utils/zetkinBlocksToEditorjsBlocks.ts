@@ -40,11 +40,13 @@ export default function zetkinBlocksToEditorjsBlocks(
       });
     } else if (block.kind === BlockKind.PARAGRAPH) {
       editorjsBlocks.push({
-        data: {
+        data: block.data.signature || {
           text: inlineNodesToHtml(block.data.content),
         },
         id: Math.random().toString(36).substring(2, 10),
-        type: BLOCK_TYPES.PARAGRAPH,
+        type: block.data.signature
+          ? BLOCK_TYPES.SIGNATURE
+          : BLOCK_TYPES.PARAGRAPH,
       });
     }
   });

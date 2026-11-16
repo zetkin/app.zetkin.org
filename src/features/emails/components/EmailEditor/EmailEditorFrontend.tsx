@@ -2,15 +2,12 @@
 //@ts-ignore
 import Header from '@editorjs/header';
 import { Box, useTheme } from '@mui/material';
-import EditorJS, {
-  EditorConfig,
-  OutputData,
-  ToolConstructable,
-} from '@editorjs/editorjs';
+import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { FC, MutableRefObject, useEffect, useRef } from 'react';
 
 import Button from './tools/Button';
-import { EmailTheme } from 'features/emails/types';
+import Signature from './tools/Signature';
+import { EmailTheme, SignatureData } from 'features/emails/types';
 import LibraryImage from './tools/LibraryImage';
 import { linkToolFactory } from './tools/InlineLink';
 import messageIds from 'features/emails/l10n/messageIds';
@@ -19,6 +16,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import variableToolFactory from './tools/inlineVariable';
 import ParagraphWithSpanPaste from './tools/paragraphWithSpanPaste';
 import { useNonce } from 'core/hooks/useNonce';
+import useSignatureDefaults from 'features/emails/hooks/useSignatureDefaults';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -40,6 +38,9 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   const muiTheme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
+  const defaultSignatureData = useSignatureDefaults(orgId);
+  const signatureDefaults = useRef<SignatureData>({ email: '', name: '' });
+  signatureDefaults.current = defaultSignatureData;
   const editorInstance = useRef<EditorJS | null>(null);
   const blockIndexRef = useRef<number | null>(null);
 
@@ -73,7 +74,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       readOnly: readOnly,
       tools: {
         button: {
-          class: Button as unknown as ToolConstructable,
+          class: Button,
           config: {
             attributes: emailTheme?.block_attributes?.['button'] ?? {},
           },
@@ -87,7 +88,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           inlineToolbar: ['variable'],
         },
         libraryImage: {
-          class: LibraryImage as unknown as ToolConstructable,
+          class: LibraryImage,
           config: {
             attributes: emailTheme?.block_attributes?.['image'] ?? {},
             orgId,
@@ -110,7 +111,17 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           },
         },
         paragraph: {
-          class: ParagraphWithSpanPaste as unknown as ToolConstructable,
+          class: ParagraphWithSpanPaste,
+        },
+        signature: {
+          class: Signature,
+          config: {
+            getDefaultData: () => signatureDefaults.current,
+            placeholder: messages.editor.tools.signature.title(),
+          },
+          toolbox: {
+            title: messages.editor.tools.signature.title(),
+          },
         },
         variable: {
           class: variableToolFactory(messages.editor.tools.variable.title()),
