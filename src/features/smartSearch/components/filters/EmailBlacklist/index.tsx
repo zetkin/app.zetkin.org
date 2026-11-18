@@ -15,11 +15,11 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.emailBlacklist;
 
-export const MESSAGE_KEY_BY_REASON = {
-  any: 'any',
-  bounce: 'allBounces',
-  unsub_org: 'unsubOrg',
-} as const;
+export enum EMAIL_UNSUB_REASON {
+  unsub_org = 'unsubOrg',
+  bounce = 'bounce',
+  any = 'any',
+}
 
 interface EmailBlockedProps {
   filter:
@@ -84,17 +84,13 @@ const EmailBlacklist = ({
                 }
                 value={filter.config.reason || 'any'}
               >
-                <MenuItem value="unsub_org">
-                  <Msg id={localMessageIds.reasonSelect.unsubOrg} />
-                </MenuItem>
-
-                <MenuItem value="bounce">
-                  <Msg id={localMessageIds.reasonSelect.allBounces} />
-                </MenuItem>
-
-                <MenuItem value="any">
-                  <Msg id={localMessageIds.reasonSelect.any} />
-                </MenuItem>
+                {Object.entries(EMAIL_UNSUB_REASON).map(
+                  ([reason, messageKey]) => (
+                    <MenuItem key={reason} value={reason}>
+                      <Msg id={localMessageIds.reasonSelect[messageKey]} />
+                    </MenuItem>
+                  )
+                )}
               </StyledSelect>
             ),
           }}

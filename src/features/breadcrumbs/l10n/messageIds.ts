@@ -13,7 +13,7 @@ export default makeMessages('feat.breadcrumbs', {
     closed: m('Closed'),
     compose: m('Compose'),
     conversation: m('Conversation'),
-    'delivery-log': m('Delivery log'),
+    deliveryLog: m('Delivery log'),
     duplicates: m('Duplicates'),
     email: m('Email'),
     emails: m('Emails'),
