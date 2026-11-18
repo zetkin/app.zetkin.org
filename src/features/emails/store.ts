@@ -126,8 +126,9 @@ const emailsSlice = createSlice({
       if (
         statsItem &&
         (email.locked != item?.data?.locked ||
-          JSON.stringify(email.target.filter_spec) !=
-            JSON.stringify(item?.data?.target.filter_spec))
+          (!!email?.target?.filter_spec &&
+            JSON.stringify(email.target.filter_spec) !==
+              JSON.stringify(item?.data?.target?.filter_spec)))
       ) {
         statsItem.isStale = true;
       }

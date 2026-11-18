@@ -195,7 +195,7 @@ export type ZetkinEmailRecipient = {
     last_name: string;
   };
   sent: string | null;
-  status: 'pending' | 'sent' | 'opened';
+  status: 'pending' | 'sent' | 'opened' | 'failed' | 'bounced';
 };
 
 export type ZetkinEmailLink = {

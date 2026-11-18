@@ -62,7 +62,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
         label: messages.tabs.insights(),
       },
       {
-        href: '/delivery-log',
+        href: '/deliveryLog',
         label: messages.tabs.deliveryLog(),
       }
     );
