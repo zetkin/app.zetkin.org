@@ -179,10 +179,19 @@ const EmailPreferencesSection: FC<
 
   return (
     <ZUISection
-      subSectionOrientation="vertical"
-      subSections={[
-        {
-          renderContent: () => (
+      renderContent={() => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <ZUIText variant="headingSm">
+                {messages.emailPreferences.channels.title()}
+              </ZUIText>
+              {hasChannels && (
+                <ZUIText color="secondary">
+                  {messages.emailPreferences.channels.description({ name })}
+                </ZUIText>
+              )}
+            </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               {!hasChannels && (
                 <ZUIText color="secondary">
@@ -226,32 +235,27 @@ const EmailPreferencesSection: FC<
                 );
               })}
             </Box>
-          ),
-          subtitle: hasChannels
-            ? messages.emailPreferences.channels.description({ name })
-            : undefined,
-          title: messages.emailPreferences.channels.title(),
-        },
-        {
-          renderContent: () => (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <ZUIText color="secondary">
-                {messages.emailPreferences.muteAll.description({ name })}
-              </ZUIText>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <ZUIButton
-                  disabled={isPending}
-                  label={messages.emailPreferences.muteAll.button()}
-                  onClick={() => run(() => setOrgMuted(true))}
-                  startIcon={VolumeOff}
-                  variant="secondary"
-                />
-              </Box>
-            </Box>
-          ),
-          title: messages.emailPreferences.muteAll.title(),
-        },
-      ]}
+          </Box>
+          <ZUIDivider />
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <ZUIText variant="headingSm">
+              {messages.emailPreferences.muteAll.title()}
+            </ZUIText>
+            <ZUIText color="secondary">
+              {messages.emailPreferences.muteAll.description({ name })}
+            </ZUIText>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ZUIButton
+              disabled={isPending}
+              label={messages.emailPreferences.muteAll.button()}
+              onClick={() => run(() => setOrgMuted(true))}
+              startIcon={VolumeOff}
+              variant="secondary"
+            />
+          </Box>
+        </Box>
+      )}
       title={messages.emailPreferences.title()}
     />
   );
