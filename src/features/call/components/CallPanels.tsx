@@ -1,5 +1,7 @@
-import { FC } from 'react';
-import { Box, List, ListItem } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+import { Box, List, ListItem, Tab } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Info, Person, List as ListIcon } from '@mui/icons-material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
@@ -20,6 +22,7 @@ import ZUITooltip from 'zui/components/ZUITooltip';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import CallSummary from './CallSummary';
 import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -32,6 +35,267 @@ type Props = {
 };
 
 const CallPanels: FC<Props> = ({
+  assignment,
+  call,
+  lane,
+  onOpenCallLog,
+  onSwitchToUnfinishedCall,
+  report,
+  unfinishedCalls,
+}) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <MobileCallPanels
+        assignment={assignment}
+        call={call}
+        lane={lane}
+        onOpenCallLog={onOpenCallLog}
+        onSwitchToUnfinishedCall={onSwitchToUnfinishedCall}
+        report={report}
+        unfinishedCalls={unfinishedCalls}
+      />
+    );
+  } else {
+    return (
+      <DesktopCallPanels
+        assignment={assignment}
+        call={call}
+        lane={lane}
+        onOpenCallLog={onOpenCallLog}
+        onSwitchToUnfinishedCall={onSwitchToUnfinishedCall}
+        report={report}
+        unfinishedCalls={unfinishedCalls}
+      />
+    );
+  }
+};
+
+const MobileCallPanels: FC<Props> = ({
+  assignment,
+  call,
+  lane,
+  report,
+  onSwitchToUnfinishedCall,
+  unfinishedCalls,
+}) => {
+  const messages = useMessages(messageIds);
+  const [callTab, setCallTab] = useState<1 | 2 | 3>(2);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setCallTab(2);
+  }, [call?.id]);
+
+  const queueError = useAppSelector((state) => state.call.queueError);
+  return (
+    <>
+      {queueError && (
+        <ZUIAlert
+          appear
+          description={messages.callAlert.description()}
+          severity="warning"
+          title={messages.callAlert.title()}
+        />
+      )}
+      <Box
+        sx={{
+          height: '100%',
+          left: lane.step == LaneStep.START ? 0 : 'calc(-100%)',
+          maxHeight: '100%',
+          overflowY: 'auto',
+          position: 'absolute',
+          transition: 'left 0.5s',
+          width: '100%',
+        }}
+      >
+        <ZUISection
+          renderContent={() => (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                paddingBottom: 2,
+              }}
+            >
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.start.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg id={messageIds.callingInfo.tutorial.start.description} />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.personInfo.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg
+                  id={messageIds.callingInfo.tutorial.personInfo.description}
+                />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.call.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg id={messageIds.callingInfo.tutorial.call.description} />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.report.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg id={messageIds.callingInfo.tutorial.report.description} />
+              </ZUIText>
+              <ZUIText variant="headingMd">
+                <Msg id={messageIds.callingInfo.tutorial.oldCalls.title} />
+              </ZUIText>
+              <ZUIText>
+                <Msg
+                  id={messageIds.callingInfo.tutorial.oldCalls.description}
+                />
+              </ZUIText>
+            </Box>
+          )}
+          title={messages.callingInfo.title()}
+        />
+        <SuspenseWithCircularLoader>
+          <AssignmentStats
+            assignmentId={assignment.id}
+            orgId={assignment.organization.id}
+          />
+        </SuspenseWithCircularLoader>
+        <InstructionsSection
+          call={call}
+          instructions={assignment.instructions}
+          step={lane.step}
+        />
+      </Box>
+      <Box
+        sx={{
+          height: '100%',
+          left: lane.step == LaneStep.CALL ? 0 : 'calc(-100%)',
+          maxHeight: '100%',
+          overflowY: 'auto',
+          position: 'absolute',
+          transition: 'left 0.5s',
+          width: '100%',
+        }}
+      >
+        <TabContext value={callTab}>
+          <Box sx={{ height: 'calc(100% - 150px)', overflowY: 'auto' }}>
+            <TabPanel sx={{ padding: 0 }} value={1}>
+              <InstructionsSection
+                call={call}
+                instructions={assignment.instructions}
+                step={lane.step}
+              />
+            </TabPanel>
+            <TabPanel sx={{ padding: 0 }} value={2}>
+              <AboutSection call={call} />
+            </TabPanel>
+            <TabPanel sx={{ padding: 0 }} value={3}>
+              <SuspenseWithCircularLoader>
+                <ActivitiesSection
+                  assignment={assignment}
+                  step={lane.step}
+                  target={call?.target ?? null}
+                />
+              </SuspenseWithCircularLoader>
+            </TabPanel>
+          </Box>
+          <TabList
+            onChange={(ev, value) => setCallTab(value)}
+            sx={{ backgroundColor: 'white', position: 'relative' }}
+            variant="fullWidth"
+          >
+            <Tab icon={<Info />} value={1} />
+            <Tab icon={<Person />} value={2} />
+            <Tab icon={<ListIcon />} value={3} />
+          </TabList>
+        </TabContext>
+      </Box>
+      <Box
+        sx={{
+          '@keyframes reportOut': {
+            '0%': { left: 'calc((100%) * 2)' },
+            '100%': { left: '-100%' },
+          },
+          animationDuration: '0.5s',
+          animationFillMode: 'backwards',
+          animationName: lane.step == LaneStep.SUMMARY ? 'reportOut' : '',
+          height: '100%',
+          left: lane.step == LaneStep.REPORT ? 0 : '100%',
+          overflowY: 'auto',
+          position: 'absolute',
+          transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
+          width: '100%',
+        }}
+      >
+        <ZUISection
+          borders={false}
+          fullHeight
+          renderContent={() => {
+            if (!call) {
+              return <Box sx={{ height: '200px' }} />;
+            }
+            return (
+              <ReportForm
+                disableCallerNotes={assignment.disable_caller_notes}
+                onReportChange={(updatedReport) => {
+                  dispatch(reportUpdated(updatedReport));
+                }}
+                report={report}
+                target={call.target}
+              />
+            );
+          }}
+          title={messages.report.title()}
+        />
+      </Box>
+      <Box
+        sx={{
+          '@keyframes summaryOut': {
+            '0%': { left: '100%' },
+            '100%': { left: '100%' },
+          },
+          alignItems: 'center',
+          animationDuration: '0.5s',
+          animationFillMode: 'backwards',
+          animationName: lane.step == LaneStep.CALL ? 'summaryOut' : '',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          justifyContent: 'space-evenly',
+          left: lane.step == LaneStep.SUMMARY ? '0%' : '120%',
+          padding: 2,
+          position: 'relative',
+          transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
+          visibility: () => {
+            const noCurrentCall = !call;
+            const inCallOrReport =
+              lane.step == LaneStep.CALL || lane.step == LaneStep.REPORT;
+            const hideSummary = noCurrentCall && inCallOrReport;
+
+            return hideSummary ? 'hidden' : undefined;
+          },
+          width: '100%',
+        }}
+      >
+        <CallSummary
+          assignmentId={assignment.id}
+          onSwitchToUnfinishedCall={(unfinishedCallId, assignmentId) =>
+            onSwitchToUnfinishedCall(unfinishedCallId, assignmentId)
+          }
+          orgId={assignment.organization.id}
+          report={report}
+          unfinishedCalls={unfinishedCalls}
+        />
+      </Box>
+    </>
+  );
+};
+
+const DesktopCallPanels: FC<Props> = ({
   assignment,
   call,
   lane,
@@ -55,7 +319,6 @@ const CallPanels: FC<Props> = ({
           title={messages.callAlert.title()}
         />
       )}
-
       <Box
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,

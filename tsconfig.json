@@ -37,7 +37,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".storybook/preview.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/features/callAssignments/components/CallLog"
   ],
   "exclude": [
     ".next",

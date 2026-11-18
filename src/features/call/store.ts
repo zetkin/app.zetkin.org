@@ -339,6 +339,8 @@ const CallSlice = createSlice({
           });
         }
       }
+
+      lane.step = LaneStep.SUMMARY;
     },
     reportUpdated: (state, action: PayloadAction<Report>) => {
       const report = action.payload;

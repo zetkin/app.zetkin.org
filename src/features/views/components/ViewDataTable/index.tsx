@@ -62,6 +62,7 @@ import ViewDataTableFooter, {
 } from 'features/views/components/ViewDataTable/ViewDataTableFooter';
 import ViewDataTableToolbar from './ViewDataTableToolbar';
 import {
+  ZetkinAppliedTag,
   ZetkinCustomField,
   ZetkinPerson,
   ZetkinViewColumn,
@@ -94,7 +95,8 @@ declare module '@mui/x-data-grid-pro' {
     isLoading: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
-    onBulkDelete: () => void;
+    onBulkDelete: () => Promise<void>;
+    onBulkTag: (tags: ZetkinAppliedTag[]) => Promise<void>;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
@@ -218,7 +220,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
-  const { bulkDeletePersons } = useViewBulkActions(orgId);
+  const { bulkDeletePeople, bulkTagPeople } = useViewBulkActions(orgId);
 
   const showError = useCallback(
     (error: VIEW_DATA_TABLE_ERROR) => {
@@ -353,8 +355,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setColumnToRename, updateColumn]
   );
 
+  const onBulkTag = useCallback(
+    async (tags: ZetkinAppliedTag[]) => {
+      await bulkTagPeople(selection, tags);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selection]
+  );
+
   const onBulkDelete = useCallback(async () => {
-    bulkDeletePersons(selection);
+    await bulkDeletePeople(selection);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection]);
 
@@ -547,6 +557,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         isLoading,
         isSmartSearch: !!view.content_query,
         onBulkDelete,
+        onBulkTag,
         onColumnCreate,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,

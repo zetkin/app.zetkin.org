@@ -49,6 +49,20 @@ export default makeMessages('feat.views', {
     },
     title: m('People'),
   },
+  bulkTagDialog: {
+    cancelButton: m('Cancel'),
+    emptyStateMessage: m('You have not selected any tags yet'),
+    errorMessage: m('There was an error tagging people, please try again!'),
+    submitButton: m<{ numPeople: number; numTags: number }>(
+      'Add {numTags, plural, =0{tags} =1 {1 tag} other {{numTags} tags}} to {numPeople, plural, =1 {one person} other {# people}}'
+    ),
+    successMessage: m<{ numPeople: number; numTags: number }>(
+      'Added {numTags, plural, =0{tags} =1 {1 tag} other {{numTags} tags}} to {numPeople, plural, =1 {one person} other {# people}}'
+    ),
+    title: m<{ numPeople: number }>(
+      'Add tags to {numPeople, plural, =1 {one person} other {# people}}'
+    ),
+  },
   cells: {
     localPerson: {
       alreadyInView: m('Already in list'),
@@ -341,8 +355,12 @@ export default makeMessages('feat.views', {
     destructiveAlert: m(
       'This is a permanent and destructive action. It cannot be undone. Please read the information below carefully before continuing.'
     ),
+    errorMessage: m('There was an error deleting people, please try again!'),
     instruction: m<{ rootOrgSlug: ReactElement }>(
       'To confirm you understand the consequences, type {rootOrgSlug} in the textbox below.'
+    ),
+    successMessage: m<{ numPeople: number }>(
+      'Permanently deleted {numPeople, plural, =1 {one person} other {# people}}'
     ),
     tagetOrgWarning: m<{ rootOrgTitle: ReactElement }>(
       'This will delete all records of these persons in {rootOrgTitle} and all its child organizations.'
@@ -456,6 +474,7 @@ export default makeMessages('feat.views', {
   },
   toolbar: {
     bulk: {
+      addTag: m('Add tags to selected people'),
       createList: m('Create list from selection'),
       delete: m('Delete selected people from organization'),
       handleSelection: m<{ numSelected: number }>(

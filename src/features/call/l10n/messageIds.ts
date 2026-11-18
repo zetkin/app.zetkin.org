@@ -167,6 +167,16 @@ export default makeMessages('feat.call', {
     noInstructions: m('This assignment does not have any instructions.'),
     title: m('Instructions'),
   },
+  mobile: {
+    call: {
+      alt: m<{ number: string }>('Call {number}'),
+      main: m<{ number: string }>('Call {number}'),
+      onlyOne: m<{ name: string }>('Call {name}'),
+    },
+    report: {
+      back: m('Back to call'),
+    },
+  },
   newUIAlert: {
     description: m<{ link: JSX.Element }>(
       'You can start using it right away or {link}'

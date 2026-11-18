@@ -1,11 +1,13 @@
 import { useCallback } from 'react';
 
-import { useApiClient, useAppDispatch } from 'core/hooks';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinSurveyApiSubmission } from 'utils/types/zetkin';
 import submitSurveysRpc from '../rpc/submitSurveysAndUpdateCall';
 import { reportSubmitted, reportSubmissionErrorAdded } from '../store';
 import { CallState, Report } from '../types';
 import calculateReportState from '../components/Report/utils/calculateReportState';
+import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
+import { objectToFormData } from '../components/utils/objectToFormData';
 
 type CallSubmissions = {
   submission: ZetkinSurveyApiSubmission;
@@ -16,9 +18,35 @@ type CallSubmissions = {
 export default function useSubmitReport(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const submissionDataBySurveyId = useAppSelector(
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
+  );
 
   return useCallback(
-    async (callId: number, report: Report, submissions: CallSubmissions) => {
+    async (callId: number, report: Report, targetId: number) => {
+      const submissions: CallSubmissions = Object.entries(
+        submissionDataBySurveyId
+      )
+        .filter(([, surveySubmissionData]) => {
+          return Object.entries(surveySubmissionData).some(([, value]) => {
+            if (typeof value == 'string') {
+              return value.trim() !== '';
+            }
+            return true;
+          });
+        })
+        .map(([surveyId, surveySubmissionData]) => {
+          const surveySubmissionDataAsFormData =
+            objectToFormData(surveySubmissionData);
+          return {
+            submission: prepareSurveyApiSubmission(
+              surveySubmissionDataAsFormData
+            ),
+            surveyId: Number(surveyId),
+            targetId,
+          };
+        });
       const state = calculateReportState(report);
       const reportData = {
         call_back_after:
@@ -46,6 +74,6 @@ export default function useSubmitReport(orgId: number) {
         dispatch(reportSubmissionErrorAdded(result));
       }
     },
-    [apiClient, dispatch, orgId]
+    [apiClient, dispatch, orgId, submissionDataBySurveyId]
   );
 }

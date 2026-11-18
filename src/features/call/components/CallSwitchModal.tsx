@@ -24,7 +24,7 @@ import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { colors } from './PreviousCallsInfo';
+import { colorByCallState } from './PreviousCallsInfo';
 import useFinishedCalls from '../hooks/useFinishedCalls';
 import { callStateToString, FinishedCall as FinishedCallType } from '../types';
 import SuspenseWithCircularLoader from './SuspenseWithCircularLoader';
@@ -165,7 +165,7 @@ const FinishedCall: FC<{
             display="flex"
             gap={1}
             sx={(theme) => {
-              const color = colors[finishedCall.state];
+              const color = colorByCallState[finishedCall.state];
               return {
                 color:
                   color === 'warning'

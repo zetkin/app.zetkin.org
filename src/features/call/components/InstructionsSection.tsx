@@ -9,6 +9,7 @@ import ZUITabView from 'zui/components/ZUITabView';
 import { AboutContent } from './AboutSection';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   call: UnfinishedCall | null;
@@ -29,6 +30,7 @@ const Instructions = ({ instructions }: { instructions: string }) => (
 );
 
 const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
+  const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const [selectedTab, setSelectedTab] = useState<'instructions' | 'about'>(
     'instructions'
@@ -93,8 +95,8 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
 
   return (
     <ZUISection
-      borders={false}
-      fullHeight
+      borders={isMobile}
+      fullHeight={!isMobile}
       renderContent={() => {
         if (!call && step != LaneStep.START) {
           return null;
