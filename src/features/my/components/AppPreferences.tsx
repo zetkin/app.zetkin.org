@@ -58,13 +58,10 @@ const AppPreferences: FC<Props> = ({ user }) => {
                     label: messages.settings.appPreferences.lang.auto(),
                     value: 'auto',
                   },
-                  ...Object.entries(languageOptions)
-                    // TODO: Remove this filter once nl is supported on server
-                    .filter((entry) => entry[0] != 'nl')
-                    .map(([code, label]) => ({
-                      label,
-                      value: code,
-                    })),
+                  ...Object.entries(languageOptions).map(([code, label]) => ({
+                    label,
+                    value: code,
+                  })),
                 ]}
                 label={messages.settings.appPreferences.lang.label()}
                 onChange={(newValue) => {

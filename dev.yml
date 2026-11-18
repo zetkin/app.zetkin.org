@@ -8,7 +8,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM node:22-alpine3.22
+        FROM node:24-alpine3.24
         COPY . /build/src/
         WORKDIR /build/src
         RUN npm install
@@ -28,7 +28,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM node:22-alpine3.22
+        FROM node:24-alpine3.24
         WORKDIR /repo
         ENTRYPOINT npm install && npm run devserver
     profiles: [dev]
@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM node:22-alpine3.22
+        FROM node:24-alpine3.24
         USER node
         WORKDIR /repo
         RUN npm install

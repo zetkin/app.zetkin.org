@@ -16,6 +16,7 @@ import {
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { tagAssigned, tagUnassigned } from 'features/tags/store';
 import {
+  ZetkinAppliedTag,
   ZetkinOfficial,
   ZetkinOrganizerAction,
   ZetkinQuery,
@@ -393,6 +394,18 @@ const viewsSlice = createSlice({
       state.rowsByViewId[viewId].loaded = new Date().toISOString();
       state.rowsByViewId[viewId].isStale = false;
     },
+    rowsTagged: (
+      state,
+      action: PayloadAction<[number[], ZetkinAppliedTag[]]>
+    ) => {
+      const [personIds, tags] = action.payload;
+
+      personIds.forEach((personId) => {
+        tags.forEach((tag) =>
+          setTagOnRelevantRows(state, personId, tag.id, tag)
+        );
+      });
+    },
     viewCreate: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
       if (!state.viewsByOrgId[orgId]) {
@@ -712,6 +725,7 @@ export const {
   rowRemoved,
   rowsLoad,
   rowsLoaded,
+  rowsTagged,
   viewCreate,
   viewCreated,
   viewDeleted,

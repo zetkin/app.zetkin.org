@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { Box, CircularProgress } from '@mui/material';
 import React, { useMemo } from 'react';
+import Head from 'next/head';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -88,6 +89,7 @@ const ThemePageContent = ({ theme }: { theme: EmailTheme }) => {
 };
 
 const ThemePage: PageWithLayout<ThemePageProps> = () => {
+  const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const { orgId, themeId } = useNumericRouteParams();
   const { isLoading, data: theme } = useEmailTheme(orgId, themeId);
@@ -101,9 +103,14 @@ const ThemePage: PageWithLayout<ThemePageProps> = () => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
-      <ThemePageContent theme={theme} />
-    </Box>
+    <>
+      <Head>
+        <title>{messages.pageTitles.theme({ themeId: theme.id })}</title>
+      </Head>
+      <Box display="flex" flexDirection="column" height="100%">
+        <ThemePageContent theme={theme} />
+      </Box>
+    </>
   );
 };
 
