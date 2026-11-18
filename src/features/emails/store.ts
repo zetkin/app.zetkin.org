@@ -212,8 +212,11 @@ const emailsSlice = createSlice({
       action: PayloadAction<[number, string]>
     ) => {
       const [personId, error] = action.payload;
-      state.channelPreferencesByPersonId[personId] = remoteList();
-      state.channelPreferencesByPersonId[personId].error = error;
+      const list = state.channelPreferencesByPersonId[personId] ?? remoteList();
+      list.error = error;
+      list.isLoading = false;
+      list.loaded = new Date().toISOString();
+      state.channelPreferencesByPersonId[personId] = list;
     },
     personChannelPreferencesInvalidated: (
       state,
