@@ -61,9 +61,6 @@ export default makeMessages('feat.profile', {
         '{name} muted this themselves. Only unmute it if they have asked you to.'
       ),
     },
-    unsubscribe: {
-      button: m('Unsubscribe'),
-    },
   },
   events: {
     noPast: m('No past events'),

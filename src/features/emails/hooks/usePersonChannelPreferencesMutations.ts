@@ -11,7 +11,6 @@ import {
 } from '../types';
 
 type UsePersonChannelPreferencesMutationsReturn = {
-  clearSubscribeFromChannel: (channelId: number) => Promise<void>;
   muteChannel: (channelId: number) => Promise<void>;
   subscribeToChannel: (channelId: number) => Promise<void>;
   unmuteChannel: (channelId: number) => Promise<void>;
@@ -50,7 +49,6 @@ export default function usePersonChannelPreferencesMutations(
 
   return useMemo(
     () => ({
-      clearSubscribeFromChannel: (channelId) => resetChannelStatus(channelId),
       muteChannel: (channelId) => setChannelStatus(channelId, 'channel_muted'),
       subscribeToChannel: (channelId) =>
         setChannelStatus(channelId, 'subscribed'),
