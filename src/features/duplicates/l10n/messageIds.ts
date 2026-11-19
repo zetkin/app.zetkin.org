@@ -25,6 +25,8 @@ export default makeMessages('feat.duplicates', {
       phone: m('Phone'),
     },
     title: m('Merge duplicates'),
+    userLabel: m('Zetkin user'),
+    userWarning: m(' - will lose access'),
     warningMessage: m(
       'All data related to any of the person records will transfer to the merged person. This includes event participation, survey submissions, tags etc. But the values you discard in the fields below will be lost.'
     ),

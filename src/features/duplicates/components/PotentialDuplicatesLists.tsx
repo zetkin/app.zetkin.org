@@ -10,8 +10,10 @@ import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 
 interface PotentialDuplicatesListsProps {
   initiallyShowManualSearch: boolean;
+  mergeTarget: ZetkinPerson;
   onDeselect: (person: ZetkinPerson) => void;
   onSelect: (person: ZetkinPerson) => void;
+  onTarget: (person: ZetkinPerson) => void;
   peopleNotToMerge: ZetkinPerson[];
   peopleToMerge: ZetkinPerson[];
 }
@@ -20,6 +22,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
   initiallyShowManualSearch,
   onDeselect,
   onSelect,
+  onTarget,
   peopleNotToMerge,
   peopleToMerge,
 }) => {
@@ -63,6 +66,7 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
       <MergeCandidateList
         buttonLabel={messages.modal.notDuplicateButton()}
         onButtonClick={onDeselect}
+        onTargetClick={onTarget}
         rows={peopleToMerge}
         showActionButton={peopleNotToMerge.length + peopleToMerge.length > 2}
       />
