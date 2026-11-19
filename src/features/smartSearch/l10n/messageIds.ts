@@ -388,6 +388,7 @@ export default makeMessages('feat.smartSearch', {
       ),
       reasonSelect: {
         any: m('of any reason'),
+        bounce: m('emails have bounced'),
         unsubOrg: m('they have unsubscribed'),
       },
     },

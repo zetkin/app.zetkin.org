@@ -10,6 +10,35 @@ export default makeMessages('feat.emails', {
     title: m('Blocked'),
     unsubscribed: m('Unsubscribed'),
   },
+  deliveryLog: {
+    aboutBounces: m('About bounces'),
+    bounceExplanation: {
+      hard_bounce: m(
+        'A hard bounce is a permanent delivery failure, for example because the email address does not exist.'
+      ),
+      soft_bounce: m(
+        'A soft bounce is a temporary delivery failure, for example because the mailbox is full or the server is unavailable.'
+      ),
+    },
+    columns: {
+      datetime: m('Time'),
+      emailAddress: m('Email address'),
+      error: m('Error'),
+      person: m('Name'),
+      status: m('Status'),
+    },
+    empty: m('No deliveries to show.'),
+    info: m(
+      'This log shows the delivery status and available errors. Bounce types and detailed bounce reasons will be added in a future update.'
+    ),
+    status: {
+      delivered: m('Delivered'),
+      failed: m('Failed'),
+      opened: m('Opened'),
+      pending: m('Pending'),
+      sent: m('Sent'),
+    },
+  },
   deliveryProblems: {
     contentError: m(
       'There are problems in the content of your email. Go to the editor in the Compose tab and correct them.'
@@ -211,6 +240,7 @@ export default makeMessages('feat.emails', {
   },
   tabs: {
     compose: m('Compose'),
+    deliveryLog: m('Delivery log'),
     insights: m('Insights'),
     overview: m('Overview'),
   },
