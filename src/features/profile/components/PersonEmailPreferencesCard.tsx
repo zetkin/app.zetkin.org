@@ -1,31 +1,27 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useState } from 'react';
 import { Box, Skeleton } from '@mui/material';
-import { ForwardToInbox, MailOutline, VolumeOff } from '@mui/icons-material';
+import { MarkEmailReadOutlined, VolumeOff } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
-import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
-import usePersonEmailPreferences from 'features/emails/hooks/usePersonEmailPreferences';
-import usePersonEmailPreferencesMutations from 'features/emails/hooks/usePersonEmailPreferencesMutations';
+import usePersonOrgEmailPreferences from 'features/emails/hooks/usePersonOrgEmailPreferences';
+import usePersonOrgEmailPreferencesMutations from 'features/emails/hooks/usePersonEmailPreferencesMutations';
 import { useMessages } from 'core/i18n';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIButton from 'zui/components/ZUIButton';
-import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import ZUIDivider from 'zui/components/ZUIDivider';
-import ZUIIcon from 'zui/components/ZUIIcon';
 import ZUISection from 'zui/components/ZUISection';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ZUISwitch from 'zui/components/ZUISwitch';
 import ZUIText from 'zui/components/ZUIText';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinOrganization, ZetkinPerson } from 'utils/types/zetkin';
 import {
-  ZetkinChannel,
-  ZetkinChannelPreferenceStatus,
-  ZetkinPersonChannelPreference,
-  ZetkinPersonEmailPreferences,
+  ZetkinEmailChannel,
+  ZetkinPersonEmailChannelPreference,
+  ZetkinPersonOrgEmailPreferences,
 } from 'features/emails/types';
-import usePersonChannelPreferences from 'features/emails/hooks/usePersonChannelPreferences';
+import usePersonEmailChannelPreferences from 'features/emails/hooks/usePersonEmailChannelPreferences';
 import ZUIFutures from 'zui/ZUIFutures';
-import usePersonChannelPreferencesMutations from 'features/emails/hooks/usePersonChannelPreferencesMutations';
+import usePersonEmailChannelPreferencesMutations from 'features/emails/hooks/usePersonEmailChannelPreferencesMutations';
+import EmailChannelList from 'features/profile/components/EmailChannelList';
+import useOrganization from 'features/organizations/hooks/useOrganization';
+import ZUIDivider from 'zui/components/ZUIDivider';
 
 type Props = {
   orgId: number;
@@ -33,93 +29,65 @@ type Props = {
 };
 
 const PersonEmailPreferencesCard: FC<Props> = ({ orgId, person }) => {
-  const configs = useEmailConfigs(orgId).data;
+  const organizationFuture = useOrganization(orgId);
+  const orgPreferencesFuture = usePersonOrgEmailPreferences(orgId, person.id);
+  const [channelPreferencesFuture, channelById] =
+    usePersonEmailChannelPreferences(orgId, person.id);
 
-  if (!configs?.length) {
+  if (!Object.entries(channelById).length) {
     return null;
   }
-
-  return <EmailPreferences orgId={orgId} person={person} />;
-};
-
-const EmailPreferences: FC<Props> = ({ orgId, person }) => {
-  const preferencesFuture = usePersonEmailPreferences(orgId, person.id);
-  const [channelPreferencesFuture, channels] = usePersonChannelPreferences(
-    orgId,
-    person.id
-  );
 
   return (
     <ZUIFutures
       futures={{
         channelPreferences: channelPreferencesFuture,
-        preferences: preferencesFuture,
+        orgPreferences: orgPreferencesFuture,
+        organization: organizationFuture,
       }}
       loadingIndicator={<Skeleton height={300} variant="rounded" />}
     >
-      {({ data: { channelPreferences, preferences } }) => (
+      {({ data: { channelPreferences, orgPreferences, organization } }) => (
         <EmailPreferencesSection
           channelPreferences={channelPreferences}
-          channels={channels}
-          orgId={orgId}
+          channelsById={channelById}
+          organization={organization}
+          orgPreferences={orgPreferences}
           person={person}
-          preferences={preferences}
         />
       )}
     </ZUIFutures>
   );
 };
 
-const EmailPreferencesSection: FC<
-  Props & {
-    channelPreferences: ZetkinPersonChannelPreference[];
-    channels: Record<number, ZetkinChannel | undefined>;
-    preferences: ZetkinPersonEmailPreferences;
-  }
-> = ({ channelPreferences, channels, orgId, person, preferences }) => {
+type EmailPreferencesSectionProps = {
+  channelPreferences: ZetkinPersonEmailChannelPreference[];
+  channelsById: Record<number, ZetkinEmailChannel>;
+  orgPreferences: ZetkinPersonOrgEmailPreferences;
+  organization: ZetkinOrganization;
+  person: ZetkinPerson;
+};
+
+const EmailPreferencesSection: FC<EmailPreferencesSectionProps> = ({
+  channelPreferences,
+  channelsById,
+  organization,
+  person,
+  orgPreferences,
+}) => {
   const messages = useMessages(messageIds);
-  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-  const { setOrgMuted } = usePersonEmailPreferencesMutations(orgId, person.id);
-  const { muteChannel, subscribeToChannel, unmuteChannel } =
-    usePersonChannelPreferencesMutations(orgId, person.id);
-  const [isPending, setIsPending] = useState(false);
+  const toggleOrgMuted = usePersonOrgEmailPreferencesMutations(
+    organization.id,
+    person.id
+  );
+  const toggleChannelMuted = usePersonEmailChannelPreferencesMutations(
+    organization.id,
+    person.id
+  );
+  const [isLoadingOrgMuteStatus, setIsLoadingOrgMuteStatus] = useState(false);
 
-  const name = `${person.first_name} ${person.last_name}`;
-  const orgMuted = preferences.org_status === 'muted';
+  const orgMuted = orgPreferences.org_status === 'muted';
   const hasChannels = channelPreferences.length > 0;
-
-  const run = async (mutation: () => Promise<void>) => {
-    if (isPending) {
-      return;
-    }
-
-    setIsPending(true);
-    try {
-      await mutation();
-    } catch (err) {
-      showSnackbar('error');
-    } finally {
-      setIsPending(false);
-    }
-  };
-
-  const confirmUnmute = (
-    mutedByPerson: boolean,
-    title: string,
-    unmute: () => void
-  ) => {
-    if (mutedByPerson) {
-      showConfirmDialog({
-        onSubmit: unmute,
-        submitText: messages.emailPreferences.unmuteConfirm.button(),
-        title,
-        warningText: messages.emailPreferences.unmuteConfirm.warning({ name }),
-      });
-    } else {
-      unmute();
-    }
-  };
 
   if (orgMuted) {
     return (
@@ -128,19 +96,26 @@ const EmailPreferencesSection: FC<
           <ZUIAlert
             button={{
               label: messages.emailPreferences.orgMuted.button(),
-              onClick: () =>
-                confirmUnmute(
-                  preferences.org_muted_by_user_id === null,
-                  messages.emailPreferences.unmuteConfirm.orgTitle(),
-                  () => run(() => setOrgMuted(false))
-                ),
-              startIcon: ForwardToInbox,
+              onClick: async () => {
+                setIsLoadingOrgMuteStatus(true);
+                try {
+                  await toggleOrgMuted(false);
+                } catch {
+                  //TODO: Display error message?
+                } finally {
+                  setIsLoadingOrgMuteStatus(false);
+                }
+              },
+              startIcon: MarkEmailReadOutlined,
             }}
             description={messages.emailPreferences.orgMuted.description({
-              name,
+              name: person.first_name,
+              orgName: organization.title,
             })}
             severity="info"
-            title={messages.emailPreferences.orgMuted.title()}
+            title={messages.emailPreferences.orgMuted.title({
+              orgName: organization.title,
+            })}
           />
         )}
         title={messages.emailPreferences.title()}
@@ -151,144 +126,67 @@ const EmailPreferencesSection: FC<
   return (
     <ZUISection
       renderContent={() => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <ZUIText variant="headingSm">
                 {messages.emailPreferences.channels.title()}
               </ZUIText>
               {hasChannels && (
                 <ZUIText color="secondary">
-                  {messages.emailPreferences.channels.description({ name })}
+                  {messages.emailPreferences.channels.description({
+                    name: person.first_name,
+                  })}
                 </ZUIText>
               )}
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               {!hasChannels && (
                 <ZUIText color="secondary">
                   {messages.emailPreferences.channels.empty()}
                 </ZUIText>
               )}
-              {channelPreferences.map((channelPreference, index) => {
-                const channel = channels[channelPreference.channel_id];
-                if (!channel) {
-                  return null;
-                }
-
-                return (
-                  <Box key={channelPreference.channel_id}>
-                    {index > 0 && <ZUIDivider />}
-                    <ChannelPreferenceRow
-                      channel={channel}
-                      channelPreference={channelPreference}
-                      disabled={isPending}
-                      onChange={(checked) => {
-                        if (checked) {
-                          confirmUnmute(
-                            channelPreference.muted_by_user_id === null,
-                            messages.emailPreferences.unmuteConfirm.channelTitle(
-                              {
-                                channel: channel.title,
-                              }
-                            ),
-                            () =>
-                              run(() =>
-                                unmuteChannel(channelPreference.channel_id)
-                              )
-                          );
-                        } else {
-                          run(() => muteChannel(channelPreference.channel_id));
-                        }
-                      }}
-                      onSubscribe={() =>
-                        run(() => subscribeToChannel(channel.id))
-                      }
-                    />
-                  </Box>
-                );
-              })}
             </Box>
+            <EmailChannelList
+              channels={channelsById}
+              onToggleChannel={(checked, channelId) =>
+                toggleChannelMuted(!checked, channelId)
+              }
+              preferences={channelPreferences}
+            />
           </Box>
           <ZUIDivider />
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <ZUIText variant="headingSm">
               {messages.emailPreferences.muteAll.title()}
             </ZUIText>
             <ZUIText color="secondary">
-              {messages.emailPreferences.muteAll.description({ name })}
+              {messages.emailPreferences.muteAll.description({
+                name: person.first_name,
+              })}
             </ZUIText>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <ZUIButton
-              disabled={isPending}
-              label={messages.emailPreferences.muteAll.button()}
-              onClick={() => run(() => setOrgMuted(true))}
-              startIcon={VolumeOff}
-              variant="secondary"
-            />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <ZUIButton
+                isLoading={isLoadingOrgMuteStatus}
+                label={messages.emailPreferences.muteAll.button()}
+                onClick={async () => {
+                  setIsLoadingOrgMuteStatus(true);
+                  try {
+                    await toggleOrgMuted(true);
+                  } catch {
+                    //TODO: Display error message?
+                  } finally {
+                    setIsLoadingOrgMuteStatus(false);
+                  }
+                }}
+                startIcon={VolumeOff}
+                variant="secondary"
+              />
+            </Box>
           </Box>
         </Box>
       )}
+      subtitle={person.email || ''}
       title={messages.emailPreferences.title()}
     />
-  );
-};
-
-const ChannelPreferenceRow: FC<{
-  channel: ZetkinChannel;
-  channelPreference: ZetkinPersonChannelPreference;
-  disabled: boolean;
-  onChange: (checked: boolean) => void;
-  onSubscribe: () => void;
-}> = ({ channel, channelPreference, disabled, onChange, onSubscribe }) => {
-  const messages = useMessages(messageIds);
-  const isMuted = channelPreference.status == 'channel_muted';
-  const color = isMuted ? 'secondary' : 'primary';
-  const canSubscribe =
-    !!channel.published &&
-    (channelPreference.status == 'has_received' ||
-      channelPreference.status == 'no_relationship');
-
-  const statusMessages = messages.emailPreferences.channels.status;
-  const statusLabels: Record<ZetkinChannelPreferenceStatus, string> = {
-    channel_muted: statusMessages.muted(),
-    has_received: statusMessages.notSubscribed(),
-    no_relationship: statusMessages.notSubscribed(),
-    subscribed: statusMessages.subscribed(),
-  };
-
-  return (
-    <Box
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-        gap: '0.75rem',
-        paddingY: '0.75rem',
-      }}
-    >
-      <ZUIIcon color={color} icon={MailOutline} />
-      <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-        <ZUIText color={color}>{channel.title}</ZUIText>
-        <ZUIText color="secondary" variant="bodySmRegular">
-          {statusLabels[channelPreference.status]}
-        </ZUIText>
-      </Box>
-      {canSubscribe && (
-        <ZUIButton
-          disabled={disabled}
-          label={messages.emailPreferences.subscribe.button()}
-          onClick={onSubscribe}
-          size="small"
-          variant="secondary"
-        />
-      )}
-      <ZUISwitch
-        checked={!isMuted}
-        disabled={disabled}
-        label=""
-        onChange={onChange}
-      />
-    </Box>
   );
 };
 

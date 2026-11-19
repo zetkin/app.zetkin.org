@@ -1,38 +1,29 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { personEmailPreferencesLoaded } from '../store';
+import { personOrgEmailPreferencesLoaded } from '../store';
 import {
-  ZetkinOrgEmailPreferenceStatus,
-  ZetkinPersonEmailPreferences,
+  ZetkinPersonOrgEmailPreferences,
+  ZetkinPersonOrgEmailPreferencesPatchBody,
 } from '../types';
 
-type UsePersonEmailPreferencesMutationsReturn = {
-  setOrgMuted: (muted: boolean) => Promise<void>;
-};
-
-export default function usePersonEmailPreferencesMutations(
+export default function usePersonOrgEmailPreferencesMutations(
   orgId: number,
   personId: number
-): UsePersonEmailPreferencesMutationsReturn {
+) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const setOrgStatus = useCallback(
-    async (status: ZetkinOrgEmailPreferenceStatus) => {
-      const preferences = await apiClient.patch<ZetkinPersonEmailPreferences>(
-        `/api2/orgs/${orgId}/people/${personId}/email_preferences`,
-        { org_status: status }
-      );
-      dispatch(personEmailPreferencesLoaded([personId, preferences]));
+  return useCallback(
+    async (mute: boolean) => {
+      const preferences = await apiClient.patch<
+        ZetkinPersonOrgEmailPreferences,
+        ZetkinPersonOrgEmailPreferencesPatchBody
+      >(`/api2/orgs/${orgId}/people/${personId}/email_preferences`, {
+        org_status: mute ? 'muted' : 'unmuted',
+      });
+      dispatch(personOrgEmailPreferencesLoaded([personId, preferences]));
     },
     [apiClient, dispatch, orgId, personId]
-  );
-
-  return useMemo(
-    () => ({
-      setOrgMuted: (muted) => setOrgStatus(muted ? 'muted' : 'unmuted'),
-    }),
-    [setOrgStatus]
   );
 }

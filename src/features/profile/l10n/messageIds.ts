@@ -44,15 +44,15 @@ export default makeMessages('feat.profile', {
     },
     orgMuted: {
       button: m('Unmute'),
-      description: m<{ name: string }>(
-        '{name} will not receive mass emails and cannot be subscribed to channels while the organization is muted. They will still receive reminders and other emails sent specifically to them as part of work they do in the organization.'
+      description: m<{ name: string; orgName: string }>(
+        '{name} will not receive mass emails from {orgName} while it is muted. They will still receive reminders and other emails sent specifically to them as part of work they do in {orgName}.'
       ),
-      title: m('Organization is muted'),
+      title: m<{ orgName: string }>('{orgName} is muted'),
     },
     subscribe: {
       button: m('Subscribe'),
     },
-    title: m('Email preferences'),
+    title: m('Email settings'),
     unmuteConfirm: {
       button: m('Unmute'),
       channelTitle: m<{ channel: string }>('Unmute {channel}?'),

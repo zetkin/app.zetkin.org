@@ -3,10 +3,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   EmailInsights,
   EmailTheme,
-  ZetkinChannel,
+  ZetkinEmailChannel,
   ZetkinEmailStats,
-  ZetkinPersonChannelPreference,
-  ZetkinPersonEmailPreferences,
+  ZetkinPersonEmailChannelPreference,
+  ZetkinPersonOrgEmailPreferences,
 } from './types';
 import {
   RemoteItem,
@@ -24,20 +24,27 @@ type SerializedError = {
   name: string;
 };
 
-type PersonEmailPreferences = ZetkinPersonEmailPreferences & { id: number };
-type PersonChannelPreference = ZetkinPersonChannelPreference & { id: number };
+type PersonOrgEmailPreferences = ZetkinPersonOrgEmailPreferences & {
+  id: number;
+};
+type PersonChannelPreference = ZetkinPersonEmailChannelPreference & {
+  id: number;
+};
 
 export interface EmailStoreSlice {
   channelPreferencesByPersonId: Record<
     number,
-    RemoteList<PersonChannelPreference> | undefined
+    RemoteList<PersonChannelPreference>
   >;
-  channelsById: Record<number, RemoteItem<ZetkinChannel> | undefined>;
+  channelsById: Record<number, RemoteItem<ZetkinEmailChannel>>;
   configList: RemoteList<ZetkinEmailConfig>;
   emailList: RemoteList<ZetkinEmail>;
   themeList: RemoteList<EmailTheme>;
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
-  preferencesByPersonId: Record<number, RemoteItem<PersonEmailPreferences>>;
+  orgEmailPreferencesByPersonId: Record<
+    number,
+    RemoteItem<PersonOrgEmailPreferences>
+  >;
   statsById: Record<number, RemoteItem<ZetkinEmailStats>>;
   insightsByEmailId: Record<number, RemoteItem<EmailInsights>>;
   themeUpdateError: SerializedError | null;
@@ -52,7 +59,7 @@ const initialState: EmailStoreSlice = {
   emailList: remoteList(),
   insightsByEmailId: {},
   linksByEmailId: {},
-  preferencesByPersonId: {},
+  orgEmailPreferencesByPersonId: {},
   statsById: {},
   themeEditorValue: { block_attributes: '', css: '', frame_mjml: '' },
   themeJsonError: { block_attributes: false, css: false, frame_mjml: false },
@@ -64,11 +71,12 @@ const emailsSlice = createSlice({
   initialState,
   name: 'emails',
   reducers: {
-    channelLoaded: (state, action: PayloadAction<ZetkinChannel>) => {
+    channelLoaded: (state, action: PayloadAction<ZetkinEmailChannel>) => {
       const channel = action.payload;
-      state.channelsById[channel.id] = remoteItem(channel.id);
-      state.channelsById[channel.id]!.loaded = new Date().toISOString();
-      state.channelsById[channel.id]!.data = channel;
+
+      state.channelsById[channel.id] ||= remoteItem(channel.id);
+      state.channelsById[channel.id].data = channel;
+      state.channelsById[channel.id].loaded = new Date().toISOString();
     },
     configCreate: (state) => {
       state.configList.isLoading = true;
@@ -197,26 +205,24 @@ const emailsSlice = createSlice({
     },
     personChannelPreferenceUpdated: (
       state,
-      action: PayloadAction<[number, ZetkinPersonChannelPreference]>
+      action: PayloadAction<[number, ZetkinPersonEmailChannelPreference]>
     ) => {
       const [personId, pref] = action.payload;
-      if (state.channelPreferencesByPersonId[personId]) {
-        remoteItemUpdated(state.channelPreferencesByPersonId[personId], {
-          ...pref,
-          id: pref.channel_id,
-        });
-      }
+      remoteItemUpdated(state.channelPreferencesByPersonId[personId], {
+        ...pref,
+        id: pref.channel_id,
+      });
     },
     personChannelPreferencesError: (
       state,
       action: PayloadAction<[number, string]>
     ) => {
       const [personId, error] = action.payload;
-      const list = state.channelPreferencesByPersonId[personId] ?? remoteList();
-      list.error = error;
-      list.isLoading = false;
-      list.loaded = new Date().toISOString();
-      state.channelPreferencesByPersonId[personId] = list;
+      state.channelPreferencesByPersonId[personId] ||= remoteList();
+      state.channelPreferencesByPersonId[personId].error = error;
+      state.channelPreferencesByPersonId[personId].isLoading = false;
+      state.channelPreferencesByPersonId[personId].loaded =
+        new Date().toISOString();
     },
     personChannelPreferencesInvalidated: (
       state,
@@ -235,37 +241,35 @@ const emailsSlice = createSlice({
     },
     personChannelPreferencesLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinPersonChannelPreference[]]>
+      action: PayloadAction<[number, ZetkinPersonEmailChannelPreference[]]>
     ) => {
       const [personId, preferences] = action.payload;
       state.channelPreferencesByPersonId[personId] = remoteListLoaded(
         preferences.map((pref) => ({ ...pref, id: pref.channel_id }))
       );
     },
-    personEmailPreferencesError: (
+    personOrgEmailPreferencesError: (
       state,
       action: PayloadAction<[number, unknown]>
     ) => {
       const [personId, error] = action.payload;
-      state.preferencesByPersonId[personId] = remoteItem(personId, {
-        data: state.preferencesByPersonId[personId]?.data,
+      state.orgEmailPreferencesByPersonId[personId] = remoteItem(personId, {
+        data: state.orgEmailPreferencesByPersonId[personId]?.data,
         error,
         loaded: new Date().toISOString(),
       });
     },
-    personEmailPreferencesLoad: (state, action: PayloadAction<number>) => {
+    personOrgEmailPreferencesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
-      state.preferencesByPersonId[personId] = remoteItem(personId, {
-        data: state.preferencesByPersonId[personId]?.data,
-        isLoading: true,
-      });
+      state.orgEmailPreferencesByPersonId[personId] ||= remoteItem(personId);
+      state.orgEmailPreferencesByPersonId[personId].isLoading = true;
     },
-    personEmailPreferencesLoaded: (
+    personOrgEmailPreferencesLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinPersonEmailPreferences]>
+      action: PayloadAction<[number, ZetkinPersonOrgEmailPreferences]>
     ) => {
       const [personId, preferences] = action.payload;
-      state.preferencesByPersonId[personId] = remoteItem(personId, {
+      state.orgEmailPreferencesByPersonId[personId] = remoteItem(personId, {
         data: { ...preferences, id: personId },
         loaded: new Date().toISOString(),
       });
@@ -440,9 +444,9 @@ export const {
   personChannelPreferencesError,
   personChannelPreferencesLoad,
   personChannelPreferencesLoaded,
-  personEmailPreferencesError,
-  personEmailPreferencesLoad,
-  personEmailPreferencesLoaded,
+  personOrgEmailPreferencesError,
+  personOrgEmailPreferencesLoad,
+  personOrgEmailPreferencesLoaded,
   themeCreate,
   themeCreated,
   themeDeleted,

@@ -3,7 +3,10 @@ import { useMemo } from 'react';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { IFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { ZetkinChannel, ZetkinPersonChannelPreference } from '../types';
+import {
+  ZetkinEmailChannel,
+  ZetkinPersonEmailChannelPreference,
+} from '../types';
 import {
   channelLoaded,
   personChannelPreferencesError,
@@ -12,12 +15,12 @@ import {
 } from '../store';
 import { serializeError } from 'utils/storeUtils/serializeError';
 
-export default function usePersonChannelPreferences(
+export default function usePersonEmailChannelPreferences(
   orgId: number,
   personId: number
 ): [
-  IFuture<ZetkinPersonChannelPreference[]>,
-  Record<number, ZetkinChannel | undefined>,
+  IFuture<ZetkinPersonEmailChannelPreference[]>,
+  Record<number, ZetkinEmailChannel>,
 ] {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -34,7 +37,7 @@ export default function usePersonChannelPreferences(
           }
           return prev;
         },
-        {} as Record<number, ZetkinChannel | undefined>
+        {} as Record<number, ZetkinEmailChannel>
       ),
     [channels]
   );
@@ -47,8 +50,8 @@ export default function usePersonChannelPreferences(
       personChannelPreferencesLoaded([personId, preferences]),
     loader: async () => {
       const resp = await apiClient.get<
-        ZetkinPersonChannelPreference[],
-        { channels: Record<number, ZetkinChannel | undefined> }
+        ZetkinPersonEmailChannelPreference[],
+        { channels: Record<number, ZetkinEmailChannel> }
       >(
         `/api2/orgs/${orgId}/people/${personId}/email_preferences/channels`,
         true

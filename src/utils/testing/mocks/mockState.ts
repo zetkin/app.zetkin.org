@@ -58,7 +58,7 @@ export default function mockState(overrides?: RootState) {
       emailList: remoteList(),
       insightsByEmailId: {},
       linksByEmailId: {},
-      preferencesByPersonId: {},
+      orgEmailPreferencesByPersonId: {},
       statsById: {},
       themeEditorValue: {
         block_attributes: '',
