@@ -14,6 +14,7 @@ import {
   personChannelPreferencesLoaded,
 } from '../store';
 import { serializeError } from 'utils/storeUtils/serializeError';
+import { RemoteItem } from 'utils/storeUtils';
 
 export default function usePersonEmailChannelPreferences(
   orgId: number,
@@ -28,16 +29,20 @@ export default function usePersonEmailChannelPreferences(
     state.emails.channelPreferencesByPersonId[personId],
     state.emails.channelsById,
   ]);
+
   const channelsById = useMemo(
     () =>
       Object.values(channels).reduce(
-        (prev, channel) => {
-          if (channel?.data) {
+        (
+          prev: Record<number, ZetkinEmailChannel>,
+          channel: RemoteItem<ZetkinEmailChannel>
+        ) => {
+          if (channel.data) {
             prev[channel.data.id] = channel.data;
           }
           return prev;
         },
-        {} as Record<number, ZetkinEmailChannel>
+        {}
       ),
     [channels]
   );
@@ -57,7 +62,7 @@ export default function usePersonEmailChannelPreferences(
         true
       );
       Object.values(resp.related.channels).forEach((channel) => {
-        dispatch(channelLoaded(channel!));
+        dispatch(channelLoaded(channel));
       });
       return resp.data;
     },
