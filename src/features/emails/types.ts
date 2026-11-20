@@ -246,7 +246,7 @@ export type ZetkinPersonEmailChannelPreferenceStatus =
 
 export type ZetkinPersonEmailChannelPreference = {
   channel_id: number;
-  muted: string | null;
+  muted: string | null; //Time muted, in ISO
   muted_by_user_id: number | null;
   status: ZetkinPersonEmailChannelPreferenceStatus;
   subscribed: string | null;
