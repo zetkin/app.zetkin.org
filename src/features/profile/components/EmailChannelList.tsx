@@ -46,7 +46,7 @@ const EmailChannelList: FC<Props> = ({
               label={channel.title}
               labelPlacement="start"
               onChange={(checked) => onToggleChannel(checked, channel.id)}
-              spaceBetweenLabel
+              fullWidth
             />
           </ListItem>
         );
