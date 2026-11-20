@@ -43,10 +43,10 @@ const EmailChannelList: FC<Props> = ({
             <ZUIIcon icon={channelPreference.muted ? VolumeOff : MailOutline} />
             <ZUISwitch
               checked={!channelPreference.muted}
+              fullWidth
               label={channel.title}
               labelPlacement="start"
               onChange={(checked) => onToggleChannel(checked, channel.id)}
-              fullWidth
             />
           </ListItem>
         );
