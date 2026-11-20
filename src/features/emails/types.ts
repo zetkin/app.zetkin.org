@@ -241,7 +241,8 @@ export type ZetkinEmailStats = {
 export type ZetkinPersonEmailChannelPreferenceStatus =
   | 'channel_muted'
   | 'has_received'
-  | 'no_relationship';
+  | 'no_relationship'
+  | 'subscribed';
 
 export type ZetkinPersonEmailChannelPreference = {
   channel_id: number;
@@ -271,8 +272,4 @@ export type ZetkinPersonOrgEmailPreferences = {
 
 export type ZetkinPersonOrgEmailPreferencesPatchBody = {
   org_status: ZetkinPersonOrgEmailPreferenceStatus;
-};
-
-export type ZetkinEmailChannelPreferencePatchBody = {
-  status: ZetkinPersonEmailChannelPreferenceStatus & 'channel_muted';
 };
