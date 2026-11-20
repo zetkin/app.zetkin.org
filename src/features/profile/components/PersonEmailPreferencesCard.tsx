@@ -1,11 +1,11 @@
 import { FC, useState } from 'react';
 import { Box, Skeleton } from '@mui/material';
-import { MarkEmailReadOutlined, VolumeOff } from '@mui/icons-material';
+import { MarkEmailReadOutlined, VolumeOff, Warning } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import usePersonOrgEmailPreferences from 'features/emails/hooks/usePersonOrgEmailPreferences';
 import usePersonOrgEmailPreferencesMutations from 'features/emails/hooks/usePersonEmailPreferencesMutations';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUISection from 'zui/components/ZUISection';
@@ -22,6 +22,7 @@ import usePersonEmailChannelPreferencesMutations from 'features/emails/hooks/use
 import EmailChannelList from 'features/profile/components/EmailChannelList';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import ZUIIcon from 'zui/components/ZUIIcon';
 
 type Props = {
   orgId: number;
@@ -29,6 +30,7 @@ type Props = {
 };
 
 const PersonEmailPreferencesCard: FC<Props> = ({ orgId, person }) => {
+  const messages = useMessages(messageIds);
   const organizationFuture = useOrganization(orgId);
   const orgPreferencesFuture = usePersonOrgEmailPreferences(orgId, person.id);
   const [channelPreferencesFuture, channelById] =
@@ -40,6 +42,38 @@ const PersonEmailPreferencesCard: FC<Props> = ({ orgId, person }) => {
 
   return (
     <ZUIFutures
+      errorIndicator={
+        <ZUISection
+          renderContent={() => (
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                padding: 2,
+              }}
+            >
+              <ZUIIcon color="error" icon={Warning} />
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <ZUIText variant="headingSm">
+                  <Msg id={messageIds.emailPreferences.error.title} />
+                </ZUIText>
+                <ZUIText>
+                  <Msg id={messageIds.emailPreferences.error.description} />
+                </ZUIText>
+              </Box>
+            </Box>
+          )}
+          title={messages.emailPreferences.title()}
+        />
+      }
       futures={{
         channelPreferences: channelPreferencesFuture,
         orgPreferences: orgPreferencesFuture,

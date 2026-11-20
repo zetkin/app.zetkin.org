@@ -35,6 +35,12 @@ export default makeMessages('feat.profile', {
       },
       title: m('Channels'),
     },
+    error: {
+      description: m(
+        'Try reloading the page. If this error keeps happening, contact support.'
+      ),
+      title: m('Something went wrong loading the email channels'),
+    },
     muteAll: {
       button: m('Mute all'),
       description: m<{ name: string }>(
