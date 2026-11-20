@@ -172,9 +172,7 @@ const ChannelSubscription = ({
                 onChange={(e) =>
                   setConfig({
                     ...filter.config,
-                    operator: e.target.value as
-                      | 'subscribed'
-                      | 'not_subscribed',
+                    operator: e.target.value as 'subscribed' | 'not_subscribed',
                   })
                 }
                 value={filter.config.operator}
@@ -189,7 +187,9 @@ const ChannelSubscription = ({
             ),
             scopeSelect: (
               <StyledSelect
-                onChange={(e) => handleScopeChange(e.target.value as ChannelScope)}
+                onChange={(e) =>
+                  handleScopeChange(e.target.value as ChannelScope)
+                }
                 value={scope}
               >
                 <MenuItem value="anyChannel">

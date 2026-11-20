@@ -31,15 +31,14 @@ const DisplayChannelSubscription = ({
       : 'anyOf'
     : 'anyChannel';
   const operator =
-    filter.config.operator === 'not_subscribed' ? 'notSubscribed' : 'subscribed';
+    filter.config.operator === 'not_subscribed'
+      ? 'notSubscribed'
+      : 'subscribed';
 
-  const selectedChannels = channelIds.reduce(
-    (acc: ZetkinEmailConfig[], id) => {
-      const channel = channels.find((channel) => channel.id === id);
-      return channel ? acc.concat(channel) : acc;
-    },
-    []
-  );
+  const selectedChannels = channelIds.reduce((acc: ZetkinEmailConfig[], id) => {
+    const channel = channels.find((channel) => channel.id === id);
+    return channel ? acc.concat(channel) : acc;
+  }, []);
 
   return (
     <Msg
