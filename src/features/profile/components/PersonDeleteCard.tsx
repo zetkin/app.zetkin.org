@@ -1,14 +1,15 @@
-import { NewReleases } from '@mui/icons-material';
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
-import PersonCard from './PersonCard';
 import usePersonMutations from '../hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUISection from 'zui/components/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import { Msg, useMessages } from 'core/i18n';
+import ZUIText from 'zui/components/ZUIText';
+import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 
@@ -45,30 +46,21 @@ const PersonDeleteCard: React.FunctionComponent<{
   };
 
   return (
-    <PersonCard title={messages.delete.title()}>
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="space-between"
-        minHeight={125}
-        p={2}
-      >
-        <Box display="flex" flexDirection="row">
-          <NewReleases color="primary" style={{ marginRight: 10 }} />
-          <Typography color="primary" variant="h5">
-            <Msg id={messageIds.delete.warning} />
-          </Typography>
+    <ZUISection
+      renderContent={() => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <ZUIText color="secondary">{messages.delete.warning()}</ZUIText>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ZUIButton
+              label={messages.delete.button()}
+              onClick={handleDelete}
+              variant="destructive"
+            />
+          </Box>
         </Box>
-        <Button
-          color="primary"
-          fullWidth
-          onClick={handleDelete}
-          variant="contained"
-        >
-          <Msg id={messageIds.delete.button} />
-        </Button>
-      </Box>
-    </PersonCard>
+      )}
+      title={messages.delete.title()}
+    />
   );
 };
 

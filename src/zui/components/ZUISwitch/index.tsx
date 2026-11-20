@@ -11,6 +11,12 @@ export type ZUISwitchProps = {
    */
   disabled?: boolean;
 
+  /**
+   * If the label and switch should grow to fit the container.
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
   label: string;
 
   /**
@@ -35,6 +41,7 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   labelPlacement = 'end',
   onChange,
   size = 'medium',
+  fullWidth = false,
 }) => (
   <FormControlLabel
     control={
@@ -62,12 +69,14 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
         '-webkit-user-select': 'none',
         userSelect: 'none',
       },
+      justifyContent: fullWidth ? 'space-between' : undefined,
       marginBottom:
         labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
       marginLeft: labelPlacement != 'end' ? 0 : '',
       marginRight: 0,
       marginTop:
         labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
+      width: fullWidth ? '100%' : undefined,
     }}
   />
 );
