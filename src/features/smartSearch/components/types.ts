@@ -19,6 +19,7 @@ export enum FILTER_TYPE {
   CALLER = 'caller',
   CALLER_PARTICIPATION = 'caller_participation',
   PROJECT_PARTICIPATION = 'campaign_participation',
+  CHANNEL_SUBSCRIPTION = 'channel_subscription',
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
@@ -169,6 +170,13 @@ export interface CallerParticipationFilterConfig {
     max?: number;
     min?: number;
   };
+  organizations?: FilterConfigOrgOptions;
+}
+
+export interface ChannelSubscriptionFilterConfig {
+  channels?: number[];
+  condition?: 'any' | 'all';
+  operator: 'subscribed' | 'not_subscribed';
   organizations?: FilterConfigOrgOptions;
 }
 
@@ -392,6 +400,7 @@ export type AnyFilterConfig =
   | CallerParticipationFilterConfig
   | ProjectParticipationConfig
   | EventParticipationConfig
+  | ChannelSubscriptionFilterConfig
   | DefaultFilterConfig
   | EmailBlacklistFilterConfig
   | JoinFormFilterConfig

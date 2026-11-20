@@ -85,6 +85,12 @@ export default makeMessages('feat.smartSearch', {
         description: m("Who signed up? Got booked? Who didn't? Find them!"),
         title: m('Participation in events'),
       },
+      channel_subscription: {
+        description: m(
+          'Find people based on which email channels they subscribe to.'
+        ),
+        title: m('Channel subscriptions'),
+      },
       email_blacklist: {
         description: m(
           'Bounced, incorrect address, not received - here they are.'
@@ -378,6 +384,31 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people who have logged {callCountSelect} in {assignmentSelect}.'
       ),
+    },
+    channelSubscription: {
+      examples: {
+        one: m('Add people who are subscribed to any channel.'),
+        two: m(
+          'Remove people who are subscribed to all of the following channels: "Newsletter", "Events".'
+        ),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        channels: ReactElement | null;
+        operatorSelect: ReactElement;
+        scopeSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people who are {operatorSelect} {scopeSelect} {channels}'
+      ),
+      operatorSelect: {
+        notSubscribed: m('not subscribed to'),
+        subscribed: m('subscribed to'),
+      },
+      scopeSelect: {
+        allOf: m('all of the following channels'),
+        anyChannel: m('any channel'),
+        anyOf: m('any of the following channels'),
+      },
     },
     emailBlacklist: {
       inputString: m<{

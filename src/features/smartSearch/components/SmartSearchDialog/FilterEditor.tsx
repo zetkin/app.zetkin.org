@@ -4,6 +4,7 @@ import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
 import Caller from '../filters/Caller';
 import CallerParticipation from '../filters/CallerParticipation';
+import ChannelSubscription from '../filters/ChannelSubscription';
 import ProjectParticipation from '../filters/ProjectParticipation';
 import EmailBlacklist from '../filters/EmailBlacklist';
 import EmailClick from '../filters/EmailClick';
@@ -101,6 +102,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.PROJECT_PARTICIPATION && (
         <ProjectParticipation
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.CHANNEL_SUBSCRIPTION && (
+        <ChannelSubscription
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
