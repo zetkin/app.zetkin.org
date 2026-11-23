@@ -8,7 +8,6 @@ export default interface IApiClient {
     data?: Partial<DataType>
   ): Promise<DataType>;
   get<DataType>(path: string): Promise<DataType>;
-
   getEnvelope<DataType, RelatedType = unknown>(
     path: `/api2/${string}`
   ): Promise<Api2Response<DataType, RelatedType>>;
