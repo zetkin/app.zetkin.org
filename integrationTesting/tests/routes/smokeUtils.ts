@@ -37,6 +37,8 @@ import SmokeJoinForm from '../../mockData/orgs/KPD/joinForms/SmokeJoinForm';
 import SmokeLocation from '../../mockData/orgs/KPD/areas/SmokeLocation';
 import SpeakToFriend from '../../mockData/orgs/KPD/projects/ReferendumSignatures/tasks/SpeakToFriend';
 import WelcomeNewMembers from '../../mockData/orgs/KPD/projects/WelcomeNewMembers';
+import { SocialistNewsEmailChannel } from '../../mockData/orgs/KPD/email/SocialistNewsEmailChannel';
+import { ClaraEmailPreferences } from '../../mockData/orgs/KPD/email/ClarasEmailPreferences';
 
 const SESSION_PASSWORD = 'thisispasswordandshouldbelongerthan32characters';
 const ORG_ID = KPD.id;
@@ -544,6 +546,15 @@ export function setupSmokeApiMocks(moxy: NextWorkerFixtures['moxy']) {
         num_visits: 0,
       },
     },
+  });
+  moxy.setMock('/v2/orgs/1/people/1/email_preferences', 'get', {
+    data: { data: ClaraEmailPreferences },
+  });
+  moxy.setMock('/v2/orgs/1/people/1/email_preferences/channels', 'get', {
+    data: { data: [] },
+  });
+  moxy.setMock('/v2/orgs/1/people/1/email_preferences/channels/1', 'get', {
+    data: { data: SocialistNewsEmailChannel },
   });
 }
 
