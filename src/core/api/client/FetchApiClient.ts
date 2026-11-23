@@ -25,51 +25,30 @@ export default class FetchApiClient implements IApiClient {
     await assertOk(res);
   }
 
-  get<DataType extends object, TRelated extends object = Record<string, never>>(
-    path: `/api2/${string}`,
-    receiveRelated: true
-  ): Promise<Api2Response<DataType, TRelated>>;
-  get<DataType>(path: string): Promise<DataType>;
-  async get<DataType>(
-    path: string,
-    receiveRelated?: boolean
-  ): Promise<
-    | DataType
-    | (DataType extends object | object[] ? Api2Response<DataType> : never)
-  > {
+  async get<DataType>(path: string): Promise<DataType> {
     const res = await this._fetch(path);
 
     await assertOk(res);
 
     const body = await res.json();
-    if (receiveRelated) {
-      return body;
-    }
 
     return body.data;
   }
 
-  patch<
-    DataType extends object,
-    InputType = Partial<DataType>,
-    TRelated extends object = Record<string, never>,
-  >(
-    path: `/api2/${string}`,
-    data: Partial<InputType>,
-    receiveRelated: true
-  ): Promise<Api2Response<DataType, TRelated>>;
-  patch<DataType, InputType = Partial<DataType>>(
-    path: string,
-    data: InputType
-  ): Promise<DataType>;
+  async getEnvelope<DataType, RelatedType = unknown>(
+    path: `/api2/${string}`
+  ): Promise<Api2Response<DataType, RelatedType>> {
+    const res = await this._fetch(path);
+
+    await assertOk(res);
+
+    return res.json();
+  }
+
   async patch<DataType, InputType = Partial<DataType>>(
     path: string,
-    data: InputType,
-    receiveRelated?: boolean
-  ): Promise<
-    | DataType
-    | (DataType extends object | object[] ? Api2Response<DataType> : never)
-  > {
+    data: InputType
+  ): Promise<DataType> {
     const res = await this._fetch(path, {
       body: JSON.stringify(data),
       headers: {
@@ -85,33 +64,13 @@ export default class FetchApiClient implements IApiClient {
     }
 
     const body = await res.json();
-    if (receiveRelated) {
-      return body;
-    }
     return body.data;
   }
 
-  post<
-    DataType extends object | object[],
-    InputType = DataType,
-    TRelated extends object = Record<string, never>,
-  >(
-    path: `/api2/${string}`,
-    data: Partial<InputType>,
-    receiveRelated: true
-  ): Promise<Api2Response<DataType, TRelated>>;
-  post<DataType, InputType = DataType>(
-    path: string,
-    data: Partial<InputType>
-  ): Promise<DataType>;
   async post<DataType, InputType = DataType>(
     path: string,
-    data: Partial<InputType>,
-    receiveRelated?: boolean
-  ): Promise<
-    | DataType
-    | (DataType extends object | object[] ? Api2Response<DataType> : never)
-  > {
+    data: Partial<InputType>
+  ): Promise<DataType> {
     const res = await this._fetch(path, {
       body: JSON.stringify(data),
       headers: {
@@ -127,29 +86,13 @@ export default class FetchApiClient implements IApiClient {
     }
 
     const body = await res.json();
-    if (receiveRelated) {
-      return body;
-    }
     return body?.data;
   }
 
-  put<DataType extends object, TRelated extends object = Record<string, never>>(
-    path: `/api2/${string}`,
-    data: Partial<DataType> | undefined,
-    receiveRelated: true
-  ): Promise<Api2Response<DataType, TRelated>>;
-  put<DataType = void>(
-    path: string,
-    data?: Partial<DataType>
-  ): Promise<DataType>;
   async put<DataType = void>(
     path: string,
-    data?: Partial<DataType> | undefined,
-    receiveRelated?: boolean
-  ): Promise<
-    | DataType
-    | (DataType extends object | object[] ? Api2Response<DataType> : never)
-  > {
+    data?: Partial<DataType> | undefined
+  ): Promise<DataType> {
     const options: RequestInit = {
       method: 'PUT',
     };
@@ -171,9 +114,6 @@ export default class FetchApiClient implements IApiClient {
 
     try {
       const body = await res.json();
-      if (receiveRelated) {
-        return body;
-      }
       return body.data;
     } catch (err) {
       //TODO: Update type to reflect this possibility

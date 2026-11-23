@@ -54,17 +54,14 @@ export default function usePersonEmailChannelPreferences(
     actionOnSuccess: (preferences) =>
       personChannelPreferencesLoaded([personId, preferences]),
     loader: async () => {
-      const resp = await apiClient.get<
+      const response = await apiClient.getEnvelope<
         ZetkinPersonEmailChannelPreference[],
-        { channels: Record<number, ZetkinEmailChannel> }
-      >(
-        `/api2/orgs/${orgId}/people/${personId}/email_preferences/channels`,
-        true
-      );
-      Object.values(resp.related.channels).forEach((channel) => {
+        { channels: Record<string, ZetkinEmailChannel> }
+      >(`/api2/orgs/${orgId}/people/${personId}/email_preferences/channels`);
+      Object.values(response.related.channels).forEach((channel) => {
         dispatch(channelLoaded(channel));
       });
-      return resp.data;
+      return response.data;
     },
   });
 

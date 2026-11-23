@@ -7,6 +7,7 @@ type MockedApiClient = jest.Mocked<IApiClient>;
 export default function mockApiClient(overrides?: {
   delete?: jest.Mock<IApiClient['delete']>;
   get?: jest.Mock<IApiClient['get']>;
+  getEnvelope?: jest.Mock<IApiClient['getEnvelope']>;
   patch?: jest.Mock<IApiClient['patch']>;
   post?: jest.Mock<IApiClient['post']>;
   put?: jest.Mock<IApiClient['put']>;
@@ -15,6 +16,7 @@ export default function mockApiClient(overrides?: {
   const defaultApiClient = {
     delete: jest.fn(),
     get: jest.fn(),
+    getEnvelope: jest.fn(),
     patch: jest.fn(),
     post: jest.fn(),
     put: jest.fn(),
