@@ -5,6 +5,7 @@ import {
   Paper,
   Popper,
   PopperProps,
+  Stack,
   Typography,
 } from '@mui/material';
 import { FC, ReactNode, useMemo } from 'react';
@@ -56,49 +57,31 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
       }}
     >
       <Paper elevation={2}>
-        <Box p={2}>
-          <Box>
-            {mostRecent && (
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: '1.1em',
-                  }}
-                  variant="h5"
+        <Stack sx={{ alignItems: 'flex-start', gap: 1, padding: 2 }}>
+          {mostRecent && (
+            <>
+              <Typography variant="h5">
+                <Msg id={messageIds.surveyPreview.mostRecent.header} />
+              </Typography>
+              <Typography color="secondary">
+                <ZUIRelativeTime datetime={mostRecent.submitted} forcePast />
+              </Typography>
+              <Box>{mostRecent.matchingContent}</Box>
+              {!isRestricted && (
+                <Button
+                  onClick={() =>
+                    onOpenSubmission && onOpenSubmission(mostRecent.id)
+                  }
+                  startIcon={<AssignmentTurnedInOutlined />}
                 >
-                  <Msg id={messageIds.surveyPreview.mostRecent.header} />
-                </Typography>
-                <Typography
-                  marginBottom={1}
-                  marginTop={1}
-                  sx={{
-                    color: 'grey',
-                  }}
-                >
-                  <ZUIRelativeTime datetime={mostRecent.submitted} forcePast />
-                </Typography>
-                <Box marginBottom={1}>{mostRecent.matchingContent}</Box>
-                {!isRestricted && (
-                  <Button
-                    onClick={() =>
-                      onOpenSubmission && onOpenSubmission(mostRecent.id)
-                    }
-                    startIcon={<AssignmentTurnedInOutlined />}
-                  >
-                    <Msg id={messageIds.surveyPreview.mostRecent.openButton} />
-                  </Button>
-                )}
-              </Box>
-            )}
-          </Box>
+                  <Msg id={messageIds.surveyPreview.mostRecent.openButton} />
+                </Button>
+              )}
+            </>
+          )}
           {!!older.length && (
-            <Box marginTop={2}>
-              <Typography
-                sx={{
-                  fontSize: '1.1em',
-                }}
-                variant="h5"
-              >
+            <>
+              <Typography variant="h5">
                 <Msg id={messageIds.surveyPreview.older.header} />
               </Typography>
               {older.map((submission) => {
@@ -134,9 +117,9 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                   </Box>
                 );
               })}
-            </Box>
+            </>
           )}
-        </Box>
+        </Stack>
       </Paper>
     </Popper>
   );

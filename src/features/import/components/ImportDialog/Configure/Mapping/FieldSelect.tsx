@@ -38,8 +38,31 @@ const FieldSelect: FC<FieldSelectProps> = ({
   const [open, setOpen] = useState(false);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  const expandedFieldOptions = fieldOptions.flatMap((option): Option[] => {
+    if (option.value.startsWith('lnglat')) {
+      return [
+        {
+          ...option,
+          label: messages.configuration.mapping.lnglat.lat({
+            value: option.label,
+          }),
+          value: `lat:${option.value}`,
+        },
+        {
+          ...option,
+          label: messages.configuration.mapping.lnglat.lng({
+            value: option.label,
+          }),
+          value: `lng:${option.value}`,
+        },
+      ];
+    } else {
+      return [option];
+    }
+  });
+
   const fieldOptionsSorted = [
-    ...fieldOptions,
+    ...expandedFieldOptions,
     {
       disabled: false,
       label: messages.configuration.mapping.externalID(),
@@ -71,6 +94,10 @@ const FieldSelect: FC<FieldSelectProps> = ({
 
     if (column.originalColumn.kind == ColumnKind.GENDER) {
       return `field:gender`;
+    }
+
+    if (column.originalColumn.kind == ColumnKind.LNGLAT) {
+      return `${column.originalColumn.type}:lnglat:${column.originalColumn.field}`;
     }
 
     if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
@@ -222,6 +249,20 @@ const FieldSelect: FC<FieldSelectProps> = ({
             selected: true,
           });
           onConfigureStart();
+        } else if (event.target.value.startsWith('lng:lnglat:')) {
+          onChange({
+            field: event.target.value.slice(11),
+            kind: ColumnKind.LNGLAT,
+            selected: true,
+            type: 'lng',
+          });
+        } else if (event.target.value.startsWith('lat:lnglat:')) {
+          onChange({
+            field: event.target.value.slice(11),
+            kind: ColumnKind.LNGLAT,
+            selected: true,
+            type: 'lat',
+          });
         }
       }}
       onClose={() => setOpen(false)}
