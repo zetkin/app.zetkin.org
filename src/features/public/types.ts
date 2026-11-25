@@ -40,16 +40,6 @@ export type ZetkinEventWithStatus = ZetkinEvent &
       }
   );
 
-export type EmailChannel = {
-  id: number;
-  is_blocked: boolean;
-  published: string | null;
-  published_by_user_id: number | null;
-  sender_email: string;
-  sender_name: string;
-  title: string;
-};
-
 export type EmailToken = {
   email: string;
   exp: number;

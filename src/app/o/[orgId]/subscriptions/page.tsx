@@ -5,7 +5,6 @@ import { cookies } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization, ZetkinUser } from 'utils/types/zetkin';
-import SubscriptionsManagementPage from 'features/public/pages/SubscriptionsManagementPage';
 import SubscriptionsTokenRequestPage from 'features/public/pages/SubscriptionsTokenRequestPage';
 import { AppSession } from 'utils/types';
 import requiredEnvVar from 'utils/requiredEnvVar';
@@ -49,30 +48,5 @@ export default async function Page({ params }: PageProps) {
     return <SubscriptionsTokenRequestPage org={org} />;
   }
 
-  return (
-    <SubscriptionsManagementPage
-      email={user.email}
-      initialChannels={[
-        {
-          id: 234,
-          is_blocked: false,
-          published: '20250212',
-          published_by_user_id: 1231,
-          sender_email: 'cutest@cat.com',
-          sender_name: 'Catttt',
-          title: 'Cat channel',
-        },
-        {
-          id: 234,
-          is_blocked: false,
-          published: '20250212',
-          published_by_user_id: 1231,
-          sender_email: 'cutest@cat.com',
-          sender_name: 'Catttt',
-          title: 'Cat channel',
-        },
-      ]}
-      org={org}
-    />
-  );
+  return <>UI PENDING</>;
 }
