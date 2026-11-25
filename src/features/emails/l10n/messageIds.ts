@@ -11,15 +11,6 @@ export default makeMessages('feat.emails', {
     unsubscribed: m('Unsubscribed'),
   },
   deliveryLog: {
-    aboutBounces: m('About bounces'),
-    bounceExplanation: {
-      hard_bounce: m(
-        'A hard bounce is a permanent delivery failure, for example because the email address does not exist.'
-      ),
-      soft_bounce: m(
-        'A soft bounce is a temporary delivery failure, for example because the mailbox is full or the server is unavailable.'
-      ),
-    },
     columns: {
       datetime: m('Time'),
       emailAddress: m('Email address'),
@@ -28,9 +19,6 @@ export default makeMessages('feat.emails', {
       status: m('Status'),
     },
     empty: m('No deliveries to show.'),
-    info: m(
-      'This log shows the delivery status and available errors. Bounce types and detailed bounce reasons will be added in a future update.'
-    ),
     status: {
       bounced: m('Bounced'),
       delivered: m('Delivered'),

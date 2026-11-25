@@ -185,8 +185,8 @@ export type ZetkinEmailRecipient = {
     id: number;
     title: string;
   };
-  email_address: null;
-  error: null;
+  email_address: string | null;
+  error: string | null;
   id: number;
   opened: string | null;
   person: {
@@ -195,8 +195,20 @@ export type ZetkinEmailRecipient = {
     last_name: string;
   };
   sent: string | null;
-  status: 'pending' | 'sent' | 'opened' | 'failed' | 'bounced';
+  status: 'pending' | 'sent' | 'delivered' | 'opened' | 'failed' | 'bounced';
 };
+
+export type DeliveryLogRecipient = Pick<
+  ZetkinEmailRecipient,
+  | 'delivered'
+  | 'email_address'
+  | 'error'
+  | 'id'
+  | 'opened'
+  | 'person'
+  | 'sent'
+  | 'status'
+>;
 
 export type ZetkinEmailLink = {
   email: {

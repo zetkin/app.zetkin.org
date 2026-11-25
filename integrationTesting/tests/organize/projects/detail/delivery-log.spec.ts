@@ -25,6 +25,7 @@ test.describe('Email delivery log', () => {
     setupFeatureFlags();
     login();
     setupSmokeApiMocks(moxy);
+    moxy.setZetkinApiMock('/orgs/1/email_themes', 'get', [{ id: 1 }]);
     await addSessionCookie(context, appUri);
   });
 
@@ -62,7 +63,7 @@ test.describe('Email delivery log', () => {
       ]
     );
 
-    await page.goto(`${appUri}/organize/1/projects/1/emails/1/deliveryLog`);
+    await page.goto(`${appUri}/organize/1/projects/1/emails/1/deliverylog`);
     const grid = page.getByRole('grid');
     await expect(grid).toBeVisible();
     await expect(grid.getByRole('columnheader')).toHaveText([
@@ -73,6 +74,11 @@ test.describe('Email delivery log', () => {
       'Status',
       'Error',
     ]);
+    const emailCells = grid.locator(
+      '[role="gridcell"][data-field="email_address"]'
+    );
+    await expect(emailCells.first()).toHaveText('clara@kpd.org');
+    await expect(emailCells.last()).toHaveText('—');
     for (const status of [
       'Sent',
       'Delivered',
@@ -107,7 +113,7 @@ test.describe('Email delivery log', () => {
       { ...recipient, delivered: sent, status: 'failed' },
     ]);
 
-    await page.goto(`${appUri}/organize/1/projects/1/emails/1/deliveryLog`);
+    await page.goto(`${appUri}/organize/1/projects/1/emails/1/deliverylog`);
 
     const grid = page.getByRole('grid');
     await expect(
@@ -118,18 +124,8 @@ test.describe('Email delivery log', () => {
     ).toHaveCount(0);
   });
 
-  test('shows the empty state and explains bounce types', async ({
-    appUri,
-    page,
-  }) => {
-    await page.goto(`${appUri}/organize/1/projects/1/emails/1/deliveryLog`);
+  test('shows the empty state', async ({ appUri, page }) => {
+    await page.goto(`${appUri}/organize/1/projects/1/emails/1/deliverylog`);
     await expect(page.getByText('No deliveries to show.')).toBeVisible();
-    await page.getByRole('button', { name: 'About bounces' }).hover();
-    await expect(page.getByRole('tooltip')).toContainText(
-      'A hard bounce is a permanent delivery failure'
-    );
-    await expect(page.getByRole('tooltip')).toContainText(
-      'A soft bounce is a temporary delivery failure'
-    );
   });
 });

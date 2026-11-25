@@ -44,6 +44,10 @@ export default function useColumn(orgId: number) {
         return column.idField == value;
       }
 
+      if (column.kind == ColumnKind.LNGLAT) {
+        return `${column.type}:lnglat:${column.field}` == value;
+      }
+
       if (column.kind == ColumnKind.FIELD) {
         return column.field == value.slice(6);
       }
@@ -97,6 +101,12 @@ export default function useColumn(orgId: number) {
         disabled: readOnly,
         label,
         value: `enum:${field.slug}`,
+      };
+    } else if (field.type == CUSTOM_FIELD_TYPE.LNGLAT) {
+      return {
+        disabled: readOnly,
+        label,
+        value: `lnglat:${field.slug}`,
       };
     } else {
       return {

@@ -22,14 +22,12 @@ interface EmailLayoutProps {
   children: React.ReactNode;
   fixedHeight?: boolean;
   noPad?: boolean;
-  requireTheme?: boolean;
 }
 
 const EmailLayout: FC<EmailLayoutProps> = ({
   children,
   fixedHeight = false,
   noPad = false,
-  requireTheme = true,
 }) => {
   const { orgId, projectId, emailId } = useNumericRouteParams();
   const router = useRouter();
@@ -62,7 +60,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
         label: messages.tabs.insights(),
       },
       {
-        href: '/deliveryLog',
+        href: '/deliverylog',
         label: messages.tabs.deliveryLog(),
       }
     );
@@ -134,7 +132,6 @@ const EmailLayout: FC<EmailLayoutProps> = ({
       </TabbedLayout>
       <Dialog
         open={
-          requireTheme &&
           !themes.isLoading &&
           !themes.error &&
           (!themes.data || themes.data.length === 0)

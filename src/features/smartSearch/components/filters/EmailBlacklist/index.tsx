@@ -41,7 +41,7 @@ const EmailBlacklist = ({
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailBlacklistFilterConfig>(initialFilter, {
       operator: 'blacklisted',
-      reason: 'any',
+      reason: EMAIL_UNSUB_REASON.any,
     });
 
   const handleSubmit = (e: FormEvent) => {
@@ -82,7 +82,7 @@ const EmailBlacklist = ({
                       .value as EmailBlacklistFilterConfig['reason'],
                   })
                 }
-                value={filter.config.reason || 'any'}
+                value={filter.config.reason || EMAIL_UNSUB_REASON.any}
               >
                 {Object.entries(EMAIL_UNSUB_REASON).map(
                   ([reason, messageKey]) => (
