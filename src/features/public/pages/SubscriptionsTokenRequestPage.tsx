@@ -14,24 +14,26 @@ import ZUIText from 'zui/components/ZUIText';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { stringToBool } from 'utils/stringUtils';
 import { useApiClient } from 'core/hooks';
+import messageIds from '../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type Props = {
   org: ZetkinOrganization;
 };
 
 const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
+  const messages = useMessages(messageIds);
+  const env = useEnv();
+  const apiClient = useApiClient();
+
   const [email, setEmail] = useState('');
   const [emailValidationError, setEmailValidationError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false); // Currently only allows one submit per page load
   const [submissionError, setSubmissionError] = useState(false);
-  const env = useEnv();
-  const apiClient = useApiClient();
 
-  // Reset error state when retrying to type email
   useEffect(() => {
     if (emailValidationError) {
-      setSubmissionError(false);
       setEmailValidationError(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,6 +68,7 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
+                  setSubmissionError(false);
 
                   if (!isEmail(email)) {
                     setEmailValidationError(true);
@@ -100,9 +103,11 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                     disabled={loading || success}
                     error={emailValidationError}
                     helperText={
-                      emailValidationError ? 'Email is invalid' : undefined
+                      emailValidationError
+                        ? messages.subscriptionTokenRequest.emailValidationError()
+                        : undefined
                     }
-                    label="Your Email"
+                    label={messages.subscriptionTokenRequest.emailInputLabel()}
                     onChange={(newEmail) => setEmail(newEmail)}
                     value={email}
                   />
@@ -111,35 +116,42 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                     actionType="submit"
                     disabled={email.length === 0 || success}
                     isLoading={loading}
-                    label={success ? 'Link requested' : 'Request link'}
+                    label={
+                      success
+                        ? messages.subscriptionTokenRequest.submitButton.wasRequested()
+                        : messages.subscriptionTokenRequest.submitButton.requestLink()
+                    }
                     variant="primary"
                   />
                   {success && (
                     <ZUIAlert
                       button={{
-                        label: 'Try again',
+                        label:
+                          messages.subscriptionTokenRequest.success.retryButton(),
                         onClick: () => {
                           window.navigation.reload();
                         },
                       }}
-                      description={`If ${email} has an account, you will recieve a link to manage your subscription. Please allow a few minutes to recieve the link before trying again`}
+                      description={messages.subscriptionTokenRequest.success.description(
+                        { email }
+                      )}
                       severity="success"
-                      title="Submitted!"
+                      title={messages.subscriptionTokenRequest.success.title()}
                     />
                   )}
                   {submissionError && (
                     <ZUIAlert
-                      description="Something went wrong when requesting an email, please try again!"
+                      description={messages.subscriptionTokenRequest.error.description()}
                       severity="error"
-                      title="Error"
+                      title={messages.subscriptionTokenRequest.error.title()}
                     />
                   )}
                 </Box>
               </form>
             );
           }}
-          subtitle="Enter your email address to get a link to manage your subscriptions."
-          title="Email settings"
+          subtitle={messages.subscriptionTokenRequest.subtitle()}
+          title={messages.subscriptionTokenRequest.title()}
         />
       </Box>
     </Box>
