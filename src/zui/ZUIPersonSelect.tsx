@@ -30,6 +30,8 @@ interface UsePersonSelectProps {
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
   initialValue?: string;
   label?: string;
+  myPerson?: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'> | null;
+  myPersonLabel?: string;
   name?: string;
   onChange: (person: ZetkinPerson) => void;
   placeholder?: string;
@@ -87,6 +89,8 @@ export const usePersonSelect: UsePersonSelect = ({
   inputRef,
   initialValue,
   label,
+  myPerson,
+  myPersonLabel,
   name,
   onChange,
   placeholder,
@@ -134,6 +138,13 @@ export const usePersonSelect: UsePersonSelect = ({
 
   let personOptions = (results || []) as ZetkinPerson[];
   if (
+    myPerson &&
+    searchFieldValue.length === 0 &&
+    !personOptions.some((o) => o.id === myPerson.id)
+  ) {
+    personOptions = [myPerson as ZetkinPerson].concat(personOptions);
+  }
+  if (
     selectedPerson &&
     !personOptions.some((o) => o.id === selectedPerson.id)
   ) {
@@ -174,7 +185,10 @@ export const usePersonSelect: UsePersonSelect = ({
         const extraLabel = getOptionExtraLabel
           ? getOptionExtraLabel(person)
           : null;
-        const name = `${person.first_name} ${person.last_name}`;
+        const name =
+          myPerson && person.id === myPerson.id && myPersonLabel
+            ? myPersonLabel
+            : `${person.first_name} ${person.last_name}`;
         return (
           <Box component="li" {...props}>
             <ZUIPerson id={person.id} name={name} subtitle={extraLabel} />

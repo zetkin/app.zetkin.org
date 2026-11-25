@@ -9,7 +9,9 @@ import { FC, useContext } from 'react';
 import messageIds from 'features/events/l10n/messageIds';
 import useEvent from '../hooks/useEvent';
 import useEventContact from '../hooks/useEventContact';
+import useMembership from 'features/organizations/hooks/useMembership';
 import { useMessages } from 'core/i18n';
+import useUser from 'core/hooks/useUser';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUICard from 'zui/ZUICard';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -81,6 +83,21 @@ const ContactDetails: FC<ContactDetailsProps> = ({
 const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
+  const user = useUser();
+  const membership = useMembership(orgId);
+  const myPerson =
+    user && membership.data
+      ? {
+          first_name: user.first_name,
+          id: membership.data.profile.id,
+          last_name: user.last_name,
+        }
+      : null;
+  const myPersonLabel = user
+    ? messages.eventContactCard.assignToMe({
+        username: `${user.first_name} ${user.last_name}`,
+      })
+    : undefined;
 
   const { setContact } = useEventContact(orgId, eventId);
   const handleSelectedPerson = (personId: number) => {
@@ -94,6 +111,8 @@ const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
           submitLabel: zuiMessages.createPerson.submitLabel.assign(),
           title: zuiMessages.createPerson.title.contact(),
         }}
+        myPerson={myPerson}
+        myPersonLabel={myPersonLabel}
         onChange={(person) => handleSelectedPerson(person.id)}
         placeholder={messages.eventContactCard.selectPlaceholder()}
         selectedPerson={null}
