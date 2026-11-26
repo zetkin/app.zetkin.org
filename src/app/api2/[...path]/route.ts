@@ -59,7 +59,9 @@ async function proxy(
   }
 
   async function makeZetkinApiRequest() {
-    headers.set('Authorization', 'Bearer ' + session.tokenData?.access_token);
+    if (session.tokenData) {
+      headers.set('Authorization', 'Bearer ' + session.tokenData.access_token);
+    }
 
     let url = apiBase + pathStr;
     if (request.nextUrl.searchParams.size) {

@@ -39,3 +39,12 @@ export type ZetkinEventWithStatus = ZetkinEvent &
         status: 'booked';
       }
   );
+
+export type EmailToken = {
+  email: string;
+  exp: number;
+  factors: string[];
+  iat: number;
+  level: number;
+  scope: string[];
+};

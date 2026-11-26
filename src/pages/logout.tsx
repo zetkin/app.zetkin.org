@@ -19,9 +19,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     });
     session?.destroy();
 
+    const redirect = context.query.redir;
+    const hasRedirect = typeof redirect === 'string';
+
     return {
       redirect: {
-        destination: '/',
+        destination: hasRedirect ? redirect : '/',
         permanent: false,
       },
     };

@@ -85,6 +85,31 @@ export default makeMessages('feat.home', {
       },
     },
   },
+  subscriptionTokenRequest: {
+    emailInputLabel: m('Email'),
+    emailValidationError: m('Email is invalid'),
+    error: {
+      description: m(
+        'Something went wrong when requesting an email, please try again!'
+      ),
+      title: m('Error'),
+    },
+    submitButton: {
+      requestLink: m('Request link'),
+      wasRequested: m('Link requested'),
+    },
+    subtitle: m(
+      'Enter your email address to get a link to manage your subscriptions.'
+    ),
+    success: {
+      description: m<{ email: string }>(
+        'If {email} exists, you will recieve a link to manage your subscription. Please allow a few minutes to recieve the link before trying again'
+      ),
+      retryButton: m('Try again'),
+      title: m('Submitted!'),
+    },
+    title: m('Email settings'),
+  },
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
