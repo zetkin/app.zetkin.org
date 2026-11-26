@@ -2,7 +2,7 @@
 
 import isEmail from 'validator/lib/isEmail';
 import { Box } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import useEnv from 'core/hooks/useEnv';
 import ZUISection from 'zui/components/ZUISection';
@@ -31,13 +31,6 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false); // Currently only allows one submit per page load
   const [submissionError, setSubmissionError] = useState(false);
-
-  useEffect(() => {
-    if (emailValidationError) {
-      setEmailValidationError(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email]);
 
   return (
     <Box
@@ -108,7 +101,12 @@ const SubscriptionsTokenRequestPage: FC<Props> = ({ org }) => {
                         : undefined
                     }
                     label={messages.subscriptionTokenRequest.emailInputLabel()}
-                    onChange={(newEmail) => setEmail(newEmail)}
+                    onChange={(newEmail) => {
+                      if (emailValidationError) {
+                        setEmailValidationError(false);
+                      }
+                      setEmail(newEmail);
+                    }}
                     value={email}
                   />
 

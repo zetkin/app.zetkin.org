@@ -48,5 +48,5 @@ export default async function Page({ params }: PageProps) {
     return <SubscriptionsTokenRequestPage org={org} />;
   }
 
-  return <>UI PENDING</>;
+  return null;
 }

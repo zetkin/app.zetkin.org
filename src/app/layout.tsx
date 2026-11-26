@@ -56,7 +56,7 @@ export default async function RootLayout({
               ZETKIN_APP_HOST: process.env.ZETKIN_APP_HOST,
               ZETKIN_CLIENT_ID: process.env.ZETKIN_CLIENT_ID,
               ZETKIN_GEN2_CALL_URL: process.env.ZETKIN_GEN2_CALL_URL,
-              ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
+              ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
               ZETKIN_PRIVACY_POLICY_LINK:
                 process.env.ZETKIN_PRIVACY_POLICY_LINK,
               ZETKIN_USE_TLS: process.env.ZETKIN_USE_TLS,
