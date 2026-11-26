@@ -45,7 +45,7 @@ export default function useEmailRecipients(
     actionOnSuccess: (loadedRecipients) =>
       recipientsLoaded([emailId, loadedRecipients]),
     loader: async () => {
-      const response = await apiClient.get<unknown>(
+      const response = await apiClient.get<DeliveryLogRecipient[]>(
         `/api/orgs/${orgId}/emails/${emailId}/recipients`
       );
       return recipientSchema.array().parse(response);
