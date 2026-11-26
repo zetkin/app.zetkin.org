@@ -2,6 +2,7 @@ import { ApiFetch } from 'utils/apiFetch';
 import IApiClient from './IApiClient';
 import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
 import { ApiClientError } from '../errors';
+import { Api2Response } from 'core/api/types';
 
 async function assertOk(res: Response) {
   if (!res.ok) {
@@ -32,6 +33,16 @@ export default class FetchApiClient implements IApiClient {
     const body = await res.json();
 
     return body.data;
+  }
+
+  async getEnvelope<DataType, RelatedType = unknown>(
+    path: `/api2/${string}`
+  ): Promise<Api2Response<DataType, RelatedType>> {
+    const res = await this._fetch(path);
+
+    await assertOk(res);
+
+    return res.json();
   }
 
   async patch<DataType, InputType = Partial<DataType>>(

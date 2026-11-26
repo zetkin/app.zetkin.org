@@ -1,0 +1,72 @@
+import { useMemo } from 'react';
+
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
+import { IFuture } from 'core/caching/futures';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import {
+  ZetkinEmailChannel,
+  ZetkinPersonEmailChannelPreference,
+} from '../types';
+import {
+  channelLoaded,
+  personChannelPreferencesError,
+  personChannelPreferencesLoad,
+  personChannelPreferencesLoaded,
+} from '../store';
+import { serializeError } from 'utils/storeUtils/serializeError';
+import { RemoteItem } from 'utils/storeUtils';
+
+export default function usePersonEmailChannelPreferences(
+  orgId: number,
+  personId: number
+): [
+  IFuture<ZetkinPersonEmailChannelPreference[]>,
+  Record<number, ZetkinEmailChannel>,
+] {
+  const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
+  const [preferences, channels] = useAppSelector((state) => [
+    state.emails.channelPreferencesByPersonId[personId],
+    state.emails.channelsById,
+  ]);
+
+  const channelsById = useMemo(
+    () =>
+      Object.values(channels).reduce(
+        (
+          prev: Record<number, ZetkinEmailChannel>,
+          channel: RemoteItem<ZetkinEmailChannel>
+        ) => {
+          if (channel.data) {
+            prev[channel.data.id] = channel.data;
+          }
+          return prev;
+        },
+        {}
+      ),
+    [channels]
+  );
+
+  const channelPreferencesFuture = loadListIfNecessary(preferences, dispatch, {
+    actionOnError: (err) =>
+      personChannelPreferencesError([personId, serializeError(err)]),
+    actionOnLoad: () => personChannelPreferencesLoad(personId),
+    actionOnSuccess: (preferences) =>
+      personChannelPreferencesLoaded([personId, preferences]),
+    loader: async () => {
+      const response = await apiClient.getEnvelope<
+        ZetkinPersonEmailChannelPreference[],
+        { channels: Record<string, ZetkinEmailChannel> }
+      >(`/api2/orgs/${orgId}/people/${personId}/email_preferences/channels`);
+      Object.values(response.related.channels).forEach((channel) => {
+        dispatch(channelLoaded(channel));
+      });
+      return response.data;
+    },
+  });
+
+  return useMemo(
+    () => [channelPreferencesFuture, channelsById],
+    [channelPreferencesFuture, channelsById]
+  );
+}

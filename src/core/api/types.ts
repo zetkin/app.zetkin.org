@@ -16,3 +16,10 @@ export interface ZetkinObjectAccess {
     last_name: string;
   };
 }
+
+export type Api2Response<TData, TRelated = unknown> = {
+  data: TData;
+  meta: unknown;
+  related: TRelated;
+  success: boolean;
+};

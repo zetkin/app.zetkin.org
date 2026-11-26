@@ -1,4 +1,5 @@
 import { RPCDef } from 'core/rpc/types';
+import { Api2Response } from 'core/api/types';
 
 export default interface IApiClient {
   delete(path: string): Promise<void>;
@@ -7,6 +8,9 @@ export default interface IApiClient {
     data?: Partial<DataType>
   ): Promise<DataType>;
   get<DataType>(path: string): Promise<DataType>;
+  getEnvelope<DataType, RelatedType = unknown>(
+    path: `/api2/${string}`
+  ): Promise<Api2Response<DataType, RelatedType>>;
   patch<DataType, InputType = Partial<DataType>>(
     path: string,
     data: InputType

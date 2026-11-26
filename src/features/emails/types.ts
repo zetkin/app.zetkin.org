@@ -237,3 +237,39 @@ export type ZetkinEmailStats = {
   num_sent: number;
   num_target_matches: number;
 };
+
+export type ZetkinPersonEmailChannelPreferenceStatus =
+  | 'channel_muted'
+  | 'has_received'
+  | 'no_relationship'
+  | 'subscribed';
+
+export type ZetkinPersonEmailChannelPreference = {
+  channel_id: number;
+  muted: string | null; //Time muted, in ISO
+  muted_by_user_id: number | null;
+  status: ZetkinPersonEmailChannelPreferenceStatus;
+  subscribed: string | null;
+  subscribed_by_user_id: number | null;
+};
+
+export type ZetkinEmailChannel = {
+  description: string | null;
+  double_opt_in: boolean;
+  id: number;
+  organization_id: number;
+  published: string | null;
+  title: string;
+};
+
+export type ZetkinPersonOrgEmailPreferenceStatus = 'muted' | 'unmuted';
+
+export type ZetkinPersonOrgEmailPreferences = {
+  org_muted: string | null;
+  org_muted_by_user_id: number | null;
+  org_status: ZetkinPersonOrgEmailPreferenceStatus;
+};
+
+export type ZetkinPersonOrgEmailPreferencesPatchBody = {
+  org_status: ZetkinPersonOrgEmailPreferenceStatus;
+};
