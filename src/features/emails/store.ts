@@ -174,6 +174,13 @@ const emailsSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    recipientsError: (state, action: PayloadAction<[number, string]>) => {
+      const [emailId, error] = action.payload;
+      const recipients = state.recipientsByEmailId[emailId];
+      recipients.error = error;
+      recipients.isLoading = false;
+      recipients.loaded = new Date().toISOString();
+    },
     recipientsLoad: (state, action: PayloadAction<number>) => {
       const emailId = action.payload;
       state.recipientsByEmailId[emailId] = remoteList<DeliveryLogRecipient>();
@@ -351,6 +358,7 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
+  recipientsError,
   recipientsLoad,
   recipientsLoaded,
   themeCreate,

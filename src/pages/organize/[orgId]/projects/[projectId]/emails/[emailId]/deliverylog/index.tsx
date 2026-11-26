@@ -1,4 +1,4 @@
-import { Box, Tooltip } from '@mui/material';
+import { Box, CircularProgress, Tooltip } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { FormattedDate } from 'react-intl';
 import { GetServerSideProps } from 'next';
@@ -16,6 +16,7 @@ import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import ZUIFuture from 'zui/ZUIFuture';
 
 type DeliveryLogEntry = DeliveryLogRecipient & { timestamp: string | null };
 
@@ -50,14 +51,6 @@ const EmailDeliveryLogPage: PageWithLayout = () => {
   const { data: email } = useEmail(orgId, emailId);
   const recipientsFuture = useEmailRecipients(orgId, emailId);
   const messages = useMessages(messageIds);
-  const recipients = (recipientsFuture.data || []).map((recipient) => ({
-    ...recipient,
-    ...getDeliveryStatus(recipient),
-  }));
-
-  if (recipientsFuture.error) {
-    throw recipientsFuture.error;
-  }
 
   const columns: GridColDef<DeliveryLogEntry>[] = [
     {
@@ -156,23 +149,37 @@ const EmailDeliveryLogPage: PageWithLayout = () => {
       <Head>
         <title>{email?.title || messages.tabs.deliveryLog()}</title>
       </Head>
-      <DataGridPro
-        aria-label={messages.tabs.deliveryLog()}
-        columns={columns}
-        disableColumnPinning
-        disableColumnReorder
-        disableColumnSelector
-        disableRowSelectionOnClick
-        hideFooter
-        initialState={{
-          sorting: { sortModel: [{ field: 'timestamp', sort: 'desc' }] },
-        }}
-        loading={recipientsFuture.isLoading}
-        localeText={{ noRowsLabel: messages.deliveryLog.empty() }}
-        rowHeight={64}
-        rows={recipients}
-        sx={{ bgcolor: 'background.paper', border: 0, borderRadius: 0 }}
-      />
+      <ZUIFuture
+        future={recipientsFuture}
+        skeleton={
+          <Box display="flex" justifyContent="center" padding={3}>
+            <CircularProgress />
+          </Box>
+        }
+      >
+        {(recipients, isLoading) => (
+          <DataGridPro
+            aria-label={messages.tabs.deliveryLog()}
+            columns={columns}
+            disableColumnPinning
+            disableColumnReorder
+            disableColumnSelector
+            disableRowSelectionOnClick
+            hideFooter
+            initialState={{
+              sorting: { sortModel: [{ field: 'timestamp', sort: 'desc' }] },
+            }}
+            loading={isLoading}
+            localeText={{ noRowsLabel: messages.deliveryLog.empty() }}
+            rowHeight={64}
+            rows={recipients.map((recipient) => ({
+              ...recipient,
+              ...getDeliveryStatus(recipient),
+            }))}
+            sx={{ bgcolor: 'background.paper', border: 0, borderRadius: 0 }}
+          />
+        )}
+      </ZUIFuture>
     </Box>
   );
 };

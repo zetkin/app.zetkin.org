@@ -3,8 +3,9 @@ import { z } from 'zod';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { IFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { recipientsLoad, recipientsLoaded } from '../store';
+import { recipientsError, recipientsLoad, recipientsLoaded } from '../store';
 import { DeliveryLogRecipient } from '../types';
+import { serializeError } from 'utils/storeUtils/serializeError';
 
 const recipientSchema: z.ZodType<DeliveryLogRecipient> = z.object({
   delivered: z.string().nullable(),
@@ -38,7 +39,8 @@ export default function useEmailRecipients(
     (state) => state.emails.recipientsByEmailId[emailId]
   );
 
-  return loadListIfNecessary(recipients, dispatch, {
+  const future = loadListIfNecessary(recipients, dispatch, {
+    actionOnError: (error) => recipientsError([emailId, serializeError(error)]),
     actionOnLoad: () => recipientsLoad(emailId),
     actionOnSuccess: (loadedRecipients) =>
       recipientsLoaded([emailId, loadedRecipients]),
@@ -49,4 +51,10 @@ export default function useEmailRecipients(
       return recipientSchema.array().parse(response);
     },
   });
+
+  if (future.error && !future.isLoading) {
+    return { data: null, error: future.error, isLoading: false };
+  }
+
+  return future;
 }
