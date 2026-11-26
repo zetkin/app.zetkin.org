@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { EmailInsights, EmailTheme, ZetkinEmailStats } from './types';
+import {
+  DeliveryLogRecipient,
+  EmailInsights,
+  EmailTheme,
+  ZetkinEmailStats,
+} from './types';
 import {
   RemoteItem,
   remoteItem,
@@ -19,6 +24,7 @@ export interface EmailStoreSlice {
   emailList: RemoteList<ZetkinEmail>;
   themeList: RemoteList<EmailTheme>;
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
+  recipientsByEmailId: Record<number, RemoteList<DeliveryLogRecipient>>;
   statsById: Record<number, RemoteItem<ZetkinEmailStats>>;
   insightsByEmailId: Record<number, RemoteItem<EmailInsights>>;
   themeUpdateError: SerializedError | null;
@@ -31,6 +37,7 @@ const initialState: EmailStoreSlice = {
   emailList: remoteList(),
   insightsByEmailId: {},
   linksByEmailId: {},
+  recipientsByEmailId: {},
   statsById: {},
   themeEditorValue: { block_attributes: '', css: '', frame_mjml: '' },
   themeJsonError: { block_attributes: false, css: false, frame_mjml: false },
@@ -122,13 +129,13 @@ const emailsSlice = createSlice({
       const item = state.emailList.items.find((item) => item.id == email.id);
       const statsItem = state.statsById[email.id];
 
-      //Only set stats as stale if query or locked state has updated
-      if (
-        statsItem &&
-        (email.locked != item?.data?.locked ||
-          JSON.stringify(email.target.filter_spec) !=
-            JSON.stringify(item?.data?.target.filter_spec))
-      ) {
+      const lockedStateChanged = email.locked != item?.data?.locked;
+      const targetFilterChanged =
+        !!email.target?.filter_spec &&
+        JSON.stringify(email.target.filter_spec) !==
+          JSON.stringify(item?.data?.target?.filter_spec);
+
+      if (statsItem && (lockedStateChanged || targetFilterChanged)) {
         statsItem.isStale = true;
       }
 
@@ -166,6 +173,26 @@ const emailsSlice = createSlice({
         data: insights,
         loaded: new Date().toISOString(),
       });
+    },
+    recipientsError: (state, action: PayloadAction<[number, string]>) => {
+      const [emailId, error] = action.payload;
+      const recipients = state.recipientsByEmailId[emailId];
+      recipients.error = error;
+      recipients.isLoading = false;
+      recipients.loaded = new Date().toISOString();
+    },
+    recipientsLoad: (state, action: PayloadAction<number>) => {
+      const emailId = action.payload;
+      state.recipientsByEmailId[emailId] = remoteList<DeliveryLogRecipient>();
+      state.recipientsByEmailId[emailId].isLoading = true;
+    },
+    recipientsLoaded: (
+      state,
+      action: PayloadAction<[number, DeliveryLogRecipient[]]>
+    ) => {
+      const [emailId, recipients] = action.payload;
+      state.recipientsByEmailId[emailId] = remoteList(recipients);
+      state.recipientsByEmailId[emailId].loaded = new Date().toISOString();
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -331,6 +358,9 @@ export const {
   emailsLoaded,
   insightsLoad,
   insightsLoaded,
+  recipientsError,
+  recipientsLoad,
+  recipientsLoaded,
   themeCreate,
   themeCreated,
   themeDeleted,

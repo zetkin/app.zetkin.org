@@ -21,11 +21,13 @@ import useEmailState, { EmailState } from '../hooks/useEmailState';
 interface EmailLayoutProps {
   children: React.ReactNode;
   fixedHeight?: boolean;
+  noPad?: boolean;
 }
 
 const EmailLayout: FC<EmailLayoutProps> = ({
   children,
   fixedHeight = false,
+  noPad = false,
 }) => {
   const { orgId, projectId, emailId } = useNumericRouteParams();
   const router = useRouter();
@@ -52,10 +54,16 @@ const EmailLayout: FC<EmailLayoutProps> = ({
   ];
 
   if (email.processed) {
-    tabs.push({
-      href: '/insights',
-      label: messages.tabs.insights(),
-    });
+    tabs.push(
+      {
+        href: '/insights',
+        label: messages.tabs.insights(),
+      },
+      {
+        href: '/deliverylog',
+        label: messages.tabs.deliveryLog(),
+      }
+    );
   }
 
   return (
@@ -72,6 +80,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
         }
         defaultTab="/"
         fixedHeight={fixedHeight}
+        noPad={noPad}
         subtitle={
           <Box alignItems="center" display="flex">
             <Box marginRight={1}>

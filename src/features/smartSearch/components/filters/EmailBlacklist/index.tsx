@@ -15,9 +15,10 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.emailBlacklist;
 
-enum EMAIL_UNSUB_REASON {
-  UNSUB_ORG = 'unsub_org',
-  ANY = 'any',
+export enum EMAIL_UNSUB_REASON {
+  unsub_org = 'unsubOrg',
+  bounce = 'bounce',
+  any = 'any',
 }
 
 interface EmailBlockedProps {
@@ -40,7 +41,7 @@ const EmailBlacklist = ({
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailBlacklistFilterConfig>(initialFilter, {
       operator: 'blacklisted',
-      reason: 'unsub_org',
+      reason: EMAIL_UNSUB_REASON.any,
     });
 
   const handleSubmit = (e: FormEvent) => {
@@ -77,18 +78,19 @@ const EmailBlacklist = ({
                 onChange={(e) =>
                   setConfig({
                     ...filter.config,
-                    reason: e.target.value as EMAIL_UNSUB_REASON,
+                    reason: e.target
+                      .value as EmailBlacklistFilterConfig['reason'],
                   })
                 }
-                value={filter.config.reason || EMAIL_UNSUB_REASON.ANY}
+                value={filter.config.reason || EMAIL_UNSUB_REASON.any}
               >
-                <MenuItem value={EMAIL_UNSUB_REASON.UNSUB_ORG}>
-                  <Msg id={localMessageIds.reasonSelect.unsubOrg} />
-                </MenuItem>
-
-                <MenuItem value={EMAIL_UNSUB_REASON.ANY}>
-                  <Msg id={localMessageIds.reasonSelect.any} />
-                </MenuItem>
+                {Object.entries(EMAIL_UNSUB_REASON).map(
+                  ([reason, messageKey]) => (
+                    <MenuItem key={reason} value={reason}>
+                      <Msg id={localMessageIds.reasonSelect[messageKey]} />
+                    </MenuItem>
+                  )
+                )}
               </StyledSelect>
             ),
           }}

@@ -10,6 +10,24 @@ export default makeMessages('feat.emails', {
     title: m('Blocked'),
     unsubscribed: m('Unsubscribed'),
   },
+  deliveryLog: {
+    columns: {
+      datetime: m('Time'),
+      emailAddress: m('Email address'),
+      error: m('Error'),
+      person: m('Name'),
+      status: m('Status'),
+    },
+    empty: m('No deliveries to show.'),
+    status: {
+      bounced: m('Bounced'),
+      delivered: m('Delivered'),
+      failed: m('Failed'),
+      opened: m('Opened'),
+      pending: m('Pending'),
+      sent: m('Sent'),
+    },
+  },
   deliveryProblems: {
     contentError: m(
       'There are problems in the content of your email. Go to the editor in the Compose tab and correct them.'
@@ -211,6 +229,7 @@ export default makeMessages('feat.emails', {
   },
   tabs: {
     compose: m('Compose'),
+    deliveryLog: m('Delivery log'),
     insights: m('Insights'),
     overview: m('Overview'),
   },
