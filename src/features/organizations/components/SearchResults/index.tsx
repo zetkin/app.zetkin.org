@@ -7,7 +7,7 @@ import { TreeItemData } from '../../types';
 interface SearchResultsProps {
   flatOrgData: TreeItemData[];
   matchingOrgs: TreeItemData[];
-  onSwitchOrg: () => void;
+  onSwitchOrg: (orgId: number) => void;
 }
 
 const SearchResults = ({
@@ -72,7 +72,7 @@ const SearchResults = ({
                 <Box
                   display="flex"
                   flexDirection="column"
-                  onClick={onSwitchOrg}
+                  onClick={() => onSwitchOrg(result.id)}
                 >
                   <Box
                     sx={{

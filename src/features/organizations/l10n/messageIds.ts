@@ -99,6 +99,10 @@ export default makeMessages('feat.organizations', {
     },
   },
   page: {
+    description: m(
+      'Welcome to Zetkin for organizers! Select an organization to get started.'
+    ),
+    heading: m('Select an organization'),
     title: m('Select organization:'),
   },
   sidebar: {
