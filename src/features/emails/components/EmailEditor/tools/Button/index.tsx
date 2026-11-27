@@ -17,16 +17,16 @@ export default class Button {
   private _readOnly: boolean;
 
   constructor({
-    config,
+    config = {},
     data,
-    readOnly,
-  }: BlockToolConstructorOptions<ButtonData>) {
+    readOnly = false,
+  }: Partial<BlockToolConstructorOptions<ButtonData>>) {
     this._config = config;
     this._readOnly = readOnly;
     this._data = {
-      buttonText: data.buttonText,
-      tag: data.tag ? data.tag : Math.random().toString(36).substring(2, 10),
-      url: data.url,
+      buttonText: data?.buttonText || '',
+      tag: data?.tag || Math.random().toString(36).substring(2, 10),
+      url: data?.url || '',
     };
   }
 
