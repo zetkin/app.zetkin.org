@@ -44,6 +44,7 @@ export default function useTagMutations(orgId: number): UseTagMutationsReturn {
           {
             color: tag.color,
             group_id: tag.group_id,
+            hidden: tag.hidden,
             title: tag.title,
             value_type: tag.value_type,
           }

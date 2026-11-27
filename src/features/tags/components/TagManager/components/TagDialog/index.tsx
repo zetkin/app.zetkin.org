@@ -1,5 +1,11 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-import { Box, Button, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import ColorPicker from './ColorPicker';
@@ -43,6 +49,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     ZetkinTagGroup | NewTagGroup | null | undefined
   >();
   const [type, setType] = useState<ZetkinTag['value_type']>(null);
+  const [isHidden, setIsHidden] = useState(false);
 
   const editingTag = tag && 'id' in tag;
 
@@ -55,6 +62,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     );
     setGroup(tag && 'group' in tag ? tag.group : undefined);
     setType(tag && 'value_type' in tag ? tag.value_type : null);
+    setIsHidden(tag && 'hidden' in tag ? tag.hidden : false);
   }, [tag]);
 
   const closeAndClear = () => {
@@ -63,6 +71,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     setGroup(undefined);
     setTitleEdited(false);
     setType(null);
+    setIsHidden(false);
     onClose();
   };
 
@@ -84,6 +93,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
             ...(color.value && { color: `#${color.value}`.toLowerCase() }),
             ...(tag && 'id' in tag && { id: tag.id }),
             ...(type && { value_type: type }),
+            hidden: isHidden,
             title,
           };
           if (group && 'id' in group) {
@@ -138,6 +148,15 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           disabled={tag && 'id' in tag}
           onChange={(value) => setType(value)}
           value={type}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isHidden}
+              onChange={(value) => setIsHidden(value.target.checked)}
+            />
+          }
+          label={messages.dialog.hideForCallersLabel()}
         />
         <Box
           alignItems="flex-end"
