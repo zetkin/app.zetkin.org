@@ -1,0 +1,4426 @@
+glob:
+  accessLevels:
+    configure: Úpravy a konfigurace
+    edit: Úpravy
+    readonly: Jen pro čtení
+  genderOptions:
+    f: Žena
+    m: Muž
+    o: Jiné
+    unspecified: Neuvedeno
+  personFields:
+    alt_phone: Další telefonní číslo
+    city: Město
+    co_address: Doplněk adresy (c/o)
+    country: Země
+    email: E-mail
+    ext_id: Externí ID
+    first_name: Jméno
+    gender: Pohlaví
+    id: ID
+    is_user: Má účet Zetkin
+    last_name: Příjmení
+    phone: Telefonní číslo
+    street_address: Adresa
+    zip_code: PSČ
+  roles:
+    admin: Správce
+    organizer: Organizátor
+core:
+  err404:
+    assignmentNotFound: Přidělení oblasti nebylo nalezeno
+    backToHomePage: Zpět na domovskou stránku
+    eventNotFound: Událost nebyla nalezena
+    goToMyZetkin: Přejít na Můj Zetkin
+    goToOrganization: Přejít na stránku organizace
+    loggedInOrgText: Zkuste organizaci najít ve svém seznamu organizací.
+    loggedOutOrgText: Pokud máte účet Zetkin, můžete se přihlásit a zkusit
+      organizaci najít ve svém seznamu organizací.
+    orgNotFound: Organizace nebyla nalezena
+    pageNotFound: Stránka nebyla nalezena
+  home:
+    redirecting: Přesměrování...
+    welcome: Tady vznikne Zetkin
+  legacy:
+    continueButton: Pokračovat do staré verze Zetkinu
+    header: Probíhá přesměrování
+    info: Používáte předběžnou verzi Zetkinu, která nepodporuje funkci, kterou
+      chcete použít. Probíhá přesměrování na starší verzi Zetkinu, která tuto
+      funkci podporuje.
+feat:
+  account:
+    lostPassword:
+      actions:
+        sendEmail: Odeslat e-mail
+        sendLink: Odeslat odkaz znovu
+        signIn: Přihlásit se
+      checkEmail: Zkontrolujte svůj e-mail
+      description: Nepamatujete si heslo k Zetkinu? Zadejte svou e-mailovou adresu a
+        pošleme vám odkaz, přes který si zvolíte nové heslo.
+      descriptionCheck: Pokud k této e-mailové adrese existuje účet, pošleme vám
+        pokyny k obnovení hesla na adresu {email}
+      emailFieldLabel: E-mail
+      errors:
+        alreadyLoggedIn:
+          description: Heslo nelze obnovit, protože už máte aktivní přihlášení.
+          title: Přihlášení je již aktivní
+        invalidEmail: Zadejte platnou e-mailovou adresu.
+        unknownError: Něco se pokazilo. Zkuste to prosím později.
+        unknownErrorTitle: Neočekávaná chyba
+      footer:
+        readPolicy: Přečtěte si naše zásady ochrany osobních údajů
+      title: Obnovení účtu Zetkin
+    register:
+      actions:
+        createAccount: Vytvořit účet
+      description: Začněte se Zetkinem organizovat hned teď
+      error:
+        conflictError: Účet s tímto e-mailem nebo telefonním číslem už existuje.
+        invalidParameter: Zkontrolujte, zda jsou e-mail a telefonní číslo zadané správně.
+        phoneError: Zadejte platné telefonní číslo.
+        unknownError: Registrace se nezdařila. Zkuste to později.
+      instructions: 'Zpráva s pokyny byla odeslána na adresu '
+      labels:
+        checkBox: Souhlasím se zpracováním svých údajů za účelem vedení uživatelského
+          účtu v Zetkinu
+        email: E-mailová adresa
+        firstName: Jméno
+        lastName: Příjmení
+        mobile: Číslo mobilního telefonu
+        password: Heslo
+      title: Vytvoření nového účtu
+      welcome: Vítejte, {userName}
+    resetPassword:
+      actions:
+        labelPassword: Heslo
+        save: Uložit heslo
+      description: Nastavte nové heslo, které chcete nadále používat. Musí mít alespoň
+        6 znaků.
+      descriptionUpdated: Vaše heslo bylo změněno. Nyní se můžete přihlásit pomocí nového hesla.
+      error:
+        errorMessage: Něco se pokazilo, zkuste to prosím znovu
+        title: Chyba
+      title: Obnovení hesla
+      unexpectedError: Při obnovování hesla došlo k neočekávané chybě, zkuste to prosím znovu.
+      validation: Heslo musí mít alespoň 6 znaků.
+    verify:
+      description: Pro další používání Zetkinu ověřte svou e-mailovou adresu.
+        Ověřovací odkaz jsme vám poslali do e-mailové schránky. Pokud ho
+        nevidíte, podívejte se do složky se spamem, nebo klikněte na tlačítko
+        níže a pošleme vám ho znovu.
+      error: Něco se pokazilo. Ověřovací odkaz se nepodařilo odeslat.
+      sendVerification: Odeslat nový ověřovací e-mail
+      success: Nový ověřovací e-mail byl odeslán
+      title: Ověřte svou e-mailovou adresu
+  areaAssignments:
+    default:
+      title: Přidělení oblasti bez názvu
+    instructions:
+      editor:
+        confirm: Chcete smazat všechny neuložené změny a vrátit se k uloženým pokynům?
+        editorPlaceholder: Přidejte pokyny pro své aktivisty
+        revertLink: Vrátit se k uložené verzi?
+        saveButton: Uložit
+        savedMessage: Vše je aktuální!
+        savingButton: Ukládání...
+        unsavedMessage: Máte neuložené změny.
+      title: Pokyny pro přiřazené osoby
+    layout:
+      actions:
+        delete: Smazat
+        deleteWarningText: Opravdu chcete smazat „{title}“?
+        end: Ukončit přidělení
+        start: Zahájit přidělení
+      basicAssignmentStats:
+        areas: '{numAreas, plural, =0 {Žádné oblasti} one {1 oblast} few {# oblasti}
+          many {# oblasti} other {# oblastí}}'
+        assignees: '{numAssignees, plural, =0 {Žádné přiřazené osoby} one {1 přiřazená
+          osoba} few {# přiřazené osoby} many {# přiřazené osoby} other {#
+          přiřazených osob}}'
+      tabs:
+        instructions: Pokyny
+        map: Mapa
+        overview: Přehled
+        report: Hlášení
+    map:
+      areaInfo:
+        assignees:
+          add: Přidat přiřazenou osobu
+          none: Žádné přiřazené osoby
+          title: Přiřazené osoby
+        stats:
+          households: '{numHouseholds, plural, one {Navštívená domácnost} few {Navštívené
+            domácnosti} many {Navštívené domácnosti} other {Navštívených
+            domácností}}'
+          locations: '{numLocations, plural, one {Místo} few {Místa} many {Místa} other
+            {Míst}}'
+          successful: '{numSuccessfulVisits, plural, one {Úspěšná návštěva} few {Úspěšné
+            návštěvy} many {Úspěšné návštěvy} other {Úspěšných návštěv}}'
+      filter:
+        assignees:
+          assigned: Pouze přiřazené oblasti
+          label: Přiřazené osoby
+          unassigned: Pouze nepřiřazené oblasti
+        description: Určete, které oblasti uvidíte na mapě
+        header: Filtry
+        ungroupedTags: Štítky bez skupiny
+      findArea:
+        filterPlaceHolder: Filtrovat
+        title: Oblasti
+      mapStyle:
+        area:
+          label: Barva oblasti
+          options:
+            assignees: Podle přiřazených osob
+            outlined: Pouze obrys
+        title: Vizualizace dat
+    overview:
+      empty:
+        description: Toto přidělení oblasti zatím nebylo naplánováno
+        startPlanningButton: Naplánovat
+      progress:
+        headers:
+          households: Navštívené domácnosti
+          locations: Navštívená místa
+          successful: Úspěšné návštěvy
+        statsTitle: Průběh
+    report:
+      card:
+        definesSuccess: Určuje úspěch
+        delete: Smazat
+        description: Bez popisu
+        question: Otázka bez názvu
+        tooltip: Chcete-li tuto otázku smazat, nejprve vytvořte novou otázku s výběrem,
+          která bude určovat, zda byla návštěva úspěšná.
+      dataCard:
+        header: Přesnost dat a soukromí
+        household: pro každou domácnost (nejpřesnější)
+        info: Sbírat data...
+        location: pro každé místo (méně přesné, více soukromí)
+        subheader: Volba, kam se mají data ukládat, je otázkou nalezení správné
+          rovnováhy mezi přesností a soukromím, která odpovídá vašim cílům
+      delete:
+        deleteWarningText: Pokud chcete smazat otázku „{title}“, musíte vybrat jinou
+          otázku s výběrem, která bude určovat, zda byla návštěva úspěšná
+        dialog: Opravdu chcete tuto otázku smazat? Tato akce je trvalá a nelze ji vrátit
+          zpět.
+        select: Vybrat
+      lockCard:
+        add: Přidávání otázek
+        change: Změna otázky, která určuje úspěšnou návštěvu
+        description: Toto přidělení oblasti už bylo zahájeno. Úpravy v této fázi mohou
+          způsobit problémy s daty. Postupujte opatrně.
+        descriptionUnlock: Dejte pozor na změny, které by mohly způsobit ztrátu nebo
+          poškození dat.
+        fix: Oprava pravopisu
+        header: Hlášení je uzamčeno
+        headerUnlock: Hlášení je odemčeno
+        rename: Přeformulování otázek tak, že se změní jejich význam
+        safe: Bezpečné
+        unsafe: Rizikové
+      metricCard:
+        choice: Otázka s výběrem
+        ratingDescription: ' Přiřazená osoba odpoví hodnocením od 1 do 5'
+        save: Uložit
+        scale: Otázka se škálou
+      successCard:
+        header: Úspěšná návštěva
+        subheader: Vyberte otázku, podle které se budou počítat úspěšné návštěvy. Kladná
+          odpověď na tuto otázku znamená, že se návštěva započítá jako úspěšná
+      toolBar:
+        title: Přidejte otázky k přidělení oblasti.
+  areas:
+    areas:
+      areaDetails:
+        households: Domácnosti
+        locations: Místa
+        title: Podrobnosti o oblasti
+      areaSettings:
+        delete: Smazat
+        edit:
+          cancelButton: Zrušit
+          editButton: Upravit
+          saveButton: Uložit
+        tags:
+          title: Štítky oblasti
+      assignmentStats:
+        percentSuccessfulVisits: návštěv bylo úspěšných
+        percentVisited: míst bylo navštíveno
+        successfulVisits: úspěšné návštěvy
+        title: Návštěvy
+      controlLabels:
+        filters: Filtry
+        layers: Vizualizace dat
+        select: Výběr
+      default:
+        description: Bez popisu
+        title: Oblast bez názvu
+      draw:
+        cancelButton: Zrušit
+        saveButton: Uložit
+        startButton: Kreslit
+      filter:
+        addFilterButton: Přidat filtr
+        openFiltersButton: Filtrovat
+        ungroupedTagsLabel: Štítky bez skupiny
+    page:
+      title: Geografie
+  breadcrumbs:
+    elements:
+      activities: Aktivity
+      archive: Archiv
+      areaassignments: Přidělení oblastí
+      assignees: Přiřazené osoby
+      calendar: Kalendář
+      callassignments: Telefonní kampaně
+      callers: Volající
+      closed: Uzavřené
+      compose: Obsah
+      conversation: Rozhovor
+      duplicates: Duplicity
+      email: E-mail
+      emails: E-maily
+      events: Události
+      fields: Pole
+      folders: Seznamy
+      geography: Geografie
+      incoming: Příchozí
+      insights: Statistiky
+      instances: Případy
+      joinforms: Vstupní formuláře
+      journeys: Cesty
+      manage: Správa
+      milestones: Milníky
+      new: Nový
+      organize: Organizování
+      participants: Účastníci
+      people: Osoby
+      plan: Plán
+      projects: Projekty
+      questions: Otázky
+      settings: Nastavení
+      shared: Sdíleno s námi
+      submissions: Odpovědi
+      suborgOverview: Přehled podorganizací
+      surveys: Dotazníky
+      tags: Štítky
+      tasks: Úkoly
+      themes: Motivy
+      untitledEvent: Událost bez názvu
+      views: Seznamy
+  calendar:
+    createMenu:
+      shiftEvent: Vytvořit více událostí tvořících směny
+      singleEvent: Vytvořit jednu událost
+    createOnDate: Vytvořit událost dne {date}
+    dstEnds: Zimní čas
+    dstStarts: Letní čas
+    event:
+      differentLocations: 'Různá místa: {numLocations}'
+      events: Události
+      noContactSelected: Není vybrána kontaktní osoba
+      remindersNotSent: 'Neodeslané připomínky: {numNotSent}'
+      unbookedSignups: 'Nepotvrzené přihlášky: {numUnbooked}'
+      underbooked: 'Nedostatečně obsazené události: {numUnderbooked}'
+      withSignups: 'S přihláškami: {numWithSignups}'
+      withoutContact: 'Bez kontaktní osoby: {numWithoutContact}'
+    eventFilter:
+      collapse: Sbalit
+      expand: '{numOfOptions, plural, one {+ 1 další typ události} few {+ # další typy
+        událostí} many {+ # dalšího typu události} other {+ # dalších typů
+        událostí}}'
+      filter: Filtr
+      filterOptions:
+        actionFilters:
+          missing: Chybí kontaktní osoba
+          overbooked: Přeobsazené
+          pending: Nevyřízené přihlášky
+          title: Filtrovat podle potřebné akce
+          underbooked: Nedostatečně obsazené
+          unsent: Neodeslaná oznámení
+        eventTypes:
+          title: Filtrovat podle typů událostí
+        stateFilters:
+          cancelled: Zrušené
+          draft: Koncepty
+          published: Zveřejněné
+          scheduled: Naplánované
+          title: Filtrovat podle stavu zveřejnění
+      reset: Resetovat filtry
+      toggle:
+        all: Vše
+        none: Žádné
+      type: Pro filtrování obsahu začněte psát
+    lastDayWithEvents: V poslední aktivní den {numEvents, plural, one {byla jedna
+      událost} few {byly {numEvents} události} many {bylo {numEvents} události}
+      other {bylo {numEvents} událostí}}
+    loadMore: Načíst další
+    moreEvents: '{numEvents, plural, one {# další událost} few {# další události}
+      many {# další události} other {# dalších událostí}}'
+    next: DALŠÍ
+    prev: PŘEDCHOZÍ
+    rangeLabel: Vyberte možnost
+    ranges:
+      day: Den
+      month: Měsíc
+      week: Týden
+    selectionBar:
+      deselect: Zrušit výběr
+      editEvents: Upravit události
+      editParticipants: Spravovat účastníky
+      ellipsisMenu:
+        cancel: Zrušit události
+        cancelWarning: Pokud to uděláte, nezapomeňte všem účastníkům a přihlášeným
+          osobám oznámit, že události byly zrušeny!
+        confirmCancel: Opravdu chcete zrušit vybrané události?
+        confirmDelete: Opravdu chcete smazat vybrané události?
+        delete: Smazat
+        deleteWarning: Po smazání už k událostem nebudete mít přístup.
+        print: Vytisknout rozpis
+        publish: Zveřejnit nyní
+        unpublish: Zrušit zveřejnění
+      moveCopyButtons:
+        copy: Kopírovat
+        copyMenuHeader: 'Kopírovat události ({numberOfEvents}) na:'
+        createShift: Po každé události (vytvořit směnu)
+        duplicate: Stejný čas a datum (duplikovat)
+        nextDay: Následující den {dates}
+        nextWeek: Následující týden {dates}
+        reschedule: Přeplánovat
+        rescheduleMenuHeader: 'Přeplánovat události ({numberOfEvents}) na:'
+    shortWeek: týd. {weekNumber}
+    showMore: Zobrazit
+    today: Dnes
+  call:
+    about:
+      events: '{numEvents}'
+      noParticipation: '{name} – zatím žádná účast na událostech.'
+      participation: '{name} – účast na událostech: {events}, naposledy {title} {time}'
+      previousActivityHeader: Předchozí aktivita
+      previousCalls:
+        callBackAfter: Zavolat osobě {name} zpět od {time}
+        calledBy: 'Volající: {name}.'
+        hasNoPreviousCalls: Zatím žádné hovory
+        note: 'Poznámka: {note}'
+        status:
+          callBack: Musíme zavolat zpět
+          leftMessage: Nechali jsme vzkaz na záznamníku
+          lineBusy: Linka byla obsazená
+          noPickup: Nepodařilo se dovolat
+          notAvailable: Osoba nemohla mluvit
+          success: Hovor byl úspěšný!
+          wrongNumber: Měli jsme špatné číslo
+        title: Předchozí hovory
+      tagsHeader: Štítky
+      title: O osobě {name}
+    activities:
+      description: Jednáte jménem osoby {name}
+      empty: Žádné aktivity
+      events:
+        alreadyBooked: Osoba {name} je již přihlášena.
+        noLocation: Bez fyzického místa
+        signUp: Přihlásit
+        undoSignUp: Zrušit přihlášku
+      filters:
+        basic:
+          alreadyIn: Již se účastní
+          events: Události
+          surveys: Dotazníky
+          thisCall: Tento hovor
+        events:
+          thisWeek: Tento týden
+          today: Dnes
+          tomorrow: Zítra
+        organizations:
+          noSelected: Organizace
+          selected: '{numOrgs, plural, =1 {1 organizace} few {# organizace} many {#
+            organizace} other {# organizací}}'
+        projects: '{numProjects, plural, =0 {Kontext} =1 {1 projekt} few {# projekty}
+          many {# projektu} other {# projektů}}'
+      noBookings: Osoba {name} není potvrzena ani přihlášena na žádnou událost.
+      projects:
+        wihoutProjectLabel: Bez projektu
+      survey:
+        backButton: Zpět na aktivity
+        cancelButton: Zrušit
+        clearButton: Vymazat odpovědi
+        confirmClearSurvey: Chcete odebrat odpovědi v dotazníku „{title}“?
+        editButton: Upravit
+        fillOutButton: Vyplnit
+        inProgress: Rozpracovaný dotazník
+      title: Aktivity
+      untitled:
+        event: Událost bez názvu
+        project: Projekt bez názvu
+        survey: Dotazník bez názvu
+    callAlert:
+      description: Ve frontě už nejsou žádné hovory
+      title: Fronta hovorů je prázdná
+    callLog:
+      openCallLogButton: Historie hovorů
+      previousCall:
+        logNew: Zaznamenat další hovor
+      searchLabel: Zadejte hledaný výraz
+      title: Historie hovorů
+      unfinishedCall:
+        abandon: Zahodit
+        switch: Přepnout
+    callingInfo:
+      title: Jak volat v Zetkinu
+      tutorial:
+        call:
+          description: Podle toho, jak telefonní kampaň probíhá, budete volat buď z
+            běžného telefonu, nebo přes počítač.
+          title: Uskutečněte hovor
+        oldCalls:
+          description: Kliknutím na tlačítko „Historie hovorů“ můžete zaznamenat nový
+            hovor s osobou, které se už dříve volalo. Hodí se to hlavně tehdy,
+            když vám někdo zavolá zpět.
+          title: Předchozí hovory
+        personInfo:
+          description: Na stránce uvidíte předchozí aktivity osoby a další údaje o ní.
+          title: Seznamte se s osobou
+        report:
+          description: Po rozhovoru s osobou vyplníte hlášení o hovoru.
+          title: Vyplňte hlášení
+        start:
+          description: Chystáte se začít volat. Přečtěte si pokyny k telefonní kampani a
+            připravte se. Potom klikněte na „Volat“ a zahajte svůj první hovor.
+          title: Začněte volat
+    error:
+      description: Zkuste obnovit stránku. Pokud chyba přetrvává, zkuste se odhlásit a
+        znovu přihlásit. Pokud chyba přetrvává i nadále, kontaktujte podporu.
+      title: Došlo k neočekávané chybě.
+    header:
+      primaryButton:
+        call: Dokončit a nahlásit
+        report: Odeslat hlášení
+        start: Volat
+        summary: Další hovor
+      qrModal:
+        title: Naskenujte kód a volejte z mobilu
+      secondaryButton:
+        call: Přeskočit
+        report: Přeskočit
+        start: Ukončit
+        summary: Dát si pauzu
+    instructions:
+      noInstructions: Tato telefonní kampaň nemá žádné pokyny.
+      title: Pokyny
+    newUIAlert:
+      description: Můžete ho začít používat hned, nebo {link}
+      linkText: se vrátit ke staré verzi.
+      title: Vítejte v přepracovaném rozhraní pro volající! {description}
+    report:
+      steps:
+        callBack:
+          question:
+            afterSpecificHourOptionLabel: Od {hour}
+            anyTimeOptionLabel: Kdykoli během dne
+            callBackButtonLabel: Zavolat zpět od {date}
+            dateLabel: Kterého dne
+            examples:
+              nextWeek: Příští týden
+              title: 'Rychlá volba:'
+              today: Později dnes
+              tomorrow: Zítra
+            invalidDateButtonLabel: Neplatné datum
+            timeLabel: Od kolika hodin
+            title: Kdy máme zavolat zpět?
+          summary:
+            afterSpecificTime: Zavolat zpět od {time}
+            anyTime: Zavoláme zpět od {date}
+            subtitle: Do té doby bude osoba {firstName} automaticky vyřazena z fronty
+        callerLog:
+          question:
+            noteLabel: Přidat poznámku (nepovinné)
+            saveWithNoteButton: Uložit s poznámkou
+            saveWithoutNoteButton: Uložit bez poznámky
+            shortcutHint: Při psaní stiskněte SHIFT + ENTER pro uložení s poznámkou.
+            title: Chcete zanechat poznámku pro další volající?
+          summary:
+            withNote:
+              subtitle: 'Další volající uvidí vaši poznámku: {note}'
+              title: Přidána poznámka pro další volající
+            withoutNote: Žádná poznámka pro další volající
+        couldTalk:
+          question:
+            noButton: Ne, zavolat zpět
+            title: Měla osoba {firstName} čas mluvit?
+            yesButton: Ano
+          summary:
+            couldNotTalk:
+              subtitle: Další volající uvidí, že je potřeba zavolat zpět
+              title: Osoba {firstName} neměla čas mluvit
+            couldTalk:
+              subtitle: Další volající uvidí, že se hovor podařilo dokončit
+              title: Osoba {firstName} měla čas mluvit
+        failureReason:
+          question:
+            lineBusy: Obsazeno
+            noPickup: Nikdo to nevzal
+            notAvailable: Teď nemůže mluvit
+            title: Proč ne?
+            wrongNumber: Špatné číslo
+          summary:
+            lineBusy: Linka byla obsazená
+            noPickup: Osoba {firstName} hovor nepřijala
+            notAvailable: Osoba {firstName} teď nemohla mluvit, musíme zavolat zpět
+            wrongNumber: Máme špatné číslo na osobu {firstName}
+        leftMessage:
+          question:
+            noButton: Ne
+            title: Byl na záznamníku zanechán vzkaz?
+            yesButton: Ano
+          summary:
+            didNotLeaveMessage: Bez vzkazu na záznamníku
+            leftMessage:
+              subtitle: Další volající uvidí, že byl zanechán vzkaz
+              title: Zanechán vzkaz na záznamníku
+        organizerAction:
+          question:
+            noButton: Ne
+            title: Stalo se během hovoru něco, co vyžaduje zásah organizátora?
+            yesButton: Ano
+          summary:
+            orgActionNeeded:
+              subtitle: Organizátor dostane upozornění
+              title: Chcete, aby se na tento hovor podíval organizátor
+            orgActionNotNeeded: Žádný zásah není potřeba
+        organizerLog:
+          question:
+            messageLabel: Přidat zprávu (nepovinné)
+            shortcutHint: Při psaní stiskněte SHIFT + ENTER pro připojení zprávy.
+            title: Popište problém organizátorovi
+            withMessageButton: Připojit zprávu
+            withoutMessageButton: Uložit bez zprávy
+            wrongNumberMessages:
+              altPhone: 'Alternativní telefonní číslo je špatné: {altPhone}'
+              both: 'Obě telefonní čísla jsou špatná: {phone} a {altPhone}'
+              phone: 'Telefonní číslo je špatné: {phone}'
+          summary:
+            withMessage:
+              subtitle: 'Organizátoři uvidí vaši zprávu: {message}'
+              title: Přidána zpráva pro organizátory
+            withoutMessage: Žádná zpráva pro organizátory
+        successOrFailure:
+          question:
+            noButton: Ne
+            title: Podařilo se zastihnout osobu {firstName}?
+            yesButton: Ano
+          summary:
+            failure:
+              subtitle: Další volající uvidí, že se s osobou {firstName} nepodařilo mluvit
+              title: Osobu {firstName} jsme nezastihli
+            success:
+              subtitle: Další volající uvidí, že se s osobou {firstName} podařilo mluvit
+              title: Osoba {firstName} byla zastižena
+        wrongNumber:
+          question:
+            bothButton: Obě
+            title: Které číslo je špatné?
+          summary:
+            phoneBoth: 'Obě čísla jsou špatná: {phone} a {altPhone}'
+            phoneSingle: 'Jedno telefonní číslo je špatné: {phone}'
+      summary:
+        editButtonLabel: Upravit
+      title: Hlášení
+    skipCallDialog:
+      cancelButton: Ne, pokračovat v hovoru
+      confirmButton: Ano, přeskočit osobu {name}?
+      title: Přeskočit hovor s osobou {name}?
+    stats:
+      callsMade: uskutečněné hovory
+      description: Takto si telefonní kampaň vede
+      inTargetGroup: osoby v cílové skupině
+      successful: úspěšné
+      successfulCalls: úspěšné hovory
+      targets: cílové osoby
+      title: Statistiky telefonní kampaně
+    summary:
+      callSummary:
+        callBack: Osobu {name} se podařilo zastihnout, ale musíme jí zavolat zpět.
+        leftMessage: Osoba {name} hovor nepřijala, na záznamníku byl zanechán vzkaz.
+        lineBusy: Linka byla obsazená, takže se osobu {name} nepodařilo zastihnout
+        noPickup: Osoba {name} hovor nepřijala, vzkaz nebyl zanechán.
+        notAvailable: Osobě {name} zavoláme zpět.
+        success: Hovor s osobou {name} proběhl
+        wrongNumber: Měli jsme špatné číslo na osobu {name}
+      previousCallMissingError:
+        description: Hlášení bylo odesláno a můžete normálně pokračovat ve volání
+        title: Předchozí hovor se nepodařilo načíst
+      reportSubmissionError:
+        description: Hovor je teď mezi vašimi nedokončenými hovory a můžete se k němu
+          vrátit a zkusit hlášení odeslat znovu.
+        title: Při odesílání hlášení se něco pokazilo.
+      title:
+        success: Hovor dokončen!
+      unfinishedCallsMessage: 'Ale než budete pokračovat: máte nedokončené hovory, vyřešte je!'
+    switchedAssignmentsAlert:
+      message: Přepnuto na jinou telefonní kampaň. Teď voláte v kampani
+        „{assignmentTitle}“
+    unexpectedError:
+      backToMyZetkinButton: Zpět na Můj Zetkin
+      description: Něco se pokazilo, omlouváme se! Můžete telefonní kampaň znovu
+        načíst, nebo se vrátit na „Můj Zetkin“.
+      reloadButton: Znovu načíst kampaň
+      title: Jejda! Došlo k neočekávané chybě
+  callAssignments:
+    actions:
+      delete: Smazat
+      end: Ukončit kampaň
+      move: Přesunout
+      start: Spustit kampaň
+      warning: Kampaň „{title}“ bude smazána.
+    blocked:
+      callBackLater: Žádost o pozdější zavolání
+      calledTooRecently: Voláno příliš nedávno
+      cooldownHelperText: Nastavte minimální dobu mezi pokusy o zastižení cílové osoby
+      cooldownLabel: Prodleva v hodinách
+      hours: '{cooldown, plural, =0 {Bez prodlevy} =1 {# hodina} few {# hodiny} many
+        {# hodiny} other {# hodin}}'
+      missingPhoneNumber: Chybí telefonní číslo
+      organizerActionNeeded: Vyžadován zásah organizátora
+      subtitle: Cílové osoby, kterým zatím nelze volat
+      title: Blokováno
+      viewSheetButton: Zobrazit seznam
+    callAssignmentChangeProjectDialog:
+      error: 'Chyba: Kampaň se nepodařilo přesunout do vybraného projektu'
+      success: Kampaň „{assignmentTitle}“ byla přesunuta do projektu „{projectTitle}“
+      title: Přesunout kampaň
+    callers:
+      actions:
+        customize: Upravit frontu
+        remove: Odebrat z kampaně
+      add:
+        alreadyAdded: Již přidáno
+        placeholder: Začněte psát a vyhledejte nebo přidejte nového volajícího
+      customize:
+        exclude:
+          h: Vyloučené štítky
+          intro: Nikdy nevolat cílovým osobám s těmito štítky.
+        prioritize:
+          h: Prioritní štítky
+          intro: Přednostně volat cílovým osobám s těmito štítky.
+        title: 'Upravit frontu: {name}'
+      customizeButton: Upravit
+      excludedTagsColumn: Vyloučené štítky
+      nameColumn: Jméno
+      prioritizedTagsColumn: Prioritní štítky
+      searchBox: Hledat
+      title: Volající
+    conversation:
+      instructions:
+        confirm: Chcete zahodit všechny neuložené změny a vrátit se k uloženým pokynům?
+        editorPlaceholder: Přidejte pokyny pro své volající
+        revertLink: Vrátit se k uložené verzi?
+        saveButton: Uložit
+        savedMessage: Vše je aktuální!
+        savingButton: Ukládání...
+        title: Pokyny pro volající
+        unsavedMessage: Máte neuložené změny.
+      settings:
+        notes:
+          message: Vypnutí poznámek volajících může zrychlit volání, ale také vést ke
+            ztrátě důležitých informací.
+          title: Povolit volajícím psát poznámky
+        targetData:
+          message: Volající vždy vidí jméno a telefonní číslo cílové osoby. Zapnutím
+            dalších údajů o cílové osobě se volajícím zpřístupní všechna pole
+            osoby.
+          title: Zobrazit další údaje o cílové osobě
+        title: Nastavení rozhovoru
+    done:
+      defineButton: Upravit kritéria dokončení
+      subtitle: Cílové osoby, které splňují kritéria dokončení
+      title: Hotovo
+    organizerActionPane:
+      markAsSolved: Označit jako vyřešené
+      markAsUnsolved: Označit jako nevyřešené
+      messagePlaceholder: Žádná zpráva od volajícího
+      noteByCaller: 'Poznámka: {person}, {time}'
+      subtitle: Poznámky k osobě {person}
+      title: Vyžadován zásah organizátora
+    ready:
+      allocated: Cílové osoby přidělené volajícím
+      queue: Cílové osoby ve frontě
+      subtitle: Cílové osoby k obvolání
+      title: Připraveno
+    state:
+      active: Aktivní
+      closed: Uzavřená
+      draft: Koncept
+      open: Otevřená
+      scheduled: Naplánovaná
+    stats:
+      callers: '{numCallers, plural, =0 {Bez volajících} one {1 volající} few {#
+        volající} many {# volajícího} other {# volajících}}'
+      targets: '{numTargets, plural, =0 {Bez cílových osob} one {1 cílová osoba} few
+        {# cílové osoby} many {# cílové osoby} other {# cílových osob}}'
+    statusSectionTitle: Stav
+    tabs:
+      callers: Volající
+      conversation: Rozhovor
+      overview: Přehled
+    targets:
+      defineButton: Definovat cílovou skupinu
+      editButton: Upravit cílovou skupinu
+      subtitle: Cílovou skupinu této kampaně definujte pomocí Smart Search.
+      title: Cílové osoby
+  canvass:
+    default:
+      description: Bez popisu
+      floor: Neznámé patro
+      location: Místo bez názvu
+    households:
+      bulkEditHouseholds:
+        floorLabel: Upravit patro
+        header: Upravit {numHouseholds, plural, one {1 domácnost} few {# domácnosti}
+          many {# domácnosti} other {# domácností}}
+        saveButtonLabel: Uložit {numHouseholds, plural, one {1 domácnost} few {#
+          domácnosti} many {# domácnosti} other {# domácností}}
+      colorPicker:
+        colorNames:
+          black: Černá
+          darkAqua: Tmavě azurová
+          darkBlue: Tmavě modrá
+          darkGreen: Tmavě zelená
+          darkIndigo: Tmavě indigová
+          darkLime: Tmavě limetková
+          darkOrange: Tmavě oranžová
+          darkPink: Tmavě růžová
+          darkPurple: Tmavě fialová
+          darkRed: Tmavě červená
+          darkTurqouise: Tmavě tyrkysová
+          darkYellow: Tmavě žlutá
+          grey: Šedá
+          lightAqua: Světle azurová
+          lightBlue: Světle modrá
+          lightGreen: Světle zelená
+          lightIndigo: Světle indigová
+          lightLime: Světle limetková
+          lightOrange: Světle oranžová
+          lightPink: Světle růžová
+          lightPurple: Světle fialová
+          lightRed: Světle červená
+          lightTurquoise: Světle tyrkysová
+          lightYellow: Světle žlutá
+          mediumAqua: Azurová
+          mediumBlue: Modrá
+          mediumGreen: Zelená
+          mediumIndigo: Indigová
+          mediumLime: Limetková
+          mediumOrange: Oranžová
+          mediumPink: Růžová
+          mediumPurple: Fialová
+          mediumRed: Červená
+          mediumTurqouise: Tyrkysová
+          mediumYellow: Žlutá
+        inputLabel: Upravit barvu domácnosti
+        noColor: Bez barvy
+      createMultiple:
+        createButtonLabel: Vytvořit {numHouseholds, plural, one {1 domácnost} few {#
+          domácnosti} many {# domácnosti} other {# domácností}}
+        header: Vytvořit domácnosti
+        numberOfFloorsInput: Počet pater
+        numberOfHouseholdsInput: Počet domácností na patro
+      delete:
+        title: Smazat domácnost
+        warningText: Opravdu chcete domácnost smazat? Tuto akci nelze vrátit zpět.
+      editSingleHousehold:
+        floorLabel: Upravit patro
+        header: Upravit {title}
+        saveButtonLabel: Uložit
+        titleLabel: Upravit název
+      householdDefaultTitle: Domácnost {householdNumber}
+      page:
+        empty: Toto místo zatím nemá žádné domácnosti
+        header: Domácnosti
+      single:
+        definesSuccess: Určuje úspěch
+        logVisitButtonLabel: Zaznamenat návštěvu
+        skipped: přeskočeno
+        subtitle: '{floorNumber}. patro'
+        visit: Návštěva
+        wasNotVisited: Tato domácnost zatím nebyla v rámci tohoto přidělení oblasti navštívena
+      stackItem:
+        detailsButtonLabel: Podrobnosti
+        visitButtonLabel: Navštívit
+    instructions:
+      areas: Oblasti
+      instructionsHeader: Pokyny
+      ready: Můžete začít
+      selectArea: Vybrat oblast
+      start: Začít
+      visitedHouseholds: Navštívené domácnosti
+      visitedLocations: Navštívená místa
+    location:
+      edit:
+        descriptionLabel: Upravit popis
+        header: Upravit {title}
+        saveButtonLabel: Uložit
+        titleLabel: Upravit název
+      header: Navštíveno {numVisitedHouseholds}/{numHouseholds} {numHouseholds,
+        plural, one {domácnosti} few {domácností} many {domácnosti} other
+        {domácností}}
+      page:
+        historySectionHeader: Historie
+        householdVisitedStatLabel: domácností navštíveno
+        householdsButtonLabel: Domácnosti
+        householdsVisitedStat: '{numVisitedHouseholds} z {numHouseholds}'
+        noHouseholds: Zatím zde nejsou evidovány žádné domácnosti
+        numberOfHouseholds: '{numHouseholds, plural, one {1 domácnost} few {#
+          domácnosti} many {# domácnosti} other {# domácností}}'
+        quickReportButtonLabel: Rychlé hlášení
+      subheader: '{successfulVisits, plural, one {1 úspěšná návštěva} few {# úspěšné
+        návštěvy} many {# úspěšné návštěvy} other {# úspěšných návštěv}}'
+    map:
+      addLocation:
+        add: Přidat místo
+        cancel: Zrušit
+        create: Vytvořit místo
+        inputPlaceholder: Zadejte název místa
+      initializationError: Při načítání mapy došlo k chybě. Zkontrolujte prosím, zda
+        váš prohlížeč podporuje WebGL a zda je tato funkce zapnutá.
+    selectArea:
+      assignedToMe: Přiděleno mně
+      noAreas: Nejsou k dispozici žádné oblasti
+    sidebar:
+      instructions:
+        title: Pokyny
+      menuOptions:
+        home: Moje aktivity
+        logOut: Odhlásit se
+      progress:
+        allTime:
+          title: Za celou dobu
+        header:
+          households: Domácnosti
+          householdsSuccessful: Úspěšně navštívené
+          householdsVisited: Navštívené domácnosti
+          locations: Místa
+          successfulVisits: Úspěšné návštěvy
+          title: Postup
+          visits: Návštěvy
+        session:
+          team: Tým
+          title: Dnes
+          you: Vy
+        sync:
+          label:
+            hasLoaded: Synchronizováno {timestamp}
+            neverLoaded: Zatím nenačteno
+          syncButton:
+            label: Synchronizovat
+            loading: Probíhá synchronizace
+    visit:
+      household:
+        header: '{householdTitle}: záznam návštěvy'
+        noButtonLabel: Ne
+        skipButtonLabel: Přeskočit tuto otázku
+        submitReportButtonLabel: Odeslat hlášení
+        yesButtonLabel: Ano
+      location:
+        average: '{numHouseholds, plural, one {1 domácnost} few {# domácnosti} many {#
+          domácnosti} other {# domácností}}, průměr {avgFixed}'
+        completed: '{numHouseholds, plural, one {1 domácnost} few {# domácnosti} many {#
+          domácnosti} other {# domácností}}, z toho ano: {numYes}'
+        header: Hlášení návštěv na tomto místě
+        noInputLabel: Ne
+        proceedButtonLabel: Pokračovat
+        submitButtonLabel: Odeslat
+        yesInputLabel: Ano
+  duplicates:
+    modal:
+      cancelButton: Zrušit
+      fieldSettings:
+        data: Údaje
+        field: Pole
+        noValue: Bez hodnoty
+        title: Údaje ke sloučení
+      findCandidateManually: Pro vyhledání možné duplicity začněte psát
+      isDuplicateButton: Zahrnout
+      lists:
+        hideManual: Skrýt ruční vyhledávání
+        showManual: Zobrazit ruční vyhledávání
+      mergeButton: Sloučit
+      notDuplicateButton: Vyloučit
+      peopleNotBeingMerged: Osoby, které nebudou sloučeny
+      peopleToMerge: Osoby ke sloučení
+      possibleDuplicatesColumns:
+        email: E-mail
+        name: Jméno
+        phone: Telefon
+      title: Sloučit duplicity
+      warningMessage: Všechna data související s kterýmkoli ze slučovaných záznamů
+        budou převedena na sloučenou osobu. Patří sem účast na událostech,
+        odpovědi na dotazníky, štítky atd. Hodnoty, které v polích níže
+        zahodíte, se však ztratí.
+      warningTitle: Riziko ztráty dat
+    page:
+      dismiss: Zamítnout
+      noDuplicates: Žádné duplicity
+      noDuplicatesContactUs: Pokud zjistíte, že algoritmus pro vyhledávání shod
+        nenachází dostatek duplicit, kontaktujte prosím Zetkin Foundation a
+        dejte nám vědět, jak Zetkin používáte.
+      noDuplicatesDescription: Zetkin ve vaší databázi osob nenašel žádné
+        pravděpodobné duplicity. Databáze se prochází každý den a případné
+        duplicity se zobrazí zde.
+      possibleDuplicates: Možné duplicity
+      possibleDuplicatesDescription: Tyto osoby ({numPeople}) si jsou velmi podobné
+      resolve: Vyřešit
+  emails:
+    blocked:
+      blacklisted: Na seznamu blokovaných
+      missingEmail: Chybí e-mail
+      subtitle: Nedostupné cílové osoby.
+      title: Blokováno
+      unsubscribed: Odhlášeno z odběru
+    deliveryProblems:
+      contentError: V obsahu vašeho e-mailu jsou chyby. Přejděte do editoru na kartě
+        Obsah a opravte je.
+      empty: Váš e-mail je prázdný. Přejděte na kartu Obsah a přidejte do něj nějaký
+        obsah.
+      noSubject: Váš e-mail nemá předmět. Přejděte na kartu Obsah a doplňte ho.
+      notTargeted: Váš e-mail nemá žádné cílové osoby. Přejděte do sekce Cílové osoby
+        na kartě Přehled a vytvořte dotaz Smart Search, který je určí.
+      targetsNotLocked: Cílové osoby nejsou uzamčeny. Přejděte do sekce Cílové osoby
+        na kartě Přehled a uzamkněte je.
+    deliveryStatus:
+      notLocked: Neuzamčeno, nenaplánováno
+      notProcessed: Naplánováno k odeslání co nejdříve
+      notScheduled: Nenaplánováno
+      wasSent: Odesláno {datetime}
+      willSend: Bude odesláno {datetime}
+    editor:
+      readOnlyModeInfo: Tento e-mail je jen pro čtení, protože je naplánován k
+        odeslání nebo už byl odeslán. Pokud je naplánován k odeslání a chcete v
+        něm provést změny, musíte nejprve odeslání zrušit.
+      settings:
+        tabs:
+          content: Obsah
+          preview:
+            confirmation: Náhled byl odeslán na vaši e-mailovou adresu.
+            instructions: 'Zde si můžete tento e-mail poslat a podívat se, jak se zobrazí
+              příjemcům. '
+            invalidEmailAddress: Toto není platná e-mailová adresa
+            okButton: Rozumím
+            previewInBrowser: Zobrazit náhled v prohlížeči
+            previewInBrowserInstructions: Pomocí tlačítka níže si můžete zobrazit náhled
+              e-mailu v prohlížeči.
+            sendButton: Odeslat
+            sendTo: 'E-mail bude odeslán na tuto adresu:'
+            title: Náhled
+          settings:
+            senderAddressInputLabel: Adresa odesílatele
+            senderInputLabel: Odesílatel
+            subjectInputLabel: Předmět
+            title: Nastavení
+          theme:
+            themeTitle: Motiv {themeId}
+            title: Motiv
+      tools:
+        button:
+          block:
+            noButtonText: Kliknutím tento text změníte!
+          settings:
+            buttonTextWarning: Nezapomeňte do tlačítka přidat text
+            invalidUrl: Toto není platný odkaz
+            testLink: Kliknutím odkaz otestujete
+            urlLabel: URL odkazu
+          title: Tlačítko
+        header:
+          title: Nadpis
+        libraryImage:
+          changeImage: Změnit obrázek
+          title: Obrázek
+        link:
+          addUrl: Přidejte odkaz
+          invalidUrl: Toto není platný odkaz
+          testLink: Kliknutím odkaz otestujete
+          title: Odkaz
+        paragraph:
+          invalidUrls: Tento textový blok obsahuje jeden nebo více neplatných odkazů.
+          title: Text
+        variable:
+          title: Proměnná
+    emailActionButtons:
+      cancel: Zrušit
+      delete: Smazat
+      delivery: Odeslání
+      deliveryDate: Datum odeslání
+      deliveryTime: Čas odeslání
+      duplicate: Duplikovat
+      move: Přesunout
+      schedule: Naplánovat
+      sendAnyway: Přesto odeslat
+      sendLater: Odeslat později
+      sendNow:
+        alert:
+          desc: Možná existuje vhodnější denní doba k odeslání. Naplánované odeslání navíc
+            dává ostatním organizátorům příležitost sladit své plány s vašimi.
+          title: Okamžité odeslání nemusí být ideální
+        header: Odeslat nyní
+      setDate: Pro pokračování nastavte datum odeslání
+      timeZone: Časové pásmo
+      warning: Opravdu chcete tento e-mail smazat? Tato akce je trvalá a nelze ji
+        vrátit zpět.
+    emailChangeProjectDialog:
+      error: 'Chyba: E-mail se nepodařilo přesunout do vybraného projektu'
+      success: E-mail „{emailTitle}“ byl přesunut do projektu „{projectTitle}“
+      title: Přesunout e-mail
+    emailFeatureIsBlocked:
+      errorMessage: Vaše organizace momentálně nemá přístup k funkci e-mailů.
+      goBackButton: Zpět
+    insights:
+      clicked:
+        descriptions:
+          ctor: Míra prokliku z otevřených (CTOR) udává, kolik procent z těch, kdo e-mail
+            otevřeli, kliklo také na některý z odkazů. Vysoká hodnota svědčí o
+            dobře zacíleném e-mailu s přesvědčivým textem.
+          ctr: Míra prokliku (CTR) udává, kolik procent příjemců e-mail nejen otevřelo,
+            ale také kliklo na některý z odkazů. Vysoká hodnota svědčí o dobře
+            zacíleném e-mailu s přesvědčivým textem.
+        gauge:
+          headers:
+            ctor: CTOR
+            ctr: CTR
+        header: Prokliknuto
+        metrics:
+          ctor: CTOR
+          ctr: CTR
+      comparison:
+        label: Porovnat s
+      opened:
+        chart:
+          afterSend: Po odeslání
+          opened: 'Otevřeno: {count}'
+          spans:
+            allTime: Celé období
+            first24: Prvních 24 hodin
+            first48: Prvních 48 hodin
+            firstMonth: Prvních 30 dní
+            firstWeek: Prvních 7 dní
+        description: Míra otevření udává, kolik procent příjemců e-mail otevřelo. Vysoká
+          hodnota svědčí o dobrém zacílení a poutavém předmětu.
+        gauge:
+          header: Míra otevření
+        header: Otevřeno
+    ready:
+      missingEmailsDescription: V cílové skupině {numPeople, plural, one {je osoba,
+        které chybí e-mailová adresa. Pokud to vyřešíte, bude do cílové skupiny
+        zahrnuta.} few {jsou osoby, kterým chybí e-mailová adresa. Pokud to
+        vyřešíte, budou do cílové skupiny zahrnuty.} many {jsou osoby, kterým
+        chybí e-mailová adresa. Pokud to vyřešíte, budou do cílové skupiny
+        zahrnuty.} other {jsou osoby, kterým chybí e-mailová adresa. Pokud to
+        vyřešíte, budou do cílové skupiny zahrnuty.}}
+      sentSubtitle: Cílové osoby, kterým bylo možné e-mail odeslat
+      subtitle: Cílové osoby, kterým lze e-mail aktuálně odeslat
+      title: Připraveno
+    state:
+      draft: Koncept
+      scheduled: Naplánováno
+      sent: Odesláno
+    stats:
+      lockedTargets: '{numLocked, plural, =0 {Žádné uzamčené cílové osoby} one {1
+        uzamčená cílová osoba} few {# uzamčené cílové osoby} many {# uzamčené
+        cílové osoby} other {# uzamčených cílových osob}}'
+      targets: '{numTargets, plural, =0 {Žádné cílové osoby} one {1 cílová osoba} few
+        {# cílové osoby} many {# cílové osoby} other {# cílových osob}}'
+    tabs:
+      compose: Obsah
+      insights: Statistiky
+      overview: Přehled
+    targets:
+      defineButton: Definovat cílovou skupinu
+      editButton: Upravit cílovou skupinu
+      loading: Načítání...
+      lockButton: Uzamknout pro odeslání
+      locked: Cílové osoby jsou uzamčeny pro odeslání
+      lockedChip: Uzamčeno
+      subtitle:
+        notTargeted: Pomocí Smart Search určete příjemce tohoto e-mailu.
+        scheduled: Tento e-mail je naplánován k odeslání. Pokud chcete cílové osoby
+          odemknout a upravit dotaz Smart Search, nejprve zrušte odeslání.
+        sent: Můžete si prohlédnout dotaz Smart Search, který určil příjemce tohoto
+          e-mailu
+        targetedAndLocked: Pokračujte k odeslání, nebo příjemce odemkněte, pokud chcete
+          upravit dotaz Smart Search, který určuje příjemce tohoto e-mailu.
+        targetedNotLocked: Upravte dotaz Smart Search, který určuje příjemce tohoto
+          e-mailu, nebo uzamkněte cílovou skupinu, aby bylo možné e-mail
+          odeslat.
+      title: Cílové osoby
+      unlockAlert: Odemknutí může do cílové skupiny přidat osoby nebo je z ní odebrat,
+        podle toho, jaké výsledky dotaz Smart Search vrátí.
+      unlockButton: Odemknout
+      viewButton: Zobrazit cílovou skupinu
+    unsubscribePage:
+      consent: Rozumím
+      h: Odhlásit se z odběru e-mailů organizace {org}
+      info: Po odhlášení z odběru už od této organizace nebudete dostávat hromadné
+        e-maily. Stále však můžete dostávat připomínky a další e-maily určené
+        přímo vám v souvislosti s činností, kterou v organizaci vykonáváte.
+      senderDetails: '{senderName} <{senderEmail}>'
+      senderH: 'Odhlásit se z odběru e-mailů od:'
+      senderInfo: Po odhlášení z odběru už od tohoto odesílatele nebudete dostávat
+        e-maily. Stále však můžete dostávat e-maily od jiných odesílatelů v této
+        organizaci a další e-maily určené přímo vám v souvislosti s činností,
+        kterou v organizaci vykonáváte.
+      unsubButton: Odhlásit mě z odběru
+    unsubscribedPage:
+      h: Odběr byl zrušen!
+      info: Odběr hromadných e-mailů od organizace {org} byl zrušen.
+      senderInfo: Odběr e-mailů od odesílatele {senderName} <{senderEmail}> byl zrušen.
+    urlCard:
+      nowAccepting: Na tomto odkazu si e-mail může zobrazit kdokoli
+      open: Veřejné zobrazení
+      preview: Budoucí přímý odkaz
+      previewPortal: Zobrazit náhled e-mailu
+      visitPortal: Otevřít e-mail
+      willAccept: Na tomto odkazu si e-mail bude moci zobrazit kdokoli
+    varDefaults:
+      target: čtenáři
+  events:
+    addPerson:
+      addButton: Přidat osobu
+      addPlaceholder: Pro přidání účastníka začněte psát
+      status:
+        booked: Účast již potvrzena
+        signedUp: Přihláška odeslána
+    common:
+      allDay: Celý den
+      noActivity: Bez kategorie
+      noLocation: Bez fyzického místa
+      noTitle: Událost bez názvu
+    eventActionButtons:
+      cancel: Zrušit událost
+      delete: Smazat
+      duplicate: Duplikovat
+      move: Přesunout
+      publish: Zveřejnit
+      restore: Obnovit událost
+      sendEmailToParticipants:
+        buttonTitle: Poslat e-mail účastníkům
+        emailSubject: 'Re: {eventTitle}'
+      unpublish: Zrušit zveřejnění
+      warning: Událost „{eventTitle}“ bude smazána.
+      warningCancel: Událost „{eventTitle}“ bude zrušena.
+      warningRestore: Událost „{eventTitle}“ bude obnovena.
+    eventChangeProjectDialog:
+      error: 'Chyba: Událost se nepodařilo přesunout do vybraného projektu'
+      success: Událost „{eventTitle}“ byla přesunuta do projektu „{projectTitle}“
+      title: Přesunout událost
+    eventContactCard:
+      header: Kontaktní osoba
+      noContact: Kontaktní osoba není přiřazena!
+      removeButton: Odebrat
+      selectPlaceholder: Vyberte kontaktní osobu
+      warningText: '{name} už nebude kontaktní osobou, ale zůstane mezi potvrzenými
+        účastníky události'
+    eventOverviewCard:
+      buttonEndDate: + Datum konce
+      createLocation: Vytvořit nové místo
+      description: Popis
+      editButton: Upravit informace o události
+      endDate: Konec
+      endTime: Čas konce
+      location: Místo
+      noLocation: Bez fyzického místa
+      startDate: Začátek
+      startTime: Čas začátku
+      url: Odkaz
+    eventParticipantsCard:
+      confirmed: Potvrzená účast
+      contact: Kontaktní osoba
+      header: Účastníci
+      noContact: Nepřiřazena
+      notifications: Oznámení
+      participantList: Zobrazit účastníky
+      pending: Nevyřízené přihlášky
+      reqParticipantsHelperText: Minimální počet potřebných účastníků
+      reqParticipantsLabel: Požadovaný počet účastníků
+    eventParticipantsList:
+      attendance: Účast
+      bookedParticipants: Potvrzení účastníci
+      buttonAttended: Účast
+      buttonBook: Potvrdit
+      buttonCancel: Zrušit
+      buttonCancelled: Zrušeno
+      buttonDelete: Smazat
+      buttonNoshow: Neúčast
+      cancelledParticipants: Zrušené účasti
+      columnAction: Akce
+      columnEmail: E-mail
+      columnName: Jméno
+      columnNotified: Upozorněno
+      columnPhone: Telefon
+      columnSignedUp: Přihlášeno
+      contactTooltip: Kontaktní osoba
+      descriptionBooked: Toto jsou osoby s potvrzenou účastí, se kterými na události
+        počítáte. Pokud chtějí svou účast zrušit, musí vás kontaktovat a vy ji
+        pak můžete zrušit ručně.
+      descriptionCancelled: Tyto osoby z nějakého důvodu zrušily svou účast. Necháváme
+        je zde, aby nebyly omylem znovu potvrzeny.
+      descriptionSignups: Tyto osoby se přihlásily přes aktivistický portál. Svou
+        přihlášku mohou stále kdykoli zrušit.
+      descriptionUnverifiedSignups: Tyto osoby se přihlásily samy, bez uživatelského
+        účtu. Musíte je potvrdit.
+      dropDownAttended: Potvrzená účast
+      dropDownNoshow: Osoba nedorazila
+      participantTooltip: Nastavit jako kontaktní osobu
+      signUps: Přihlášky
+      unverifiedSignups: Neověřené přihlášky
+    eventPopper:
+      backToEvents: Zpět na seznam událostí
+      backToLocations: Zpět na seznam míst
+      backToShifts: Zpět na seznam směn
+      bookAll: Potvrdit všechny
+      booked: Potvrzeno
+      cancel: Zrušit událost
+      cancelWarning: Pokud to uděláte, nezapomeňte všem účastníkům a přihlášeným
+        osobám oznámit, že událost byla zrušena!
+      confirmCancel: Opravdu chcete tuto událost zrušit?
+      confirmDelete: Opravdu chcete tuto událost smazat?
+      confirmRemindersMessage: Potvrďte prosím, že chcete odeslat připomínku
+        {numReminders, plural, =1 {jednomu účastníkovi} few {# účastníkům} many
+        {# účastníka} other {# účastníkům}}
+      confirmRemindersTitle: Potvrdit odeslání připomínek
+      contactPerson: Kontaktní osoba
+      dateAndTime: Datum a čas
+      delete: Smazat
+      deleteWarning: Po smazání už k události nebudete mít přístup.
+      description: Popis
+      duplicate: Duplikovat
+      eventPageLink: Přejít na stránku události
+      events: události
+      location: Místo
+      locations: místa
+      multiEvent: Více událostí
+      multiLocation: Událost na více místech
+      multiShift: Událost s více směnami
+      noContact: Nebyla přiřazena žádná kontaktní osoba
+      notified: Upozorněno
+      pendingSignups: Některé přihlášky čekají na vyřízení
+      publish: Zveřejnit
+      reminded: Připomenuto
+      shifts: směny
+      signups: Přihlášky
+      unsentReminders: '{numMissing, plural, =1 {Jednomu účastníkovi} few {#
+        účastníkům} many {# účastníka} other {# účastníkům}} zatím nebyla
+        odeslána připomínka'
+    eventRelatedCard:
+      header: Související události
+    eventShiftModal:
+      addShift: Přidat směnu
+      customTitle: Vlastní název
+      date: Datum
+      description: Popis
+      draft: Uložit jako koncept
+      end: Konec
+      error: Událost s více směnami se nepodařilo vytvořit. Zkuste to prosím znovu.
+      event: Událost
+      eventDuration: Délka události
+      header: Vytvořit událost s více směnami
+      hours: '{no, plural, one {1 hodina} few {# hodiny} many {# hodiny} other {#
+        hodin}}'
+      hoursShort: h
+      invalidDate: Neplatné datum
+      invalidTime: Neplatný čas
+      link: Odkaz
+      location: Místo
+      minutes: '{no, plural, one {1 minuta} few {# minuty} many {# minuty} other {#
+        minut}}'
+      minutesShort: min
+      noEvents: 'Bude vytvořeno událostí: {no}'
+      noTitle: Událost s více směnami bez názvu
+      participation: Účast
+      participationDescription: Cílový počet účastníků na směnu
+      publish: Zveřejnit
+      reset: Resetovat
+      shiftDuration: Délka směny
+      shiftStart: Začátek směny {no}
+      shifts: '{no, plural, one {1 směna} few {# směny} many {# směny} other {# směn}}'
+      shiftsHeader: Směny
+      showMoreSettingsButton: Další nastavení
+      start: Začátek
+      successDraft: '{no, plural, one {Vytvořen 1 koncept události} few {Vytvořeny #
+        koncepty událostí} many {Vytvořeno # konceptu událostí} other {Vytvořeno
+        # konceptů událostí}}'
+      successPublish: '{no, plural, one {Zveřejněna 1 směna} few {Zveřejněny # směny}
+        many {Zveřejněno # směny} other {Zveřejněno # směn}}'
+      type: Typ
+    eventStatus:
+      cancelled: Zrušeno
+      draft: Koncept
+      ended: Ukončeno
+      open: Otevřeno
+      scheduled: Naplánováno
+      unknown: Neznámý stav
+    filterButtonLabels:
+      eventTypes: '{numEventTypes, plural, =0 {Typy událostí} =1 {{singleEventType}}
+        few {# typy událostí} many {# typu událostí} other {# typů událostí}}'
+    linkSignupDialog:
+      bookButton: Potvrdit
+      cancelButton: Zrušit
+      createPersonButton: Vytvořit novou osobu
+      helperText: Potvrďte tuto přihlášku výběrem osoby nebo vytvořte novou, pokud
+        žádná neodpovídá.
+      keepTyping: Pro zahájení vyhledávání pokračujte v psaní
+      noResults: Nebyly nalezeny žádné odpovídající osoby
+      searchLabel: Vyhledat osobu
+      searchPlaceholder: Hledat podle jména, e-mailu nebo telefonu
+      signupDetails: Podrobnosti přihlášky
+      title: Nebyla nalezena přesná shoda. Vyberte prosím osobu.
+    list:
+      events: Události
+      noEvents: Žádné události...
+    locationModal:
+      cancel: Zrušit
+      createLocation: Vytvořit nové místo
+      description: Popis
+      infoText: Mapu můžete posouvat kliknutím a tažením a přibližovat gestem prstů
+        nebo kolečkem myši. Nové místo vytvoříte kliknutím na prázdnou část
+        mapy.
+      move: Přesunout
+      moveInstructions: Přetažením špendlíku vyberte místo.
+      noDescription: Bez popisu
+      noRelatedEvents: Na tomto místě se přibližně ve stejnou dobu nekonají žádné
+        další události.
+      relatedEvents: Další události na tomto místě přibližně ve stejnou dobu
+      save: Uložit
+      saveLocation: Uložit místo
+      searchBox: Najít místo
+      title: Název místa
+      useLocation: Použít místo
+    participantSummaryCard:
+      bookButton: Potvrdit všechny
+      booked: Oznámení
+      cancelled: Zrušeno
+      confirmed: Potvrzená účast
+      header: Účastníci
+      noshow: ({noshows, plural, =1 {1 neúčast} few {# neúčasti} many {# neúčasti}
+        other {# neúčastí}})
+      pending: Nevyřízené přihlášky
+      recordButton: Zaznamenat účast
+      remindButton: Připomenout všem
+      remindButtondisabledTooltip: Před odesláním připomínek musíte přiřadit kontaktní osobu
+      reqParticipantsHelperText: Minimální počet potřebných účastníků
+      reqParticipantsLabel: Požadovaný počet účastníků
+    participantsModal:
+      affected:
+        empty: Zatím nebyly provedeny žádné změny. Chcete-li přesouvat účastníky,
+          vyberte událost.
+        header: Dotčené osoby
+      discardButton: Zahodit změny
+      emptyStates:
+        booked: Na této události zatím nikdo nemá potvrzenou účast. Účastníky můžete
+          přidat ze zásobníku.
+        pending: V zásobníku nejsou žádní další účastníci. Účastníky můžete přesunout z
+          události do zásobníku a pracovat s nimi zde.
+      participants:
+        buttons:
+          addBack: Znovu přidat
+          addHere: Přidat sem
+          move: Přesunout
+          undo: Vrátit zpět
+        headers:
+          booked: Tato událost
+          pending: Osoby, které lze přidat
+        states:
+          added: Přidává se k této události
+          pending: V zásobníku
+          removed: Přesouvá se z této události
+      statusText: '{personCount, plural, =1 {Přesune se jedna osoba} few {Přesunou se
+        # osoby} many {Přesune se # osoby} other {Přesune se # osob}}'
+      submitButton: Provést
+      title: Spravovat účastníky
+    publicEventSignup:
+      alert:
+        error: Chyba
+        signupSuccessful: Přihláška byla úspěšně odeslána
+        thankYou: Děkujeme za vaši přihlášku!
+      errors:
+        emailOrPhoneRequired: Je nutné vyplnit e-mail nebo telefon
+        gdprConsentRequired: Musíte přijmout podmínky
+        invalidEmail: Zadejte prosím platný e-mail
+        nameRequired: Jméno a příjmení jsou povinné
+        phoneFormat: Telefonní číslo musí být v mezinárodním formátu, např. +420601234567
+        signupError: Při přihlašování došlo k chybě
+        signupFailed: Přihlášení se nezdařilo
+      fields:
+        email: E-mail
+        firstName: Jméno
+        lastName: Příjmení
+        phone: Telefon
+      info:
+        description: Zadejte své jméno a alespoň jeden způsob, jak vás mohou
+          organizátoři kontaktovat.
+        title: Přihlaste se
+      privacyPolicy: Když se přihlásíte na událost, organizace, která ji pořádá, uloží
+        vámi poskytnuté údaje v Zetkinu a bude je zpracovávat za účelem
+        organizování aktivistické činnosti a v souladu se zásadami ochrany
+        osobních údajů Zetkinu.
+      submit:
+        button: Přihlásit se
+        submitting: Odesílání...
+    search: Hledat
+    state:
+      cancelled: Zrušená
+      draft: Koncept
+      ended: Ukončená
+      open: Otevřená
+      scheduled: Naplánovaná
+    stats:
+      participants: '{participants, plural, one {1 účastník} few {# účastníci} many {#
+        účastníka} other {# účastníků}}'
+    tabs:
+      overview: Přehled
+      participants: Účastníci
+    tooltipContent: U událostí bez názvu se jako název zobrazí typ
+    type:
+      createType: Vytvořit „{type}“
+      deleteMessage: Opravdu chcete smazat typ události „{eventType}“ pro celou organizaci?
+      deleteWarning: Opravdu chcete smazat typ události „{eventType}“ pro celou
+        organizaci {orgTitle}?
+      tooltip: Kliknutím změníte typ
+      uncategorized: Bez kategorie
+    unverifiedSignups:
+      actionFailed: Něco se pokazilo. Zkuste to prosím znovu.
+      booked: Účast osoby {name} byla úspěšně potvrzena.
+      exactMatchBooked: Byla nalezena přesně odpovídající osoba. Přihláška byla
+        propojena s osobou {name} a potvrzena.
+    urlCard:
+      nowAccepting: Na tomto odkazu se nyní přijímají přihlášky
+      open: Otevřeno pro přihlášky
+      preview: Náhled události
+      previewPortal: Zobrazit náhled události v aktivistickém portálu
+      visitPortal: Otevřít událost v aktivistickém portálu
+      willAccept: Na tomto odkazu se budou přijímat přihlášky
+  files:
+    fileUpload:
+      dropToUpload: Pro nahrání pusťte soubor sem
+      instructions: ' nebo ho sem přetáhněte'
+      selectClick: Klikněte a nahrajte soubor
+    image:
+      dimensions: '{width} × {height} pixelů'
+    libraryDialog:
+      preview:
+        backButton: Zpět do knihovny
+        cropLandscape: Oříznutí na šířku
+        cropSquare: Čtvercové oříznutí
+        cropWarning: Zetkin v některých případech při zobrazení ořízne váš obrázek
+          přibližně do těchto poměrů stran.
+        cropWide: Široké oříznutí
+        previewsSection: Náhledy
+        useButton: Použít
+      title: Knihovna
+    searching:
+      label: Hledat
+    sorting:
+      label: Řadit podle
+      options:
+        date: Datum
+        originalName: Původní název souboru
+    typeFilter:
+      anyOption: Všechny typy
+      label: Typ
+      options:
+        image: Obrázky
+  home:
+    activityList:
+      actions:
+        areaAssignment: Připojit se
+        call: Začít volat
+        connectAndSignUp: Připojit se a přihlásit
+        details: Více informací
+        loginToSignUp: Přihlásit se a podat přihlášku
+        signUp: Přihlásit se
+        undoSignup: Zrušit přihlášku
+      emptyListMessage: Zatím nemáte žádné aktivity
+      eventStatus:
+        booked: Vaše účast na této události je potvrzená a organizátoři s vámi počítají.
+          Pokud ji potřebujete zrušit, kontaktujte {org}.
+        needed: Jste potřeba
+        signedUp: Přihláška odeslána
+      filters:
+        call: Telefonování
+        canvass: Oblasti
+        event: Události
+    allEventsList:
+      emptyList:
+        message: Nenašly se žádné události
+        removeFiltersButton: Zrušit filtry
+      filterButtonLabels:
+        organizations: '{numOrgs, plural, =0 {Organizace} =1 {1 organizace} few {#
+          organizace} many {# organizace} other {# organizací}}'
+        selectDate: Vybrat datum
+        thisWeek: Tento týden
+        today: Dnes
+        tomorrow: Zítra
+    defaultTitles:
+      areaAssignment: Přidělení oblasti bez názvu
+      callAssignment: Telefonní kampaň bez názvu
+      event: Událost bez názvu
+      noLocation: Bez fyzického místa
+    footer:
+      privacyPolicy: Zásady ochrany osobních údajů
+    ics:
+      joinEvent: 'Přihlaste se na událost zde: {eventLink}'
+    myOrgs:
+      followButton: Sledovat
+      organizeButton: Organizovat
+      unfollowButton: Přestat sledovat
+    newLandingPageAlert:
+      description: Pokud hledáte stránky pro organizátory, od teď je najdete po
+        kliknutí na tlačítko v záhlaví níže.
+      title: Toto je vaše nová úvodní stránka
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Pro přihlašování heslem přidejte ke svému účtu e-mailovou adresu.
+          changeInstructions: Pokud potřebujete změnit svou e-mailovou adresu, obraťte se
+            na info@zetkin.org.
+          errorText: Došlo k chybě. Zkuste to znovu nebo kontaktujte podporu Zetkin
+            Foundation.
+          label: E-mailová adresa
+          saveButton: Uložit
+        header: Nastavení účtu
+      appPreferences:
+        header: Předvolby aplikace
+        lang:
+          auto: Automaticky (podle nastavení prohlížeče)
+          label: Jazyk
+          saveButton: Uložit a znovu načíst
+    tabs:
+      feed: Všechny události
+      home: Moje aktivity
+      orgs: Moje organizace
+      settings: Nastavení
+    title: Můj Zetkin
+  import:
+    actionButtons:
+      back: Zpět
+      close: Zavřít
+      configure: Nastavit
+      done: Hotovo
+      import: Importovat
+      restart: Začít znovu
+      validate: Zkontrolovat
+    configuration:
+      configure:
+        dates:
+          customFormatDescription: Popište formát hodnot v tomto sloupci pomocí písmen Y
+            (rok), M (měsíc), D (den) a znaků, které je oddělují. Pokud jsou
+            například data zapsána jako 1998.03.23, popíšete formát jako
+            YYYY.MM.DD.
+          customFormatLabel: Vlastní formát data
+          dateConfigDescription: Vyberte formát hodnot v tomto sloupci, aby je bylo možné
+            správně importovat jako datum.
+          dateInputLabel: Formát data
+          dropDownLabel: Vyberte formát
+          emptyPreview: Nelze rozpoznat
+          header: Nastavení formátu data
+          invalidDateFormatWarning: Některé hodnoty ve sloupci zřejmě neodpovídají tomuto
+            formátu. Je vybraný formát opravdu správný?
+          listSubHeaders:
+            custom: Vlastní
+            dates: Formáty data
+            personNumbers: Rodná čísla
+          noCustomFormatWarning: Není zadán vlastní formát data.
+          personNumberFormat:
+            dk:
+              description: Hodnoty v tomto sloupci se převedou z desetimístných dánských
+                rodných čísel (CPR, formát DDMMYY-XXXX nebo DDMMYYXXXX) na
+                datum.
+              label: Dánské rodné číslo (CPR)
+            no:
+              description: Hodnoty v tomto sloupci se převedou z jedenáctimístných norských
+                rodných čísel (fødselsnummer, formát DDMMYYXXXXX nebo
+                DDMMYY-XXXXX) na datum.
+              label: Norské rodné číslo (fødselsnummer)
+            se:
+              description: Hodnoty v tomto sloupci se převedou z deseti- nebo dvanáctimístných
+                švédských rodných čísel (personnummer, formát YYMMDD-XXXX nebo
+                YYYYMMDD-XXXX) na datum.
+              label: Švédské rodné číslo (personnummer)
+        enum:
+          header: Přiřazení hodnot k možnostem
+          none: Žádná
+          numberOfRows: '{numRows, plural, =1 {1 řádek} few {# řádky} many {# řádku} other
+            {# řádků}}'
+          value: Hodnota
+        genders:
+          label: Pohlaví
+          selectLabels:
+            f: Žena
+            m: Muž
+            o: Jiné
+            unknown: Neznámé
+        ids:
+          confirmIDChange:
+            description: Chystáte se změnit importní ID z „{currentImportID}“ na
+              „{newImportID}“.
+            title: Potvrdit změnu importního ID
+          externalIDInfo: Externí ID je identifikátor z jiného systému než Zetkin,
+            například ze samostatné členské databáze. Lze ho použít k vyhledání
+            a identifikaci osob v Zetkinu.
+          field:
+            email: E-mail
+            ext_id: Externí ID
+            id: ID Zetkin
+          importCheckboxDescription: Pole se použije k vyhledání osob, které už v Zetkinu
+            existují. Hodnota v každém řádku by ideálně měla být jedinečná
+          importCheckboxLabel: Použít „{importID}“ jako importní ID
+          importID: Importní ID
+          importIDDescription: '{importID, select, id {ID Zetkin se použije k vyhledání a
+            identifikaci osob v Zetkinu.} email {E-mail lze použít k vyhledání a
+            identifikaci osob v Zetkinu.} other {Externí ID lze použít k
+            vyhledání a identifikaci osob v Zetkinu.}}'
+          skipRowDescription: Nebudou vytvořeny žádné nové osoby
+          wrongEmailFormatWarning: Některé hodnoty v tomto sloupci nejsou platné e-mailové adresy.
+          wrongIDFormatWarning: Hodnoty v tomto sloupci nevypadají jako ID Zetkin. ID
+            Zetkin obsahuje pouze číslice. Pokud některé buňky obsahují např.
+            písmena, nelze je jako ID Zetkin použít.
+          zetkinIDInfo: ID Zetkin je identifikátor osoby, která už v Zetkinu existuje. V
+            souboru ho najdete, pokud vznikl exportem dat ze Zetkinu.
+        orgs:
+          guess: Odhadnout organizace
+          header: Přiřazení hodnot k organizacím
+          organizations: Organizace
+          scoreImperfect: Nejde o přesnou shodu
+          showOrganizationSelectButton: Přiřadit k...
+          status: Stav
+        tags:
+          empty: Prázdné
+          guess: Odhadnout štítky
+          header: Přiřazení hodnot ke štítkům
+          numberOfRows: '{numRows, plural, =1 {1 řádek} few {# řádky} many {# řádku} other
+            {# řádků}}'
+          scoreImperfect: Nejde o přesnou shodu
+          tagsHeader: Štítky
+      hide: Skrýt
+      mapping:
+        configButton: Nastavit
+        defaultColumnHeader: Sloupec {columnIndex}
+        email: E-mail
+        emptyStateMessage: Začněte přiřazením sloupců souboru.
+        externalID: Externí ID
+        fileHeader: Soubor
+        finishedMappingDates: '{numValues, plural, =1 {1 hodnota se převede} few {#
+          hodnoty se převedou} many {# hodnoty se převede} other {# hodnot se
+          převede}} z formátu {dateFormat, select, se {švédského rodného čísla}
+          no {norského rodného čísla} dk {dánského rodného čísla} other
+          {{dateFormat}}} na datum'
+        finishedMappingOrganizations: '{numPeople, plural, =1 {1 osoba} few {# osoby}
+          many {# osoby} other {# osob}} se přiřadí do {numMappedTo, plural, =1
+          {1 organizace} few {# organizací} many {# organizace} other {#
+          organizací}}'
+        finishedMappingTags: '{numRows, plural, =1 {1 řádku} few {# řádkům} many {#
+          řádku} other {# řádkům}} se přiřadí {numMappedTo, plural, =1 {1
+          štítek} few {# štítky} many {# štítku} other {# štítků}}'
+        header: Přiřazení
+        infoButton: Informace
+        mapValuesButton: Přiřadit hodnoty
+        messages:
+          manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
+            plural, =1 {jedna další hodnota} few {# další hodnoty} many {# další
+            hodnoty} other {# dalších hodnot}} a {numEmpty, plural, =1 {jeden
+            prázdný řádek} few {# prázdné řádky} many {# prázdného řádku} other
+            {# prázdných řádků}}.'
+          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} a {numMoreValues,
+            plural, =1 {jedna další hodnota} few {# další hodnoty} many {# další
+            hodnoty} other {# dalších hodnot}}.'
+          oneValueAndEmpty: '{firstValue} a {numEmpty, plural, =1 {jeden prázdný řádek}
+            few {# prázdné řádky} many {# prázdného řádku} other {# prázdných
+            řádků}}.'
+          oneValueNoEmpty: '{firstValue}.'
+          onlyEmpty: '{numEmpty, plural, =1 {Jeden prázdný řádek} few {# prázdné řádky}
+            many {# prázdného řádku} other {# prázdných řádků}}.'
+          readOnlyField: '{title} (jen pro čtení)'
+          threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} a {numEmpty,
+            plural, =1 {jeden prázdný řádek} few {# prázdné řádky} many {#
+            prázdného řádku} other {# prázdných řádků}}.'
+          threeValuesNoEmpty: '{firstValue}, {secondValue} a {thirdValue}.'
+          twoValuesAndEmpty: '{firstValue}, {secondValue} a {numEmpty, plural, =1 {jeden
+            prázdný řádek} few {# prázdné řádky} many {# prázdného řádku} other
+            {# prázdných řádků}}.'
+          twoValuesNoEmpty: '{firstValue} a {secondValue}.'
+        notEnoughRows: Soubor neobsahuje dostatek řádků k importu dat
+        organization: Organizace
+        selectZetkinField: Importovat jako...
+        tags: Štítky
+        unfinished:
+          date: Je třeba nastavit formát data
+          enum: Je třeba přiřadit hodnoty
+          gender: Je třeba přiřadit hodnoty
+          id: Je třeba nastavit ID
+          org: Je třeba přiřadit hodnoty
+          tag: Je třeba přiřadit hodnoty
+        zetkinFieldGroups:
+          fields: Pole
+          id: ID
+          other: Ostatní
+        zetkinHeader: Zetkin
+        zetkinID: ID Zetkin
+      preview:
+        columnHeader:
+          gender: Pohlaví
+          org: Organizace
+          tags: Štítky
+        genders:
+          f: Žena
+          m: Muž
+          o: Jiné
+          unknown: Neznámé
+        ids:
+          email: E-mail
+          ext_id: Externí ID
+          id: ID Zetkin
+        next: Další
+        noOrg: Bez organizace
+        noTags: Bez štítků
+        noValue: Bez hodnoty
+        previous: Předchozí
+        title: Náhled přiřazení
+      settings:
+        firstRowIsHeaders: První řádek obsahuje záhlaví
+        header: Nastavení
+        sheetSelectHelpText: Soubor obsahuje více listů. Vyberte, který chcete použít.
+        sheetSelectLabel: List
+        skipUnknown: Přeskočit řádky s neznámým ID (nikdy nevytvářet nové osoby)
+      show: Zobrazit
+      statusMessage:
+        done: 'Připraveno k importu: {numConfiguredPeople, plural, =1 {1 osoba} few {#
+          osoby} many {# osoby} other {# osob}}'
+        notDone: Nastavení není dokončené
+      title: Import osob
+    impactSummary:
+      future:
+        created: '{number} {numPeople, plural, =1 {nová osoba bude vytvořena} few {nové
+          osoby budou vytvořeny} many {nové osoby bude vytvořeno} other {nových
+          osob bude vytvořeno}}'
+        defaultDesc: '{numPeople} se změní pole {field}'
+        organization: organizace
+        orgs: '{numPeople} bude přiřazena {org}'
+        tags: štítky
+        tagsDesc: '{numPeople} budou přidány {tags}'
+        updated: '{number} {numPeople, plural, =1 {osoba bude aktualizována} few {osoby
+          budou aktualizovány} many {osoby bude aktualizováno} other {osob bude
+          aktualizováno}}'
+      past:
+        created: '{number} {numPeople, plural, =1 {nová osoba byla vytvořena} few {nové
+          osoby byly vytvořeny} many {nové osoby bylo vytvořeno} other {nových
+          osob bylo vytvořeno}}'
+        defaultDesc: '{numPeople} se změnilo pole {field}'
+        organization: organizace
+        orgs: '{numPeople} byla přiřazena {org}'
+        tags: štítky
+        tagsDesc: '{numPeople} byly přidány {tags}'
+        updated: '{number} {numPeople, plural, =1 {osoba byla aktualizována} few {osoby
+          byly aktualizovány} many {osoby bylo aktualizováno} other {osob bylo
+          aktualizováno}}'
+      people: '{number} {numPeople, plural, =1 {osobě} few {osobám} many {osoby} other
+        {osobám}}'
+      peopleToSubOrg: '{orgName} ({num})'
+    importStatus:
+      completed:
+        desc: Vaše data byla importována do Zetkinu
+        title: Import dokončen
+      completedChanges: Provedené změny
+      error:
+        desc: Do Zetkinu nebyla importována žádná data
+        title: Import se nezdařil
+      loadingState: Probíhá import
+      scheduled:
+        desc: Toto okno můžete bezpečně zavřít. Až bude import hotový, pošleme vám
+          e-mail.
+        title: Jde o velký import, jehož zpracování v Zetkinu chvíli potrvá!
+    preflight:
+      headers:
+        messages: Zprávy
+        summary: Souhrn
+      messages:
+        common:
+          back: Vrátit se
+          checkbox: Rozumím a přesto chci pokračovat
+          fewRows: Tento problém se vyskytuje na řádcích {commaRows} a {lastRow}.
+          manyRows: Tento problém se vyskytuje na řádcích {commaRows} a na
+            {additionalRows, plural, =1 {1 dalším řádku} few {# dalších řádcích}
+            many {# dalšího řádku} other {# dalších řádcích}}.
+          singleRow: Tento problém se vyskytuje na řádku {row}.
+        invalidFormat:
+          title: 'Nesprávný formát pole: {field}'
+        invalidOrgCountry:
+          description: Kvůli tomu nelze odhadnout např. mezinárodní předvolby telefonních
+            čísel. Požádejte podporu o opravu.
+          title: 'Kód země organizace je možná neplatný: {code}'
+        majorChange:
+          description: Toto upozornění se zobrazí, když se změna týká více než 30 %
+            importovaných osob. Zkontrolujte, zda jsou sloupce správně nastavené
+          title: 'Tento import přepíše pole „{field}“ (počet osob: {amount})'
+        missingIdAndName:
+          description: Každý řádek musí obsahovat alespoň celé jméno nebo ID osoby, která
+            už v Zetkinu existuje.
+          title: Některé řádky nemají identifikátor
+        noImpact:
+          description: Příčinou může být to, že soubor neobsahuje žádná nová data, nebo
+            neznámá chyba.
+          descriptionSkipped: Příčinou může být to, že soubor neobsahuje žádná nová data
+            nebo že byla všechna nová data přeskočena podle vašeho nastavení. Ve
+            vzácných případech může jít o neznámou chybu.
+          title: Tento import by nic nezměnil
+        ok:
+          description: Zkontrolujte souhrn a kliknutím na „Importovat“ spusťte import.
+          title: Nebyly nalezeny žádné problémy!
+        unconfiguredId:
+          description: To povede k duplicitám v databázi. Pokud jde o váš první import,
+            doporučujeme vrátit se a zvolit externí ID, které budete moci
+            používat i nadále.
+          title: Nebyl vybrán sloupec s ID
+        unconfiguredIdAndName:
+          description: Každý import musí obsahovat alespoň celá jména nebo ID osob, které
+            už v Zetkinu existují.
+          title: Nejsou nastaveny identifikační sloupce
+        unexpectedError:
+          description: Nebyly importovány žádné osoby. Můžete se vrátit a zkontrolovat
+            nastavení importu nebo vybrat k importu jiný soubor. Odeslaný
+            formulář obsahoval chyby. Zkuste to prosím znovu a vyplňte všechny
+            potřebné údaje. Pokud chyba přetrvává, můžete kontaktovat podporu na
+            adrese info@zetkin.org
+          title: Něco se pokazilo a import byl přerušen
+        unknownError:
+          description: Pokud potřebujete pomoc s pochopením problému, kontaktujte podporu.
+          title: Došlo k neznámé chybě
+        unknownPerson:
+          description: Sloupec je nastavený jako ID Zetkin, ale obsahuje ID, která
+            neexistují. Nemělo se spíše použít externí ID? Nebo mohly být
+            některé osoby od vytvoření souboru smazány?
+          title: Pokus o aktualizaci neexistujících záznamů
+        validating: Probíhá kontrola
+    steps:
+      configure: Nastavení
+      import: Import
+      upload: Nahrání
+      validate: Kontrola
+    uploadDialog:
+      dialogButtons:
+        configure: Nastavit
+        restart: Začít znovu
+      instructions: '{link} nebo ho sem přetáhněte'
+      loading: Načítání souboru...
+      release: Pusťte soubor sem
+      selectClick: Nahrajte soubor
+      types: CSV, XLS nebo XLSX
+      unsupportedFile: Nepodporovaný formát souboru.
+    validation:
+      messages: Zprávy
+      people: '{numPeople, plural, =1 {osoba} few {osoby} many {osoby} other {osob}}'
+      statusMessages:
+        create: Tento import vytvoří {numCreated, plural, =1 {1 osobu} few {# osoby}
+          many {# osoby} other {# osob}}.
+        createAndUpdate: Tento import vytvoří {numCreated, plural, =1 {1 osobu} few {#
+          osoby} many {# osoby} other {# osob}} a aktualizuje {numUpdated,
+          plural, =1 {1 osobu} few {# osoby} many {# osoby} other {# osob}}.
+        error: Před importem je třeba opravit chyby
+        update: Tento import aktualizuje {numUpdated, plural, =1 {1 osobu} few {# osoby}
+          many {# osoby} other {# osob}}.
+  joinForms:
+    defaultTitle: Formulář bez názvu
+    deleteJoinForm:
+      success: Formulář „{title}“ byl smazán
+      title: Smazat vstupní formulář
+      warning: Opravdu chcete smazat formulář „{title}“?
+    embedding:
+      copyLink: Kopírovat adresu URL pro vložení
+      delete: Smazat
+      formSubmitted: Formulář byl odeslán
+      linkCopied: Adresa URL pro vložení byla zkopírována.
+      openLink: Otevřít
+      submitButton: Odeslat
+    formPane:
+      labels:
+        addField: Přidat pole
+        description: Popis
+        requireEmailVerification: Vyžadovat ověření e-mailu
+        shareWithSuborgs: Sdílet s podorganizacemi
+        title: Název
+      title: Upravit formulář
+    forms: Formuláře
+    states:
+      accepted: Schváleno
+      pending: Čeká na schválení
+    status: Stav
+    submissionList:
+      approveButton: Schválit
+      firstName: Jméno
+      form: Formulář
+      lastName: Příjmení
+      noFilteringResults: Filtrování nevrátilo žádné výsledky.
+      rejectButton: Zamítnout
+      timestamp: Čas odeslání
+    submissionPane:
+      allForms: Všechny formuláře
+      allStatuses: Vše
+      approveButton: Schválit
+      form: Formulář
+      rejectButton: Zamítnout
+    submissionVerifiedPage:
+      h: Děkujeme!
+      info: Vaše žádost o vstup byla ověřena a organizátoři z organizace {org} ji brzy
+        posoudí.
+    submitToken:
+      copySubmitToken: Kopírovat token pro odeslání
+      submitTokenCopied: Token pro odeslání byl zkopírován.
+  journeys:
+    instance:
+      addAssigneeButton: Přiřadit osobu
+      addSubjectButton: Přidat osobu
+      addSubjectLabel: Přidat osobu
+      assignPersonLabel: Přiřadit osobu
+      closeButton:
+        dialog:
+          outcomeFieldPlaceholder: Popište výsledek případu ({singularLabel})
+          outcomeLabel: Výsledek
+          outcomeTagsDescription: Přidejte štítky, které popisují výsledek.
+          outcomeTagsLabel: Štítky výsledku
+        error: Při uzavírání případu ({singularLabel}) došlo k chybě
+        label: Uzavřít případ ({singularLabel})
+      collapseButton: Sbalit
+      createAndApplyTagButton: Vytvořit a přidat
+      created: Vytvořeno {relative}
+      deadlineLabel: (Termín byl {date})
+      dueDateInputClear: Vymazat
+      dueDateInputLabel: Termín
+      editButton: Upravit
+      ellipsisMenu:
+        convert: Převést na...
+        deletion:
+          delete: Smazat „{instanceTitle}“
+          warning: Případ „{instanceTitle}“ bude smazán. Tuto akci nelze vrátit zpět.
+      expandButton: Rozbalit
+      markedCompleteLabel: Označeno jako splněné {relativeTime}
+      newInstance:
+        draft: Koncept
+        openingNote: Úvodní poznámka
+        submitLabel: Vytvořit nový případ ({journey})
+        title: Nový případ ({journey})
+      noMilestones: Nejsou zde žádné milníky.
+      noOutcomeDetails: Podrobnosti o výsledku nebyly uvedeny.
+      percentComplete: 'Dokončeno: {percentComplete} %'
+      reopenButton:
+        error: Při opětovném otevírání případu ({singularLabel}) došlo k chybě
+        label: Znovu otevřít případ ({singularLabel})
+      sections:
+        assigned: Přiřazeno
+        members: Zúčastněné osoby
+        milestones: Milníky
+        outcome: Tento případ ({journeyTitle}) je uzavřený.
+        summary: Shrnutí
+        timeline: Poznámky
+      summaryPlaceholder: Zadejte stručný popis stavu tohoto případu ({journeyTitle}).
+      updated: poslední aktivita {relative}
+    instances:
+      columns:
+        assignees: Přiřazeno
+        created: Vytvořeno
+        id: ID
+        nextMilestoneDeadline: Termín dalšího milníku
+        nextMilestoneTitle: Další milník
+        outcome: Poznámky k výsledku
+        subjects: Osoby
+        summary: Shrnutí
+        tagsFree: Štítky
+        title: Název
+        updated: Naposledy aktualizováno
+      export:
+        headers:
+          assignees: Přiřazené osoby
+          closed: Uzavřeno
+          created: Vytvořeno
+          id: ID
+          journey: Cesta
+          nextMilestone: Další milník
+          nextMilestoneDeadline: Termín dalšího milníku
+          outcome: Výsledek
+          subjects: Zúčastněné osoby
+          summary: Shrnutí
+          title: Název
+          unsortedTags: Štítky bez skupiny
+          updated: Aktualizováno
+      filters:
+        doesNotHaveOperator: nemá
+        doesNotIncludeOperator: neobsahuje
+        hasOperator: má
+        includesOperator: obsahuje
+        isEmptyOperator: je prázdný
+        isNotOperator: není
+        isOperator: je
+        milestoneLabel: Milník
+        personLabel: Osoba
+        tagLabel: Štítek
+      menu:
+        downloadCsv: Stáhnout případy ({pluralLabel}) jako CSV
+        downloadXlsx: Stáhnout případy ({pluralLabel}) jako Excel
+    journeys:
+      buttonClose: Uzavřít
+      buttonOpen: Otevřít
+      cardCTA: Zobrazit vše
+      closedCount: 'Uzavřené: {numberClosed}'
+      conversionSnackbar:
+        error: Při převodu cesty se něco pokazilo.
+        success: Převod cesty proběhl úspěšně!
+      editJourneyTitleAlert:
+        error: Chyba. Název nebyl aktualizován.
+        success: Název byl aktualizován!
+      lastActivity: Poslední aktivita
+      menu:
+        downloadCsv: Stáhnout vše jako CSV
+        downloadXlsx: Stáhnout vše jako Excel
+      nextMilestone: Další milník
+      openCount: 'Otevřené: {numberOpen}'
+      overview:
+        overviewTitle: Všechny cesty
+      statusClosed: Uzavřeno
+      statusOpen: Otevřeno
+      tabs:
+        closed: Uzavřené
+        manage: Správa
+        milestones: Milníky
+        open: Otevřené
+        overview: Přehled
+        timeline: Časová osa
+      title: Cesty
+  organizations:
+    allEventsList:
+      emptyList:
+        message: Nebyly nalezeny žádné události
+        removeFiltersButton: Zrušit filtry
+      filterButtonLabels:
+        locations: 'Místa: {count}'
+        organizations: '{numOrgs, plural, =0 {Organizace} =1 {1 organizace} few {#
+          organizace} many {# organizace} other {# organizací}}'
+        selectDate: Vybrat datum
+        thisWeek: Tento týden
+        today: Dnes
+        tomorrow: Zítra
+    authDialog:
+      cancelButton: Zrušit
+      content: K přihlášení na události potřebujete účet Zetkin.
+      label: Přihlásit se
+      loginButton: Přihlásit se a vrátit se
+    eventPage:
+      cancelSignup: Zrušit přihlášku
+      cancelledHeader: Tato událost byla zrušena
+      cancelledParagraph: Už se na ni nelze přihlásit. Pokud na ni máte přihlášku,
+        vaše účast se už neočekává.
+      contactPerson:
+        default: 'Kontaktní osoba: {name}'
+        you: Kontaktní osobou jste vy
+      defaultTitle: Událost bez názvu
+      haveAccount: Mám účet
+      loading: Načítání...
+      noDescription: Tato událost nemá popis
+      noLocation: Bez fyzického místa
+      partOfProject: Součást projektu {projectLink}
+      participatingInfo: '{participatingCount, plural, =1 {# osoba se účastní} few {#
+        osoby se účastní} many {# osoby se účastní} other {# osob se účastní}}'
+      today: Dnes
+    gen3:
+      description: Toto je nová webová aplikace pro organizátory (3. generace). Pokud
+        znáte tu původní, najdete zde spoustu nových funkcí a vylepšené
+        uživatelské rozhraní. Pokud ale chcete, můžete ještě nějakou dobu
+        používat i starou aplikaci pro organizátory.
+      gen2Button: Přejít do starého rozhraní
+      title: Vítejte v novém Zetkinu!
+    home:
+      footer:
+        privacyPolicy: Zásady ochrany osobních údajů
+      header:
+        calendarLinkCopied: Odkaz na kalendář byl zkopírován
+        connect: Připojit se
+        copyIcsUrl: Kopírovat URL pro odběr kalendáře
+        follow: Sledovat
+        login: Přihlásit se a připojit se
+        organize: Organizovat
+        unfollow: Přestat sledovat
+        userMenu: Uživatelská nabídka ({initials})
+      map:
+        viewInList: Zobrazit v seznamu
+        viewOnMap: Zobrazit na mapě
+      menu:
+        logout: Odhlásit se
+        myZetkin: Můj Zetkin
+        organize: Organizovat
+        settings: Nastavení
+      tabs:
+        calendar: Kalendář
+        suborgs: Prozkoumat
+    noEventsBlurb:
+      description: '{org} nemá žádné nadcházející události.'
+      headline: Žádné nadcházející události
+    notOrganizer:
+      description: Tato část Zetkinu je dostupná pouze uživatelům, kterým jiný
+        funkcionář organizace udělil přístup organizátora. Momentálně nemáte
+        dostatečnou úroveň přístupu. Pokud se domníváte, že jde o chybu, obraťte
+        se na místní funkcionáře Zetkinu nebo na Zetkin Foundation.
+      myPageButton: Přejít na aktivistický portál
+      title: Nemáte přístup organizátora
+    overview:
+      suborgs:
+        title: Podorganizace
+    page:
+      title: 'Vyberte organizaci:'
+    sidebar:
+      allOrganizations: Všechny organizace
+      filter:
+        noResults: Tomuto filtru neodpovídají žádné organizace
+        topLevel: Organizace nejvyšší úrovně
+      filtered: Filtrováno
+      recent:
+        clear: Vymazat
+        title: Nedávné organizace
+    signupChoiceModal:
+      description: K přihlášení na událost použijte svůj účet Zetkin. Pokud účet
+        nemáte, nevadí – přihlásit se můžete i bez něj.
+      title: Jak se chcete přihlásit?
+      withAccount: S účtem
+      withoutAccount: Bez účtu
+    subOrgEventBlurb:
+      description: '{eventsElem} {numEvents, plural, =1 {další událost se koná} few
+        {další události se konají} many {další události se koná} other {dalších
+        událostí se koná}} v rámci {orgsElem} {numOrgs, plural, =1
+        {podorganizace} few {podorganizací} many {podorganizace} other
+        {podorganizací}}.'
+      headline: Prozkoumejte více
+      showButton: Zobrazit všechny události
+  profile:
+    customFields:
+      notEditable: Toto pole nemůže vaše organizace upravovat
+    delete:
+      button: Smazat osobu
+      confirm: Opravdu chcete smazat osobu {name} z organizace {org} a ze všech
+        souvisejících organizací? Tato akce je nevratná.
+      title: Smazat osobu
+      warning: Tuto akci nelze vrátit zpět!
+    details:
+      title: Údaje
+    editButton: 'Upravit: {title}'
+    editButtonClose: 'Ukončit úpravy: {title}'
+    editButtonLabel: Upravit údaje
+    editPersonHeader: Upravit osobu {person}
+    ellipsisMenu:
+      merge: Sloučit s...
+    events:
+      noPast: Žádné minulé události
+      noUpcoming: Žádné nadcházející události
+      past: Minulé události
+      upcoming: Nadcházející události
+    genders:
+      f: Žena
+      m: Muž
+      o: Jiné
+      unknown: Neuvedeno
+    journeys:
+      addButton: Zahájit novou cestu
+      title: Cesty
+    notes:
+      addNoteButton: Přidat poznámku
+      cancelButton: Zrušit
+      note:
+        author: '{authorName}: přidána poznámka'
+        delete: Smazat
+        deleteWarningDescription: Opravdu chcete smazat tuto poznámku o osobě {name}?
+          Smazání poznámky nelze vrátit zpět.
+        deleteWarningTitle: Smazat poznámku
+      placeHolder: Napište poznámku
+      title: Poznámky
+    numberOfChangesMessage: '{number, plural, =1 {Bude aktualizováno 1 pole} few
+      {Budou aktualizována # pole} many {Bude aktualizováno # pole} other {Bude
+      aktualizováno # polí}}'
+    organizations:
+      add: Přidat novou podorganizaci
+      addError: Tuto organizaci se nepodařilo přidat
+      removeError: Tuto organizaci se nepodařilo odebrat
+      title: Organizace
+    resetButton: Vrátit změny
+    role:
+      noRole: Bez role
+    saveButton: Uložit
+    surveySubmissions:
+      showMore: + {numExtra} další
+      title: Odpovědi na dotazníky
+    tabs:
+      events: Události
+      manage: Správa
+      profile: Profil
+    tags:
+      createAndApplyLabel: Vytvořit a přidat
+    user:
+      hasAccount: Propojeno s účtem Zetkin
+      noAccount: Není propojeno s účtem Zetkin
+  projects:
+    activeProjects:
+      header: Aktivní
+    activitiesOverview:
+      button: Procházet všechny aktivity
+      empty: Na tento den není nic naplánováno
+      endsTomorrow: končí zítra
+      extraActivities: + {numExtra} další
+      goToActivities: Zobrazit všechny nadcházející aktivity.
+      noActivities: Tento týden nejsou žádné aktivity.
+      noDescription:
+        addOneNow: Přidejte ho nyní.
+        text: K tomuto projektu zatím nebyl přidán žádný popis. {addOneNow}
+      nothingTomorrow: Na zítřek není nic naplánováno
+      startsTomorrow: začíná zítra
+      subtitles:
+        endsLater: Končí {relative}
+        endsToday: Končí dnes
+        sentEarlier: Odesláno {relative}
+        sentLater: Bude odesláno {relative}
+        startsLater: Začíná {relative}
+        startsToday: Začíná dnes
+      thisWeekCard: Dále tento týden
+      title: Nadcházející aktivity
+      todayCard: Dnes
+      tomorrowCard: Zítra
+    activityList:
+      eventItem:
+        contact: Nebyla přiřazena žádná kontaktní osoba
+        locations: 'Místa: {count}'
+        reminders: '{numMissing, plural, =1 {Jedna osoba zatím nedostala připomínku} few
+          {# osoby zatím nedostaly připomínku} many {# osoby zatím nedostalo
+          připomínku} other {# osob zatím nedostalo připomínku}}'
+        signups: Některé přihlášky čekají na vyřízení
+    all:
+      cardAriaLabel: Otevřít projekt „{title}“
+      cardCTA: Přejít na projekt
+      create: Vytvořit nový projekt
+      creating: Vytváří se nový projekt
+      filter:
+        areaAssignments: Přidělení oblastí
+        calls: Telefonní kampaně
+        emails: E-maily
+        filter: Filtrovat výsledky
+        standalones: Samostatné události
+        surveys: Dotazníky
+      header: Projekty
+      indefinite: Bez časového vymezení
+      projectFilterPlaceholder: Zadejte text pro filtrování projektů
+      unsorted: Nezařazené projekty
+      upcoming: 'Počet nadcházejících událostí: {numEvents, number}.'
+    allProjects:
+      noActivities: Pokud má vaše organizace aktivity, které nepatří k žádnému
+        projektu, zobrazí se zde.
+      viewArchive: Zobrazit archiv
+    archivedProjects:
+      header: Archivované
+      hideShowButton:
+        hide: Skrýt archivované projekty
+        show: Zobrazit archivované projekty
+    assigneeActions: Akce přiřazených osob
+    calendarView: Zobrazit vše v kalendáři
+    changeProjectDialog:
+      moveButtonLabel: Přesunout
+    createButton:
+      createActivity: Vytvořit
+      createAreaAssignment: Přidělení oblasti
+      createCallAssignment: Telefonní kampaň
+      createEmail: E-mail
+      createEvent: Událost
+      createMultiShiftEvent: Událost s více směnami
+      createSurvey: Dotazník
+      createTask: Úkol
+      creatingActivity: Vytváří se
+    events: Události
+    feedback:
+      copy: Sběr zpětné vazby (při telefonních kampaních nebo samostatně) vám může
+        pomoci pracovat efektivněji
+      create: Vytvořit dotazník
+      heading: Zpětná vazba a dotazníky (nic není nastaveno)
+    form:
+      archiveProject:
+        archive: Archivovat projekt
+        unarchive: Obnovit z archivu
+      createActivity:
+        error: Při vytváření aktivity došlo k chybě
+      createAreaAssignment:
+        defaultQuestion: Podařilo se úkol splnit?
+      createCallAssignment:
+        newCallAssignment: Moje telefonní kampaň
+      createEmail:
+        newEmail: E-mail bez názvu
+      createProject:
+        create: Vytvořit projekt
+        error: Při vytváření projektu došlo k chybě
+        newProject: Můj projekt
+      createSurvey:
+        newSurvey: Můj dotazník
+      createTask:
+        title: Vytvořit úkol
+      deleteProject:
+        cancel: Zrušit
+        error: Při mazání projektu došlo k chybě
+        submitButton: Potvrdit smazání
+        title: Smazat projekt
+        warning: Opravdu chcete tento projekt smazat? Tato akce je nevratná.
+      description: Popis
+      edit: Upravit projekt
+      editProjectTitle:
+        error: Chyba při aktualizaci názvu projektu
+        success: Název projektu byl aktualizován
+      manager:
+        label: Vedoucí projektu
+      name: Název
+      requestError: Došlo k chybě. Zkuste to prosím znovu.
+      required: Povinné pole
+      status:
+        draft: Koncept
+        heading: Stav
+        published: Zveřejněný
+      visibility:
+        heading: Viditelnost
+        private: Soukromý
+        public: Veřejný
+    indefinite: Bez časového vymezení
+    layout:
+      activities: Aktivity
+      allProjects: Všechny projekty a aktivity
+      archive: Archiv
+      calendar: Kalendář
+      insights: Statistiky
+      overview: Přehled
+    linkGroup:
+      createActivity: Vytvořit
+      createAreaAssignment: Přidělení oblasti
+      createCallAssignment: Telefonní kampaň
+      createEmail: E-mail
+      createEvent: Událost
+      createSurvey: Dotazník
+      createTask: Úkol
+      public: Veřejná stránka
+      settings: Upravit nastavení
+    mobilization:
+      copy: Uspořádání telefonní kampaně k mobilizaci vaší organizace mnohonásobně
+        zvýší účast
+      create: Vytvořit telefonní kampaň
+      heading: Mobilizace a oslovování (nic není nastaveno)
+    noManager: Projekt nemá vedoucí osobu
+    publicProjectPage:
+      calendarLinkCopied: Odkaz na kalendář byl zkopírován
+      copyIcsUrl: Kopírovat URL pro odběr kalendáře
+      eventList:
+        emptyList:
+          message: Nebyly nalezeny žádné události
+          removeFiltersButton: Zrušit filtry
+        filterButtonLabels:
+          locations: 'Místa: {count}'
+          selectDate: Vybrat datum
+          thisWeek: Tento týden
+          today: Dnes
+          tomorrow: Zítra
+        noEventsBlurb:
+          description: '{project} nemá žádné nadcházející události.'
+          headline: Nejsou žádné nadcházející události
+      map:
+        viewInListButton: Zobrazit v seznamu
+        viewOnMapButton: Zobrazit na mapě
+    shared:
+      cta: Zobrazit sdílené aktivity
+      noActivities: Zde se zobrazí všechny probíhající aktivity sdílené s vaší organizací.
+      noArchives: Zde se zobrazí všechny skončené aktivity, které byly sdíleny s vaší
+        organizací.
+      title: Sdíleno s námi
+    sharedLayout:
+      alertMsg: Tento projekt obsahuje pouze aktivity sdílené jinými organizacemi.
+        Můžete si ho prohlížet, ale nemůžete ho měnit.
+      subtitle: '{numOfActivities, plural, =1 {1 aktivita} few {# aktivity} many {#
+        aktivity} other {# aktivit}}'
+      tabs:
+        activities: Aktivity
+        archive: Archiv
+        overview: Přehled
+      title: Sdíleno s námi
+    singleProject:
+      filterActivities: Zadejte text pro filtrování
+      noActivities: V tomto projektu zatím nejsou žádné aktivity.
+      noSearchResults: Filtrování nepřineslo žádné výsledky.
+      showPublicPage: Zobrazit veřejnou stránku pro přihlášky
+      status:
+        archived: Archivovaný
+        draft: Koncept
+        private: Soukromý
+        public: Veřejný
+      viewArchive: Zobrazit archiv
+    taskLayout:
+      tabs:
+        assignees: Přiřazené osoby
+        insights: Statistiky
+        summary: Shrnutí
+    tasks: Úkoly
+    urlCard:
+      nowAccepting: Na tomto odkazu se nyní přijímají přihlášky
+      open: Otevřeno pro přihlášky
+      preview: Náhled projektu
+      previewPortal: Zobrazit náhled projektu v aktivistickém portálu
+      visitPortal: Otevřít projekt v aktivistickém portálu
+      willAccept: Na tomto odkazu se budou přijímat přihlášky
+  search:
+    error: Došlo k chybě
+    groups:
+      callassignment: Telefonní kampaně
+      campaign: Projekty
+      journeyinstance: Cesty
+      person: Osoby
+      survey: Dotazníky
+      task: Úkoly
+      view: Seznamy
+    label: Hledat
+    noResults: Žádné výsledky
+    placeholder: Zadejte hledaný výraz
+    results:
+      project: Projekt
+    showOnly:
+      callassignment: Zobrazit pouze telefonní kampaně
+      campaign: Zobrazit pouze projekty
+      journeyinstance: Zobrazit pouze cesty
+      person: Zobrazit pouze osoby
+      survey: Zobrazit pouze dotazníky
+      task: Zobrazit pouze úkoly
+      view: Zobrazit pouze seznamy
+  settings:
+    email:
+      themes:
+        addTheme: Vytvořit nový motiv
+        delete:
+          action: Smazat
+          confirmDialog:
+            confirmButton: Ano, smazat motiv {themeId}
+            title: Smazat motiv {themeId}?
+            warningText: Opravdu chcete smazat motiv {themeId}? Tuto akci nelze vrátit zpět.
+        duplicateTheme: Duplikovat motiv
+        overview:
+          description: Motiv určuje celkový vzhled a rozvržení vašich e-mailů – od barev a
+            písem po mezery, tlačítka a bloky obsahu.
+          title: Motivy
+        themeCard:
+          duplicate: Duplikovat
+          edit: Upravit
+          title: Motiv {themeId}
+        themeEditor:
+          jsonError: Neplatný JSON
+          previewTitle: Náhled
+          saveButton: Uložit
+          tabs:
+            block: Blok
+            css: CSS
+            frame: Rámec
+          title: Motiv {themeId}
+        themePreview:
+          button: Zaregistrujte se zde
+          heading:
+            paragraphPart1: Dobrý den
+            paragraphPart2: S radostí vás zveme na panelovou diskusi 1. května
+            paragraphPart3: 'Co vás čeká:'
+          paragraph:
+            paragraph1: 'Evropou obchází strašidlo – strašidlo komunismu. Všechny mocnosti
+              staré Evropy uzavřely svatou alianci, aby toto strašidlo
+              zažehnaly: papež i car, Metternich i Guizot, francouzští
+              radikálové i němečtí policejní špiclové.'
+            paragraph2: Kde je opoziční strana, kterou by její protivníci u moci neoznačili
+              za komunistickou? Kde je opozice, která by cejch komunismu sama
+              nevmetla do tváře jak pokročilejším opozičním stranám, tak svým
+              reakčním odpůrcům?
+            paragraph3: 'Z této skutečnosti vyplývají dvě věci:'
+            paragraph4: Všechny evropské mocnosti již uznávají komunismus za mocnost.
+            paragraph5: Je nejvyšší čas, aby komunisté otevřeně, před celým světem,
+              zveřejnili své názory, své cíle a své snahy a postavili proti této
+              báchorce o strašidle komunismu manifest samotné strany.
+            paragraph6: 'Celý manifest si můžete přečíst '
+            paragraph7: zde
+        title: Motivy
+        unsavedChanges:
+          confirmLeaving: Odejít bez uložení
+          warning: Máte neuložené změny. Opravdu chcete odejít?
+    fields:
+      access:
+        onlyThisOrg: Pouze tato organizace
+        suborgRead: Podorganizace mohou data zobrazit
+        suborgReadAndWrite: Podorganizace mohou data upravovat
+      accessTypes:
+        onlyThisOrg: Ne
+        suborgRead: Ano, mohou data zobrazit
+        suborgReadAndWrite: Ano, mohou data zobrazit i upravovat
+      confirmDeletion:
+        confirmButton: Ano, smazat pole „{fieldTitle}“
+        title: Smazat pole „{fieldTitle}“?
+        warningText: Opravdu chcete smazat pole „{fieldTitle}“? Tuto akci nelze vrátit zpět.
+      create:
+        accessInput: Sdílet s podorganizacemi?
+        accessInputHelper: Správci této organizace budou moci tato data o osobách vždy
+          zobrazit i upravovat.
+        createButton: Vytvořit
+        errorMessage: Při vytváření pole došlo k neočekávané chybě. Zkuste to prosím
+          znovu. Pokud chyba přetrvává, kontaktujte podporu.
+        optionsInput: Možnosti (oddělené čárkou)
+        slugInput: Identifikátor
+        slugInputHelper: Identifikátor musí být jedinečný a smí obsahovat pouze znaky
+          a-z, 0-9 a _
+        title: Vytvořit nové pole
+        titleInput: Název
+        typeInput: Typ
+      customFieldTypes:
+        date: Datum
+        enum: Možnosti
+        json: JSON
+        lnglat: Zeměpisná délka a šířka
+        text: Text
+        url: URL
+      edit:
+        cancelButton: Zrušit
+        deleteButton: Smazat pole
+        errorMessage: Pole se nepodařilo aktualizovat.
+        optionsInput: Možnosti (oddělené čárkou)
+        saveButton: Uložit
+        slugInput: Identifikátor
+        title: Úprava pole „{fieldTitle}“
+        titleInput: Název
+        typeInput: Typ
+      errors:
+        '400': Toto pole se nepodařilo uložit. Zkontrolujte prosím identifikátor a
+          možnosti.
+        '409': Tento identifikátor se už používá. Zvolte prosím jiný.
+      list:
+        editButton: Upravit
+        headers:
+          access: Přístup
+          slug: Identifikátor
+          title: Název
+          type: Typ
+        title: Pole
+    officials:
+      addPerson:
+        addAdmin: Přidat správce
+        addOrganizer: Přidat organizátora
+        administrators: správce
+        alreadyInList: Už je v seznamu
+        organizers: organizátory
+        placeholder: Pro přidání osoby mezi {list} začněte psát
+      administrators:
+        columns:
+          name: Jméno
+        description: Správci mají plný přístup k vytváření, úpravám a mazání jakéhokoli
+          typu obsahu.
+        empty: Zatím nebyli přidáni žádní správci.
+        roleInheritance: Správce v organizaci
+        title: Správci
+      organizers:
+        columns:
+          inheritance: Dědění role
+          name: Jméno
+        description: Organizátoři mají dostatečná oprávnění například k organizování
+          projektů a ke správě existujících telefonních kampaní.
+        empty: Zatím nebyli přidáni žádní organizátoři.
+        roleInheritance: Organizátor v organizaci
+        title: Organizátoři
+      tableButtons:
+        demote: Degradovat
+        promote: Povýšit
+        remove: Odebrat
+      urlCard:
+        linkToPub: Odkaz na veřejnou stránku organizace
+        subTitle: Uživatelé se musí nejprve připojit k organizaci, než budou mít přístup
+          do Zetkinu jako funkcionáři.
+      you: Vy
+    settingsLayout:
+      access: Přístup
+      email: E-mail
+      fields: Pole
+      title: Nastavení
+  smartSearch:
+    buttonLabels:
+      add: Uložit výběr
+      addNewFilter: Přidat / odebrat osoby
+      cancel: Zrušit
+      close: Zavřít
+      goBack: Zpět na dotaz
+      save: Uložit
+    filterGallery:
+      categories:
+        basicInformation:
+          description: Vyberte osoby podle osobních údajů
+          title: Základní informace
+        crossReferencing:
+          description: Vyberte osoby podle seznamů a dotazů Smart Search
+          title: Křížové odkazy
+        email:
+          description: Najděte osoby podle údajů získaných při odesílání e-mailů.
+          title: E-maily
+        events:
+          description: Vyberte osoby podle údajů z událostí
+          title: Události
+        journey:
+          description: Vyberte osoby podle údajů z cest
+          title: Cesty
+        misc:
+          description: Další způsoby výběru
+          title: Ostatní
+        phoneBanking:
+          description: Vyberte osoby podle údajů o hovorech
+          title: Telefonní kampaně
+        surveys:
+          description: Vyberte osoby podle odpovědí na dotazníky
+          title: Dotazníky
+        tasks:
+          description: Vyberte osoby podle údajů o úkolech
+          title: Úkoly
+      filters:
+        action_participation:
+          description: Které osoby se přihlásily nebo byly potvrzeny na konkrétní události?
+          title: Účast na konkrétní události
+        all:
+          description: Najděte osoby podle toho, ve kterých podorganizacích jsou.
+          title: Všechny osoby v podorganizaci
+        area:
+          description: Vyhledávejte podle polí s polohou uvnitř zeměpisné oblasti nebo
+            mimo ni
+          title: Poloha (oblast)
+        call_history:
+          description: Najděte osoby, které byly obvolány či zastiženy nebo u kterých
+            proběhl pokus o hovor.
+          title: Historie hovorů
+        caller:
+          description: Najděte osoby, které jsou přiřazeny jako volající.
+          title: Volající
+        caller_participation:
+          description: Najděte osoby, které jako volající zaznamenaly hovory.
+          title: Volající se zaznamenanými hovory
+        campaign_participation:
+          description: Které osoby se přihlásily? Které byly potvrzeny? A které ne?
+            Najděte je!
+          title: Účast na událostech
+        email_blacklist:
+          description: Vrácené e-maily, chybné adresy, nedoručené zprávy – tady jsou.
+          title: Osoby blokované pro e-maily
+        email_click:
+          description: Kliknuto, nebo ne?
+          title: Podle interakce s odkazy v e-mailech.
+        email_history:
+          description: Komu byl odeslán jaký e-mail a kdy?
+          title: Podle historie e-mailů
+        joinform:
+          description: Najděte osoby, které se připojily přes vstupní formulář.
+          title: Podle zdrojového vstupního formuláře
+        journey_subjects:
+          description: Najděte osoby, které jsou zapojené do cesty nebo ji již dokončily
+          title: Osoby zapojené do cesty
+        official:
+          description: Najděte osoby, které mají v organizaci přístup organizátora nebo
+            správce
+          title: Podle úrovně přístupu
+        person_data:
+          description: Jméno, adresa, e-mail a další!
+          title: Osobní údaje
+        person_field:
+          description: Jako základní osobní údaje, ale prohledávejte vlastní pole této
+            organizace.
+          title: Vlastní pole
+        person_tags:
+          description: Pro hledání osob s určitými štítky nebo bez nich.
+          title: Štítky
+        person_view:
+          description: Když potřebujete osoby, které v seznamu jsou, nebo nejsou.
+          title: Osoby ze seznamu
+        random:
+          description: Náhodně přidejte nebo odeberte osoby.
+          title: Náhodný výběr
+        sub_query:
+          description: Upřesněte tento dotaz Smart Search pomocí jiného dotazu Smart Search.
+          title: Osoby odpovídající uloženému dotazu Smart Search
+        survey_option:
+          description: 'Využijte odpovědi z dotazníků k jejich slavnému účelu: k hledání
+            těch správných osob!'
+          title: Odpovědi na otázky se zaškrtávacími políčky
+        survey_response:
+          description: 'Využijte odpovědi z dotazníků k jejich slavnému účelu: k hledání
+            těch správných osob!'
+          title: Odpovědi na textové otázky
+        survey_submission:
+          description: Byl dotazník odeslán, nebo ne? Tady najdete správné osoby!
+          title: Odeslaný dotazník
+        task:
+          description: Přidejte nebo odeberte osoby podle jejich zapojení do úkolů
+          title: Úkoly
+        user:
+          description: Najděte osoby, které jsou, nebo nejsou propojeny s účtem Zetkin
+          title: Uživatelé Zetkinu
+    filters:
+      all:
+        inputString: Začít {startWithSelect}.
+        startWithSelect:
+          'false': s prázdným seznamem
+          'true': se seznamem všech osob v organizaci
+      allInSuborg:
+        examples:
+          one: Přidat všechny, kdo jsou v konkrétní podorganizaci Místní pobočka Littleton
+          two: Odebrat všechny, kdo jsou v jakékoli podorganizaci.
+        inputString:
+          any: '{addRemoveSelect} všechny, kdo jsou v {suborgScopeSelect}.'
+          multiple: '{addRemoveSelect} všechny, kdo jsou v {suborgScopeSelect}:
+            {multipleSuborgsSelect}'
+          single: '{addRemoveSelect} všechny, kdo jsou v {suborgScopeSelect}
+            {singleSuborgSelect}'
+        suborgScopeSelect:
+          any: jakékoli podorganizaci
+          multiple: kterékoli z následujících podorganizací
+          single: konkrétní podorganizaci
+      area:
+        examples:
+          one: Přidat osoby, jejichž Poloha bydliště je uvnitř oblasti Malmö
+          two: Odebrat osoby, jejichž adresa centrály je mimo oblast Kodaň
+        inputString: '{addRemoveSelect} osoby, jejichž {lnglatFieldSelect} je
+          {withinOutsideSelect} {areaSelect}'
+        slice:
+          in: uvnitř oblasti
+          out: mimo oblast
+      callBlocked:
+        inputString: '{addRemoveSelect} osoby, které jsou z jakéhokoli důvodu
+          zablokovány pro volání'
+      callHistory:
+        assignmentSelect:
+          any: jakékoli telefonní kampani
+          assignment: telefonní kampani „{assignmentTitle}“
+          none: Tato organizace zatím nemá žádné telefonní kampaně
+        callSelect:
+          called: byly obvolány
+          notreached: nebyly zastiženy
+          reached: byly úspěšně zastiženy
+        examples:
+          one: Přidat osoby, které byly úspěšně zastiženy alespoň 2krát v jakékoli
+            telefonní kampani kdykoli.
+          two: Odebrat osoby, které byly obvolány alespoň jednou v telefonní kampani
+            „Aktivace bývalých členů“ během posledních 30 dní.
+        inputString: '{addRemoveSelect} osoby, které {callSelect} {minTimes} v
+          {assignmentSelect} {timeFrame}.'
+        minTimes: '{minTimes, plural, one {jednou} few {#krát} many {#krát} other
+          {#krát}}'
+        minTimesInput: alespoň {input} {minTimes, plural, one {krát} few {krát} many
+          {krát} other {krát}}
+      caller:
+        assignmentSelect:
+          any: jakékoli telefonní kampani
+          assignment: telefonní kampani „{assignmentTitle}“
+          none: Tato organizace zatím nemá žádné telefonní kampaně
+        callerSelect:
+          assigned: jsou přiřazeny jako volající
+          notassigned: nejsou přiřazeny jako volající
+        examples:
+          one: Přidat osoby, které jsou aktuálně přiřazeny jako volající.
+          two: Odebrat osoby, které jsou přiřazeny jako volající v telefonní kampani
+            „Aktivace bývalých členů“.
+        inputString: '{addRemoveSelect} osoby, které {callerSelect} v {assignmentSelect}.'
+        previewString: '{addRemoveSelect} osoby, které {callerSelect} v {assignmentSelect}.'
+      callerParticipation:
+        assignmentSelect:
+          any: jakékoli telefonní kampani
+          assignment: telefonní kampani „{assignmentTitle}“
+          none: Tato organizace zatím nemá žádné telefonní kampaně
+        callCount:
+          edit:
+            between: '{callCountSelect} {minInput} a {maxInput} hovory'
+            max: '{callCountSelect} {maxInput} {max, plural, one {hovor} few {hovory} many
+              {hovoru} other {hovorů}}'
+            min: '{callCountSelect} {minInput} {min, plural, one {hovor} few {hovory} many
+              {hovoru} other {hovorů}}'
+            once: '{callCountSelect} hovor'
+          labels:
+            between: mezi
+            max: nejvýše
+            min: alespoň
+            once: alespoň jeden
+          preview:
+            between: mezi {min} a {max} hovory
+            max: nejvýše {max} {max, plural, one {hovor} few {hovory} many {hovoru} other
+              {hovorů}}
+            min: alespoň {min} {min, plural, one {hovor} few {hovory} many {hovoru} other
+              {hovorů}}
+            once: alespoň jeden hovor
+        examples:
+          one: Přidat osoby, které zaznamenaly alespoň 50 hovorů.
+          two: Odebrat osoby, které zaznamenaly nejvýše 5 hovorů v telefonní kampani
+            „Aktivace bývalých členů“.
+        inputString: '{addRemoveSelect} osoby, které zaznamenaly {callCountSelect} v
+          {assignmentSelect}.'
+        previewString: '{addRemoveSelect} osoby, které zaznamenaly {callCountSelect} v
+          {assignmentSelect}.'
+      emailBlacklist:
+        inputString: '{addRemoveSelect} osoby, které nebudou dostávat e-maily
+          {reasonSelect}'
+        reasonSelect:
+          any: z jakéhokoli důvodu
+          unsubOrg: kvůli odhlášení z odběru
+      emailClick:
+        inputString: '{addRemoveSelect} osoby, které {operatorSelect} na
+          {linkScopeSelect} {emailSelect} {projectSelect} {timeFrame}
+          {linkSelect}'
+        linkScopeSelect:
+          anyFollowingLinks: jakýkoli z následujících odkazů v konkrétním e-mailu
+          anyLink: jakýkoli odkaz v jakémkoli e-mailu
+          anyLinkInEmail: jakýkoli odkaz v konkrétním e-mailu
+          linkInEmailFromProject: jakýkoli odkaz v jakémkoli e-mailu v konkrétním projektu
+        operatorSelect:
+          clicked: klikly
+          notClicked: neklikly
+      emailHistory:
+        emailScopeSelect:
+          any: jakýkoli e-mail
+          email: konkrétní e-mail
+          project: jakýkoli e-mail z projektu
+        inputString: '{addRemoveSelect} osoby, které {operatorSelect} {emailScopeSelect}
+          {emailSelect} {projectSelect} {timeFrame}'
+        operatorSelect:
+          notOpened: neotevřely
+          notSent: neobdržely
+          opened: otevřely
+          sent: obdržely
+      eventParticipation:
+        bookedSelect:
+          booked: potvrzeny
+          signed_up: přihlášeny
+        error: Při načítání událostí došlo k chybě
+        example: Přidat osoby, které byly potvrzeny na událost a dostavily se.
+        inputString: '{addRemoveSelect} osoby, které byly {bookedSelect} na událost
+          {eventSelect} {statusSelect}'
+        statusSelect:
+          any: bez ohledu na účast
+          attended: a dostavily se
+          cancelled: a zrušily účast
+          noshow: a nedostavily se
+      joinForm:
+        anyForm: jakýkoli vstupní formulář
+        form: vstupní formulář „{title}“
+        inputString: '{addRemoveSelect} osoby, které se připojily přes {formSelect}
+          {timeFrame}'
+      journey:
+        condition:
+          conditionSelect:
+            all: a mají všechny
+            any: a mají kterýkoli
+            none: a nemají žádný
+            regardlessTags: bez ohledu na štítky
+            some: a mají alespoň
+          preview:
+            all: a mají všechny
+            any: a mají kterýkoli
+            none: a nemají žádný
+            regardlessTags: bez ohledu na štítky
+            some: a mají alespoň {minMatching}
+        followingTags: z následujících štítků
+        inputString: '{addRemoveSelect} osoby zapojené do případů cesty {journeySelect},
+          které byly otevřeny {openedTimeFrame} a {stateSelect}
+          {closedTimeFrame} {condition} {tagsDesc} {tags}'
+        stateOptions:
+          closed: byly uzavřeny
+          open: jsou stále otevřené
+      mostActive:
+        examples:
+          one: Přidat 100 osob s nejvyšší aktivitou v organizaci před dneškem.
+          two: Odebrat 5 osob s nejvyšší aktivitou v organizaci kdykoli.
+        inputString: '{addRemoveSelect} {numPeopleSelect} {numPeople} s nejvyšší
+          aktivitou v organizaci {timeFrame}.'
+        numPeople: '{numPeople, plural, one {osobu} few {osoby} many {osoby} other
+          {osob}}'
+        numPeopleSelect: '{numPeopleSelect}'
+      official:
+        examples:
+          one: Přidat všechny osoby, které mají přístup jako organizátoři nebo správci.
+          two: Odebrat všechny osoby, které mají přístup jako správci.
+        inputString: '{addRemoveSelect} všechny osoby, které mají přístup jako
+          {roleSelect}.'
+        roleSelect:
+          admin: správci
+          any: organizátoři nebo správci
+          organizer: organizátoři
+      personData:
+        ellipsis: ...
+        examples:
+          one: Přidat každou osobu, jejíž křestní jméno je „Clara“ a příjmení je „Zetkin“.
+          two: Odebrat každou osobu, jejíž město je Stockholm.
+        fieldMatches: '{field} odpovídá hodnotě {value}'
+        fieldSelect:
+          alt_phone: alternativní telefonní číslo
+          city: město
+          co_address: adresa c/o
+          email: e-mail
+          first_name: křestní jméno
+          gender: pohlaví
+          last_name: příjmení
+          phone: telefonní číslo
+          remove: Odebrat toto kritérium
+          street_address: ulice
+          zip_code: PSČ
+        fieldTuple: '{first} a {second}'
+        genders:
+          f: žena
+          m: muž
+          o: jiné
+          unknown: neuvedeno
+        inputString: '{addRemoveSelect} každou osobu, jejíž {criteria}.'
+      personField:
+        edit:
+          date: '{fieldSelect} je {timeFrame}'
+          enum: '{fieldSelect} je „{selectInput}“'
+          none: Tato organizace zatím nemá žádná vlastní pole.
+          text: '{fieldSelect} odpovídá „{freeTextInput}“'
+          url: '{fieldSelect} odpovídá „{freeTextInput}“'
+        fieldSelect:
+          any: vlastní pole
+        inputString: '{addRemoveSelect} každou osobu, jejíž {field}.'
+        preview:
+          date: '{fieldName} je {timeFrame}'
+          enum: '{fieldName} je „{searchTerm}“'
+          text: '{fieldName} odpovídá „{searchTerm}“'
+          url: '{fieldName} odpovídá „{searchTerm}“'
+      personTags:
+        addAllFromGroupButton: Přidat vše
+        condition:
+          conditionSelect:
+            all: mají všechny
+            any: mají kterýkoli
+            none: nemají žádný
+            some: mají alespoň
+          edit:
+            all: '{conditionSelect}'
+            any: '{conditionSelect}'
+            none: '{conditionSelect}'
+            some: '{conditionSelect} {minMatchingInput}'
+          preview:
+            all: mají všechny
+            any: mají kterýkoli
+            none: nemají žádný
+            some: mají alespoň {minMatching}
+        examples:
+          one: 'Přidat osoby, které mají alespoň jeden z následujících štítků: „Člen“,
+            „Aktivista“'
+          two: 'Odebrat osoby, které mají všechny z následujících štítků: „Člen výboru“'
+        inputString: '{addRemoveSelect} osoby, které {condition} z následujících štítků:
+          {tags}'
+        noGroup: Bez skupiny
+      personView:
+        examples:
+          one: Přidat osoby, které jsou v seznamu „Aktivní členové 2022“.
+          two: Odebrat osoby, které nejsou v seznamu „Aktivní členové 2022“.
+        inSelect:
+          in: jsou
+          notin: nejsou
+        inputString: '{addRemoveSelect} osoby, které {inSelect} v seznamu {viewSelect}.'
+        viewSelect:
+          none: Tato organizace zatím nemá žádné seznamy
+      projectParticipation:
+        activitySelect:
+          activity: typu „{activity}“
+          any: jakéhokoli typu
+        bookedSelect:
+          booked: potvrzeny
+          signed_up: přihlášeny
+        examples:
+          one: Přidat osoby, které byly přihlášeny na události jakéhokoli typu v jakémkoli
+            projektu na místě „Dorfplatz“ kdykoli a dostavily se
+          two: Odebrat osoby, které nebyly potvrzeny na události typu „Lepení plakátů“ v
+            jakémkoli projektu na jakémkoli místě před dneškem bez ohledu na
+            účast.
+        haveSelect:
+          in: byly
+          notin: nebyly
+        inputString: '{addRemoveSelect} osoby, které {haveSelect} {bookedSelect} na
+          události {activitySelect} v {projectSelect} {locationSelect}
+          {timeFrame} {statusSelect}'
+        locationSelect:
+          any: na jakémkoli místě
+          location: na místě „{location}“
+        projectSelect:
+          any: jakémkoli projektu
+          project: projektu „{project}“
+        statusSelect:
+          any: bez ohledu na účast
+          attended: a dostavily se
+          cancelled: a zrušily účast
+          noshow: a nedostavily se
+      random:
+        addLimitRemoveSelect:
+          add: přidat
+          limit: omezit na
+          sub: odebrat
+        examples:
+          one: Náhodně přidat 20 osob v organizaci.
+          two: Náhodně odebrat 15 % osob v organizaci.
+        inputString: Náhodně {addRemoveSelect} {quantity} v organizaci.
+      subQuery:
+        examples:
+          one: Odebrat osoby, které odpovídají dotazu Smart Search „Osoby žijící ve
+            Stockholmu“.
+          two: Přidat osoby, které odpovídají cílové skupině telefonní kampaně „První
+            kampaň“.
+        inputString: '{addRemoveSelect} osoby, které {matchSelect} {query}.'
+        matchSelect:
+          in: odpovídají
+          notin: neodpovídají
+        noSmartSearches: V této organizaci zatím nejsou žádné dotazy Smart Search.
+        query:
+          edit:
+            callassignment_goal: '{querySelect} telefonní kampaně „{titleSelect}“'
+            callassignment_target: '{querySelect} telefonní kampaně „{titleSelect}“'
+            email_target: '{querySelect} e-mailu „{titleSelect}“'
+            none: '{querySelect}'
+            standalone: '{querySelect} „{titleSelect}“'
+          preview:
+            callassignment_goal: účelové skupině telefonní kampaně „{queryTitle}“
+            callassignment_target: cílové skupině telefonní kampaně „{queryTitle}“
+            email_target: cílové skupině e-mailu „{queryTitle}“
+            none: '{queryTitle}'
+            standalone: dotazu Smart Search „{queryTitle}“
+          selectLabel:
+            callassignment_goal: účelové skupině
+            callassignment_target: cílové skupině
+            email_target: cílové skupině
+            none: dotazu Smart Search
+            standalone: dotazu Smart Search
+          selectOptions:
+            callassignment_goal: účelové skupině telefonní kampaně
+            callassignment_target: cílové skupině telefonní kampaně
+            email_target: cílové skupině e-mailu
+            none: Tato organizace zatím nemá žádné telefonní kampaně ani dotazy Smart
+              Search.
+            standalone: samostatnému dotazu Smart Search
+      surveyOption:
+        conditionSelect:
+          all: vybraly všechny
+          any: vybraly kteroukoli
+          none: nevybraly žádnou
+          some: vybraly některé
+        examples:
+          one: 'Odebrat všechny osoby, které vybraly všechny z následujících možností v
+            dotazníku „Členský dotazník 2020“ (otázka „Otázka 1“): „Někdy“,
+            „Nikdy“'
+          two: 'Přidat všechny osoby, které vybraly kteroukoli z následujících možností v
+            dotazníku „Členský dotazník“ (otázka „Otázka 2“): „Možnost 2“'
+        inputString: '{addRemoveSelect} osoby, které {conditionSelect} z následujících
+          možností v {surveySelect} ({questionSelect}): {options}'
+        questionSelect:
+          any: jakákoli otázka
+          none: V tomto dotazníku nejsou žádné otázky s možnostmi
+          question: otázka „{question}“
+        surveySelect:
+          any: jakémkoli dotazníku
+          none: Tato organizace zatím nemá žádné dotazníky
+          survey: dotazníku „{surveyTitle}“
+      surveyResponse:
+        examples:
+          one: Osoby, jejichž odpovědi v dotazníku „Členský dotazník“ (jakákoli otázka)
+            obsahují „organizovat“.
+          two: Osoby, jejichž odpovědi v dotazníku „Členský dotazník“ (otázka „Otázka 1“)
+            přesně odpovídají „organizovat“.
+        inputString: '{addRemoveSelect} osoby, jejichž odpověď v {surveySelect}
+          ({questionSelect}) {matchSelect} „{freeTextInput}“'
+        matchSelect:
+          eq: přesně odpovídá
+          in: obsahuje
+          noteq: není
+          notin: neobsahuje
+        questionSelect:
+          any: jakákoli otázka
+          none: V tomto dotazníku nejsou žádné otázky s volnou textovou odpovědí
+          question: otázka „{question}“
+        surveySelect:
+          any: jakémkoli dotazníku
+          none: Tato organizace zatím nemá žádné dotazníky
+          survey: dotazníku „{surveyTitle}“
+      surveySubmission:
+        examples:
+          one: Osoby, které odeslaly odpovědi na dotazník „Členský dotazník 2020“ před
+            dneškem.
+          two: Osoby, které odeslaly odpovědi na dotazník „Členský dotazník 2020“ během
+            posledních 30 dní.
+        inputString: '{addRemoveSelect} osoby, které odeslaly odpovědi na {surveySelect}
+          {timeFrame}.'
+        surveySelect:
+          any: jakýkoli dotazník
+          none: Tato organizace zatím nemá žádné dotazníky
+          survey: dotazník „{surveyTitle}“
+      task:
+        examples:
+          one: Přidat osoby, které splnily úkol „Řekněte to přátelům“ alespoň jednou
+            kdykoli
+          two: Přidat osoby, které ignorovaly jakýkoli úkol v jakémkoli projektu 2 až
+            5krát před dneškem
+        inputString: '{addRemoveSelect} osoby, které {taskStatusSelect}
+          {taskSelect}{projectSelect} {matchingSelect} {timeFrame}'
+        projectSelect:
+          any: jakémkoli projektu
+          in: ' v '
+          project: projektu „{project}“
+        taskSelect:
+          any: jakýkoli úkol
+          task: úkol „{task}“
+        taskStatusSelect:
+          assigned: měly přiřazený
+          completed: splnily
+          ignored: ignorovaly
+      user:
+        connectedSelect:
+          'false': nejsou propojeny
+          'true': jsou propojeny
+        examples:
+          one: Odebrat všechny osoby, které jsou propojeny s uživatelem Zetkinu.
+          two: Přidat všechny osoby, které nejsou propojeny s uživatelem Zetkinu.
+        inputString: '{addRemoveSelect} všechny osoby, které {connectedSelect} s
+          uživatelem Zetkinu.'
+    headers:
+      examples: Příklady
+      gallery: Jak chcete vybrat osoby?
+    matching:
+      edit:
+        between: '{matchingSelect} {minInput} až {maxInput} krát'
+        max: '{matchingSelect} {maxInput} {max, plural, one {krát} few {krát} many
+          {krát} other {krát}}'
+        min: '{matchingSelect} {minInput} {min, plural, one {krát} few {krát} many
+          {krát} other {krát}}'
+        once: '{matchingSelect}'
+      labels:
+        between: v rozmezí
+        max: nejvýše
+        min: alespoň
+        once: alespoň jednou
+      options:
+        between: v rozmezí
+        max: nejvýše
+        min: alespoň
+        once: alespoň jednou
+      preview:
+        between: '{min} až {max}krát'
+        max: nejvýše {max, plural, one {jednou} few {#krát} many {#krát} other {#krát}}
+        min: alespoň {min}{max, plural, one {krát} few {krát} many {krát} other {krát}}
+        once: alespoň jednou
+    misc:
+      noOptions: Žádné odpovídající štítky
+      noOptionsEmailNotSent: E-mail nebyl odeslán. Odkazy obsažené v e-mailu se
+        přidají až po jeho odeslání.
+      noOptionsInvalidEmail: Neplatný e-mail. Nejprve vyberte e-mail.
+      noOptionsLinks: Žádné odpovídající odkazy
+    operators:
+      add: Přidat
+      limit: Omezit na
+      sub: Odebrat
+    orgScope:
+      all: Hledá se ve všech organizacích
+      few: Hledá se v organizacích {first} a {last}
+      many: Hledá se v organizacích {first} a {additional} dalších
+      single: Hledá se v organizaci {value}
+      suborgs: Hledá se ve všech podorganizacích
+    quantity:
+      edit:
+        integer: '{numInput} {quantitySelect}'
+        percent: '{numInput} {quantitySelect}'
+      preview:
+        integer: '{people} {people, plural, one {osobu} few {osoby} many {osoby} other
+          {osob}}'
+        percent: '{people} % osob'
+      quantitySelectLabel:
+        integer: '{people, plural, one {osobu} few {osoby} many {osoby} other {osob}}'
+        percent: '% osob'
+      quantitySelectOptions:
+        integer: počet osob
+        percent: procento osob
+    readOnly: Tento dotaz Smart Search je jen pro čtení a nelze jej upravit.
+    resultHint:
+      countLabel: '{count, plural, =1 {jednu osobu} few {# osoby} many {# osoby} other
+        {# osob}}'
+      hint: Tento dotaz Smart Search vám aktuálně vrátí {count}.
+    smartSearch: Smart Search
+    statsPopper:
+      change: změna
+      details: Smart Search pracuje dynamicky. To znamená, že se počet shod může v
+        průběhu času měnit. Ostatní uživatelé mohou vidět jiné výsledky, pokud
+        mají přístup k většímu nebo menšímu počtu osob.
+      exit: Výsledek
+      headline: Dopad výběru
+      info: Toto je dynamický výběr a čísla se mohou v průběhu času měnit.
+      input: předtím
+      matches: nalezeno
+      output: poté
+    timeFrame:
+      edit:
+        afterDate: '{timeFrameSelect} {afterDateSelect}'
+        beforeDate: '{timeFrameSelect} {beforeDateSelect}'
+        beforeToday: '{timeFrameSelect}'
+        between: '{timeFrameSelect} {afterDateSelect} a {beforeDateSelect}'
+        ever: '{timeFrameSelect}'
+        future: '{timeFrameSelect}'
+        lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {dne} few {dní} many
+          {dne} other {dní}}'
+        onDate: '{onTimeFrameSelect} {onDateSelect}'
+      preview:
+        afterDate: po {afterDate}
+        beforeDate: před {beforeDate}
+        beforeToday: před dneškem
+        between: mezi {afterDate} a {beforeDate}
+        ever: kdykoli
+        future: v budoucnu
+        lastFew: '{days, plural, one {během posledního # dne} few {během posledních #
+          dní} many {během posledních # dne} other {během posledních # dní}}'
+        onDate: dne {onDate}
+      timeFrameSelectLabel:
+        afterDate: po
+        beforeDate: před
+        beforeToday: před dneškem
+        between: mezi
+        ever: kdykoli
+        future: v budoucnu
+        lastFew: během posledních
+        onDate: dne
+      timeFrameSelectOptions:
+        afterDate: po určitém datu
+        beforeDate: před určitým datem
+        beforeToday: před dneškem
+        between: mezi dvěma daty
+        ever: kdykoli
+        future: v budoucnu
+        lastFew: nedávno
+        onDate: v určitý den
+  surveys:
+    addBlocks:
+      choiceQuestionButton: Výběrová otázka
+      openQuestionButton: Otevřená otázka
+      textButton: Text
+      title: Vyberte typ bloku a přidejte do dotazníku další obsah
+    alert:
+      editable: Tento dotazník patří organizaci {orgTitle} a upravovat ho můžete jen v
+        jeho původním umístění.
+      goOriginal: Přejít na původní dotazník
+      notEditable: Tento dotazník patří organizaci {orgTitle} a nemůžete ho upravovat.
+    autoLink:
+      close: Zavřít
+      columns:
+        matchedEmail: E-mail nalezené osoby
+        matchedFirstName: Jméno nalezené osoby
+        matchedLastName: Příjmení nalezené osoby
+        submissionEmail: E-mail
+        submissionFirstName: Jméno
+        submissionLastName: Příjmení
+      error: Chyba při automatickém propojování. ({msg})
+      linkSelected: Propojit vybrané
+      success: '{count, plural, =1 {Jedna odpověď byla automaticky propojena!} few {#
+        odpovědi byly automaticky propojeny!} many {# odpovědi bylo automaticky
+        propojeno!} other {# odpovědí bylo automaticky propojeno!}}'
+      title: Zkontrolujte odpovědi k automatickému propojení
+      tooltips:
+        notEnoughRowsSelected: Pro spuštění je potřeba vybrat alespoň jeden řádek
+        startAutoLinking: Spustit automatické propojení
+    blocks:
+      choice:
+        addOption: Přidat možnost
+        addOptionsBulk: Hromadně přidat možnosti
+        bulk:
+          cancelButton: Zrušit
+          placeholder: Napište nebo vložte každou možnost na samostatný řádek
+          submitButton: Přidat vše
+        description: Popis
+        emptyDescription: Popis
+        emptyOption: Prázdná možnost
+        emptyQuestion: Název
+        question: Otázka
+        widget: Typ výběru
+        widgets:
+          checkbox: Více možností (zaškrtávací políčka)
+          radio: Jedna možnost (přepínače)
+          select: Jedna možnost (rozbalovací seznam)
+      deleteBlockDialog:
+        title: Smazat otázku
+        warningText: Opravdu chcete tuto otázku smazat? Tato akce je trvalá a nelze ji
+          vrátit zpět.
+      deleteOptionDialog:
+        title: Smazat možnost
+        warningText: Opravdu chcete tuto možnost smazat? Tato akce je trvalá a nelze ji
+          vrátit zpět.
+      open:
+        description: Popis
+        empty: Otevřená otázka bez názvu
+        fieldTypePreview: textové pole
+        label: Název
+        multiLine: Víceřádkové
+        singleLine: Jednořádkové
+        textFieldType: Typ textového pole
+      text:
+        content: Popis
+        empty: Blok bez názvu
+        header: Nadpis
+    chart:
+      header: Odpovědi na dotazník
+      placeholder: Až začnete sbírat odpovědi, uvidíte zde, jak přibývají
+      subheader: 'Kumulativní počet odpovědí za {days, plural, =1 {poslední den} few
+        {poslední # dny} many {posledních # dne} other {posledních # dní}}'
+      tooltip:
+        submissions: '{count, plural, =1 {1 odpověď} few {# odpovědi} many {# odpovědi}
+          other {# odpovědí}}'
+    editWarning:
+      editing:
+        header: Dotazník odemčen
+        safe:
+          bullet1: Oprava pravopisných chyb
+          bullet2: Změna pořadí bloků
+          bullet3: Skrývání otázek
+          bullet4: Přidávání otázek nebo možností
+          header: Bezpečné
+        subheader: Vyhněte se změnám, které by mohly způsobit ztrátu nebo poškození dat
+          z odpovědí.
+        unsafe:
+          bullet1: Mazání otázek (místo toho je skryjte)
+          bullet2: Přejmenování otázek nebo možností tak, že se změní jejich význam
+          header: Rizikové
+      locked:
+        header: Dotazník uzamčen
+        subheader: Do tohoto dotazníku už přicházejí odpovědi. Úpravy dotazníku teď
+          mohou způsobit problémy s daty. Postupujte opatrně.
+    insights:
+      error: Při načítání došlo k neznámé chybě.
+      export:
+        errorUnknown: Při exportu došlo k neznámé chybě.
+        toPdf: Exportovat do PDF
+        toPng: Exportovat do PNG
+      optionsFields:
+        displayInsights:
+          absoluteCount: Počet
+          percentCount: Procenta
+        subheader: Celkem {answerCount, plural, =1 {1 odpověď} few {# odpovědi} many {#
+          odpovědi} other {# odpovědí}} a {totalSelectedOptionsCount, plural, =1
+          {1 vybraná možnost} few {# vybrané možnosti} many {# vybrané možnosti}
+          other {# vybraných možností}}.
+        tabs:
+          barPlot: Sloupcový graf
+          piePlot: Koláčový graf
+        warningMultipleSelectedOptionsPie: Upozorňujeme, že tato otázka umožňuje vybrat
+          více než jednu možnost a {respondentCount, plural, =1 {1 osoba toho
+          využila} few {# osoby toho využily} many {# osoby toho využilo} other
+          {# osob toho využilo}}. Koláčový graf proto může být zavádějící.
+      textFields:
+        copyResponse:
+          copy: Kopírovat do schránky
+          wasCopied: Zkopírováno!
+        subheader: Celkem {answerCount, plural, =1 {1 odpověď} few {# odpovědi} many {#
+          odpovědi} other {# odpovědí}}, {totalWordCount, plural, =1 {1 slovo}
+          few {# slova} many {# slova} other {# slov}} a {totalUniqueWordCount,
+          plural, =1 {1 jedinečné slovo} few {# jedinečná slova} many {#
+          jedinečného slova} other {# jedinečných slov}}.
+        tabs:
+          responses: Odpovědi
+          wordCloud: Mrak slov
+          wordFrequencies: Sloupcový graf
+    layout:
+      actions:
+        createList: Vytvořit seznam z odpovědí
+        delete: Smazat
+        duplicate: Duplikovat
+        move: Přesunout
+        publish: Zveřejnit dotazník
+        unpublish: Zrušit zveřejnění dotazníku
+        warning: Dotazník „{surveyTitle}“ bude smazán.
+      stats:
+        questions: '{numQuestions, plural, one {1 otázka} few {# otázky} many {# otázky}
+          other {# otázek}}'
+        submissions: '{numSubmissions, plural, one {1 odpověď} few {# odpovědi} many {#
+          odpovědi} other {# odpovědí}}'
+      unknownTitle: Dotazník bez názvu
+    optionCollapse:
+      collapse: Sbalit
+      more: '{numOfOptions, plural, one {Zobrazit 1 další možnost} few {Zobrazit #
+        další možnosti} many {Zobrazit # další možnosti} other {Zobrazit #
+        dalších možností}}'
+    organizerActionPane:
+      subtitle: Poznámky k hovorům s osobou {person}
+      title: Vyžadován zásah organizátora
+    overview:
+      noQuestions:
+        button: Vytvořit otázky
+        title: Tento dotazník zatím neobsahuje žádné otázky
+    shareSuborgsCard:
+      caption: Když je tato možnost zapnutá, mohou funkcionáři v podorganizacích číst
+        a prohledávat odpovědi na dotazníky od osob propojených s jejich
+        organizací.
+      title: Sdílet s podorganizacemi
+    state:
+      draft: Koncept
+      published: Zveřejněný
+      scheduled: Naplánovaný
+      unpublished: Nezveřejněný
+    submissionPane:
+      anonymous: Anonymní
+      hidden: Skrytá
+      linked: Propojeno
+      subtitle: '{person} {date}'
+    submissions:
+      anonymous: Anonymní
+      createPersonSubmit: Uložit a propojit
+      createPersonTitle: Vytvořit novou osobu
+      dateColumn: Datum
+      delete: Smazat
+      deleteSuccess: Úspěšně smazáno
+      deleteTitle: Smazat odpověď
+      deleteWarningText: Opravdu chcete smazat tuto odpověď na dotazník?
+      emailColumn: E-mail
+      firstNameColumn: Jméno
+      lastNameColumn: Příjmení
+      link: Propojit
+      personRecordColumn: Osoba
+      suggestedPeople: Navrhované osoby
+      unlink: Zrušit propojení
+    surveyChangeProjectDialog:
+      error: 'Chyba: Dotazník se nepodařilo přesunout do vybraného projektu'
+      success: Dotazník „{surveyTitle}“ byl přesunut do projektu „{projectTitle}“
+      title: Přesunout dotazník
+    surveyDialog:
+      add: Přidat
+      cancel: Nepřidávat
+      description: Právě propojená osoba nemá e-mailovou adresu, ale v odpovědi na
+        dotazník je uvedena. Chcete ji k osobě přidat?
+      new: Nový
+      old: Starý
+      title: Přidat e-mailovou adresu
+    surveyDialogDifferentEmail:
+      description: Právě propojená osoba má jiný e-mail než ten, který je uveden v
+        odpovědi na dotazník. Chcete nastavit e-mail z odpovědi jako nový e-mail
+        této osoby?
+      keep: Ne, ponechat starý e-mail
+      title: Aktualizovat e-mailovou adresu
+      update: Ano, aktualizovat e-mail
+    surveyDuplicated:
+      error: 'Chyba: Dotazník se nepodařilo duplikovat'
+      success: Váš dotazník byl duplikován.
+      title: Dotazník duplikován
+    surveyEditor:
+      required: Vyžadovat odpověď na tuto otázku
+    surveyForm:
+      accept: Souhlasím s níže uvedenými podmínkami
+      error: Při odesílání vašich odpovědí se něco pokazilo. Zkuste to prosím později.
+      policy:
+        text: Kliknutím zobrazíte úplné zásady ochrany osobních údajů Zetkinu
+      required: povinné
+      sign:
+        anonymous: Podepsat anonymně
+        nameAndEmail: Podepsat jménem a e-mailem
+      submit: Odeslat
+      terms:
+        description: Po odeslání tohoto dotazníku budou vámi poskytnuté údaje uloženy a
+          zpracovány v Zetkinu organizací {organization} za účelem organizování
+          aktivismu a v souladu se zásadami ochrany osobních údajů Zetkinu.
+        title: Zásady ochrany osobních údajů
+    surveyFormSubmitted:
+      retakeSurvey: Vyplnit dotazník znovu
+      text: Vaše odpovědi na dotazník „{title}“ byly odeslány.
+      title: Dotazník odeslán
+    surveySignature:
+      email:
+        email: E-mail
+        firstName: Jméno
+        lastName: Příjmení
+      title: Zvolte způsob podpisu
+      type:
+        anonymous: Podepsat anonymně
+        email: Podepsat jménem a e-mailem
+        user: Podepsat jako {person} s e-mailem {email}
+    surveyToList:
+      error: Kvůli neznámé chybě se nepodařilo vytvořit seznam z odpovědí na dotazník.
+      title: Odpovědi z dotazníku {surveyTitle}
+    tabs:
+      insights: Statistiky
+      overview: Přehled
+      questions: Otázky
+      submissions: Odpovědi
+    unlinkedCard:
+      description: Když někdo odešle dotazník bez přihlášení, nebude taková odpověď
+        propojená. Vyhledávání osob v Zetkinu podle odpovědí na dotazníky u
+        nepropojených odpovědí nefunguje.
+      header: Nepropojené odpovědi
+      openLink: '{numUnlink, plural, one {Propojit odpověď} few {Propojit odpovědi}
+        many {Propojit odpovědi} other {Propojit odpovědi}}'
+    unlinkedWarningAlert:
+      autoLink:
+        canBeAutoLinkedText: Automaticky lze propojit {countStr, plural, =1 {1 odpověď}
+          few {# odpovědi} many {# odpovědi} other {# odpovědí}}.
+        openDialogButton: Automaticky propojit odpovědi
+      default:
+        description: '{numUnlink, plural, one {Jedna odpověď na dotazník není propojená
+          s profilem v Zetkinu, a proto nebude zahrnuta do vyhledávání.} few
+          {Některé odpovědi na dotazník nejsou propojené s profily v Zetkinu, a
+          proto nebudou zahrnuty do vyhledávání.} many {Některé odpovědi na
+          dotazník nejsou propojené s profily v Zetkinu, a proto nebudou
+          zahrnuty do vyhledávání.} other {Některé odpovědi na dotazník nejsou
+          propojené s profily v Zetkinu, a proto nebudou zahrnuty do
+          vyhledávání.}}'
+        header: Nepropojené odpovědi
+        viewUnlinked: Zobrazit jen nepropojené
+      filtered:
+        description: Seznam je filtrovaný a zobrazuje jen podepsané odpovědi na
+          dotazník, které nejsou propojené s profilem.
+        header: Zobrazeny jen nepropojené odpovědi
+        viewAll: Zobrazit vše
+    urlCard:
+      nowAccepting: Odpovědi se nyní přijímají na tomto odkazu
+      open: Otevřeno pro odpovědi
+      preview: Náhled dotazníku
+      previewPortal: Zobrazit náhled dotazníku v aktivistickém portálu
+      visitPortal: Otevřít dotazník v aktivistickém portálu
+      willAccept: Odpovědi se budou přijímat na tomto odkazu
+  tags:
+    dialog:
+      colorErrorText: Zadejte platný hexadecimální kód
+      colorLabel: Barva
+      createTagButton: Vytvořit
+      createTitle: Vytvořit štítek
+      deleteButtonLabel: Smazat
+      deleteWarning: Opravdu chcete tento štítek smazat? Smazání štítku nelze vrátit zpět.
+      editTitle: Upravit štítek
+      groupCreatePrompt: Přidat „{groupName}“
+      groupLabel: Skupina
+      groupSelectPlaceholder: Zadejte název pro vyhledání nebo vytvoření skupiny
+      titleErrorText: Název štítku je povinný
+      titleLabel: Název štítku
+      typeLabel: Typ štítku
+      types:
+        none: Základní (bez hodnot)
+        text: Textové hodnoty
+      updateTagButton: Aktualizovat
+    groupDialog:
+      deleteTitle: Smazat „{groupName}“
+      deleteWarning: Opravdu chcete tuto skupinu smazat? Smazání skupiny nelze vrátit
+        zpět. Štítky v této skupině se nesmažou, jen zůstanou bez skupiny.
+      editButton: Upravit
+      editTitle: Upravit skupinu
+      titleLabel: Název skupiny
+    manager:
+      addTag: Přidat štítek
+      addValue: Přidat hodnotu ke štítku „{tag}“
+      createNamedTag: 'Vytvořit štítek: {name}'
+      createTag: Nový štítek
+      groupTags: Seskupit štítky
+      title: Štítky
+      ungroupedHeader: Bez skupiny
+      valueTagForm:
+        typeHint: '{type, select, text {Zadejte text} other {Zadejte hodnotu}} ke
+          štítku.'
+    tagsPage:
+      createTagButton: Vytvořit
+      noTags: Vaše organizace zatím nemá žádné štítky
+      overviewTabLabel: Přehled
+      title: Štítky
+      ungroupedHeader: Bez skupiny
+  tasks:
+    actions:
+      delete: Smazat
+      edit: Upravit
+      move: Přesunout
+    assignees:
+      completedStates:
+        completed: Dokončeno {time}
+        ignored: Ignorováno {time}
+        notCompleted: Zatím nedokončeno
+      links:
+        create: Vytvořit dotaz Smart Search
+        edit: Upravit dotaz Smart Search
+        readOnly: Zobrazit dotaz Smart Search
+      queryStates:
+        assigned: Tento úkol byl přiřazen všem osobám, které odpovídají cílovému dotazu
+          Smart Search.
+        editable: Po zveřejnění bude tento úkol přiřazen osobám, které odpovídají
+          cílovému dotazu Smart Search.
+        new: Tento úkol bude určen osobám, které odpovídají dotazu Smart Search. Před
+          zveřejněním musíte pomocí Smart Search vytvořit cílovou skupinu.
+        published: Tento úkol se právě přiřazuje všem, kdo odpovídají cílovému dotazu
+          Smart Search...
+      title: Přiřazeno {numPeople, plural, one {# osobě} few {# osobám} many {# osoby}
+        other {# osobám}}
+    common:
+      notSet: Nenastaveno
+    configs:
+      collectDemographics:
+        fields:
+          demographic: Požadované údaje
+          dempographicOptions:
+            city: Město
+            country: Země
+            email: E-mailová adresa
+            gender: Genderová identita
+            streetAddress: Adresa
+            zipCode: PSČ
+        title: Nastavení sběru demografických údajů
+      shareLink:
+        fields:
+          defaultMessage: Výchozí zpráva k odeslání
+          url: URL ke sdílení
+        title: Nastavení sdílení odkazu
+      visitLink:
+        fields:
+          url: URL k otevření
+        title: Nastavení otevření odkazu
+    deleteTask:
+      cancel: Zrušit
+      error: Při mazání úkolu došlo k chybě
+      submitButton: Potvrdit smazání
+      title: Smazat úkol
+      warning: Opravdu chcete tento úkol smazat? Tato akce je trvalá a nelze ji vrátit
+        zpět.
+    editTask:
+      title: Upravit úkol
+    form:
+      fields:
+        deadline: Termín dokončení
+        expires: Datum vypršení platnosti
+        instructions: Pokyny
+        project: Projekt
+        published: Čas zveřejnění
+        reassignInterval: Znovu přiřadit po dokončení
+        reassignIntervalOptions:
+          days: '{days, plural, =1 {Následující den} few {Po # dnech} many {Po # dne}
+            other {Po # dnech}}'
+          hours: Po {hours, plural, =1 {jedné hodině} few {# hodinách} many {# hodiny}
+            other {# hodinách}}
+          noReassign: Nikdy znovu nepřiřazovat
+        reassignLimit: 'Maximální počet (opakovaných) přiřazení:'
+        timeEstimate: Odhadovaná doba dokončení
+        timeEstimateOptions:
+          hoursAndMinutes: '{hours, plural, =0{} one{# hodina} few{# hodiny} many{#
+            hodiny} other{# hodin}} {minutes, plural, =0{} one {# minuta} few {#
+            minuty} many {# minuty} other {# minut}}'
+          lessThanOneMinute: Méně než minuta
+          noEstimate: Bez odhadu
+        timeValidationErrors:
+          deadlineNotSecond: Toto musí být naplánováno po datu zveřejnění a před datem
+            vypršení platnosti
+          expiresNotThird: Toto musí být naplánováno jako poslední
+          publishedNotFirst: Toto musí být naplánováno jako první
+        title: Název
+        type: Typ úkolu
+        types:
+          demographic: Sběr demografických údajů
+          offline: Offline
+          share_link: Sdílení odkazu
+          visit_link: Otevření odkazu
+          watch_video: Zhlédnutí videa
+      invalidUrl: Zadejte platnou URL adresu
+      requestError: Došlo k chybě. Zkuste to prosím znovu.
+      required: Povinné
+      title: Vytvořit nový úkol
+    noTasksCreatePrompt: Žádné úkoly... Klikněte sem a vytvořte nový.
+    publishButton:
+      publish: Zveřejnit
+      tooltip:
+        alreadyPublished: Již zveřejněno
+        missingAssignees: Chybí přiřazené osoby
+        missingFields: Chybí povinná pole
+        missingFieldsAndAssignees: Chybí povinná pole a přiřazené osoby
+    publishTask:
+      cancel: Zrušit
+      submitButton: Zveřejnit úkol nyní
+      title: Zveřejnit úkol
+      warning: Potvrďte prosím, že chcete tento úkol zveřejnit. Bude odeslán všem
+        přiřazeným osobám.
+    showExpiredTasksPrompt: Zobrazit úkoly s vypršelou platností...
+    statuses:
+      active: Aktivní
+      closed: Uzavřeno
+      draft: Koncept
+      expired: Vypršelo
+      scheduled: Naplánováno
+    taskChangeProjectDialog:
+      error: 'Chyba: úkol se nepodařilo přesunout do vybraného projektu'
+      success: Úkol „{taskTitle}“ byl přesunut do projektu „{projectTitle}“
+      title: Přesunout úkol
+    taskDetails:
+      deadlineTime: Termín
+      editButton: Upravit
+      expiresTime: Vypršení platnosti
+      instructionsLabel: Pokyny
+      publishedTime: Čas zveřejnění
+      reassignInterval:
+        label: Interval opětovného přiřazení
+        value: Znovu se přiřadí {value, plural, =1{hodinu} few{# hodiny} many{# hodiny}
+          other{# hodin}} po dokončení
+      reassignLimit:
+        label: Limit opakovaných přiřazení
+        value: Opakuje se nejvýše {value, plural, =1{jednou} few{#krát} many{#krát}
+          other{#krát}} na osobu
+      statusLabel: Stav
+      timeEstimateLabel: Odhadovaná doba dokončení
+      title: Podrobnosti úkolu
+      titleLabel: Název
+      typeLabel: Typ
+    taskLayout:
+      tabs:
+        assignees: Přiřazené osoby
+        insights: Statistiky
+        summary: Přehled
+    taskListItem:
+      relativeTimes:
+        active: Termín {time}
+        closed: Uzavřeno {time}
+        expired: Platnost vypršela {time}
+        expires: Platnost vyprší {time}
+        indefinite: Zveřejněno {time}
+        scheduled: Bude zveřejněno {time}
+    taskPreview:
+      addImage: Přidat titulní obrázek
+      sectionTitle: Náhled
+      timeEstimate: '{minutes, plural, =0 {Méně než minuta} =1 {Jedna minuta} few {#
+        minuty} many {# minuty} other {# minut}}'
+    taskTypeDetails:
+      demographic:
+        title: Nastavení sběru demografických údajů
+      share_link:
+        title: Nastavení sdílení odkazu
+      visit_link:
+        title: Nastavení otevření odkazu
+    types:
+      demographic: Sběr demografických údajů
+      offline: Offline
+      share_link: Sdílení odkazu
+      visit_link: Otevření odkazu
+      watch_video: Zhlédnutí videa
+  views:
+    actions:
+      create: Vytvořit
+      createError: Došlo k chybě
+      createFolder: Vytvořit složku
+      createJoinForm: Vytvořit vstupní formulář
+      createPerson: Vytvořit osobu
+      createView: Vytvořit seznam
+      creating: Vytváří se
+      importPeople: Importovat osoby
+    browser:
+      backToFolder: Zpět do složky {folder}
+      backToRoot: Zpět na všechny seznamy
+      confirmDelete:
+        folder:
+          title: Smazat složku a její obsah
+          warning: Smazání této složky a všech seznamů v ní je trvalé a nelze ho vrátit
+            zpět. Opravdu chcete pokračovat?
+        view:
+          title: Smazat seznam
+          warning: Smazání tohoto seznamu je trvalé a nelze ho vrátit zpět. Opravdu chcete
+            pokračovat?
+      menu:
+        delete: Smazat
+        duplicate: Duplikovat
+        move: Přesunout
+        rename: Přejmenovat
+        viewCopy: '{viewName} – kopie'
+      moveToFolder: Přesunout do složky {folder}
+      moveToRoot: Přesunout mezi všechny seznamy
+    browserLayout:
+      tabs:
+        duplicates: Duplicity
+        incoming: Příchozí
+        joinForms: Vstupní formuláře
+        views: Seznamy
+      title: Lidé
+    cells:
+      localPerson:
+        alreadyInView: Již v seznamu
+        clearLabel: Zrušit přiřazení
+        otherPeople: Ostatní osoby
+        restrictedMode: Ve sdílených seznamech nelze upravovat.
+        searchLabel: Vyberte osobu
+      organizerAction:
+        actionNeeded: Vyžadován zásah organizátora
+        showDetails: Zobrazit podrobnosti
+        solvedIssues: '{count, plural, =1 {1 vyřešený problém} few {# vyřešené problémy}
+          many {# vyřešeného problému} other {# vyřešených problémů}}'
+      personTag:
+        emptyValue: Bez hodnoty
+    columnDialog:
+      categories:
+        basic:
+          description: Jednoduchá pole s informacemi o osobách.
+          title: Základní informace
+        categorizing:
+          description: K seskupování, kategorizaci nebo užšímu výběru osob, a to libovolně
+            nebo na základě dat v Zetkinu.
+          title: Kategorizace
+        crossReferencing:
+          description: Porovnávejte s daty v Zetkinu pomocí Smart Search.
+          title: Porovnání dat
+        outreach:
+          description: Plánujte, delegujte a provádějte oslovování lidí a po dokončení
+            informujte o výsledcích
+          title: Oslovování
+        surveys:
+          description: Procházejte, vyhledávejte a filtrujte podle odpovědí lidí v
+            dotaznících.
+          title: Dotazníky
+        utility:
+          description: Osvědčené sloupce, které využijete v mnoha situacích
+          title: Pomocné sloupce
+      choices:
+        delegate:
+          columnTitleAssignee: Přiřazená osoba
+          columnTitleContacted: Kontaktováno
+          columnTitleNotes: Poznámky
+          columnTitleResponded: Odpověď
+          description: Přidá sadu sloupců, které se běžně používají při delegování
+            oslovování na přiřazenou osobu.
+          title: Delegování
+        email:
+          description: Přidejte sloupec s e-mailovými adresami
+          keywords: e-mail email
+          title: E-mailová adresa
+        firstName:
+          description: Přidejte sloupec s křestními jmény
+          keywords: křestní jméno
+          title: Jméno
+        followUp:
+          columnTitleCheckbox: Zaškrtávací políčko
+          columnTitleNotes: Poznámky
+          description: Přidá sloupec se zaškrtávacími políčky a sloupec pro poznámky
+          title: Následný kontakt
+        fullName:
+          description: Dva sloupce se jménem a příjmením
+          keywords: příjmení
+          title: Celé jméno
+        lastName:
+          description: Přidejte sloupec s příjmeními
+          keywords: příjmení
+          title: Příjmení
+        localPerson:
+          columnTitle: Přiřazená osoba
+          description: Umožňuje vybrat přiřazenou osobu na každém řádku
+          title: Přiřazená osoba
+        localQuery:
+          columnTitle: Ve Smart Search?
+          description: Zjistěte, zda jednotlivé osoby odpovídají dotazu Smart Search
+          title: Vlastní porovnání
+        localText:
+          columnTitle: Poznámky
+          description: Přidejte sloupec pro poznámky k osobám.
+          title: Poznámky
+        personFields:
+          description: Přidejte vybrané sloupce, například e-mail, telefonní číslo atd.
+          keywords: adresa PSČ město země
+          title: Vybrat pole
+        phone:
+          description: Přidejte sloupec s telefonními čísly
+          keywords: telefonní číslo telefon
+          title: Telefonní číslo
+        queryBooked:
+          columnTitle: Potvrzeno
+          description: Má osoba potvrzenou účast na některé z budoucích událostí?
+          keywords: aktivní potvrzený potvrzení
+          title: Potvrzená budoucí účast
+        queryParticipated:
+          columnTitle: Účast
+          description: Měla osoba někdy potvrzenou účast na nějaké události?
+          keywords: aktivní potvrzený účast
+          title: Jakákoli účast
+        queryReached:
+          columnTitle: Zastiženo
+          description: Podařilo se nám osobu někdy zastihnout při telefonování?
+          keywords: telefon
+          title: Zastižení telefonem
+        surveyResponse:
+          allOptions: Všechny možnosti (jeden sloupec)
+          allOptionsHeader: Všechny možnosti
+          allOptionsSeparated: Všechny možnosti (samostatné sloupce)
+          description: Zahrňte odpověď na otázku z libovolného dotazníku.
+          keywords: pole více
+          oneOption: Jedna možnost
+          optionsLabel: Jaké sloupce chcete přidat?
+          questionField: Otázky
+          surveyField: Dotazníky
+          textField: Odpovědi jsou ve volném textu a zobrazí se v jednom sloupci
+          title: Jedna otázka z dotazníku
+        surveyResponses:
+          description: Zahrňte odpovědi na více otázek z dotazníku.
+          keywords: pole více
+          questionField: Otázky
+          surveyField: Dotazníky
+          title: Více otázek
+        surveySubmitDate:
+          description: Zjistěte, zda a kdy osoba odeslala dotazník
+          noSurveys: Vaše organizace nemá žádné dotazníky.
+          title: Datum odeslání dotazníku
+        tag:
+          description: Přidávejte nebo odebírejte štítek u jednotlivých osob v seznamu
+          title: Štítek
+        toggle:
+          columnTitle: Zaškrtávací políčko
+          description: Sloupec se zaškrtávacími políčky
+          title: Zaškrtávací políčko
+      commonHeaders:
+        email: E-mailová adresa
+        first_name: Jméno
+        last_name: Příjmení
+        phone: Telefonní číslo
+      editor:
+        alreadyInView: Již v seznamu
+        buttonLabels:
+          addColumns: Přidat {columns, plural, one {1 sloupec} few {{columns} sloupce}
+            many {{columns} sloupce} other {{columns} sloupců}}
+          change: Změnit typ sloupce
+        defaultTitle: Nový sloupec
+        fieldLabels:
+          field: Pole
+          question: Otázka
+          smartSearch: Smart Search
+          survey: Dotazník
+          tag: Štítek
+      gallery:
+        add: Přidat
+        alreadyInView: Již v seznamu
+        columns: Sloupce
+        configure: Nastavit
+        header: Přidat sloupec do seznamu
+        noSearchResults: Výrazu „{searchString}“ neodpovídají žádné typy sloupců
+        searchPlaceholder: Najít sloupec
+        searchResults: Výsledky pro „{searchString}“
+    columnMenu:
+      configure: Nastavit sloupec
+      confirmDelete: Opravdu chcete tento sloupec odebrat? Obsahuje data, která budou
+        trvale smazána. Tuto akci nelze vrátit zpět.
+      delete: Smazat sloupec
+      rename: Přejmenovat sloupec
+    columnRenameDialog:
+      save: Uložit
+      title: Název
+    customFilters:
+      choose: Vyberte
+      date:
+        dayOfMonth:
+          label: Den v měsíci
+        month:
+          label: Měsíc
+          months:
+            April: Duben
+            August: Srpen
+            December: Prosinec
+            February: Únor
+            January: Leden
+            July: Červenec
+            June: Červen
+            March: Březen
+            May: Květen
+            November: Listopad
+            October: Říjen
+            September: Září
+    dataTableErrors:
+      create_column: Při vytváření sloupce došlo k chybě
+      delete_column: Při mazání sloupce došlo k chybě
+      modify_column: Při úpravě sloupce došlo k chybě
+      remove_rows: Při odebírání jednoho nebo více řádků došlo k chybě
+    defaultColumnTitles:
+      journey_assignee: Přiřazené cesty
+      local_bool: Zaškrtávací políčko
+      local_person: Odkaz na osobu
+      organizer_action: Označené hovory
+      person_notes: Poznámky
+    defaultViewTitles:
+      organizer_action: Vyžadován zásah organizátora
+    deleteDialog:
+      error: Při mazání seznamu došlo k chybě
+      title: Smazat seznam?
+      warningText: Opravdu chcete tento seznam smazat? Smažou se všechna data uložená
+        v seznamu, například poznámky a zaškrtnutá políčka (osoby se ale z
+        databáze nesmažou).
+    deleteRowsDialog:
+      cancelButton: Zrušit
+      confirmButton: Trvale smazat {numPeople, plural, =1 {osobu} few {# osoby} many
+        {# osoby} other {# osob}}
+      confirmationInputLabel: Název organizace
+      destructiveAlert: Tato akce je trvalá a destruktivní a nelze ji vrátit zpět. Než
+        budete pokračovat, pečlivě si přečtěte níže uvedené informace.
+      instruction: Pro potvrzení, že rozumíte důsledkům, napište do textového pole
+        níže {rootOrgSlug}.
+      tagetOrgWarning: Tím se smažou všechny záznamy těchto osob v organizaci
+        {rootOrgTitle} a ve všech jejích podorganizacích.
+      title: Smazat všechny záznamy {numPeople, plural, =1 {jedné osoby} few {# osob}
+        many {# osoby} other {# osob}}
+    editViewTitleAlert:
+      error: Chyba. Název nebyl aktualizován
+      success: Název byl aktualizován!
+    empty:
+      dynamic:
+        configureButton: Nastavit
+        description: Vytvořte dynamický seznam, do kterého se osoby přidávají a ze
+          kterého se odebírají automaticky pomocí Smart Search.
+        headline: Nastavit seznam Smart Search
+      notice:
+        dynamic: Toto je seznam Smart Search, ale dotazu neodpovídají žádné osoby
+        static: Zatím nebyly přidány žádné řádky
+      static:
+        description: Přidejte první osobu a vytvořte tak statický seznam, do kterého se
+          osoby přidávají a ze kterého se odebírají ručně.
+        headline: Přidat osoby ručně
+    filterOptions:
+      any: Vše
+      no: Ne
+      yes: Ano
+    folder:
+      summary:
+        empty: Prázdné
+        folderCount: '{count, plural, =1 {1 složka} few {# složky} many {# složky} other
+          {# složek}}'
+        viewCount: '{count, plural, =1 {1 seznam} few {# seznamy} many {# seznamu} other
+          {# seznamů}}'
+    footer:
+      addPlaceholder: Začněte psát a přidejte osobu do seznamu
+      alreadyInView: Již v seznamu
+    moveViewDialog:
+      cancel: Zrušit
+      emptyFolder: Prázdná složka
+      moveHere: Přesunout sem
+    newFolderTitle: Nová složka
+    newViewFields:
+      title: Nový seznam
+    removeDialog:
+      action: Opravdu chcete tyto řádky odebrat ze seznamu?
+      title: Odebrat osoby ze seznamu
+    shareDialog:
+      download:
+        buttons:
+          csv: Stáhnout soubor CSV
+          xlsx: Stáhnout soubor Excel
+        shareLink: bezpečně sdílet data
+        tabLabel: Stažení
+        warning1: Pokud je to možné, data ze Zetkinu neexportujte, aby všechna data
+          zůstala v pořádku.
+        warning2: V Zetkinu můžete {shareLink}. Export má smysl, pokud chcete data
+          zkopírovat do jiného systému.
+      share:
+        addPlaceholder: Přidat spolupracovníka
+        collabInstructions: Po přidání spolupracovníků jim zkopírujte a pošlete {viewLink}
+        showOfficials: Zobrazit funkcionáře
+        statusLabel: Sdíleno s {collaborators, plural, =1 {1 spolupracovníkem} few {#
+          spolupracovníky} many {# spolupracovníka} other {# spolupracovníky}},
+          {officials, plural, =1 {1 funkcionář má} few {# funkcionáři mají} many
+          {# funkcionáře má} other {# funkcionářů má}} přístup ke všem seznamům.
+        tabLabel: Sdílení
+        viewLink: odkaz s omezeným přístupem
+      title: Sdílet seznam „{title}“
+    suggested:
+      created: 'Autor: {name}'
+      sectionTitle: Doporučené
+    surveyOptionCell:
+      notSelected: Nevybráno
+      selected: Vybráno
+    surveyPreview:
+      mostRecent:
+        header: Nejnovější
+        openButton: Zobrazit celou odpověď
+      older:
+        header: Starší odpovědi
+        openButton: Zobrazit
+    toolbar:
+      bulk:
+        createList: Vytvořit seznam z výběru
+        delete: Smazat vybrané osoby z organizace
+        handleSelection: Akce s výběrem ({numSelected})
+        removeFromList: Odebrat vybrané osoby ze seznamu
+      createColumn: Nový sloupec
+    viewLayout:
+      actions:
+        share: Sdílet
+      ellipsisMenu:
+        delete: Smazat seznam
+        duplicate: Duplikovat
+        editQuery: Upravit dotaz Smart Search
+        makeDynamic: Převést na seznam Smart Search
+        makeStatic:
+          confirmDialogInfo: Pokud tento seznam převedete na statický, dotaz Smart Search
+            se odstraní a všechny osoby z jeho výsledků už v seznamu nebudou.
+          confirmDialogSubmitLabel: Převést
+          confirmDialogTitle: Převést na statický seznam
+          label: Převést na statický seznam
+      jumpMenu:
+        placeholder: Začněte psát a vyhledejte seznam
+      subtitle:
+        collaborators: '{count, plural, =1 {1 externí spolupracovník} few {# externí
+          spolupracovníci} many {# externího spolupracovníka} other {# externích
+          spolupracovníků}}'
+        columns: '{count, plural, =0 {Žádné sloupce} =1 {1 sloupec} few {# sloupce} many
+          {# sloupce} other {# sloupců}}'
+        people: '{count, plural, =0 {Žádné osoby} =1 {1 osoba} few {# osoby} many {#
+          osoby} other {# osob}}'
+    viewsList:
+      columns:
+        created: Datum vytvoření
+        owner: Vlastník
+        title: Název
+      empty: Zatím nebyly vytvořeny žádné seznamy.
+zui:
+  accessList:
+    added: 'Přidáno: {sharer}, {updated}'
+    removeAccess: Odebrat přístup
+  autocomplete:
+    noOptionsDefaultText: Vašemu hledání neodpovídá žádná možnost
+  breadcrumbs:
+    showMore: '{number} další...'
+  collapse:
+    collapse: Sbalit
+    expand: Rozbalit
+  confirmDialog:
+    button: Potvrdit
+    defaultTitle: Potvrzení
+    defaultWarningText: Opravdu chcete provést tuto akci? Nelze ji vrátit zpět.
+  copyToClipboard:
+    copied: Zkopírováno
+    copiedValue: 'Zkopírováno: „{value}“'
+    copy: Kopírovat
+  createPerson:
+    cancel: Zrušit
+    createBtn: Vytvořit
+    defaultitle: Vytvořit osobu
+    enumFields:
+      noneOption: Žádná
+    genders:
+      f: Žena
+      m: Muž
+      o: Jiné
+      unknown: Neuvedeno
+    location:
+      dialog:
+        clearButton: Vymazat polohu
+        doneButton: Hotovo
+        helperText: Souřadnice zeměpisné šířky a délky
+        mapInfo: Mapu posunete kliknutím a tažením. Přiblížíte či oddálíte ji gestem
+          dvou prstů nebo kolečkem myši. Polohu na mapě vyberete kliknutím nebo
+          klepnutím.
+      helperText: Souřadnice zeměpisné šířky a délky
+      mapIconTooltip: Upravit na mapě
+    showAllFields: Zobrazit všechna pole
+    submitLabel:
+      add: Vytvořit a přidat
+      assign: Vytvořit a přiřadit
+      default: Vytvořit
+    tagCreateAndApplyLabel: Vytvořit a použít
+    title:
+      addToJourney: Vytvořit osobu a přidat ji do „{journey}“
+      addToList: Vytvořit osobu a přidat ji do „{list}“
+      assignToAreaAssignment: Vytvořit osobu a přiřadit ji k „{areaAss}“
+      assignToJourney: Vytvořit osobu a přiřadit ji k „{journey}“
+      caller: Vytvořit osobu a přidat ji mezi volající
+      contact: Vytvořit osobu a přiřadit ji jako kontaktní osobu
+      default: Vytvořit osobu
+      participant: Vytvořit osobu a přidat ji mezi účastníky
+    validationWarning:
+      email: Zadejte platnou e-mailovou adresu
+      name: Toto pole nesmí být prázdné
+      phone: Zadejte platné telefonní číslo
+      url: Zadejte platnou URL adresu
+  dataTableSearch:
+    button: Hledat
+    placeholder: 'Zadejte hledaný výraz (min. počet znaků: {minSearchLength})'
+    placeholderWithIdSearch: 'Hledat – ID zadejte se znakem #, např. #123 (min.
+      počet znaků: {minSearchLength})'
+    title: Hledat
+  dataTableSorting:
+    addButton: Přidat sloupec pro řazení
+    ascending: Vzestupně
+    button: Seřadit
+    descending: Sestupně
+    hint: 'Tip: při klikání na více sloupců podržte {shiftKeyIcon}'
+    title: Řazení
+  dateRange:
+    draft: Bez data začátku
+    end: Konec
+    finite: Viditelné od {start} do {end}
+    indefinite: Viditelné od {start}
+    invisible: Není viditelné ani naplánované
+    start: Začátek
+  dateSpan:
+    multiDay: '{startDate} - {endDate}'
+    multiDayEndsToday: '{startDate} - dnes'
+    multiDayToday: Dnes - {endDate}
+    singleDay: '{date}'
+    singleDayToday: Dnes
+  drawerModal:
+    close: Zavřít
+  duration:
+    days: '{n, plural, =1 {1 den} few {# dny} many {# dne} other {# dní}}'
+    h: '{n} h'
+    m: '{n} min'
+    ms: '{n} ms'
+    s: '{n} s'
+  editTextInPlace:
+    tooltip:
+      edit: Kliknutím upravíte
+      noEmpty: Toto pole nesmí být prázdné
+  editableImage:
+    add: Kliknutím přidáte obrázek
+  ellipsisMenu:
+    ariaLabel: Další možnosti
+  eventWarningIcons:
+    contact: Nebyla přiřazena žádná kontaktní osoba
+    reminders: '{numMissing, plural, =1 {Jednomu účastníkovi zatím nebyla odeslána
+      připomínka} few {# účastníkům zatím nebyla odeslána připomínka} many {#
+      účastníka zatím nebyla odeslána připomínka} other {# účastníkům zatím
+      nebyla odeslána připomínka}}'
+    signUps: Některé přihlášky čekají na vyřízení
+  expandableText:
+    showLess: Zobrazit méně
+    showMore: Zobrazit více
+  footer:
+    privacyPolicy: Zásady ochrany osobních údajů
+  futures:
+    errorLoading: Při načítání dat došlo k chybě.
+  header:
+    collapseButton:
+      collapse: Sbalit
+      expand: Rozbalit
+  lists:
+    showMore: Zobrazit více...
+  mobileOrganizeHeader:
+    sideBarMenuButtonDescription: Otevřít nabídku postranního panelu
+    userMenuButtonDescription: Otevřít uživatelskou nabídku
+  orgScopeSelect:
+    orgPlaceholder: Vyberte organizace
+    orgSelectionLabel: 'Vybráno: {count}'
+    scope:
+      all: '{org} a všechny podorganizace'
+      specific: Konkrétní organizace
+      suborgs: Pouze podorganizace
+      this: Pouze {org}
+  organizeSidebar:
+    collapse: Sbalit postranní panel
+    expand: Rozbalit postranní panel
+    filter: Zadejte text pro filtrování
+    filterLabel: Filtrovat organizace
+    geography: Geografie
+    home: Domů
+    journeys: Cesty
+    myPagesInfoText: Přejít na moje stránky
+    myPagesMenuItemLabel: Moje stránky
+    mySettingsMenuItemLabel: Moje nastavení
+    organizationAvatarAltText: Ikona organizace
+    organizationSwitcher:
+      hide: Skrýt přepínač organizací
+      show: Zobrazit přepínač organizací
+    overview: Přehled
+    people: Lidé
+    projects: Projekty a aktivity
+    search: Hledat
+    settings: Nastavení
+    signOut: Odhlásit se
+    tags: Štítky
+    userSettings: Uživatelské nastavení
+  personGridEditCell:
+    keepTyping: Pokračujte v psaní..
+    noResult: Nebyla nalezena žádná odpovídající osoba
+    otherPeople: Ostatní osoby
+    restrictedMode: Ve sdílených seznamech nelze upravovat.
+    searchResults: Výsledky hledání
+  personSelect:
+    bulkAdd:
+      backButton: Zpět
+      cancelButton: Zrušit
+      confirmMessage: '{entityToAddTo, select, undefined {Počet osob, které se
+        chystáte přidat: {count, number, integer}. Opravdu chcete pokračovat?}
+        other {Počet osob, které se chystáte přidat do „{entityToAddTo}“:
+        {count, number, integer}. Opravdu chcete pokračovat?}}'
+      confirmTitle: Potvrdit přidání osob
+      fromView: Ze seznamu „{viewTitle}“
+      openButton: Hromadně přidat
+      submitButton: '{numSelected, plural, =0 {Vybrat} =1 {Vybrat 1 osobu} few {Vybrat
+        {numSelected, number, integer} osoby} many {Vybrat {numSelected, number,
+        integer} osoby} other {Vybrat {numSelected, number, integer} osob}}'
+      title: '{entityToAddTo, select, undefined {Přidat osoby} other {Přidat osoby do
+        „{entityToAddTo}“}}'
+    keepTyping: Pro zahájení vyhledávání pokračujte v psaní
+    noResult: Nebyla nalezena žádná odpovídající osoba
+    search: Pro vyhledávání začněte psát
+    searching: Vyhledávání...
+  privacyPolicyLink: https://zetkin.org/privacy
+  publicFooter:
+    hostingOrganization: Tuto instanci Zetkinu hostuje a spravuje {name}.
+    links:
+      foundation: Zetkin Foundation
+      privacy: Zásady ochrany osobních údajů
+    text: Zetkin je platforma pro organizování aktivismu. Vyvíjí ho Zetkin
+      Foundation, jejímž posláním je usilovat o radikální změnu společnosti v
+      socialistickém, feministickém, antirasistickém a udržitelném směru.
+  signUpChip:
+    booked: Účast potvrzena
+    callSignUp: 'Přihlášeno: {name}'
+    needed: Potřebujeme vás
+    signedUp: Přihlášeno
+  snackbar:
+    error: Jejda, něco se pokazilo
+    success: Hotovo!
+    warning: Upozornění!
+  statusChip:
+    cancelled: Zrušeno
+    closed: Uzavřeno
+    draft: Koncept
+    ended: Ukončeno
+    published: Zveřejněno
+    scheduled: Naplánováno
+  submitOrCancel:
+    cancel: Zrušit
+    submit: Odeslat
+  suffixedNumber:
+    thousands: '{num} tis.'
+  timeSpan:
+    multiDay: '{startDate}, {start} – {endDate}, {end}'
+    multiDayEndsToday: '{startDate}, {start} – dnes, {end}'
+    multiDayToday: Dnes, {start} – {endDate}, {end}
+    singleDay: '{date}, {start}–{end}'
+    singleDayAllDay: Dnes celý den
+    singleDayToday: Dnes, {start}–{end}
+  timeZonePicker:
+    gmt: GMT
+    noOptionsText: Vašemu hledání neodpovídá žádné místo
+    placeholder: Pro vyhledání místa začněte psát
+    timeZone: Časové pásmo
+  timeline:
+    addNotePlaceholder: Napište text poznámky
+    email:
+      headers:
+        cc: Kopie
+        from: Od
+        to: Komu
+    expand: zobrazit celou časovou osu
+    fileUploadErrorMessage: Poznámku nelze přidat. Možná je příliš dlouhá
+    filter:
+      byType:
+        all: Vše
+        files: Soubory
+        journey: Případ
+        milestones: Milníky
+        notes: Poznámky
+        people: Osoby
+        tags: Štítky
+      filterSelectLabel: 'Zobrazit: {filter}'
+      warning: Časová osa je filtrovaná. Kliknutím sem filtr odeberete.
+    updates:
+      any:
+        addtags: '{actor}: {count, plural, =1 {přidán štítek} few {přidány # štítky}
+          many {přidáno # štítku} other {přidáno # štítků}}'
+        removetags: '{actor}: {count, plural, =1 {odebrán štítek} few {odebrány #
+          štítky} many {odebráno # štítku} other {odebráno # štítků}}'
+      journeyinstance:
+        addassignee: '{actor}: přiřazena osoba {assignee}'
+        addnote: '{actor}: přidána poznámka'
+        addsubject: '{actor}: přidána osoba {subject}'
+        close:
+          header: '{actor}: případ uzavřen'
+        convert: '{actor}: případ převeden z typu „{oldLabel}“ na „{newLabel}“'
+        create:
+          header: '{actor}: zahájen nový případ'
+        open: '{actor}: případ znovu otevřen'
+        removeassignee: '{actor}: zrušeno přiřazení osoby {assignee}'
+        removesubject: '{actor}: odebrána osoba {subject}'
+        update:
+          readMore: Číst dál
+          summary: '{actor}: upraveno shrnutí'
+          title: '{actor}: upraven název'
+        updatemilestone:
+          complete: '{actor}: dokončen milník'
+          deadline: '{actor}: změněn termín milníku'
+          deadlineRemove: termín byl odebrán
+          deadlineUpdate: 'nový termín: {datetime}'
+          incomplete: '{actor}: milník označen jako nedokončený'
