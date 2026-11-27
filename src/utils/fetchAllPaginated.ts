@@ -1,11 +1,11 @@
 export async function fetchAllPaginated<T>(
-  fetchPage: (page: number) => Promise<T[]>,
+  fetchPage: (page: number, size: number) => Promise<T[]>,
   batchSize: number = 100
 ): Promise<T[]> {
   const result: T[] = [];
 
   async function loadNextBatch(page: number = 1) {
-    const batch = await fetchPage(page);
+    const batch = await fetchPage(page, batchSize);
     result.push(...batch);
 
     if (batch.length >= batchSize) {
