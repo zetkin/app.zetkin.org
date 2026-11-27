@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Skeleton } from '@mui/material';
 import { FunctionComponent, useContext, useState } from 'react';
 import NProgress from 'nprogress';
 import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
@@ -59,7 +59,11 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   }
 
   const title = (
-    <ZUIFuture future={viewFuture}>
+    <ZUIFuture
+      errorIndicator={<span />}
+      future={viewFuture}
+      skeletonWidth={280}
+    >
       {(view) => {
         return (
           <Box>
@@ -168,6 +172,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       <SimpleLayout
         actionButtons={
           <Button
+            disabled={!view}
             endIcon={<Share />}
             onClick={() => setShareDialogOpen(true)}
             variant="contained"
@@ -175,15 +180,17 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
             <Msg id={messageIds.viewLayout.actions.share} />
           </Button>
         }
-        ellipsisMenuItems={ellipsisMenu}
+        ellipsisMenuItems={view ? ellipsisMenu : []}
         fixedHeight={true}
         subtitle={
           // TODO: Replace with model eventually
           <ZUIFutures
+            errorIndicator={<span />}
             futures={{
               cols: columnsFuture,
               rows: rowsFuture,
             }}
+            loadingIndicator={<Skeleton height={28} width={260} />}
           >
             {({ data: { cols, rows } }) => {
               const labels = [

@@ -1,13 +1,17 @@
+import shouldLoad from 'core/caching/shouldLoad';
+import { serializeError } from 'utils/storeUtils/serializeError';
 import { IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import useTagging from 'features/tags/hooks/useTagging';
 import {
   cellUpdate,
   cellUpdated,
+  columnsError,
   columnsLoad,
   columnsLoaded,
   columnUpdated,
   rowRemoved,
+  rowsError,
   rowsLoad,
   rowsLoaded,
 } from '../store';
@@ -47,8 +51,12 @@ export default function useViewGrid(
     views.columnsByViewId[viewId],
     dispatch,
     {
+      actionOnError: (err) => columnsError([viewId, serializeError(err)]),
       actionOnLoad: () => columnsLoad(viewId),
       actionOnSuccess: (columns) => columnsLoaded([viewId, columns]),
+      isNecessary: () =>
+        !views.columnsByViewId[viewId]?.error &&
+        shouldLoad(views.columnsByViewId[viewId]),
       loader: () =>
         apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/columns`),
     }
@@ -66,8 +74,12 @@ export default function useViewGrid(
   };
 
   const rowsFuture = loadListIfNecessary(views.rowsByViewId[viewId], dispatch, {
+    actionOnError: (err) => rowsError([viewId, serializeError(err)]),
     actionOnLoad: () => rowsLoad(viewId),
     actionOnSuccess: (rows) => rowsLoaded([viewId, rows]),
+    isNecessary: () =>
+      !views.rowsByViewId[viewId]?.error &&
+      shouldLoad(views.rowsByViewId[viewId]),
     loader: () =>
       apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/rows`),
   });

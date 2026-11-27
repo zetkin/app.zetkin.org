@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
 import { Msg } from 'core/i18n';
@@ -25,17 +25,23 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   const viewFuture = useView(orgId, viewId);
 
   const title = (
-    <ZUIFuture future={viewFuture}>
+    <ZUIFuture
+      errorIndicator={<span />}
+      future={viewFuture}
+      skeletonWidth={280}
+    >
       {(view) => <span>{view.title}</span>}
     </ZUIFuture>
   );
   const subtitle = (
     // TODO: Replace with model eventually
     <ZUIFutures
+      errorIndicator={<span />}
       futures={{
         cols: columnsFuture,
         rows: rowsFuture,
       }}
+      loadingIndicator={<Skeleton height={28} width={260} />}
     >
       {({ data: { cols, rows } }) => (
         <ZUIIconLabelRow
