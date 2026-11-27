@@ -187,7 +187,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
           locationId={locationId}
           locations={locations || []}
           onCreateLocation={(newLocation: Partial<ZetkinLocation>) => {
-            addLocation(newLocation);
+            return addLocation(newLocation);
           }}
           onMapClose={() => {
             setLocationModalOpen(false);
