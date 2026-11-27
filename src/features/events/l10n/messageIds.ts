@@ -43,6 +43,7 @@ export default makeMessages('feat.events', {
     title: m('Move event'),
   },
   eventContactCard: {
+    assignToMe: m<{ username: string }>('Assign to me ({username})'),
     header: m('Contact'),
     noContact: m('No Contact Assigned!'),
     removeButton: m('Remove'),
