@@ -29,6 +29,7 @@ import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import useSurveySubmissionMutations from '../hooks/useSurveySubmissionMutations';
+import hasEmailConflict from '../utils/hasEmailConflict';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -263,18 +264,13 @@ const SurveySubmissionsList = ({
       setRespondentId(person?.id || null);
 
       const respondentEmail = row.respondent?.email;
-      if (person) {
-        const personHasNoEmail = person.email == null || person.email == '';
-        const personHasDifferentEmail =
-          person.email &&
-          person.email.toLowerCase() !== respondentEmail?.toLowerCase();
-        if (
-          (personHasNoEmail && respondentEmail != undefined) ||
-          (personHasDifferentEmail && respondentEmail != undefined)
-        ) {
-          setDialogEmail(respondentEmail);
-          setDialogPerson(person);
-        }
+      if (
+        person &&
+        respondentEmail &&
+        hasEmailConflict(respondentEmail, person.email)
+      ) {
+        setDialogEmail(respondentEmail);
+        setDialogPerson(person);
       }
     };
 
