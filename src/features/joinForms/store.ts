@@ -11,14 +11,17 @@ import {
   remoteListLoaded,
 } from 'utils/storeUtils';
 import { ZetkinJoinForm, ZetkinJoinSubmission } from './types';
+import { PotentialDuplicate } from './rpc/getPotentialDuplicates';
 
 export interface JoinFormsStoreSlice {
   formList: RemoteList<ZetkinJoinForm>;
+  potentialDuplicateList: RemoteList<PotentialDuplicate>;
   submissionList: RemoteList<ZetkinJoinSubmission>;
 }
 
 const initialState: JoinFormsStoreSlice = {
   formList: remoteList(),
+  potentialDuplicateList: remoteList(),
   submissionList: remoteList(),
 };
 
@@ -55,6 +58,17 @@ const joinFormsSlice = createSlice({
     },
     joinFormsLoaded: (state, action: PayloadAction<ZetkinJoinForm[]>) => {
       state.formList = remoteListLoaded(action.payload);
+    },
+    potentialDuplicatesLoad: (state) => {
+      state.potentialDuplicateList = remoteListLoad(
+        state.potentialDuplicateList
+      );
+    },
+    potentialDuplicatesLoaded: (
+      state,
+      action: PayloadAction<PotentialDuplicate[]>
+    ) => {
+      state.potentialDuplicateList = remoteListLoaded(action.payload);
     },
     submissionDeleted: (state, action: PayloadAction<number>) => {
       const submissionId = action.payload;
@@ -99,6 +113,8 @@ export const {
   joinFormUpdated,
   joinFormsLoad,
   joinFormsLoaded,
+  potentialDuplicatesLoad,
+  potentialDuplicatesLoaded,
   submissionDeleted,
   submissionLoad,
   submissionLoaded,

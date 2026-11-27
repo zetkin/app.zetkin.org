@@ -108,6 +108,7 @@ export default function mockState(overrides?: RootState) {
     },
     joinForms: {
       formList: remoteList(),
+      potentialDuplicateList: remoteList(),
       submissionList: remoteList(),
     },
     journeys: {

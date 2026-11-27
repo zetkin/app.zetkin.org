@@ -1,9 +1,13 @@
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { FC } from 'react';
-import { Box, Button, useTheme } from '@mui/material';
+import { FC, useState } from 'react';
+import { Box, Button, Tooltip, useTheme } from '@mui/material';
+import { WarningAmber } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
+import usePotentialDuplicates from '../hooks/usePotentialDuplicates';
+import { PotentialDuplicate } from '../rpc/getPotentialDuplicates';
+import PotentialDuplicateDialog from './PotentialDuplicateDialog';
 import { ZetkinJoinSubmission } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 import oldTheme from 'theme';
@@ -19,6 +23,9 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
   const theme = useTheme();
   const { approveSubmission, deleteSubmission } =
     useJoinSubmissionMutations(orgId);
+  const { data: potentialDuplicates } = usePotentialDuplicates(orgId);
+  const [pendingDuplicate, setPendingDuplicate] =
+    useState<PotentialDuplicate | null>(null);
 
   return (
     <Box bgcolor={theme.palette.background.paper} m={2}>
@@ -83,8 +90,18 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             headerName: '',
             renderCell: (params) => {
               if (params.row.state !== 'accepted') {
+                const potentialDuplicate = potentialDuplicates?.find(
+                  (dup) => dup.id == params.row.id
+                );
                 return (
-                  <Box display="flex" gap={2}>
+                  <Box alignItems="center" display="flex" gap={2} height="100%">
+                    {potentialDuplicate && (
+                      <Tooltip
+                        title={messages.submissionList.potentialDuplicate()}
+                      >
+                        <WarningAmber color="warning" fontSize="small" />
+                      </Tooltip>
+                    )}
                     <Button
                       onClick={(event) => {
                         deleteSubmission(params.row.id);
@@ -96,7 +113,11 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
                     </Button>
                     <Button
                       onClick={(event) => {
-                        approveSubmission(params.row.id);
+                        if (potentialDuplicate) {
+                          setPendingDuplicate(potentialDuplicate);
+                        } else {
+                          approveSubmission(params.row.id);
+                        }
                         event.stopPropagation();
                       }}
                       variant="outlined"
@@ -118,6 +139,17 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
           onSelect(params.row);
         }}
         rows={submissions}
+      />
+      <PotentialDuplicateDialog
+        onClose={() => setPendingDuplicate(null)}
+        onSubmit={() => {
+          if (pendingDuplicate) {
+            approveSubmission(pendingDuplicate.id);
+          }
+          setPendingDuplicate(null);
+        }}
+        orgId={orgId}
+        potentialDuplicate={pendingDuplicate}
       />
     </Box>
   );
