@@ -29,6 +29,9 @@ glob:
 core:
   err404:
     backToHomePage: Tillbaka till startsidan
+    goToMyZetkin: Gå till Mitt Zetkin
+    goToOrganization: Gå till organisation
+    orgNotFound: Organisation hittades inte
     pageNotFound: Sidan hittades inte
   home:
     redirecting: Omdirigerar...
@@ -40,11 +43,53 @@ core:
       använda. Du omdirigeras nu till den äldre versionen av Zetkin som stödjer
       den funktionen.
 feat:
+  account:
+    lostPassword:
+      actions:
+        sendEmail: Skicka e-post
+        sendLink: Skicka länk igen
+        signIn: Logga in
+      emailFieldLabel: E-post
+      errors:
+        alreadyLoggedIn:
+          description: 'Du kan inte återställa ditt lösenord eftersom du redan är
+            inloggad. '
+          title: Du är redan inloggad
+        unknownError: 'Något gick fel. Prova igen senare. '
+        unknownErrorTitle: Oväntat fel
+      footer:
+        readPolicy: Läs vår integritetspolicy
+    register:
+      actions:
+        createAccount: Skapa konto
+      description: Börja organisera med Zetkin direkt
+      labels:
+        email: E-post
+        firstName: Förnamn
+        lastName: Efternamn
+        mobile: Mobilnummer
+        password: Lösenord
+      title: Skapa nytt konto
+      welcome: Välkommen, {userName}
+    resetPassword:
+      actions:
+        labelPassword: Lösenord
+        save: Spara lösenord
+      description: 'Skapa ett nytt lösenord som du vill använda framöver. Lösenordet
+        behöver vara minst 6 tecken långt. '
+      descriptionUpdated: Ditt lösenord uppdaterades. Du kan använda ditt nya lösenord
+        för att logga in.
+      error:
+        errorMessage: Något gick fel, prova igen
+        title: Fel
+      title: Återställ lösenord
+      unexpectedError: 'Det skedde ett oväntat fel när du återställde lösenordet, prova igen. '
+      validation: Lösenordet behöver vara minst 6 tecken långt.
+    verify:
+      sendVerification: Skicka en ny bekräftelse
+      success: Ett nytt bekräftelsemail skickades
+      title: Bekräfta din e-postadress
   areaAssignments:
-    assignees:
-      columns:
-        areas: Områden
-        name: Namn
     default:
       title: Namnlöst områdesuppdrag
     instructions:
@@ -69,7 +114,6 @@ feat:
         assignees: '{numAssignees, plural, =0 {Ingen ansvarig} one {1 ansvarig} other {#
           ansvariga}}'
       tabs:
-        assignees: Ansvariga
         instructions: Instruktioner
         map: Karta
         overview: Översikt
@@ -87,7 +131,6 @@ feat:
           unassigned: Endast ej tilldelade områden
         description: Definiera vilka områden du ser på kartan
         header: Filters
-        title: Lägg till filter för att avgöra vilka områden du ser på kartan
         ungroupedTags: Ogrupperade etiketter
       findArea:
         filterPlaceHolder: Filter
@@ -97,29 +140,7 @@ feat:
           label: Områdesfärg
           options:
             assignees: Ansvariga
-            hidden: Dold
-            households: Hushåll
             outlined: Markerad
-            progress: Framsteg
-        center:
-          label: Områdesmarkeringar
-          options:
-            assignees: Ansvariga
-            hidden: Dold
-            households: Hushåll & platser
-            progress: Framsteg
-        markers:
-          label: Platsmarkörer
-          options:
-            altDescriptions:
-              locationDot: Punktalternativ
-              locationHidden: Dölj val
-              locationHouseholds: Alternativ för hushåll
-              locationProgress: Alternativ för framsteg
-            dot: Punkt
-            hidden: Dold
-            households: Hushåll
-            progress: Framsteg
         title: Datavisualisering
     overview:
       empty:
@@ -131,9 +152,6 @@ feat:
           locations: Besökta platser
           successful: Lyckade besök
         statsTitle: Framsteg
-        unassignedVisits:
-          description: Detta diagram visar besök som gjordes utanför tilldelade områden
-          title: Ej tilldelade besök
     report:
       card:
         definesSuccess: Definiera framgång
@@ -150,8 +168,6 @@ feat:
         subheader: Att konfigurera var datan ska lagras handlar om att hitta en balans
           mellan precision och integritet som passar din organisation.
       delete:
-        cancel: Avbryt
-        confirm: Bekräfta
         deleteWarningText: Om du vill radera {title} behöver du välja en annan fråga som
           definierar att besöket var lyckat
         dialog: 'Är du säker på att du vill radera denna fråga? Denna handling är
@@ -183,6 +199,9 @@ feat:
         title: Lägg till frågor till ditt områdesuppdrag
   areas:
     areas:
+      areaDetails:
+        locations: Platser
+        title: Områdesuppgifter
       areaSettings:
         delete: Radera
         edit:
@@ -191,6 +210,11 @@ feat:
           saveButton: Spara
         tags:
           title: Områdesetiketter
+      assignmentStats:
+        percentSuccessfulVisits: av besöken var lyckade
+        percentVisited: av besökta platser
+        successfulVisits: lyckade besök
+        title: Besök
       controlLabels:
         filters: Filter
         layers: Datavisualisering
@@ -245,6 +269,7 @@ feat:
       surveys: Enkäter
       tags: Etiketter
       tasks: Uppgifter
+      themes: Teman
       untitledEvent: Event utan titel
       views: Listor
   calendar:
@@ -272,9 +297,9 @@ feat:
           missing: Kontaktperson saknas
           overbooked: Överbokad
           pending: Anmälningar väntar
-          title: Filtrera efter åtgärd behövs
+          title: Filtrera efter behov av åtgärd
           underbooked: Inte tillräckligt många bokningar
-          unsent: Icke skickade påminnelser
+          unsent: Ej skickade påminnelser
         eventTypes:
           title: Filtrera efter eventtyp
         stateFilters:
@@ -326,10 +351,29 @@ feat:
     today: Idag
   call:
     about:
+      events: '{numEvents} event'
+      noParticipation: '{name} har aldrig deltagit på några event.'
+      participation: '{name} deltog på {events}, senaste var {title} {time}'
       previousActivityHeader: Tidigare aktivitet
+      previousCalls:
+        callBackAfter: Ring {name} efter {time}
+        hasNoPreviousCalls: Aldrig ringd
+        note: 'Anteckning: {note}'
+        status:
+          callBack: Ring senare
+          leftMessage: Lämnade röstmeddelande
+          lineBusy: Upptaget
+          success: Lyckade
+          wrongNumber: Fel nummer
+        title: Tidigare samtal
       tagsHeader: Etiketter
       title: Om {name}
     activities:
+      description: Agera som {name}
+      empty: Inga aktiviteter
+      events:
+        alreadyBooked: '{name} är redan anmäld.'
+        noLocation: Ingen fysisk plats
       filters:
         basic:
           events: Events
@@ -341,8 +385,13 @@ feat:
           tomorrow: Imorgon
         organizations:
           noSelected: Organisationer
+      noBookings: '{name} är inte bokad eller anmäld till några event.'
       projects:
         wihoutProjectLabel: Inget projekt
+      survey:
+        backButton: Tillbaka till aktiviteter
+        cancelButton: Avbryt
+        editButton: Redigera
       title: Aktiviteter
     callLog:
       openCallLogButton: Samtalslogg
@@ -358,6 +407,8 @@ feat:
           title: Tidigare samtal
         personInfo:
           title: Lär känna personen
+        report:
+          title: Rapportera samtal
         start:
           title: Börja ringa
     error:
@@ -367,9 +418,15 @@ feat:
     header:
       primaryButton:
         call: Avsluta & rapportera
+        report: Skicka rapport
+        summary: Nästa samtal
       secondaryButton:
+        call: Hoppa över
+        report: Hoppa över
         start: Avsluta
+        summary: Ta en paus
     instructions:
+      noInstructions: Uppdraget har inga instruktioner.
       title: Instruktioner
     report:
       steps:
@@ -485,8 +542,30 @@ feat:
       summary:
         editButtonLabel: Redigera
       title: Rapportera
+    skipCallDialog:
+      cancelButton: Nej, fortsätt ringa
+      confirmButton: Ja, hoppa över {name}?
+      title: Hoppa över samtal med {name}?
     stats:
       callsMade: samtal gjorda
+      inTargetGroup: personer i målgrupp
+      successful: lyckade
+      successfulCalls: lyckade samtal
+      targets: målgrupp
+    summary:
+      callSummary:
+        callBack: Du nådde {name}, men vi behöver ringa tillbaka.
+        leftMessage: '{name} svarade inte, du lämnade ett meddelande på telefonsvararen.'
+        lineBusy: Linjen var upptagen, du nådde inte {name}
+        noPickup: '{name} svarade inte, du lämnade inte ett meddelande.'
+        notAvailable: Vi kommer ringa tillbaka till {name}.
+        success: Du pratade med {name}
+      title:
+        success: Samtal avslutat!
+    unexpectedError:
+      backToMyZetkinButton: Gå tillbaka till Mitt Zetkin
+      reloadButton: Ladda om uppdrag
+      title: Oj! Ett oväntat fel uppstod
   callAssignments:
     actions:
       delete: Radera
@@ -589,194 +668,6 @@ feat:
       editButton: Ändra målgrupp
       subtitle: Använd en Smart sökning för att definiera målgruppen för detta uppdrag.
       title: Målgrupp
-  projects:
-    activeProjects:
-      header: Aktiv
-    activitiesOverview:
-      button: Bläddra bland alla aktiviteter
-      empty: Inget under denna dag
-      endsTomorrow: slutar imorgon
-      extraActivities: + {numExtra} fler
-      goToActivities: Se alla framtida aktiviteter.
-      noActivities: Det finns inga aktiviteter den här veckan
-      noDescription:
-        addOneNow: Lägg till en nu.
-      nothingTomorrow: Ingenting planerat imorgon
-      startsTomorrow: startar imorgon
-      subtitles:
-        endsLater: Slutar {relative}
-        endsToday: Avslutas idag
-        sentEarlier: Har skickats {relative}
-        sentLater: Ska skickas {relative}
-        startsLater: Startar {relative}
-        startsToday: Startar idag
-      thisWeekCard: Mer den här veckan
-      title: Framtida aktiviteter
-      todayCard: Idag
-      tomorrowCard: Imorgon
-    activityList:
-      eventItem:
-        contact: Ingen kontaktperson vald
-        locations: '{count} platser'
-        reminders: '{numMissing, plural, =1 {en deltagare} other {# deltagare}} har inte
-          fått en påminnelse'
-        signups: Det finns väntande anmälningar
-    all:
-      projectFilterPlaceholder: Skriv för att filtrera projekt
-      cardCTA: Gå till projekt
-      create: Skapa nytt projekt
-      filter:
-        areaAssignments: Områdesuppdrag
-        calls: Ringuppdrag
-        emails: E-post
-        filter: Filtrera resultat
-        standalones: Fristående event
-        surveys: Enkäter
-      header: Projekt
-      indefinite: Obestämd
-      unsorted: Osorterade projekt
-      upcoming: '{numEvents, number} framtida event.'
-    allProjects:
-      noActivities: Om din organisation har aktiviteter som inte hör till ett projekt
-        kommer de att visas här.
-      viewArchive: Visa arkiv
-    archivedProjects:
-      header: Arkiverat
-      hideShowButton:
-        hide: Dölj arkiverade projekt
-        show: Visa arkiverade projekt
-    assigneeActions: Uppgifter för ansvarig
-    calendarView: Se alla i kalendern
-    changeProjectDialog:
-      moveButtonLabel: Flytta
-    createButton:
-      createActivity: Skapa
-      createAreaAssignment: Områdesuppdrag
-      createCallAssignment: Ringuppdrag
-      createEmail: E-post
-      createEvent: Event
-      createSurvey: Enkät
-      createTask: Uppgift
-    events: Event
-    feedback:
-      copy: Att samla in feedback (vid gemensamma ringningar eller enskilda
-        ringuppdrag) kan hjälpa dig att arbeta mer effektivt
-      create: Skapa enkät
-      heading: Feedback och Enkäter (ingen konfiguerad)
-    form:
-      archiveProject:
-        archive: Arkivera projekt
-      createAreaAssignment:
-        defaultQuestion: Har du slutfört uppgiften?
-      createCallAssignment:
-        newCallAssignment: Mitt ringuppdrag
-      createProject:
-        create: Skapa projekt
-        error: Något gick fel när projektet skapades
-        newProject: Mitt projekt
-      createEmail:
-        newEmail: Icke namngivet e-post
-      createSurvey:
-        newSurvey: Min enkät
-      createTask:
-        title: Skapa uppgift
-      deleteProject:
-        cancel: Avbryt
-        error: Något gick fel när projektet raderades
-        submitButton: Bekräfta att du vill radera
-        title: Radera projekt
-        warning: Är du säker på att du vill radera det här projektet? Du kan inte ångra
-          detta beslut.
-      description: Beskrivning
-      edit: Redigera projekt
-      editProjectTitle:
-        error: Fel när projekttiteln uppdaterades
-        success: Projekttiteln uppdaterades
-      manager:
-        label: Projektansvarig
-      name: Namn
-      requestError: Något blev fel. Prova igen.
-      required: Obligatorisk
-      status:
-        draft: Utkast
-        heading: Status
-        published: Publicerad
-      visibility:
-        heading: Synlighet
-        private: Privat
-        public: Offentlig
-    indefinite: Obestämd tidslinje
-    layout:
-      activities: Aktiviteter
-      allProjects: Alla projekt och aktiviteter
-      archive: Arkiv
-      calendar: Kalender
-      insights: Insikter
-      overview: Översikt
-    linkGroup:
-      createActivity: Skapa aktivitet
-      createAreaAssignment: Områdesuppdrag
-      createCallAssignment: Skapa ringuppdrag
-      createEmail: Skapa e-post
-      createEvent: Skapa event
-      createSurvey: Skapa enkät
-      createTask: Skapa uppgift
-      public: Offentlig sida
-      settings: Ändra inställningar
-    mobilization:
-      copy: Att ringa för att mobilisera i er organisation kommer att öka deltagandet
-        mycket
-      create: Skapa ringuppdrag
-      heading: Mobilisering och kontaktarbete (ej konfigurerad)
-    noManager: Ingen projektansvarig
-    publicProjectPage:
-      eventList:
-        emptyList:
-          message: Kunde inte hitta några event
-          removeFiltersButton: Rensa filter
-        filterButtonLabels:
-          locations: '{count} platser'
-          thisWeek: Denna vecka
-          today: Idag
-          tomorrow: Imorgon
-        noEventsBlurb:
-          description: '{project} har inga kommande events.'
-          headline: Det finns inga kommande events
-      map:
-        viewInListButton: Visa i lista
-        viewInMapButton: Visa på karta
-    shared:
-      cta: Gå till projekt
-      noActivities: Alla pågående aktiviteter som delas med din organisation kommer
-        synas här.
-      noArchives: Alla utgångna aktiviteter som delas med din organisation kommer
-        synas här.
-      title: Delas med oss
-    sharedLayout:
-      alertMsg: Det här projektet innehåller endast aktiviteter som delas från andra
-        organisationer, du kan se men inte ändra det.
-      subtitle: '{numOfActivities, plural, =1 {1 aktivitet} other {# aktiviteter}}'
-      tabs:
-        activities: Aktiviteter
-        archive: Arkiv
-        overview: Översikt
-      title: Delas med oss
-    singleProject:
-      filterActivities: Skriv för att filtrera
-      noActivities: Det finns ännu inga aktiviteter i det här projektet.
-      noSearchResults: Din filtrering gav inga resultat.
-      showPublicPage: Visa i aktivistportalen
-      status:
-        archived: Arkiverat
-        draft: Utkast
-        private: Privat
-      viewArchive: Visa arkiv
-    taskLayout:
-      tabs:
-        assignees: Ansvariga
-        insights: Insikter
-        summary: Sammanfattning
-    tasks: Uppgifter
   canvass:
     default:
       description: Ingen beskrivning
@@ -846,7 +737,6 @@ feat:
       single:
         logVisitButtonLabel: Logga besök
         subtitle: Våning {floorNumber}
-        wasVisited: Detta hushåll har besökts i det här uppdraget
       stackItem:
         detailsButtonLabel: Detaljer
         visitButtonLabel: Besök
@@ -931,10 +821,6 @@ feat:
       fieldSettings:
         data: Data
         field: Fält
-        gender:
-          f: Kvinna
-          m: Man
-          o: Annat
         noValue: Inget värde
         title: Data att slå samman
       findCandidateManually: Skriv för att hitta potentiella dubbletter
@@ -1158,6 +1044,9 @@ feat:
     unsubscribedPage:
       h: Avregistrerad!
       info: Du har blivit avregistrerad från massutskick av e-post från {org}
+    urlCard:
+      previewPortal: Förhandsvisa e-post
+      visitPortal: Öppna e-post
     varDefaults:
       target: läsare
   events:
@@ -1230,6 +1119,7 @@ feat:
       columnName: Namn
       columnNotified: Påmind
       columnPhone: Telefon
+      columnSignedUp: Anmälda
       contactTooltip: Kontaktperson
       descriptionBooked: Dessa är de personer du har bokat och räknar med ska delta på
         eventet. För att avboka sin medverkan måste de kontakta dig och du kan
@@ -1246,6 +1136,7 @@ feat:
       backToEvents: Tillbaka till eventlistan
       backToLocations: Tillbaka till platser
       backToShifts: Tillbaka till skiftlistan
+      bookAll: Boka alla
       booked: Bokad
       cancel: Ställ in
       cancelWarning: Om du gör detta, kom ihåg att meddela alla bokade och anmälda
@@ -1314,6 +1205,16 @@ feat:
       open: Öppna
       scheduled: Schemalagd
       unknown: Okänd
+    linkSignupDialog:
+      bookButton: Boka
+      cancelButton: Avbryt
+      createPersonButton: Skapa ny person
+      keepTyping: Fortsätt skriv för att börja söka
+      noResults: Inga personer matchade din sökning
+      searchLabel: Sök efter person
+      searchPlaceholder: Sök genom namn, e-post eller telefonnummer
+      signupDetails: Anmälningsuppgifter
+      title: Ingen exakt matchning hittades. Välj en person.
     list:
       events: Event
       noEvents: Inga event...
@@ -1379,14 +1280,27 @@ feat:
     publicEventSignup:
       alert:
         error: Fel
+        signupSuccessful: Anmälan lyckades
+        thankYou: Tack för din anmälan!
       errors:
+        emailOrPhoneRequired: Du måste ange antingen e-post eller telefonnummer
+        gdprConsentRequired: Du behöver acceptera villkoren
+        invalidEmail: Ange en giltig e-postadress
         nameRequired: För- och efternamn krävs
+        phoneFormat: Ange telefonnumret i internationellt format, t.ex. +46701234567.
+        signupError: Ett fel inträffade vid anmälan
+        signupFailed: Anmälan misslyckades
       fields:
         email: E-post
         firstName: Förnamn
         lastName: Efternamn
+        phone: Telefonnummer
       info:
+        description: Ange ditt namn och minst ett sätt för organisatörerna att kontakta dig.
         title: Dags att anmäla dig
+      submit:
+        button: Anmäl dig
+        submitting: Skickar...
     search: Sök
     state:
       cancelled: Inställt
@@ -1410,6 +1324,8 @@ feat:
       uncategorized: Okategoriserade
     unverifiedSignups:
       actionFailed: Något gick fel. Prova gärna igen.
+      booked: '{name} har blivit bokad.'
+      exactMatchBooked: Exakt matchning hittades. Den här personen är nu bokad som {name}.
     urlCard:
       nowAccepting: Anmälningar tas nu emot via denna länk
       open: Öppen för anmälningar
@@ -1427,6 +1343,7 @@ feat:
     libraryDialog:
       preview:
         backButton: Tillbaka till bibliotek
+        previewsSection: Förhandsvisningar
         useButton: Använd
       title: Bibliotek
     searching:
@@ -1499,6 +1416,10 @@ feat:
             o: Annat
             unknown: Okänd
         ids:
+          confirmIDChange:
+            description: Du är påväg att byta Import ID från {currentImportID} till
+              {newImportID}.
+            title: Bekräfta ändring av Import ID
           externalIDInfo: Ett externt ID är ett ID som kommer från ett annat system än
             Zetkin, till exempel ett separat medlemsregister. Det kan användas
             för att hitta och identifiera personer i Zetkin.
@@ -1506,8 +1427,10 @@ feat:
             email: E-post
             ext_id: Externt ID
             id: Zetkin ID
+          importCheckboxLabel: Använd {importID} som Import ID
           importID: Import ID
           skipRowDescription: Inga nya personer kommer att skapas
+          wrongEmailFormatWarning: Det finns värden i denna kolumn som inte är korrekta e-postadresser.
           wrongIDFormatWarning: Den här kolumnen verkar inte innehålla Zetkin-ID. Ett
             Zetkin-ID består bara av siffror. Om vissa celler är tomma eller
             innehåller andra tecken kan de inte användas som Zetkin-ID.
@@ -1593,7 +1516,7 @@ feat:
           unknown: Okänt
         ids:
           email: E-post
-          ext_id: Externt ID
+          undefined: Externt ID
           id: Zetkin ID
         next: Nästa
         noOrg: Ingen organisation
@@ -1911,10 +1834,10 @@ feat:
         booked: Du har blivit bokad på det här eventet och organisatörerna förväntar sig
           att du kommer. Kontakta {org} om du behöver ställa in.
         needed: Du behövs
-        signedUp: Du har anmält dig
+        signedUp: Du är anmäld
       filters:
         call: Ringa
-        canvass: Områden
+        canvass: Områdesuppdrag
         event: Event
     allEventsList:
       emptyList:
@@ -1928,13 +1851,15 @@ feat:
         tomorrow: Imorgon
     defaultTitles:
       areaAssignment: Namnlöst områdesuppdrag
-      callAssignment: Icke namngivet ringuppdrag
-      event: Icke namngivet event
+      callAssignment: Ej namngivet ringuppdrag
+      event: Ej namngivet event
       noLocation: Ingen fysisk plats
     footer:
       privacyPolicy: Sekretesspolicy
-    newLandingPageAlert:
-      title: Detta är din nya landningssida
+    myOrgs:
+      followButton: Följ
+      organizeButton: Organisera
+      unfollowButton: Avfölj
     settings:
       accountSettings:
         email:
@@ -1949,14 +1874,19 @@ feat:
       appPreferences:
         header: Appinställningar
         lang:
-          auto: Automatisk (använder webbläsarens inställning)
+          auto: Automatisk (använd webbläsarens inställning)
           label: Språk
           saveButton: Spara & ladda om
     tabs:
       feed: Alla event
       home: Mina aktiviteter
+      orgs: Mina organisationer
       settings: Inställningar
     title: Mitt Zetkin
+    newLandingPageAlert:
+      description: 'Om du letar efter organisatörsidorna kan du från och med nu hitta
+        dessa genom att klicka på knappen i sidhuvudet här nedan. '
+      title: Detta är din nya landningssida
   organizations:
     allEventsList:
       emptyList:
@@ -1988,6 +1918,7 @@ feat:
       noDescription: 'Eventet har ingen beskrivning. '
       noLocation: Ingen fysisk plats
       partOfProject: Del av {projectLink}
+      participatingInfo: '{participatingCount, plural, =1 {# person} other {# personer}} deltar'
       today: Idag
     gen3:
       description: Det här är den nya (generation 3) organisatörssidan. Om du är van
@@ -2007,12 +1938,11 @@ feat:
         unfollow: Avfölj
       map:
         viewInList: Visa i lista
-        viewInMap: Visa på karta
+        viewOnMap: Visa på karta
       menu:
-        allEvents: Alla event
         logout: Logga ut
-        myActivities: Mina aktiviteter
         myZetkin: Mitt Zetkin
+        organize: Organisera
         settings: Inställningar
       tabs:
         calendar: Kalender
@@ -2101,25 +2031,205 @@ feat:
     tabs:
       manage: Hantera
       profile: Profil
-      timeline: Tidslinje
     tags:
       createAndApplyLabel: Skapa och använd
     user:
       hasAccount: Ansluten till ett Zetkinkonto
       noAccount: Inte ansluten till ett Zetkinkonto
+  projects:
+    activeProjects:
+      header: Aktiv
+    activitiesOverview:
+      button: Bläddra bland alla aktiviteter
+      empty: Inget under denna dag
+      endsTomorrow: slutar imorgon
+      extraActivities: + {numExtra} fler
+      goToActivities: Se alla framtida aktiviteter.
+      noActivities: Det finns inga aktiviteter den här veckan
+      noDescription:
+        addOneNow: Lägg till en nu.
+      nothingTomorrow: Ingenting planerat imorgon
+      startsTomorrow: startar imorgon
+      subtitles:
+        endsLater: Slutar {relative}
+        endsToday: Avslutas idag
+        sentEarlier: Har skickats {relative}
+        sentLater: Ska skickas {relative}
+        startsLater: Startar {relative}
+        startsToday: Startar idag
+      thisWeekCard: Mer den här veckan
+      title: Framtida aktiviteter
+      todayCard: Idag
+      tomorrowCard: Imorgon
+    activityList:
+      eventItem:
+        contact: Ingen kontaktperson vald
+        locations: '{count} platser'
+        reminders: '{numMissing, plural, =1 {en deltagare} other {# deltagare}} har inte
+          fått en påminnelse'
+        signups: Det finns väntande anmälningar
+    all:
+      cardCTA: Gå till projekt
+      create: Skapa nytt projekt
+      filter:
+        areaAssignments: Områdesuppdrag
+        calls: Ringuppdrag
+        emails: E-post
+        filter: Filtrera resultat
+        standalones: Fristående event
+        surveys: Enkäter
+      header: Projekt
+      indefinite: Obestämd
+      projectFilterPlaceholder: Skriv för att filtrera projekt
+      unsorted: Osorterade projekt
+      upcoming: '{numEvents, number} framtida event.'
+    allProjects:
+      noActivities: Om din organisation har aktiviteter som inte hör till ett projekt
+        kommer de att visas här.
+      viewArchive: Visa arkiv
+    archivedProjects:
+      header: Arkiverat
+      hideShowButton:
+        hide: Dölj arkiverade projekt
+        show: Visa arkiverade projekt
+    assigneeActions: Uppgifter för ansvarig
+    calendarView: Se alla i kalendern
+    changeProjectDialog:
+      moveButtonLabel: Flytta
+    createButton:
+      createActivity: Skapa
+      createAreaAssignment: Områdesuppdrag
+      createCallAssignment: Ringuppdrag
+      createEmail: E-post
+      createEvent: Event
+      createSurvey: Enkät
+      createTask: Uppgift
+    events: Event
+    feedback:
+      copy: Att samla in feedback (vid gemensamma ringningar eller enskilda
+        ringuppdrag) kan hjälpa dig att arbeta mer effektivt
+      create: Skapa enkät
+      heading: Feedback och Enkäter (ingen konfiguerad)
+    form:
+      archiveProject:
+        archive: Arkivera projekt
+      createAreaAssignment:
+        defaultQuestion: Har du slutfört uppgiften?
+      createCallAssignment:
+        newCallAssignment: Mitt ringuppdrag
+      createEmail:
+        newEmail: Icke namngivet e-post
+      createProject:
+        create: Skapa projekt
+        error: Något gick fel när projektet skapades
+        newProject: Mitt projekt
+      createSurvey:
+        newSurvey: Min enkät
+      createTask:
+        title: Skapa uppgift
+      deleteProject:
+        cancel: Avbryt
+        error: Något gick fel när projektet raderades
+        submitButton: Bekräfta att du vill radera
+        title: Radera projekt
+        warning: Är du säker på att du vill radera det här projektet? Du kan inte ångra
+          detta beslut.
+      description: Beskrivning
+      edit: Redigera projekt
+      editProjectTitle:
+        error: Fel när projekttiteln uppdaterades
+        success: Projekttiteln uppdaterades
+      manager:
+        label: Projektansvarig
+      name: Namn
+      requestError: Något blev fel. Prova igen.
+      required: Obligatorisk
+      status:
+        draft: Utkast
+        heading: Status
+        published: Publicerad
+      visibility:
+        heading: Synlighet
+        private: Privat
+        public: Offentlig
+    indefinite: Obestämd tidslinje
+    layout:
+      activities: Aktiviteter
+      allProjects: Alla projekt och aktiviteter
+      archive: Arkiv
+      calendar: Kalender
+      insights: Insikter
+      overview: Översikt
+    linkGroup:
+      createActivity: Skapa aktivitet
+      createAreaAssignment: Områdesuppdrag
+      createCallAssignment: Skapa ringuppdrag
+      createEmail: Skapa e-post
+      createEvent: Skapa event
+      createSurvey: Skapa enkät
+      createTask: Skapa uppgift
+      public: Offentlig sida
+      settings: Ändra inställningar
+    mobilization:
+      copy: Att ringa för att mobilisera i er organisation kommer att öka deltagandet
+        mycket
+      create: Skapa ringuppdrag
+      heading: Mobilisering och kontaktarbete (ej konfigurerad)
+    noManager: Ingen projektansvarig
+    publicProjectPage:
+      eventList:
+        emptyList:
+          message: Kunde inte hitta några event
+          removeFiltersButton: Rensa filter
+        filterButtonLabels:
+          locations: '{count} platser'
+          thisWeek: Denna vecka
+          today: Idag
+          tomorrow: Imorgon
+        noEventsBlurb:
+          description: '{project} har inga kommande events.'
+          headline: Det finns inga kommande events
+      map:
+        viewInListButton: Visa i lista
+    shared:
+      cta: Gå till projekt
+      noActivities: Alla pågående aktiviteter som delas med din organisation kommer
+        synas här.
+      noArchives: Alla utgångna aktiviteter som delas med din organisation kommer
+        synas här.
+      title: Delas med oss
+    sharedLayout:
+      alertMsg: Det här projektet innehåller endast aktiviteter som delas från andra
+        organisationer, du kan se men inte ändra det.
+      subtitle: '{numOfActivities, plural, =1 {1 aktivitet} other {# aktiviteter}}'
+      tabs:
+        activities: Aktiviteter
+        archive: Arkiv
+        overview: Översikt
+      title: Delas med oss
+    singleProject:
+      filterActivities: Skriv för att filtrera
+      noActivities: Det finns ännu inga aktiviteter i det här projektet.
+      noSearchResults: Din filtrering gav inga resultat.
+      showPublicPage: Visa i aktivistportalen
+      status:
+        archived: Arkiverat
+        draft: Utkast
+        private: Privat
+      viewArchive: Visa arkiv
+    taskLayout:
+      tabs:
+        assignees: Ansvariga
+        insights: Insikter
+        summary: Sammanfattning
+    tasks: Uppgifter
   search:
     error: Något gick fel
     label: Sök
     noResults: Inget resultat
     placeholder: Skriv för att söka
     results:
-      callassignment: Ringuppdrag
-      people: Människor
-      person: Person
       project: Projekt
-      survey: Enkät
-      task: Uppgifter
-      view: Lista
   settings:
     officials:
       addPerson:
@@ -2144,9 +2254,6 @@ feat:
           och hantera redan skapade ringuppdrag
         roleInheritance: Organisatör i
         title: Organisatörer
-      settingsLayout:
-        access: Tillgång
-        title: Inställningar
       tableButtons:
         demote: Nedgradera
         promote: Uppgradera
@@ -2198,11 +2305,13 @@ feat:
         all:
           description: 'Hitta personer baserat på vilka underorganisationer de tillhör. '
           title: Alla i en underorganisation
+        area:
+          title: Plats (area)
         call_history:
           description: Hitta personer som har blivit uppringda, nådda eller fått
             samtalsförsök.
           title: Ringhistorik
-        project_participation:
+        campaign_participation:
           description: Vem anmälde sig? Vem blev bokad? Vem blev det inte? Hitta dem!
           title: Deltagande i events
         email_blacklist:
@@ -2216,9 +2325,14 @@ feat:
           title: Baserat på deras e-posthistorik
         joinform:
           description: Hitta personer som anslöt genom en join form
+          title: Baserat på en join form-källa
         journey_subjects:
           description: Hitta personer som är i en Journey eller redan har avslutat den
           title: Personer i en Journey
+        official:
+          description: Hitta personer som har organisatörs- eler administratörsbehörighet
+            i en organisation.
+          title: Baserat på deras behörighet
         person_data:
           description: Namn, adress, e-post och annat!
           title: Personinfo
@@ -2300,35 +2414,6 @@ feat:
           {assignmentSelect} {timeFrame}'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
         minTimesInput: minst {input} {minTimes, plural, one {gång} other {gånger}}
-      projectParticipation:
-        activitySelect:
-          activity: typen "{activity}"
-          any: vilken typ som helst
-        bookedSelect:
-          booked: blivit bokade på
-          signed_up: anmält sig till
-        projectSelect:
-          any: vilket projekt som helst
-          project: projektet "{project}"
-        examples:
-          one: Lägg till personer som har anmält sig till event i vilket projekt som helst
-            på platsen 'Möllevången' någonsin
-          two: Ta bort personer som inte har blivit bokade på event i vilket projekt som
-            helst av typen 'Affischera' på vilken plats som helst innan idag.
-        haveSelect:
-          in: har
-          notin: inte har
-        inputString: '{addRemoveSelect} alla som {haveSelect} {bookedSelect}
-          {statusSelect} på event i {projectSelect} av typen {activitySelect}
-          på {locationSelect} {timeFrame}'
-        locationSelect:
-          any: vilken plats som helst
-          location: platsen "{location}"
-        statusSelect:
-          any: oavsett närvaro
-          attended: och deltog
-          cancelled: och avbokade
-          noshow: och inte dök upp
       emailBlacklist:
         inputString: '{addRemoveSelect} personer som inte kommer få e-post för att
           {reasonSelect}'
@@ -2392,6 +2477,16 @@ feat:
           organisationen {timeFrame}.'
         numPeople: '{numPeople, plural, one {person} other {personer}}'
         numPeopleSelect: '{numPeopleSelect}'
+      official:
+        examples:
+          one: Lägg till alla personer som har organisatörs- eller
+            administratörsbehörighet.
+          two: Ta bort alla personer som har administratörsbehörighet.
+        inputString: '{addRemoveSelect} alla personer som har behörighet som {roleSelect}.'
+        roleSelect:
+          admin: administratörer
+          any: antingen organisatör eller administratör
+          organizer: organisatörer
       personData:
         ellipsis: ...
         examples:
@@ -2433,6 +2528,7 @@ feat:
           text: '{fieldName} matchar "{searchTerm}"'
           url: '{fieldName} matchar "{searchTerm}"'
       personTags:
+        addAllFromGroupButton: Lägg till alla
         condition:
           conditionSelect:
             all: har alla
@@ -2464,6 +2560,35 @@ feat:
         inputString: '{addRemoveSelect} personer som {inSelect} listan {viewSelect}.'
         viewSelect:
           none: Organisationen har inte några listor ännu
+      projectParticipation:
+        activitySelect:
+          activity: typen "{activity}"
+          any: vilken typ som helst
+        bookedSelect:
+          booked: blivit bokade på
+          signed_up: anmält sig till
+        examples:
+          one: Lägg till personer som har anmält sig till event i vilket projekt som helst
+            på platsen 'Möllevången' någonsin
+          two: Ta bort personer som inte har blivit bokade på event i vilket projekt som
+            helst av typen 'Affischera' på vilken plats som helst innan idag.
+        haveSelect:
+          in: har
+          notin: inte har
+        inputString: '{addRemoveSelect} alla som {haveSelect} {bookedSelect}
+          {statusSelect} på event i {projectSelect} av typen {activitySelect} på
+          {locationSelect} {timeFrame}'
+        locationSelect:
+          any: vilken plats som helst
+          location: platsen "{location}"
+        projectSelect:
+          any: vilket projekt som helst
+          project: projektet "{project}"
+        statusSelect:
+          any: oavsett närvaro
+          attended: och deltog
+          cancelled: och avbokade
+          noshow: och inte dök upp
       random:
         addLimitRemoveSelect:
           add: Lägg slumpvis till
@@ -2560,17 +2685,17 @@ feat:
           none: Organisationen har inga enkäter än
           survey: enkäten "{surveyTitle}"
       task:
-        projectSelect:
-          any: vilket projekt som helst
-          project: projektet "{project}"
-          in: i
         examples:
           one: Lägg till personer som har slutfört uppgiften "Berätta för dina vänner"
             minst en gång vid vilken tidpunkt som helst
           two: Lägg till personer som har ignorerat vilken uppgift som helst i vilket
             projekt som helst mellan 2 och 5 gånger innan idag
         inputString: '{addRemoveSelect} personer som har {taskStatusSelect} {taskSelect}
-          {projectSelect} {matchingSelect} {timeFrame}'
+          {campaignSelect} {matchingSelect} {timeFrame}'
+        projectSelect:
+          any: vilket projekt som helst
+          in: i
+          project: projektet "{project}"
         taskSelect:
           any: vilken uppgift som helst
           task: uppgiften "{task}"
@@ -2674,6 +2799,7 @@ feat:
         ever: någonsin
         future: i framtiden
         lastFew: under de senaste {days} {days, plural, one {dag} other {dagarna}}
+        onDate: på {onDate}
       timeFrameSelectLabel:
         afterDate: efter
         beforeDate: före
@@ -2682,6 +2808,7 @@ feat:
         ever: någonsin
         future: i framtiden
         lastFew: under de senaste
+        onDate: på
       timeFrameSelectOptions:
         afterDate: efter ett särskilt datum
         beforeDate: innan ett särskilt datum
@@ -2690,6 +2817,7 @@ feat:
         ever: någonsin
         future: i framtiden
         lastFew: nyligen
+        onDate: på ett särskilt datum
   surveys:
     addBlocks:
       choiceQuestionButton: Kryssfråga
@@ -2765,14 +2893,21 @@ feat:
         subheader: Den här enkäten har börjat få in enkätsvar. Att ändra enkäten nu kan
           orsaka problem med datan. Fortsätt med försiktighet.
     insights:
+      error: Ett okänt fel uppstod när sidan lästes in.
       export:
         errorUnknown: 'Ett okänt fel inträffade under exporten. '
         toPdf: Exportera till pdf
         toPng: Exportera till png
       optionsFields:
+        displayInsights:
+          percentCount: Procent
         tabs:
           barPlot: Stapel
+          piePlot: Cirkeldiagram
       textFields:
+        copyResponse:
+          copy: Kopiera till urklipp
+          wasCopied: Kopierad!
         tabs:
           responses: Svar
           wordCloud: Moln
@@ -2839,8 +2974,13 @@ feat:
     surveyDialog:
       add: Lägg till
       cancel: Lägg inte till
+      description: Personen som du ska länka enkäten till har ingen epost men enkäten
+        innehåller en epostadress. Vill du lägga till den till personen?
       title: Lägg till epostadress
     surveyDialogDifferentEmail:
+      description: Personen som du är på väg att länka har en annan e-postadress än i
+        enkätsvaret. Vill du använda e-postadressen från enkätsvaret som ny
+        e-postadress för personen?
       keep: Nej, behåll tidigare e-postadress
       title: Uppdatera e-postadress
       update: Ja, uppdatera e-postadress
@@ -2934,6 +3074,11 @@ feat:
         none: Grundläggande (inga värden)
         text: Textvärden
       updateTagButton: Uppdatera
+    groupDialog:
+      deleteTitle: Radera "{groupName}"
+      editButton: Redigera
+      editTitle: Redigera grupp
+      titleLabel: Gruppnamn
     manager:
       addTag: Lägg till etikett
       addValue: Skapa värde för "{tag}"
@@ -3007,10 +3152,10 @@ feat:
       title: Redigera uppgift
     form:
       fields:
-        project: Kampanj
         deadline: Deadline för slutförande
         expires: Går ut
         instructions: Instruktioner
+        project: Kampanj
         published: Publicera
         reassignInterval: Återtilldela efter slutförande
         reassignIntervalOptions:
@@ -3317,6 +3462,26 @@ feat:
     columnRenameDialog:
       save: Spara
       title: Titel
+    customFilters:
+      choose: Välj
+      date:
+        dayOfMonth:
+          label: Dag i månad
+        month:
+          label: Månad
+          months:
+            January: januari
+            February: februari
+            March: mars
+            April: april
+            May: maj
+            June: juni
+            July: juli
+            August: augusti
+            September: september
+            October: oktober
+            November: november
+            December: december
     dataTableErrors:
       create_column: Något gick fel när kolumnen skapades
       delete_column: Något gick fel när kolumnen raderades
@@ -3336,6 +3501,9 @@ feat:
       warningText: Vill du verkligen radera listan? Detta kommer radera all lokal data
         i listan, som anteckningar och kryssrutor (men kommer inte att ta bort
         personer ur databasen).
+    deleteRowsDialog:
+      title: Radera alla uppgifter om {numPeople, plural, =1 {en person} other {#
+        personer}}
     editViewTitleAlert:
       error: Något gick fel. Titeln uppdaterades inte
       success: Titeln uppdaterades!
@@ -3411,6 +3579,7 @@ feat:
       bulk:
         createList: Skapa en ny lista med valda personer
         delete: Radera valda personer från organisationen
+        handleSelection: Hantera urval ({numSelected})
         removeFromList: Ta bort valda personer från lista
       createColumn: Ny kolumn
     viewLayout:
@@ -3449,7 +3618,7 @@ zui:
         from: Från
         to: Till
     expand: visa hela tidslinjen
-    fileUploadErrorMessage: Det går inte att lägga till notering. Den kan vara för lång
+    fileUploadErrorMessage: Det går inte att lägga till anteckning. Den kan vara för lång
     filter:
       byType:
         all: Alla
@@ -3517,6 +3686,8 @@ zui:
       m: Man
       o: Annat
       unknown: Okänd
+    location:
+      mapIconTooltip: Redigera i karta
     showAllFields: Visa alla fält
     submitLabel:
       add: Skapa & lägg till
@@ -3544,7 +3715,9 @@ zui:
     title: Sök
   dataTableSorting:
     addButton: Lägg till kolumn för sortering
+    ascending: Stigande
     button: Sortera
+    descending: Fallande
     hint: 'Tips: håll ner {shiftKeyIcon} när du klickar på flera kolumner'
     title: Sortera
   dateRange:
@@ -3584,8 +3757,10 @@ zui:
   expandableText:
     showLess: Visa mindre
     showMore: Visa mer
+  footer:
+    privacyPolicy: Integritetspolicy
   futures:
-    errorLoading: Något gick fel när datan laddades upp.
+    errorLoading: Något gick fel när datan laddades.
   header:
     collapseButton:
       collapse: Dölj
@@ -3614,6 +3789,10 @@ zui:
     myPagesInfoText: Gå till mina sidor
     myPagesMenuItemLabel: Mina sidor
     mySettingsMenuItemLabel: Mina inställningar
+    organizationAvatarAltText: Organisationsikon
+    organizationSwitcher:
+      hide: Dölj organisationsmeny
+      show: Visa organisationsmeny
     overview: Översikt
     people: Människor
     projects: Projekt & Aktiviteter
@@ -3631,8 +3810,10 @@ zui:
   personSelect:
     bulkAdd:
       backButton: Tillbaka
+      cancelButton: Avbryt
       confirmTitle: Bekräfta att lägga till personer
       fromView: Från ‘{viewTitle}’
+      openButton: Lägg till i bulk
     keepTyping: Fortsätt skriv för att börja söka
     noResult: Hittade ingen person som matchade
     search: Skriv för att börja söka
@@ -3641,6 +3822,7 @@ zui:
     hostingOrganization: Denna kopia av Zetkin tillhandahålls och hanteras av {name}.
     links:
       foundation: Zetkin Foundation
+      privacy: Integritetspolicy
     text: 'Zetkin är en plattform för att organisera aktivism. Zetkin är utvecklat
       av Zetkin Foundation som arbetar för radikal samhällsförändring i en
       socialistiskt, feministisk, antirasistisk och hållbar riktning. '
@@ -3654,6 +3836,7 @@ zui:
     success: Framgång
     warning: Varning!
   statusChip:
+    closed: Stängd
     draft: Utkast
     ended: Avslutad
     published: Publicerad
@@ -3671,6 +3854,7 @@ zui:
     singleDayAllDay: Hela dagen idag
     singleDayToday: Idag, {start} - {end}
   timeZonePicker:
+    gmt: GMT
     noOptionsText: Ingen plats matchar din sökning
     placeholder: Börja skriva för att söka efter plats
     timeZone: Tidszon
