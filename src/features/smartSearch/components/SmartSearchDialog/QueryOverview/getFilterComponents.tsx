@@ -14,6 +14,7 @@ import {
   GroupWorkOutlined,
   LocalOfferOutlined,
   MarkEmailReadOutlined,
+  MarkEmailUnreadOutlined,
   PentagonOutlined,
   PersonAddAlt,
   PersonOutlined,
@@ -29,6 +30,7 @@ import DisplayCallBlocked from '../../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../../filters/CallHistory/DisplayCallHistory';
 import DisplayCaller from '../../filters/Caller/DisplayCaller';
 import DisplayCallerParticipation from '../../filters/CallerParticipation/DisplayCallerParticipation';
+import DisplayChannelSubscription from '../../filters/ChannelSubscription/DisplayChannelSubscription';
 import DisplayProjectParticipation from '../../filters/ProjectParticipation/DisplayProjectParticipation';
 import DisplayEmailBlacklist from '../../filters/EmailBlacklist/DisplayEmailBlacklist';
 import DisplayEmailClick from '../../filters/EmailClick/DisplayEmailClick';
@@ -55,6 +57,7 @@ import {
   CallHistoryFilterConfig,
   CallerFilterConfig,
   CallerParticipationFilterConfig,
+  ChannelSubscriptionFilterConfig,
   ProjectParticipationConfig,
   EmailBlacklistFilterConfig,
   EmailClickFilterConfig,
@@ -128,6 +131,17 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <Call color="secondary" fontSize="small" />;
+  } else if (filter.type === FILTER_TYPE.CHANNEL_SUBSCRIPTION) {
+    displayFilter = (
+      <DisplayChannelSubscription
+        filter={
+          filter as SmartSearchFilterWithId<ChannelSubscriptionFilterConfig>
+        }
+      />
+    );
+    filterTypeIcon = (
+      <MarkEmailUnreadOutlined color="secondary" fontSize="small" />
+    );
   } else if (filter.type === FILTER_TYPE.EMAIL_BLACKLIST) {
     displayFilter = (
       <DisplayEmailBlacklist
