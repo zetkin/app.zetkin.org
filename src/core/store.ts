@@ -52,6 +52,7 @@ import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 import areasSlice, { AreasStoreSlice } from 'features/areas/store';
+import manageSlice, { ManageStoreSlice } from 'features/manage/store';
 import areaAssignmentSlice, {
   areaAssignmentCreated,
   AreaAssignmentsStoreSlice,
@@ -74,6 +75,7 @@ export interface RootState {
   import: ImportStoreSlice;
   joinForms: JoinFormsStoreSlice;
   journeys: JourneysStoreSlice;
+  manage: ManageStoreSlice;
   organizations: OrganizationsStoreSlice;
   profiles: ProfilesStoreSlice;
   settings: SettingsStoreSlice;
@@ -100,6 +102,7 @@ const reducer = {
   import: importSlice.reducer,
   joinForms: joinFormsSlice.reducer,
   journeys: journeysSlice.reducer,
+  manage: manageSlice.reducer,
   organizations: organizationsSlice.reducer,
   profiles: profilesSlice.reducer,
   projects: projectsSlice.reducer,

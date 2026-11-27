@@ -4,22 +4,31 @@ import { redirect } from 'next/navigation';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinSession, ZetkinUser } from 'utils/types/zetkin';
 
-const getUser = async (apiClient: BackendApiClient, redirectPath: string) => {
+const getUser = async (
+  apiClient: BackendApiClient,
+  redirectPath: string,
+  requiredAuthLevel: number
+) => {
   try {
     return await apiClient.get<ZetkinUser>('/api/users/me');
   } catch (err) {
-    redirect(`/login?redirect=${redirectPath}`);
+    redirect(
+      `/login?redirect=${encodeURIComponent(redirectPath)}&level=${encodeURIComponent(requiredAuthLevel)}`
+    );
   }
 };
 
 const getSession = async (
   apiClient: BackendApiClient,
-  redirectPath: string
+  redirectPath: string,
+  requiredAuthLevel: number
 ) => {
   try {
     return await apiClient.get<ZetkinSession>('/api/session');
   } catch (err) {
-    redirect(`/login?redirect=${redirectPath}`);
+    redirect(
+      `/login?redirect=${encodeURIComponent(redirectPath)}&level=${encodeURIComponent(requiredAuthLevel)}`
+    );
   }
 };
 
@@ -37,13 +46,17 @@ export default async function redirectIfLoginNeeded(
 
   const redirectPath = path || '/';
 
-  const session = await getSession(apiClient, redirectPath);
+  const session = await getSession(apiClient, redirectPath, requiredAuthLevel);
   if (session.level < requiredAuthLevel) {
-    redirect(`/login?redirect=${redirectPath}`);
+    redirect(
+      `/login?redirect=${encodeURIComponent(redirectPath)}&level=${encodeURIComponent(requiredAuthLevel)}`
+    );
   }
 
-  const user = await getUser(apiClient, redirectPath);
+  const user = await getUser(apiClient, redirectPath, requiredAuthLevel);
   if (!user.is_verified && !allowUnverified) {
     redirect('/verify');
   }
+
+  return user;
 }

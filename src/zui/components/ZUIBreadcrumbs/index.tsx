@@ -1,3 +1,5 @@
+'use client';
+
 import NextLink from 'next/link';
 import { Box, Link, Menu, SvgIconTypeMap } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';

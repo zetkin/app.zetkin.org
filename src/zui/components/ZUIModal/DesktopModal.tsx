@@ -24,6 +24,7 @@ const DesktopModal: FC<ZUIModalProps> = ({
   secondaryButton,
   size = 'auto',
   title,
+  keepMounted,
 }) => {
   const seed = useRef(0);
   useEffect(() => {
@@ -36,6 +37,7 @@ const DesktopModal: FC<ZUIModalProps> = ({
     <Modal
       disableRestoreFocus
       hideBackdrop={true}
+      keepMounted={keepMounted}
       onClose={onClose}
       open={open}
     >
