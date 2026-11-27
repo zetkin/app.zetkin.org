@@ -11,13 +11,14 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { HouseholdColorModel } from 'features/areaAssignments/models';
 
 type RouteMeta = {
-  params: {
+  params: Promise<{
     locationId: string;
     orgId: string;
-  };
+  }>;
 };
 
-export async function GET(request: NextRequest, { params }: RouteMeta) {
+export async function GET(request: NextRequest, props: RouteMeta) {
+  const params = await props.params;
   await mongoose.connect(process.env.MONGODB_URL || '');
   const headers: IncomingHttpHeaders = {};
   request.headers.forEach((value, key) => (headers[key] = value));
